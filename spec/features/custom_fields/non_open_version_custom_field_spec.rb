@@ -133,12 +133,11 @@ RSpec.describe "support for non-open version values in version custom field", :j
 
       work_package.reload
 
-      # only one value, so no array
       cvs = work_package
               .custom_value_for(custom_field)
-              .typed_value
+              .map(&:typed_value)
 
-      expect(cvs).to eq version_closed
+      expect(cvs).to eq [version_closed]
     end
   end
 

@@ -14,12 +14,12 @@ import {
 export function addFiltersToPath(
   basePath:string,
   filters:ApiV3FilterBuilder,
-  params:{ [key:string]:string } = {},
+  params:Record<string, string> = {},
 ):URL {
   const url = new URL(basePath, window.location.origin);
 
   if (url.searchParams.has('filters')) {
-    const existingFilters = JSON.parse(url.searchParams.get('filters') as string) as ApiV3Filter[];
+    const existingFilters = JSON.parse(url.searchParams.get('filters')!) as ApiV3Filter[];
     url.searchParams.set('filters', JSON.stringify(existingFilters.concat(filters.filters)));
   } else {
     url.searchParams.set('filters', filters.toJson());

@@ -403,5 +403,41 @@ RSpec.describe "Recurring meetings show",
         expect(page).to have_text "There are more scheduled meetings"
       end
     end
+
+    describe "limit parameter" do
+      let(:recurring_meeting) do
+        create :recurring_meeting,
+               project:,
+               author: user,
+               start_time: Time.zone.today + 1.day,
+               frequency: "daily",
+               end_after: "iterations",
+               iterations: 15
+      end
+
+      it "respects the limit parameter and shows the correct number of meetings (Regression #68454, #68311)" do
+        get project_recurring_meeting_path(project, recurring_meeting, limit: 10)
+
+        (1..10).each do |i|
+          expect(page).to have_text format_time(Time.zone.today + i.days)
+        end
+
+        (11..15).each do |i|
+          expect(page).to have_no_text format_time(Time.zone.today + i.days)
+        end
+      end
+
+      it "defaults to 5 meetings when no limit parameter is provided" do
+        get project_recurring_meeting_path(project, recurring_meeting)
+
+        (1..5).each do |i|
+          expect(page).to have_text format_time(Time.zone.today + i.days)
+        end
+
+        (6..15).each do |i|
+          expect(page).to have_no_text format_time(Time.zone.today + i.days)
+        end
+      end
+    end
   end
 end

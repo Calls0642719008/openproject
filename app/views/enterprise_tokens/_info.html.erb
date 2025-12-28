@@ -27,7 +27,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 <% content_for :header_tags do %>
-  <%= nonced_javascript_include_tag OpenProject::Static::Links.links[:chargebee][:href],
+  <%= nonced_javascript_include_tag OpenProject::Static::Links.url_for(:chargebee),
                                     "data-cb-site": OpenProject::Configuration.enterprise_chargebee_site %>
 <% end %>
 

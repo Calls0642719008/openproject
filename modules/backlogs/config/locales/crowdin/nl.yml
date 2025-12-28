@@ -37,7 +37,7 @@ nl:
               can_only_contain_work_packages_of_current_sprint: "kan alleen ID's bevatten van werkpakketten in de huidige sprint."
               must_block_at_least_one_work_package: "het moet de ID bevatten van ten minste één ticket."
             version_id:
-              task_version_must_be_the_same_as_story_version: "moet hetzelfde zijn als de ouder verhaalversie."
+              task_version_must_be_the_same_as_story_version: "moet hetzelfde zijn als de bovenliggende verhaalversie."
         sprint:
           cannot_end_before_it_starts: "De sprint kan niet eindigen voordat het start."
   backlogs:
@@ -151,12 +151,12 @@ nl:
   rb_label_copy_tasks_none: "Geen"
   rb_label_copy_tasks_open: "Open"
   rb_label_link_to_original: "Link toevoegen aan het originele verhaal"
-  remaining_hours: "resterend werk"
+  remaining_hours: "Resterend werk"
   required_burn_rate_hours: "vereiste burn rate (uren)"
   required_burn_rate_points: "vereiste burn rate (punten)"
   todo_work_package_description: "%{summary}: %{url}\n%{description}"
   todo_work_package_summary: "%{type}: %{summary}"
-  version_settings_display_label: "Kolom in achterstand"
+  version_settings_display_label: "Kolom in backlog"
   version_settings_display_option_left: "links"
   version_settings_display_option_none: "geen"
   version_settings_display_option_right: "rechts"

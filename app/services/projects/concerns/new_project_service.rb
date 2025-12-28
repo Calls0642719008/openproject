@@ -34,22 +34,16 @@ module Projects::Concerns
 
     def before_perform(service_call)
       super.tap do |super_call|
-        reject_section_scoped_validation(super_call.result)
-      end
-    end
-
-    def after_validate(service_call)
-      super.tap do |super_call|
         build_missing_project_custom_field_project_mappings(super_call.result)
       end
     end
 
-    def after_perform(attributes_call)
+    def after_persist(attributes_call)
       new_project = attributes_call.result
 
       set_default_role(new_project) unless user.admin?
       disable_custom_fields_with_empty_values(new_project)
-      notify_project_created(new_project)
+      notify_project_created(new_project) if new_project.persisted?
 
       super
     end
@@ -82,13 +76,12 @@ module Projects::Concerns
         OpenProject::Events::PROJECT_CREATED,
         project: new_project
       )
+
+      send_project_creation_email(new_project) if Setting.new_project_send_confirmation_email?
     end
 
-    def reject_section_scoped_validation(new_project)
-      if new_project._limit_custom_fields_validation_to_section_id.present?
-        raise ArgumentError,
-              "Section scoped validation is not supported for project creation, only for project updates"
-      end
+    def send_project_creation_email(new_project)
+      ProjectMailer.project_created(new_project, user:).deliver_later
     end
 
     def disable_custom_fields_with_empty_values(new_project)
@@ -100,7 +93,7 @@ module Projects::Concerns
       # although the user explicitly provided a blank value. In order to not patch `acts_as_customizable`
       # further, we simply identify these custom values and deactivate the custom field.
 
-      custom_field_ids = new_project.custom_values.select { |cv| cv.value.blank? && !cv.required? }.pluck(:custom_field_id)
+      custom_field_ids = new_project.custom_values.select { |cv| cv.value.blank? && !cv.is_for_all? }.pluck(:custom_field_id)
       custom_field_project_mappings = new_project.project_custom_field_project_mappings
 
       custom_field_project_mappings
@@ -111,10 +104,11 @@ module Projects::Concerns
     end
 
     def build_missing_project_custom_field_project_mappings(project)
-      # Activate custom fields for this project (via mapping table) if values have been provided
-      # for custom_fields, but no mapping exists.
+      # Activate all custom fields (via mapping table) that have no mapping, but are either
+      # intended for all projects, or have a value provided by the user.
+
       custom_field_ids = project.custom_values
-        .select { |cv| cv.value.present? }
+        .select { |cv| cv.value? || cv.is_for_all? }
         .pluck(:custom_field_id).uniq
       activated_custom_field_ids = project.project_custom_field_project_mappings.pluck(:custom_field_id).uniq
 
@@ -122,6 +116,26 @@ module Projects::Concerns
         .map { |custom_field_id| { custom_field_id: } }
 
       project.project_custom_field_project_mappings.build(mappings)
+    end
+
+    def update_calculated_value_custom_fields(model)
+      changed_cf_ids = model.custom_values.map(&:custom_field_id)
+
+      # Using unscope(where: :admin_only) to fix an issue when non admin user
+      # edits a custom field which is used by an admin only calculated value
+      # field. Without this unscoping, admin only value and all fields
+      # referencing it (recursively) will not be recalculated and there will
+      # even be no place for that recalculatin to be triggered unless an admin
+      # edits same value again.
+      #
+      # This may need to be handled differently to make it work for other custom
+      # field containers, like WorkPackage. User custom fields also has
+      # admin_only check.
+      affected_cfs = model.available_custom_fields.unscope(where: :admin_only).affected_calculated_fields(changed_cf_ids)
+
+      model.calculate_custom_fields(affected_cfs)
+
+      model.save if model.persisted? && model.changed_for_autosave?
     end
   end
 end

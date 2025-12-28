@@ -290,6 +290,12 @@ paths:
     "$ref": "./paths/placeholder_users.yml"
   "/api/v3/placeholder_users/{id}":
     "$ref": "./paths/placeholder_user.yml"
+  "/api/v3/portfolios":
+    "$ref": "./paths/portfolios.yml"
+  "/api/v3/portfolios/{id}":
+    "$ref": "./paths/portfolio.yml"
+  "/api/v3/portfolios/{id}/form":
+    "$ref": "./paths/portfolio_form.yml"
   "/api/v3/posts/{id}":
     "$ref": "./paths/post.yml"
   "/api/v3/posts/{id}/attachments":
@@ -300,6 +306,12 @@ paths:
     "$ref": "./paths/priorities.yml"
   "/api/v3/priorities/{id}":
     "$ref": "./paths/priority.yml"
+  "/api/v3/programs":
+    "$ref": "./paths/programs.yml"
+  "/api/v3/programs/{id}":
+    "$ref": "./paths/program.yml"
+  "/api/v3/programs/{id}/form":
+    "$ref": "./paths/program_form.yml"
   "/api/v3/project_phases/{id}":
     "$ref": "./paths/project_phase.yml"
   "/api/v3/project_phase_definitions":
@@ -350,6 +362,8 @@ paths:
     "$ref": "./paths/project_types.yml"
   "/api/v3/projects/{id}/versions":
     "$ref": "./paths/project_versions.yml"
+  "/api/v3/projects/{id}/favorite":
+    "$ref": "./paths/project_favorite.yml"
   "/api/v3/queries":
     "$ref": "./paths/queries.yml"
   "/api/v3/queries/available_projects":
@@ -460,6 +474,8 @@ paths:
     "$ref": "./paths/version_form.yml"
   "/api/v3/versions/{id}/projects":
     "$ref": "./paths/version_projects.yml"
+  "/api/v3/versions/{id}/workspaces":
+    "$ref": "./paths/version_workspaces.yml"
   "/api/v3/views":
     "$ref": "./paths/views.yml"
   "/api/v3/views/{id}":
@@ -506,6 +522,30 @@ paths:
     "$ref": "./paths/work_package_watchers.yml"
   "/api/v3/work_packages/{id}/watchers/{user_id}":
     "$ref": "./paths/work_package_watcher.yml"
+  "/api/v3/workspaces":
+    "$ref": "./paths/workspaces.yml"
+  "/api/v3/workspaces/{id}/available_assignees":
+    "$ref": "./paths/workspace_available_assignees.yml"
+  "/api/v3/workspaces/{id}/categories":
+    "$ref": "./paths/workspace_categories.yml"
+  "/api/v3/workspaces/{id}/favorite":
+    "$ref": "./paths/workspace_favorite.yml"
+  "/api/v3/workspaces/{id}/queries/default":
+    "$ref": "./paths/workspace_queries_default.yml"
+  "/api/v3/workspace/{id}/queries/filter_instance_schemas":
+    "$ref": "./paths/workspace_queries_filter_instance_schemas.yml"
+  "/api/v3/workspace/{id}/queries/schema":
+    "$ref": "./paths/workspace_queries_schema.yml"
+  "/api/v3/workspaces/{id}/types":
+    "$ref": "./paths/workspace_types.yml"
+  "/api/v3/workspaces/{id}/work_packages":
+    "$ref": "./paths/workspace_work_packages.yml"
+  "/api/v3/workspaces/{id}/work_packages/form":
+    "$ref": "./paths/workspace_work_packages_form.yml"
+  "/api/v3/workspaces/{id}/versions":
+    "$ref": "./paths/workspace_versions.yml"
+  "/api/v3/workspaces/schema":
+    "$ref": "./paths/workspaces_schema.yml"
 
 components:
   examples:
@@ -549,8 +589,20 @@ components:
       $ref: "./components/examples/notification_collection.yml"
     PlaceholderUserResponse:
       $ref: "./components/examples/placeholder-user-response.yml"
+    Portfolio:
+      $ref: "./components/examples/portfolio.yml"
+    PortfolioBody:
+      $ref: "./components/examples/portfolio_body.yml"
+    PortfolioCollection:
+      $ref: "./components/examples/portfolio_collection.yml"
     PriorityCollection:
       $ref: "./components/examples/priority_collection.yml"
+    Program:
+      $ref: "./components/examples/program.yml"
+    ProgramBody:
+      $ref: "./components/examples/program_body.yml"
+    ProgramCollection:
+      $ref: "./components/examples/program_collection.yml"
     Project:
       $ref: "./components/examples/project.yml"
     ProjectBody:
@@ -615,6 +667,8 @@ components:
       $ref: "./components/examples/work_package_create_valid.yml"
     WorkPackageEditSubject:
       $ref: "./components/examples/work_package_edit_subject.yml"
+    WorkPackageWithMetaValidation:
+      $ref: "./components/examples/work_package_with_meta_validation.yml"
 
   responses:
     InvalidQuery:
@@ -653,8 +707,8 @@ components:
       "$ref": "./components/schemas/budget_model.yml"
     Budgets_by_ProjectModel:
       "$ref": "./components/schemas/budgets_by_project_model.yml"
-    Categories_by_ProjectModel:
-      "$ref": "./components/schemas/categories_by_project_model.yml"
+    Categories_by_WorkspaceModel:
+      "$ref": "./components/schemas/categories_by_workspace_model.yml"
     CategoryModel:
       "$ref": "./components/schemas/category_model.yml"
     CollectionLinks:
@@ -673,12 +727,16 @@ components:
       "$ref": "./components/schemas/day_model.yml"
     Default_QueryModel:
       "$ref": "./components/schemas/default_query_model.yml"
-    Default_Query_for_ProjectModel:
-      "$ref": "./components/schemas/default_query_for_project_model.yml"
+    Default_Query_for_WorkspaceModel:
+      "$ref": "./components/schemas/default_query_for_workspace_model.yml"
     DocumentModel:
       "$ref": "./components/schemas/document_model.yml"
     DocumentsModel:
       "$ref": "./components/schemas/documents_model.yml"
+    EmojiReactionModel:
+      "$ref": "./components/schemas/emoji_reaction_model.yml"
+    EmojiReactions_Model:
+      "$ref": "./components/schemas/emoji_reactions_model.yml"
     ErrorResponse:
       "$ref": "./components/schemas/error_response.yml"
     Example_FormModel:
@@ -731,8 +789,8 @@ components:
       "$ref": "./components/schemas/list_capabilities_model.yml"
     List_of_NewsModel:
       "$ref": "./components/schemas/list_of_news_model.yml"
-    List_projects_by_versionModel:
-      "$ref": "./components/schemas/list_projects_by_version_model.yml"
+    List_workspaces_by_versionModel:
+      "$ref": "./components/schemas/list_workspaces_by_version_model.yml"
     MeetingModel:
       "$ref": "./components/schemas/meeting_model.yml"
     MarkdownModel:
@@ -779,6 +837,10 @@ components:
       "$ref": "./components/schemas/placeholder_user_model.yml"
     Plain_TextModel:
       "$ref": "./components/schemas/plain_text_model.yml"
+    PortfolioCollectionModel:
+      "$ref": "./components/schemas/portfolio_collection_model.yml"
+    PortfolioModel:
+      "$ref": "./components/schemas/portfolio_model.yml"
     PostModel:
       "$ref": "./components/schemas/post_model.yml"
     PrincipalCollectionModel:
@@ -789,6 +851,10 @@ components:
       "$ref": "./components/schemas/priority_collection_model.yml"
     PriorityModel:
       "$ref": "./components/schemas/priority_model.yml"
+    ProgramCollectionModel:
+      "$ref": "./components/schemas/program_collection_model.yml"
+    ProgramModel:
+      "$ref": "./components/schemas/program_model.yml"
     ProjectCollectionModel:
       "$ref": "./components/schemas/project_collection_model.yml"
     ProjectModel:
@@ -803,8 +869,6 @@ components:
       "$ref": "./components/schemas/project_storage_collection_model.yml"
     ProjectStorageModel:
       "$ref": "./components/schemas/project_storage_model.yml"
-    Projects_schemaModel:
-      "$ref": "./components/schemas/projects_schema_model.yml"
     QueriesModel:
       "$ref": "./components/schemas/queries_model.yml"
     QueryModel:
@@ -815,12 +879,14 @@ components:
       "$ref": "./components/schemas/query_create_form.yml"
     Query_FilterModel:
       "$ref": "./components/schemas/query_filter_model.yml"
+    Query_Filter_Instance_Model:
+      "$ref": "./components/schemas/query_filter_instance_model.yml"
     Query_Filter_Instance_SchemaModel:
       "$ref": "./components/schemas/query_filter_instance_schema_model.yml"
     Query_Filter_Instance_SchemasModel:
       "$ref": "./components/schemas/query_filter_instance_schemas_model.yml"
-    Query_Filter_Instance_Schemas_For_ProjectModel:
-      "$ref": "./components/schemas/query_filter_instance_schemas_for_project_model.yml"
+    Query_Filter_Instance_Schemas_For_WorkspaceModel:
+      "$ref": "./components/schemas/query_filter_instance_schemas_for_workspace_model.yml"
     Query_OperatorModel:
       "$ref": "./components/schemas/query_operator_model.yml"
     Query_Sort_ByModel:
@@ -851,8 +917,8 @@ components:
       "$ref": "./components/schemas/schema_property_model.yml"
     Schema_For_Global_QueriesModel:
       "$ref": "./components/schemas/schema_for_global_queries_model.yml"
-    Schema_For_Project_QueriesModel:
-      "$ref": "./components/schemas/schema_for_project_queries_model.yml"
+    Schema_For_Workspace_QueriesModel:
+      "$ref": "./components/schemas/schema_for_workspace_queries_model.yml"
     Star_QueryModel:
       "$ref": "./components/schemas/star_query_model.yml"
     StatusCollectionModel:
@@ -885,8 +951,8 @@ components:
       "$ref": "./components/schemas/type_model.yml"
     TypesModel:
       "$ref": "./components/schemas/types_model.yml"
-    Types_by_ProjectModel:
-      "$ref": "./components/schemas/types_by_project_model.yml"
+    Types_by_WorkspaceModel:
+      "$ref": "./components/schemas/types_by_workspace_model.yml"
     Unstar_QueryModel:
       "$ref": "./components/schemas/unstar_query_model.yml"
     UserCollectionModel:
@@ -905,8 +971,8 @@ components:
       "$ref": "./components/schemas/version_schema_model.yml"
     VersionsModel:
       "$ref": "./components/schemas/versions_model.yml"
-    Versions_by_ProjectModel:
-      "$ref": "./components/schemas/versions_by_project_model.yml"
+    Versions_by_WorkspaceModel:
+      "$ref": "./components/schemas/versions_by_workspace_model.yml"
     View_actionModel:
       "$ref": "./components/schemas/view_action_model.yml"
     View_capabilitiesModel:
@@ -947,10 +1013,10 @@ components:
       "$ref": "./components/schemas/work_package_activities_model.yml"
     Work_PackagesModel:
       "$ref": "./components/schemas/work_packages_model.yml"
-    EmojiReactionModel:
-      "$ref": "./components/schemas/emoji_reaction_model.yml"
-    EmojiReactions_Model:
-      "$ref": "./components/schemas/emoji_reactions_model.yml"
+    WorkspaceCollectionModel:
+      "$ref": "./components/schemas/workspace_collection_model.yml"
+    Workspaces_schemaModel:
+      "$ref": "./components/schemas/workspaces_schema_model.yml"
   securitySchemes:
     BasicAuth:
       type: http
@@ -979,9 +1045,11 @@ tags:
   - "$ref": "./tags/news.yml"
   - "$ref": "./tags/notifications.yml"
   - "$ref": "./tags/oauth.yml"
+  - "$ref": "./tags/portfolios.yml"
   - "$ref": "./tags/posts.yml"
   - "$ref": "./tags/principals.yml"
   - "$ref": "./tags/priorities.yml"
+  - "$ref": "./tags/programs.yml"
   - "$ref": "./tags/project_phases.yml"
   - "$ref": "./tags/project_phase_definitions.yml"
   - "$ref": "./tags/projects.yml"
@@ -1009,5 +1077,6 @@ tags:
   - "$ref": "./tags/wiki_pages.yml"
   - "$ref": "./tags/work_packages.yml"
   - "$ref": "./tags/work_schedule.yml"
+  - "$ref": "./tags/workspaces.yml"
 security:
   - BasicAuth: []

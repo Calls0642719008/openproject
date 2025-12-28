@@ -99,7 +99,7 @@ Please note that **% Complete** does not adjust automatically when the values of
 - Bugfix: Can not add invited users to existing groups \[[#51679](https://community.openproject.org/wp/51679)\]
 - Bugfix: Project.visible scope slower than it should be \[[#51706](https://community.openproject.org/wp/51706)\]
 - Bugfix: Ongoing meetings are not visible via the Meetings tab in work packages \[[#51715](https://community.openproject.org/wp/51715)\]
-- Bugfix: The Access Token expiry date not updated on refresh for FileStorage tokens \[[#51749](https://community.openproject.org/wp/51749)\]
+- Bugfix: The Access Token expiration date not updated on refresh for FileStorage tokens \[[#51749](https://community.openproject.org/wp/51749)\]
 - Bugfix: Work package share permissions not in Work package permission group \[[#52086](https://community.openproject.org/wp/52086)\]
 - Bugfix: lockVersion missing in payload for API WP form when only having change_work_package_status permission \[[#52089](https://community.openproject.org/wp/52089)\]
 - Bugfix: Status cannot be changed in backlogs when only having change_work_package_status permission \[[#52090](https://community.openproject.org/wp/52090)\]

@@ -13,10 +13,8 @@ Rails.application.routes.draw do
     end
 
     resources :synchronized_groups,
-              param: :ldap_group_id,
-              only: %i(new index create show destroy) do
+              param: :ldap_group_id do
       member do
-        # Destroy warning
         get "destroy_info"
       end
     end

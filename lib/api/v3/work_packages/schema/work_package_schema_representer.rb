@@ -34,6 +34,7 @@ module API
           extend ::API::V3::Utilities::CustomFieldInjector::RepresenterClass
 
           include API::Caching::CachedRepresenter
+
           cached_representer key_parts: %i[project type],
                              dependencies: -> {
                                all_permissions_granted_to_user_under_project + [Setting.work_package_done_ratio,
@@ -410,7 +411,7 @@ module API
             if work_package&.persisted?
               api_v3_paths.available_assignees_in_work_package(represented.id)
             elsif work_package&.project
-              api_v3_paths.available_assignees_in_project(represented.project_id)
+              api_v3_paths.available_assignees_in_workspace(represented.project_id)
             end
           end
         end

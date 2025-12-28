@@ -67,7 +67,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
     it "does not show the edit buttons" do
       overview_page.within_project_attributes_sidebar do
-        expect(page).to have_no_css("[data-test-selector='project-custom-field-section-edit-button']")
+        expect(page).to have_no_test_selector("[data-test-selector*='project-custom-field-edit-button']")
       end
     end
   end
@@ -83,7 +83,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
     it "does not show the edit buttons" do
       overview_page.within_project_attributes_sidebar do
-        expect(page).to have_no_css("[data-test-selector='project-custom-field-section-edit-button']")
+        expect(page).to have_no_css("[data-test-selector*='project-custom-field-edit-button']")
       end
     end
   end
@@ -96,15 +96,15 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
     it "shows the edit buttons" do
       overview_page.within_project_attributes_sidebar do
-        expect(page).to have_css("[data-test-selector='project-custom-field-section-edit-button']", count: 3)
+        expect(page).to have_css("[data-test-selector*='project-custom-field-edit-button']", count: 13)
       end
     end
   end
 
   describe "with insufficient Edit attribute permission on the update dialog" do
     let(:member) { member_with_project_attributes_edit_permissions }
-    let(:section) { section_for_input_fields }
-    let(:dialog) { Components::Projects::ProjectCustomFields::EditDialog.new(project, section) }
+    let(:custom_field) { boolean_project_custom_field }
+    let(:dialog) { Components::Projects::ProjectCustomFields::EditDialog.new(project, custom_field) }
 
     before do
       login_as member
@@ -112,7 +112,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
     end
 
     it "responds with a permission denied message" do
-      overview_page.open_edit_dialog_for_section(section)
+      overview_page.open_edit_dialog_for_custom_field(custom_field)
       # Change role to project edit, so the user won't have the project attributes edit role
       member_with_project_attributes_edit_permissions.memberships.first.update(roles: [edit_project_role])
       member_with_project_attributes_edit_permissions.reload

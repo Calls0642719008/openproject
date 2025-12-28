@@ -29,12 +29,19 @@
 #++
 
 class APIDocsController < ApplicationController
-  before_action :require_login
+  before_action :require_login,
+                :check_if_api_docs_enabled
   no_authorization_required! :index
 
   helper API::APIDocsHelper
 
   def index
+    render locals: { turbo_opt_out: true }
+  end
+
+  private
+
+  def check_if_api_docs_enabled
     render_404 unless Setting.apiv3_docs_enabled?
   end
 end

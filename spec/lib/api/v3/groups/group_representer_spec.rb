@@ -44,7 +44,7 @@ RSpec.describe API::V3::Groups::GroupRepresenter, "rendering" do
   end
   let(:current_user_admin) { false }
   let(:current_user) { build_stubbed(:user, admin: current_user_admin) }
-  let(:representer) { described_class.new(group, current_user:, embed_links:) }
+  let(:representer) { described_class.create(group, current_user:, embed_links:) }
   let(:members) { 2.times.map { build_stubbed(:user) } }
   let(:permissions) { [:manage_members] }
   let(:embed_links) { true }

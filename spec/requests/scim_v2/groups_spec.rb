@@ -54,507 +54,412 @@ RSpec.describe "SCIM API Groups", with_ee: [:scim_api] do
   end
 
   describe "GET /scim_v2/Groups" do
-    context "with the feature flag enabled", with_flag: { scim_api: true } do
-      before { group }
+    before { group }
 
-      it "responds with group list" do
-        get "/scim_v2/Groups", {}, headers
+    it "responds with a list of groups excluding marked for deletion" do
+      create(:group_marked_for_deletion)
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to match("Resources" => contain_exactly({ "displayName" => group.name,
-                                                                        "externalId" => external_group_id,
-                                                                        "id" => group.id.to_s,
-                                                                        "members" => [{ "value" => user.id.to_s }],
-                                                                        "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                                                    "created" => group.created_at.iso8601,
-                                                                                    "lastModified" => group.updated_at.iso8601,
-                                                                                    "resourceType" => "Group" },
-                                                                        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }, { "displayName" => group_without_external_id.name,
-                                                                                                                                          "id" => group_without_external_id.id.to_s,
-                                                                                                                                          "members" => [{ "value" => user.id.to_s }],
-                                                                                                                                          "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group_without_external_id.id}",
-                                                                                                                                                      "created" => group_without_external_id.created_at.iso8601,
-                                                                                                                                                      "lastModified" => group_without_external_id.updated_at.iso8601,
-                                                                                                                                                      "resourceType" => "Group" },
-                                                                                                                                          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }),
-                                       "itemsPerPage" => 100,
-                                       "schemas" => ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
-                                       "startIndex" => 1,
-                                       "totalResults" => 2)
-      end
+      get "/scim_v2/Groups", {}, headers
 
-      it "filters results" do
-        filter = ERB::Util.url_encode("displayName Eq \"#{group.name}\"")
-        get "/scim_v2/Groups?filter=#{filter}", {}, headers
-
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq("Resources" => [{ "displayName" => group.name,
-                                                      "externalId" => external_group_id,
-                                                      "id" => group.id.to_s,
-                                                      "members" => [{ "value" => user.id.to_s }],
-                                                      "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                                  "created" => group.created_at.iso8601,
-                                                                  "lastModified" => group.updated_at.iso8601,
-                                                                  "resourceType" => "Group" },
-                                                      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }],
-                                    "itemsPerPage" => 100,
-                                    "schemas" => ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
-                                    "startIndex" => 1,
-                                    "totalResults" => 1)
-
-        filter = ERB::Util.url_encode('displayName Eq "NONEXISTENT GROUP NAME"')
-        get "/scim_v2/Groups?filter=#{filter}", {}, headers
-
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq("Resources" => [],
-                                    "itemsPerPage" => 100,
-                                    "schemas" => ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
-                                    "startIndex" => 1,
-                                    "totalResults" => 0)
-      end
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to match("Resources" => contain_exactly({ "displayName" => group.name,
+                                                                      "externalId" => external_group_id,
+                                                                      "id" => group.id.to_s,
+                                                                      "members" => [{ "value" => user.id.to_s }],
+                                                                      "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                                                                  "created" => group.created_at.iso8601,
+                                                                                  "lastModified" => group.updated_at.iso8601,
+                                                                                  "resourceType" => "Group" },
+                                                                      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }, { "displayName" => group_without_external_id.name,
+                                                                                                                                        "id" => group_without_external_id.id.to_s,
+                                                                                                                                        "members" => [{ "value" => user.id.to_s }],
+                                                                                                                                        "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group_without_external_id.id}",
+                                                                                                                                                    "created" => group_without_external_id.created_at.iso8601,
+                                                                                                                                                    "lastModified" => group_without_external_id.updated_at.iso8601,
+                                                                                                                                                    "resourceType" => "Group" },
+                                                                                                                                        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }),
+                                     "itemsPerPage" => 100,
+                                     "schemas" => ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
+                                     "startIndex" => 1,
+                                     "totalResults" => 2)
     end
 
-    context "with the feature flag disabled", with_flag: { scim_api: false } do
-      it do
-        get "/scim_v2/Groups", {}, headers
+    it "filters results" do
+      filter = ERB::Util.url_encode("displayName Eq \"#{group.name}\"")
+      get "/scim_v2/Groups?filter=#{filter}", {}, headers
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Requires authentication",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "401"
-        )
-        expect(last_response).to have_http_status(401)
-      end
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to eq("Resources" => [{ "displayName" => group.name,
+                                                    "externalId" => external_group_id,
+                                                    "id" => group.id.to_s,
+                                                    "members" => [{ "value" => user.id.to_s }],
+                                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                                                "created" => group.created_at.iso8601,
+                                                                "lastModified" => group.updated_at.iso8601,
+                                                                "resourceType" => "Group" },
+                                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }],
+                                  "itemsPerPage" => 100,
+                                  "schemas" => ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
+                                  "startIndex" => 1,
+                                  "totalResults" => 1)
+
+      filter = ERB::Util.url_encode('displayName Eq "NONEXISTENT GROUP NAME"')
+      get "/scim_v2/Groups?filter=#{filter}", {}, headers
+
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to eq("Resources" => [],
+                                  "itemsPerPage" => 100,
+                                  "schemas" => ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
+                                  "startIndex" => 1,
+                                  "totalResults" => 0)
     end
   end
 
   describe "GET /scim_v2/Groups/:id" do
-    context "with the feature flag enabled", with_flag: { scim_api: true } do
-      it "responds with specific group data" do
-        group
-        get "/scim_v2/Groups/#{group.id}", {}, headers
+    it "responds with specific group data" do
+      group
+      get "/scim_v2/Groups/#{group.id}", {}, headers
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [{ "value" => user.id.to_s }],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "excludes specified attributes" do
-        get "/scim_v2/Groups/#{group.id}?excludedAttributes=members", {}, headers
-
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-        expect(response_body["members"]).to be_nil
-      end
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [{ "value" => user.id.to_s }],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
     end
 
-    context "with the feature flag disabled", with_flag: { scim_api: false } do
-      it do
-        get "/scim_v2/Groups/#{group.id}", {}, headers
+    it "excludes specified attributes" do
+      get "/scim_v2/Groups/#{group.id}?excludedAttributes=members", {}, headers
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Requires authentication",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "401"
-        )
-        expect(last_response).to have_http_status(401)
-      end
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+      expect(response_body["members"]).to be_nil
     end
   end
 
   describe "POST /scim_v2/Groups/" do
-    context "with the feature flag enabled", with_flag: { scim_api: true } do
-      let(:group_name) { "Group 123" }
+    let(:group_name) { "Group 123" }
 
-      it "creates a group with members" do
-        user
-        request_body = { "displayName" => group_name,
-                         "externalId" => external_group_id,
-                         "members" => [{ "value" => user.id.to_s,
-                                         "$ref" => "/Users/#{user.id}" }],
-                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }
-        expect do
-          post "/scim_v2/Groups/", request_body.to_json, headers
-        end.to change(Group, :count).by(1)
+    it "creates a group with members" do
+      user
+      request_body = { "displayName" => group_name,
+                       "externalId" => external_group_id,
+                       "members" => [{ "value" => user.id.to_s,
+                                       "$ref" => "/Users/#{user.id}" }],
+                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }
+      expect do
+        post "/scim_v2/Groups/", request_body.to_json, headers
+      end.to change(Group, :count).by(1)
 
-        response_body = JSON.parse(last_response.body)
-        group = Group.find_by(name: group_name)
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [{ "value" => user.id.to_s }],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "creates group without members specified" do
-        user
-        request_body = { "displayName" => "Group 123",
-                         "externalId" => external_group_id,
-                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }
-        expect do
-          post "/scim_v2/Groups/", request_body.to_json, headers
-        end.to change(Group, :count).by(1)
-
-        response_body = JSON.parse(last_response.body)
-        group = Group.find_by(name: group_name)
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
+      response_body = JSON.parse(last_response.body)
+      group = Group.find_by(name: group_name)
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [{ "value" => user.id.to_s }],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
     end
 
-    context "with the feature flag disabled", with_flag: { scim_api: false } do
-      it do
-        post "/scim_v2/Groups/", "", headers
+    it "creates group without members specified" do
+      user
+      request_body = { "displayName" => "Group 123",
+                       "externalId" => external_group_id,
+                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"] }
+      expect do
+        post "/scim_v2/Groups/", request_body.to_json, headers
+      end.to change(Group, :count).by(1)
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Requires authentication",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "401"
-        )
-        expect(last_response).to have_http_status(401)
-      end
+      response_body = JSON.parse(last_response.body)
+      group = Group.find_by(name: group_name)
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
     end
   end
 
   describe "DELETE /scim_v2/Groups/:id" do
-    context "with the feature flag enabled", with_flag: { scim_api: true } do
-      it "deletes specific group" do
-        group
-        delete "/scim_v2/Groups/#{group.id}", "", headers
+    it "deletes specific group" do
+      group
+      delete "/scim_v2/Groups/#{group.id}", "", headers
 
-        expect(last_response.body).to eq("")
-        expect(last_response).to have_http_status(204)
+      expect(last_response.body).to eq("")
+      expect(last_response).to have_http_status(204)
 
-        get "/scim_v2/Groups/#{group.id}", "", headers
+      get "/scim_v2/Groups/#{group.id}", "", headers
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [{ "value" => user.id.to_s }],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+      expect(last_response).to have_http_status(404)
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to eq(
+        "detail" => "Resource \"#{group.id}\" not found",
+        "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
+        "status" => "404"
+      )
 
-        perform_enqueued_jobs
-        assert_performed_jobs 1
+      perform_enqueued_jobs
+      assert_performed_jobs 1
 
-        get "/scim_v2/Groups/#{group.id}", "", headers
+      get "/scim_v2/Groups/#{group.id}", "", headers
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Resource \"#{group.id}\" not found",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "404"
-        )
-      end
-    end
-
-    context "with the feature flag disabled", with_flag: { scim_api: false } do
-      it do
-        delete "/scim_v2/Users/123", "", headers
-
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Requires authentication",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "401"
-        )
-        expect(last_response).to have_http_status(401)
-      end
+      expect(last_response).to have_http_status(404)
+      response_body = JSON.parse(last_response.body)
+      expect(response_body).to eq(
+        "detail" => "Resource \"#{group.id}\" not found",
+        "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
+        "status" => "404"
+      )
     end
   end
 
   describe "PUT /scim_v2/Groups/:id" do
-    context "with the feature flag enabled", with_flag: { scim_api: true } do
-      let(:new_external_group_id) { "new_idp_group_id_123asdqwe12345" }
+    let(:new_external_group_id) { "new_idp_group_id_123asdqwe12345" }
 
-      before do
-        admin
-        group
-      end
-
-      it "updates specific group by replacing it with newly provided data" do
-        request_body = {
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-          "active" => true,
-          "externalId" => new_external_group_id,
-          "displayName" => group.name,
-          "members" => [
-            { "value" => user.id.to_s },
-            { "value" => admin.id.to_s }
-          ]
-        }
-
-        put "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to match("displayName" => group.name,
-                                       "externalId" => new_external_group_id,
-                                       "id" => group.id.to_s,
-                                       "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                   "created" => group.created_at.iso8601,
-                                                   "lastModified" => group.updated_at.iso8601,
-                                                   "resourceType" => "Group" },
-                                       "members" => contain_exactly({ "value" => user.id.to_s }, { "value" => admin.id.to_s }),
-                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "updates members if there is $ref field present for every member(Keycloak plugin adds it for example)" do
-        request_body = {
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-          "externalId" => new_external_group_id,
-          "displayName" => group.name,
-          "members" => [
-            {
-              "value" => user.id.to_s,
-              "$ref" => "/Users/#{user.id}"
-            },
-            {
-              "value" => admin.id.to_s,
-              "$ref" => "/Users/#{admin.id}"
-            }
-          ]
-        }
-
-        put "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to match("displayName" => group.name,
-                                       "externalId" => new_external_group_id,
-                                       "id" => group.id.to_s,
-                                       "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                   "created" => group.created_at.iso8601,
-                                                   "lastModified" => group.updated_at.iso8601,
-                                                   "resourceType" => "Group" },
-                                       "members" => contain_exactly({ "value" => user.id.to_s }, { "value" => admin.id.to_s }),
-                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "updates members if there is no members field(Keycloak plugin sends memberless group request like that)" do
-        request_body = {
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-          "externalId" => new_external_group_id,
-          "displayName" => group.name
-        }
-
-        put "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to match("displayName" => group.name,
-                                       "externalId" => new_external_group_id,
-                                       "id" => group.id.to_s,
-                                       "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                   "created" => group.created_at.iso8601,
-                                                   "lastModified" => group.updated_at.iso8601,
-                                                   "resourceType" => "Group" },
-                                       "members" => [],
-                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
+    before do
+      admin
+      group
     end
 
-    context "with the feature flag disabled", with_flag: { scim_api: false } do
-      it do
-        put "/scim_v2/Groups/123", "", headers
+    it "updates specific group by replacing it with newly provided data" do
+      request_body = {
+        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+        "active" => true,
+        "externalId" => new_external_group_id,
+        "displayName" => group.name,
+        "members" => [
+          { "value" => user.id.to_s },
+          { "value" => admin.id.to_s }
+        ]
+      }
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Requires authentication",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "401"
-        )
-        expect(last_response).to have_http_status(401)
-      end
+      put "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to match("displayName" => group.name,
+                                     "externalId" => new_external_group_id,
+                                     "id" => group.id.to_s,
+                                     "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                                 "created" => group.created_at.iso8601,
+                                                 "lastModified" => group.updated_at.iso8601,
+                                                 "resourceType" => "Group" },
+                                     "members" => contain_exactly({ "value" => user.id.to_s }, { "value" => admin.id.to_s }),
+                                     "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+    end
+
+    it "updates members if there is $ref field present for every member(Keycloak plugin adds it for example)" do
+      request_body = {
+        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+        "externalId" => new_external_group_id,
+        "displayName" => group.name,
+        "members" => [
+          {
+            "value" => user.id.to_s,
+            "$ref" => "/Users/#{user.id}"
+          },
+          {
+            "value" => admin.id.to_s,
+            "$ref" => "/Users/#{admin.id}"
+          }
+        ]
+      }
+
+      put "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to match("displayName" => group.name,
+                                     "externalId" => new_external_group_id,
+                                     "id" => group.id.to_s,
+                                     "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                                 "created" => group.created_at.iso8601,
+                                                 "lastModified" => group.updated_at.iso8601,
+                                                 "resourceType" => "Group" },
+                                     "members" => contain_exactly({ "value" => user.id.to_s }, { "value" => admin.id.to_s }),
+                                     "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+    end
+
+    it "updates members if there is no members field(Keycloak plugin sends memberless group request like that)" do
+      request_body = {
+        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+        "externalId" => new_external_group_id,
+        "displayName" => group.name
+      }
+
+      put "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to match("displayName" => group.name,
+                                     "externalId" => new_external_group_id,
+                                     "id" => group.id.to_s,
+                                     "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                                 "created" => group.created_at.iso8601,
+                                                 "lastModified" => group.updated_at.iso8601,
+                                                 "resourceType" => "Group" },
+                                     "members" => [],
+                                     "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
     end
   end
 
   describe "PATCH /scim_v2/Groups/:id" do
-    context "with the feature flag enabled", with_flag: { scim_api: true } do
-      it "supports external_id replacing" do
-        group
-        new_external_group_id = "new_idp_user_id_123asdqwe12345"
-        request_body = {
-          "schemas" =>
-          ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
-          "Operations" => [{
-            "op" => "replace",
-            "path" => "externalId",
-            "value" => new_external_group_id
-          }]
-        }
-        patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+    it "supports external_id replacing" do
+      group
+      new_external_group_id = "new_idp_user_id_123asdqwe12345"
+      request_body = {
+        "schemas" =>
+        ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        "Operations" => [{
+          "op" => "replace",
+          "path" => "externalId",
+          "value" => new_external_group_id
+        }]
+      }
+      patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
 
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => new_external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [{ "value" => user.id.to_s }],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "supports replacing of members" do
-        group
-        user2
-
-        request_body = {
-          "schemas" =>
-          ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
-          "Operations" => [{
-            "op" => "replace",
-            "path" => "members",
-            "value" => [{
-              "value" => user2.id.to_s,
-              "$ref" => "/Users/#{user2.id}"
-            }]
-          }]
-        }
-        patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [{ "value" => user2.id.to_s }],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "supports adding of a member" do
-        group
-        user2
-
-        request_body = {
-          "schemas" =>
-          ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
-          "Operations" => [{
-            "op" => "add",
-            "path" => "members",
-            "value" => [{ "value" => user2.id.to_s }]
-          }]
-        }
-        patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [{ "value" => user1.id.to_s },
-                                                  { "value" => user2.id.to_s }],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "supports removal of a member" do
-        group
-
-        request_body = {
-          "schemas" =>
-          ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
-          "Operations" => [{
-            "op" => "remove",
-            "path" => "members",
-            "value" => [{ "value" => user1.id.to_s }]
-          }]
-        }
-        patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "members" => [],
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
-
-      it "supports removal of a member with exclusion of members list from the response" do
-        group
-
-        request_body = {
-          "schemas" =>
-          ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
-          "Operations" => [{
-            "op" => "remove",
-            "path" => "members",
-            "value" => [{ "value" => user1.id.to_s }]
-          }]
-        }
-        patch "/scim_v2/Groups/#{group.id}?excludedAttributes=members", request_body.to_json, headers
-
-        response_body = JSON.parse(last_response.body)
-        group.reload
-        expect(response_body).to eq("displayName" => group.name,
-                                    "externalId" => external_group_id,
-                                    "id" => group.id.to_s,
-                                    "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
-                                                "created" => group.created_at.iso8601,
-                                                "lastModified" => group.updated_at.iso8601,
-                                                "resourceType" => "Group" },
-                                    "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
-      end
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => new_external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [{ "value" => user.id.to_s }],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
     end
 
-    context "with the feature flag disabled", with_flag: { scim_api: false } do
-      it do
-        patch "/scim_v2/Groups/123", "", headers
+    it "supports replacing of members" do
+      group
+      user2
 
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          "detail" => "Requires authentication",
-          "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-          "status" => "401"
-        )
-      end
+      request_body = {
+        "schemas" =>
+        ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        "Operations" => [{
+          "op" => "replace",
+          "path" => "members",
+          "value" => [{
+            "value" => user2.id.to_s,
+            "$ref" => "/Users/#{user2.id}"
+          }]
+        }]
+      }
+      patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [{ "value" => user2.id.to_s }],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+    end
+
+    it "supports adding of a member" do
+      group
+      user2
+
+      request_body = {
+        "schemas" =>
+        ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        "Operations" => [{
+          "op" => "add",
+          "path" => "members",
+          "value" => [{ "value" => user2.id.to_s }]
+        }]
+      }
+      patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [{ "value" => user1.id.to_s },
+                                                { "value" => user2.id.to_s }],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+    end
+
+    it "supports removal of a member" do
+      group
+
+      request_body = {
+        "schemas" =>
+        ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        "Operations" => [{
+          "op" => "remove",
+          "path" => "members",
+          "value" => [{ "value" => user1.id.to_s }]
+        }]
+      }
+      patch "/scim_v2/Groups/#{group.id}", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "members" => [],
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
+    end
+
+    it "supports removal of a member with exclusion of members list from the response" do
+      group
+
+      request_body = {
+        "schemas" =>
+        ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        "Operations" => [{
+          "op" => "remove",
+          "path" => "members",
+          "value" => [{ "value" => user1.id.to_s }]
+        }]
+      }
+      patch "/scim_v2/Groups/#{group.id}?excludedAttributes=members", request_body.to_json, headers
+
+      response_body = JSON.parse(last_response.body)
+      group.reload
+      expect(response_body).to eq("displayName" => group.name,
+                                  "externalId" => external_group_id,
+                                  "id" => group.id.to_s,
+                                  "meta" => { "location" => "http://test.host/scim_v2/Groups/#{group.id}",
+                                              "created" => group.created_at.iso8601,
+                                              "lastModified" => group.updated_at.iso8601,
+                                              "resourceType" => "Group" },
+                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"])
     end
   end
 end

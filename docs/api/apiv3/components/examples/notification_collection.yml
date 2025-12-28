@@ -8,11 +8,11 @@ value:
   pageSize: 20
   _embedded:
     elements:
-      - _hint: Notification resource shortened for brevity
+      - _abbreviated: Notification resource shortened for brevity
         id: 1
         readIAN: false
         reason: mentioned
-      - _hint: Notification resource shortened for brevity
+      - _abbreviated: Notification resource shortened for brevity
         id: 2
         readIAN: false
         reason: dateAlert

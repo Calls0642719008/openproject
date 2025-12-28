@@ -54,6 +54,56 @@ This is an example of new project attribute with a format *Text*.
 - **Admin-only**: If you enable this, the project attribute will only be visible to administrators. All other users will not see it, even if it is activated in a project.
 - **Searchable**: Checking this makes this project attribute (and its value) available as a filter in project lists.
 
+## Project attribute formats
+
+There are multiple format options for project attributes in OpenProject. You can select one of the following formats:
+
+- **Boolean** - creates a project attribute, that is either true or false. It is represented by a checkbox that can be checked or unchecked.
+- **Calculated value** (Enterprise add-on) - creates a project attribute that enables automatic computations based on formulas using numeric project attributes, for example from **Weighted item lists**.
+- **Date** - creates a project attribute,, which allows selecting dates from a date picker.
+- **Float** - creates a project attribute for rational numbers.
+- **Hierarchy (Enterprise add-on)** -  creates a project attribute, which allows selecting one or multiple items from a hierarchical list structure. The structure can be created in the *Items* tab of the project attribute.
+- **Integer** - creates a project attribute for integers.
+- **Link (URL)** - creates a project attribute for URLs.
+- **List** - creates a project attribute with flat list options. 
+- **Text** - creates a project attribute in text format with the specified length restrictions.
+- **Long text** - creates a project attribute for cases where longer text needs to entered.
+- **User** - creates a project attribute, which allows selecting users that are allowed to access the entity containing the project attribute.
+- **Version** - creates a project attribute, which allows selecting one or multiple versions. Versions are created on the project level in *Backlogs* module.
+- **Weighted item list (Enterprise add-on)** - creates a project attribute similar to the *Hierarchy* type, but with underlying numerical values used for project evaluation (e.g., **calculated values project attributes**. Please keep in mind that **weighted item lists** custom fields can't be used as multi-select.  
+
+### Hierarchy project attribute (Enterprise add-on)
+
+[feature: custom_field_hierarchies ]
+
+Project attributes of the **Hierarchy** type function in the same way as work package custom fields of the **Hierarchy** type. For detailed information, please refer to [Work package custom fields documentation](../../custom-fields/#hierarchy-custom-field-enterprise-add-on).
+
+### Weighted item list project attribute (Enterprise add-on)
+
+[feature: weighted_item_lists ]
+
+Weighted item list project attributes function similarly to the **Hierarchy** type. They let you define a structured list of items arranged in a hierarchy for users to choose from.
+
+To set up a project attribute of the **Weighted item list** type, follow the same procedure as when adding a standard project attribute and select the Weighted item list option.
+
+Adding and modifying items within a weighted item list works in the same way as for a hierarchy project attribute.
+
+In contrast to Hierarchy, items in a weighted item list do not include a Short value but instead require a Weight.
+
+This numeric value is required and can be used in calculations — for example, within a project attribute of type Calculated value
+
+### Calculated value project attribute (Enterprise add-on)
+
+[feature: calculated_values ]
+
+**Calculated values** enable automatic computations based on formulas using numeric project attributes, including scores from Weighted item lists or even other calculated values. The computed result is displayed directly on the project overview and in the project list. It automatically updates whenever one of its source attributes (e.g., Benefit or Effort in the example below) is changed. This allows teams to calculate project scores and prioritise consistently across the portfolio.
+
+To set up a project attribute of the **Calculated value** type, follow the same procedure as when adding a standard project attribute and select the *Calculated value* option. Define the name, section it will appear in and the calculation formula. 
+
+In the example below, a project attribute called **Initiative score (calculated)** is determined by this formula: (Strategic fit * 0.4) + ( User benefit* 0.4) - (Effort * 0.2).
+
+![An example of a project attribute of type "Calculated value" in OpenProject administration](open_project_system_guide_project_attributes_calculated_value.png)
+
 ## Modify project attributes
 
 You can edit existing attributes under **Administration settings** → **Projects** → **Project attributes**.

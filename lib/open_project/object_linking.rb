@@ -45,7 +45,7 @@ module OpenProject
     # Will attach a user hover card to the link.
     def link_to_user(user, options = {}) # rubocop:disable Metrics/AbcSize
       return h(user.to_s) unless user.is_a?(User)
-      return h(user.name) if user.locked? && !User.current.admin?
+      return h(user.name) if (user.locked? || user.deleted?) && !User.current.admin?
 
       only_path = options.delete(:only_path) { true }
       name = options.delete(:name) { user.name }

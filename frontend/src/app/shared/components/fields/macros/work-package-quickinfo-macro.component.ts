@@ -32,7 +32,7 @@ import {
   Component,
   ElementRef,
   HostBinding,
-  Injector,
+  Injector, OnInit,
 } from '@angular/core';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { Observable } from 'rxjs';
@@ -58,7 +58,7 @@ import { PathHelperService } from 'core-app/core/path-helper/path-helper.service
   ],
   standalone: false,
 })
-export class WorkPackageQuickinfoMacroComponent {
+export class WorkPackageQuickinfoMacroComponent implements OnInit {
   // Whether the value could not be loaded
   error:string|null = null;
 

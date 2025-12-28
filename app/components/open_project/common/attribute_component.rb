@@ -42,7 +42,7 @@ module OpenProject
       PARAGRAPH_CSS_CLASS = "op-uc-p"
 
       def initialize(id, name, description, lines: 1, background_reference_id: "content", formatted: false, **args)
-        super
+        super()
         @id = id
         @name = name
         @description = description

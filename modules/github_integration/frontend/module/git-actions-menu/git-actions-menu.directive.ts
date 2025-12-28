@@ -45,7 +45,7 @@ export class GitActionsMenuDirective extends OpContextMenuTrigger {
     super(elementRef, opContextMenu);
   }
 
-  protected open(evt:JQuery.TriggeredEvent) {
+  protected open(evt:Event) {
     this.opContextMenu.show(this, evt, GitActionsMenuComponent);
   }
 

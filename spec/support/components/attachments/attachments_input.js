@@ -103,43 +103,44 @@ function dropOnTarget(dataTransfer) {
   });
 }
 
-let input = jQuery('<input>')
-    .attr('id', name)
-    .attr('name', name)
-    .attr('type', 'file')
-    .attr('style', 'position:fixed;left:0;bottom:0;z-index:10000')
-    .appendTo(document.body)
-    .on('change', function(event) {
-      input.remove();
-      event.stopPropagation();
+let input = document.createElement('input');
+input.id = name;
+input.name = name;
+input.type = 'file';
+input.style.cssText = 'position:fixed;left:0;bottom:0;z-index:10000';
+document.body.appendChild(input);
 
-      let dataTransfer = {
-        constructor   : DataTransfer,
-        effectAllowed : 'all',
-        dropEffect    : 'none',
-        types         : [ 'Files' ],
-        files         : input[0].files,
-        setData       : function setData(){},
-        getData       : function getData(){},
-        clearData     : function clearData(){},
-        setDragImage  : function setDragImage(){}
-      };
+input.addEventListener('change', function(event) {
+  input.remove();
+  event.stopPropagation();
 
-      // If we have stopovers, do those first and then get the target
-      if (stopovers.length > 0) {
-        stopovers.forEach((stopover) => dropOnStopover(stopover, dataTransfer));
+  let dataTransfer = {
+    constructor   : DataTransfer,
+    effectAllowed : 'all',
+    dropEffect    : 'none',
+    types         : [ 'Files' ],
+    files         : input.files,
+    setData       : function setData(){},
+    getData       : function getData(){},
+    clearData     : function clearData(){},
+    setDragImage  : function setDragImage(){}
+  };
 
-        setTimeout(() => {
-          if (!cancelDrop) {
-            // After we left the stopover DOM elements, the target element should remain visible.
-            // If it's not visible, we raise an error.
-            if (target.offsetParent === null) {
-              throw new Error("Cannot drop the file on an invisible target");
-            };
-            dropOnTarget(dataTransfer);
-          }
-        }, 2000);
-      } else {
+  // If we have stopovers, do those first and then get the target
+  if (stopovers.length > 0) {
+    stopovers.forEach((stopover) => dropOnStopover(stopover, dataTransfer));
+
+    setTimeout(() => {
+      if (!cancelDrop) {
+        // After we left the stopover DOM elements, the target element should remain visible.
+        // If it's not visible, we raise an error.
+        if (target.offsetParent === null) {
+          throw new Error("Cannot drop the file on an invisible target");
+        };
         dropOnTarget(dataTransfer);
       }
-    });
+    }, 2000);
+  } else {
+    dropOnTarget(dataTransfer);
+  }
+});

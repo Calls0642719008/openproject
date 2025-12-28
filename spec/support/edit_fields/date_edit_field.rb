@@ -96,6 +96,7 @@ class DateEditField < EditField
 
   def click_to_open_datepicker
     input_element.click
+    datepicker
   end
 
   def active?

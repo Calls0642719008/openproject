@@ -61,6 +61,7 @@ RSpec.describe IncomingEmails::DispatchService do
   describe ".handlers" do
     it "returns the default handlers" do
       expect(described_class.handlers).to include(
+        IncomingEmails::Handlers::MeetingResponse,
         IncomingEmails::Handlers::MessageReply,
         IncomingEmails::Handlers::WorkPackage
       )
@@ -114,7 +115,11 @@ RSpec.describe IncomingEmails::DispatchService do
 
   describe "#ignore_mail?" do
     it "returns false by default" do
-      allow(service).to receive_messages(mail_from_system?: false, ignored_by_header?: false, ignored_user?: false)
+      allow(service).to receive_messages(
+        mail_from_system?: false,
+        ignored_by_header?: false,
+        ignored_user?: false
+      )
 
       expect(service.send(:ignore_mail?)).to be_falsey
     end

@@ -66,13 +66,11 @@ import { TabComponent } from 'core-app/features/work-packages/components/wp-tabs
   standalone: false,
 })
 export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase implements OnInit {
-  hasState:boolean = !!this.$state.current;
+  hasState = !!this.$state.current;
   /** Reference to the base route e.g., work-packages.partitioned.list or bim.partitioned.split */
   private baseRoute:string = this.$state.current?.data?.baseRoute as string;
 
-  @Input() workPackageId:string;
   @Input() showTabs = true;
-  @Input() activeTab?:string;
 
   @Input() resizerClass = 'work-packages-partitioned-page--content-right';
 
@@ -89,7 +87,7 @@ export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase imp
     readonly backRouting:BackRoutingService,
     readonly wpTabs:WorkPackageTabsService,
   ) {
-    super(injector, $state.params.workPackageId);
+    super(injector);
   }
 
     // enable other parts of the application to trigger an immediate update
@@ -104,16 +102,7 @@ export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase imp
     this.observeWorkPackage();
 
     const wpId = (this.$state.params.workPackageId || this.workPackageId) as string;
-    const focusedWP = this.wpTableFocus.focusedWorkPackage;
-
-    if (!focusedWP) {
-      // Focus on the work package if we're the first route
-      const isFirstRoute = this.firstRoute.name === `${this.baseRoute}.details.overview`;
-      const isSameID = this.firstRoute.params && wpId === this.firstRoute.params.workPackageI;
-      this.wpTableFocus.updateFocus(wpId, (isFirstRoute && isSameID));
-    } else {
-      this.wpTableFocus.updateFocus(wpId, false);
-    }
+    this.wpTableFocus.updateFocus(wpId, false);
 
     if (this.wpTableSelection.isEmpty) {
       this.wpTableSelection.setRowState(wpId, true);
@@ -127,7 +116,7 @@ export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase imp
         const idSame = wpId.toString() === newId.toString();
         if (!idSame && this.$state.includes(`${this.baseRoute}.details`)) {
           this.$state.go(
-            (this.$state.current.name as string),
+            (this.$state.current.name!),
             { workPackageId: newId, focus: false },
           );
         }

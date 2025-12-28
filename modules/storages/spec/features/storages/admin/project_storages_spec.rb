@@ -181,8 +181,11 @@ RSpec.describe "Admin lists project mappings for a storage",
     it "links to the delete page of a storage" do
       page.find_test_selector("storage-delete-button").click
 
-      expect(page).to have_text("DELETE FILE STORAGE")
-      expect(page).to have_current_path(confirm_destroy_admin_settings_storage_path(storage))
+      within_test_selector("op-storages--destroy-confirm-dialog") do
+        expect(page).to have_text("Delete file storage")
+        expect(page).to have_unchecked_field("I understand that this deletion cannot be reversed")
+        expect(page).to have_button("Delete permanently", disabled: true)
+      end
     end
 
     describe "Linking a project to a storage with a manually managed folder" do
@@ -364,8 +367,7 @@ RSpec.describe "Admin lists project mappings for a storage",
         project_storages_index_page.click_menu_item_of("Remove project", project)
 
         page.within("dialog") do
-          expect(page).to have_text("Remove project from #{storage.name}")
-          expect(page).to have_text("this storage has an automatically managed project folder")
+          expect(page).to have_text("Are you sure you want to remove #{storage.name} from this project?")
           click_on "Cancel"
         end
 
@@ -380,7 +382,7 @@ RSpec.describe "Admin lists project mappings for a storage",
         current_page = 3
         visit admin_settings_storage_project_storages_path(storage, page: current_page)
 
-        project = project_storages_index_page.project_in_first_row(column_text_separator: "\t")
+        project = project_storages_index_page.project_in_first_row
         project_storages_index_page.click_menu_item_of("Remove project", project)
 
         # The original DeleteService would try to remove actual files from actual storages,
@@ -395,9 +397,9 @@ RSpec.describe "Admin lists project mappings for a storage",
         page.within("dialog") do
           expect(page).to have_button("Remove", disabled: true)
           Retryable.repeat_until_success do
-            check "Please, confirm you understand and want to remove this file storage from this project", allow_label_click: true
+            check "I understand that this removal cannot be reversed", allow_label_click: true
             expect(page).to have_button("Remove", disabled: false) # ensure button is clickable
-            click_on "Remove"
+            click_on "Remove permanently"
           end
         end
 

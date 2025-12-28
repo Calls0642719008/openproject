@@ -53,6 +53,8 @@ class Tables::GoodJobs < Tables::Base
       t.text :job_class
       t.integer :error_event, limit: 2
       t.text :labels, array: true
+      t.uuid :locked_by_id
+      t.datetime :locked_at
 
       t.index :scheduled_at,
               where: "(finished_at IS NULL)",
@@ -89,6 +91,13 @@ class Tables::GoodJobs < Tables::Base
               order: { priority: "ASC NULLS LAST", created_at: :asc },
               where: "finished_at IS NULL",
               name: :index_good_job_jobs_for_candidate_lookup
+      t.index %i[priority scheduled_at],
+              order: { priority: "ASC NULLS LAST", scheduled_at: :asc },
+              where: "finished_at IS NULL AND locked_by_id IS NULL",
+              name: :index_good_jobs_on_priority_scheduled_at_unfinished_unlocked
+      t.index :locked_by_id,
+              where: "locked_by_id IS NOT NULL",
+              name: :index_good_jobs_on_locked_by_id
     end
   end
 end

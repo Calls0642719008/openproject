@@ -31,6 +31,7 @@
 module Admin::Settings
   class ProjectCustomFieldsController < ::Admin::SettingsController
     include CustomFields::SharedActions
+    include CustomFields::AttributeHelpTextActions
     include OpTurbo::ComponentStream
     include FlashMessagesOutputSafetyHelper
     include Admin::Settings::ProjectCustomFields::ComponentStreams
@@ -41,12 +42,15 @@ module Admin::Settings
     before_action :set_sections, only: %i[show index edit update move drop]
     before_action :find_custom_field,
                   only: %i(show edit project_mappings new_link link unlink update destroy delete_option reorder_alphabetical
-                           move drop)
+                           move drop role_assignment update_role_assignment role_assignment_preview_dialog
+                           attribute_help_text update_attribute_help_text)
     before_action :prepare_custom_option_position, only: %i(update create)
     before_action :find_custom_option, only: :delete_option
     before_action :project_custom_field_mappings_query, only: %i[project_mappings unlink]
     before_action :find_custom_field_projects_to_link, only: :link
     before_action :find_unlink_project_custom_field_mapping, only: :unlink
+    before_action :prepare_role_assignment_form, only: %i[role_assignment update_role_assignment]
+    before_action :find_or_initialize_attribute_help_text, only: %i[attribute_help_text update_attribute_help_text]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def index
@@ -71,6 +75,29 @@ module Admin::Settings
     def edit; end
 
     def project_mappings; end
+
+    def role_assignment; end
+
+    def role_assignment_preview_dialog
+      role = params[:role_id].to_i == 0 ? nil : ProjectRole.find_by(id: params[:role_id])
+      respond_with_dialog(Admin::CustomFields::RoleAssignmentPreviewDialogComponent.new(custom_field: @custom_field, role: role))
+    end
+
+    def update_role_assignment
+      call = CustomFields::LinkWithRoleService
+        .new(user: current_user, model: @custom_field)
+        .call(role_assignment_params)
+
+      call.on_success do
+        flash[:notice] = t(:notice_successful_update)
+        redirect_to role_assignment_admin_settings_project_custom_field_path(@custom_field)
+      end
+
+      call.on_failure do
+        flash[:error] = call.message || I18n.t(:notice_internal_server_error)
+        render :role_assignment
+      end
+    end
 
     def new_link
       @project_mapping = ProjectCustomFieldProjectMapping.new(project_custom_field: @custom_field)
@@ -114,43 +141,65 @@ module Admin::Settings
     end
 
     def move
-      call = CustomFields::UpdateService.new(user: current_user, model: @custom_field).call(
+      result = CustomFields::UpdateService.new(user: current_user, model: @custom_field).call(
         move_to: params[:move_to]&.to_sym
       )
 
-      if call.success?
+      if result.success?
         update_sections_via_turbo_stream(project_custom_field_sections: @project_custom_field_sections)
       else
-        # TODO: handle error
+        render_error_flash_message_via_turbo_stream(
+          message: join_flash_messages(result.errors)
+        )
       end
 
       respond_with_turbo_streams
     end
 
     def drop
-      call = ::ProjectCustomFields::DropService.new(user: current_user, project_custom_field: @custom_field).call(
+      result = ::ProjectCustomFields::DropService.new(user: current_user, project_custom_field: @custom_field).call(
         target_id: params[:target_id],
         position: params[:position]
       )
 
-      if call.success?
-        drop_success_streams(call)
+      if result.success?
+        drop_success_streams(result)
       else
-        # TODO: handle error
+        render_error_flash_message_via_turbo_stream(
+          message: join_flash_messages(result.errors)
+        )
       end
 
       respond_with_turbo_streams
     end
 
     def destroy
-      @custom_field.destroy
+      result = CustomFields::DeleteService.new(user: current_user, model: @custom_field).call
 
-      update_section_via_turbo_stream(project_custom_field_section: @custom_field.project_custom_field_section.reload)
+      if result.success?
+        update_section_via_turbo_stream(project_custom_field_section: @custom_field.project_custom_field_section.reload)
+      else
+        render_error_flash_message_via_turbo_stream(
+          message: join_flash_messages(result.errors)
+        )
+      end
 
       respond_with_turbo_streams
     end
 
+    def attribute_help_text
+      render_attribute_help_text_form
+    end
+
+    def update_attribute_help_text
+      update_help_text
+    end
+
     private
+
+    def prepare_role_assignment_form
+      @custom_field_usages = @custom_field.custom_values.where.not(value: nil)
+    end
 
     def render_project_list(url_for_action: action_name)
       update_via_turbo_stream(
@@ -223,6 +272,18 @@ module Admin::Settings
 
     def include_sub_projects?
       ActiveRecord::Type::Boolean.new.cast(params.to_unsafe_h[:project_custom_field_project_mapping][:include_sub_projects])
+    end
+
+    def role_assignment_params
+      params.expect(custom_field: [:role_id])
+    end
+
+    def show_path
+      attribute_help_text_admin_settings_project_custom_field_path(@custom_field)
+    end
+
+    def render_attribute_help_text_form(status: :ok)
+      render "custom_fields/attribute_help_texts/show_project", status:
     end
   end
 end

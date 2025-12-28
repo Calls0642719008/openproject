@@ -38,7 +38,6 @@ export default class PreviewController extends DialogPreviewController {
     this.debouncedPreview = debounce((event:Event) => {
       let field:HTMLInputElement;
       if (event.type === 'blur') {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         field = (event as FocusEvent).relatedTarget as HTMLInputElement;
       } else {
         field = event.target as HTMLInputElement;

@@ -103,7 +103,7 @@ export class WorkPackageViewCollapsedGroupsService extends WorkPackageViewBaseSe
   }
 
   setAllGroupsCollapseStateTo(collapsedState:boolean):void {
-    const groupUpdatedState = this.currentGroups.reduce((updatedState:{ [key:string]:boolean }, group) => ({
+    const groupUpdatedState = this.currentGroups.reduce((updatedState:Record<string, boolean>, group) => ({
       ...updatedState,
       [group.identifier]: collapsedState,
     }), {});

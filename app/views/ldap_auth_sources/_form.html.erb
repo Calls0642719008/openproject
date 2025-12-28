@@ -38,7 +38,14 @@ See COPYRIGHT and LICENSE files for more details.
   <div class="op-toast -info">
     <a title="close" class="op-toast--close icon-context icon-close"></a>
     <div class="op-toast--content">
-      <%= t("ldap_auth_sources.technical_warning_html") %>
+      <%=
+        link_translate(
+          "ldap_auth_sources.technical_warning",
+          links: {
+            docs_url: %i[sysadmin_docs ldap]
+          }
+        )
+      %>
     </div>
   </div>
 <% end %>
@@ -73,7 +80,7 @@ See COPYRIGHT and LICENSE files for more details.
   <legend class="form--fieldset-legend"><%= t("ldap_auth_sources.connection_encryption") %></legend>
   <p>
     <%= t "ldap_auth_sources.tls_mode.section_more_info_link_html",
-          link: OpenProject::Static::Links[:ldap_encryption_documentation][:href] %>
+          link: OpenProject::Static::Links.url_for(:ldap_encryption_documentation) %>
   </p>
   <div class="form--field">
     <%= f.radio_button :tls_mode,

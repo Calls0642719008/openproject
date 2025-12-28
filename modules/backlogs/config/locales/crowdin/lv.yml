@@ -79,7 +79,7 @@ lv:
       button_update_backlogs: "Update backlogs module"
     x_more: "%{count} vairāk..."
   backlogs_active: "Aktīvs"
-  backlogs_any: "visi"
+  backlogs_any: "jebkurš"
   backlogs_inactive: "Projektā nav uzrādāmu darbību"
   backlogs_points_burn_direction: "Points burn up/down"
   backlogs_product_backlog: "Produkta darbu krātuve"

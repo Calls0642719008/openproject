@@ -32,6 +32,7 @@ import { ApplicationController } from 'stimulus-use';
 import { renderStreamMessage } from '@hotwired/turbo';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TurboHelpers } from 'core-turbo/helpers';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 
 export default class AsyncJobDialogController extends ApplicationController {
     static values = {
@@ -39,8 +40,12 @@ export default class AsyncJobDialogController extends ApplicationController {
     };
 
     declare closeDialogIdValue:string;
+    protected pathHelper:PathHelperService;
 
-    connect() {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    async connect(){
+        const context = await window.OpenProject.getPluginContext();
+        this.pathHelper = context.services.pathHelperService;
         this.element.addEventListener('click', (e) => {
             e.preventDefault();
             TurboHelpers.showProgressBar();
@@ -87,7 +92,7 @@ export default class AsyncJobDialogController extends ApplicationController {
     }
 
     async showJobModal(job_id:string) {
-        const response = await fetch(`/job_statuses/${job_id}/dialog`, {
+        const response = await fetch(this.pathHelper.jobStatusModalPath(job_id), {
             method: 'GET',
             headers: { Accept: 'text/vnd.turbo-stream.html' },
         });

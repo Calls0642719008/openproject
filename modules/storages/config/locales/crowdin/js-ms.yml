@@ -50,7 +50,7 @@ ms:
           Anda masih belum mempunyai akses ke folder projek yang dikendalikan. Sila tunggu sebentar dan cuba lagi.
         cannot_create_folder: Failed to create folder. Avoid using special characters and symbols and make sure the folder does not exist already.
         upload_keep_both: "Simpan kedua-duanya"
-        upload_replace: "Gantikan"
+        upload_replace: "Ganti"
       file_links:
         empty: >
           Tiada fail yang terpaut pada pakej kerja ini pada masa ini. Mula pautkan fail dengan tindakan di bawah atau dari %{storageType}.

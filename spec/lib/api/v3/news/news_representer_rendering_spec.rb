@@ -35,36 +35,45 @@ RSpec.describe API::V3::News::NewsRepresenter, "rendering" do
 
   let(:news) do
     build_stubbed(:news,
-                  project:,
-                  author: user)
+                  project: workspace,
+                  author: current_user)
   end
-  let(:project) { build_stubbed(:project) }
-  let(:user) { build_stubbed(:user) }
+  let(:workspace) { build_stubbed(:project) }
+  let(:current_user) { build_stubbed(:user) }
+  let(:embed_links) { true }
   let(:representer) do
-    described_class.create(news, current_user: user, embed_links: true)
+    described_class.create(news, current_user:, embed_links:)
   end
   let(:permissions) { all_permissions }
   let(:all_permissions) { %i() }
 
   subject { representer.to_json }
 
+  before do
+    allow(workspace)
+      .to receive(:visible?)
+            .and_return(true)
+  end
+
   describe "_links" do
-    it_behaves_like "has a titled link" do
-      let(:link) { "self" }
-      let(:href) { api_v3_paths.news news.id }
-      let(:title) { news.title }
+    describe "self" do
+      it_behaves_like "has a titled link" do
+        let(:link) { "self" }
+        let(:href) { api_v3_paths.news news.id }
+        let(:title) { news.title }
+      end
     end
 
-    it_behaves_like "has a titled link" do
-      let(:link) { :project }
-      let(:title) { project.name }
-      let(:href) { api_v3_paths.project project.id }
+    describe "project" do
+      it_behaves_like "has workspace linked"
     end
 
-    it_behaves_like "has a titled link" do
-      let(:link) { :author }
-      let(:title) { user.name }
-      let(:href) { api_v3_paths.user user.id }
+    describe "author" do
+      it_behaves_like "has a titled link" do
+        let(:link) { :author }
+        let(:title) { current_user.name }
+        let(:href) { api_v3_paths.user current_user.id }
+      end
     end
   end
 
@@ -103,16 +112,16 @@ RSpec.describe API::V3::News::NewsRepresenter, "rendering" do
   end
 
   describe "_embedded" do
-    it "has project embedded" do
-      expect(subject)
-        .to be_json_eql(project.name.to_json)
-        .at_path("_embedded/project/name")
+    describe "project" do
+      it_behaves_like "has workspace embedded"
     end
 
-    it "has author embedded" do
-      expect(subject)
-        .to be_json_eql(user.name.to_json)
-        .at_path("_embedded/author/name")
+    describe "author" do
+      let(:embedded_path) { "_embedded/author" }
+      let(:embedded_resource) { current_user }
+      let(:embedded_resource_type) { "User" }
+
+      it_behaves_like "has the resource embedded"
     end
   end
 end

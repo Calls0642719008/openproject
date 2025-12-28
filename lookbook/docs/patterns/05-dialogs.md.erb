@@ -118,11 +118,11 @@ you have to make sure that the data-turbo attribute is also set.
 
     d.with_footer do
       render(Primer::Beta::Button.new(
+        scheme: :primary,
         tag: :button,
         type: :submit,
         form: "my-dialog-form"
         data: { turbo: true }
-        variant: :primary,
       ) do |button|
         button.text = t(:button_save)
       end)

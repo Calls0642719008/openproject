@@ -37,6 +37,7 @@ module Projects::Exports::PDFExport::Styles
     include Exports::PDF::Components::CoverStyles
     include Exports::PDF::Components::WpTableStyles
     include WorkPackage::PDFExport::Common::AttributesTableStyles
+    include Project::PDFExport::Common::ProjectAttributesStyles
 
     def project_title
       resolve_font(@styles.dig(:project, :title))
@@ -83,40 +84,6 @@ module Projects::Exports::PDFExport::Styles
     def toc_item_margins(level)
       resolve_margin(@styles.dig(:toc, :item)).merge(
         resolve_margin(@styles.dig(:toc, :"item_level_#{level}"))
-      )
-    end
-
-    def project_markdown_label
-      resolve_font(@styles.dig(:project, :markdown_label))
-    end
-
-    def project_markdown_label_margins
-      resolve_margin(@styles.dig(:project, :markdown_label))
-    end
-
-    def project_markdown_margins
-      resolve_margin(@styles.dig(:project, :markdown_margins))
-    end
-
-    def project_markdown_styling_yml
-      resolve_markdown_styling(@styles.dig(:project, :markdown) || {})
-    end
-
-    def project_attributes_table_margins
-      resolve_margin(@styles.dig(:project, :attributes_table))
-    end
-
-    def project_attributes_table_cell
-      resolve_table_cell(@styles.dig(:project, :attributes_table, :cell))
-    end
-
-    def project_attributes_table_label
-      resolve_font(@styles.dig(:project, :attributes_table, :cell_label))
-    end
-
-    def project_attributes_table_label_cell
-      project_attributes_table_cell.merge(
-        resolve_table_cell(@styles.dig(:project, :attributes_table, :cell_label)) || {}
       )
     end
   end

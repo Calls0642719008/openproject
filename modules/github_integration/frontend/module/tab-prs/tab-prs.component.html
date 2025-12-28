@@ -1,11 +1,11 @@
-<ng-container *ngIf="(pullRequests$ | async)?.length === 0">
+@if ((pullRequests$ | async)?.length === 0) {
   <p
     class="op-tab-content--text-box"
     [innerHTML]="emptyText"
   ></p>
-</ng-container>
+}
 
-<op-github-pull-request
-  *ngFor="let pullRequest of (pullRequests$ | async)"
-  [pullRequest]="pullRequest"
-></op-github-pull-request>
+@for (pullRequest of (pullRequests$ | async); track pullRequest) {
+  <op-github-pull-request [pullRequest]="pullRequest"
+   />
+}

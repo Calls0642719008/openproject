@@ -27,6 +27,7 @@
 //++
 
 import {
+  InputState,
   MultiInputState,
   State,
 } from '@openproject/reactivestates';
@@ -150,6 +151,10 @@ export class StateCacheService<T> {
           return mapped;
         }),
       );
+  }
+
+  observeChanges():Observable<[string, T|undefined, InputState<T>]> {
+    return this.multiState.observeChange();
   }
 
   observeSome(ids:string[]):Observable<T[]> {

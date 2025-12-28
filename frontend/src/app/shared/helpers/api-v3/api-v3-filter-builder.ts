@@ -37,11 +37,9 @@ export interface ApiV3FilterValue {
   values:ApiV3FilterValueType[];
 }
 
-export interface ApiV3Filter {
-  [filter:string]:ApiV3FilterValue;
-}
+export type ApiV3Filter = Record<string, ApiV3FilterValue>;
 
-export type ApiV3FilterObject = { [filter:string]:ApiV3FilterValue };
+export type ApiV3FilterObject = Record<string, ApiV3FilterValue>;
 
 export class ApiV3FilterBuilder {
   private filterMap:ApiV3FilterObject = {};
@@ -142,7 +140,7 @@ export class ApiV3FilterBuilder {
     return JSON.stringify(this.filters);
   }
 
-  public toParams(mergeParams:{ [key:string]:string } = {}):string {
+  public toParams(mergeParams:Record<string, string> = {}):string {
     const params = { filters: this.toJson(), ...mergeParams };
     return new URLSearchParams(params).toString();
   }

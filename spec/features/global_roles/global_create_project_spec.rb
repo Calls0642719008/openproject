@@ -87,11 +87,15 @@ RSpec.describe "Global role: Global Create project",
       projects_page.visit!
       projects_page.create_new_workspace
 
+      # Step 1: Select workspace type (blank project)
+      click_on "Continue"
+
+      # Step 2: Fill in project details
       fill_in "Name", with: "New project name"
 
-      click_on "Create"
+      click_on "Complete"
 
-      expect(page).to have_current_path "/projects/new-project-name/"
+      expect(page).to have_current_path "/projects/new-project-name"
     end
   end
 
@@ -101,6 +105,34 @@ RSpec.describe "Global role: Global Create project",
     it "does show the button for project creation" do
       projects_page.visit!
       projects_page.expect_no_project_create_button
+    end
+  end
+
+  describe "portfolio_models feature flag" do
+    context "when enabled", with_flag: { portfolio_models: true } do
+      let(:projects_menu) { Components::Projects::TopMenu.new }
+
+      current_user { admin }
+
+      it "does not show the button for project creation and list" do
+        projects_page.visit!
+        projects_menu.toggle!
+        projects_menu.expect_no_project_create_button
+        projects_menu.expect_no_project_list_button
+      end
+    end
+
+    describe "when disabled", with_flag: { portfolio_models: false } do
+      let(:projects_menu) { Components::Projects::TopMenu.new }
+
+      current_user { admin }
+
+      it "shows the button for project creation and list" do
+        projects_page.visit!
+        projects_menu.toggle!
+        projects_menu.expect_project_create_button
+        projects_menu.expect_project_list_button
+      end
     end
   end
 end

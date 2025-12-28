@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "jsx": "react-jsx",
     "outDir": "./dist/out-tsc",
     "strict": true,
     "strictPropertyInitialization": false,
@@ -21,6 +22,7 @@
       "@ng-select/ng-select/*": ["./node_modules/@ng-select/ng-select/*"],
       "core-app/*": ["./src/app/*"],
       "core-components/*": ["./src/app/components/*"],
+      "core-elements/*": ["./src/elements/*"],
       "core-stimulus/*": ["./src/stimulus/*"],
       "core-turbo/*": ["./src/turbo/*"],
       "core-typings/*": ["./src/typings/*"],

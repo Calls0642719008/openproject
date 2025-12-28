@@ -71,7 +71,7 @@ export class FormattableDisplayField extends DisplayField {
       return null;
     }
     const element = this.resource[this.name];
-    if (!(element && element.html)) {
+    if (!(element?.html)) {
       return '';
     }
 

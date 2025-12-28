@@ -41,7 +41,7 @@ class API::V3::FileLinks::FileLinksDownloadAPI < API::OpenProjectAPI
 
   resources :download do
     get do
-      Storages::Adapters::Input::DownloadLink.build(file_link: @file_link).bind do |input_data|
+      Storages::Adapters::Input::DownloadLink.build(file_id: @file_link.origin_id).bind do |input_data|
         Storages::Adapters::Registry.resolve("#{@file_link.storage}.queries.download_link")
           .call(storage: @file_link.storage, auth_strategy:, input_data:)
           .either(

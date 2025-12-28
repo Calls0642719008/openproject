@@ -3,7 +3,7 @@ sidebar_navigation:
   title: OneDrive integration setup
   priority: 601
 description: Set up One Drive as a file storage in your OpenProject instance
-keywords: OneDrive, SharePoint, file storage, integration
+keywords: OneDrive, file storage, integration
 ---
 
 # OneDrive (Enterprise add-on) integration setup
@@ -36,8 +36,7 @@ OneDrive for Business plan as well. There might be some differences in the setup
 documentation.
 
 > [!NOTE]
-> This guide only covers the integration setup. Please go to
-> our [OneDrive integration user guide](../../../user-guide/file-management/nextcloud-integration/) to learn
+> This guide only covers the integration setup. Please go to our [OneDrive integration user guide](../../../user-guide/file-management/nextcloud-integration/) to learn
 > more about how to work with the OneDrive integration.
 
 ## Minimum requirements
@@ -85,7 +84,7 @@ Continue by filling out the information for the *Azure OAuth* and once again cli
 
 ![OAuth applications details in OneDrive file storages setup in OpenProject](openproject_system_guide_new_onedrive_storage_OAuth.png)
 
-Finally, copy the *Redirect URl* and click the green *Done, complete setup* button.
+Finally, copy the *Redirect URl* and click the green *Finish setup* button.
 
 ![Redirect URI details in OneDrive file storage setup in OpenProject](openproject_system_guide_new_onedrive_storage_redirect_URL.png)
 

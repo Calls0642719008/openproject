@@ -58,7 +58,7 @@ import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
 import { HttpErrorResponse } from '@angular/common/http';
 
 function containsFiles(dataTransfer:DataTransfer):boolean {
-  return dataTransfer.types.indexOf('Files') >= 0;
+  return dataTransfer.types.includes('Files');
 }
 
 @Component({
@@ -158,7 +158,7 @@ export class OpAttachmentsComponent extends UntilDestroyedMixin implements OnIni
     }
 
     if (this.externalUploadButton) {
-      fromEvent(document.querySelector(this.externalUploadButton) as Element, 'click')
+      fromEvent(document.querySelector(this.externalUploadButton)!, 'click')
         .pipe(
           this.untilDestroyed(),
         )
@@ -229,7 +229,6 @@ export class OpAttachmentsComponent extends UntilDestroyedMixin implements OnIni
   public onDropFiles(event:DragEvent):void {
     if (event.dataTransfer === null) return;
 
-    // eslint-disable-next-line no-param-reassign
     event.dataTransfer.dropEffect = 'copy';
 
     this.uploadFiles(Array.from(event.dataTransfer.files));
@@ -239,7 +238,6 @@ export class OpAttachmentsComponent extends UntilDestroyedMixin implements OnIni
 
   public onDragOver(event:DragEvent):void {
     if (event.dataTransfer !== null && containsFiles(event.dataTransfer)) {
-      // eslint-disable-next-line no-param-reassign
       event.dataTransfer.dropEffect = 'copy';
       this.draggingOverDropZone = true;
     }

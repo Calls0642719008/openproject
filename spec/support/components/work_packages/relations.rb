@@ -78,12 +78,12 @@ module Components
 
       def find_row(relatable)
         actual_relatable = find_relatable(relatable)
-        page.find_test_selector("op-relation-row-visible-#{actual_relatable.id}", wait: 5)
+        page.find_test_selector("op-relation-row-visible-#{actual_relatable.id}", wait: 10)
       end
 
       def find_ghost_row(relatable)
         actual_relatable = find_relatable(relatable)
-        page.find_test_selector("op-relation-row-ghost-#{actual_relatable.id}", wait: 5)
+        page.find_test_selector("op-relation-row-ghost-#{actual_relatable.id}", wait: 10)
       end
 
       def find_some_row(text:)
@@ -307,7 +307,7 @@ module Components
         expect(page).to have_test_selector("no-relations-blankslate", text: "This work package does not have any relations yet.")
       end
 
-      def add_parent(query, work_package)
+      def add_parent(work_package)
         # Open the parent edit
         SeleniumHubWaiter.wait
         find(".wp-relation--parent-change").click
@@ -316,9 +316,8 @@ module Components
         SeleniumHubWaiter.wait
         autocomplete = page.find_test_selector("wp-relations-autocomplete")
         select_autocomplete autocomplete,
-                            query:,
-                            results_selector: ".ng-dropdown-panel-items",
-                            select_text: work_package.id
+                            query: work_package.subject,
+                            results_selector: ".ng-dropdown-panel-items"
       end
 
       def expect_parent(work_package)
@@ -418,7 +417,9 @@ module Components
 
       def remove_relation_with_work_package(relatable)
         open_action_menu_with_work_package(relatable) do
-          relatable_delete_button(relatable).click
+          accept_confirm do
+            relatable_delete_button(relatable).click
+          end
         end
 
         expect_no_row(relatable)

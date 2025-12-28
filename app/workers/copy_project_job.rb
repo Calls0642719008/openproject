@@ -35,12 +35,12 @@ class CopyProjectJob < ApplicationJob
   queue_with_priority :above_normal
 
   # Again error handling pushing the branch costs up
-  def perform(target_project_params:, associations_to_copy:, send_mails: false)
+  def perform(target_project_params:, associations_to_copy:, skip_custom_field_validation: false, send_mails: false, **) # rubocop:disable Metrics/AbcSize
     User.current = user
     target_project_params = target_project_params.with_indifferent_access
 
     target_project, errors = with_locale_for(user) do
-      create_project_copy(target_project_params, associations_to_copy, send_mails)
+      create_project_copy(target_project_params, associations_to_copy, skip_custom_field_validation, send_mails)
     end
 
     update_batch(target_project:, errors:, target_project_name: target_project_params[:name])
@@ -63,7 +63,21 @@ class CopyProjectJob < ApplicationJob
 
   protected
 
-  def title = I18n.t(:label_copy_project)
+  def title
+    if params[:copy_from_template]
+      I18n.t("project.template.copying_title")
+    else
+      I18n.t(:label_copy_project)
+    end
+  end
+
+  def params
+    if arguments.is_a?(Array)
+      Hash(arguments.first)
+    else
+      {}
+    end
+  end
 
   private
 
@@ -73,7 +87,8 @@ class CopyProjectJob < ApplicationJob
   end
 
   def successful_status_update(target_project, errors)
-    payload = redirect_payload(url_helpers.project_url(target_project)).merge(hal_links(target_project))
+    payload = redirect_payload(success_redirect_url(target_project))
+      .merge(hal_links(target_project))
 
     if errors.any?
       payload[:errors] = errors
@@ -82,6 +97,14 @@ class CopyProjectJob < ApplicationJob
     upsert_status status: :success,
                   message: I18n.t("copy_project.succeeded", target_project_name: target_project.name),
                   payload:
+  end
+
+  def success_redirect_url(target_project)
+    if target_project.project_creation_wizard_enabled
+      url_helpers.project_creation_wizard_path(target_project)
+    else
+      url_helpers.project_url(target_project)
+    end
   end
 
   def failure_status_update(errors)
@@ -111,21 +134,22 @@ class CopyProjectJob < ApplicationJob
 
   # rubocop:disable Metrics/AbcSize
   # Most of the cost is from handling errors, we need to check what can be moved around / removed
-  def create_project_copy(target_project_params, associations_to_copy, send_mails)
-    errors = []
+  def create_project_copy(target_project_params, associations_to_copy, skip_custom_field_validation, send_mails)
+    service_result = copy_project(
+      target_project_params,
+      associations_to_copy,
+      skip_custom_field_validation,
+      send_mails
+    )
+    target_project = service_result.result
+    errors = service_result.errors.full_messages
 
-    ProjectMailer.with_deliveries(send_mails) do
-      service_result = copy_project(target_project_params, associations_to_copy, send_mails)
-      target_project = service_result.result
-      errors = service_result.errors.full_messages
-
-      # We assume the copying worked "successfully" if the project was saved
-      if target_project&.persisted?
-        return target_project, errors
-      else
-        logger.error("Copying project fails with validation errors: #{errors.join("\n")}")
-        return nil, errors
-      end
+    # We assume the copying worked "successfully" if the project was saved
+    if target_project&.persisted?
+      [target_project, errors]
+    else
+      logger.error("Copying project fails with validation errors: #{errors.join("\n")}")
+      [nil, errors]
     end
   rescue ActiveRecord::RecordNotFound => e
     logger.error("Entity missing: #{e.message} #{e.backtrace.join("\n")}")
@@ -142,8 +166,9 @@ class CopyProjectJob < ApplicationJob
   end
   # rubocop:enable Metrics/AbcSize
 
-  def copy_project(target_project_params, associations_to_copy, send_notifications)
-    copy_service = ::Projects::CopyService.new(source: source_project, user:)
+  def copy_project(target_project_params, associations_to_copy, skip_custom_field_validation, send_notifications)
+    contract_options = { skip_custom_field_validation: }
+    copy_service = ::Projects::CopyService.new(source: source_project, user:, contract_options:)
     result = copy_service.call({ target_project_params:, send_notifications:, only: Array(associations_to_copy) })
 
     enqueue_copy_project_folder_jobs(copy_service.state.copied_project_storages,
@@ -153,14 +178,14 @@ class CopyProjectJob < ApplicationJob
     result
   end
 
-  def enqueue_copy_project_folder_jobs(copied_storages, work_packages_map, only)
+  def enqueue_copy_project_folder_jobs(copied_project_storages, work_packages_map, only)
     return unless only.intersect?(%w[file_links storage_project_folders])
 
-    Array(copied_storages).each do |storage_pair|
+    Array(copied_project_storages).each do |project_storage_pair|
       batch.enqueue do
         Storages::CopyProjectFoldersJob
-          .perform_later(source: storage_pair[:source],
-                         target: storage_pair[:target],
+          .perform_later(source: project_storage_pair[:source],
+                         target: project_storage_pair[:target],
                          work_packages_map: work_packages_map.stringify_keys)
       end
     end

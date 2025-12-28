@@ -786,7 +786,7 @@ RSpec.describe "API v3 Work package resource",
 
         context "multiple read-only attributes" do
           let(:params) do
-            valid_params.merge(createdAt: Date.today.iso8601, updatedAt: Date.today.iso8601)
+            valid_params.merge(createdAt: Time.zone.today.iso8601, updatedAt: Time.zone.today.iso8601)
           end
 
           include_context "patch request"
@@ -863,6 +863,108 @@ RSpec.describe "API v3 Work package resource",
           include_context "patch request"
 
           it_behaves_like "update conflict"
+        end
+      end
+
+      describe "custom fields" do
+        context "when the custom field is required" do
+          let!(:required_custom_field) do
+            create(:work_package_custom_field,
+                   field_format: "string",
+                   name: "Department",
+                   is_required: true,
+                   projects: [project],
+                   types: [work_package.type])
+          end
+
+          context "when no custom field value is provided" do
+            let(:params) { valid_params }
+
+            include_context "patch request"
+
+            it "responds with 200" do
+              expect(response).to have_http_status(:ok)
+            end
+
+            it "keeps the custom field value to be empty" do
+              response
+              expect(work_package.reload.typed_custom_value_for(required_custom_field))
+                .to be_nil
+            end
+          end
+
+          context "when the custom field value is provided but empty" do
+            let(:params) do
+              valid_params.merge("customField#{required_custom_field.id}" => "")
+            end
+
+            include_context "patch request"
+
+            it "returns 422 with custom field validation error" do
+              expect(response)
+                .to have_http_status(422)
+
+              expect(response.body)
+                .to be_json_eql("Department can't be blank.".to_json)
+                .at_path("message")
+            end
+
+            it "does not alter the work package" do
+              expect { response }.not_to change(work_package.reload, :updated_at)
+            end
+          end
+
+          context "when custom field value is being cleared" do
+            let(:params) do
+              valid_params.merge("customField#{required_custom_field.id}" => "")
+            end
+
+            before do
+              # Set an initial value for the custom field
+              work_package.custom_field_values = { required_custom_field.id => "Initial Department" }
+              work_package.save!
+            end
+
+            include_context "patch request"
+
+            it "returns 422 with custom field validation error" do
+              expect(response)
+                .to have_http_status(422)
+
+              expect(response.body)
+                .to be_json_eql("Department can't be blank.".to_json)
+                .at_path("message")
+            end
+
+            it "does not alter the work package" do
+              expect { response }.not_to change(work_package.reload, :updated_at)
+
+              # Custom field value should remain unchanged
+              expect(work_package.reload.typed_custom_value_for(required_custom_field))
+                .to eq("Initial Department")
+            end
+          end
+
+          context "when the custom field value is provided and valid" do
+            let(:params) do
+              valid_params.merge("customField#{required_custom_field.id}" => "Engineering")
+            end
+
+            include_context "patch request"
+
+            it "responds with 200" do
+              expect(response).to have_http_status(:ok)
+            end
+
+            it "updates the custom field value" do
+              response
+              work_package.reload
+              expect(work_package.typed_custom_value_for(required_custom_field))
+                .to eq("Engineering")
+            end
+
+            it_behaves_like "lock version updated"
+          end
         end
       end
 

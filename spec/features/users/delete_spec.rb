@@ -49,14 +49,17 @@ RSpec.describe "user deletion:", :js do
 
     it "can delete their own account", :signout_via_visit do
       Setting.users_deletable_by_self = 1
-      visit delete_my_account_info_path
+      visit my_account_path
+      page.find_test_selector("delete-my-account-button").click
 
-      fill_in "login_verification", with: current_user.login
-      click_on "Delete"
+      check "I understand that this deletion cannot be reversed"
+      click_on "Delete permanently"
 
       dialog.confirm_flow_with user_password
 
-      expect(page).to have_content "Account has been locked and was scheduled for deletion"
+      expect(page).to have_content("Account has been scheduled for deletion. " \
+                                   "Note that this process takes place in the background. " \
+                                   "It might take a few moments until the user is fully deleted.")
       expect(page).to have_current_path "/login"
     end
 
@@ -64,15 +67,13 @@ RSpec.describe "user deletion:", :js do
       Setting.users_deletable_by_self = 0
       visit my_account_path
 
-      within "#main-menu" do
-        expect(page).to have_no_content "Delete account"
-      end
+      expect(page).not_to have_test_selector("delete-my-account-button")
     end
   end
 
   context "user with global add role" do
     let!(:user) { create(:user) }
-    let(:current_user) { create(:user, global_permissions: [:manage_user]) }
+    let(:current_user) { create(:user, global_permissions: %i[manage_user view_all_principals]) }
 
     it "can not delete even if settings allow it" do
       Setting.users_deletable_by_admins = 1
@@ -104,18 +105,21 @@ RSpec.describe "user deletion:", :js do
       click_on "Delete"
 
       SeleniumHubWaiter.wait
-      fill_in "login_verification", with: user.login
-      click_on "Delete"
+      check "I understand that this deletion cannot be reversed"
+      click_on "Delete permanently"
 
       dialog.confirm_flow_with "wrong", should_fail: true
 
-      SeleniumHubWaiter.wait
-      fill_in "login_verification", with: user.login
       click_on "Delete"
+      SeleniumHubWaiter.wait
+      check "I understand that this deletion cannot be reversed"
+      click_on "Delete permanently"
 
       dialog.confirm_flow_with user_password, should_fail: false
 
-      expect(page).to have_content "Account has been locked and was scheduled for deletion"
+      expect(page).to have_content("Account has been scheduled for deletion. " \
+                                   "Note that this process takes place in the background. " \
+                                   "It might take a few moments until the user is fully deleted.")
       expect(page).to have_current_path "/users"
     end
 
@@ -128,12 +132,14 @@ RSpec.describe "user deletion:", :js do
       click_on "Delete"
 
       SeleniumHubWaiter.wait
-      fill_in "login_verification", with: user.login
-      click_on "Delete"
+      check "I understand that this deletion cannot be reversed"
+      click_on "Delete permanently"
 
       dialog.confirm_flow_with user_password, with_keyboard: true, should_fail: false
 
-      expect(page).to have_content "Account has been locked and was scheduled for deletion"
+      expect(page).to have_content("Account has been scheduled for deletion. " \
+                                   "Note that this process takes place in the background. " \
+                                   "It might take a few moments until the user is fully deleted.")
       expect(page).to have_current_path "/users"
     end
 

@@ -62,8 +62,11 @@ module My
                     action: delete_action,
                     access_token_id: api_token.id
                   },
-                  method: :delete,
-                  data: { confirm: t("my_account.access_tokens.simple_revoke_confirmation"), test_selector: "api-token-revoke" },
+                  data: {
+                    turbo_method: :delete,
+                    turbo_confirm: t("my_account.access_tokens.simple_revoke_confirmation"),
+                    test_selector: "api-token-revoke"
+                  },
                   class: "icon icon-delete"
         end
 

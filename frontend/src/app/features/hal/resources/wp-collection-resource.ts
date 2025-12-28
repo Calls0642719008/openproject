@@ -45,11 +45,11 @@ export class WorkPackageCollectionResource extends CollectionResource<WorkPackag
 
   public groups:GroupObject[];
 
-  public totalSums?:{ [key:string]:number };
+  public totalSums?:Record<string, number>;
 
   public sumsSchema?:SchemaResource;
 
-  public representations:Array<HalResource>;
+  public representations:HalResource[];
 }
 
 export interface WorkPackageCollectionResource extends WorkPackageCollectionResourceEmbedded {}
@@ -64,7 +64,7 @@ export interface GroupObject {
   collapsed?:boolean;
   index:number;
   identifier:string;
-  sums:{ [attribute:string]:number|null };
+  sums:Record<string, number|null>;
   href:{ href:string }[];
   _links:{
     valueLink:{ href:string }[];

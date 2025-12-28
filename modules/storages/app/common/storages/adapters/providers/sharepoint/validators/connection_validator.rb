@@ -37,6 +37,10 @@ module Storages
             register_group StorageConfigurationValidator
             register_group AuthenticationValidator,
                            precondition: ->(_, result) { result.group(:base_configuration).non_failure? }
+            register_group AmpfConfigurationValidator,
+                           precondition: ->(storage, result) do
+                             result.group(:base_configuration).non_failure? && storage.automatic_management_enabled?
+                           end
           end
         end
       end

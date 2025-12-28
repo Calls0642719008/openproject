@@ -57,11 +57,11 @@ export interface CallableHalLink extends HalLinkInterface {
 export class HalLink implements HalLinkInterface {
   constructor(public requestMethod:(method:HTTPSupportedMethods, href:string, data:any, headers:any) => Promise<HalResource>,
     public href:string|null = null,
-    public title:string = '',
+    public title = '',
     public method:HTTPSupportedMethods = 'get',
-    public templated:boolean = false,
+    public templated = false,
     public payload?:any,
-    public type:string = 'application/json',
+    public type = 'application/json',
     public identifier?:string) {
   }
 
@@ -86,7 +86,7 @@ export class HalLink implements HalLinkInterface {
    */
   public $fetch(...params:any[]):Promise<HalResource> {
     const [data, headers] = params;
-    return this.requestMethod(this.method, this.href as string, data, headers);
+    return this.requestMethod(this.method, this.href!, data, headers);
   }
 
   /**
@@ -94,7 +94,7 @@ export class HalLink implements HalLinkInterface {
    *
    * @returns {CallableHalLink}
    */
-  public $prepare(templateValues:{ [templateKey:string]:string }) {
+  public $prepare(templateValues:Record<string, string>) {
     if (!this.templated) {
       throw new Error(`The link ${this.href} is not templated.`);
     }

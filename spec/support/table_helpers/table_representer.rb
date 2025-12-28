@@ -63,18 +63,22 @@ module TableHelpers
     end
 
     def get_values(column, table_data)
-      if column.attribute == :schedule
+      case column.attribute
+      when :schedule
         start_dates = table_data.values_for_attribute(:start_date)
         due_dates = table_data.values_for_attribute(:due_date)
         ignore_non_working_days_values = ignore_non_working_days_values(table_data)
         start_dates.zip(due_dates, ignore_non_working_days_values).map do |start_date, due_date, ignore_non_working_days|
           schedule_column_representer.span(start_date, due_date, ignore_non_working_days)
         end
-      elsif column.attribute == :hierarchy
+      when :hierarchy
         table_data
           .values_for_attribute(:subject)
           .zip(get_hierarchy_levels(table_data))
           .map! { |subject, level| column.format("#{'  ' * level}#{subject}") }
+      when :identifier
+        table_data.work_package_identifiers
+          .map! { |identifier| column.format(identifier) }
       else
         table_data
           .values_for_attribute(column.attribute)

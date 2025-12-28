@@ -31,7 +31,7 @@ export class WorkPackageViewHierarchies {
 
   public last:string|null = null;
 
-  public collapsed:{ [workPackageId:string]:boolean } = {};
+  public collapsed:Record<string, boolean> = {};
 
   constructor(visible:boolean) {
     this.isVisible = visible;

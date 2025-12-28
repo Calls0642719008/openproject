@@ -49,7 +49,7 @@ module Storages
           return @result.map { @data.with(id: source.project_folder_id) } if manually_managed_source?(source)
 
           info "Initiating copy of project folder #{source.managed_project_folder_path} to #{target.managed_project_folder_path}"
-          copy_result = initiate_copy(source.storage, source.project_folder_location, target.managed_project_folder_path)
+          copy_result = copy_project_folder(source.storage, source.project_folder_location, target.managed_project_folder_path)
           copy_result.either(
             ->(success) { @result.map { success } },
             ->(failed) { @result.map { failed } }
@@ -74,7 +74,7 @@ module Storages
         end
       end
 
-      def initiate_copy(storage, source_path, destination_path)
+      def copy_project_folder(storage, source_path, destination_path)
         Adapters::Input::CopyTemplateFolder.build(source: source_path, destination: destination_path).bind do |input_data|
           Adapters::Registry
             .resolve("#{storage}.commands.copy_template_folder")

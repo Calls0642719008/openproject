@@ -69,6 +69,17 @@ RSpec.shared_examples_for "roles contract" do
       it "is invalid" do
         expect_valid(false, permissions: %i(dependency_missing))
       end
+
+      context "when the dependency is hidden" do
+        before do
+          dependency_permission = OpenProject::AccessControl.permission(:view_members)
+          allow(dependency_permission).to receive(:hidden?).and_return(true)
+        end
+
+        it "is valid" do
+          expect_valid(true)
+        end
+      end
     end
   end
 

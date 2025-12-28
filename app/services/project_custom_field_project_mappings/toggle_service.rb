@@ -31,23 +31,48 @@
 module ProjectCustomFieldProjectMappings
   class ToggleService < ::BaseServices::Write
     def persist(service_result)
-      if service_result.result.persisted?
-        # destroy the mapping if it exists and catch any errors which would not be caught by active record
-        begin
-          service_result.result.destroy
-        rescue StandardError => e
-          service_result.errors = e.message
-          service_result.success = false
-        end
+      if ActiveModel::Type::Boolean.new.cast(params[:value])
+        create_mapping(service_result)
       else
-        # create the mapping if it does not exist
-        unless service_result.result.save
-          service_result.errors = service_result.result.errors
-          service_result.success = false
-        end
+        destroy_mapping(service_result)
       end
 
       service_result
+    end
+
+    def after_perform(service_result)
+      super.tap do
+        recalculate_values(service_result)
+      end
+    end
+
+    def recalculate_values(service_result)
+      mapping = service_result.result
+      project = mapping.project
+
+      affected_cfs = project.all_available_custom_fields.affected_calculated_fields([mapping.custom_field_id])
+
+      project.calculate_custom_fields(affected_cfs)
+
+      project.save if project.changed_for_autosave?
+    end
+
+    def create_mapping(service_result)
+      return if service_result.result.persisted?
+
+      unless service_result.result.save
+        service_result.errors = service_result.result.errors
+        service_result.success = false
+      end
+    end
+
+    def destroy_mapping(service_result)
+      return unless service_result.result.persisted?
+
+      service_result.result.destroy
+    rescue StandardError => e
+      service_result.errors = e.message
+      service_result.success = false
     end
 
     def instance(params)
@@ -55,6 +80,11 @@ module ProjectCustomFieldProjectMappings
         project_id: params[:project_id],
         custom_field_id: params[:custom_field_id]
       )
+    end
+
+    # no need to set attributes, also required to remove value parameter
+    def set_attributes_params(_params)
+      {}
     end
 
     def default_contract_class

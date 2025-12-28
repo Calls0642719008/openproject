@@ -28,6 +28,41 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
+require "capybara/cuprite"
+
+module FerrumPageExtensions
+  def initialize(...)
+    super
+
+    command("Accessibility.enable")
+  end
+end
+
+module CupriteNodeExtensions
+  def accessible_name
+    accessibility_tree_node.dig("name", "value") || ""
+  end
+
+  def accessible_description
+    accessibility_tree_node.dig("description", "value") || ""
+  end
+
+  def role
+    accessibility_tree_node.dig("role", "value")
+  end
+
+  private
+
+  def accessibility_tree_node
+    @accessibility_tree_node ||= browser.page
+      .command("Accessibility.getPartialAXTree", nodeId: node.node_id, fetchRelatives: true)["nodes"]
+      .first { it["ignored"] == false } || {}
+  end
+end
+
+Ferrum::Page.include FerrumPageExtensions
+Capybara::Cuprite::Node.include CupriteNodeExtensions
+
 #  Modifies combo_box_list_box provided by Capybara Accessible Selectors
 #  to work with our autocompleter (ng-select) implementation: we allow
 # `aria-owns`/`aria-controls` to be specified on ancestor of the

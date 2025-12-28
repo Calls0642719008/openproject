@@ -213,7 +213,7 @@ module WorkPackages
         end
 
         def skip_rendering_details?
-          journal.initial? && journal_sorting == "desc"
+          journal.initial? && journal_sorting.desc?
         end
 
         def render_journal_details(details_container_inner)

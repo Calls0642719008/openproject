@@ -89,6 +89,21 @@ class MeetingMailer < UserMailer
     end
   end
 
+  def ended_series(series, user, actor)
+    @actor = actor
+    @user = user
+    @series = series
+
+    open_project_headers "Project" => @series.project.identifier,
+                         "Meeting-Id" => @series.id
+
+    with_attached_ics(@series, user) do
+      subject = I18n.t("meeting.email.ended.header_series", title: @series.title)
+
+      mail(to: user, subject: "[#{@series.project.name}] #{subject}")
+    end
+  end
+
   def icalendar_notification(meeting, user, _actor, **)
     @meeting = meeting
 

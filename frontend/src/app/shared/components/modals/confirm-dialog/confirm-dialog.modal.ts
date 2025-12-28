@@ -93,9 +93,8 @@ export class ConfirmDialogModalComponent extends OpModalComponent {
     close_popup: this.I18n.t('js.close_popup_title'),
   };
 
-  public icon = {
-    continue: undefined,
-    cancel: undefined,
+  public icon:{continue:'trash'|'unlink'} = {
+    continue: 'trash',
   };
 
   public passedData:string[];

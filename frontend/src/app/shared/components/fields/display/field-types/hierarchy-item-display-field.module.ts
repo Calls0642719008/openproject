@@ -52,7 +52,7 @@ export class HierarchyItemDisplayField extends ResourceDisplayField {
     });
   }
 
-  private branch(item:HalResource):Observable<HTMLDivElement> {
+  private branch(item:HalResource):Observable<HTMLSpanElement> {
     const itemLink = item.$link as HalLink;
 
     return from(itemLink.$fetch())

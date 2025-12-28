@@ -22,16 +22,17 @@ uk:
         storage: Сховище
         storage_url: URL-адреса сховища
       storages/sharepoint_storage:
-        host: Sharepoint Site URL
-        library: Library ID
-        name: Name
-        site: Site ID
+        host: URL-адреса сайту SharePoint
+        library: Ідентифікатор бібліотеки
+        name: Назва
+        site: Ідентифікатор сайту
       storages/storage:
         authentication_method: Метод автентифікації
         creator: Автор
         drive: ID диска
         host: Хост
         name: Назва
+        password: Пароль додатка
         provider_type: Тип постачальника
         tenant: ID каталогу (клієнта)
     errors:
@@ -62,7 +63,7 @@ uk:
               op_application_not_installed: схоже, у вас не встановлено додаток OpenProject integration. Спочатку встановіть його, а потім спробуйте знову.
             password:
               invalid_password: недійсний.
-              unknown_error: не вдалося перевірити. Перевірте підключення до сховища й повторіть спробу.
+              unknown_error: не вдалося перевірити через постачальника файлового сховища. Переконайтеся, що з’єднання працює належним чином.
     models:
       file_link: Файл
       storages/storage: Сховище
@@ -95,12 +96,6 @@ uk:
       manual: Наявна папка має ручне керування
     remove_project:
       deletion_failure_flash: Не вдалося вилучити проєкт зі сховища. %{error}
-      dialog:
-        automatically_managed_appendix: Крім того, якщо це сховище містить папку проєкту з автоматичним керуванням, цю папку й усі її файли буде остаточно видалено.
-        confirmation_text: Підтвердьте, що ви розумієте наслідки й хочете вилучити цей проєкт із файлового сховища
-        heading_text: Вилучити проєкт із %{storage}
-        text: Буде вилучено всі посилання з пакетів робіт цього проєкту на файли й папки, що зберігаються в цьому сховищі. Це незворотна дія.
-        title: Вилучити проєкт зі сховища
       label: Вилучити проєкт
   services:
     attributes:
@@ -118,9 +113,16 @@ uk:
         hide_inactive_folders: 'Етап «Приховайте неактивні папки»:'
         remote_folders: 'Читання контенту папки групи:'
         rename_project_folder: 'Перейменування папки керованого проекту:'
+      sharepoint_sync_service:
+        create_folder: 'Створення керованої папки проєкту:'
+        ensure_root_folder_permissions: 'Установлення дозволів для основної папки:'
+        hide_inactive_folders: 'Етап «Приховайте неактивні папки»:'
+        remote_folders: 'Читання контенту папки групи:'
+        rename_project_folder: 'Перейменування папки керованого проекту:'
     errors:
       messages:
         error: Сталася неочікувана помилка. Щоб дізнатися більше, перегляньте журнали OpenProject або зверніться до адміністратора.
+        forbidden: OpenProject could not access the requested resource. Please check your permissions configuration on the Storage Provider.
         unauthorized: OpenProject не вдалося автентифікуватись у постачальника сховища. Переконайтеся, що ви маєте до нього доступ.
       models:
         copy_project_folders_service:
@@ -158,6 +160,7 @@ uk:
           group_does_not_exist: "Групи «%{group}» не існує. Перевірте конфігурацію свого екземпляра Nextcloud."
           insufficient_privileges: OpenProject не має достатніх привілеїв, щоб додати користувача %{user} в групу «%{group}». Перевірте налаштування своєї групи в Nextcloud.
           not_allowed: Nextcloud блокує запит.
+          not_found: OpenProject не зміг знайти файл на сховищі Nextcloud. Перевірте, будь ласка, чи він не був видалений.
           unauthorized: Не вдалося синхронізувати OpenProject із Nextcloud. Перевірте своє сховище й конфігурацію Nextcloud.
           user_does_not_exist: "%{user} не існує в Nextcloud."
         one_drive_sync_service:
@@ -170,6 +173,23 @@ uk:
             remote_folders:
               request_error: OpenProject не вдалося отримати доступ до вашого диска %{drive_id}. Перевірте правильність конфігурації свого сховища.
             rename_project_folder:
+              conflict: OpenProject не вдалося змінити назву папки «%{current_path}» на «%{project_folder_name}», оскільки папка з такою назвою вже існує.
+              forbidden: OpenProject не має дозволу на перейменування папки %{current_path}.
+              not_found: "%{current_path} не знайдено."
+            set_folders_permissions:
+              permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
+          error: Сталася неочікувана помилка. Переконайтеся, що є доступ до OneDrive, і перевірте журнали працівників OpenProject, щоб дізнатися більше.
+          not_allowed: OpenProject не має дозволу на доступ до вашого диска OneDrive. Перевірте дозволи, установлені в програмі Azure.
+          unauthorized: Не вдалося синхронізувати OpenProject з OneDrive. Перевірте конфігурацію свого сховища й додатку Azure.
+          user_does_not_exist: "%{user} не існує в Nextcloud."
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: '%{folder_name} уже існує в папці %{parent_location}.'
+              not_found: "%{parent_location} не знайдено."
+            hide_inactive_folders:
+              permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
+            rename_project_folder:
               conflict: OpenProject не вдалося змінити назву папки «%{current_path}» на «%{project_folder_name}», оскільки папка з такою назвою вже існує
               forbidden: OpenProject не має дозволу на перейменування папки %{current_path}.
               not_found: "%{current_path} не знайдено."
@@ -177,14 +197,13 @@ uk:
               permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
           error: Сталася неочікувана помилка. Переконайтеся, що є доступ до OneDrive, і перевірте журнали працівників OpenProject, щоб дізнатися більше.
           not_allowed: OpenProject не має дозволу на доступ до вашого диска OneDrive. Перевірте дозволи, установлені в програмі Azure.
+          not_found: OpenProject не вдалось отримати доступ до вашої бібліотеки «%{drive_name}». Перевірте бібліотеки документів свого сайту SharePoint.
           unauthorized: Не вдалося синхронізувати OpenProject із OneDrive. Перевірте конфігурацію свого сховища й додатку Azure.
           user_does_not_exist: "%{user} не існує в Nextcloud."
         upload_link_service:
           not_found: Теку призначення %{folder} не вдалося знайти на %{storage_name}.
   storages:
     buttons:
-      complete_without_setup: Завершити без налаштування
-      done_complete_setup: Готово – завершити налаштування
       done_continue: Виконано, продовжити 
       open_storage: Відкрити файлове сховище
       replace_oauth_application: Замінити OpenProject OAuth
@@ -195,22 +214,20 @@ uk:
       oauth_client_incomplete:
         nextcloud: Надайте OpenProject доступ до даних Nextcloud із використанням OAuth.
         one_drive: Надайте OpenProject доступ до даних Azure із використанням OAuth для підключення OneDrive.
-        sharepoint: Allow OpenProject to access SharePoint data using OAuth.
+        sharepoint: Надайте OpenProject доступ до даних SharePoint із використанням OAuth.
       redirect_uri_incomplete:
         one_drive: Завершіть налаштування за допомогою правильного URI переспрямування.
-        sharepoint: Complete the setup with the correct URI redirection.
+        sharepoint: Завершіть налаштування за допомогою правильного URI переспрямування.
     confirm_replace_oauth_application: Ця дія призведе до скидання поточних облікових даних OAuth. Коли ви підтвердите дію, вам потрібно буде повторно ввести облікові дані в системі постачальника сховища. У такому разі всім віддаленим користувачам знадобиться знову пройти автентифікацію в OpenProject. Продовжити?
     confirm_replace_oauth_client: Ця дія призведе до скидання поточних облікових даних OAuth. Коли ви підтвердите дію, вам потрібно буде ввести нові облікові дані в системі постачальника сховища. У такому разі всім користувачам знадобиться знову пройти автентифікацію в %{provider_type}. Продовжити?
     delete_warning:
-      input_delete_confirmation: Введіть ім’я файлового сховища %{file_storage}, щоб підтвердити видалення.
-      irreversible_notice: Видалення файлового сховища не можна скасувати.
-      project_storage: 'Справді видалити %{file_storage} з цього проєкту? Щоб підтвердити цю дію, введіть ім’я сховище в поле нижче, щоб:'
-      project_storage_delete_result_1: Вилучіть усі посилання на файли й папки в цьому сховизі з пакетів робіт поточного проєкту.
-      project_storage_delete_result_2: Якщо це сховище містить папку проєкту з автоматичним керуванням, цю папку та всі її файли буде остаточно видалено.
-      storage: 'Справді видалити %{file_storage}? Щоб підтвердити цю дію, введіть ім’я сховища в поле нижче, щоб:'
-      storage_delete_result_1: вилучити всі налаштування сховища для всіх проєктів, де воно використовується;
-      storage_delete_result_2: вилучити всі посилання з пакетів робіт з усіх проєктів на файли й папки в цьому сховищі.
-      storage_delete_result_3: Якщо це сховище містить папки проєкту з автоматичним керуванням, цю папку й усі її файли буде остаточно видалено.
+      project_storage: Are you sure you want to remove %{file_storage} from this project?
+      project_storage_delete_result_1: All links to corresponding files and folders will be removed
+      project_storage_delete_result_2: The automatically-managed project folder and all files in it will be deleted
+      storage: Are you sure you want to delete %{file_storage} as an external file storage?
+      storage_delete_result_1: The storage will be removed from all projects currently using it
+      storage_delete_result_2: All links to corresponding files and folders will be removed
+      storage_delete_result_3: The automatically-managed project folder and all files in it will be deleted
     dependencies:
       nextcloud:
         group_folders_app: Папки групи
@@ -221,25 +238,32 @@ uk:
     error_invalid_provider_type: Виберіть дійсного постачальника сховища.
     file_storage_view:
       access_management:
-        automatic_management: Доступ і папки з автоматичним керуванням
-        automatic_management_description: Дозвольте OpenProject автоматично створювати папки для проєкту й керувати доступом користувачів до них. Радимо зробити це, адже в такому разі кожен учасник команди завжди матиме належні дозволи на доступ.
-        description: Виберіть тип керування доступом користувачів і створенням папок. Рекомендуємо використовувати «Автоматичне керування доступом». Це забезпечує більш організовану структуру й гарантує доступ усім відповідним користувачам.
-        manual_management: Доступ і папки з ручним керуванням
-        manual_management_description: Створюйте папки для кожного проєкту й керуйте ними самостійно. Вам знадобиться вручну надавати доступ відповідним користувачам.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Виберіть тип керування доступом користувачів і створенням папок.
-        subtitle: Керування доступом
+        subtitle: Folder and access management
       access_management_section: Доступ і папки проєкту
       automatically_managed_folders: Папки з автоматичним керуванням
       general_information: Загальна інформація
       oauth_configuration: Конфігурація OAuth
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: Папки проєкту
       redirect_uri: URI переспрямування
+      sharepoint_oauth: Azure OAuth
       storage_audience_blank: Аудиторію не налаштовано.
       storage_audience_description: Триває обмін маркерів для аудиторії «%{audience}».
       storage_audience_idp: Використання маркера доступу, отриманого від постачальника ідентифікаційних даних під час входу, незалежно від аудиторії.
-      storage_oauth: Nextcloud OAuth
+      storage_oauth: OAuth сховища
       storage_provider: Постачальник сховища
       token_exchange: Обмін маркерів
     health:
@@ -252,10 +276,10 @@ uk:
         ampf_configuration:
           client_folder_creation: Автоматичне створення папки
           client_folder_removal: Автоматичне видалення папки
-          drive_contents: Диск містить очікуваний контент
+          drive_contents: Вміст диска
           files_request: Отримання файлів із папок групи
           group_folder_app: 'Залежність: папки групи'
-          group_folder_contents: Папка групи містить очікуваний контент
+          group_folder_contents: Вміст папки групи
           group_folder_presence: Папка групи вже існує
           header: Папки проєкту з автоматичним керуванням
           userless_access: Автентифікація запиту на стороні сервера
@@ -278,6 +302,7 @@ uk:
           drive_id_exists: Диск існує
           drive_id_format: Формат ID Диска
           header: Конфігурація
+          host: URL-адреса хосту
           host_url_accessible: URL-адреса хосту доступна
           storage_configured: Налаштування завершено
           tenant_id: ID клієнта
@@ -323,15 +348,16 @@ uk:
         oidc_token_acquisition_failed: Ваша конфігурація OpenID Connect не передбачає наявності необхідної аудиторії та можливостей обміну маркерів. Щоб дізнатися більше, ознайомтеся з нашою документацією.
         oidc_token_exchange_failed: Схоже, виникла проблема з конфігурацією Token Exchange у вашого постачальника OpenID Connect. Перевірте конфігурацію і повторіть спробу.
         oidc_token_refresh_failed: Під час перевірки доступу до сховища сталася помилка. Щоб отримати додаткову інформацію, перевірте журнали сервера.
-        sp_client_cant_delete_folder: The client is having trouble deleting folders in SharePoint. Please check the setup documentation for your storage.
-        sp_client_id_missing: The configured OAuth 2 client id is missing for SharePoint. Please check the configuration.
-        sp_client_secret_missing: The configured OAuth 2 client secret is missing for SharePoint. Please check the configuration.
-        sp_client_write_permission_missing: The client seems to have write permissions missing in SharePoint. Please check the setup documentation for your storage.
-        sp_existing_test_folder: The folder %{folder_name} needed for testing already exists in SharePoint. Please delete it and try again.
-        sp_oauth_request_error: The user-bound request to SharePoint failed. Please check the server logs for further information.
-        sp_oauth_token_missing: OpenProject cannot test the user level communication with SharePoint as the user did not yet link their SharePoint account.
-        sp_tenant_id_missing: The configured directory (tenant) id is missing for SharePoint. Please check the configuration.
-        sp_unexpected_content: Unexpected content found in the SharePoint drive.
+        sp_client_cant_delete_folder: У клієнта виникли проблеми з видаленням папок у SharePoint. Ознайомтеся з документацією щодо конфігурації для свого сховища.
+        sp_client_id_missing: Бракує налаштованого ідентифікатора клієнта OAuth 2. Перевірте конфігурацію.
+        sp_client_secret_missing: Бракує налаштованого секрету клієнта OAuth 2. Перевірте конфігурацію.
+        sp_client_write_permission_missing: Схоже, клієнту бракує дозволів на записування в SharePoint. Ознайомтеся з документацією щодо конфігурації для свого сховища.
+        sp_existing_test_folder: Папка «%{folder_name}», необхідна для тестування, уже існує в SharePoint. Видаліть її і повторіть спробу.
+        sp_oauth_request_error: Не вдалося виконати пов’язаний із користувачем запит до SharePoint. Докладні відомості наведено в журналах сервера.
+        sp_oauth_request_unauthorized: The current user isn't authorized to access the remote file storage. Please check the server logs for further information.
+        sp_oauth_token_missing: OpenProject не може перевірити з’єднання на рівні користувача із SharePoint, оскільки користувач досі не прив’язав свій обліковий запис SharePoint.
+        sp_tenant_id_missing: Бракує налаштованого ідентифікатора каталогу (клієнта). Перевірте конфігурацію.
+        sp_unexpected_content: Unexpected content found in the SharePoint Document Library.
         unknown_error: Не вдалося перевірити підключення. Сталася невідома помилка. Щоб дізнатися більше, перегляньте журнали сервера.
       label_error: Помилка
       label_failed: Не пройдено
@@ -400,10 +426,10 @@ uk:
       setting_up_storages: Щоб створити файлові сховища, перейдіть у
       setting_up_storages_non_admin: Адміністратори можуть налаштовувати файлові сховища в розділі «Адміністрування» / «Файлові сховища».
       sharepoint:
-        application_link_text: SharePoint site
-        integration: SharePoint Administration / OpenProject
-        oauth_configuration: Copy these values from the desired application in the %{application_link_text}.
-        provider_configuration: Please make sure you have administration privileges in the %{application_link_text} or contact your Microsoft administrator before doing the setup. In the portal, you also need to register an Azure application or use an existing one for authentication.
+        application_link_text: Сайт SharePoint
+        integration: Адміністрування SharePoint / OpenProject
+        oauth_configuration: 'Скопіюйте ці значення з потрібного додатка в цей: %{application_link_text}.'
+        provider_configuration: Перш ніж виконувати налаштування, переконайтеся, що у вас є права адміністратора в додатку %{application_link_text}, або зверніться до свого адміністратора Microsoft. На порталі вам також знадобиться зареєструвати додаток Azure або скористатися наявним під час автентифікації.
       type: 'Перш ніж виконувати налаштування, переконайтеся, що маєте права адміністратора у своєму екземплярі Nextcloud і що встановлено цей додаток:'
       type_link_text: "«Інтеграція OpenProject»"
     label_active: Активний
@@ -476,7 +502,7 @@ uk:
         title: Ми налаштовуємо ваші дозволи для папки проєкту.
     page_titles:
       file_storages:
-        delete: Видалити файлове сховище
+        delete: Delete file storage?
         subtitle: Додайте зовнішнє файлове сховище, щоб вивантажувати файли, створювати посилання й керувати файлами в пакетах робіт.
       managed_project_folders:
         subtitle: |-
@@ -485,13 +511,14 @@ uk:
         subtitle_short: Дозвольте автоматично створювати папки для кожного проєкту в OpenProject.
         title: Папки проєкту з автоматичним керуванням
       project_settings:
-        delete: Видалити файлове сховище
         edit: Редагувати файлове сховище для цього проєкту
         members_connection_status: Стан підключення учасників
         new: Додайте сховище файлів до цього проєкту
       project_storage_members:
         subtitle: Перевірте стан підключення до сховища %{storage_name_link} для всіх учасників проєкту.
         title: Стан підключення учасників
+      project_storages:
+        delete: Remove file storage from project?
     permission_header_explanation: 'Дозволи на доступ до файлів у зовнішніх сховищах застосовуються лише до папок і файлів у межах папок проєкту з автоматичним керуванням. Зауважте, що деякі постачальники сховищ не підтримують дозволи на доступ до файлів. Щоб дізнатися більше, ознайомтеся з документацією щодо <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>дозволів для файлових сховищ</a>.'
     provider_types:
       label: Тип постачальника
@@ -506,10 +533,11 @@ uk:
         name: OneDrive
         name_placeholder: напр. OneDrive
       sharepoint:
-        label_oauth_client_id: Azure OAuth Application (client) ID
-        label_oauth_client_secret: Azure OAuth Client Secret Value
+        drive_description: Бібліотека документів OpenProject із керуванням на основі доступу
+        label_oauth_client_id: Ідентифікатор (клієнт) додатка Azure OAuth
+        label_oauth_client_secret: Значення секрету клієнта Azure OAuth
         name: SharePoint
-        name_placeholder: e.g. SharePoint
+        name_placeholder: наприклад, SharePoint
     show_attachments_toggle:
       description: Якщо вимкнути цей параметр, список вкладень буде приховано на вкладці «Файли» пакетів робіт. Файли, вкладені в опис пакета робіт, усе одно буде додано у внутрішнє сховище вкладень.
       label: Показувати вкладення на вкладці «Файли» пакетів робіт
@@ -520,12 +548,19 @@ uk:
         label: Використовувати маркер доступу, отриманий під час входу користувача
       manual:
         helptext: OpenProject отримає маркер у постачальника ідентифікаційних даних для визначеної аудиторії.
-        label: Вручну вказати аудиторію, для якої потрібно отримати маркер доступу
+        label: Вручну вказувати аудиторію, для якої потрібно отримати маркер доступу (рекомендовано)
     storage_list_blank_slate:
       description: Додайте сховище, щоб воно з’явилося тут.
       heading: У вас ще немає жодного сховища.
-    successful_storage_connection: Сховище підключено. Щоб користуватися ним, активуйте модуль і визначене сховище в налаштуваннях кожного потрібного проєкту.
+    successful_storage_connection: Сховище під'єднано. Щоб користуватися ним, активуйте модуль і визначене сховище в налаштуваннях кожного потрібного проєкту.
     upsell:
-      description: |-
-        Інтегруйте OneDrive як файлове сховище в OpenProject. Додайте файли й прив’яжіть їх безпосередньо до пакетів робіт у проєкті.
-      title: Інтеграція з OneDrive
+      one_drive:
+        description: |-
+          Integrate your OneDrive drive as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: OneDrive integration
+      sharepoint:
+        description: |-
+          Integrate your SharePoint site as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: SharePoint integration

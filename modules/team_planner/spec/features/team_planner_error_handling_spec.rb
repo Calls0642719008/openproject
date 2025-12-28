@@ -45,7 +45,7 @@ RSpec.describe "Team planner error handling",
   end
 
   let!(:custom_field) do
-    create(:work_package_custom_field,
+    create(:string_wp_custom_field,
            default_value: nil,
            is_for_all: true,
            is_required: false)
@@ -67,15 +67,15 @@ RSpec.describe "Team planner error handling",
       end
     end
 
-    it "cannot change the wp because of required fields not being set" do
+    it "can assign the wp despite the required field not being set" do
       custom_field.is_required = true
       custom_field.save!
 
-      # Try to move the wp
       retry_block do
         team_planner.drag_wp_by_pixel(work_package, 200, 0)
       end
-      team_planner.expect_toast(type: :error, message: "#{custom_field.name} can't be blank")
+
+      team_planner.expect_toast(type: :success, message: "Successful update.")
 
       team_planner.within_lane(user) do
         team_planner.expect_event work_package

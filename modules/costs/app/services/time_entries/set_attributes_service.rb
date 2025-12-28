@@ -53,6 +53,9 @@ module TimeEntries
 
       # Always set the logging user as logged_by
       set_logged_by
+
+      # Set custom_values_to_validate for customizable models
+      set_custom_values_to_validate(params)
     end
 
     def set_default_attributes(*)

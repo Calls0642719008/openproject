@@ -13,7 +13,7 @@
     if @meeting_agenda_item.outcomes.exists?
       outcome = @meeting_agenda_item.outcomes.information_kind.last
       flex.with_row do
-        render(Primer::Box.new(mt: 2, p: 3, classes: "outcome-container", border_radius: 2)) do
+        render(OpPrimer::InsetBoxComponent.new(border: false, mt: 2, classes: "outcome-container")) do
           concat render(Primer::Beta::Heading.new(tag: :h5)) { t(:label_agenda_outcome) }
           concat render(Primer::Box.new(classes: "op-uc-container", pb: 0, mt: 1)) { format_text(outcome, :notes) }
         end

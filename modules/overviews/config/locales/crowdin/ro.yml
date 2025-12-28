@@ -1,4 +1,6 @@
 ro:
   overviews:
-    label: 'Prezentare generală'
+    label_home: "%{workspace_type} acasă"
+    label_dashboard: "Panou de control"
+    label_overview: 'Vedere de ansamblu'
   permission_manage_overview: 'Gestionează pagina de prezentare generală'

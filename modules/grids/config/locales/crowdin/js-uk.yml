@@ -13,14 +13,8 @@ uk:
           no_results: 'Ще немає документів.'
         members:
           title: 'Учасники'
-          no_results: 'Немає видимих учасників.'
-          view_all_members: 'Переглянути всіх учасників'
-          add: 'Учасник'
-          too_many: 'Відображено %{count} з %{total} учасників.'
         news:
           title: 'Новини'
-          at: 'на'
-          no_results: 'Нічого нового для звітування.'
         project_description:
           title: 'Опис проекту'
           no_results: "Опис ще не створено. Можна вказати в налаштуваннях проекту."
@@ -33,9 +27,10 @@ uk:
           not_set: 'Не встановлено'
           finished: 'Завершено'
           discontinued: 'Припинено'
+        project_status_beta:
+          title: 'Статус проєкту (BETA)'
         subprojects:
-          title: 'Підпроекти'
-          no_results: 'Немає підпроектів.'
+          title: 'Піделементи'
         project_favorites:
           title: 'Обрані проєкти'
           no_results: 'Зараз у вас немає обраних проєктів. Натисніть значок зірочки на панелі керування проєктом, щоб додати його в обране.'
@@ -57,6 +52,7 @@ uk:
           title: 'Таблиця робочих пакетів'
         work_packages_graph:
           title: 'Графік робочих пакетів'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Календар'
         work_packages_overview:

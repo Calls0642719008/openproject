@@ -35,14 +35,15 @@ import { WorkPackageViewTimelineService } from 'core-app/features/work-packages/
 import { WorkPackageViewHierarchyIdentationService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-hierarchy-indentation.service';
 import { WorkPackageViewDisplayRepresentationService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-display-representation.service';
 
-export type WorkPackageAction = {
+export interface WorkPackageAction {
   text?:string;
   key:string;
   icon?:string;
   indexBy?:(actions:WorkPackageAction[]) => number,
   link?:string;
   href?:string;
-};
+  hidden?:boolean;
+}
 
 @Injectable()
 export class WorkPackageContextMenuHelperService {
@@ -114,10 +115,10 @@ export class WorkPackageContextMenuHelperService {
     let link:string|undefined;
     switch (action.key) {
       case 'copy_link_to_clipboard':
-        link = this.PathHelper.workPackageShortPath(workPackage.id as string);
+        link = this.PathHelper.workPackageShortPath(workPackage.id!);
         break;
       default:
-        link = action.link ? (workPackage[action.link] as HalLink).href as string : undefined;
+        link = action.link ? (workPackage[action.link] as HalLink).href! : undefined;
     }
 
     return link;
@@ -168,7 +169,7 @@ export class WorkPackageContextMenuHelperService {
     });
 
     _.each(this.HookService.call('workPackageTableContextMenu'), (action:WorkPackageAction) => {
-      if (workPackage[action.link as string] !== undefined) {
+      if (workPackage[action.link!] !== undefined) {
         const index = action.indexBy ? action.indexBy(allowedActions) : allowedActions.length;
         allowedActions.splice(index, 0, action);
       }

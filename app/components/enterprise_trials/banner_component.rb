@@ -40,5 +40,9 @@ module EnterpriseTrials
 
       super
     end
+
+    def enterprise_url
+      OpenProject::Static::Links.url_for(:enterprise_features, :feature_comparison)
+    end
   end
 end

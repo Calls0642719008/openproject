@@ -56,6 +56,7 @@ fi:
       label_mapping: Mapping
       label_requested_attribute_for: "Requested attribute for: %{attribute}"
       no_results_table: No SAML identity providers have been defined yet.
+      notice_created: A new SAML identity provider was successfully created.
       plural: SAML identity providers
       singular: SAML identity provider
       requested_attributes: Requested attributes
@@ -110,7 +111,7 @@ fi:
       idp_sso_service_url: >
         The URL of the identity provider login endpoint.
       idp_slo_service_url: >
-        The URL of the identity provider login endpoint.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Enter the X509 PEM-formatted public certificate of the identity provider. You can enter multiple certificates by separating them with a newline.
       name_identifier_format: >

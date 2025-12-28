@@ -38,10 +38,10 @@ export abstract class WorkPackageRelationQueryBase extends UntilDestroyedMixin {
   public workPackage:WorkPackageResource;
 
   /** Input is either a query resource, or directly query props */
-  public query:QueryResource|Object;
+  public query:QueryResource|object;
 
   /** Query props are derived from the query resource, if any */
-  public queryProps:Object;
+  public queryProps:object;
 
   /** Whether this section should be hidden completely (due to missing permissions e.g.) */
   public hidden = false;

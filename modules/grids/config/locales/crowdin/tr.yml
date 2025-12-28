@@ -1,6 +1,24 @@
 tr:
   grids:
     label_widget_in_grid: "%{grid_name} ızgarasında bulunan bileşen"
+    widgets:
+      empty: "This widget is currently empty."
+      not_available: "This widget is not available."
+      subitems:
+        title: "Subitems"
+        no_results: "Görünürde hiç çocuk yok."
+        view_all_subitems: "View all subitems"
+        button_text: "Subitem"
+      members:
+        title: "Members"
+        no_results: "Görünür üye yok."
+        view_all_members: "Tüm üyeleri göster"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          one: "and one more member."
+          other: "and %{count} more members."
+      news:
+        no_results: "Rapor için yeni birşey bulunamadı."
   activerecord:
     attributes:
       grids/grid:

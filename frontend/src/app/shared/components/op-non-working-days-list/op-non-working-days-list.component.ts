@@ -137,7 +137,7 @@ export class OpNonWorkingDaysListComponent implements OnInit, AfterViewInit {
   }
 
   private listenToFormSubmit() {
-    const form = this.elementRef.nativeElement.closest('form') as HTMLFormElement;
+    const form = this.elementRef.nativeElement.closest('form')!;
     form.addEventListener('submit', (evt:Event) => {
       if (!this.form_submitted
         && (this.nonWorkingDaysModified() || this.workingDaysModified())) {
@@ -176,7 +176,7 @@ export class OpNonWorkingDaysListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit():void {
-    const form = this.elementRef.nativeElement.closest('form') as HTMLFormElement;
+    const form = this.elementRef.nativeElement.closest('form')!;
     const workingDayCheckboxes = Array.from(form.querySelectorAll('input[name="settings[working_days][]"]'));
     workingDayCheckboxes.forEach((checkbox:HTMLInputElement) => {
       if (checkbox.checked) {
@@ -253,7 +253,7 @@ export class OpNonWorkingDaysListComponent implements OnInit, AfterViewInit {
   private get workingDays():string[] {
     const workingDays:string[] = [];
 
-    const form = this.elementRef.nativeElement.closest('form') as HTMLFormElement;
+    const form = this.elementRef.nativeElement.closest('form')!;
     const workingDayCheckboxes = Array.from(form.querySelectorAll('input[name="settings[working_days][]"]'));
     workingDayCheckboxes.forEach((checkbox:HTMLInputElement) => {
       if (checkbox.checked) {

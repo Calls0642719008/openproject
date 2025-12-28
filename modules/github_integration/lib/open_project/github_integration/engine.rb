@@ -85,6 +85,7 @@ module OpenProject::GithubIntegration
            badge: ->(work_package:, **) {
              work_package.github_pull_requests.count
            },
+           before: :watchers,
            caption: :project_module_github
     end
 

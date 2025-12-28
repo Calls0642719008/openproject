@@ -75,7 +75,7 @@ export class ApiV3WorkPackagesPaths extends ApiV3Collection<WorkPackageResource,
           _.each(pagedResults, (results) => {
             if (results.schemas) {
               _.each(results.schemas.elements, (schema:SchemaResource) => {
-                this.states.schemas.get(schema.href as string).putValue(schema);
+                this.states.schemas.get(schema.href!).putValue(schema);
               });
             }
 
@@ -104,7 +104,7 @@ export class ApiV3WorkPackagesPaths extends ApiV3Collection<WorkPackageResource,
       );
   }
 
-  filtered<R = ApiV3GettableResource<WorkPackageCollectionResource>>(filters:ApiV3FilterBuilder, params:{ [p:string]:string } = {}):R {
+  filtered<R = ApiV3GettableResource<WorkPackageCollectionResource>>(filters:ApiV3FilterBuilder, params:Record<string, string> = {}):R {
     return super.filtered(filters, params, ApiV3WorkPackageCachedSubresource) as any;
   }
 
@@ -114,7 +114,7 @@ export class ApiV3WorkPackagesPaths extends ApiV3Collection<WorkPackageResource,
    * @param idOnly
    * @param additionalParams Additional set of params to the API
    */
-  public filterByTypeaheadOrId(term:string, idOnly = false, additionalParams:{ [key:string]:string } = {}):ApiV3WorkPackageCachedSubresource {
+  public filterByTypeaheadOrId(term:string, idOnly = false, additionalParams:Record<string, string> = {}):ApiV3WorkPackageCachedSubresource {
     const filters:ApiV3FilterBuilder = new ApiV3FilterBuilder();
 
     if (idOnly) {

@@ -92,20 +92,19 @@ module Storages
                                     :error
                                   end
 
-        file_link.save
         file_link
       end
     end
 
     def update_file_link(file_link, file_info)
-      file_link.origin_mime_type = file_info.mime_type
-      file_link.origin_created_by_name = file_info.owner_name
-      file_link.origin_last_modified_by_name = file_info.last_modified_by_name
-      file_link.origin_name = file_info.name
-      file_link.origin_created_at = file_info.created_at
-      file_link.origin_updated_at = file_info.last_modified_at
-
-      file_link
+      file_link.update!(
+        origin_mime_type: file_info.mime_type,
+        origin_created_by_name: file_info.owner_name,
+        origin_last_modified_by_name: file_info.last_modified_by_name,
+        origin_name: file_info.name,
+        origin_created_at: file_info.created_at,
+        origin_updated_at: file_info.last_modified_at
+      )
     end
   end
 end

@@ -31,10 +31,10 @@ import {
   Component,
   HostListener,
   Injector,
+  Input,
   OnInit,
 } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { ConfigurationService } from 'core-app/core/config/configuration.service';
 import { CurrentUserService } from 'core-app/core/current-user/current-user.service';
 import { RecentItemsService } from 'core-app/core/recent-items.service';
 import { ProjectResource } from 'core-app/features/hal/resources/project-resource';
@@ -48,7 +48,7 @@ import { Observable, of } from 'rxjs';
 
 @Component({
   templateUrl: './wp-full-view.html',
-  selector: 'wp-full-view-entry',
+  selector: 'op-wp-full-view',
   // Required class to support inner scrolling on page
   host: { class: 'work-packages-page--ui-view' },
   providers: [
@@ -78,17 +78,14 @@ export class WorkPackagesFullViewComponent extends WorkPackageSingleViewBase imp
     },
   };
 
-  stateName$ = of('work-packages.new');
-
   constructor(
     public injector:Injector,
     public wpTableSelection:WorkPackageViewSelectionService,
     public recentItemsService:RecentItemsService,
     readonly $state:StateService,
     readonly currentUserService:CurrentUserService,
-    private readonly configurationService:ConfigurationService,
   ) {
-    super(injector, $state.params.workPackageId);
+    super(injector);
   }
 
   // enable other parts of the application to trigger an immediate update

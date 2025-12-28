@@ -66,11 +66,11 @@ class EnterpriseToken < ApplicationRecord
     end
 
     def available_features
-      active_tokens.map(&:available_features).flatten.uniq
+      active_tokens.map(&:available_features).inject(Set.new, :|)
     end
 
     def non_trialling_features
-      active_non_trial_tokens.map(&:available_features).flatten.uniq
+      active_non_trial_tokens.map(&:available_features).inject(Set.new, :|)
     end
 
     def trialling_features

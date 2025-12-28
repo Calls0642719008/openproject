@@ -9,6 +9,18 @@ get:
             response:
               value:
                 _dependencies: []
+                _attributeGroups:
+                - _type: ProjectFormCustomFieldSection
+                  name: Project Details
+                  attributes:
+                  - customField30
+                  - customField34
+                - _type: ProjectFormCustomFieldSection
+                  name: Budget Information
+                  attributes:
+                  - customField31
+                  - customField32
+                  - customField35
                 _links:
                   self:
                     href: "/api/v3/projects/schema"
@@ -134,11 +146,13 @@ get:
                   type: DateTime
                   writable: false
           schema:
-            "$ref": "../components/schemas/projects_schema_model.yml"
+            "$ref": "../components/schemas/workspaces_schema_model.yml"
       description: OK
       headers: {}
   tags:
   - Projects
-  description: ''
+  description: 'Provides the schema describing a project resource.
+
+  This endpoint is deprecated. As projects are workspaces, an equivalent schema can be found fetching `/api/v3/workspaces/schema`.'
   operationId: View_project_schema
   summary: View project schema

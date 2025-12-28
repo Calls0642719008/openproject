@@ -35,6 +35,10 @@ RSpec.describe Role do
   let(:build_role) { build(:project_role, permissions:) }
   let(:created_role) { create(:project_role, permissions:) }
 
+  it { is_expected.to validate_presence_of :name }
+  it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
+  it { is_expected.to validate_length_of(:name).is_at_most(256) }
+
   describe ".create" do
     it "is prevented for type Role" do
       build_role.type = described_class.name

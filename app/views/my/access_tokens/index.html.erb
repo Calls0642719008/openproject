@@ -41,9 +41,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.api_tokens, token_type: Token::API) %>
 <%= render partial: "icalendar_tokens_section", locals: { ical_tokens_grouped_by_query: @ical_tokens_grouped_by_query } %>
-<% if OpenProject::FeatureDecisions.meeting_ical_subscription_active? %>
-  <%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.ical_meeting_tokens, token_type: Token::ICalMeeting) %>
-<% end %>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.ical_meeting_tokens, token_type: Token::ICalMeeting) %>
 <%= render partial: "oauth_tokens_section", locals: { granted_applications: granted_applications } %>
 <%= render partial: "rss_tokens_section", locals: { rss_token: @user.rss_token } %>
 <%= render partial: "storage_tokens_section", locals: { storage_tokens: @storage_tokens } %>

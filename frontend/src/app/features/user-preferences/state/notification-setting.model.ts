@@ -1,4 +1,4 @@
-import { HalSourceLink } from 'core-app/features/hal/resources/hal-resource';
+import { HalSourceLink } from 'core-app/features/hal/interfaces';
 
 export interface INotificationSetting {
   _links:{ project:HalSourceLink };

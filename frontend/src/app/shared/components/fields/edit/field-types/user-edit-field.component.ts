@@ -90,7 +90,7 @@ export class UserEditFieldComponent extends EditFieldComponent implements OnInit
   initialize():void {
     const link = this.schema.allowedValues as CallableHalLink|undefined;
     if (link) {
-      this.url = link.$link.href as string;
+      this.url = link.$link.href!;
     }
   }
 

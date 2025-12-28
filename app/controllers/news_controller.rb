@@ -113,7 +113,7 @@ class NewsController < ApplicationController
       call.apply_flash_message!(flash)
     end
 
-    redirect_to action: "index", project_id: @project
+    redirect_to action: "index", project_id: @project, status: :see_other
   end
 
   private

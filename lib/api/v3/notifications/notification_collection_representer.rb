@@ -30,6 +30,9 @@ module API
   module V3
     module Notifications
       class NotificationCollectionRepresenter < ::API::Decorators::OffsetPaginatedCollection
+        self.to_eager_load = []
+        self.to_preload = []
+
         property :detailsSchemas,
                  getter: ->(*) { details_schemas },
                  exec_context: :decorator,

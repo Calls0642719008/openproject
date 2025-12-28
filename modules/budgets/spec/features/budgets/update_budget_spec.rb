@@ -28,7 +28,7 @@
 
 require_relative "../../spec_helper"
 
-RSpec.describe "updating a budget", :js, :selenium do
+RSpec.describe "updating a budget", :js do
   let(:project) do
     create(:project_with_types,
            enabled_module_names: %i[budgets costs work_package_tracking],
@@ -132,6 +132,10 @@ RSpec.describe "updating a budget", :js, :selenium do
     end
 
     context "with german locale" do
+      around do |example|
+        I18n.with_locale(:de, &example)
+      end
+
       let(:user) { create(:admin, language: :de) }
       let(:cost_type2) do
         create(:cost_type, name: "ABC", unit: "abc", unit_plural: "abcs")
@@ -148,7 +152,7 @@ RSpec.describe "updating a budget", :js, :selenium do
       it "retains the overridden budget when opening, but not editing (Regression #32822)" do
         material_budget_item2
         budget_page.visit!
-        click_on I18n.t(:button_update, locale: :de)
+        click_on I18n.t(:button_update)
 
         budget_page.expect_planned_costs! type: :material, row: 1, expected: "150,00 EUR"
         budget_page.expect_planned_costs! type: :material, row: 2, expected: "1.000,00 EUR"
@@ -159,7 +163,7 @@ RSpec.describe "updating a budget", :js, :selenium do
         expect(page).to have_field("budget_existing_material_budget_item_attributes_#{material_budget_item.id}_amount")
 
         click_on "OK"
-        expect(budget_page).to have_content(I18n.t(:notice_successful_update, locale: :de))
+        expect(budget_page).to have_content(I18n.t(:notice_successful_update))
 
         expect(page).to have_css("tbody td.currency", text: "150,00 EUR")
         expect(page).to have_css("tbody td.currency", text: "1.000,00 EUR")
@@ -314,7 +318,9 @@ RSpec.describe "updating a budget", :js, :selenium do
 
       click_on "Update"
 
-      page.find("#budget_existing_labor_budget_item_attributes_#{labor_budget_item.id} a.delete-budget-item").click
+      page.find("#budget_existing_labor_budget_item_attributes_#{labor_budget_item.id}")
+        .click_on accessible_name: "Delete"
+
       click_on "Submit"
 
       expect(budget_page.labor_costs_at(1)).to have_no_content "125.00 EUR"

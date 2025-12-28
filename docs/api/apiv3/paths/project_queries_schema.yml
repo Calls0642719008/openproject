@@ -17,7 +17,7 @@ get:
             QuerySchema:
               "$ref": "../components/examples/query_schema.yml"
           schema:
-            "$ref": "../components/schemas/schema_for_project_queries_model.yml"
+            "$ref": "../components/schemas/schema_for_workspace_queries_model.yml"
       description: OK
       headers: {}
     '403':
@@ -35,6 +35,9 @@ get:
       headers: {}
   tags:
   - Queries
-  description: Retrieve the schema for project queries.
+  description: |-
+    Retrieve the schema for project queries.
+
+    This endpoint is deprecated and replaced by ['/api/v3/workspaces/{id}/queries/schema`](https://www.openproject.org/docs/api/endpoints/queries/#view-schema-for-workspace-queries)
   operationId: View_schema_for_project_queries
   summary: View schema for project queries

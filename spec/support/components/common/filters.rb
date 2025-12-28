@@ -43,12 +43,12 @@ module Components
         if filter_name == "name_and_identifier"
           expect(page.find_by_id(filter_name).value).not_to be_empty
         elsif value
-          within("li[data-filter-name='#{filter_name}']:not(.hidden)", visible: :hidden) do
+          within("li[data-filter-name='#{filter_name}']") do
             expect(page).to have_css(".advanced-filters--filter-value", text: value, visible: :all)
           end
         else
           expect(page)
-            .to have_css("li[data-filter-name='#{filter_name}']:not(.hidden)", visible: :hidden)
+            .to have_css("li[data-filter-name='#{filter_name}']")
         end
       end
 
@@ -109,10 +109,8 @@ module Components
         within(selected_filter) do
           find('[data-filter-autocomplete="true"]').click
         end
-        wait_for_network_idle if using_cuprite?
-        options = visible_user_auto_completer_options
 
-        expect(options).to eq(expected_options)
+        expect_visible_user_auto_completer_options(expected_options)
       end
 
       def apply_operator(name, human_operator)

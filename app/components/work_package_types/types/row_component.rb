@@ -86,8 +86,7 @@ module WorkPackageTypes
         link_to(
           "",
           model,
-          method: :delete,
-          data: { confirm: t(:text_are_you_sure) },
+          data: { turbo_method: :delete, turbo_confirm: t(:text_are_you_sure) },
           class: "icon icon-delete",
           title: t(:button_delete)
         )

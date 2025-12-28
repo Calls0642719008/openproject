@@ -30,13 +30,27 @@
 
 module Projects
   class TemplateSelectComponent < ApplicationComponent
+    extend Dry::Initializer[undefined: false]
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
     include OpTurbo::Streamable
 
-    options :template, :parent
+    option :project
+    option :template
+    option :parent, optional: true
+    option :current_user, default: -> { User.current }
 
     private
+
+    def new_workspace_path
+      workspace_type = if Project.workspace_types.key?(project.workspace_type)
+                         project.workspace_type.to_sym
+                       else
+                         :project
+                       end
+
+      url_for([:new, workspace_type])
+    end
 
     def template_id = template&.id
     def parent_id = parent&.id

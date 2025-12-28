@@ -44,7 +44,7 @@ export class ApiV3Paths {
 
     if (!workPackage.id || workPackage.id === 'new') {
       // that are members of that project:
-      filters.add('member', '=', [(workPackage.project as HalResource).id as string]);
+      filters.add('member', '=', [(workPackage.project as HalResource).id!]);
     } else {
       // that are mentionable on the work package
       filters.add(

@@ -30,6 +30,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractWidgetComponent } from 'core-app/shared/components/grids/widgets/abstract-widget.component';
 
 @Component({
+  selector: 'op-wp-overview-widget',
   templateUrl: './wp-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

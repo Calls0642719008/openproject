@@ -227,11 +227,11 @@ RSpec.describe "Project phase field in the work package table", :js do
 
       it "includes the group icon in the group row header" do
         within("#wp-table-rowgroup-1") do
-          expect(page).to have_test_selector("project-phase-icon #{other_project_phase.name}")
+          expect(page).to have_test_selector("project-phase-icon phase-definition-#{other_project_phase.definition_id}")
         end
 
         within("#wp-table-rowgroup-2") do
-          expect(page).to have_test_selector("project-phase-icon #{project_phase.name}")
+          expect(page).to have_test_selector("project-phase-icon phase-definition-#{project_phase.definition_id}")
         end
       end
     end

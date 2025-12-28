@@ -50,37 +50,36 @@ export class OpModalWrapperAugmentService {
   public setupListener() {
     const matches = this.documentElement.querySelectorAll('[data-augmented-model-wrapper]');
     for (let i = 0; i < matches.length; ++i) {
-      this.wrapElement(jQuery(matches[i]) as JQuery);
+      this.wrapElement(matches[i] as HTMLElement);
     }
   }
 
   /**
    * Wrap a section[data-augmented-modal-wrapper] element
    */
-  public wrapElement(element:JQuery) {
+  public wrapElement(element:HTMLElement) {
     // Find activation link
-    const activationSelector = element.data('activationSelector') || '.modal-delivery-element--activation-link';
-    const activationLink = jQuery(activationSelector);
-
-    const initializeNow = element.data('modalInitializeNow');
+    const activationSelector = element.dataset.activationSelector || '.modal-delivery-element--activation-link';
+    const activationLink = document.querySelector(activationSelector);
+    const initializeNow = element.dataset.modalInitializeNow;
 
     if (initializeNow) {
       this.show(element);
     } else {
-      activationLink.click((evt:JQuery.TriggeredEvent) => {
+      activationLink?.addEventListener('click', (evt) => {
         this.show(element);
         evt.preventDefault();
       });
     }
   }
 
-  private show(element:JQuery) {
+  private show(element:HTMLElement) {
     // Set modal class name
-    const modalClassName = element.data('modalClassName');
+    const modalClassName = element.dataset.modalClassName;
 
     // Set template from wrapped element
-    const wrappedElement = element.find('.modal-delivery-element');
-    let modalBody = wrappedElement.html();
+    const wrappedElement = element.querySelector<HTMLElement>('.modal-delivery-element')!;
+    const modalBody = wrappedElement.innerHTML;
 
     this.opModalService.show(
       DynamicContentModalComponent,

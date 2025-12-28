@@ -35,11 +35,9 @@ See COPYRIGHT and LICENSE files for more details.
       <%= l_or_humanize(name, prefix: "project_module_") %>
       <% feature = OpenProject::AccessControl.module_enterprise_feature?(name) %>
       <% if feature && !EnterpriseToken.allows_to?(feature) %>
-        <%= spot_icon(
-              "enterprise-addons",
-              inline: true,
-              size: "1_25",
-              classnames: "upsell-colored"
+        <%= render Primer::Beta::Octicon.new(
+              icon: :"op-enterprise-addons",
+              classes: "upsell-colored"
             ) %>
       <% end %>
     </label>

@@ -17,7 +17,7 @@ export class SubmenuService {
       const currentSrc = menu.getAttribute('src');
 
       if (currentSrc && menu) {
-        const frameUrl = new URL(currentSrc);
+        const frameUrl = new URL(currentSrc, window.location.origin);
         const defaultQuery = sideMenuOptions.defaultQuery;
 
         if (selectedQueryId) {

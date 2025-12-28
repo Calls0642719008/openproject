@@ -18,7 +18,7 @@ properties:
               - $ref: './link.yml'
               - description: |-
                   The storage resource of the linked file.
-                  
+
                   **Resource**: Storage
       - type: object
         required:
@@ -29,12 +29,12 @@ properties:
               - $ref: './link.yml'
               - description: |-
                   The storage url the file link references to.
-                  
+
                   **Resource**: N/A
 
 example:
   originData:
-    id: 5503
+    id: "5503"
     name: logo.png
     mimeType: image/png
     size: 16042

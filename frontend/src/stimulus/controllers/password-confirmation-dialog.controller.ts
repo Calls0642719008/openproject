@@ -32,16 +32,23 @@ import { ApplicationController } from 'stimulus-use';
 import {
   PasswordConfirmationModalComponent,
 } from 'core-app/shared/components/modals/request-for-confirmation/password-confirmation.modal';
+import { PortalOutletTarget } from 'core-app/shared/components/modal/portal-outlet-target.enum';
 
 export default class PasswordConfirmationDialogController extends ApplicationController {
   private formListener:(evt:SubmitEvent) => unknown = this.onFormSubmit.bind(this);
 
   private activeDialog = false;
+  private submitButton:HTMLButtonElement|null;
+  private submitDialogId:string|undefined;
 
   connect() {
     super.connect();
 
     this.element.addEventListener('submit', this.formListener);
+
+    this.submitButton = this.element.querySelector("button[type='submit']");
+    this.submitDialogId = this.submitButton?.dataset?.submitDialogId;
+    this.removeSubmitDialogId();
   }
 
   disconnect() {
@@ -66,12 +73,12 @@ export default class PasswordConfirmationDialogController extends ApplicationCon
     if (this.activeDialog) {
       return false;
     }
-
+    const target = document.querySelector('opce-custom-modal-overlay') ? PortalOutletTarget.Custom : PortalOutletTarget.Default;
     this.activeDialog = true;
 
     pluginContext.runInZone(() => {
       opModalService
-        .show(PasswordConfirmationModalComponent, 'global')
+        .show(PasswordConfirmationModalComponent, 'global',{ }, false, false, target)
         .subscribe((modal) => modal.closingEvent.subscribe(() => {
           this.activeDialog = false;
 
@@ -83,7 +90,9 @@ export default class PasswordConfirmationDialogController extends ApplicationCon
           input.type = 'hidden';
           input.id = 'hidden_password_confirmation';
           input.name = '_password_confirmation';
-          input.value = modal.password_confirmation as string;
+          input.value = modal.password_confirmation!;
+
+          this.addSubmitDialogId();
 
           form.append(input);
           form.requestSubmit(event?.submitter);
@@ -91,5 +100,19 @@ export default class PasswordConfirmationDialogController extends ApplicationCon
     });
 
     return false;
+  }
+
+  private removeSubmitDialogId() {
+    // Avoid that Primer dialogs already close and thus get destroyed on submit.
+    // Otherwise the new form submit will not work after password confirmation
+    if (this.submitButton && this.submitDialogId) {
+      this.submitButton.removeAttribute('data-submit-dialog-id');
+    }
+  }
+
+  private addSubmitDialogId() {
+    if (this.submitButton && this.submitDialogId) {
+      this.submitButton.setAttribute('data-submit-dialog-id', this.submitDialogId);
+    }
   }
 }

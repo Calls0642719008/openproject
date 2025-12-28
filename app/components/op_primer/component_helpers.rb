@@ -61,5 +61,32 @@ module OpPrimer
         render(row, &)
       end
     end
+
+    # Intended to help in building action menus with different sections, separated by dividers. Wrap all items that
+    # should go into the same section into a with_item_group block. Dividers are only rendered if needed (no empty sections).
+    #
+    # @example
+    #   def render_action_menu(menu)
+    #     with_item_group { menu.with_item(label: "Item alone in section") }
+    #     with_item_group do
+    #       menu.with_item(label: "hidden section") if false
+    #     end
+    #     with_item_group do
+    #       menu.with_item(label: "first in section")
+    #       menu.with_item(label: "last in section")
+    #     end
+    #   end
+    def with_item_group(menu)
+      pending_divider = menu.items.any? && menu.items.last[:type] != :divider
+      if pending_divider
+        menu.with_divider
+      end
+
+      size_before = menu.items.size
+      yield
+
+      # undo insertion of divider, if no items were added in this section
+      menu.items.pop if menu.items.size == size_before
+    end
   end
 end

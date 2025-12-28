@@ -43,13 +43,6 @@ ja:
           name: PM2 マゼンタ
         item_3:
           name: PM2 緑黄色
-      document_categories:
-        item_0:
-          name: 文章
-        item_1:
-          name: 仕様
-        item_2:
-          name: その他
       project_query_roles:
         item_0:
           name: プロジェクト・クエリ・ビューア

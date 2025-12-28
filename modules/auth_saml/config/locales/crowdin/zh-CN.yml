@@ -56,6 +56,7 @@ zh-CN:
       label_mapping: 映射
       label_requested_attribute_for: "请求属性： %{attribute}"
       no_results_table: 尚未定义 SAML 身份提供商。
+      notice_created: 成功创建了一个新的 SAML 身份提供程序。
       plural: SAML 身份供应商
       singular: SAML 身份提供商
       requested_attributes: 请求的属性
@@ -110,7 +111,7 @@ zh-CN:
       idp_sso_service_url: >
         身份提供商登录端点的 URL 。
       idp_slo_service_url: >
-        身份提供商登录端点的 URL 。
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         输入身份提供商的 X509 PEM 格式公开证书。您可以用换行符输入多个证书。
       name_identifier_format: >

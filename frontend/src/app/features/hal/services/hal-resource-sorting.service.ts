@@ -34,7 +34,7 @@ export class HalResourceSortingService {
   /**
    * List of sortable properties by HAL type
    */
-  private config:{ [typeName:string]:string } = {
+  private config:Record<string, string> = {
     user: 'name',
     project: 'name',
   };

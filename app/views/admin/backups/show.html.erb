@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 
 <% html_title t(:label_administration), t(:label_backup) -%>
 
@@ -36,24 +36,22 @@ See COPYRIGHT and LICENSE files for more details.
 </p>
 
 <% if Token::Backup.count > 0 %>
-  <p>
-    <span><%= I18n.t("backup.label_token_users") %></span>:
+  <span><%= I18n.t("backup.label_token_users") %></span>:
 
-    <div class="wiki">
-      <ul>
-        <% Token::Backup.includes(:user).each do |token| %>
-          <li>
-            <% if current_user.allowed_globally?(:manage_user) %>
-              <%= link_to token.user.name, edit_user_path(token.user) %>
-            <% else %>
-              <%= token.user.name %>
-            <% end %>
-            <%= token.user == current_user ? "(#{I18n.t(:you)})" : "" %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </p>
+  <div class="wiki">
+    <ul>
+      <% Token::Backup.includes(:user).each do |token| %>
+        <li>
+          <% if current_user.allowed_globally?(:manage_user) %>
+            <%= link_to token.user.name, edit_user_path(token.user) %>
+          <% else %>
+            <%= token.user.name %>
+          <% end %>
+          <%= token.user == current_user ? "(#{I18n.t(:you)})" : "" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
 
 <% if @backup_token.present? %>

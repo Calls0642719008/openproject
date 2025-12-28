@@ -27,50 +27,53 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%# The javscript for this component is included in `settings.js.erb`. %>
-
-<div class="form--field">
-  <%= styled_label_tag "lang-for-#{name}" do %>
-    <%= content_tag(:span, setting_label(name), class: "sr-only") %>
-  <% end %>
-  <div class="form--field-container">
-    <%=
-      styled_select_tag(
-        "#{name}_lang",
-        options_for_select(helpers.lang_options_for_select(false), current_language.to_s),
-        id: "lang-for-#{name}",
-        class: "lang-select-switch",
-        container_class: "-slim"
-      )
-    %>
+<%# The Stimulus Controller for this component: `multi-lang-text-setting.controller.ts`. %>
+<div data-controller="admin--multi-lang-text-setting" style="display:contents">
+  <div class="form--field">
+    <%= styled_label_tag "lang-for-#{name}" do %>
+      <%= content_tag(:span, setting_label(name), class: "sr-only") %>
+    <% end %>
+    <div class="form--field-container">
+      <%=
+        styled_select_tag(
+          "#{name}_lang",
+          options_for_select(helpers.lang_options_for_select(false), current_language.to_s),
+          id: "lang-for-#{name}",
+          container_class: "-slim",
+          data: { admin__multi_lang_text_setting_target: "select" }
+        )
+      %>
+    </div>
   </div>
-</div>
 
-<% Redmine::I18n.valid_languages.each do |lang| %>
-  <%=
-    hidden_field_tag(
-      "settings[#{name}][#{lang}]",
-      setting_value(name)[lang],
-      id: "lang-for-#{name}-#{lang}"
-    )
-  %>
-<% end %>
-
-<div class="form--field -visible-overflow">
-  <%= styled_label_tag "settings-#{name}", setting_label(name) %>
-  <div class="form--field-container">
+  <% Redmine::I18n.valid_languages.each do |lang| %>
     <%=
-      styled_text_area_tag(
-        "settings[#{name}][#{current_language}]",
-        setting_value(name)[current_language.to_s],
-        disabled: setting_disabled?(name),
-        label: false,
-        id: "settings-#{name}",
-        class: "wiki-edit",
-        with_text_formatting: true,
-        rows: 5,
-        container_class: "-xxwide"
+      hidden_field_tag(
+        "settings[#{name}][#{lang}]",
+        setting_value(name)[lang],
+        id: "lang-for-#{name}-#{lang}",
+        data: { admin__multi_lang_text_setting_target: "langFor", lang: }
       )
     %>
+  <% end %>
+
+  <div class="form--field -visible-overflow">
+    <%= styled_label_tag "settings-#{name}", setting_label(name) %>
+    <div class="form--field-container">
+      <%=
+        styled_text_area_tag(
+          "settings[#{name}][#{current_language}]",
+          setting_value(name)[current_language.to_s],
+          disabled: setting_disabled?(name),
+          label: false,
+          id: "settings-#{name}",
+          class: "wiki-edit",
+          with_text_formatting: true,
+          rows: 5,
+          container_class: "-xxwide",
+          data: { admin__multi_lang_text_setting_target: "textArea" }
+        )
+      %>
+    </div>
   </div>
 </div>

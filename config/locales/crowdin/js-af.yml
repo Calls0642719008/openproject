@@ -88,6 +88,8 @@ af:
     button_list_view: "List view"
     button_show_view: "Fullscreen view"
     button_log_time: "Log tyd"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "Meer"
     button_open_details: "Open details view"
     button_close_details: "Close details view"
@@ -288,17 +290,6 @@ af:
         format:
           date: "%{attribute} is no valid date - YYYY-MM-DD expected."
         general: "An error has occurred."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Read about new features and product updates."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -306,12 +297,13 @@ af:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Activate"
     label_assignee: "Gedelegeerde"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Add column after"
     label_add_column_before: "Add column before"
     label_add_columns: "Add columns"
@@ -353,6 +345,7 @@ af:
     label_collapse: "Vou in"
     label_collapsed: "collapsed"
     label_collapse_all: "Vou almal op"
+    label_collapse_text: "Collapse text"
     label_comment: "Opmerking"
     label_committed_at: "%{committed_revision_link} at %{date}"
     label_committed_link: "committed revision %{revision_identifier}"
@@ -365,6 +358,7 @@ af:
     label_expand: "Expand"
     label_expanded: "expanded"
     label_expand_all: "Vou almal uit"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Expand project menu"
     label_export: "Uitvoer"
     label_export_preparing: "The export is being prepared and will be downloaded shortly."
@@ -444,7 +438,7 @@ af:
     label_sort_lower: "Skuif af"
     label_sorting: "Sorting"
     label_spent_time: "Tyd gespandeer"
-    label_star_query: "Favored"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Press enter to save."
     label_public_query: "Openbaar"
     label_sum: "Sum"
@@ -563,7 +557,7 @@ af:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -1114,6 +1108,7 @@ af:
       child_work_packages:
         one: "one child work package"
         other: "%{count} work package children"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1134,6 +1129,7 @@ af:
       current_project_and_all_descendants: "In this project + subprojects"
       current_project: "In this project"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "all projects"
         project_and_subprojects: "and all subprojects"
@@ -1143,71 +1139,8 @@ af:
       list: "Table"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Terug"
       invite: "Invite"
-      title:
-        invite: "Invite user"
-        invite_to_project: "Invite %{type} to %{project}"
-        User: "user"
-        Group: "group"
-        PlaceholderUser: "placeholder user"
-        invite_principal_to_project: "Invite %{principal} to %{project}"
-      project:
-        label: "Projek"
-        required: "Please select a project"
-        lacking_permission: "Please select a different project since you lack permissions to assign users to the currently selected."
-        lacking_permission_info: "You lack the permission to assign users to the project you are currently in. You need to select a different one."
-        next_button: "Volgende"
-        no_results: "No projects were found"
-        no_invite_rights: "You are not allowed to invite members to this project"
-      type:
-        required: "Please select the type to be invited"
-        user:
-          title: "Gebruiker"
-          description: "Permissions based on the assigned role in the selected project"
-        group:
-          title: "Groep"
-          description: "Permissions based on the assigned role in the selected project"
-        placeholder:
-          title: "Placeholder user"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "Has no access to the project and no emails are sent out."
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "Name or email address"
-          name: "Naam"
-        already_member_message: "Already a member of %{project}"
-        no_results_user: "No users were found"
-        invite_user: "Invite:"
-        no_results_placeholder: "No placeholders were found"
-        create_new_placeholder: "Create new placeholder:"
-        no_results_group: "No groups were found"
-        next_button: "Volgende"
-        required:
-          user: "Please select a user"
-          placeholder: "Please select a placeholder"
-          group: "Please select a group"
-      role:
-        label: "Role in %{project}"
-        no_roles_found: "No roles were found"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Please select a role"
-        next_button: "Volgende"
-      message:
-        label: "Invitation message"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "Volgende"
-      summary:
-        next_button: "Stuur uitnodiging"
-      success:
-        title: "%{principal} was invited!"
-        description:
-          user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
-        next_button: "Continue"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1224,7 +1157,7 @@ af:
       selected_filter:
         all: "All projects"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:
@@ -1233,6 +1166,11 @@ af:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "Verwyder"

@@ -36,8 +36,6 @@ RSpec.describe ProjectsController do
   let(:user) { admin }
 
   before do
-    allow(controller).to receive(:set_localization)
-
     login_as user
   end
 
@@ -86,8 +84,10 @@ RSpec.describe ProjectsController do
       end
     end
 
+    let(:workspace_type) { "project" }
+
     before do
-      get :new, params: { parent_id: parent&.id, template_id: template&.id }
+      get :new, params: { parent_id: parent&.id, template_id: template&.id, workspace_type: }
     end
 
     context "as an admin" do
@@ -134,20 +134,17 @@ RSpec.describe ProjectsController do
       end
     end
 
-    context "as a non-admin with global add_portfolios permission", with_flag: { portfolio_models: true } do
-      let(:parent) { nil }
-      let(:user) { create(:user, global_permissions: [:add_portfolios]) }
-      let(:template) { nil }
+    context "when not being logged in but login is required", with_settings: { login_required: true } do
+      let(:user) { User.anonymous }
+      let(:workspace_type) { "portfolio" }
+      let(:parent) { build_stubbed(:project) }
+      let(:template) { build_stubbed(:project) }
 
-      it_behaves_like "successful request"
-    end
-
-    context "as a non-admin with global add_programs permission", with_flag: { portfolio_models: true } do
-      let(:parent) { nil }
-      let(:user) { create(:user, global_permissions: [:add_programs]) }
-      let(:template) { nil }
-
-      it_behaves_like "successful request"
+      it "redirects to the sign in page with the parameters provided in the back url" do
+        expect(response).to be_redirect
+        expect(response).to redirect_to signin_path(back_url: new_project_url(parent_id: parent.id,
+                                                                              template_id: template.id))
+      end
     end
   end
 
@@ -217,61 +214,168 @@ RSpec.describe ProjectsController do
           it_behaves_like "successful create request"
         end
       end
-
-      context "as a non-admin with global add_portfolios permission", with_flag: { portfolio_models: true } do
-        let(:user) { create(:user, global_permissions: [:add_portfolios]) }
-
-        it_behaves_like "successful create request"
-      end
-
-      context "as a non-admin with global add_programs permission", with_flag: { portfolio_models: true } do
-        let(:user) { create(:user, global_permissions: [:add_programs]) }
-
-        it_behaves_like "successful create request"
-      end
     end
 
     context "without a template" do
-      before do
-        creation_service = instance_double(Projects::CreateService, call: service_result)
+      let(:workspace_type_param) { { workspace_type: "project" } }
 
-        allow(Projects::CreateService)
-          .to receive(:new)
-                .with(user: admin)
-                .and_return(creation_service)
-      end
+      context "when submitted from step 1" do
+        let(:project) { Project.new }
+        let(:service_result) { ServiceResult.failure(result: project, message: "Name can't be blank.") }
 
-      context "when service call succeeds" do
-        let(:project) { build_stubbed(:project) }
-        let(:service_result) { ServiceResult.success(result: project) }
+        it "clears custom field errors", :aggregate_failures do
+          post :create, params: {
+            project: workspace_type_param.merge({ name: "" }),
+            step: 1
+          }
 
-        it "redirects to project show", :aggregate_failures do
-          post :create, params: { project: { name: "New Project" } }
-
-          expect(response).to redirect_to project_path(project)
-          expect(flash[:notice]).to eq I18n.t(:notice_successful_create)
+          new_project = assigns(:new_project)
+          expect(new_project.errors.select { |error| error.attribute.to_s.start_with?("custom_field") }).to be_empty
         end
       end
 
-      context "when service call fails" do
+      context "when submitted from step 2" do
         let(:project) { Project.new }
-        let(:service_result) { ServiceResult.failure(result: project, message: "") }
 
-        it "renders new template with errors", :aggregate_failures do
-          post :create, params: { project: { name: "" } }
+        before do
+          post :create, params: {
+            project: workspace_type_param.merge(project_params),
+            step: 2
+          }
+        end
 
-          expect(response).not_to be_successful
-          expect(response).to have_http_status :unprocessable_entity
-          expect(assigns(:new_project)).to be_a_new(Project)
-          expect(assigns(:new_project)).not_to be_valid
-          expect(flash[:error]).to start_with I18n.t(:notice_unsuccessful_create_with_reason, reason: "")
-          expect(response).to render_template "new"
+        context "when there is a required custom field" do
+          shared_let(:custom_field) { create(:string_project_custom_field, is_required: true) }
+
+          context "when the name is missing" do
+            let(:project_params) { { name: "" } }
+
+            it "renders step 2 with errors", :aggregate_failures do
+              expect(controller.params[:step].to_i).to eq 2
+              expect(response).to render_template "new"
+              expect(response).to have_http_status :unprocessable_entity
+            end
+
+            it "shows an error on the name", :aggregate_failures do
+              expect(assigns(:new_project).errors[:name]).to be_present
+              expect(flash[:error])
+                .to eq I18n.t(:notice_unsuccessful_create_with_reason, reason: "Name can't be blank.")
+            end
+
+            it "does not show custom field errors", :aggregate_failures do
+              expect(assigns(:new_project).errors[:"custom_field_#{custom_field.id}"]).to be_empty
+              assigns(:new_project).custom_values.each do |cv|
+                expect(cv.errors).to be_empty
+              end
+            end
+          end
+
+          context "when the parent is invalid", with_flag: { portfolio_models: true } do
+            shared_let(:invalid_parent) { create(:project, workspace_type: :program) }
+            let(:project_params) { { name: "Valid Project", parent_id: invalid_parent.id, workspace_type: :portfolio } }
+
+            it "renders step 2 with errors", :aggregate_failures do
+              expect(controller.params[:step].to_i).to eq 2
+              expect(response).to render_template "new"
+              expect(response).to have_http_status :unprocessable_entity
+            end
+
+            it "shows an error on the parent", :aggregate_failures do
+              expect(assigns(:new_project).errors[:parent]).to be_present
+              expect(flash[:error]).to be_present
+            end
+
+            it "does not show custom field errors", :aggregate_failures do
+              expect(assigns(:new_project).errors[:"custom_field_#{custom_field.id}"]).to be_empty
+              assigns(:new_project).custom_values.each do |cv|
+                expect(cv.errors).to be_empty
+              end
+            end
+          end
+
+          context "when it has no validation error on name" do
+            let(:project_params) { { name: "Valid Project" } }
+
+            it "advances to step 3 without errors", :aggregate_failures do
+              expect(controller.params[:step].to_i).to eq 3
+              expect(response).to render_template "new"
+              expect(response).to have_http_status :unprocessable_entity
+            end
+
+            it "does not show custom field errors", :aggregate_failures do
+              expect(assigns(:new_project).errors[:"custom_field_#{custom_field.id}"]).to be_empty
+              assigns(:new_project).custom_values.each do |cv|
+                expect(cv.errors).to be_empty
+              end
+              expect(flash[:error]).to be_nil
+            end
+          end
+
+          # It is not possible to submit these params with the wizard in place,
+          # because the custom fields cannot be submitted in the second step.
+          # However, this test just ensures that no tampering with the params
+          # will result in an unexpected behavior.
+          context "when there is no validation error on the custom field" do
+            let(:project_params) do
+              {
+                name: "Valid Project",
+                custom_field_values: { custom_field.id => "Valid Value" }
+              }
+            end
+
+            it "creates the project successfully", :aggregate_failures do
+              expect(response).to redirect_to project_path(assigns(:new_project))
+              expect(flash[:notice]).to eq I18n.t(:notice_successful_create)
+            end
+          end
+        end
+
+        context "when there is no required custom field" do
+          context "when the name is missing" do
+            let(:project_params) { { name: "" } }
+
+            it "renders step 2 with errors", :aggregate_failures do
+              expect(controller.params[:step].to_i).to eq 2
+              expect(response).to render_template "new"
+              expect(response).to have_http_status :unprocessable_entity
+            end
+
+            it "shows an error on the name", :aggregate_failures do
+              expect(assigns(:new_project).errors[:name]).to be_present
+              expect(flash[:error])
+                .to eq I18n.t(:notice_unsuccessful_create_with_reason, reason: "Name can't be blank.")
+            end
+          end
+
+          context "when the name is present" do
+            let(:project_params) { { name: "Valid Project" } }
+
+            it "creates the project successfully", :aggregate_failures do
+              expect(response).to redirect_to project_path(assigns(:new_project))
+              expect(flash[:notice]).to eq I18n.t(:notice_successful_create)
+            end
+          end
+        end
+      end
+
+      context "when submitted from step 3" do
+        shared_let(:custom_field) { create(:string_project_custom_field, is_required: true) }
+
+        it "does not clear custom field errors", :aggregate_failures do
+          post :create,
+               params: { project: workspace_type_param.merge({ name: "Valid Project" }), step: 3 }
+
+          expect(assigns(:new_project).errors[:"custom_field_#{custom_field.id}"])
+            .to be_present
+          expect(flash[:error])
+            .to eq I18n.t(:notice_unsuccessful_create_with_reason,
+                          reason: "#{custom_field.name} can't be blank.")
         end
       end
     end
 
     context "with a template" do
-      let(:template) { create(:template_project) }
+      let(:template) { create(:template_project, workspace_type:) }
 
       before do
         copy_service = instance_double(Projects::EnqueueCopyService)
@@ -280,20 +384,30 @@ RSpec.describe ProjectsController do
          .to receive(:new)
                .with(user: admin, model: template)
                .and_return(copy_service)
-
+        dependencies = %w[
+          boards storages storage_project_folders forums phases members overview
+          versions wiki wiki_page_attachments work_packages work_package_attachments
+          categories file_links queries work_package_shares
+        ]
         allow(copy_service)
           .to receive(:call)
-              .with(target_project_params: { "name" => name }, only: [], send_notifications: false)
-              .and_return(service_result)
+              .with(
+                target_project_params: { "name" => name, "template" => template },
+                only: dependencies,
+                skip_custom_field_validation: true,
+                send_notifications: false
+              ).and_return(service_result)
 
         post :create, params: {
           template_id: template.id,
+          workspace_type:,
           project: { name: },
-          copy_options: { dependencies: [""], send_notifications: false } # emulating empty dependencies array
+          copy_options: { send_notifications: false }
         }
       end
 
       context "when service call succeeds" do
+        let(:workspace_type) { "project" }
         let(:name) { "Copied project" }
         let(:job) { CopyProjectJob.new }
         let(:service_result) { ServiceResult.success(result: job) }
@@ -303,26 +417,32 @@ RSpec.describe ProjectsController do
         end
       end
 
-      context "when service call fails" do
+      context "when service call fails", with_flag: { portfolio_models: true } do
         let(:name) { "" }
         let(:project) { Project.new }
         let(:service_result) { ServiceResult.failure(result: project, message: "") }
 
-        it "renders new template with errors", :aggregate_failures do
-          expect(response).not_to be_successful
-          expect(response).to have_http_status :unprocessable_entity
-          expect(assigns(:new_project)).to be_a_new(Project)
-          expect(assigns(:new_project)).not_to be_valid
-          expect(assigns(:template)).not_to be_nil
-          expect(assigns(:copy_options)).not_to be_nil
-          expect(flash[:error]).to start_with I18n.t(:notice_unsuccessful_create_with_reason, reason: "")
-          expect(response).to render_template "new"
+        %w[portfolio program project].each do |workspace_type|
+          context "for workspace type #{workspace_type}" do
+            let(:workspace_type) { workspace_type }
+
+            it "renders new template with errors", :aggregate_failures do
+              expect(response).not_to be_successful
+              expect(response).to have_http_status :unprocessable_entity
+              expect(assigns(:new_project)).to be_a_new(Project)
+              expect(assigns(:new_project)).not_to be_valid
+              expect(assigns(:template)).not_to be_nil
+              expect(assigns(:copy_options)).not_to be_nil
+              expect(flash[:error]).to start_with I18n.t(:notice_unsuccessful_create_with_reason, reason: "")
+              expect(response).to render_template "new"
+            end
+          end
         end
       end
     end
   end
 
-  describe "index.html" do
+  describe "#index" do
     shared_let(:project_a) { create(:project, name: "Project A", public: false, active: true) }
     shared_let(:project_b) { create(:project, name: "Project B", public: false, active: true) }
     shared_let(:project_c) { create(:project, name: "Project C", public: true, active: true) }
@@ -345,6 +465,8 @@ RSpec.describe ProjectsController do
         expect(response).to render_template "index"
       end
     end
+
+    it_behaves_like "successful index"
   end
 
   describe "#destroy" do
@@ -391,9 +513,9 @@ RSpec.describe ProjectsController do
     let(:project) { create(:project, identifier: "blog") }
 
     it "gets destroy info" do
-      get :destroy_info, params: { id: project.id }
+      get :destroy_info, params: { id: project.id }, format: :turbo_stream
       expect(response).to be_successful
-      expect(response).to render_template "destroy_info"
+      expect(response).to have_turbo_stream action: "dialog", target: "projects-delete-dialog-component"
 
       expect { project.reload }.not_to raise_error
     end

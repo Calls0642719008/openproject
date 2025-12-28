@@ -66,21 +66,59 @@ RSpec.describe "my", :js do
   end
 
   shared_examples "common tests for normal and LDAP user" do
-    describe "settings" do
-      context "with a default time zone", with_settings: { user_default_timezone: "Asia/Tokyo" } do
-        it "can override a time zone" do
-          expect(user.pref.time_zone).to eq "Asia/Tokyo"
-          visit my_settings_path
+    describe "Language and Region" do
+      before do
+        visit my_locale_path
+      end
 
-          expect(page).to have_select "pref_time_zone", selected: "(UTC+09:00) Tokyo"
-          select "(UTC+01:00) Paris", from: "pref_time_zone"
+      context "with a default time zone", with_settings: { user_default_timezone: "Asia/Tokyo" } do
+        it "override user time zone" do
+          expect(user.pref.time_zone).to eq "Asia/Tokyo"
+          expect(page).to have_heading "Language and region"
+
+          expect(page).to have_select "Time zone", selected: "(UTC+09:00) Tokyo"
+          select "(UTC+01:00) Paris", from: "Time zone"
           click_on "Save"
 
-          expect(page).to have_select "pref_time_zone", selected: "(UTC+01:00) Paris"
-          wait_for_network_idle
-          user.reload
+          expect_and_dismiss_flash type: :success, message: "Account was successfully updated."
+
+          expect(page).to have_select "Time zone", selected: "(UTC+01:00) Paris"
           expect(user.pref.time_zone).to eq "Europe/Paris"
         end
+      end
+
+      it "updates user language" do
+        expect(user.language).to eq "en"
+        expect(page).to have_heading "Language and region"
+
+        expect(page).to have_select "Language", selected: "English"
+        select "Español", from: "Language"
+        click_on "Save"
+
+        expect_and_dismiss_flash type: :success, message: "Cuenta se actualizó correctamente."
+
+        expect(page).to have_select "Idioma", selected: "Español"
+        expect(user.language).to eq "es"
+      end
+
+      it "updates user language with change visible on navigating to other settings (regression #66951)" do
+        expect(user.language).to eq "en"
+        expect(page).to have_heading "Language and region"
+
+        expect(page).to have_select "Language", selected: "English"
+        select "Português do brasil", from: "Language"
+        click_on "Save"
+
+        expect_and_dismiss_flash type: :success, message: "Conta foi atualizada com sucesso."
+
+        expect(page).to have_select "Idioma", selected: "Português do brasil"
+
+        within "#main-menu" do
+          click_on "Configurações de notificação"
+        end
+
+        expect(page).to have_heading "Configurações de notificação"
+        expect(page).to have_heading "Alertas de data"
       end
     end
   end
@@ -95,7 +133,7 @@ RSpec.describe "my", :js do
         fill_in "user[mail]", with: "foo@mail.com"
         fill_in "user[firstname]", with: "Foo"
         fill_in "user[lastname]", with: "Bar"
-        click_on "Save"
+        click_on "Update profile"
       end
 
       context "when confirmation disabled",
@@ -161,7 +199,7 @@ RSpec.describe "my", :js do
         expect(page).to have_text(I18n.t("user.text_change_disabled_for_ldap_login"), count: 3)
 
         fill_in "Hobbies", with: "Ruby, DCS"
-        click_on "Save"
+        click_on "Update profile"
 
         expect(page).to have_content I18n.t(:notice_account_updated)
 

@@ -35,7 +35,7 @@
         pointer-events: none
 
       &:not(&_disabled):hover
-        .op-file-list--item-title > :not(.spot-icon)
+        .op-file-list--item-title > *
           text-decoration: underline
 
     &-action_faulty-status &-title
@@ -91,7 +91,16 @@
         text-decoration: none
 
   & &--item &--item-floating-actions
+    display: flex
     padding-right: 0
+
+  //& &--item &--item-floating-actions
+  //  opacity: 0
+  //  padding: $spot-spacing-0_25 0 $spot-spacing-0_25 $spot-spacing-1
+  //
+  //& &--item &--item-floating-actions:hover,
+  //& &--item &--item-floating-actions:focus-within
+  //  opacity: 1
 
   & &--item &--item-floating-text
     padding-right: $spot-spacing-0_5

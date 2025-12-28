@@ -62,7 +62,7 @@ class Queries::WorkPackages::Filter::ProjectPhaseFilter < Queries::WorkPackages:
   end
 
   def where
-    operator_strategy.sql_for_field(values, :active_phases, :active_phase_definition_id)
+    operator_strategy.sql_for_field(values, :active_phases, :project_phase_definition_id)
   end
 
   private

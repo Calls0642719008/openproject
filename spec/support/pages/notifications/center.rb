@@ -68,6 +68,12 @@ module Pages
         item_title(notification).click
       end
 
+      def click_id(notification)
+        within_item(notification) do
+          click_on("##{notification.resource.id}")
+        end
+      end
+
       def double_click_item(notification)
         item_title(notification).double_click
       end

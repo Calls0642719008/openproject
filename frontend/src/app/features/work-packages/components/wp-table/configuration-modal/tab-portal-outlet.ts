@@ -13,7 +13,7 @@ import {
 import { TabDefinition } from 'core-app/shared/components/tabs/tab.interface';
 
 export interface TabInterface extends TabDefinition {
-  componentClass:{ new(...args:any[]):TabComponent };
+  componentClass:new(...args:any[]) => TabComponent;
 }
 
 export interface TabComponent {
@@ -28,7 +28,7 @@ export interface ActiveTabInterface extends TabDefinition {
 
 export class TabPortalOutlet {
   // Active tabs that have been instantiated
-  public activeTabs:{ [name:string]:ActiveTabInterface } = {};
+  public activeTabs:Record<string, ActiveTabInterface> = {};
 
   // The current tab
   public currentTab:ActiveTabInterface|null = null;

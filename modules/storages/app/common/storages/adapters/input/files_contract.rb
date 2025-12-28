@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class FilesContract < Dry::Validation::Contract
+      class FilesContract < DryApplicationContract
         params do
           required(:folder).filter(:filled?, :str?).value(AdapterTypes::Location)
         end

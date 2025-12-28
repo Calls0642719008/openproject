@@ -88,9 +88,7 @@ export class ResourceChangesetCommit<T extends HalResource = HalResource> {
   }
 }
 
-export interface ResourceChangesetClass {
-  new(...args:any[]):ResourceChangeset;
-}
+export type ResourceChangesetClass = new(...args:any[]) => ResourceChangeset;
 
 @Injectable()
 export class HalResourceEditingService extends StateCacheService<ResourceChangeset> {
@@ -227,7 +225,7 @@ export class HalResourceEditingService extends StateCacheService<ResourceChanges
           filter(([resource, _]) => !!resource),
           map(([resource, change]) => {
             if (change) {
-              change.updatePristineResource(resource as V);
+              change.updatePristineResource(resource!);
               return change.projectedResource;
             }
 

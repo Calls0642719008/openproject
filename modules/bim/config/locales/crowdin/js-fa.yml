@@ -4,26 +4,26 @@ fa:
     bcf:
       label_bcf: 'BCF'
       import: 'درون‌ریزی'
-      import_bcf_xml_file: 'Import BCF XML file (BCF version 2.1)'
+      import_bcf_xml_file: 'وارد کردن فایل XML BCF (نسخه BCF 2.1)'
       export: 'خروجی'
-      export_bcf_xml_file: 'Export BCF XML file (BCF version 2.1)'
-      viewpoint: 'Viewpoint'
-      add_viewpoint: 'Add viewpoint'
-      show_viewpoint: 'Show viewpoint'
-      delete_viewpoint: 'Delete viewpoint'
-      management: 'BCF management'
+      export_bcf_xml_file: 'خروجی گرفتن از فایل XML مربوط به BCF (نسخه BCF 2.1)'
+      viewpoint: 'نقطه دید'
+      add_viewpoint: 'افزودن نقطه دید'
+      show_viewpoint: 'نمایش نقطه دید'
+      delete_viewpoint: 'حذف نقطه دید'
+      management: 'مدیریت BCF'
       refresh: 'بازنشانی'
       refresh_work_package: 'بازنشانی بسته کار'
     ifc_models:
-      empty_warning: "This project does not yet have any IFC models."
-      use_this_link_to_manage: "Use this link to upload and manage your IFC models"
-      keyboard_input_disabled: "Viewer does not have keyboard controls. Click on the viewer to give keyboard control to the viewer."
+      empty_warning: "این پروژه هنوز هیچ مدل IFC ندارد."
+      use_this_link_to_manage: "از این لینک برای آپلود و مدیریت مدل های IFC خود استفاده کنید"
+      keyboard_input_disabled: "نمایشگر کنترل های صفحه کلید ندارد.\nبرای دادن کنترل صفحه کلید به نمایشگر روی نمایشگر کلیک کنید."
       models:
-        ifc_models: 'IFC models'
+        ifc_models: 'مدل های IFC'
       views:
-        viewer: 'Viewer'
-        split: 'Viewer and table'
-        split_cards: 'Viewer and cards'
+        viewer: 'نمایشگر'
+        split: 'نمایشگر و جدول'
+        split_cards: 'نمایشگر و کارت ها'
     revit:
-      revit_add_in: "Revit Add-In"
-      revit_add_in_settings: "Revit Add-In settings"
+      revit_add_in: "افزونه رویت"
+      revit_add_in_settings: "تنظیمات افزونه رویت"

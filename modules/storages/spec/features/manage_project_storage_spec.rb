@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -105,8 +105,7 @@ RSpec.describe("Activation of storages in projects",
     page.first(:link, "New storage").click
     expect(page).to have_current_path new_project_settings_project_storage_path(project_id: project)
     expect(page).to have_text("Add a file storage")
-    expect(page).to have_select("storages_project_storage_storage_id",
-                                options: ["#{storage.name} (#{storage})"])
+    expect(page).to have_select("storages_project_storage_storage_id", options: [storage.typed_label])
     page.click_on("Continue")
 
     # by default automatic have to be chosen if storage has automatic management enabled
@@ -177,24 +176,29 @@ RSpec.describe("Activation of storages in projects",
     # Press Delete icon to remove the storage from the project
     page.find(".icon.icon-delete").click
 
-    # Danger zone confirmation flow
-    expect(page).to have_css(".form--section-title", text: "DELETE FILE STORAGE")
-    expect(page).to have_css(".danger-zone--warning", text: "Deleting a file storage is an irreversible action.")
-    expect(page).to have_button("Delete", disabled: true)
+    within_test_selector("op-project-storages--delete-dialog") do
+      expect(page).to have_text("Delete file storage")
+      expect(page).to have_unchecked_field("I understand that this removal cannot be reversed")
+      expect(page).to have_button("Remove permanently", disabled: true)
 
-    # Cancel Confirmation
-    page.click_on("Cancel")
+      # Cancel Confirmation
+      page.click_button("Cancel")
+    end
+
     expect(page).to have_current_path external_file_storages_project_settings_project_storages_path(project)
+    expect(page).to have_text(storage.name)
 
     page.find(".icon.icon-delete").click
 
-    # Approve Confirmation
-    page.fill_in "delete_confirmation", with: storage.name
-    page.click_on("Delete")
+    within_test_selector("op-project-storages--delete-dialog") do
+      # Approve Confirmation
+      page.check "I understand that this removal cannot be reversed"
+      page.click_button("Remove permanently")
+    end
 
     # List of ProjectStorages empty again
-    expect(page).to have_current_path external_file_storages_project_settings_project_storages_path(project)
     expect(page).to have_text(I18n.t("storages.no_results"))
+    expect(page).to have_current_path external_file_storages_project_settings_project_storages_path(project)
   end
 
   describe "automatic project folder mode" do
@@ -265,10 +269,9 @@ RSpec.describe("Activation of storages in projects",
       page.first(:link, "New storage").click
 
       aggregate_failures "select field options" do
-        expect(page).to have_select("storages_project_storage_storage_id",
-                                    options: ["#{configured_storage.name} (#{configured_storage.short_provider_type})"])
+        expect(page).to have_select("storages_project_storage_storage_id", options: [configured_storage.typed_label])
         expect(page).to have_no_select("storages_project_storage_storage_id",
-                                       options: ["#{unconfigured_storage.name} (#{unconfigured_storage.short_provider_type})"])
+                                       options: [unconfigured_storage.typed_label])
       end
     end
   end

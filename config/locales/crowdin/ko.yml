@@ -59,6 +59,10 @@ ko:
       tab_interface: "인터페이스"
       tab_branding: "브랜딩"
       tab_pdf_export_styles: "PDF 내보내기 스타일"
+      tab_pdf_export_font: "PDF 내보내기 글꼴"
+      fonts:
+        file_too_large: "- 너무 큽니다(최대 크기 %{count}MB)."
+        file_is_invalid: "- 유효한 TTF 글꼴 파일이 아닙니다."
       colors:
         primary-button-color: "기본 버튼"
         accent-color: "강조 색"
@@ -158,6 +162,16 @@ ko:
         expired: "%{date}에 만료됨"
         revoked: "%{date}에 취소됨"
         title: "액세스 토큰 테이블"
+    settings:
+      new_project:
+        project_creation: "Project creation"
+        notification_text_default: >
+          <p>Hello,</p> <p>A new project has been created: projectValue:name</p> <p>Thank you</p>
+    workflows:
+      tabs:
+        default_transitions: "기본 전환"
+        user_author: "사용자가 작성자입니다"
+        user_assignee: "사용자가 담당자입니다"
   authentication:
     login_and_registration: "로그인 및 등록"
   announcements:
@@ -176,12 +190,12 @@ ko:
       title: "격리된 첨부 파일"
       error_cannot_act_self: "고유한 업로드 파일에서는 작업을 수행할 수 없습니다."
   attribute_help_texts:
-    note_public: "이 필드에 추가하는 모든 텍스트와 이미지는 로그인한 모든 사용자에게 공개됩니다!"
+    caption: "This short version will be displayed as caption of the attribute."
+    note_public: "Any text and images you add to this field is publicly visible to all logged in users."
     text_overview: "이 보기에서 특성 보기에 대한 사용자 지정 도움말 텍스트를 작성할 수 있습니다. 이 텍스트를 정의하면 속하는 특성 옆에 있는 도움말 아이콘을 클릭하여 표시할 수 있습니다."
-    label_plural: "특성 도움말 텍스트"
     show_preview: "미리 보기 텍스트"
     add_new: "도움말 텍스트 추가"
-    edit: "%{attribute_caption}에 대한 도움말 텍스트 편집"
+    edit_field_name: "Edit help text for %{attribute_field_name}"
   background_jobs:
     status:
       error_requeue: "작업 중에 오류가 발생했지만 다시 시도 중입니다. 오류 메시지: %{message}"
@@ -191,10 +205,9 @@ ko:
     ldap_auth_failed: "LDAP 서버에서 인증할 수 없습니다."
     sync_failed: "LDAP에서 동기화하지 못했습니다: %{message}."
     back_to_index: "연결 목록으로 돌아가려면 여기를 클릭하세요."
-    technical_warning_html: |
-      이 LDAP 양식에는 LDAP/Active Directory 설정에 대한 기술적 지식이 필요합니다.
-      <br>
-      <a href="https://www.openproject.org/help/administration/manage-ldap-authentication/">자세한 지침은 설명서를 참조하세요</a>.
+    technical_warning: |
+      이 LDAP 양식에는 LDAP / Active Directory 설정에 대한 기술적 지식이 필요합니다.
+      [자세한 지침은 설명서를 참조하세요](docs_url).
     attribute_texts:
       name: LDAP 연결의 임의 이름
       host: LDAP 호스트 이름 또는 IP 주소
@@ -297,7 +310,7 @@ ko:
         placeholder:
           label: "항목 레이블"
           short: "짧은 이름"
-          score: "Score"
+          weight: "Weight"
       notice:
         remember_items_and_projects: "이 사용자 지정 필드의 각 탭에서 항목과 프로젝트를 설정해야 합니다."
       hierarchy:
@@ -305,6 +318,25 @@ ko:
           zero: 하위 항목 없음
           one: 하위 항목 1개
           other: "하위 항목 %{count}개"
+      role_assignment:
+        title: Role Assignment
+        description: You can automatically grant a certain project role to any user assigned to this project attribute, regardless of that user’s original role in that project.
+        warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
+        role_field_label: "Project Role"
+        role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
+        review_hint: >
+          There are %{user_count} who are already assigned to this project attribute in various projects. They might get additional permissions and be added to projects they did not previously have access to.
+        review_button: Review users and permissions
+        dialog:
+          title: "Overview of users and permissions"
+          change: Change
+          changes:
+            new_member: Will be added as a member
+            remove_member: Will be removed as a member
+            gain_and_lose_role: Will lose role ‘%{old_role}’ and gain role ‘%{new_role}’
+            gain_role: Will gain role ‘%{new_role}’
+            lose_role: Will lose role ‘%{old_role}’
+            no_change: No changes
     text_add_new_custom_field: >
       프로젝트에 새 사용자 지정 필드를 추가하려면 먼저 해당 필드를 만들어야 합니다. 그래야 이 프로젝트에 해당 필드를 추가할 수 있습니다.
     is_enabled_globally: "는 세계적으로 사용 가능합니다."
@@ -314,35 +346,71 @@ ko:
     reorder_alphabetical: "알파벳순으로 값 재정렬"
     reorder_confirmation: "경고: 사용 가능한 값의 현재 순서가 손실됩니다. 계속하시겠습니까?"
     placeholder_version_select: "먼저 작업 패키지 또는 프로젝트를 선택해야 합니다"
+    calculated_field_not_editable: "편집할 수 없는 특성입니다. 이 값은 자동으로 계산됩니다."
+    no_role_assigment: "No role assignment"
     instructions:
-      is_required: "사용자 지정 필드를 필수로 표시합니다. 이렇게 하면 새 리소스를 생성하거나 기존 리소스를 업데이트할 때 이 필드를 반드시 입력해야 합니다."
-      is_required_for_project: "이 특성을 활성화하려면 선택하고 모든 프로젝트에서 필수로 지정하세요. 개별 프로젝트에 대해 비활성화할 수는 없습니다."
-      is_for_all: "모든 기존 프로젝트와 새 프로젝트에서 사용자 지정 필드를 사용 가능으로 표시합니다."
-      multi_select: "사용자가 이 사용자 지정 필드에 여러 값을 할당할 수 있도록 허용합니다."
-      searchable: "글로벌 검색 기능을 사용할 때 필드 값을 포함합니다."
-      searchable_for_project: "프로젝트 목록에서 이 특성을 필터로 사용 가능하게 설정하려면 선택하세요."
-      editable: "사용자가 필드를 편집할 수 있도록 허용합니다."
-      admin_only: "이 특성을 관리자에게만 표시하려면 선택하세요. 관리자 권한이 없는 사용자는 이 특성을 보거나 편집할 수 없습니다."
-      is_filter: >
-        작업 패키지 보기의 필터에서 사용자 지정 필드를 사용할 수 있도록 허용합니다. '모든 프로젝트용'을 선택한 경우에만 사용자 지정 필드가 글로벌 보기에 표시됩니다.
-      formula: "숫자 값을 추가하거나 /를 입력하여 특성 또는 수학 연산자를 검색합니다."
+      is_required:
+        all: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
+        project: "Check to enable this attribute and make it required in all projects. It cannot be deactivated for individual projects. Existing projects will not require a value when being updated."
+      is_for_all:
+        all: "Mark the custom field as available in all existing and new projects."
+        project: "Mark the attribute as available in all existing and new projects."
+      multi_select:
+        all: "Allows the user to assign multiple values to this custom field."
+        project: "Allows the user to assign multiple values to this attribute."
+      searchable:
+        all: "Include the field values when using the global search functionality."
+        project: "Check to make this attribute available as a filter in project lists."
+      editable:
+        all: "Allow the field to be editable by users themselves."
+      admin_only:
+        all: "Check to make this custom field only visible to administrators. Users without admin rights will not be able to view or edit it."
+        project: "Check to make this attribute only visible to administrators. Users without admin rights will not be able to view or edit it."
+      is_filter:
+        all: >
+          Allow the custom field to be used in a filter in work package views. Note that only with 'For all projects' selected, the custom field will show up in global views.
+      formula:
+        project: "Add numeric values or type / to search for an attribute or a mathematical operator."
     tab:
       no_results_title_text: 사용자 필드가 없습니다.
       no_results_content_text: 새 사용자 필드 생성
+  calculated_values:
+    error_dialog:
+      title: "Error with Calculated value"
+    errors:
+      unknown: "An unknown error occurred. Please review the formula for this Calculated value."
+      mathematical: "The mathematical formula leads to an error. Please review the project calculation attribute and try again."
+      missing_value: The attribute "%{custom_field_name}" is required by this Calculated value, but is empty.
+      disabled_value: The attribute "%{custom_field_name}" is required by this Calculated value, but is disabled for the project.
   concatenation:
     single: "또는"
-  dry_validation:
+  danger_dialog:
+    confirmation_live_message_checked: "진행 버튼이 이제 활성화되었습니다."
+    confirmation_live_message_unchecked: "진행 버튼이 이제 비활성화되었습니다. 계속하려면 확인란을 선택해야 합니다."
+  op_dry_validation:
+    or: "또는"
     errors:
-      defined: "must not be defined."
-      int?: "- 정수여야 합니다."
+      array?: "- 배열이어야 합니다."
+      decimal?: "- 소수여야 합니다."
+      defined: "- 정의해서는 안 됩니다."
+      eql?: "- %{left}과(와) 같아야 합니다."
       filled?: "- 입력해야 합니다."
       greater_or_equal_zero: "- 0보다 크거나 같아야 합니다."
+      gteq?: "- %{num}보다 크거나 같아야 합니다."
+      hash?: "- 해시여야 합니다."
+      included_in?:
+        arg:
+          default: "- 다음 중 하나여야 합니다: %{list}."
+          range: "- 다음 중 하나여야 합니다: %{list_left} - %{list_right}."
+      int?: "- 정수여야 합니다."
+      key?: "- 누락되었습니다."
       not_found: "- 찾을 수 없습니다."
+      respond_to?: "does not implement required method."
       rules:
         copy_workflow_from:
           workflow_missing: "- 고유한 워크플로가 없습니다."
         custom_field:
-          format_not_supported: "format '%{field_format}' is unsupported."
+          format_not_supported: "형식 '%{field_format}'은(는) 지원되지 않습니다."
         item:
           root_item: "- 루트 항목일 수 없습니다."
           not_persisted: "- 이미 존재하는 항목이어야 합니다."
@@ -352,12 +420,15 @@ ko:
           not_unique: "- 동일한 계층 수준 내에서 고유해야 합니다."
         parent:
           not_descendant: "- 계층 루트의 하위 항목이어야 합니다."
+      str?: "- 문자열이어야 합니다."
+      type?: "- %{type}이어야(여야) 합니다."
     rules:
       copy_workflow_from: "워크플로 복사의 유형"
       enabled: "활성화됨"
       depth: "깊이"
       item: "항목"
       label: "레이블"
+      weight: "Weight"
       short: "짧은 이름"
       parent: "부모"
       blueprint: "패턴 청사진"
@@ -378,7 +449,7 @@ ko:
       description: 사용자를 그룹화하여 동일한 프로젝트에 멤버로 추가하거나 동일한 글로벌 역할을 할당할 수 있습니다.
     table_component:
       blank_slate:
-        description: You can define named groups of users with specific permissions.
+        description: 명명된 사용자 그룹을 특정 권한을 사용하여 정의할 수 있습니다.
         title: 아직 설정된 그룹 없음
       user_count: 사용자 수
     users:
@@ -393,6 +464,18 @@ ko:
   incoming_mails:
     ignore_filenames: >
       받는 메일의 첨부 파일을 처리할 때 무시할 이름 목록을 지정하십시오(예: 서명 또는 아이콘). 라인 하나에 파일 이름 하나를 입력하십시오.
+  portfolios:
+    index:
+      search:
+        label: Portfolio name filter
+        placeholder: Search portfolios
+      sub_items_html:
+        other: "<strong>%{count}</strong> sub-items"
+    lists:
+      active: "Active portfolios"
+      my: "My portfolios"
+      favorited: "Favorite portfolios"
+      archived: "Archived portfolios"
   projects:
     copy:
       #Contains custom strings for options when copying a project that cannot be found elsewhere.
@@ -404,12 +487,15 @@ ko:
       work_package_categories: "작업 패키지: 카테고리"
       work_package_file_links: "작업 패키지: 파일 링크"
       work_package_shares: "작업 패키지: 공유"
+    create:
+      notification_email_subject: "Your project '%{project_name}' has been created"
+      complete_wizard_link: "Complete the %{artefact_name}"
     delete:
       scheduled: "삭제가 예약되었으며 백그라운드에서 수행됩니다. 결과 알림이 제공될 것입니다."
       schedule_failed: "프로젝트를 삭제할 수 없습니다: %{errors}"
-      failed: "프로젝트 %{name} 삭제가 실패했습니다."
-      failed_text: "프로젝트 %{name} 삭제 요청이 실패했습니다. 프로젝트가 보관되었습니다."
-      completed: "프로젝트 %{name} 삭제가 완료되었습니다."
+      failed: "Deletion of project '%{name}' has failed"
+      failed_text: "The request to delete project '%{name}' has failed. The project was left archived."
+      completed: "Deletion of project '%{name}' completed"
       completed_text: "프로젝트 '%{name}' 삭제 요청이 완료되었습니다."
       completed_text_children: "또한 다음 하위 프로젝트가 삭제되었습니다."
     index:
@@ -422,7 +508,7 @@ ko:
     lists:
       active: "활성 프로젝트"
       my: "내 프로젝트"
-      favored: "즐겨 찾는 프로젝트"
+      favorited: "즐겨 찾는 프로젝트"
       archived: "보관된 프로젝트"
       shared: "공유된 프로젝트 목록"
       my_lists: "내 프로젝트 목록"
@@ -452,6 +538,22 @@ ko:
         description: >
           이 프로젝트는 해당 역할 및 관련 권한에 따라 프로젝트 멤버에게만 표시됩니다. 하위 프로젝트는 영향을 받지 않으며 고유한 설정이 있습니다.
       change_identifier: 식별자 변경
+      subitems:
+        template_section: >
+          Select templates to be used when creating new subitems.
+        project_template_label: "Template for projects"
+        project_template_caption: "Select a template project to be used as the default for new subitems of this type."
+        program_template_label: "Template for programs"
+        program_template_caption: "Select a template program to be used as the default for new subitems of this type."
+        no_template: "No predefined template"
+      template:
+        menu_title: "Template"
+        title: "Template settings"
+        enable_failed: "Failed to enable template mode."
+        members:
+          excluded_roles_label: "Roles to exclude when template is applied"
+          excluded_roles_caption: >
+            When creating a new project from this template, the roles selected above will be omitted. This allows you to select which members will be excluded based on their project roles. Users can then access the template for viewing purposes without being granted access to new projects created from it.
       actions:
         label_enable_all: "모두 활성화"
         label_disable_all: "모두 비활성화"
@@ -485,9 +587,9 @@ ko:
           label_enable_single: "이 프로젝트에서 활성화되어 있습니다. 비활성화하려면 클릭하세요."
           label_disable_single: "이 프로젝트에서 비활성화되어 있습니다. 활성화하려면 클릭하세요."
           remove_from_project: "프로젝트에서 제거"
-        is_required_blank_slate:
-          heading: 모든 프로젝트에서 필수
-          description: '"모든 프로젝트에서 필수" 옵션이 선택되어 있으므로 모든 프로젝트에서 이 프로젝트 특성이 활성화됩니다. 개별 프로젝트에 대해 비활성화할 수 없습니다.'
+        is_for_all_blank_slate:
+          heading: For all projects
+          description: This project attribute is enabled in all projects since the "For all projects" option is checked. It cannot be deactivated for individual projects.
       types:
         no_results_title_text: 사용 가능한 타입이 없습니다.
         form:
@@ -495,12 +597,37 @@ ko:
       versions:
         no_results_title_text: 프로젝트에 버전이 없습니다.
         no_results_content_text: 새 버전 생성
+        work_packages_graph: 작업 패키지 그래프
+        show_work_packages: 작업 패키지 표시
       storage:
         no_results_title_text: 이 프로젝트에서 사용하는 추가 기록 디스크 공간이 없습니다.
       work_package_priorities:
         new_label: "새로운 우선 순위"
+      creation_wizard:
+        export:
+          description_attachment_export: "The generated artifact will be saved as a PDF attachment to the artifact work package."
+          description_file_link_export: "The artifact work package will have a file link to a PDF stored in an external file storage. Requires a working file storage with automatically-managed project folders for this project. At the moment only Nextcloud file storages are supported."
+          description_file_storage_selection: "Select which of the configured external file storages should be used."
+          external_file_storage: "External file storage"
+          label_artifact_export: "Artifact export"
+          label_attachment_export: "Save as work package file attachment"
+          label_file_link_export: "Upload file to external file storage and add file link to work package"
+          pdf_file_storage: "PDF file storage"
+          unavailable: "unavailable"
+        label_request_submission: "Request submission"
+        project_attributes_description: >
+          Select which project attributes should be included in the project initiation request. This list only includes [project attributes](project_attributes_url) enabled for for this project.
     status:
       button_edit: 프로젝트 상태 편집
+    wizard:
+      sidebar_content_title: "Content"
+      sections: "Sections"
+      title: "Project initiation request"
+      no_help_text: "This attribute has no help text defined."
+      success: "Project attributes saved and artifact work package created successfully."
+      progress_label: "%{current} of %{total}"
+      create_artifact_work_package_error: "Failed to create artifact work package"
+      create_artifact_storage_error: "Failed to store artifact in file storage"
   lists:
     create:
       success: "수정된 목록이 새 목록으로 저장되었습니다"
@@ -573,18 +700,15 @@ ko:
     access_token:
       dialog:
         token/api:
-          dialog_title: "Create new API token"
-          attention_text: "Treat API tokens like passwords. Anyone with this token will have access to information from this instance, share it only with trusted users."
-          dialog_body: "This token will allow third-party applications to communicate with your instance. To differentiate the new API token, please give it a name."
-          create_button: "Create"
-          name_label: "Token name"
+          dialog_title: "새 API 토큰 만들기"
+          attention_text: "API 토큰을 암호처럼 취급하세요. 이 토큰이 있으면 누구든지 이 인스턴스의 정보에 액세스할 수 있습니다. 신뢰할 수 있는 사용자와만 공유하세요."
+          dialog_body: "이 토큰을 사용하면 타사 애플리케이션이 해당 인스턴스와 통신할 수 있습니다. 새 API 토큰을 구별하려면 이름을 지정하세요."
+          create_button: "만들기"
+          name_label: "토큰 이름"
       created_dialog:
         token/api:
-          title: "The API token has been generated"
-          warning: "This is the only time you will see this token. Make sure to copy it now."
-      errors:
-        token_name_blank: "API 토큰 이름을 입력하세요"
-        token_name_in_use: "이 API 토큰 이름은 이미 사용 중입니다. 다른 이름을 선택하세요."
+          title: "API 토큰이 생성되었습니다"
+          warning: "이번에만 이 토큰이 표시됩니다. 지금 이 토큰을 복사해야 합니다."
       failed_to_reset_token: "액세스 토큰을 재설정하지 못함: %{error}"
       failed_to_create_token: "액세스 토큰을 만들지 못했습니다: %{error}"
       failed_to_revoke_token: "액세스 토큰을 취소하지 못했습니다: %{error}"
@@ -598,21 +722,35 @@ ko:
     index:
       no_results_title_text: 보고할 소식이 없습니다.
       no_results_content_text: 소식 항목 추가
+  roles:
+    permissions:
+      section_check_all_label: "Assign all %{module} permissions"
+      section_uncheck_all_label: "Unassign all %{module} permissions"
+    report:
+      matrix_caption: "Permissions matrix for %{module} module"
+      matrix_checkbox_label: "Assign %{permission} permission to %{role} role"
+      matrix_check_all_label: "Assign all %{module} permissions to all roles"
+      matrix_uncheck_all_label: "Unassign all %{module} permissions from all roles"
+      matrix_check_uncheck_all_in_row_label_html: "Toggle <em>%{permission}</em> permission for all roles"
+      matrix_check_uncheck_all_in_col_label_html: "Toggle all %{module} permissions for <em>%{role}</em> role"
   users:
     autologins:
       prompt: "%{num_days}일 동안 로그인 상태 유지"
     sessions:
-      remembered_devices: "장치 저장"
-      remembered_devices_caption: "'로그인 상태 유지' 옵션을 사용하여 이 계정에 로그인한 모든 장치의 목록입니다."
       session_name: "%{os_name}의 %{browser_name} %{browser_version}"
       browser: "브라우저"
+      expires: "만료"
+      last_connection: "마지막 연결"
       device: "장치/OS"
       unknown_browser: "알 수 없는 브라우저"
       unknown_os: "알 수 없는 운영 체제"
-      current: "현재 세션"
+      unknown: "(알 수 없음)"
+      browser_session: "(브라우저 세션)"
+      current: "현재(이 장치)"
       title: "세션 관리"
-      instructions: "사용자 계정에 로그인한 장치의 목록입니다. 알지 못하거나 더 이상 액세스할 수 없는 세션을 취소하세요."
+      instructions: "다음 장치를 통해 계정에 로그인했습니다. 사용자가 알지 못하는 세션이나 제어하지 않는 장치에서 로그인한 세션은 취소하세요."
       may_not_delete_current: "현재 세션을 삭제할 수 없습니다."
+      deletion_warning: "이 세션을 취소하시겠습니까? 이 장치에서 로그아웃됩니다."
     groups:
       member_in_these_groups: "이 사용자는 현재 다음 그룹의 멤버입니다:"
       no_results_title_text: 이 사용자는 현재 어떤 그룹의 멤버도 아닙니다.
@@ -622,6 +760,57 @@ ko:
     memberships:
       no_results_title_text: 이 사용자는 프로젝트의 멤버가 아닙니다.
     open_profile: "프로필 열기"
+    invite_user_modal:
+      invite: "초대"
+      title:
+        invite: "사용자 초대"
+        invite_to_project: "%{type}을(를) %{project}에 초대"
+        invite_principal_to_project: "%{principal}을(를) %{project}에 초대"
+      project:
+        label: "프로젝트"
+        required: "프로젝트를 선택하십시오"
+        next_button: "다음"
+        no_results: "프로젝트가 없습니다"
+        no_invite_rights: "이 프로젝트에 멤버를 초대할 권한이 없습니다"
+      type:
+        required: "초대 유형을 선택해주십시오"
+        user:
+          title: "%{project_name}에 사용자 초대"
+          description: "선택한 프로젝트 내 할당된 역할을 토대로 하는 권한"
+        group:
+          title: "%{project_name}에 그룹 초대"
+          description: "선택한 프로젝트 내 할당된 역할을 토대로 하는 권한"
+        placeholder_user:
+          title: "%{project_name}에 플레이스홀더 사용자 추가"
+          title_no_ee: "플레이스홀더 사용자(Enterprise Edition 전용 추가 기능)"
+          description: "프로젝트에 대한 접근 권한이 없으며 이메일이 보내지지 않았습니다."
+        already_member_message: "이미 %{project}의 멤버입니다"
+      principal:
+        no_results_user: "사용자가 없습니다."
+        invite_user: "초대:"
+        no_results_placeholder: "플레이스홀더가 없습니다"
+        create_new_placeholder: "새 플레이스홀더 생성:"
+        no_results_group: "그룹이 없습니다"
+        invite_to_project: "%{project_name}에 초대"
+        required:
+          user: "사용자를 선택하십시오"
+          placeholder: "플레이스홀더를 선택하십시오"
+          group: "그룹을 선택하십시오"
+      role:
+        label: "%{project} 내 역할"
+        no_roles_found: "역할이 없습니다"
+        description: >
+          사용자가 프로젝트에 참여할 때 부여되는 역할입니다. 역할에 따라 사용자가 수행할 수 있는 작업과 볼 수 있는 정보가 정의됩니다. [역할 및 권한에 대해 자세히 알아보세요.](docs_url)
+        required: "역할을 선택하십시오"
+      message:
+        label: "초대 메시지"
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
+      summary:
+        next_button: "초대장 보내기"
+      success_message:
+        user: "사용자는 로그인하여 %{project}에 접근할 수 있게 되었습니다. 한편 당신은 해당 사용자에 대한 계획을 세우거나 작업 패키지를 할당할 수 있습니다."
+        placeholder_user: "이제 %{project}에서 이 플레이스홀더를 사용할 수 있게 되었습니다. 한편 당신은 해당 사용자에 대한 계획을 세우거나 작업 패키지를 할당할 수 있습니다."
+        group: "이제 이 그룹은 %{project}의 일부입니다. 한편 당신은 해당 사용자에 대한 계획을 세우거나 작업 패키지를 할당할 수 있습니다."
   page:
     text: "텍스트"
   placeholder_users:
@@ -683,9 +872,7 @@ ko:
         excluded_from_totals: "합계에서 제외됨"
   themes:
     dark: "다크"
-    dark_high_contrast: "Dark high contrast"
     light: "라이트"
-    light_high_contrast: "라이트 하이 콘트라스트"
     sync_with_os: "자동(OS 색상 모드와 일치)"
   types:
     index:
@@ -738,6 +925,16 @@ ko:
     print_hint: 탐색 모음 없이 이 위키 페이지 콘텐츠가 인쇄됩니다.
     index:
       no_results_content_text: 위키 페이지 추가
+  workflows:
+    form:
+      matrix_caption: "Workflow matrix"
+      matrix_caption_assignee: "Workflow matrix for assignee"
+      matrix_caption_author: "Workflow matrix for author"
+      matrix_checkbox_label: "Allow transition from %{old_status} to %{new_status}"
+      matrix_check_all_label: "Allow all transitions"
+      matrix_uncheck_all_label: "Disallow all transitions"
+      matrix_check_uncheck_all_in_row_label_html: "Toggle transitions from <em>%{old_status}</em> to all new statuses"
+      matrix_check_uncheck_all_in_col_label_html: "Toggle transitions from all old statuses to <em>%{new_status}</em>"
   work_flows:
     index:
       no_results_title_text: 작업 흐름이 없습니다.
@@ -903,21 +1100,15 @@ ko:
   account:
     delete: "계정 삭제"
     delete_confirmation: "이 계정을 정말로 삭제합니까?"
-    deletion_pending: "계정이 잠겼으며 삭제가 예약되었습니다. 이 프로세스는 백그라운드에서 수행됩니다. 사용자가 완전히 삭제될 때까지 몇 분 정도 걸릴 수 있습니다."
+    deletion_pending: "계정 삭제가 예약되었습니다. 이 프로세스는 백그라운드에서 수행됩니다. 사용자가 완전히 삭제될 때까지 몇 분 정도 걸릴 수 있습니다."
     deletion_info:
       data_consequences:
-        other: '이 사용자에 대한 데이터(예를 들어 이메일, 환경 설정, 일감, 위키 항목)를 가능한 범위까지 지울 것입니다. 다만 일감이나 위키 항목과 같은 데이터는 지워버릴 경우 다른 사용자의 작업을 방해하게 됩니다. 따라서 그러한 데이터는 "삭제된 사용자" 계정에 귀속됩니다. 삭제된 사용자의 작업물이 하나의 계정으로 귀속되기에, 작업물을 만든 원래 사용자가 누구인지 구분할 수 없게 됩니다.'
-        self: '당신에 대한 데이터(예를 들어 이메일, 환경 설정, 일감, 위키 항목)를 가능한 범위까지 지울 것입니다. 다만 일감이나 위키 항목과 같은 데이터는 지워버릴 경우 다른 사용자의 작업을 방해하게 됩니다. 따라서 그러한 데이터는 "삭제된 사용자" 계정에 귀속됩니다. 삭제된 사용자의 작업물이 하나의 계정으로 귀속되기에, 당신이 만든 작업물과 다른 삭제된 사용자가 만든 작업물을 구분할 수 없게 됩니다.'
-      heading: "계정 %{name}를 삭제"
-      info:
-        other: "사용자 계정을 삭제하는것은 돌이킬 수 없는 행동입니다."
-        self: "당신의 계정을 삭제하는 것은 되돌릴 수 없습니다."
+        other: "All user-specific data will be deleted. The user's activity in shared views such as work packages and meetings will not be deleted but instead be associated with a generic 'Deleted user' that cannot be linked to the original account."
+        self: "All user-specific data will be deleted. Your activity in shared views such as work packages and meetings will not be deleted but instead be associated with a generic 'Deleted user' that cannot be linked to your original account."
+      heading: "Delete %{name}'s account?"
       login_consequences:
-        other: "이 계정이 시스템에서 삭제됩니다. 따라서 사용자는 지금의 인증 정보로 더 이상 로그인할 수 없습니다. 이 사람은 이 애플리케이션이 허용하는 방법을 따르면 다시 사용자가 될 수 있습니다."
-        self: "당신의 계정이 시스템에서 삭제됩니다. 따라서 당신은 지금의 인증 정보로 더 이상 로그인할 수 없습니다. 원한다면 이 애플리케이션이 허용하는 방법을 따라서 다시 사용자가 될 수 있습니다."
-      login_verification:
-        other: "삭제를 확인하려면 로그인 %{name}을(를) 입력하세요. 제출하면 암호를 확인하라는 메시지가 표시됩니다."
-        self: "삭제를 확인하려면 로그인 %{name}을(를) 입력하세요. 제출하면 암호를 확인하라는 메시지가 표시됩니다."
+        other: "This account will immediately be removed from the system and the user will no longer be able to log in with their credentials."
+        self: "Your account will immediately be removed from the system and you will no longer be able to log in using your credentials."
     error_inactive_activation_by_mail: >
       당신의 계정이 아직 활성화되지 않았습니다. 계정을 활성화하기 위해, 이메일로 전송된 링크를 클릭하십시오.
     error_inactive_manual_activation: >
@@ -950,8 +1141,14 @@ ko:
       attribute_help_text:
         attribute_name: "특성"
         help_text: "도움말 텍스트"
+        caption: "Caption"
       auth_provider:
         scim_clients: "SCIM 클라이언트"
+      calculated_value_error:
+        error_code: "오류 코드"
+        customized: "사용자 지정됨"
+        customized_id: "사용자 지정된 ID"
+        customized_type: "사용자 지정된 유형"
       capability:
         context: "컨텍스트"
       changeset:
@@ -980,7 +1177,7 @@ ko:
       custom_value:
         value: "값"
       design_color:
-        variable: "Variable"
+        variable: "변수"
       doorkeeper/application:
         uid: "고객 ID"
         secret: "클라이언트 비밀번호"
@@ -1002,6 +1199,8 @@ ko:
         active_user_count_restriction: "활성 사용자"
       enterprise_trial:
         company: "회사"
+      favorite:
+        favorited: "항목"
       grids/grid:
         page: "페이지"
         row_count: "행 수"
@@ -1034,11 +1233,13 @@ ko:
         active_value:
           true: "보관 취소됨"
           false: "보관됨"
+        attribute_groups: "특성 그룹"
         description: "설명"
         enabled_modules: "사용 가능한 모듈"
         identifier: "식별자"
         latest_activity_at: "다음의 최근 활동"
         parent: "하위 프로젝트"
+        project_creation_wizard_enabled: "Project initiation request"
         public_value:
           title: "표시 여부"
           true: "공개"
@@ -1053,6 +1254,13 @@ ko:
           off_track: "비정상 상태"
           finished: "마침"
           discontinued: "중단됨"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
+        template: "Template"
         templated: "템플릿 프로젝트"
         templated_value:
           true: "템플릿으로 표시됨"
@@ -1060,10 +1268,12 @@ ko:
         types: "유형"
         versions: "버전"
         work_packages: "작업 패키지"
-        workspace_type: "Workspace type"
+        workspace_type: "워크스페이스 유형"
       project_custom_field:
-        is_required: "모든 프로젝트에 필수"
+        is_required: "Required"
         custom_field_section: 섹션
+      subproject_template_assignment:
+        workspace_type: "Workspace type"
       project/phase:
         date_range: "날짜 범위"
         definition: "정의"
@@ -1127,6 +1337,8 @@ ko:
         is_readonly: "읽기 전용 작업 패키지"
         excluded_from_totals: "계층의 합계 계산에서 제외"
         default_done_ratio: "완료 %"
+      token/named:
+        token_name: "토큰 이름"
       token/ical:
         calendar: "달력"
         ical_token_query_assignment: "쿼리 할당"
@@ -1171,6 +1383,7 @@ ko:
         header_alerts: "알림"
         button_update_look_and_feel: "모양과 느낌 업데이트"
         button_update_alerts: "업데이트 알림"
+        button_update_user_information: "Update profile"
         comments_sorting: "다음을 기준으로 작업 패키지 활동을 정렬하여 표시:"
         disable_keyboard_shortcuts: "키보드 바로 가기 비활성화"
         disable_keyboard_shortcuts_caption_html: |-
@@ -1180,11 +1393,21 @@ ko:
         auto_hide_popups: "성공 배너 자동으로 숨기기"
         auto_hide_popups_caption: "활성화하면 녹색 성공 배너가 5초 후에 자동으로 사라집니다."
         warn_on_leaving_unsaved: "저장하지 않고 작업 패키지를 벗어날 때 알려주세요."
+        increase_theme_contrast: "테마 대비 증가"
+        increase_contrast: "대비 증가"
+        increase_contrast_caption: "선택한 색상 모드에 대한 고대비 모드를 활성화합니다."
+        force_light_theme_contrast: "라이트 모드에서 고대비 강제 적용"
+        force_dark_theme_contrast: "다크 모드에서 고대비 강제 적용"
+        force_light_theme_contrast_caption: "자동 색상 모드를 선택하면 라이트 모드의 고대비 버전이 사용됩니다."
+        force_dark_theme_contrast_caption: "자동 색상 모드를 선택하면 다크 모드의 고대비 버전이 사용됩니다."
         theme: "색상 모드"
         time_zone: "표준 시간대"
         mode_guideline: "일부 모드에서는 접근성과 가독성을 위해 사용자 지정 테마 색상을 덮어씁니다. 전체 사용자 지정 테마 지원을 위해서는 라이트 모드를 선택하세요."
         daily_reminders: "일일 미리 알림"
         workdays: "근무일"
+      users/invitation/form_model:
+        principal_type: "초대 유형"
+        id_or_email: "이름 또는 이메일 주소"
       version:
         effective_date: "완료 날짜"
         sharing: "공유"
@@ -1247,7 +1470,7 @@ ko:
         confirmation: "%{attribute} 속성에 부합하지 않습니다."
         could_not_be_copied: "%{dependency}을(를) (완전히) 복사할 수 없습니다."
         does_not_exist: "존재하지 않음"
-        error_enterprise_only: "%{action}은(는) OpenProject Enterprise Edition에서만 사용할 수 있습니다"
+        error_enterprise_only: "%{action}은(는) OpenProject Enterprise Edition에서만 사용할 수 있습니다."
         error_unauthorized: "액세스하지 못할 수 있습니다."
         error_readonly: "- 쓰려고 했지만 쓸 수 없습니다."
         error_conflict: "그 사이에 정보가 한 명 이상의 다른 사용자에 의해 업데이트되었습니다."
@@ -1269,8 +1492,6 @@ ko:
         inclusion: "은(는) 허용되는 값이 아닙니다."
         inclusion_nested: "- 경로 '%{path}'에서 허용되는 값 중 하나로 설정되지 않았습니다."
         invalid: "은(는) 올바르지 않은 값입니다"
-        invalid_characters: "- 유효하지 않은 문자가 포함되어 있습니다."
-        not_allowed_custom_fields_referenced: "- 허용되지 않는 사용자 지정 필드가 포함되어 있습니다: %{custom_fields}."
         invalid_url: "은(는) 올바른 URL이 아닙니다."
         invalid_url_scheme: "은(는) 지원되는 프로토콜(허용: %{allowed_schemes})이 아닙니다."
         less_than_or_equal_to: "은(는) %{count} 보다 작거나 같아야 합니다"
@@ -1282,7 +1503,8 @@ ko:
         not_a_datetime: "은(는) 유효한 날짜가 아닙니다."
         not_a_number: "은(는) 숫자가 아닙니다."
         not_allowed: "- 사용 권한이 없어 유효하지 않습니다."
-        not_json: "- 유효한 JSON 개체가 아닙니다."
+        not_json: "is not parseable as JSON."
+        not_json_object: "is not a JSON object."
         not_an_integer: "은(는) 정수가 아닙니다."
         not_an_iso_date: "은(는) 유효한 날짜가 아닙니다. 필요한 형식: YYYY-MM-DD."
         not_same_project: "은(는) 동일한 프로젝트에 속하지 않습니다."
@@ -1290,8 +1512,8 @@ ko:
         odd: "에 홀수를 입력해 주세요"
         regex_match_failed: "%{expression} 정규 표현식과 일치하지 않습니다."
         regex_invalid: "관련 정규 표현식으로 유효성을 확인할 수 없습니다."
-        regex_list_invalid: "- %{invalid_lines} 라인에서 정규 표현식으로 구문 분석할 수 없습니다."
-        hexcode_invalid: "is not a valid 6-digit hexadecimal color code."
+        regex_list_invalid: "%{invalid_lines} 라인을 정규 표현식으로 구문 분석할 수 없습니다."
+        hexcode_invalid: "- 유효한 6자리 16진수 색상 코드가 아닙니다."
         smaller_than_or_equal_to_max_length: "은(는) 최대 길이보다 같거나 작아야 합니다."
         taken: "은(는) 이미 존재합니다."
         too_long: "은(는) 너무 깁니다 (최대 %{count}자까지 가능합니다)"
@@ -1325,6 +1547,18 @@ ko:
               minimum: "'=' 연산자를 사용하여 주체, 컨텍스트 또는 ID에 대해 하나 이상의 필터를 포함시켜야 합니다."
         custom_field:
           at_least_one_custom_option: "하나 이상의 옵션을 사용할 수 있어야 합니다."
+          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet, please try again in a few minutes."
+          referenced_in_other_fields_html:
+            other: "%{name}은(는) 프로젝트 특성 계산에 사용됩니다: %{links}."
+          attributes:
+            formula:
+              blank: "Formula can't be blank."
+              invalid: "Formula is invalid."
+              invalid_characters: "Only numeric values, mathematical operators and project attributes of type integer, float, calculated value and weighted list are allowed."
+              not_allowed_custom_fields_referenced: "The attribute %{custom_fields} cannot be used because it leads to a circular reference; one attribute depends on the other."
+              format: "%{message}"
+            required:
+              cannot_be_true: "cannot be set to true."
         custom_fields_project:
           attributes:
             project_ids:
@@ -1356,6 +1590,8 @@ ko:
           only_one_trial: "평가판 토큰은 하나만 활성화할 수 있습니다. 다른 평가판 토큰을 추가하기 전에 이전 토큰을 삭제하세요."
           unreadable: "읽을 수 없습니다. 지원하는 토큰이 확실한가요?"
           already_added: "이미 추가된 토큰입니다."
+        favorite:
+          already_favorited: "- 이미 즐겨찾기에 추가되었습니다."
         grids/grid:
           overlaps: "오버랩"
           outside: "- 그리드의 외부에 있습니다."
@@ -1392,9 +1628,11 @@ ko:
         project:
           archived_ancestor: "이 프로젝트에는 보관된 상위 항목이 있습니다."
           foreign_wps_reference_version: "하위가 아닌 프로젝트의 작업 패키지는 해당 프로젝트 또는 하위 프로젝트의 버전을 참조합니다."
+          cannot_be_assigned_to_artifact_work_package: "The chosen user is not allowed to be assigned to work packages."
           attributes:
             base:
               archive_permission_missing_on_subprojects: "모든 하위 프로젝트를 보관하는 데 필요한 권한이 없습니다. 관리자에게 문의하세요."
+              project_initiation_request_disabled: "Project initiation request is disabled. It must be enabled to create the artifact work package."
             types:
               in_use_by_work_packages: "아직 작업 패키지에 사용됨: %{types}"
             enabled_modules:
@@ -1452,10 +1690,19 @@ ko:
           typed_dag:
             circular_dependency: "이 관계는 관계의 원을 만듭니다."
           attributes:
+            base:
+              error_not_deletable: "선택한 작업 패키지에 대한 편집 권한이 없으므로 이 관계를 삭제할 수 없습니다."
+              error_not_editable: "선택한 작업 패키지에 대한 편집 권한이 없으므로 이 관계를 편집할 수 없습니다."
             to_id:
+              format: "선택한 작업 패키지 %{message}"
+              error_not_found: "- 찾을 수 없습니다."
               error_readonly: "- 기존 관계에 대해서는 변경할 수 없습니다."
+              error_not_manageable: "- 선택한 작업 패키지에 대한 편집 권한이 없으므로 추가할 수 없습니다."
             from_id:
+              format: "선택한 작업 패키지 %{message}"
+              error_not_found: "- 찾을 수 없습니다."
               error_readonly: "- 기존 관계에 대해서는 변경할 수 없습니다."
+              error_not_manageable: "- 선택한 작업 패키지에 대한 편집 권한이 없으므로 추가할 수 없습니다."
         repository:
           not_available: "SCM 업체가 가용하지 않습니다."
           not_whitelisted: "은(는) 설절에 허용되지 않습니다."
@@ -1604,9 +1851,11 @@ ko:
         version:
           undeletable_archived_projects: "첨부된 작업 패키지가 있으므로 이 버전은 삭제할 수 없습니다."
           undeletable_work_packages_attached: "첨부된 작업 패키지가 있으므로 이 버전은 삭제할 수 없습니다."
-        token/api:
+        token/named:
           attributes:
             token_name:
+              blank: "토큰 이름을 입력하세요"
+              in_use: "이 토큰 이름은 이미 사용 중입니다. 다른 이름을 선택하세요"
               format: "%{message}"
       template:
         body: "다음 필드를 확인 하십시오."
@@ -1614,11 +1863,12 @@ ko:
           other: "%{count} 오류 때문에 %{model} 을 저장할 수 없습니다."
     models:
       attachment: "파일"
-      attribute_help_text: "특성 도움말 텍스트"
+      attribute_help_text:
+        other: "Attribute help texts"
       auth_provider:
         other: "인증 공급자"
       category: "카테고리"
-      color: "Color"
+      color: "색상"
       comment: "코멘트"
       custom_action: "사용자 지정 작업"
       custom_field: "사용자 정의 필드"
@@ -1630,6 +1880,7 @@ ko:
       group: "그룹"
       issue_priority:
         other: "우선 순위"
+      meeting_participant: "미팅 참가자"
       member: "멤버"
       news: "뉴스"
       notification:
@@ -1661,6 +1912,11 @@ ko:
     header_additional_invalid_fields:
       other: "또한 다음 필드에 문제가 있습니다."
     field_erroneous_label: "이 필드는 유효 하지 않습니다: %{full_errors} \n유효한 값을 입력 해 주십시오."
+    messages:
+      must_be_template: "must be template"
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "%{datetime}, %{user} 님이 생성함"
@@ -1712,6 +1968,7 @@ ko:
     attachments: "첨부 파일"
     actor: "수행자"
     action: "액션"
+    api_key: "API 키"
     author: "작성자"
     avatar: "아바타"
     base: "일반 오류:"
@@ -1786,6 +2043,7 @@ ko:
     subject: "제목"
     slug: "슬러그"
     summary: "요약"
+    template: "Template"
     time_zone: "표준 시간대"
     text: "텍스트"
     title: "제목"
@@ -1842,6 +2100,7 @@ ko:
   button_add_watcher: "주시자 추가"
   button_annotate: "주석 달기"
   button_apply: "적용"
+  button_apply_changes: "변경 사항 적용"
   button_archive: "보관"
   button_back: "뒤로"
   button_cancel: "취소"
@@ -1855,6 +2114,7 @@ ko:
   button_collapse_all: "모두 축소"
   button_configure: "구성"
   button_continue: "계속"
+  button_complete: "Complete"
   button_copy: "복사"
   button_copy_to_clipboard: "클립보드 복사"
   button_copy_link_to_clipboard: "클립보드에 링크 복사"
@@ -1865,10 +2125,12 @@ ko:
   button_delete_permanently: "영구 삭제"
   button_delete_watcher: "주시자 %{name} 삭제"
   button_download: "다운로드"
+  button_disable: "Disable"
   button_duplicate: "복제"
   button_duplicate_and_follow: "복제하고 팔로우"
   button_edit: "편집"
-  button_edit_associated_wikipage: "Edit associated wiki page: %{page_title}"
+  button_enable: "Enable"
+  button_edit_associated_wikipage: "연결된 위키 페이지 편집: %{page_title}"
   button_expand_all: "모두 확장"
   button_favorite: "즐겨찾기에 추가"
   button_filter: "필터"
@@ -1882,6 +2144,7 @@ ko:
   button_print: "인쇄"
   button_quote: "인용"
   button_remove: 제거
+  button_remove_permanently: "Remove permanently"
   button_remove_reminder: "미리 알림 제거"
   button_rename: "이름 바꾸기"
   button_replace: "교체하기"
@@ -1891,8 +2154,8 @@ ko:
   button_rollback: "이 버전으로 롤백"
   button_save: "저장"
   button_save_as: "다른 이름으로 저장"
-  button_apply_changes: "변경 사항 적용"
   button_save_back: "저장하고 돌아가기"
+  button_select: "선택"
   button_set_reminder: "미리 알림 설정"
   button_show: "표시"
   button_sort: "분류"
@@ -1954,9 +2217,25 @@ ko:
     copy_options:
       dependencies_label: "프로젝트에서 복사"
   create_project:
+    attributes_heading: "Fill in this mandatory information to work on your projects."
     template_label: "템플릿 사용"
+    template_heading: "Select a project template to work with the most common project management methods, or create a project from scratch."
     copy_options:
       dependencies_label: "템플릿에서 복사"
+    blank_template:
+      label: "Blank project"
+      description: Start from scratch. Manually add project attributes, members and modules.
+    blank_description: No description provided.
+  create_portfolio:
+    template_heading: "Select a portfolio template to work with the most common project management methods, or create a portfolio from scratch."
+    blank_template:
+      label: "Blank portfolio"
+      description: Start from scratch. Manually add portfolio attributes, members and modules.
+  create_program:
+    template_heading: "Select a program template to work with the most common project management methods, or create a program from scratch."
+    blank_template:
+      label: "Blank program"
+      description: Start from scratch. Manually add program attributes, members and modules.
   create_wiki_page: "새 위키 페이지 만들기"
   create_wiki_page_button: "위키 페이지"
   date:
@@ -2096,10 +2375,11 @@ ko:
     features:
       baseline_comparison: 기준선 비교
       board_view: 고급 보드
+      calculated_values: Calculated values
       conditional_highlighting: 조건부 강조 표시
       internal_comments: 내부 코멘트
       custom_actions: 사용자 지정 작업
-      custom_field_hierarchies: 유형 계층의 사용자 지정 필드
+      custom_field_hierarchies: Hierarchies
       customize_life_cycle: 수명 주기 사용자 지정
       date_alerts: 날짜 알림
       define_custom_style: 사용자 지정 테마 및 로고
@@ -2109,12 +2389,14 @@ ko:
       nextcloud_sso: Nextcloud 저장소용 Single Sign-On
       one_drive_sharepoint_file_storage: OneDrive/SharePoint 파일 저장소
       placeholder_users: 플레이스홀더 사용자
+      portfolio_management: Portfolio management
       project_list_sharing: 프로젝트 목록 공유
       readonly_work_packages: 읽기 전용 작업 패키지
       scim_api: SCIM 서버 API
       sso_auth_providers: Single Sign-On
       team_planner_view: 팀 플래너 보기
       virus_scanning: 바이러스 백신 검사
+      weighted_item_lists: Weighted item lists
       work_package_query_relation_columns: 작업 패키지 쿼리 관계 열
       work_package_sharing: 외부 사용자와 작업 패키지 공유
       work_package_subject_generation: 작업 패키지 제목 생성
@@ -2130,7 +2412,7 @@ ko:
         이미 토큰이 있으신가요? 아래 버튼을 사용하여 토큰을 추가하고 예약한 Enterprise 플랜으로 업그레이드하세요.
       hide_banner: "이 배너 숨기기"
       homescreen_description: >
-        Enterprise 플랜은 현재 사용 중인 Community 버전의 OpenProject를 확장합니다. 여기에는 추가 기능, 기타 기능 및 전문가 지원이 포함되어 있으므로 모든 규모의 조직이 함께 탁월한 성과를 달성할 수 있습니다.
+        Enterprise 플랜은 OpenProject Community Edition에 [Enterprise 추가 기능](enterprise_url)과 전문 지원을 포함하여 확장한 플랜으로, 미션 크리티컬 환경에서 OpenProject를 실행하는 조직에 이상적입니다.
       homescreen_subline: 업그레이드하면 오픈 소스 프로젝트도 지원하게 됩니다.
       baseline_comparison:
         description: 과거 어느 시점 이후에 이 목록에서 변경된 사항을 강조 표시합니다.
@@ -2161,13 +2443,17 @@ ko:
       readonly_work_packages:
         description: "특정 상태의 작업 패키지를 읽기 전용으로 표시합니다."
       custom_field_hierarchies:
-        description: "계층 사용자 지정 필드를 사용하면 다중 레벨 선택 목록을 사용하여 작업 패키지의 계층 구조를 구성할 수 있습니다."
+        description: "Hierarchy custom fields allow organizing hierarchical structures in work packages and projects by making use of multi-level select lists."
       date_alerts:
         description: "날짜 경보를 사용하면, 중요 마감일을 놓치거나 잊지 않도록 향후 시작 날짜 또는 종료 날짜에 대한 알림을 받게 됩니다."
+      weighted_item_lists:
+        description: "Weighted item lists allow you to create a list with underlying numeric values associated."
       work_package_sharing:
         description: "프로젝트 멤버가 아닌 사용자와 작업 패키지를 공유합니다."
       project_list_sharing:
         description: "개별 사용자와 프로젝트 목록을 공유합니다."
+      calculated_values:
+        description: "Calculated values allow you to create a mathematical formula based attribute using numeric values and other project attributes and custom fields."
       define_custom_style:
         title: "사용자 지정 색상 테마 및 로고"
         more_info: "참고: 사용된 로그는 공개적으로 액세스 가능합니다."
@@ -2182,8 +2468,8 @@ ko:
         title: "SCIM 클라이언트"
         description: "SCIM 서버 API를 통해 Microsoft Entra 또는 Keycloak 같은 외부 ID 서비스를 원활하게 통합하여 OpenProject에서 사용자 관리를 자동화하세요. Enterprise 기업 플랜부터 사용할 수 있습니다."
       sso_auth_providers:
-        title: "Single Sign-On (SSO)"
-        description: "Enable users to log in via external SSO providers using SAML or OpenID Connect for seamless access and integration with existing identity systems."
+        title: "SSO(Single Sign-On)"
+        description: "기존 ID 시스템에서 원활하게 액세스하고 통합할 수 있도록 SAML 또는 OpenID Connect를 사용하여 외부 SSO 공급자를 통해 사용자가 로그인할 수 있게 합니다."
       virus_scanning:
         description: "OpenProject에서 업로드된 파일은 바이러스 검사를 수행한 후에 다른 사용자가 액세스해야 합니다."
       placeholder_users:
@@ -2196,6 +2482,8 @@ ko:
       internal_comments_inline:
         title: "소규모 그룹만 볼 수 있는 내부 코멘트 작성"
         description: " "
+      portfolio_management:
+        description: Align your projects to your strategic goals by organizing them into portfolios and programs.
     teaser:
       title:
         other: "%{trial_plan} 평가판 토큰 %{count}일 남음"
@@ -2232,6 +2520,9 @@ ko:
   enumeration_reported_project_statuses: "보고된 프로젝트 상태"
   enumeration_caption_order_changed: "주문이 변경되었습니다."
   enumeration_could_not_be_moved: "열거형은 이동할 수 없습니다."
+  enterprise_trials:
+    dialog_component:
+      title: Enterprise 평가판
   error_auth_source_sso_failed: "사용자 '%{value}'에 대한 Single Sign-On(SSO) 실패"
   error_can_not_archive_project: "이 프로젝트는 보관할 수 없습니다: %{errors}"
   error_can_not_delete_entry: "항목을 삭제할 수 없습니다."
@@ -2260,6 +2551,7 @@ ko:
   error_invalid_selected_value: "선택된 값이 유효하지 않습니다."
   error_journal_attribute_not_present: "저널에 %{attribute} 특성이 없습니다."
   error_pdf_export_too_many_columns: "PDF 내보내기에 대해 너무 많은 열을 선택했습니다. 열 수를 줄이십시오."
+  error_pdf_date_range_too_long: "선택한 작업 패키지 날짜 범위는 허용되는 PDF 내보내기 제한을 초과합니다. 범위를 최대 %{years}년으로 좁혀주세요."
   error_pdf_failed_to_export: "PDF 내보내기를 저장할 수 없습니다: %{error}"
   error_token_authenticity: "교차 사이트 요청 위조 토큰을 확인할 수 없습니다. 여러 브라우저나 탭에서 데이터 제출을 시도하셨습니까? 모든 탭을 닫고 다시 시도하세요."
   error_reminder_not_found: "미리 알림을 찾을 수 없거나 이미 알림을 받았습니다."
@@ -2372,9 +2664,13 @@ ko:
           label: "설명 포함"
           caption: "이 옵션은 원시 형식으로 설명 열을 추가합니다."
     your_work_packages_export: "작업 패키지를 내보내는 중입니다."
-    your_projects_export: "Projects are being exported"
+    your_projects_export: "프로젝트를 내보내는 중입니다"
     succeeded: "내보내기 완료"
     failed: "작업 패키지를 내보내려는 중에 오류가 발생했습니다: %{message}"
+    demo:
+      heading: "데모 PDF"
+      footer: "OpenProject에서 생성함"
+      button_text: 데모 PDF 생성
     errors:
       embedded_table_with_too_many_columns: "이 포함된 작업 패키지 테이블은 페이지에 맞지 않습니다. 열 수를 줄여주세요."
     format:
@@ -2392,7 +2688,7 @@ ko:
       attribute_not_found: "특성을 찾을 수 없음: %{attribute}"
       model_not_found: "잘못된 특성 모델: %{model}"
       resource_not_found: "리소스를 찾을 수 없음: %{resource}"
-      rich_text_unsupported: "서식 있는 텍스트 임베딩은 내보내기에서 현재 지원되지 않음"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: 시간
       days: 일
@@ -2437,11 +2733,14 @@ ko:
       tesseract: "Tesseract 사용 가능(선택적)"
   filterable_tree_view:
     filter_mode:
-      all: "All"
-      label: "Filter mode"
-      selected: "Selected"
-    include_sub_items: "Include sub-items"
-    no_results_text: "No results"
+      all: "모두"
+      label: "필터 모드"
+      selected: "선택됨"
+    include_sub_items: "하위 항목 포함"
+    no_results_text: "결과 없음"
+  toggle_switch:
+    label_on: "켜기"
+    label_off: "끄기"
   general_csv_decimal_separator: "."
   general_csv_encoding: "UTF-8"
   general_csv_separator: ","
@@ -2464,6 +2763,24 @@ ko:
       community: "OpenProject 커뮤니티"
       upsell:
         title: "Enterprise Edition으로 업그레이드"
+      new_features:
+        header: "새로운 기능 및 제품 업데이트에 대해 알아보세요."
+        learn_about: "새로운 모든 기능에 대해 자세히 알아보기"
+        missing: "There are no highlighted features yet."
+        #We need to include the version to invalidate outdated translations in other locales
+        "17_0":
+          new_features_title: >
+            The release contains various new features and improvements, such as:
+          new_features_list:
+            line_0: Real-time documents collaboration.
+            line_1: Ability to structure related projects into programs and portfolios to focus them on strategic goals (Enterprise add-on).
+            line_2: Better meeting management with draft mode, presentation mode, enhanced outcomes, and iCal subscription.
+            line_3: Updated SharePoint integration with more restrictive permissions (Enterprise add-on).
+            line_4: Redesigned project overview with new tabs, configurable widgets, and an improved layout.
+            line_5: Option to guard the privacy of users not working in the same project more strictly.
+            line_6: Improved project creation flow with better template selection.
+            line_7: Smarter global search including type and status, improving precision in several autocompleters.
+            line_8: Accessibility improvements with ALT texts and improved chart colors.
     links:
       upgrade_enterprise_edition: "Enterprise Edition으로 업그레이드"
       postgres_migration: "설치를 PostgreSQL로 마이그레이션"
@@ -2474,7 +2791,8 @@ ko:
       shortcuts: "바로가기 "
       blog: "OpenProject 블로그"
       forums: "커뮤니티 포럼"
-      newsletter: "보안 알림/뉴스레터"
+      security_alerts: "보안 알림"
+      newsletter: "뉴스레터"
   image_conversion:
     imagemagick: "Imagemagick"
   journals:
@@ -2549,14 +2867,14 @@ ko:
       simple_revoke_confirmation: "이 토큰을 취소하시겠습니까?"
       token/api:
         title: "API"
-        text_hint: "API tokens allow third-party applications to communicate with this OpenProject instance via REST APIs."
-        disabled_text: "API tokens are not enabled by the administrator. Please contact your administrator to use this feature."
-        add_button: "API Token"
+        text_hint: "API 토큰을 사용하면 타사 애플리케이션이 REST API를 통해 이 OpenProject 인스턴스와 통신할 수 있습니다."
+        disabled_text: "관리자가 API 토큰을 활성화하지 않았습니다. 이 기능을 사용하려면 관리자에게 문의하세요."
+        add_button: "API 토큰"
       api:
         static_token_name: "API 토큰"
       ical:
         title: "iCalendar"
-        text_hint: 'iCalendar 토큰을 사용하면 사용자가 <a href="%{path}" target="_blank">OpenProject 캘린더를 구독</a>하고 외부 클라이언트의 최신 작업 패키지 정보를 볼 수 있습니다.'
+        text_hint_link: "iCalendar 토큰을 사용하여 사용자가 [OpenProject 캘린더를 구독](docs_url)하고 외부 클라이언트의 최신 작업 패키지 정보를 볼 수 있습니다."
         disabled_text: "관리자가 iCalendar 구독을 활성화하지 않았습니다. 이 기능을 사용하려면 관리자에게 문의하세요."
         empty_text_hint: "iCalendar 토큰을 추가하려면 프로젝트의 캘린더 모듈 내에서 새 캘린더 또는 기존 캘린더를 구독하세요. 필요한 권한이 있어야 합니다."
       oauth:
@@ -2639,6 +2957,7 @@ ko:
   label_api_access_key: "API 액세스 키"
   label_api_access_key_created_on: "API 액세스 키가 %{value} 전에 생성되었습니다."
   label_api_access_key_type: "API"
+  label_auto_option: "(자동)"
   label_ical_access_key_type: "iCalendar"
   label_ical_access_key_description: '"%{project_name}"의 "%{calendar_name}"에 대한 iCalendar 토큰 "%{token_name}"'
   label_ical_access_key_not_present: "iCalendar 토큰이 없습니다."
@@ -2684,6 +3003,7 @@ ko:
   label_board_plural: "보드"
   label_branch: "브랜치"
   label_browse: "찾아보기"
+  label_builtin: "Built-in"
   label_bulk_edit_selected_work_packages: "선택된 작업 패키지 일괄 편집"
   label_bundled: "(번들)"
   label_calendar: "달력"
@@ -2696,7 +3016,8 @@ ko:
   label_select_main_menu_item: 새 기본 메뉴 항목 선택
   label_required_disk_storage: "필요한 디스크 스토리지"
   label_send_invitation: 초대장 보내기
-  label_calculated_value: "계산된 값"
+  label_calculated_value: "Calculated value"
+  label_change_parent: "부모 변경"
   label_change_plural: "변경"
   label_change_properties: "속성 변경"
   label_change_status: "상태 변경"
@@ -2785,6 +3106,7 @@ ko:
   label_duplicate: "중복"
   label_duplicates: "복제"
   label_edit: "편집"
+  label_edit_attribute: "특성 편집"
   label_edit_x: "편집: %{x}"
   label_enable_multi_select: "다중 선택 토글"
   label_enabled_project_custom_fields: "사용자 정의 필드 사용"
@@ -2872,11 +3194,11 @@ ko:
   label_integer: "정수"
   label_interface: "인터페이스"
   label_internal: "내부"
-  label_introduction_video: "소개 동영상"
+  label_introduction_video: "시작하기 동영상"
   label_invite_user: "사용자 초대"
   label_item: "항목"
   label_item_plural: "항목"
-  label_scored_list: "Scored list"
+  label_weighted_item_list: "Weighted item list"
   label_share: "공유"
   label_share_project_list: "프로젝트 목록 공유"
   label_share_work_package: "작업 패키지 공유"
@@ -2887,6 +3209,7 @@ ko:
   label_journal_diff: "설명 비교"
   label_language: "언어"
   label_languages: "언어"
+  label_locale: "언어 및 지역"
   label_jump_to_a_project: "프로젝트로 이동..."
   label_keyword_plural: "키워드"
   label_language_based: "사용자 언어에 따름"
@@ -2906,13 +3229,19 @@ ko:
   label_link_url: "링크(URL)"
   label_list: "목록"
   label_loading: "로드 중..."
+  label_locked: "잠김"
   label_lock_user: "사용자 잠금"
   label_logged_as: "로그인한 계정:"
   label_login: "로그인"
-  label_custom_logo: "사용자 정의 로고"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "사용자 지정 내보내기 로고"
   label_custom_export_cover: "사용자 지정 내보내기 커버 배경"
-  label_custom_export_footer: "Custom export footer image"
+  label_custom_export_footer: "사용자 지정 내보내기 바닥글 이미지"
+  label_custom_export_font_regular: "일반"
+  label_custom_export_font_bold: "굵게"
+  label_custom_export_font_italic: "기울임꼴"
+  label_custom_export_font_bold_italic: "굵은 기울임꼴"
   label_custom_export_cover_overlay: "사용자 지정 내보내기 커버 배경 오버레이"
   label_custom_export_cover_text_color: "텍스트 색상"
   label_custom_pdf_export_settings: "사용자 지정 PDF 내보내기 설정"
@@ -3000,6 +3329,8 @@ ko:
   label_operator_equals_or: "(OR)"
   label_operator_equals_all: "(AND)"
   label_operator_shared_with_user_any: "모두"
+  label_open: "열기"
+  label_closed: "마감됨"
   label_open_menu: "메뉴 열기"
   label_open_work_packages: "열기"
   label_open_work_packages_plural: "열기"
@@ -3028,6 +3359,7 @@ ko:
   label_planning: "계획"
   label_please_login: "로그인하세요."
   label_plugins: "플러그인"
+  label_portfolio_plural: "Portfolios"
   label_modules_and_plugins: "모듈 및 플러그인"
   label_precedes: "선행"
   label_preferences: "기본 설정"
@@ -3048,11 +3380,15 @@ ko:
   label_project_attribute_manage_link: "프로젝트 특성 관리"
   label_project_count: "전체 프로젝트 수"
   label_project_copy_notifications: "프로젝트 복사 중에 이메일 알림 보내기"
+  label_project_initiation_export_pdf: "Export PDF for %{project_creation_name}"
   label_project_latest: "최근 프로젝트"
   label_project_default_type: "빈 유형 허용"
   label_project_hierarchy: "프로젝트 계층 구조"
   label_project_mappings: "프로젝트"
   label_project_new: "새 프로젝트"
+  label_project_initiation_request: "New project initiation request"
+  label_project_creation_wizard: "New project creation wizard"
+  label_project_mandate: "New project mandate"
   label_project_plural: "프로젝트"
   label_project_list_plural: "프로젝트 목록"
   label_project_life_cycle: "프로젝트 수명 주기"
@@ -3066,10 +3402,10 @@ ko:
   label_project_view_all: "모든 프로젝트 보기"
   label_project_show_details: "프로젝트 세부 정보 표시"
   label_project_hide_details: "프로젝트 세부 정보 숨기기"
-  label_portfolio: "Portfolio"
-  label_portfolio_new: "New portfolio"
-  label_program: "Program"
-  label_program_new: "New program"
+  label_portfolio: "포트폴리오"
+  label_portfolio_new: "새 포트폴리오"
+  label_program: "프로그램"
+  label_program_new: "새 프로그램"
   label_public_projects: "공용 프로젝트"
   label_query_new: "새 쿼리"
   label_query_plural: "사용자 지정 쿼리"
@@ -3102,6 +3438,7 @@ ko:
   label_repository_remove: "리포지토리 제거"
   label_repository_root: "최상위 저장소"
   label_repository_plural: "리포지토리"
+  label_request_submission: "Request submission"
   label_required: "필수"
   label_requires: "필수"
   label_result_plural: "결과"
@@ -3152,6 +3489,7 @@ ko:
   label_subproject: "하위 프로젝트"
   label_subproject_new: "새 하위 프로젝트"
   label_subproject_plural: "하위 프로젝트"
+  label_subitems: "Subitems"
   label_subtask_plural: "하위 작업"
   label_summary: "요약"
   label_system: "시스템"
@@ -3159,6 +3497,8 @@ ko:
   label_table_of_contents: "목차"
   label_tag: "태그"
   label_team_planner: "팀 플래너"
+  label_template: "템플릿"
+  label_templates: "Templates"
   label_text: "긴 텍스트"
   label_this_month: "이번 달"
   label_this_week: "이번 주"
@@ -3203,6 +3543,7 @@ ko:
   label_user_search: "사용자 검색"
   label_user_settings: "사용자 설정"
   label_users_settings: "사용자 설정"
+  label_value_x: "값: %{x}"
   label_version_new: "새 버전"
   label_version_edit: "버전 편집"
   label_version_plural: "버전"
@@ -3218,8 +3559,8 @@ ko:
   label_watched_work_packages: "주시하는 작업 패키지"
   label_what_is_this: "이게 뭐예요?"
   label_week: "주"
-  label_widget: "Widget"
-  label_widget_new: "New widget"
+  label_widget: "위젯"
+  label_widget_new: "새 위젯"
   label_wiki_content_added: "위키 페이지 추가됨"
   label_wiki_content_updated: "위키 페이지 업데이트됨"
   label_wiki_toc: "목차"
@@ -3513,6 +3854,7 @@ ko:
   notice_password_confirmation_failed: "암호가 올바르지 않습니다. 계속할 수 없습니다."
   notice_principals_found_multiple: "%{number} 개의 결과가 발견되었습니다.\n첫번째 결과를 보려면 탭 해주세요."
   notice_principals_found_single: "한 개의 결과가 있습니다.\n보려면 탭 해주세요."
+  notice_parent_item_not_found: "부모 항목을 찾을 수 없습니다."
   notice_project_not_deleted: "프로젝트가 삭제되지 않았습니다."
   notice_project_not_found: "프로젝트를 찾을 수 없습니다."
   notice_successful_connection: "연결에 성공했습니다."
@@ -3564,8 +3906,8 @@ ko:
   permission_add_work_packages: "작업 패키지 추가"
   permission_add_messages: "메시지 게시"
   permission_add_project: "프로젝트 만들기"
-  permission_add_portfolios: "Create portfolios"
-  permission_add_programs: "Create programs"
+  permission_add_portfolios: "포트폴리오 만들기"
+  permission_add_programs: "프로그램 만들기"
   permission_add_work_package_attachments: "첨부 파일 추가"
   permission_add_work_package_attachments_explanation: "작업 패키지 편집 권한 없이 첨부 파일 추가를 허용합니다."
   permission_add_internal_comments: "내부 코멘트 작성"
@@ -3583,6 +3925,7 @@ ko:
   permission_comment_news: "뉴스에 코멘트 달기"
   permission_commit_access: "리포지토리(커밋)에 대한 읽기/쓰기 액세스"
   permission_copy_projects: "프로젝트 복사"
+  permission_copy_projects_explanation: "In template projects, this permission has a secondary function, it allows the creation of new projects derived from the template."
   permission_copy_work_packages: "작업 패키지 복제"
   permission_create_backup: "백업 만들기"
   permission_delete_work_package_watchers: "주시자 삭제"
@@ -3611,7 +3954,11 @@ ko:
   permission_edit_timelines: "타임라인 편집"
   permission_edit_wiki_pages: "위키 페이지 편집"
   permission_export_work_packages: "작업 패키지 내보내기"
+  permission_export_projects: "Export projects"
   permission_export_wiki_pages: "위키 페이지 내보내기"
+  permission_invite_members_by_email: "이메일로 멤버 초대"
+  permission_invite_members_by_email_explanation: >
+    사용자가 이메일로 새로운 멤버를 초대할 수 있습니다. 초대된 사용자는 암호를 설정하고 계정을 활성화하는 링크가 포함된 이메일을 받게 됩니다. 멤버를 관리하는 권한에 따라 다릅니다
   permission_list_attachments: "첨부 파일 나열"
   permission_log_own_time: "내 시간 기록"
   permission_log_time: "다른 사용자의 시간 기록"
@@ -3641,6 +3988,9 @@ ko:
   permission_share_work_packages: "작업 패키지 공유"
   permission_manage_types: "유형 선택"
   permission_manage_own_reminders: "고유한 미리 알림 만들기"
+  permission_view_all_principals: "모든 사용자 및 그룹 보기"
+  permission_view_all_principals_explanation: >
+    사용자가 참여 프로젝트나 그룹의 멤버가 아니더라도 시스템의 모든 사용자와 그룹을 볼 수 있도록 허용합니다.
   permission_view_project: "프로젝트 보기"
   permission_view_changesets: "OpenProject에서 리포지토리 수정 사항 보기"
   permission_view_internal_comments: "내부 코멘트 보기"
@@ -3671,8 +4021,19 @@ ko:
   permission_edit_project_query: "프로젝트 쿼리 편집"
   placeholders:
     default: "-"
+  portfolio:
+    count:
+      zero: "0 portfolios"
+      one: "1 portfolio"
+      other: "%{count} portfolios"
+  program:
+    count:
+      zero: "0 programs"
+      one: "1 program"
+      other: "%{count} programs"
   project:
     archive:
+      title: "Archive project"
       are_you_sure: "프로젝트 '%{name}'을(를) 보관하시겠습니까?"
       archived: "보관됨"
     count:
@@ -3680,13 +4041,15 @@ ko:
       one: "1개 프로젝트"
       other: "%{count}개 프로젝트"
     destroy:
-      confirmation: "계속하면 %{identifier} 프로젝트가 영구적으로 제거됩니다. 이 작업을 확인하려면 아래 필드에 프로젝트 이름을 입력하세요. 이렇게 하면 다음이 허용됩니다."
-      project_delete_result_1: "모든 관련 데이터를 삭제합니다."
-      project_delete_result_2: "연결된 저장소의 관리되는 프로젝트 폴더를 모두 삭제합니다."
-      info: "프로젝트 삭제는 취소할 수 없는 작업입니다."
-      project_verification: "삭제를 확인하려면 프로젝트 이름 %{name}(을)를 입력하세요."
-      subprojects_confirmation: "하위 프로젝트 %{value}도 삭제됩니다."
-      title: "프로젝트 %{name} 삭제"
+      title: "프로젝트 삭제"
+      heading: "이 프로젝트를 영구적으로 삭제하시겠습니까?"
+      confirmation_message_for_subprojects_html:
+        zero: >
+          <strong>%{name}</strong> 프로젝트와 관련된 모든 데이터를 영구적으로 삭제하려고 합니다.
+        one: >
+          <strong>%{name}</strong> 프로젝트 및 이 하위 프로젝트와 관련된 모든 데이터를 영구적으로 삭제하려고 합니다:
+        other: >
+          <strong>%{name}</strong> 프로젝트 및 해당 하위 프로젝트와 관련된 모든 데이터를 영구적으로 삭제하려고 합니다:
     filters:
       project_phase: "프로젝트 단계: %{phase}"
       project_phase_any: "프로젝트 단계: 모두"
@@ -3697,6 +4060,7 @@ ko:
       title: 프로젝트의 식별자 변경
     not_available: "프로젝트 N/A"
     template:
+      copying_title: "Applying template"
       copying: >
         선택한 템플릿 프로젝트에서 프로젝트를 만들고 있습니다. 프로젝트가 사용 가능하게 되면 즉시 메일로 알려드립니다.
       use_template: "템플릿 사용"
@@ -3860,8 +4224,9 @@ ko:
   setting_attachment_whitelist: "첨부 파일 업로드 허용 목록"
   setting_email_delivery_method: "이메일 배달 방법"
   setting_emails_salutation: "이메일의 주소 사용자:"
-  setting_oauth_allow_remapping_of_existing_users: "Allow remapping of existing users"
+  setting_oauth_allow_remapping_of_existing_users: "기존 사용자의 다시 매핑 허용"
   setting_sendmail_location: "sendmail 실행 파일의 위치"
+  setting_sendmail_arguments: "Arguments for sendmail"
   setting_smtp_enable_starttls_auto: "사용 가능한 경우 자동으로 STARTTLS 사용"
   setting_smtp_ssl: "SSL 연결 사용"
   setting_smtp_address: "SMTP 서버"
@@ -3919,6 +4284,8 @@ ko:
   setting_feeds_limit: "피드 콘텐츠 제한"
   setting_file_max_size_displayed: "인라인에 표시되는 텍스트 파일의 최대 크기"
   setting_host_name: "호스트 이름"
+  setting_collaborative_editing_hocuspocus_url: "Hocuspocus 서버 URL"
+  setting_collaborative_editing_hocuspocus_secret: "Hocuspocus 서버 비밀번호"
   setting_hours_per_day: "일별 시간"
   setting_hours_per_day_explanation: >-
     일 및 시간으로 기간을 표시할 때 "하루"로 간주되는 시간을 정의합니다(예: 하루가 8시간이면 32시간은 4일이 됩니다).
@@ -3948,6 +4315,8 @@ ko:
   setting_mail_handler_body_delimiter_regex: "이 정규식에 일치하는 이메일을 자름"
   setting_mail_handler_ignore_filenames: "무시된 메일 첨부 파일"
   setting_new_project_user_role_id: "프로젝트를 만드는 비관리자 사용자에게 지정된 역할"
+  setting_new_project_send_confirmation_email: "Send notification to author when creating a new project"
+  setting_new_project_notification_text: "Notification text"
   setting_password_active_rules: "활성 문자 클래스"
   setting_password_count_former_banned: "재사용 금지된 최근에 사용한 암호 수"
   setting_password_days_valid: "암호 변경을 적용할 경과 일 수"
@@ -3994,7 +4363,7 @@ ko:
   setting_self_registration_manual_activation: "수동 계정 활성화"
   setting_self_registration_manual_activation_caption: >
     사용자가 직접 등록할 수 있습니다. 사용자를 생성하거나 관리할 수 있는 글로벌 권한을 가진 사용자 또는 관리자가 계정을 활성화할 때까지 해당 계정은 대기 상태로 유지됩니다.
-  setting_session_ttl: "비활성화된 후 세션 만료 시간"
+  setting_session_ttl: "Session expiration time after inactivity"
   setting_session_ttl_hint: "5 아래 값은 사용 안함으로 작동합니다."
   setting_session_ttl_enabled: "세션 만료됨"
   setting_start_of_week: "주의 시작:"
@@ -4020,14 +4389,17 @@ ko:
   setting_work_package_list_default_highlighted_attributes: "기본 인라인 강조 표시 특성"
   setting_working_days: "근무일"
   settings:
+    errors:
+      not_writable: "The setting is not writable and can only be changed by a sysadmin."
+      failed_to_update: "Setting '%{name}' could not be updated: %{message}"
     authentication:
-      login: "Login"
+      login: "로그인"
       registration: "등록"
-      sso: "Single Sign-On (SSO)"
+      sso: "SSO(Single Sign-On)"
       omniauth_direct_login_hint_html: >
         이 옵션이 활성화된 경우, 로그인 요청은 구성된 omniauth 공급자로 리디렉션됩니다. 로그인 드롭다운 및 로그인 페이지가 비활성화됩니다. <br/> <strong>참고:</strong> 또한 암호 로그인을 비활성화하지 않는 경우에는 이 옵션이 활성화된 상태에서 사용자가 <code>%{internal_path}</code> 로그인 페이지를 방문하여 내부에서 계속 로그인할 수 있습니다.
       remapping_existing_users_hint: >
-        If enabled, allows any configured identity provider to login existing users based on their email address, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
+        활성화된 경우, 사용자가 이전에 해당 공급자를 통해 로그인한 적이 없더라도, 구성된 모든 ID 공급자가 이메일 주소를 기반으로 기존 사용자에 로그인하도록 허용합니다. 이 옵션은 OpenProject 인스턴스를 새 SSO 공급자로 마이그레이션할 때 유용할 수 있지만 인스턴스의 일부 사용자가 신뢰하지 않는 공급자를 이용할 때는 권장되지 않습니다.
     attachments:
       whitelist_text_html: >
         업로드된 파일의 유효한 파일 확장명 및/또는 MIME 형식 목록을 정의합니다. <br/> 파일 확장명(예: <code>%{ext_example}</code>) 또는 MIME 형식(예: <code>%{mime_example}</code>)을 입력합니다. <br/> 모든 파일 형식을 업로드할 수 있도록 허용하려면 비워 둡니다. 여러 값이 허용됩니다(각 값에 대해 한 줄).
@@ -4080,6 +4452,7 @@ ko:
     passwords: "암호"
     project_attributes:
       heading: "프로젝트 특성"
+      label_for_all_projects: "All projects"
       label_new_attribute: "프로젝트 특성"
       label_new_section: "섹션"
       label_edit_section: "제목 편집"
@@ -4092,9 +4465,63 @@ ko:
       new:
         heading: "새 특성"
         description: "이 프로젝트 특성에 대한 변경 사항은 이 특성이 활성화된 모든 프로젝트에 반영됩니다. 필수 특성은 프로젝트별로 비활성화할 수 없습니다."
+      sections:
+        display_representation:
+          overview:
+            label: "Project attribute shown in:"
+            main_area:
+              label: "Main area"
+              description: "Add all the project attributes as individual widgets in the main section of the project overview."
+            side_panel:
+              label: "Side panel"
+              description: "Add all the project attributes in a section inside the right side panel in the project overview."
+    project_initiation_request:
+      header_description: >
+        OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can choose which project attributes should be included and create a PDF artifact as a result.
+      status:
+        submitted: "%{wizard_name} has been submitted"
+        submitted_description: "Click the button below to go to the work package for the submission process."
+        submitted_button: "Open submission request"
+        not_completed: "%{wizard_name} not yet completed"
+        not_completed_description: "Provide the necessary information by filling the attributes and get the project started."
+      wizard_status_button:
+        project_initiation_request: "Open project initiation request"
+        project_creation_wizard: "Open project creation wizard"
+        project_mandate: "Open project mandate"
+      blankslate:
+        title: "Initiation request not enabled"
+        description: "OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can choose which project attributes should be included and what to do with the output document. Enable it here to start configuring the wizard."
+      disable_dialog:
+        title: "Disable project initiation request"
+        heading: "Disable this project initiation request?"
+        confirmation_message: "The initiation request wizard will no longer be available to new projects based on this template. Project managers and project owners will need to manually configure and fill out the relevant information in the Project overview."
+        checkbox_message: "I understand that this action is not reversible"
+      name:
+        artifact_name: "Artifact name"
+        artifact_name_caption: "Choose the name for this artifact that your project management framework recommends."
+        options:
+          project_initiation_request: "Project initiation request"
+          project_creation_wizard: "Project creation wizard"
+          project_mandate: "Project mandate"
+      submission:
+        description_template: >
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artefact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
+        description: "When a user submits a project initiation request, a new work package will be created with the request artifact attached as a PDF file. The settings below define the type, status and assignee for this new work package."
+        work_package_type: "Work package type"
+        work_package_type_caption: "The work package type that should be used to store the completed artifact."
+        status_when_submitted: "Status when submitted"
+        status_when_submitted_caption: "The status the generated work package will transition to once the request is submitted."
+        send_confirmation_email: "Send confirmation email to the user who submitted the project initiation request"
+        assignee: "Assignee when submitted"
+        assignee_caption_html: "The user or group assigned to this project attribute will also become the assignee of the new work package. This list includes active project attributes of type <i>User</i> only."
+        confirmation_email_text: "Confirmation email text"
+        confirmation_email_default: "Hello,\n\nYou submitted a project initiation request for **%{project_name}**. It is now awaiting review.\nClick the link below to access the work package with your request."
+        work_package_comment: "Work package comment"
+        work_package_comment_caption: "The assignee selected above will automatically be @mentioned in the comment."
+        work_package_comment_default: "A project initiation request for **%{project_name}** was submitted and is awaiting review."
     project_phase_definitions:
       heading: "프로젝트 수명 주기"
-      heading_description: "프로젝트 수명 주기는 프로젝트 계획에 사용할 수 있는 프로젝트 단계를 정의하며, 각 프로젝트의 개요 페이지에 표시됩니다. 이러한 특성은 활성화 또는 비활성화할 수 있지만 프로젝트 수준에서 재정렬할 수는 없습니다."
+      heading_description: "Project life cycle defines the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
       label_add: "추가"
       label_add_description: "프로젝트 단계 정의 추가"
       filter:
@@ -4137,6 +4564,7 @@ ko:
   status_invited: 초대됨
   status_locked: 잠김
   status_registered: 등록됨
+  status_deleted: 삭제됨
   #Used in array.to_sentence.
   support:
     array:
@@ -4146,6 +4574,7 @@ ko:
   text_access_token_hint: "액세스 토큰을 사용하여 OpenProject의 리소스에 대한 외부 응용 프로그램 액세스 권한을 부여할 수 있습니다."
   text_analyze: "추가 분석: %{subject}"
   text_are_you_sure: "계속하시겠습니까?"
+  open_link_in_a_new_tab: "새 탭에서 링크 열기"
   text_are_you_sure_continue: "계속하시겠습니까?"
   text_are_you_sure_with_children: "작업 패키지 및 모든 자식 작업 패키지를 삭제하시겠습니까?"
   text_are_you_sure_with_project_custom_fields: "이 특성을 삭제하면 모든 프로젝트에서 해당 값도 삭제됩니다. 계속하시겠습니까?"
@@ -4166,13 +4595,27 @@ ko:
   text_project_custom_field_html: >
     Enterprise Edition은 프로젝트의 사용자 지정 필드에 대해 다음과 같은 기타 추가 기능을 추가합니다: <br> <ul> <li><b>프로젝트 목록에 프로젝트에 대한 사용자 지정 필드를 추가하여 프로젝트 포트폴리오 보기 만들기</b></li> </ul>
   text_custom_logo_instructions: >
-    투명한 배경에 흰색 로고가 권장됩니다. 기존 디스플레이와 레티나 디스플레이 둘 다에서 최상의 결과를 위해 이미지의 크기는 460px x 60px여야 합니다.
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×47px image. You can add as much spacing inside that image as you like.
+  text_custom_logo_mobile_instructions: >
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×33px image. You can add as much spacing inside that image as you like.
   text_custom_export_logo_instructions: >
     PDF 내보내기에서 표시되는 로고입니다. PNG 또는 JPEG 이미지 파일이어야 합니다. 투명 또는 흰색 바탕에 검은색 또는 컬러 로고를 사용하는 것이 좋습니다.
   text_custom_export_cover_instructions: >
     PDF 내보내기의 커버 페이지 배경에 나타나는 이미지입니다. 약 800px 너비, 500px 높이의 PNG 또는 JPEG 이미지 파일이어야 합니다.
   text_custom_export_footer_instructions: >
-    PDF exports will include a graphical element positioned to the left of the footer. This image must be a PNG or JPEG file with approximately 200 pixels in width.
+    PDF 내보내기에는 바닥글 왼쪽에 있는 그래픽 요소가 포함됩니다. 이 이미지는 너비가 약 200픽셀인 PNG 또는 JPEG 파일이어야 합니다.
+  label_custom_export_font_instructions: >
+    PDF 내보내기에 사용되는 사용자 지정 TrueType(.ttf) 글꼴을 업로드하고 관리하세요. 최상의 결과를 얻으려면 동일한 글꼴 패밀리의 일치하는 파일을 사용하세요. 글꼴이 제공되지 않으면 기본 NotoSans 글꼴이 사용됩니다.
+  label_custom_export_images_instructions: >
+    PDF 내보내기에 사용되는 사용자 지정 이미지 파일을 업로드하고 관리하세요.
+  text_custom_export_font_regular_instructions: >
+    일반 텍스트용 글꼴 파일입니다. TTF 형식이어야 하며 필수입니다.
+  text_custom_export_font_bold_instructions: >
+    굵은 텍스트용 글꼴 파일입니다. TTF 형식이어야 합니다.
+  text_custom_export_font_italic_instructions: >
+    기울임꼴 텍스트용 글꼴 파일입니다. TTF 형식이어야 합니다.
+  text_custom_export_font_bold_italic_instructions: >
+    굵은 기울임꼴 텍스트용 글꼴 파일입니다. TTF 형식이어야 합니다.
   text_custom_favicon_instructions: >
     페이지 제목 옆의 브라우저 창/탭에 나타나는 작은 아이콘입니다. 투명한 배경을 가진 정사각형 32x32 픽셀 크기의 PNG 이미지 파일이어야 합니다.
   text_custom_touch_icon_instructions: >
@@ -4230,6 +4673,7 @@ ko:
     참고: 활성화하는 경우, <a href="%{information_panel_path}">%{information_panel_label}</a> 관리 패널 및 홈페이지에서 설치 상태가 나오는 배지가 표시됩니다. 배지는 관리자에게만 표시됩니다. <br/> 배지는 공식 OpenProject 릴리스 데이터베이스와 비교하여 현재 OpenProject 버전을 확인하고 업데이트 또는 알려진 취약성에 대해 알려줍니다. 이 검사에서 제공하는 사항, 사용 가능한 업데이트를 제공하기 위해 필요한 데이터 및 이 검사를 비활성화하는 방법에 대한 자세한 내용은 <a href="%{more_info_url}">구성 문서</a>를 참조하십시오.
   text_own_membership_delete_confirmation: "권한의 일부 또는 전부를 삭제하려고 합니다. 이렇게 한 후에는 이 프로젝트를 더 이상 편집하지 못할 수 있습니다.\n계속하시겠습니까?"
   text_permanent_delete_confirmation_checkbox_label: "이 삭제는 되돌릴 수 없음을 이해합니다."
+  text_permanent_remove_confirmation_checkbox_label: "I understand that this removal cannot be reversed"
   text_plugin_assets_writable: "플러그인 자산 디렉터리 쓰기 가능"
   text_powered_by: "%{link} 제공"
   text_project_identifier_info: "소문자(a-z), 숫자, 대시(-) 및 밑줄(_)만 허용됩니다. 소문자로 시작해야 합니다."
@@ -4512,8 +4956,8 @@ ko:
       code_500_missing_enterprise_token: "Enterprise 토큰이 유효하지 않거나 누락되어 요청을 처리할 수 없습니다."
       bad_request:
         emoji_reactions_activity_type_not_supported: "이 활동 유형은 이모티콘 반응을 지원하지 않습니다."
-        invalid_link: "The link under key '%{key}' is not valid."
-        links_not_an_object: "_links must be a JSON object."
+        invalid_link: "'%{key}' 키 아래의 링크가 유효하지 않습니다."
+        links_not_an_object: "_links는 JSON 개체여야 합니다."
       conflict:
         multiple_reminders_not_allowed: |-
           작업 패키지에 대해 한 번에 하나의 미리 알림만 설정할 수 있습니다. 기존 미리 알림을 삭제하거나 업데이트하세요.
@@ -4541,6 +4985,8 @@ ko:
       multiple_errors: "다중 필드 제약 조건이 위반되었습니다."
       unable_to_create_attachment: "첨부 파일을 만들 수 없습니다."
       unable_to_create_attachment_permissions: "파일 시스템 사용 권한이 부족하여 첨부 파일을 저장할 수 없습니다."
+      user:
+        name_readonly: "The name attribute is read-only. Changes can be written through the attributes firstname and lastname."
       render:
         context_not_parsable: "제공된 컨텍스트는 리소스에 대한 링크가 아닙니다."
         unsupported_context: "지정된 리소스는 컨텍스트로 지원되지 않습니다."
@@ -4555,8 +5001,10 @@ ko:
     resources:
       schema: "스키마"
     undisclosed:
-      parent: 숨겨짐 - 권한이 없어 선택한 부모를 볼 수 없습니다.
+      parent: Undisclosed - The parent is invisible because of lacking permissions.
+      project: Undisclosed - The project is invisible because of lacking permissions.
       ancestor: 숨겨짐 - 권한이 없어 상위 항목을 볼 수 없습니다.
+      definingProject: Undisclosed - The project is invisible because of lacking permissions.
   doorkeeper:
     pre_authorization:
       status: "사전 권한 부여"

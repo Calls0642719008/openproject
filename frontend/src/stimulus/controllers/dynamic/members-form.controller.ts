@@ -70,7 +70,7 @@ export default class MembersFormController extends Controller {
       window.OpenProject.guardedLocalStorage('showFilter', 'false');
     }
 
-    this.autocompleter = this.addMemberFormTarget.querySelector('opce-members-autocompleter') as HTMLElement;
+    this.autocompleter = this.addMemberFormTarget.querySelector('opce-members-autocompleter')!;
 
     if (this.hasErrorExplanationTarget && this.errorExplanationTarget.textContent !== '') {
       this.showAddMemberForm();

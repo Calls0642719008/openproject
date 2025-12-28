@@ -43,8 +43,15 @@ module OpTurbo
     extend ActiveSupport::Concern
 
     class_methods do
-      def wrapper_key
+      def wrapper_key(_object = nil)
         name.underscore.tr("/", "-").tr("_", "-")
+      end
+
+      def component_id(object = nil)
+        [
+          wrapper_key,
+          object.respond_to?(:id) ? object.id : object
+        ].compact.join("-")
       end
     end
 
@@ -61,7 +68,8 @@ module OpTurbo
     # @param [ActionView::Context] view_context the view context to render in.
     # @param [Symbol] action the Turbo Stream action.
     # @param [String, nil] method the Turbo Stream method (if action is :update or :replace).
-    def render_as_turbo_stream(view_context:, action: :update, method: nil, **attributes)
+    # @param [String, nil] target of the turbo stream. Defaults to the wrapper key
+    def render_as_turbo_stream(view_context:, action: :update, method: nil, target: wrapper_key, **attributes)
       case action
       when :update, *INLINE_ACTIONS
         @inner_html_only = true
@@ -88,7 +96,7 @@ module OpTurbo
       OpTurbo::StreamComponent.new(
         action:,
         method:,
-        target: wrapper_key,
+        target:,
         template:,
         **attributes
       ).render_in(view_context)
@@ -139,11 +147,7 @@ module OpTurbo
     end
 
     def wrapper_key
-      if wrapper_uniq_by.nil?
-        self.class.wrapper_key
-      else
-        "#{self.class.wrapper_key}-#{wrapper_uniq_by}"
-      end
+      self.class.component_id(wrapper_uniq_by)
     end
 
     def wrapper_uniq_by

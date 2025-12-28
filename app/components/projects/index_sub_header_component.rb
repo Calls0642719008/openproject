@@ -54,7 +54,8 @@ module Projects
       {
         controller: "filter--filters-form",
         "filter--filters-form-perform-turbo-requests-value": true,
-        "filter--filters-form-clear-button-id-value": clear_button_id
+        "filter--filters-form-clear-button-id-value": clear_button_id,
+        "filter--filters-form-display-filters-value": filters_expanded?
       }
     end
 
@@ -72,37 +73,23 @@ module Projects
     end
 
     def new_workspace_path(type)
-      case type
-      when Project.workspace_types[:project]
-        new_project_path
-      when Project.workspace_types[:portfolio]
-        new_portfolio_path
-      when Project.workspace_types[:program]
-        new_program_path
-      end
+      return unless Project.workspace_types.key?(type)
+
+      url_for([:new, type.to_sym])
     end
 
     def new_workspace_label(type)
       I18n.t(:"label_#{type}")
     end
 
-    def new_workspace_icon(type)
-      case type
-      when Project.workspace_types[:project]
-        :project
-      when Project.workspace_types[:portfolio]
-        :briefcase
-      when Project.workspace_types[:program]
-        :"project-roadmap"
-      end
-    end
-
     def allowed_new_workspace_types
-      allowed_types = []
-      allowed_types << Project.workspace_types[:project] if @current_user.allowed_globally?(:add_project)
-      allowed_types << Project.workspace_types[:portfolio] if @current_user.allowed_globally?(:add_portfolios) && OpenProject::FeatureDecisions.portfolio_models_active?
-      allowed_types << Project.workspace_types[:program] if @current_user.allowed_globally?(:add_programs) && OpenProject::FeatureDecisions.portfolio_models_active?
-      allowed_types
+      @allowed_new_workspace_types ||= [].tap do |types|
+        if OpenProject::FeatureDecisions.portfolio_models_active?
+          types << "portfolio" if @current_user.allowed_globally?(:add_portfolios)
+          types << "program" if @current_user.allowed_globally?(:add_programs)
+        end
+        types << "project" if @current_user.allowed_globally?(:add_project)
+      end
     end
 
     def for_a_single_new_allowed_type
@@ -115,6 +102,16 @@ module Projects
       return unless allowed_new_workspace_types.length > 1
 
       yield allowed_new_workspace_types
+    end
+
+    def workspace_type_enterprise_feature_allowed?(workspace_type)
+      return EnterpriseToken.allows_to?(:portfolio_management) if workspace_type.in?(%w[portfolio program])
+
+      true
+    end
+
+    def filters_expanded?
+      params[:filters].present?
     end
   end
 end

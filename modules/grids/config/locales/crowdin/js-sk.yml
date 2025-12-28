@@ -13,14 +13,8 @@ sk:
           no_results: 'Zatiaľ žiadne dokumenty.'
         members:
           title: 'Členovia'
-          no_results: 'No visible members.'
-          view_all_members: 'Zobraziť všetkých členov'
-          add: 'Člen'
-          too_many: 'Displaying %{count} of %{total} members.'
         news:
           title: 'Novinky'
-          at: 'o'
-          no_results: 'Nič nové pre nahlásenie.'
         project_description:
           title: 'Popis projektu'
           no_results: "No description has been written yet. One can be provided in the 'Project settings'."
@@ -33,9 +27,10 @@ sk:
           not_set: 'Not set'
           finished: 'Dokončené'
           discontinued: 'Discontinued'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: 'Podprojekty'
-          no_results: 'No subprojects.'
+          title: 'Subitems'
         project_favorites:
           title: 'Favorite projects'
           no_results: 'You currently have no favorite projects. Click on the star icon in the project dashboard to add one to your favorites.'
@@ -57,6 +52,7 @@ sk:
           title: 'Work packages table'
         work_packages_graph:
           title: 'Work packages graph'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Kalendár'
         work_packages_overview:

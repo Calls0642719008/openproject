@@ -31,11 +31,11 @@
 require "spec_helper"
 
 RSpec.describe WorkPackage, "acts_as_customizable" do
-  let(:type) { create(:type_standard) }
-  let(:project) { create(:project, types: [type]) }
-  let(:user) { create(:user) }
-  let(:status) { create(:status) }
-  let(:priority) { create(:priority) }
+  shared_let(:type) { create(:type_standard) }
+  shared_let(:project) { create(:project, types: [type]) }
+  shared_let(:user) { create(:user) }
+  shared_let(:status) { create(:status) }
+  shared_let(:priority) { create(:priority) }
 
   let(:work_package) { create(:work_package, project:, type:) }
   let(:new_work_package) do
@@ -52,6 +52,7 @@ RSpec.describe WorkPackage, "acts_as_customizable" do
     type.custom_fields << cf
     # Void the custom field caching
     RequestStore.clear!
+    cf
   end
 
   describe "#custom_field_values=" do
@@ -172,7 +173,8 @@ RSpec.describe WorkPackage, "acts_as_customizable" do
 
       # now give the work_package another required custom field, but don't assign a value
       setup_custom_field(cf2)
-      work_package.custom_field_values # #custom_field_values needs to be touched
+      # custom_field_values needs to be touched
+      work_package.custom_values_to_validate = work_package.custom_field_values
 
       # that should not be valid
       expect(work_package).not_to be_valid(:saving_custom_fields)
@@ -185,31 +187,10 @@ RSpec.describe WorkPackage, "acts_as_customizable" do
 
   it_behaves_like "acts_as_customizable included" do
     let(:model_instance) { work_package }
+    let(:new_model_instance) { new_work_package }
     let(:custom_field) { create(:string_wp_custom_field) }
     before do
       setup_custom_field(custom_field)
-    end
-
-    context "with a default value" do
-      before do
-        custom_field.update! default_value: "foobar"
-        model_instance.custom_values.destroy_all
-      end
-
-      it "returns no changes" do
-        expect(model_instance.custom_field_changes).to be_empty
-      end
-    end
-
-    context "with a bool custom_field having a default value" do
-      before do
-        custom_field.update! field_format: "bool", default_value: "0"
-        model_instance.custom_values.destroy_all
-      end
-
-      it "returns no changes" do
-        expect(model_instance.custom_field_changes).to be_empty
-      end
     end
   end
 

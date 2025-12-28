@@ -131,7 +131,7 @@ export class MultiSelectEditFieldComponent extends EditFieldComponent implements
 
       // Special case 'null' value, which angular
       // only understands in ng-options as an empty string.
-      if (option && option.href === '') {
+      if (option?.href === '') {
         option.href = null;
       }
 
@@ -142,9 +142,9 @@ export class MultiSelectEditFieldComponent extends EditFieldComponent implements
   }
 
   public onOpen() {
-    jQuery(this.hiddenOverflowContainer).one('scroll', () => {
+    document.querySelector(this.hiddenOverflowContainer)?.addEventListener('scroll', () => {
       this.ngSelectComponent.close();
-    });
+    }, { once: true });
   }
 
   public onClose() {

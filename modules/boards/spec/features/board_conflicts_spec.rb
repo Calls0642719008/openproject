@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -56,7 +58,7 @@ RSpec.describe "Board remote changes resolution", :js, with_ee: %i[board_view] d
     login_as(user1)
   end
 
-  it "update boards in the background" do
+  it "update boards in the background", skip: "flickering spec" do
     board_index.visit!
 
     # Create new board

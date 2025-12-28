@@ -31,11 +31,12 @@
 module StaticLinksHelper
   ##
   # Create a static link to the given key entry
-  def static_link_to(key, label: nil)
-    item = OpenProject::Static::Links.links.fetch key
+  def static_link_to(*path, label: nil)
+    href = OpenProject::Static::Links.url_for(*path)
+    label_text = label || OpenProject::Static::Links.label_for(*path)
 
-    link_to label || t(item[:label]),
-            item[:href],
+    link_to label_text,
+            href,
             class: "openproject--static-link",
             target: "_blank", rel: "noopener"
   end
@@ -44,8 +45,7 @@ module StaticLinksHelper
   # Link to the correct installation guides for the current selected method
   def installation_guide_link
     val = OpenProject::Configuration.installation_type
-    link = OpenProject::Static::Links.links[:"#{val}_installation"] || OpenProject::Static::Links.links[:installation_guides]
-
-    link[:href]
+    # Try specific installation type first, fallback to general installation guides
+    OpenProject::Static::Links.url_for(:"#{val}_installation") || OpenProject::Static::Links.url_for(:installation_guides)
   end
 end

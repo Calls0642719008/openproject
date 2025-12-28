@@ -35,7 +35,7 @@ See COPYRIGHT and LICENSE files for more details.
   <li><%= link_to t(:label_activate_user), change_status_info_user_url(@user, change_action: :activate) %></li>
   <li><%= link_to t(:label_lock_user), change_status_info_user_url(@user, change_action: :lock) %></li>
   <% if Setting.users_deletable_by_admins? %>
-    <li><%= link_to t(:label_delete_user), deletion_info_user_url(@user) %></li>
+    <li><%= link_to t(:label_delete_user), edit_user_url(@user) %></li>
   <% end %>
   <li><%= link_to t(:label_show_all_registered_users), users_url(status: "registered") %></li>
 </ul>

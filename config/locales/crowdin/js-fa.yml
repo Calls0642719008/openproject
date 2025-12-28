@@ -88,6 +88,8 @@ fa:
     button_list_view: "نمای فهرستی"
     button_show_view: "نمایش تمام صفحه"
     button_log_time: "پیگیری زمان"
+    button_start_timer: "Start timer"
+    button_stop_timer: "توقف زمان‌سنج"
     button_more: "بیشتر"
     button_open_details: "بازکردن نمای جزییات"
     button_close_details: "بستن نمایش جزئیات"
@@ -260,7 +262,7 @@ fa:
         farRight: "منتهای راست"
         description: >
           Select the attributes you want to be shown in the respective positions of the Gantt chart at all times. Note that when hovering over an element, its date labels will be shown instead of these attributes.
-      button_activate: "نمایش Gant chart"
+      button_activate: "نمایش نمودار گانت"
       button_deactivate: "عدم نمایش Gantt chart"
       filter:
         noneSelection: "(هیچ)"
@@ -288,17 +290,6 @@ fa:
         format:
           date: "%{attribute} is no valid date - YYYY-MM-DD expected."
         general: "خطایی رخ داده است."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Read about new features and product updates."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -306,12 +297,13 @@ fa:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Activate"
     label_assignee: "نماینده"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Add column after"
     label_add_column_before: "افزودن ستون قبل از"
     label_add_columns: "افزودن ستون ها"
@@ -324,7 +316,7 @@ fa:
     label_added_time_by: 'Added by <a href="%{authorLink}">%{author}</a> at %{age}'
     label_ago: "days ago"
     label_all: "all"
-    label_all_projects: "All projects"
+    label_all_projects: "همه پروژه‌ها"
     label_all_uppercase: "همه"
     label_all_work_packages: "تمام بسته های کاری"
     label_and: "and"
@@ -353,6 +345,7 @@ fa:
     label_collapse: "فرو ریختن"
     label_collapsed: "فروریخته"
     label_collapse_all: "بستن همه"
+    label_collapse_text: "Collapse text"
     label_comment: "نظر"
     label_committed_at: "%{committed_revision_link} در %{date}"
     label_committed_link: "committed revision %{revision_identifier}"
@@ -365,6 +358,7 @@ fa:
     label_expand: "بست دادن"
     label_expanded: "بست یافته"
     label_expand_all: "باز کردن همه"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "بازکردن منوی پروژه"
     label_export: "خروجی"
     label_export_preparing: "The export is being prepared and will be downloaded shortly."
@@ -444,7 +438,7 @@ fa:
     label_sort_lower: "Move down"
     label_sorting: "مرتب سازی"
     label_spent_time: "زمان صرف شده"
-    label_star_query: "Favored"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "برای ثبت اینتر را بزنید."
     label_public_query: "عمومی"
     label_sum: "جمع"
@@ -452,7 +446,7 @@ fa:
     label_total_sum: "Total sum"
     label_subject: "موضوع"
     label_this_week: "this week"
-    label_today: "Today"
+    label_today: "امروز"
     label_time_entry_plural: "زمان صرف شده"
     label_up: "بالا"
     label_user_plural: "Users"
@@ -563,7 +557,7 @@ fa:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -914,7 +908,7 @@ fa:
         remainingWork: "کار باقی‌مانده"
         remainingWorkAlternative: "ساعت‌های باقیمانده"
         responsible: "مسئول"
-        startDate: "Start date"
+        startDate: "تاریخ شروع"
         status: "وضعیت"
         subject: "موضوع"
         subproject: "زیر پروژه"
@@ -1114,6 +1108,7 @@ fa:
       child_work_packages:
         one: "یک زیر بسته"
         other: "%{count} زیر بسته"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1132,8 +1127,9 @@ fa:
       all_projects: "In all projects"
       close_search: "Close search"
       current_project_and_all_descendants: "In this project + subprojects"
-      current_project: "In this project"
+      current_project: "در این پروژه"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "all projects"
         project_and_subprojects: "and all subprojects"
@@ -1143,71 +1139,8 @@ fa:
       list: "Table"
       timeline: "Gantt"
     invite_user_modal:
-      back: "برگشت"
       invite: "دعوت"
-      title:
-        invite: "Invite user"
-        invite_to_project: "Invite %{type} to %{project}"
-        User: "کاربر"
-        Group: "گروه"
-        PlaceholderUser: "placeholder user"
-        invite_principal_to_project: "دعوت %{principal} به %{project}"
-      project:
-        label: "پروژه"
-        required: "لطفا یک پروژه انتخاب شود"
-        lacking_permission: "Please select a different project since you lack permissions to assign users to the currently selected."
-        lacking_permission_info: "You lack the permission to assign users to the project you are currently in. You need to select a different one."
-        next_button: "Next"
-        no_results: "No projects were found"
-        no_invite_rights: "You are not allowed to invite members to this project"
-      type:
-        required: "Please select the type to be invited"
-        user:
-          title: "کاربر"
-          description: "Permissions based on the assigned role in the selected project"
-        group:
-          title: "گروه"
-          description: "Permissions based on the assigned role in the selected project"
-        placeholder:
-          title: "Placeholder user"
-          title_no_ee: "Placeholder کاربر (فقط برای نسخه حرفه ای)"
-          description: "Has no access to the project and no emails are sent out."
-          description_no_ee: 'دسترسی به پروژه ندارد و هیچ ایمیلی ارسال نمی‌شود. <br> نسخه <a href="%{eeHref}" target="_blank">انترپرایز</a> را بررسی کنید.'
-      principal:
-        label:
-          name_or_email: "Name or email address"
-          name: "نام"
-        already_member_message: "Already a member of %{project}"
-        no_results_user: "No users were found"
-        invite_user: "دعوت:"
-        no_results_placeholder: "No placeholders were found"
-        create_new_placeholder: "Create new placeholder:"
-        no_results_group: "No groups were found"
-        next_button: "Next"
-        required:
-          user: "لطفا یک کاربر را انتخاب کنید"
-          placeholder: "Please select a placeholder"
-          group: "لطفا یک گروه انتخاب کنید"
-      role:
-        label: "Role in %{project}"
-        no_roles_found: "No roles were found"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Please select a role"
-        next_button: "Next"
-      message:
-        label: "Invitation message"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "Next"
-      summary:
-        next_button: "ارسال دعوت نامه"
-      success:
-        title: "%{principal} was invited!"
-        description:
-          user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
-        next_button: "Continue"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1224,7 +1157,7 @@ fa:
       selected_filter:
         all: "همه پروژه‌ها"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:
@@ -1233,6 +1166,11 @@ fa:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "پاکسازی"

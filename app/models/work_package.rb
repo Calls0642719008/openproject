@@ -277,6 +277,11 @@ class WorkPackage < ApplicationRecord
     "#{type.name unless type.is_standard} ##{id}: #{subject}"
   end
 
+  def infoline(show_standard_type: true)
+    type_name = show_standard_type || !type.is_standard ? type.name : ""
+    "#{type_name}: #{subject} (##{id})"
+  end
+
   # Return true if the work_package is closed, otherwise false
   def closed?
     status.nil? || status.is_closed?

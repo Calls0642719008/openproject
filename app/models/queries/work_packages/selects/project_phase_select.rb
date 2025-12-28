@@ -33,7 +33,6 @@ class Queries::WorkPackages::Selects::ProjectPhaseSelect < Queries::WorkPackages
 
   def initialize
     super(:project_phase,
-          association: :project_phase_definition,
           group_by_column_name: :project_phase_definition,
           sortable: sortable_statement,
           groupable: group_by_statement,
@@ -43,11 +42,11 @@ class Queries::WorkPackages::Selects::ProjectPhaseSelect < Queries::WorkPackages
   end
 
   def groupable_select
-    "#{group_by_statement} as project_phase_definition_id"
+    group_by_statement
   end
 
   def group_by_statement
-    active_phase_null_case(true_case: "NULL", false_case: "project_phase_definitions.id")
+    "active_phases.project_phase_definition_id"
   end
 
   def order_for_count
@@ -67,7 +66,7 @@ class Queries::WorkPackages::Selects::ProjectPhaseSelect < Queries::WorkPackages
     # We use the join alias from the group by join statement to ensure that work packages with an *inactive* project
     # phase are treated like work packages *without* a project phase. In the result list, they will belong to the
     # same group: without an active project phase.
-    active_phase_null_case(true_case: "-1", false_case: "project_phase_definitions.position")
+    active_phase_null_case(true_case: "-1", false_case: "active_phases.position")
   end
 
   def self.instances(context = nil)

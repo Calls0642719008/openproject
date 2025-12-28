@@ -33,6 +33,11 @@ module API
         extend ::ActiveSupport::Concern
 
         included do
+          # There is no common representer class for all elements, we thus override the default behaviour
+          # of forwarding eager_loading preferences to the element representer
+          self.to_eager_load = []
+          self.to_preload = []
+
           collection :elements,
                      getter: ->(*) {
                        represented.map do |model|

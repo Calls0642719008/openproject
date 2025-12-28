@@ -46,6 +46,7 @@ module Storages
             register(:remove_user_from_group, Commands::RemoveUserFromGroupCommand)
             register(:rename_file, Commands::RenameFileCommand)
             register(:set_permissions, Commands::SetPermissionsCommand)
+            register(:upload_file, Commands::UploadFileCommand)
           end
 
           namespace("components") do

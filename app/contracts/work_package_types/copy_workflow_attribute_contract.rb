@@ -29,9 +29,7 @@
 #++
 
 module WorkPackageTypes
-  class CopyWorkflowAttributeContract < Dry::Validation::Contract
-    config.messages.backend = :i18n
-
+  class CopyWorkflowAttributeContract < DryApplicationContract
     params do
       optional(:copy_workflow_from).filled(:string)
     end

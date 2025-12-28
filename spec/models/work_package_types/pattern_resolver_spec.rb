@@ -33,7 +33,7 @@ require "spec_helper"
 RSpec.describe WorkPackageTypes::PatternResolver do
   let(:subject_pattern) { "ID Please: {{id}}" }
 
-  shared_let(:work_package) { create(:work_package) }
+  shared_let(:work_package) { create(:work_package, remaining_hours: 2) }
 
   subject(:resolver) { described_class.new(subject_pattern) }
 
@@ -64,6 +64,14 @@ RSpec.describe WorkPackageTypes::PatternResolver do
 
     it "resolves the pattern" do
       expect(subject.resolve(work_package)).to eq("N/A | empty: [Assignee] | without parent: N/A")
+    end
+  end
+
+  context "when the pattern has time attributes" do
+    let(:subject_pattern) { "Time left: {{remaining_time}}" }
+
+    it "resolves the pattern" do
+      expect(subject.resolve(work_package)).to eq("Time left: 2h")
     end
   end
 

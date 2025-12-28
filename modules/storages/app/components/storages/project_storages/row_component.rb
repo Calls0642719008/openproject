@@ -77,6 +77,7 @@ module Storages::ProjectStorages
               confirm_destroy_project_settings_project_storage_path(project_id: project_storage.project, id: project_storage),
               class: "icon icon-delete",
               title: I18n.t(:button_delete),
+              data: { controller: "async-dialog" },
               method: :get
     end
   end

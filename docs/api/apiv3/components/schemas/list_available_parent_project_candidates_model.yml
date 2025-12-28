@@ -29,4 +29,6 @@ allOf:
             items:
               allOf:
                 - "$ref": ./project_model.yml
-                - description: Collection of projects
+                - "$ref": ./program_model.yml
+                - "$ref": ./portfolio_model.yml
+            description: Collection of projects

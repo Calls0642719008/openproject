@@ -37,7 +37,7 @@ export class HalPayloadHelper {
    * @param resource
    * @param schema
    */
-  static extractPayload<T extends HalResource = HalResource>(resource:T|Object|null, schema:SchemaResource|null = null):Object {
+  static extractPayload<T extends HalResource = HalResource>(resource:T|object|null, schema:SchemaResource|null = null):object {
     if (resource instanceof HalResource && schema) {
       return this.extractPayloadFromSchema(resource, schema);
     } if (resource && !(resource instanceof HalResource)) {
@@ -63,13 +63,13 @@ export class HalPayloadHelper {
     const nonLinkProperties = [];
 
     for (const key in schema) {
-      if (schema.hasOwnProperty(key) && schema[key] && schema[key].writable) {
+      if (schema.hasOwnProperty(key) && schema[key]?.writable) {
         if (resource.$links[key]) {
           if (Array.isArray(resource[key])) {
             payload._links[key] = _.map(resource[key], (element) => ({ href: (element as HalResource).href }));
           } else {
             payload._links[key] = {
-              href: (resource[key] && resource[key].href),
+              href: (resource[key]?.href),
             };
           }
         } else {

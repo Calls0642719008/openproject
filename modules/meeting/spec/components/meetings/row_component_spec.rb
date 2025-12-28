@@ -130,7 +130,7 @@ RSpec.describe Meetings::RowComponent, type: :component do
         let(:meeting) { build_stubbed(:meeting, project:) }
 
         it "shows copy menu item" do
-          expect(subject).to have_link "Copy meeting"
+          expect(subject).to have_link "Duplicate meeting"
         end
       end
     end

@@ -87,7 +87,7 @@ RSpec.describe API::V3::UserPreferences::UserPreferenceRepresenter,
       expect(subject.notification_settings.length).to eq 2
       in_project, global = subject.notification_settings
 
-      expect(in_project[:project_id]).to eq "1"
+      expect(in_project[:project_id]).to eq 1
       expect(in_project[:assignee]).to be_truthy
       expect(in_project[:responsible]).to be_truthy
       expect(in_project[:mentioned]).to be_nil

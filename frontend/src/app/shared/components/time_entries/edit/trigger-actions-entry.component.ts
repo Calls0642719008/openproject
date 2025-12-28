@@ -17,12 +17,12 @@ import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service
     <a (click)="editTimeEntry()"
        [title]="text.edit"
        class="no-decoration-on-hover">
-      <op-icon icon-classes="icon-context icon-edit"></op-icon>
+      <op-icon icon-classes="icon-context icon-edit" />
     </a>
     <a (click)="deleteTimeEntry()"
        [title]="text.delete"
        class="no-decoration-on-hover">
-      <op-icon icon-classes="icon-context icon-delete"></op-icon>
+      <op-icon icon-classes="icon-context icon-delete" />
     </a>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,7 +67,7 @@ export class TriggerActionsEntryComponent {
         }
       });
       void this.turboRequestService.request(
-        this.pathHelper.timeEntryEditDialog(entry.id as string),
+        this.pathHelper.timeEntryEditDialog(entry.id!),
         { method: 'GET' },
       );
     });
@@ -93,7 +93,7 @@ export class TriggerActionsEntryComponent {
   }
 
   protected loadEntry():Observable<TimeEntryResource> {
-    const timeEntryId = (this.elementRef.nativeElement as HTMLElement).dataset.entry as string;
+    const timeEntryId = (this.elementRef.nativeElement as HTMLElement).dataset.entry!;
 
     return this
       .apiv3Service

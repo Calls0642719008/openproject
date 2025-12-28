@@ -33,7 +33,7 @@ class AttributeHelpText < ApplicationRecord
 
   def self.cached(user)
     RequestStore.fetch(name) do
-      visible(user).select(:id, :attribute_name).index_by(&:attribute_name)
+      visible(user).select(:id, :attribute_name, :caption).index_by(&:attribute_name)
     end
   end
 
@@ -71,8 +71,8 @@ class AttributeHelpText < ApplicationRecord
   validates :help_text, presence: true
   validates :attribute_name, uniqueness: { scope: :type }
 
-  def attribute_caption
-    @attribute_caption ||= self.class.available_attributes[attribute_name]
+  def attribute_field_name
+    @attribute_field_name ||= self.class.available_attributes[attribute_name]
   end
 
   def attribute_scope

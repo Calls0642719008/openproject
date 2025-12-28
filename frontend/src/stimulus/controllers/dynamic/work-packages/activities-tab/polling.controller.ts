@@ -57,7 +57,7 @@ export default class PollingController extends BaseController {
   declare readonly editFormTargets:HTMLFormElement[];
   declare readonly reactionButtonTargets:HTMLElement[];
 
-  private updateInProgress:boolean = false;
+  private updateInProgress = false;
   private intervallId:number;
   private turboRequests:TurboRequestsService;
   private apiV3Service:ApiV3Service;
@@ -111,7 +111,7 @@ export default class PollingController extends BaseController {
 
   setLastServerTimestampViaHeaders(headers:Headers) {
     if (headers.has('X-Server-Timestamp')) {
-      this.lastServerTimestampValue = headers.get('X-Server-Timestamp') as string;
+      this.lastServerTimestampValue = headers.get('X-Server-Timestamp')!;
     }
   }
 

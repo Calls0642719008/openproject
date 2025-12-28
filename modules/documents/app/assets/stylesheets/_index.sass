@@ -1,5 +1,27 @@
+$blocknote-max-width: 800px
+
 .document-form--long-description
   .ck-content
     min-height: 30vh
-  .bn-editor
-    min-height: 30vh
+
+.block-note-editor-container
+  align-items: center
+  display: flex
+  flex-direction: column-reverse
+  gap: 10px
+  height: 100%
+  max-width: none
+  padding: 0
+  width: 100%
+  > .bn-editor
+    height: 100%
+    max-width: $blocknote-max-width
+    min-height: 80vh
+    overflow: auto
+    width: 100%
+    background-color: transparent
+    padding-top: 10px // Small padding to display cursor label when at the very top
+    padding-inline: 0 // No inline padding necessary given transparent background
+
+  :focus-visible
+    outline: none !important // Remove default focus outline to use custom styles

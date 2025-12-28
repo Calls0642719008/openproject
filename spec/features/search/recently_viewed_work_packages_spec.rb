@@ -80,7 +80,7 @@ RSpec.describe "Recently viewed work packages",
       expect(page)
         .to have_css(".subject", text: work_package.subject)
       expect(page)
-        .to have_current_path project_work_package_path(work_package.project, work_package, state: "activity")
+        .to have_current_path project_work_package_path(work_package.project, work_package, "activity")
     end
 
     it "is not shown after typing something in the global search bar" do

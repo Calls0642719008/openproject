@@ -135,6 +135,26 @@ RSpec.describe RecurringMeetings::UpdateService, "integration", type: :model do
         expect(series.upcoming_instantiated_meetings.count).to eq 1
       end
     end
+
+    context "when the template is in draft mode",
+            with_good_job: RecurringMeetings::InitNextOccurrenceJob do
+      let(:params) do
+        { start_time: Time.zone.today + 2.days + 11.hours }
+      end
+
+      before do
+        series.template.update_column(:state, :draft)
+      end
+
+      it "reschedules, but does not init an occurrence (Bug #69175)" do
+        expect(service_result).to be_success
+
+        expect(series.upcoming_instantiated_meetings).to be_empty
+
+        series.reload
+        expect(series.start_time).to eq Time.zone.today + 2.days + 11.hours
+      end
+    end
   end
 
   describe "rescheduling mails" do
@@ -170,6 +190,54 @@ RSpec.describe RecurringMeetings::UpdateService, "integration", type: :model do
         expect(ActionMailer::Base.deliveries.count).to eq(1)
         expect(ActionMailer::Base.deliveries.first.subject)
           .to eq "[#{project.name}] Meeting series '#{series.title}' has been updated"
+      end
+    end
+
+    context "when updating only the location with recipients with different locales" do
+      let(:german_author) do
+        create(:user,
+               language: "de",
+               member_with_permissions: { project => %i(view_meetings edit_meetings) })
+      end
+
+      let(:english_recipient) do
+        create(:user,
+               language: "en",
+               member_with_permissions: { project => %i(view_meetings) })
+      end
+
+      let(:german_recipient) do
+        create(:user,
+               language: "de",
+               member_with_permissions: { project => %i(view_meetings) })
+      end
+
+      let(:instance) { described_class.new(model: series, user: german_author) }
+
+      let(:params) { { location: "New location" } }
+
+      before do
+        series.update!(author: german_author)
+        series.template.participants.delete_all
+        series.template.participants << MeetingParticipant.new(user: english_recipient, invited: true)
+        series.template.participants << MeetingParticipant.new(user: german_recipient, invited: true)
+        series.template.update!(location: "Old location")
+      end
+
+      it "does not send a schedule update when not necessary (Bug #67287)" do
+        expect(service_result).to be_success
+        perform_enqueued_jobs
+
+        expect(ActionMailer::Base.deliveries.count).to eq(2)
+
+        english_mail = ActionMailer::Base.deliveries.find { |m| m.to.include?(english_recipient.mail) }
+        german_mail = ActionMailer::Base.deliveries.find { |m| m.to.include?(german_recipient.mail) }
+
+        expect(english_mail.html_part.body).to include("Every day")
+        expect(english_mail.html_part.body).not_to include("Jeden Tag")
+
+        expect(german_mail.html_part.body).to include("Jeden Tag")
+        expect(german_mail.html_part.body).not_to include("Every day")
       end
     end
   end

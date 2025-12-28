@@ -9,22 +9,22 @@ value:
   updatedAt: '2022-04-06T09:03:24.591Z'
   _embedded:
     author:
-      _hint: User resource shortened for brevity
+      _abbreviated: User resource shortened for brevity
       _type: User
       id: 13
       name: Darth Nihilus
     project:
-      _hint: Project resource shortened for brevity
+      _abbreviated: Project resource shortened for brevity
       _type: Project
       id: 11
       name: Jedi Remnant Locator
     activity:
-      _hint: Activity resource shortened for brevity
+      _abbreviated: Activity resource shortened for brevity
       _type: Activity::Comment
       id: 180
       version: 3
     resource:
-      _hint: WorkPackage resource shortened for brevity
+      _abbreviated: WorkPackage resource shortened for brevity
       _type: WorkPackage
       id: 77
       subject: Educate Visas Marr

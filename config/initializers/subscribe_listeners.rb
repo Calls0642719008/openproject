@@ -30,13 +30,19 @@
 
 Rails.application.config.after_initialize do
   OpenProject::Notifications.subscribe(OpenProject::Events::JOURNAL_CREATED) do |payload|
+    journal = payload[:journal]
+    send_notifications = payload[:send_notification]
+
+    # A job is scheduled immediately that handles additional workflows on work packages
+    WorkPackages::WorkflowJob.perform_later(journal, payload[:changes]) if journal.journable_type == "WorkPackage"
+
     # A job is scheduled immediately that creates notifications (in-app if
     # supported) right away and schedules jobs to be run for mail and digest
     # mails.
     Notifications::WorkflowJob
       .perform_later(:create_notifications,
-                     payload[:journal],
-                     payload[:send_notification])
+                     journal,
+                     send_notifications)
 
     # A job is scheduled for the end of the journal aggregation time. If the
     # journal still exists with a matching updated_at value (it might be updated

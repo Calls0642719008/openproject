@@ -4,8 +4,6 @@
         size: :medium_portrait,
         id: MODAL_ID
       )
-    ) do |d| %>
-  <% d.with_body do %>
+    ) do %>
     <%= render(Settings::ProjectCustomFieldSections::DialogBodyFormComponent.new) %>
-  <% end %>
 <% end %>

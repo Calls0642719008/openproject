@@ -27,12 +27,15 @@ vi:
       no_results_table: Chưa có webhook nào được định nghĩa.
       label_add_new: Thêm webhook mới
       label_edit: Chỉnh sửa webhook
-      label_event_resources: Tài nguyên sự kiện
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Đã tạo"
         updated: "Đã cập nhật"
-        comment: "Comment"
-        internal_comment: "Internal comment"
+        comment: "Nhận xét"
+        internal_comment: "ghi chú nội bộ"
       explanation:
         text: >
           Khi xảy ra một sự kiện như tạo gói công việc hoặc cập nhật dự án, OpenProject sẽ gửi một yêu cầu POST đến các điểm cuối web đã cấu hình. Thông thường, sự kiện được gửi sau khi %{link} đã trôi qua.

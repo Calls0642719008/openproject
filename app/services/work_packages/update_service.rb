@@ -42,6 +42,10 @@ class WorkPackages::UpdateService < BaseServices::Update
   private
 
   def set_templated_attributes
+    # TODO: code smell here: saving the automatically generated subject depends
+    # on running the UpdateAncestorsService right after. The subject gets saved
+    # only thanks to this. If the UpdateAncestorsService is not run, the subject
+    # is not saved. That's an odd coupling.
     model.type.enabled_patterns.each do |key, pattern|
       model.public_send(:"#{key}=", pattern.resolve(model))
     end
@@ -56,19 +60,24 @@ class WorkPackages::UpdateService < BaseServices::Update
   end
 
   def update_related_work_packages(service_call)
-    update_ancestors([service_call.result]).each do |ancestor_service_call|
+    work_package = service_call.result
+    changed_attributes = work_package.changed_attribute_keys_before_last_save
+    update_ancestors(work_package, changed_attributes).tap do |ancestor_service_call|
       ancestor_service_call.dependent_results.each do |ancestor_dependent_service_call|
         service_call.add_dependent!(ancestor_dependent_service_call)
       end
     end
 
-    update_related(service_call.result).each do |related_service_call|
+    # update saved changes as they might have changed due to the ancestors updates
+    changed_attributes += work_package.changed_attribute_keys_before_last_save
+    changed_attributes.uniq!
+    update_related(work_package, changed_attributes).each do |related_service_call|
       service_call.add_dependent!(related_service_call)
     end
   end
 
-  def update_related(work_package)
-    consolidated_calls(update_descendants(work_package) + reschedule_related(work_package))
+  def update_related(work_package, changed_attributes)
+    consolidated_calls(update_descendants(work_package) + reschedule_related(work_package, changed_attributes))
       .each { |dependent_call| dependent_call.result.save(validate: false) }
   end
 
@@ -128,7 +137,7 @@ class WorkPackages::UpdateService < BaseServices::Update
     work_package.reset_custom_values!
   end
 
-  def reschedule_related(work_package)
+  def reschedule_related(work_package, changed_attributes)
     work_packages_to_reschedule = [work_package]
 
     # if parent changed, the former parent needs to be rescheduled too.
@@ -139,7 +148,7 @@ class WorkPackages::UpdateService < BaseServices::Update
 
     WorkPackages::SetScheduleService
       .new(user:, work_package: work_packages_to_reschedule, initiated_by: cause_of_rescheduling)
-      .call(work_package.saved_changes.keys.map(&:to_sym))
+      .call(changed_attributes)
       .dependent_results
   end
 

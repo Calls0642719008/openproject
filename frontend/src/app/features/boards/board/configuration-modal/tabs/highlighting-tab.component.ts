@@ -1,4 +1,4 @@
-import { Component, Inject, Injector } from '@angular/core';
+import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { TabComponent } from 'core-app/features/work-packages/components/wp-table/configuration-modal/tab-portal-outlet';
 import { OpModalLocalsMap } from 'core-app/shared/components/modal/modal.types';
@@ -10,7 +10,7 @@ import { CardHighlightingMode } from 'core-app/features/work-packages/components
   templateUrl: './highlighting-tab.component.html',
   standalone: false,
 })
-export class BoardHighlightingTabComponent implements TabComponent {
+export class BoardHighlightingTabComponent implements TabComponent, OnInit {
   // Highlighting mode
   public highlightingMode:CardHighlightingMode = 'none';
 
@@ -54,7 +54,7 @@ export class BoardHighlightingTabComponent implements TabComponent {
       this.highlightingMode = mode;
     }
 
-    if (['priority', 'type'].indexOf(this.highlightingMode) !== -1) {
+    if (['priority', 'type'].includes(this.highlightingMode)) {
       this.lastEntireCardAttribute = this.highlightingMode;
       this.entireCardMode = true;
     } else {

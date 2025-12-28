@@ -77,12 +77,14 @@ module Roles
     end
 
     def check_permission_prerequisites
+      hidden_permissions = OpenProject::AccessControl.permissions.select(&:hidden?).map(&:name)
+
       model.permissions.each do |name|
         permission = OpenProject::AccessControl.permission(name)
 
         next unless permission
 
-        unmet_dependencies = permission.dependencies - model.permissions
+        unmet_dependencies = permission.dependencies - model.permissions - hidden_permissions
 
         unmet_dependencies.each do |unmet_dependency|
           add_unmet_dependency_error(name, unmet_dependency)

@@ -38,16 +38,16 @@ module Components
       expect(page).to have_css('[data-test-selector="op-submenu"]')
     end
 
-    def expect_item(name, selected: false, favored: nil, visible: true)
+    def expect_item(name, selected: false, favorited: nil, visible: true)
       within "#main-menu" do
         selected_specifier = selected ? ".selected" : ":not(.selected)"
 
-        if favored.nil?
+        if favorited.nil?
           expect(page).to have_css(".op-submenu--item-action#{selected_specifier}", text: name, visible:)
         else
           item = page.find(".op-submenu--item-action#{selected_specifier}", text: name, visible:)
 
-          if favored
+          if favorited
             expect(item).to have_css(".op-primer--star-icon")
           else
             expect(item).to have_no_css(".op-primer--star-icon")

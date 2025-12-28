@@ -273,8 +273,13 @@ module OpenProject
                                   request_headers)
 
         header = %{#{scheme} realm="#{scope_realm(scope)}"}
-        header << %{, error="#{error}"}                         if error
-        header << %{, error_description="#{error_description}"} if error && error_description
+        if scheme == "Bearer"
+          header << %{, resource_metadata="#{resource_metadata}"}
+          header << %{, scope="#{escape_string scope}"} if scope
+        end
+
+        header << %{, error="#{escape_string error}"}                         if error
+        header << %{, error_description="#{escape_string error_description}"} if error && error_description
         header
       end
 
@@ -284,6 +289,14 @@ module OpenProject
         Manager.auth_schemes
           .select { |_, info| scope.nil? or info.strategies.intersect?(strategies) }
           .keys
+      end
+
+      def escape_string(string)
+        string.to_s.dump[1..-2]
+      end
+
+      def resource_metadata
+        OpenProject::StaticRouting::StaticRouter.new.url_helpers.protected_resource_metadata_url
       end
     end
 

@@ -19,7 +19,7 @@ ka:
       free: ძირითადი
       action: "Action board (%{attribute})"
     board_type_attributes:
-      assignee: დასაქმებული
+      assignee: დამსაქმებელი
       status: სტატუსი
       version: ვერსია
       subproject: ქვეპროექტი

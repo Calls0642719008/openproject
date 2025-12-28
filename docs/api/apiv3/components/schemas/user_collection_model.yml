@@ -17,7 +17,7 @@ allOf:
               - $ref: './link.yml'
               - description: |-
                   This user collection
-                  
+
                   **Resource**: Collection
       _embedded:
         type: object
@@ -38,9 +38,9 @@ example:
       href: '/api/v3/users'
   _embedded:
     elements:
-      - _hint: User resource shortened for brevity
+      - _abbreviated: User resource shortened for brevity
         _type: User
         id: 1337
-      - _hint: User resource shortened for brevity
+      - _abbreviated: User resource shortened for brevity
         _type: User
         id: 1338

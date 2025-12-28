@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 <%= styled_form_tag(
       saml_provider_path(@provider),
       class: "danger-zone",
@@ -39,10 +39,10 @@ See COPYRIGHT and LICENSE files for more details.
       <%= t("provider.delete_warning.provider", name: content_tag(:strong, @provider.display_name)).html_safe %>
     </p>
     <ul class="mb-3">
-      <li> <%= t("provider.delete_warning.delete_result_1") %>
-      <li> <%= t("provider.delete_warning.delete_result_user_count", count: @provider.user_count) %>
+      <li><%= t("provider.delete_warning.delete_result_1") %></li>
+      <li><%= t("provider.delete_warning.delete_result_user_count", count: @provider.user_count) %></li>
       <% if Setting.omniauth_direct_login_provider == @provider.slug %>
-      <li> <%= t("provider.delete_warning.delete_result_direct") %>
+      <li><%= t("provider.delete_warning.delete_result_direct") %></li>
       <% end %>
     </ul>
     <p class="danger-zone--warning">

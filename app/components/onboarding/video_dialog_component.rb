@@ -37,8 +37,8 @@ module Onboarding
       I18n.t("onboarding.welcome", app_title: Setting.app_title)
     end
 
-    def iframe_src
-      OpenProject::Configuration.onboarding_video_url
+    def video_src
+      OpenProject::Static::Links.url_for(:onboarding_video_url)
     end
   end
 end

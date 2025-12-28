@@ -146,7 +146,7 @@ export class WorkPackageViewFiltersService extends WorkPackageQueryStateService<
     }
 
     const filters = [...this.rawFilters];
-    modifier(filters[index]!);
+    modifier(filters[index]);
     this.update(filters);
 
     return true;
@@ -187,7 +187,7 @@ export class WorkPackageViewFiltersService extends WorkPackageQueryStateService<
   public remainingVisibleFilters(filters = this.current) {
     return this
       .remainingFilters(filters)
-      .filter((filter) => this.hidden.indexOf(filter.id) === -1);
+      .filter((filter) => !this.hidden.includes(filter.id));
   }
 
   /**

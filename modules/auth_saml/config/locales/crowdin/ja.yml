@@ -56,6 +56,7 @@ ja:
       label_mapping: マッピング
       label_requested_attribute_for: "要求された属性 %{attribute}"
       no_results_table: SAML ID プロバイダはまだ定義されていない。
+      notice_created: A new SAML identity provider was successfully created.
       plural: SAML ID プロバイダー
       singular: SAML ID プロバイダ
       requested_attributes: 要求された属性
@@ -106,11 +107,11 @@ ja:
       limit_self_registration: >
         有効にした場合、ユーザーは自己登録設定が許可されている場合にのみ、このプロバイダを使用して登録することができます。
       sp_entity_id: >
-        サービスプロバイダー(SP)のエンティティID。Audience と呼ばれることもあります。OpenProject インスタンスの一意のクライアント識別子です。
+        サービスプロバイダー(SP)のエンティティID。Audience と呼ばれることもあります。OpenProject サイトの一意のクライアント識別子です。
       idp_sso_service_url: >
         IDプロバイダのログイン・エンドポイントのURL。
       idp_slo_service_url: >
-        IDプロバイダのログイン・エンドポイントのURL。
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         ID プロバイダの X509 PEM 形式の公開証明書を入力します。改行で区切ることで、複数の証明書を入力できます。
       name_identifier_format: >

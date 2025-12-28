@@ -160,9 +160,10 @@ RSpec.describe NewsController do
   end
 
   describe "#destroy" do
-    it "deletes the news element and redirects to the news overview page" do
+    it "deletes the news item and redirects with 303 See Other" do
       delete :destroy, params: { id: news.id }
 
+      expect(response).to have_http_status(:see_other)
       expect(response).to redirect_to project_news_index_path(news.project)
       expect { news.reload }.to raise_error ActiveRecord::RecordNotFound
     end

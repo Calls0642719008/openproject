@@ -1,4 +1,6 @@
 zh-TW:
   overviews:
-    label: '總覽'
+    label_home: "%{workspace_type} 家"
+    label_dashboard: "儀表板"
+    label_overview: '總覽'
   permission_manage_overview: '管理總覽頁面'

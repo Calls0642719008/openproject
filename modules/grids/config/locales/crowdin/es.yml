@@ -1,6 +1,24 @@
 es:
   grids:
     label_widget_in_grid: "Widget contenido en la cuadrícula %{grid_name}"
+    widgets:
+      empty: "This widget is currently empty."
+      not_available: "This widget is not available."
+      subitems:
+        title: "Subelementos"
+        no_results: "No hay subelementos visibles."
+        view_all_subitems: "Ver todos los subelementos"
+        button_text: "Subitem"
+      members:
+        title: "Members"
+        no_results: "No hay miembros visibles."
+        view_all_members: "Ver todos los miembros"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          one: "and one more member."
+          other: "and %{count} more members."
+      news:
+        no_results: "Nada nuevo sobre lo que informar."
   activerecord:
     attributes:
       grids/grid:

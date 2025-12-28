@@ -38,8 +38,11 @@ RSpec.describe ErrorMessageHelper do
   let(:message) { error_flash[:message] }
   let(:description) { error_flash[:description] }
 
-  def escape_html(array)
-    array.map { CGI.escapeHTML it }
+  def join_escaped_errors(attributes)
+    Array(attributes)
+      .flat_map { |attribute| errors.full_messages_for(attribute) }
+      .map { CGI.escapeHTML it }
+      .join("<br/>")
   end
 
   before do
@@ -59,9 +62,11 @@ RSpec.describe ErrorMessageHelper do
       it "adds the error messages", :aggregate_failures do
         helper.error_messages_for("wiki_page")
 
-        expect(message).to include(t("activerecord.errors.template.header", model: "Wiki page", count: 1))
-        expect(description).to include(t("errors.header_invalid_fields", count: 1))
-        expect(description).to include(*escape_html(errors.full_messages))
+        expect(message).to eq(t("activerecord.errors.template.header", model: "Wiki page", count: 1))
+        expect(description).to be_html_safe.and eq([
+          t("errors.header_invalid_fields", count: 1),
+          join_escaped_errors(:title)
+        ].join("<br/>"))
       end
     end
 
@@ -74,9 +79,11 @@ RSpec.describe ErrorMessageHelper do
       it "adds both error messages", :aggregate_failures do
         helper.error_messages_for("wiki_page")
 
-        expect(message).to include(t("activerecord.errors.template.header", model: "Wiki page", count: 2))
-        expect(description).to include(t("errors.header_invalid_fields", count: 2))
-        expect(description).to include(*escape_html(errors.full_messages))
+        expect(message).to eq(t("activerecord.errors.template.header", model: "Wiki page", count: 2))
+        expect(description).to be_html_safe.and eq([
+          t("errors.header_invalid_fields", count: 2),
+          join_escaped_errors(%i[title author])
+        ].join("<br/>"))
       end
     end
 
@@ -88,9 +95,8 @@ RSpec.describe ErrorMessageHelper do
       it "adds the one error message", :aggregate_failures do
         helper.error_messages_for("wiki_page")
 
-        expect(message).to include(t("activerecord.errors.template.header", model: "Wiki page", count: 1))
-        expect(description).not_to include(t("errors.header_additional_invalid_fields", count: 1))
-        expect(description).to include(*escape_html(errors.full_messages))
+        expect(message).to eq(t("activerecord.errors.template.header", model: "Wiki page", count: 1))
+        expect(description).to be_html_safe.and eq(join_escaped_errors(:base))
       end
     end
 
@@ -103,9 +109,12 @@ RSpec.describe ErrorMessageHelper do
       it "adds both error messages", :aggregate_failures do
         helper.error_messages_for("wiki_page")
 
-        expect(message).to include(t("activerecord.errors.template.header", model: "Wiki page", count: 2))
-        expect(description).to include(t("errors.header_additional_invalid_fields", count: 1))
-        expect(description).to include(*escape_html(errors.full_messages))
+        expect(message).to eq(t("activerecord.errors.template.header", model: "Wiki page", count: 2))
+        expect(description).to be_html_safe.and eq([
+          join_escaped_errors(:base),
+          t("errors.header_additional_invalid_fields", count: 1),
+          join_escaped_errors(:title)
+        ].join("<br/>"))
       end
     end
 
@@ -120,9 +129,12 @@ RSpec.describe ErrorMessageHelper do
       it "adds both error messages", :aggregate_failures do
         helper.error_messages_for("wiki_page")
 
-        expect(message).to include(t("activerecord.errors.template.header", model: "Wiki page", count: 4))
-        expect(description).to include(t("errors.header_additional_invalid_fields", count: 2))
-        expect(description).to include(*escape_html(errors.full_messages))
+        expect(message).to eq(t("activerecord.errors.template.header", model: "Wiki page", count: 4))
+        expect(description).to be_html_safe.and eq([
+          join_escaped_errors(:base),
+          t("errors.header_additional_invalid_fields", count: 2),
+          join_escaped_errors(%i[title author])
+        ].join("<br/>"))
       end
     end
   end
@@ -130,12 +142,15 @@ RSpec.describe ErrorMessageHelper do
   describe "#error_messages_for" do
     it "accesses the model from instance variables if a name is given" do
       model.errors.add(:base, :error_conflict)
+
       helper.error_messages_for("wiki_page")
-      expect(description).to include(*escape_html(errors.full_messages))
+
+      expect(description).to eq join_escaped_errors(:base)
     end
 
     it "renders nothing if there is no instance variable with the given name" do
       model.errors.add(:base, :error_conflict)
+
       helper.error_messages_for("work_package")
 
       expect(error_flash).to be_nil

@@ -13,14 +13,8 @@
           no_results: 'Ingen dokumenter ennå.'
         members:
           title: 'Medlemmer'
-          no_results: 'Ingen synlige medlemmer.'
-          view_all_members: 'Vis alle medlemmer'
-          add: 'Medlem'
-          too_many: 'Viser %{count} av %{total} medlemmer.'
         news:
           title: 'Nyheter'
-          at: 'på'
-          no_results: 'Ingenting nytt å rapportere.'
         project_description:
           title: 'Prosjektbeskrivelse'
           no_results: "Ingen beskrivelse har blitt skrevet ennå. Den kan oppgis i \"Prosjektinnstillinger\"."
@@ -33,9 +27,10 @@
           not_set: 'Ikke angitt'
           finished: 'Fullført'
           discontinued: 'Utløpt'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: 'Underprosjekter'
-          no_results: 'Ingen delprosjekter.'
+          title: 'Subitems'
         project_favorites:
           title: 'Favorittprosjekter'
           no_results: 'Du har ingen prosjektfavoritter. Klikk på stjerneikonet i prosjektdashbordet for å legge til en i favorittene dine.'
@@ -57,6 +52,7 @@
           title: 'Tabell for arbeidspakker'
         work_packages_graph:
           title: 'Arbeidspakkediagram'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Kalender'
         work_packages_overview:

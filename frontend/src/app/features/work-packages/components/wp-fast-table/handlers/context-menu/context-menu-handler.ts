@@ -5,6 +5,8 @@ import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decora
 import { tableRowClassName } from '../../builders/rows/single-row-builder';
 import { WorkPackageTable } from '../../wp-fast-table';
 import { TableEventComponent, TableEventHandler } from '../table-handler-registry';
+import { PositionArgs } from 'core-app/shared/components/op-context-menu/wp-context-menu/wp-view-context-menu.directive';
+import { EventType } from 'core-app/features/work-packages/routing/wp-view-base/event-handling/event-handler-registry';
 
 export abstract class ContextMenuHandler implements TableEventHandler {
   // Injections
@@ -17,18 +19,18 @@ export abstract class ContextMenuHandler implements TableEventHandler {
     return `.${tableRowClassName}`;
   }
 
-  public abstract get EVENT():string;
+  public abstract get EVENT():EventType|EventType[];
 
   public abstract get SELECTOR():string;
 
   public eventScope(view:TableEventComponent) {
-    return jQuery(view.workPackageTable.tableAndTimelineContainer);
+    return view.workPackageTable.tableAndTimelineContainer;
   }
 
-  public abstract handleEvent(view:TableEventComponent, evt:JQuery.TriggeredEvent):boolean;
+  public abstract handleEvent(view:TableEventComponent, evt:Event):boolean;
 
-  protected openContextMenu(table:WorkPackageTable, evt:JQuery.TriggeredEvent, workPackageId:string, positionArgs?:any):void {
-    const handler = new WorkPackageTableContextMenu(this.injector, workPackageId, jQuery(evt.target) as JQuery, positionArgs, table);
+  protected openContextMenu(table:WorkPackageTable, evt:Event, workPackageId:string, positionArgs:PositionArgs = {}):void {
+    const handler = new WorkPackageTableContextMenu(this.injector, workPackageId, evt.target as HTMLElement, positionArgs, table);
     this.opContextMenu.show(handler, evt);
   }
 }

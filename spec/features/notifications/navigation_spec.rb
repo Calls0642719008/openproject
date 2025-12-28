@@ -56,6 +56,7 @@ RSpec.describe "Notification center navigation", :js do
 
       # Close the split screen
       split_screen.close
+      wait_for_network_idle
       expect(page).to have_current_path "/notifications"
     end
   end

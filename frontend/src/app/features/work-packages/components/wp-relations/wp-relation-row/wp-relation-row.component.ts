@@ -25,7 +25,7 @@ export class WorkPackageRelationRowComponent extends UntilDestroyedMixin impleme
 
   @Input() public groupByWorkPackageType:boolean;
 
-  @ViewChild('relationDescriptionTextarea') readonly relationDescriptionTextarea:ElementRef;
+  @ViewChild('relationDescriptionTextarea') readonly relationDescriptionTextarea:ElementRef<HTMLTextAreaElement>;
 
   public relationType:string;
 
@@ -77,7 +77,7 @@ export class WorkPackageRelationRowComponent extends UntilDestroyedMixin impleme
   }
 
   ngOnInit() {
-    this.relation = this.relatedWorkPackage.relatedBy as RelationResource;
+    this.relation = this.relatedWorkPackage.relatedBy!;
 
     this.userInputs.newRelationText = this.relation.description || '';
     this.availableRelationTypes = RelationResource.LOCALIZED_RELATION_TYPES(false);
@@ -112,18 +112,18 @@ export class WorkPackageRelationRowComponent extends UntilDestroyedMixin impleme
   public startDescriptionEdit() {
     this.userInputs.showDescriptionEditForm = true;
     setTimeout(() => {
-      const textarea = jQuery(this.relationDescriptionTextarea.nativeElement);
-      const textlen = (textarea.val() as string).length;
+      const textarea = this.relationDescriptionTextarea.nativeElement;
+      const textlen = textarea.value.length;
       // Focus and set cursor to end
       textarea.focus();
 
-      textarea.prop('selectionStart', textlen);
-      textarea.prop('selectionEnd', textlen);
+      textarea.selectionStart = textlen;
+      textarea.selectionEnd = textlen;
     });
   }
 
-  public handleDescriptionKey($event:JQuery.TriggeredEvent) {
-    if ($event.key === 'Escape') {
+  public handleDescriptionKey(event:KeyboardEvent) {
+    if (event.key === 'Escape') {
       this.cancelDescriptionEdit();
     }
   }
@@ -157,7 +157,7 @@ export class WorkPackageRelationRowComponent extends UntilDestroyedMixin impleme
     }
   }
 
-  public cancelRelationTypeEditOnEscape(evt:JQuery.TriggeredEvent) {
+  public cancelRelationTypeEditOnEscape(evt:KeyboardEvent) {
     this.userInputs.showRelationTypesForm = false;
   }
 

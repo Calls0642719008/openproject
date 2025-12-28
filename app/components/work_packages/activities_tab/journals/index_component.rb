@@ -59,10 +59,6 @@ module WorkPackages
           "work-package-journal-days"
         end
 
-        def journal_sorting_desc?
-          journal_sorting == "desc"
-        end
-
         def base_journals
           combine_and_sort_records(fetch_journals, fetch_revisions)
         end
@@ -85,7 +81,7 @@ module WorkPackages
         def combine_and_sort_records(journals, revisions)
           (journals + revisions).sort_by do |record|
             timestamp = record_timestamp(record)
-            journal_sorting_desc? ? [-timestamp, -record.id] : [timestamp, record.id]
+            journal_sorting.desc? ? [-timestamp, -record.id] : [timestamp, record.id]
           end
         end
 
@@ -102,7 +98,7 @@ module WorkPackages
         end
 
         def recent_journals
-          if journal_sorting_desc?
+          if journal_sorting.desc?
             base_journals.first(MAX_RECENT_JOURNALS)
           else
             base_journals.last(MAX_RECENT_JOURNALS)
@@ -110,7 +106,7 @@ module WorkPackages
         end
 
         def older_journals
-          if journal_sorting_desc?
+          if journal_sorting.desc?
             base_journals.drop(MAX_RECENT_JOURNALS)
           else
             base_journals.take(base_journals.size - MAX_RECENT_JOURNALS)
@@ -133,7 +129,7 @@ module WorkPackages
         end
 
         def inner_container_margin_bottom
-          if journal_sorting_desc?
+          if journal_sorting.desc?
             3
           else
             0

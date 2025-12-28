@@ -87,7 +87,7 @@ See COPYRIGHT and LICENSE files for more details.
 
             <td style="color: #878787; font-size: 12px; font-weight: 400; line-height: 16px;">
               <%= I18n.t("mail.storages.health.unhealthy.troubleshooting.text") %>
-              <a href="<%= ::OpenProject::Static::Links[:storage_docs][:troubleshooting][:href] %>"><%= I18n.t("mail.storages.health.unhealthy.troubleshooting.link_text") %></a>.
+              <a href="<%= ::OpenProject::Static::Links.url_for(:storage_docs, :troubleshooting) %>"><%= I18n.t("mail.storages.health.unhealthy.troubleshooting.link_text") %></a>.
             </td>
 
             <%= placeholder_cell("12px", vertical: true) %>

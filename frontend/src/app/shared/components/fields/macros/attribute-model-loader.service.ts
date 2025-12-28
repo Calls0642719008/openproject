@@ -103,7 +103,7 @@ export class AttributeModelLoaderService {
       );
   }
 
-  private load(model:SupportedAttributeModels, id?:string|undefined|null):Observable<HalResource|null> {
+  private load(model:SupportedAttributeModels, id?:string|null):Observable<HalResource|null> {
     switch (model) {
       case 'workPackage':
         return this.loadWorkPackage(id);
@@ -131,7 +131,7 @@ export class AttributeModelLoaderService {
       );
   }
 
-  private loadWorkPackage(id?:string|undefined|null) {
+  private loadWorkPackage(id?:string|null) {
     if (!id) {
       return throwError(this.text.not_found);
     }

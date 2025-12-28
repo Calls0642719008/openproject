@@ -44,11 +44,10 @@ RSpec.describe "custom fields", :js do
 
   describe "available fields" do
     it "shows all form elements" do
-      expect(cf_page).to have_form_element("Name")
-      expect(cf_page).to have_form_element("Default value")
-      expect(cf_page).to have_form_element("Required")
-      expect(cf_page).to have_form_element("For all projects")
-      expect(cf_page).to have_form_element("Used as a filter")
+      expect(cf_page).to have_field("Name")
+      expect(cf_page).to have_field("Default value")
+      expect(cf_page).to have_field("For all projects")
+      expect(cf_page).to have_field("Used as a filter")
     end
   end
 

@@ -3,72 +3,68 @@
   data-test-selector="op-files-picker-modal"
 >
   <div class="spot-modal--header">
-    <span id="spotModalTitle" class="spot-modal--header-title">{{text.header}}</span>
+    <span id="spotModalTitle" class="spot-modal--header-title">{{ text.header }}</span>
   </div>
 
   <div class="spot-divider"></div>
 
   <div class="spot-modal--body spot-container op-file-picker--modal-body">
-    <div
-      *ngIf="(showAlert | async) !== 'none'"
-      class="op-toast -warning"
-    >
-      <div class="op-toast--content">
-        <p>{{alertText | async}}</p>
-        <button
-          class="spot-link op-toast--close"
-          (click)="closeAlert()"
-        >
-          <span class="spot-icon spot-icon_close"></span>
-        </button>
+    @if ((showAlert | async) !== 'none') {
+      <div class="op-toast -warning">
+        <div class="op-toast--content">
+          <p>{{ alertText | async }}</p>
+          <button
+            class="spot-link op-toast--close"
+            (click)="closeAlert()"
+          >
+            <svg x-icon size="small"></svg>
+          </button>
+        </div>
       </div>
-    </div>
+    }
 
-    <spot-breadcrumbs [content]="breadcrumbs"></spot-breadcrumbs>
+    <spot-breadcrumbs [content]="breadcrumbs" />
 
-    <ng-container *ngIf="(loading$ | async) === 'success'; then listTemplate"></ng-container>
-    <ng-container *ngIf="(loading$ | async) === 'error'; then notFoundTemplate"></ng-container>
-    <ng-container *ngIf="(loading$ | async) === 'loading'; then loadingTemplate"></ng-container>
-
-    <ng-template #listTemplate>
-      <ul
-        *ngIf="(listItems$ | async).length > 0; else emptyTemplate"
-        class="spot-list spot-list_compact op-file-list op-file-picker--scrollable-content"
-        data-test-selector="op-files-picker-modal--file-list"
-      >
-        <li
-          *ngFor="let file of listItems$ | async; let i = index;"
-          class="spot-list--item op-file-list--item"
-          data-test-selector="op-file-list--item"
-          op-storage-file-list-item
-          [content]="file"
-        ></li>
-      </ul>
-    </ng-template>
-
-    <ng-template #loadingTemplate>
-      <op-loading-file-list
-        class="spot-body-small"
-        data-test-selector="op-file-list--loading-indicator"
-      ></op-loading-file-list>
-    </ng-template>
-
-    <ng-template #emptyTemplate>
-      <div class="spot-body-small spot-body-small_bold op-file-picker--info">
-        <span class="spot-icon spot-icon_folder-open op-file-picker--info-icon"></span>
-        <span [textContent]="text.content.empty"></span>
-        <span class="spot-body-small op-file-picker--info-sub-text" [textContent]="text.content.emptyHint"></span>
-      </div>
-    </ng-template>
-
-    <ng-template #notFoundTemplate>
-      <div class="spot-body-small spot-body-small_bold op-file-picker--info">
-        <span class="spot-icon spot-icon_remove-link op-file-picker--info-icon"></span>
-        <span [textContent]="text.content.noConnection(storageType)"></span>
-        <span class="spot-body-small op-file-picker--info-sub-text"
-              [textContent]="text.content.noConnectionHint(storageType)"></span>
-      </div>
-    </ng-template>
+    @switch (loading$ | async) {
+      @case ('success') {
+        @if ((listItems$ | async).length > 0) {
+          <ul
+            class="spot-list spot-list_compact op-file-list op-file-picker--scrollable-content"
+            data-test-selector="op-files-picker-modal--file-list"
+          >
+            @for (file of listItems$ | async; track file.storageFile.id) {
+              <li
+                class="spot-list--item op-file-list--item"
+                data-test-selector="op-file-list--item"
+                op-storage-file-list-item
+                [content]="file"
+              ></li>
+            }
+          </ul>
+        } @else {
+          <div class="spot-body-small spot-body-small_bold op-file-picker--info">
+            <svg file-directory-fill-icon size="small" class="op-file-picker--info-icon"></svg>
+            <span [textContent]="text.content.empty"></span>
+            <span class="spot-body-small op-file-picker--info-sub-text" [textContent]="text.content.emptyHint"></span>
+          </div>
+        }
+      }
+      @case ('error') {
+        <div class="spot-body-small spot-body-small_bold op-file-picker--info">
+          <svg x-circle-icon size="small" class="op-file-picker--info-icon"></svg>
+          <span [textContent]="text.content.noConnection(storageType)"></span>
+          <span
+            class="spot-body-small op-file-picker--info-sub-text"
+            [textContent]="text.content.noConnectionHint(storageType)"
+          ></span>
+        </div>
+      }
+      @case ('loading') {
+        <op-loading-file-list class="spot-body-small"
+          data-test-selector="op-file-list--loading-indicator"
+         />
+      }
+    }
   </div>
 
   <div class="spot-action-bar">
@@ -79,7 +75,7 @@
         [disabled]="!canCreateFolder"
         (click)="createAndNavigateToFolder()"
       >
-        <span class="spot-icon spot-icon_folder-add op-files-tab--icon op-files-tab--icon_forums"></span>
+        <svg file-directory-fill-icon size="small" class="op-files-tab--icon op-files-tab--icon_forums"></svg>
         <span [textContent]="text.buttons.newFolder"></span>
       </button>
     </div>
@@ -87,9 +83,10 @@
       <button
         type="button"
         class="button spot-action-bar--action"
-        [textContent]="text.buttons.cancel"
         (click)="closeMe()"
-      ></button>
+      >
+        {{ text.buttons.cancel }}
+      </button>
       <button
         type="button"
         class="button spot-action-bar--action -primary"
@@ -97,7 +94,9 @@
         [disabled]="!canChooseLocation"
         [textContent]="text.buttons.submit"
         (click)="chooseLocation()"
-      ></button>
+      >
+        {{ text.buttons.submit }}
+      </button>
     </div>
   </div>
 </div>

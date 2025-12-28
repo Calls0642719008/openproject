@@ -50,8 +50,9 @@ See COPYRIGHT and LICENSE files for more details.
       <tr id="user-<%= user.id %>">
         <td class="user"><%= link_to_user user %></td>
         <td class="buttons">
-          <%= link_to "", member_of_group_path(@group, user),
-                      method: :delete,
+          <%= link_to "",
+                      member_of_group_path(@group, user),
+                      data: { turbo_method: :delete },
                       class: "icon icon-remove",
                       title: t(:button_remove) %>
         </td>

@@ -1,4 +1,6 @@
 "no":
   overviews:
-    label: 'Oversikt'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Kontrollpanel"
+    label_overview: 'Oversikt'
   permission_manage_overview: 'Endre oversiktsside'

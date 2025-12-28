@@ -38,7 +38,7 @@ RSpec.describe "Cost report showing my own times", :js do
       user_autocompleter = find("opce-user-autocompleter##{filter_selector}")
 
       ng_select_clear(user_autocompleter, raise_on_missing: false)
-      select_autocomplete(user_autocompleter, query: "me")
+      select_autocomplete(user_autocompleter, query: "me", results_selector: "body")
 
       click_on "Save"
       fill_in "query_name", with: "Query ME value"

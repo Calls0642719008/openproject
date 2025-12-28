@@ -3,7 +3,7 @@ ro:
   js:
     team_planner:
       add_existing: 'Adaugă existent'
-      label_team_planner_plural: 'Team planners'
+      label_team_planner_plural: 'Planificare echipă'
       add_existing_title: 'Adaugă pachete de lucru existente'
       create_label: 'Planificator echipă'
       create_title: 'Creează planificare echipă nouă'
@@ -18,7 +18,7 @@ ro:
       work_week: 'Săptămână de lucru'
       today: 'Azi'
       drag_here_to_remove: 'Trageți aici pentru a elimina responsabilul și a începe și a termina datele.'
-      cannot_drag_here: 'Nu se poate elimina pachetul de lucru din cauza permisiunilor sau restricțiilor de editare.'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'Acest pachet de lucru nu poate să înceapă/se încheie într-o zi nelucrătoare.'
       quick_add:
         empty_state: 'Utilizează câmpul de căutare pentru a găsi pachete de lucru și trage-le în planificare pentru a-l atribui cuiva și defini datele de început și de sfârșit.'

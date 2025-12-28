@@ -108,9 +108,7 @@ export class CombinedDateEditFieldComponent extends DatePickerEditFieldComponent
   }
 
   protected current(dateAttribute:'startDate' | 'dueDate' | 'date'):string {
-    // Since the rework of the datepicker, the milestone date field has the name 'start_date' to match the database
-    const valueReference = dateAttribute === 'date' ? 'startDate' : dateAttribute;
-    const value = (this.resource && (this.resource as WorkPackageResource)[valueReference]) as string|null;
-    return (value || this.text.placeholder[dateAttribute]);
+    const value = (this.resource && (this.resource as WorkPackageResource)[dateAttribute]) as string|null;
+    return (value ?? this.text.placeholder[dateAttribute]);
   }
 }

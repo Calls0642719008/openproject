@@ -38,17 +38,17 @@ export function scrollHeaderOnMobile() {
       // Condition needed for safari browser to avoid negative positions
       const currentScrollPos = scrollableElement.scrollTop < 0 ? 0 : scrollableElement.scrollTop;
       // Only if sidebar is not opened or search bar is opened
-      if (!(jQuery('#main').hasClass('hidden-navigation'))
-        || jQuery('.op-app-header').hasClass('op-app-header_search-open')
+      if (!(document.querySelector('#main')!.classList.contains('hidden-navigation'))
+        || document.querySelector('.op-app-header')?.classList.contains('op-app-header_search-open')
         || Math.abs(currentScrollPos - prevScrollPos) <= headerHeight) { // to avoid flickering at the end of the page
         return;
       }
 
       if (prevScrollPos !== undefined && currentScrollPos !== undefined && (prevScrollPos > currentScrollPos)) {
         // Slide top menu in or out of viewport and change viewport height
-        jQuery('#wrapper').removeClass('_header-scrolled');
+        document.querySelector('#wrapper')!.classList.remove('_header-scrolled');
       } else {
-        jQuery('#wrapper').addClass('_header-scrolled');
+        document.querySelector('#wrapper')!.classList.add('_header-scrolled');
       }
       prevScrollPos = currentScrollPos;
     });

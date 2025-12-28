@@ -48,7 +48,7 @@
             <%= link_to t("two_factor_authentication.remember.clear_cookie"),
                         my_2fa_remember_cookie_path,
                         class: "two-factor-authentication--remove-remember-cookie-link",
-                        method: :delete %>
+                        data: { turbo_method: :delete } %>
           </strong>
         </p>
       </div>

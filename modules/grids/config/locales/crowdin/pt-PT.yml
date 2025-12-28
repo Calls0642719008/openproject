@@ -1,6 +1,24 @@
 pt-PT:
   grids:
     label_widget_in_grid: "Widget contido na Grelha %{grid_name}"
+    widgets:
+      empty: "This widget is currently empty."
+      not_available: "This widget is not available."
+      subitems:
+        title: "Sub-elementos"
+        no_results: "Não há filhos visíveis."
+        view_all_subitems: "Ver todos os sub-elemntos"
+        button_text: "Subitem"
+      members:
+        title: "Members"
+        no_results: "Nenhum membro visível."
+        view_all_members: "Ver todos os membros"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          one: "and one more member."
+          other: "and %{count} more members."
+      news:
+        no_results: "Nada de novo no relatório."
   activerecord:
     attributes:
       grids/grid:

@@ -17,6 +17,15 @@ post:
     set only two values in the request and the third one will be computed and returned in the response. For instance,
     when sending `{ "startDate": "2022-08-23", duration: "P2D" }`, the response will
     include `{ "dueDate": "2022-08-24" }`.
+
+    **Custom Field Validation**  
+
+    Required custom fields are only validated when they are explicitly provided in the request body. If a custom field
+    is not included in the form request, it will not be validated, allowing clients to validate partial updates
+    without triggering validation errors for unrelated required custom fields.
+
+    To override this behavior and validate all required custom fields regardless of whether they are included in the
+    request, set `validateCustomFields` to `true` in the `_meta` object of the request body.
   requestBody:
     content:
       application/json:
@@ -25,6 +34,8 @@ post:
         examples:
           'Changing subject':
             $ref: '../components/examples/work_package_edit_subject.yml'
+          'With custom field validation':
+            $ref: '../components/examples/work_package_with_meta_validation.yml'
   parameters:
     - name: id
       description: ID of the work package being modified

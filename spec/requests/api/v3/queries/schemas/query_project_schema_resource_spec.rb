@@ -31,7 +31,7 @@
 require "spec_helper"
 require "rack/test"
 
-RSpec.describe "API v3 Query Schema resource" do
+RSpec.describe "GET workspaces/:id/queries/schema" do
   include Rack::Test::Methods
   include API::V3::Utilities::PathHelper
 
@@ -41,14 +41,10 @@ RSpec.describe "API v3 Query Schema resource" do
     create(:user, member_with_permissions: { project => permissions })
   end
 
-  before do
-    login_as(user)
-  end
+  current_user { user }
 
-  describe "#get queries/schema" do
+  shared_context "as workspace schema" do
     subject { last_response }
-
-    let(:path) { api_v3_paths.query_project_schema(project.id) }
 
     before do
       get path
@@ -61,14 +57,26 @@ RSpec.describe "API v3 Query Schema resource" do
 
     it "returns the schema" do
       expect(subject.body)
-        .to be_json_eql(path.to_json)
+        .to be_json_eql(api_v3_paths.query_workspace_schema(project.id).to_json)
         .at_path("_links/self/href")
     end
 
-    context "user not allowed" do
+    context "when user not allowed" do
       let(:permissions) { [] }
 
       it_behaves_like "unauthorized access"
     end
+  end
+
+  context "for the project path" do
+    let(:path) { api_v3_paths.query_project_schema(project.id) }
+
+    include_context "as workspace schema"
+  end
+
+  context "for the workspace path" do
+    let(:path) { api_v3_paths.query_workspace_schema(project.id) }
+
+    include_context "as workspace schema"
   end
 end

@@ -13,14 +13,8 @@ ru:
           no_results: 'Документов пока нет.'
         members:
           title: 'Участники'
-          no_results: 'Нет видимых участников.'
-          view_all_members: 'Просмотреть всех участников'
-          add: 'Участник'
-          too_many: 'Отображается %{count} из %{total} участников.'
         news:
           title: 'Новости'
-          at: 'на'
-          no_results: 'Ничего нового для отчета.'
         project_description:
           title: 'Описание проекта'
           no_results: "Описания еще нет. Его можно добавить в настройках проекта."
@@ -33,9 +27,10 @@ ru:
           not_set: 'Не задано'
           finished: 'Завершен'
           discontinued: 'Прекращен'
+        project_status_beta:
+          title: 'Статус проекта (BETA)'
         subprojects:
           title: 'Подпроекты'
-          no_results: 'Подпроектов нет.'
         project_favorites:
           title: 'Избранные проекты'
           no_results: 'В настоящее время у вас нет избранных проектов. Нажмите на значок звезды в панели управления проекта, чтобы добавить его в избранное.'
@@ -57,6 +52,7 @@ ru:
           title: 'Таблица пакетов работ'
         work_packages_graph:
           title: 'Диаграмма по пакетам работ'
+          summary: "%{chartType} диаграмма показывает пакеты работ, которые %{description}."
         work_packages_calendar:
           title: 'Календарь'
         work_packages_overview:

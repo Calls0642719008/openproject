@@ -147,34 +147,34 @@ sk:
                   name: Pracovné balíčky
               item_6:
                 options:
-                  name: Milestones
+                  name: Míľniky
         demo-planning-constructing-project:
           name: "(Demo) Planning & constructing"
           status_explanation: All tasks are on schedule. The people involved know their tasks. The system is completely set up.
           description: This is a short summary of the goals of this demo planning and constructing project.
           news:
             item_0:
-              title: Welcome to your demo project
+              title: Vitajte vo svojom demo projekte
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
-              description: The actual news
+                Sme radi, že ste sa pridali.
+                V tomto module môžete členom svojho tímu oznamovať novinky o projekte.
+              description: Aktuálne správy
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategória 1 (treba zmeniť v nastaveniach projektu)
           queries:
             item_0:
-              name: Project plan
+              name: Plán projektu
             item_1:
-              name: Milestones
+              name: Míľniky
             item_2:
-              name: Tasks
+              name: Úlohy
             item_3:
-              name: Team planner
+              name: Plánovač tímu
           project-overview:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Vitajte
               item_1:
                 options:
                   name: Začíname
@@ -202,7 +202,7 @@ sk:
                   name: Pracovné balíčky
               item_6:
                 options:
-                  name: Milestones
+                  name: Míľniky
           work_packages:
             item_0:
               subject: Project kick off construction project
@@ -408,27 +408,27 @@ sk:
           description: This is a short summary of the goals of this demo BIM project.
           news:
             item_0:
-              title: Welcome to your demo project
+              title: Vitajte vo svojom demo projekte
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
-              description: The actual news
+                Sme radi, že ste sa pridali.
+                V tomto module môžete členom svojho tímu oznamovať novinky o projekte.
+              description: Aktuálne správy
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategória 1 (treba zmeniť v nastaveniach projektu)
           queries:
             item_0:
-              name: Project plan
+              name: Plán projektu
             item_1:
-              name: Milestones
+              name: Míľniky
             item_2:
-              name: Tasks
+              name: Úlohy
             item_3:
-              name: Team planner
+              name: Plánovač tímu
           project-overview:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Vitajte
               item_1:
                 options:
                   name: Začíname
@@ -459,7 +459,7 @@ sk:
                   name: Pracovné balíčky
               item_6:
                 options:
-                  name: Milestones
+                  name: Míľniky
           work_packages:
             item_0:
               subject: Project kick off creating BIM model
@@ -679,7 +679,7 @@ sk:
             item_2:
               name: Hospital - Mechanical (cc-by-sa-3.0 Autodesk Inc.)
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategória 1 (treba zmeniť v nastaveniach projektu)
           queries:
             item_0:
               name: Issues
@@ -690,13 +690,13 @@ sk:
             item_3:
               name: Remarks
             item_4:
-              name: Project plan
+              name: Plán projektu
             item_5:
-              name: Milestones
+              name: Míľniky
             item_6:
-              name: Tasks
+              name: Úlohy
             item_7:
-              name: Team planner
+              name: Plánovač tímu
           boards:
             bcf:
               name: BCF issues
@@ -704,7 +704,7 @@ sk:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Vitajte
               item_1:
                 options:
                   name: Začíname

@@ -125,14 +125,14 @@ module Meetings
     def copy_action(menu)
       return unless copy_allowed?
 
-      menu.with_item(label: I18n.t(:label_meeting_copy),
+      menu.with_item(label: I18n.t(:label_meeting_duplicate),
                      href: copy_project_meeting_path(project, model),
                      content_arguments: {
                        data: {
                          turbo_stream: true
                        }
                      }) do |item|
-        item.with_leading_visual_icon(icon: :copy)
+        item.with_leading_visual_icon(icon: :duplicate)
       end
     end
 

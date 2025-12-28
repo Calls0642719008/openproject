@@ -8,6 +8,13 @@
        { href: admin_settings_api_path, text: t("menus.admin.api_and_webhooks") },
        t("webhooks.plural")]
     )
+
+    header.with_description do
+      t(
+        "webhooks.outgoing.explanation.text",
+        link: link_to(t(:"webhooks.outgoing.explanation.link"), admin_settings_aggregation_path, target: "_blank", rel: "noopener")
+      ).html_safe
+    end
   end
 %>
 
@@ -24,12 +31,5 @@
     end
   end
 %>
-
-<p>
-  <%= t(
-        "webhooks.outgoing.explanation.text",
-        link: link_to(t(:"webhooks.outgoing.explanation.link"), admin_settings_aggregation_path, target: "_blank")
-      ).html_safe %>
-</p>
 
 <%= render ::Webhooks::Outgoing::Webhooks::TableComponent.new(rows: @webhooks) %>

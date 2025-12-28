@@ -39,7 +39,7 @@ module ProjectQueries::Scopes
       def allowed_to(user, permission)
         permissions = Authorization.contextual_permissions(permission, :project_query, raise_on_unknown: true).map(&:name)
 
-        return none if user.locked?
+        return none if user.locked? || user.deleted?
         return none if permissions.empty?
 
         if user.anonymous?

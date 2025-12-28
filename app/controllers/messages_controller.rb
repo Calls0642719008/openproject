@@ -137,7 +137,7 @@ class MessagesController < ApplicationController
                         { action: "show", id: @message.parent, r: @message }
                       end
 
-    redirect_to redirect_target
+    redirect_to redirect_target, status: :see_other
   end
 
   def quote

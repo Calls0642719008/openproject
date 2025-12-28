@@ -43,6 +43,8 @@ class Tables::Types < Tables::Base
       t.boolean :is_standard, default: false, null: false
       t.text :attribute_groups
       t.text :description
+      t.text :patterns, null: true
+      t.jsonb :pdf_export_templates_config, default: {}
     end
   end
 end

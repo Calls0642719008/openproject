@@ -1,49 +1,25 @@
 // Legacy code ported from app/assets/javascripts/application.js.erb
+import { delegate } from '@knowledgecode/delegate';
+import { showElement } from 'core-app/shared/helpers/dom-helpers';
+import { slideDown, slideUp } from 'es6-slide-up-down';
+
 // Do not add stuff here, but ideally remove into components whenever changes are necessary
 export function setupServerResponse() {
-  jQuery(document).ajaxComplete(activateFlashNotice);
-  jQuery(document).ajaxComplete(activateFlashError);
-
-  /*
-  * 1 - registers a callback which copies the csrf token into the
-  * X-CSRF-Token header with each ajax request.  Necessary to
-  * work with rails applications which have fixed
-  * CVE-2011-0447
-  * 2 - shows and hides ajax indicator
-  */
-  jQuery(document).ajaxSend((event, request) => {
-    if (jQuery(event.target.activeElement!).closest('[ajax-indicated]').length
-      && jQuery('ajax-indicator')) {
-      jQuery('#ajax-indicator').show();
-    }
-
-    const csrf_meta_tag = jQuery('meta[name=csrf-token]');
-
-    if (csrf_meta_tag) {
-      const header = 'X-CSRF-Token';
-      const token = csrf_meta_tag.attr('content');
-
-      request.setRequestHeader(header, token!);
-    }
-
-    request.setRequestHeader('X-Authentication-Scheme', 'Session');
-  });
-
-  // ajaxStop gets called when ALL Requests finish, so we won't need a counter as in PT
-  jQuery(document).ajaxStop(() => {
-    if (jQuery('#ajax-indicator')) {
-      jQuery('#ajax-indicator').hide();
-    }
-    addClickEventToAllErrorMessages();
-  });
-
   // show/hide the files table
-  jQuery('.attachments h4').click(function () {
-    jQuery(this).toggleClass('closed').next().slideToggle(100);
+  document.querySelectorAll<HTMLHeadingElement>('.attachments h4').forEach((heading) => {
+    heading.addEventListener('click', () => {
+      const closed = heading.classList.toggle('closed');
+      const nextElement = heading.nextElementSibling as HTMLElement;
+      if (closed) {
+        slideUp(nextElement, 100);
+      } else {
+        slideDown(nextElement, 100);
+      }
+    });
   });
 
   let resizeTo:any = null;
-  jQuery(window).on('resize', () => {
+  window.addEventListener('resize', () => {
     // wait 200 milliseconds for no further resize event
     // then readjust breadcrumb
 
@@ -51,23 +27,23 @@ export function setupServerResponse() {
       clearTimeout(resizeTo);
     }
     resizeTo = setTimeout(() => {
-      jQuery(window).trigger('resizeEnd');
+      window.dispatchEvent(new CustomEvent('resizeEnd', { bubbles: true }));
     }, 200);
   });
 
   // Do not close the login window when using it
-  jQuery('#nav-login-content').click((event) => {
+  document.querySelector('#nav-login-content')?.addEventListener('click', (event) => {
     event.stopPropagation();
   });
 
   // Set focus on first error message
-  const error_focus = jQuery('a.afocus').first();
-  const input_focus = jQuery('.autofocus').first();
-  if (error_focus !== undefined) {
+  const error_focus = document.querySelector<HTMLAnchorElement>('a.afocus');
+  const input_focus = document.querySelector<HTMLElement>('.autofocus');
+  if (error_focus) {
     error_focus.focus();
-  } else if (input_focus !== undefined) {
+  } else if (input_focus) {
     input_focus.focus();
-    if (input_focus[0].tagName === 'INPUT') {
+    if (input_focus instanceof HTMLInputElement) {
       input_focus.select();
     }
   }
@@ -75,45 +51,53 @@ export function setupServerResponse() {
   addClickEventToAllErrorMessages();
 
   // Click handler for formatting help
-  jQuery(document.body).on('click', '.formatting-help-link-button', () => {
-    window.open(`${window.appBasePath}/help/wiki_syntax`,
+  delegate(document.body).on('click', '.formatting-help-link-button', (event) => {
+    window.open(
+      `${window.appBasePath}/help/wiki_syntax`,
       '',
-      'resizable=yes, location=no, width=600, height=640, menubar=no, status=no, scrollbars=yes');
-    return false;
+      'resizable=yes, location=no, width=600, height=640, menubar=no, status=no, scrollbars=yes'
+    );
+    event.preventDefault();
+    event.stopPropagation();
   });
 }
 
 function addClickEventToAllErrorMessages() {
-  jQuery('a.afocus').each(function () {
-    const target = jQuery(this);
-    target.click((evt) => {
-      let field = jQuery(`#${target.attr('href')!.substr(1)}`);
-      if (field === null) {
-        // Cut off '_id' (necessary for select boxes)
-        field = jQuery(`#${target.attr('href')!.substr(1).concat('_id')}`);
+  document.querySelectorAll('a.afocus').forEach((anchor) => {
+    anchor.addEventListener('click', function (evt) {
+      evt.preventDefault();
+
+      const href = anchor.getAttribute('href');
+      if (!href?.startsWith('#')) return;
+
+      const id = href.substring(1);
+      let field = document.getElementById(id);
+
+      if (!field) {
+        // Try with `_id` suffix (needed for select boxes)
+        field = document.getElementById(id + '_id');
       }
-      target.unbind(evt);
-      return false;
-    });
+
+      if (field) {
+        field.focus();
+      }
+    }, { once: true });
   });
 }
 
 export function initMainMenuExpandStatus() {
-  const wrapper = jQuery('#wrapper');
-  const upToggle = jQuery('ul.menu_root.closed li.open a.arrow-left-to-project');
+  const wrapper = document.querySelector('#wrapper')!;
+  const upToggle = document.querySelector<HTMLAnchorElement>('ul.menu_root.closed li.open a.arrow-left-to-project');
 
-  if (upToggle.length === 1 && wrapper.hasClass('hidden-navigation')) {
-    upToggle.trigger('click');
+  if (upToggle && wrapper.classList.contains('hidden-navigation')) {
+    upToggle.click();
   }
 }
 
-function activateFlash(selector:any) {
-  const flashMessages = jQuery(selector);
+function activateFlash(selector:string) {
+  const flashMessages = document.querySelectorAll<HTMLElement>(selector);
 
-  flashMessages.each((ix, e) => {
-    const flashMessage = jQuery(e);
-    flashMessage.show();
-  });
+  flashMessages.forEach((flashMessage) => { showElement(flashMessage); });
 }
 
 export function activateFlashNotice() {
@@ -125,8 +109,8 @@ export function activateFlashError() {
 }
 
 export function focusFirstErroneousField() {
-  const firstErrorSpan = jQuery('span.errorSpan').first();
-  const erroneousInput = firstErrorSpan.find('*').filter(':input');
+  const firstErrorSpan = document.querySelector('span.errorSpan');
+  const erroneousInput = firstErrorSpan?.querySelector<HTMLElement>('input, select, textarea, button');
 
-  erroneousInput.trigger('focus');
+  erroneousInput?.focus();
 }

@@ -30,9 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe CustomFields::Hierarchy::GenerateRootContract,
-               with_ee: [:custom_field_hierarchies],
-               with_flag: { scored_list_custom_fields: true } do
+RSpec.describe CustomFields::Hierarchy::GenerateRootContract, with_ee: [:custom_field_hierarchies] do
   subject { described_class.new }
 
   describe "#call" do
@@ -66,8 +64,8 @@ RSpec.describe CustomFields::Hierarchy::GenerateRootContract,
       end
     end
 
-    context "when inputs are valid" do
-      let(:custom_field) { create(:scored_list_wp_custom_field, hierarchy_root: nil) }
+    context "when inputs are valid", with_ee: %i[weighted_item_lists] do
+      let(:custom_field) { create(:weighted_item_list_wp_custom_field, hierarchy_root: nil) }
 
       it "creates a success result" do
         expect(subject.call(custom_field:)).to be_success

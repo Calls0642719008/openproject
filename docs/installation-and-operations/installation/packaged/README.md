@@ -62,14 +62,16 @@ sudo apt-get install apt-transport-https ca-certificates wget
 Import the PGP key used to sign our packages:
 
 ```shell
-sudo wget -O /etc/apt/trusted.gpg.d/openproject.asc https://dl.packager.io/srv/opf/openproject/key
+sudo curl -fsSL "https://packages.openproject.com/srv/deb/opf/openproject/gpg-key.gpg" \
+  -o /usr/share/keyrings/openproject.gpg
 ```
 
 Add the OpenProject package source:
 
 ```shell
-sudo wget -O /etc/apt/sources.list.d/openproject.list \
-  https://dl.packager.io/srv/opf/openproject/stable/16/installer/ubuntu/22.04.repo
+sudo curl -fsSL \
+  "https://packages.openproject.com/srv/opf/openproject/stable/17/installer/ubuntu/22.04.list" \
+  -o /etc/apt/sources.list.d/openproject.list
 ```
 
 Download the OpenProject package:
@@ -77,6 +79,12 @@ Download the OpenProject package:
 ```shell
 sudo apt-get update
 sudo apt-get install openproject
+```
+
+Verify the repository is configured correctly:
+
+```bash
+apt-cache policy
 ```
 
 Then finish the installation by reading the [*Initial configuration*](#initial-configuration) section.
@@ -89,20 +97,22 @@ Update the `apt` package index and install packages to allow `apt` to use a repo
 
 ```shell
 sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates wget
+sudo apt-get install apt-transport-https ca-certificates curl
 ```
 
 Import the PGP key used to sign our packages:
 
 ```shell
-wget -qO- https://dl.packager.io/srv/opf/openproject/key | sudo apt-key add -
+sudo curl -fsSL "https://packages.openproject.com/srv/deb/opf/openproject/gpg-key.gpg" \
+  -o /usr/share/keyrings/openproject.gpg
 ```
 
 Add the OpenProject package source:
 
 ```shell
-sudo wget -O /etc/apt/sources.list.d/openproject.list \
-  https://dl.packager.io/srv/opf/openproject/stable/16/installer/ubuntu/20.04.repo
+sudo curl -fsSL \
+  "https://packages.openproject.com/srv/opf/openproject/stable/17/installer/ubuntu/20.04.list" \
+  -o /etc/apt/sources.list.d/openproject.list
 ```
 
 Download the OpenProject package:
@@ -111,6 +121,14 @@ Download the OpenProject package:
 sudo apt-get update
 sudo apt-get install openproject
 ```
+
+Verify the repository is configured correctly:
+
+```bash
+apt-cache policy
+```
+
+
 
 Then finish the installation by reading the [*Initial configuration*](#initial-configuration) section.
 
@@ -123,20 +141,22 @@ As root update the `apt` package index and install packages to allow `apt` to us
 ```shell
 su -
 apt update
-apt install apt-transport-https ca-certificates wget gpg
+apt install apt-transport-https ca-certificates curl gpg
 ```
 
 Import the PGP key used to sign our packages:
 
 ```shell
-wget -qO- https://dl.packager.io/srv/opf/openproject/key | gpg --dearmor > /etc/apt/trusted.gpg.d/packager-io.gpg
+sudo curl -fsSL "https://packages.openproject.com/srv/deb/opf/openproject/gpg-key.gpg" \
+  -o /usr/share/keyrings/openproject.gpg
 ```
 
 Add the OpenProject package source:
 
 ```shell
-wget -O /etc/apt/sources.list.d/openproject.list \
-  https://dl.packager.io/srv/opf/openproject/stable/16/installer/debian/12.repo
+sudo curl -fsSL \
+  "https://packages.openproject.com/srv/opf/openproject/stable/17/installer/debian/12.list" \
+  -o /etc/apt/sources.list.d/openproject.list
 ```
 
 Download the OpenProject package:
@@ -147,6 +167,12 @@ apt install openproject
 ```
 
 Then finish the installation by reading the [*Initial configuration*](#initial-configuration) section.
+
+Verify the repository is configured correctly:
+
+```bash
+apt-cache policy
+```
 
 ### Debian 11
 
@@ -155,20 +181,22 @@ As root update the `apt` package index and install packages to allow `apt` to us
 ```shell
 su -
 apt update
-apt install apt-transport-https ca-certificates wget gpg
+apt install apt-transport-https ca-certificates curl gpg
 ```
 
 Import the PGP key used to sign our packages:
 
 ```shell
-wget -qO- https://dl.packager.io/srv/opf/openproject/key | gpg --dearmor > /etc/apt/trusted.gpg.d/packager-io.gpg
+sudo curl -fsSL "https://packages.openproject.com/srv/deb/opf/openproject/gpg-key.gpg" \
+  -o /usr/share/keyrings/openproject.gpg
 ```
 
 Add the OpenProject package source:
 
 ```shell
-wget -O /etc/apt/sources.list.d/openproject.list \
-  https://dl.packager.io/srv/opf/openproject/stable/16/installer/debian/11.repo
+sudo curl -fsSL \
+  "https://packages.openproject.com/srv/opf/openproject/stable/17/installer/debian/11.list" \
+  -o /etc/apt/sources.list.d/openproject.list
 ```
 
 Download the OpenProject package:
@@ -180,15 +208,22 @@ apt install openproject
 
 Then finish the installation by reading the [*Initial configuration*](#initial-configuration) section.
 
+Verify the repository is configured correctly:
+
+```bash
+apt-cache policy
+```
+
 ## CentOS Installation
 
 ### CentOS 9 / RHEL 9
 
-Add the OpenProject package source:
+Please ensure that you have `curl` installed.
+
+Import the repository GPG key
 
 ```shell
-sudo wget -O /etc/yum.repos.d/openproject.repo \
-  https://dl.packager.io/srv/opf/openproject/stable/16/installer/el/9.repo
+sudo rpm --import https://packages.openproject.com/srv/rpm/opf/openproject/gpg-key.asc
 ```
 
 If it is not already enabled, make sure to enable [Extra Packages for Enterprise Linux](https://fedoraproject.org/wiki/EPEL) (EPEL).
@@ -202,17 +237,34 @@ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noa
 # sudo dnf install https://dl.fedoraproject.org/pub/epel/epel{,-next}-release-latest-9.noarch.rpm
 ```
 
+Add the OpenProject repository:
+
+```bash
+sudo curl -fsSL \
+  "https://packages.openproject.com/srv/opf/openproject/stable/17/installer/el/9.repo" \
+  -o /etc/yum.repos.d/openproject.repo
+```
+
+
+
 Download the OpenProject package:
 
 ```shell
 sudo yum install openproject
 ```
 
+Or if you are using dnf:
+
+```bash
+sudo dnf install openproject
+```
+
+
+
 Then finish the installation by reading the [*Initial configuration*](#initial-configuration) section.
 
 > [!NOTE]
 > On this distribution full-text extraction for attachments [*is not supported*](#full-text-extraction-not-supported) by default.
->
 
 ## SUSE Linux Enterprise Server (SLES) Installation
 
@@ -221,11 +273,13 @@ Then finish the installation by reading the [*Initial configuration*](#initial-c
 
 ### SLES 15
 
+Please make sure that you have  `curl` installed on your system.
+
 Add the OpenProject package source:
 
 ```shell
-wget -O /etc/zypp/repos.d/openproject.repo \
-  https://dl.packager.io/srv/opf/openproject/stable/16/installer/sles/15.repo
+sudo curl -o /etc/zypp/repos.d/openproject.repo \
+  "https://packages.openproject.com/srv/opf/openproject/stable/17/installer/sles/15.repo"
 ```
 
 If you already had an old package source that is being updated you must refresh
@@ -240,6 +294,14 @@ Next, download the OpenProject package:
 ```shell
 sudo zypper install openproject
 ```
+
+Verify the repository is correctly configured:
+
+```bash
+sudo zypper repos
+```
+
+
 
 Then finish the installation by reading the [*Initial configuration*](#initial-configuration) section.
 

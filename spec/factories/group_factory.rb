@@ -48,5 +48,10 @@ FactoryBot.define do
           .on_failure { |call| raise call.message }
       end
     end
+
+    factory :group_marked_for_deletion do
+      lastname { "DeletedGroup" }
+      status { Group.statuses[:deleted] }
+    end
   end
 end

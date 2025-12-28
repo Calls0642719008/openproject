@@ -95,8 +95,8 @@ export abstract class WidgetTimeEntriesListComponent extends AbstractWidgetCompo
 
   public get total():string {
     const duration = this.entries.reduce((current, entry) => current + this.timezone.toHours(entry.hours), 0);
-
-    return this.i18n.t('js.units.hour', { count: duration });
+    const amount = this.i18n.t('js.units.hour', { count: duration });
+    return this.i18n.t('js.label_total_amount', { amount });
   }
 
   public get anyEntries():boolean {
@@ -112,11 +112,11 @@ export abstract class WidgetTimeEntriesListComponent extends AbstractWidgetCompo
   }
 
   public entityName(entry:TimeEntryResource):string {
-    return `#${entry.entity.id as string}: ${entry.entity.name}`;
+    return `#${entry.entity.id!}: ${entry.entity.name}`;
   }
 
   public entityId(entry:TimeEntryResource):string {
-    return entry.entity.id as string;
+    return entry.entity.id!;
   }
 
   public comment(entry:TimeEntryResource):string | undefined {
@@ -143,7 +143,7 @@ export abstract class WidgetTimeEntriesListComponent extends AbstractWidgetCompo
 
   public editTimeEntry(entry:TimeEntryResource):void {
     void this.turboRequests.request(
-      `${this.pathHelper.timeEntryEditDialog(entry.id as string)}`,
+      `${this.pathHelper.timeEntryEditDialog(entry.id!)}`,
       { method: 'GET' },
     );
   }
@@ -175,11 +175,11 @@ export abstract class WidgetTimeEntriesListComponent extends AbstractWidgetCompo
       });
   }
 
-  protected abstract dmFilters():Array<[string, FilterOperator, [string]]>;
+  protected abstract dmFilters():[string, FilterOperator, [string]][];
 
   private buildEntries(entries:TimeEntryResource[]) {
     this.entries = entries;
-    const sumsByDateSpent:{ [key:string]:number } = {};
+    const sumsByDateSpent:Record<string, number> = {};
 
     entries.forEach((entry) => {
       const date = entry.spentOn;

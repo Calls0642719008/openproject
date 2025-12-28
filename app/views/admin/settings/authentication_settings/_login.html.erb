@@ -28,51 +28,12 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-  settings_primer_form_with(scope: :settings,
-                            url: admin_settings_authentication_path(tab: params[:tab]),
-                            method: :patch) do |f|
-    render_inline_settings_form(f) do |form|
-      form.select_list(
-        name: :autologin,
-        input_width: :medium,
-        label: I18n.t(:setting_autologin),
-      ) do |select|
-        select.option(
-          value: 0,
-          label: I18n.t(:label_disabled),
-          selected: Setting.autologin == 0
-        )
-
-        Settings::Definition[:autologin].allowed.each do |days|
-          select.option(
-            value: days,
-            label: I18n.t("datetime.distance_in_words.x_days", count: days),
-            selected: Setting.autologin == days
-          )
-        end
-      end
-
-      form.check_box(name: :session_ttl_enabled)
-
-      form.text_field(name: :session_ttl,
-                      type: :number,
-                      size: 6,
-                      min: 0,
-                      caption: I18n.t("setting_session_ttl_hint"),
-                      trailing_visual: { text: { text: I18n.t(:label_minute_plural) } },
-                      input_width: :small)
-
-      form.check_box(name: :log_requesting_user)
-
-      form.text_field(name: :after_first_login_redirect_url,
-                      caption: I18n.t(:setting_after_first_login_redirect_url_text_html).html_safe,
-                      input_width: :large)
-
-      form.text_field(name: :after_login_default_redirect_url,
-                      caption: I18n.t(:setting_after_login_default_redirect_url_text_html).html_safe,
-                      input_width: :large)
-
-      form.submit
-    end
+  settings_primer_form_with(
+    scope: :settings,
+    url: admin_settings_authentication_path(tab: params[:tab]),
+    method: :patch,
+    data: { controller: "show-when-checked", show_when_checked_visibility_class: "d-none" }
+  ) do |f|
+    render(Settings::AuthenticationSettingsForm.new(f))
   end
 %>

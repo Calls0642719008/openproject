@@ -34,6 +34,7 @@ export class MultipleLinesCustomOptionsDisplayField extends ResourcesDisplayFiel
     const values = this.stringValue;
     element.setAttribute('title', displayText);
     element.textContent = displayText;
+    element.classList.add('-multiline');
 
     element.innerHTML = '';
 

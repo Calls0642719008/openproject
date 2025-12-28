@@ -93,6 +93,10 @@ class RecurringMeeting < ApplicationRecord
   has_one :template, -> { where(template: true) },
           class_name: "Meeting"
 
+  has_many :recurring_meeting_interim_responses,
+           inverse_of: :recurring_meeting,
+           dependent: :destroy
+
   scope :visible, ->(*args) {
     includes(:project)
       .references(:projects)
@@ -304,10 +308,6 @@ class RecurringMeeting < ApplicationRecord
 
   def end_date_constraints
     return if end_date.nil?
-
-    if end_date < Date.current
-      errors.add(:end_date, :after_today)
-    end
 
     if parsed_start_date.present? && end_date < parsed_start_date
       errors.add(:end_date, :after, date: format_date(parsed_start_date))

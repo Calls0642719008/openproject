@@ -1,14 +1,12 @@
-// noinspection ES6UnusedImports
-
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
-import { HalSourceLink } from 'core-app/features/hal/resources/hal-resource';
 import { BannersService } from 'core-app/core/enterprise/banners.service';
 import { overDueReminderTimes, reminderAvailableTimeframes } from '../overdue-reminder-available-times';
 import { ConfigurationService } from 'core-app/core/config/configuration.service';
+import { HalSourceLink } from 'core-app/features/hal/interfaces';
 
 @Component({
   selector: 'op-notification-settings-table',

@@ -36,12 +36,12 @@ properties:
           - $ref: "./link.yml"
           - description: |-
               Not provided
-              
+
               **Resource**: urn:openproject-org:api:v3:storages:storage_file:no_link_provided
 example:
   _type: StorageFiles
   files:
-    - id: 42
+    - id: "42"
       name: readme.md
       _type: StorageFile
       location: '/readme.md'
@@ -54,7 +54,7 @@ example:
       _links:
         self:
           href: 'urn:openproject-org:api:v3:storages:storage_file:no_link_provided'
-    - id: 43
+    - id: "43"
       name: readme.pdf
       _type: StorageFile
       location: '/readme.pdf'
@@ -68,8 +68,9 @@ example:
         self:
           href: 'urn:openproject-org:api:v3:storages:storage_file:no_link_provided'
   parent:
-    id: 41
+    id: "41"
     name: '/'
+    _type: StorageFile
     location: '/'
     mimeType: 'application/x-op-directory'
     size: 6144
@@ -84,4 +85,4 @@ example:
   _links:
     self:
       href: 'urn:openproject-org:api:v3:storages:storage_file:no_link_provided'
-  
+

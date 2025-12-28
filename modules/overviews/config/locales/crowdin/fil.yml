@@ -1,4 +1,6 @@
 fil:
   overviews:
-    label: 'Buod'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Dashboard"
+    label_overview: 'Buod'
   permission_manage_overview: 'Manage overview page'

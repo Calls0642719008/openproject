@@ -33,14 +33,14 @@ require "spec_helper"
 RSpec.describe API::V3::Shares::ShareRepresenter, "rendering" do
   include API::V3::Utilities::PathHelper
 
-  shared_let(:project) { create(:project_with_types) }
-  shared_let(:work_package) { create(:work_package, project:) }
+  shared_let(:workspace) { create(:project) }
+  shared_let(:work_package) { create(:work_package, project: workspace) }
 
   let(:member) do
     build_stubbed(:work_package_member,
                   member_roles: [member_role1, member_role2, member_role2, marked_member_role],
                   principal:,
-                  project:,
+                  project: workspace,
                   entity: work_package)
   end
   let(:roles) { [role1, role2] }
@@ -60,18 +60,19 @@ RSpec.describe API::V3::Shares::ShareRepresenter, "rendering" do
   let(:user) { build_stubbed(:user) }
   let(:group) { build_stubbed(:group) }
   let(:current_user) { build_stubbed(:user) }
+  let(:embed_links) { true }
   let(:permissions) do
     [:manage_members]
   end
   let(:representer) do
-    described_class.create(member, current_user:, embed_links: true)
+    described_class.create(member, current_user:, embed_links:)
   end
 
   subject { representer.to_json }
 
   before do
     mock_permissions_for(current_user) do |mock|
-      mock.allow_in_project *permissions, project: project || build_stubbed(:project)
+      mock.allow_in_project *permissions, project: workspace || build_stubbed(:project)
     end
   end
 
@@ -93,11 +94,7 @@ RSpec.describe API::V3::Shares::ShareRepresenter, "rendering" do
     end
 
     describe "project" do
-      it_behaves_like "has a titled link" do
-        let(:link) { "project" }
-        let(:href) { api_v3_paths.project(project.id) }
-        let(:title) { project.name }
-      end
+      it_behaves_like "has workspace linked"
     end
 
     describe "principal" do
@@ -187,17 +184,7 @@ RSpec.describe API::V3::Shares::ShareRepresenter, "rendering" do
     end
 
     describe "project" do
-      let(:embedded_path) { "_embedded/project" }
-
-      it "has the project embedded" do
-        expect(subject)
-          .to be_json_eql("Project".to_json)
-          .at_path("#{embedded_path}/_type")
-
-        expect(subject)
-          .to be_json_eql(project.name.to_json)
-          .at_path("#{embedded_path}/name")
-      end
+      it_behaves_like "has workspace embedded"
     end
 
     describe "principal" do

@@ -10,7 +10,7 @@ export class MainMenuNavigationService {
     return this
       .navigationEvents$
       .pipe(
-        filter((evt) => names.indexOf(evt) !== -1),
+        filter((evt) => names.includes(evt)),
         take(1),
       );
   }

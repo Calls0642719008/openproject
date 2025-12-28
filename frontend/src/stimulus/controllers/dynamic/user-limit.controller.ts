@@ -77,10 +77,10 @@ export default class UserLimitController extends Controller {
   // Accessors
   private get autocompleterElement():HTMLElement {
     if (this.memberAutocompleterValue) {
-      return this.element.querySelector('opce-members-autocompleter') as HTMLElement;
+      return this.element.querySelector('opce-members-autocompleter')!;
     }
 
-    return this.element.querySelector('opce-user-autocompleter') as HTMLElement;
+    return this.element.querySelector('opce-user-autocompleter')!;
   }
 
   private get numberOfNewUsers() {

@@ -27,8 +27,6 @@ properties:
     properties:
       storage:
         $ref: './storage_read_model.yml'
-      container:
-        $ref: './work_package_model.yml'
   _links:
     type: object
     properties:
@@ -123,7 +121,7 @@ example:
   createdAt: '2021-12-20T13:37:00.211Z'
   updatedAt: '2021-12-20T13:37:00.211Z'
   originData:
-    id: 5503
+    id: "5503"
     name: logo.png
     mimeType: image/png
     size: 16042
@@ -147,6 +145,10 @@ example:
           title: Nextcloud
         origin:
           href: https://nextcloud.deathstar.rocks/
+        open:
+          href: https://example.com/a-link-to-open-the-file
+        authorizationState:
+          href: urn:openproject-org:api:v3:storages:authorization:Connected
     container:
       _hint: Work package resource shortened for brevity
       _type: WorkPackage

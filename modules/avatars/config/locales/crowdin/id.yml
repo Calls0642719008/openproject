@@ -17,7 +17,7 @@ id:
   wrong_file_format: "Format yang diperbolehkan adalah jpg, png, gif"
   empty_file_error: "Unggah gambar yang valid (jpg, png, gif)"
   avatars:
-    label_avatar: "Foto Profil"
+    label_avatar: "Avatar"
     label_gravatar: 'Gravatar'
     label_current_avatar: 'Avatar saat ini'
     label_local_avatar: 'Avatar khusus'

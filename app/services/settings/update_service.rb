@@ -37,7 +37,14 @@ class Settings::UpdateService < BaseServices::BaseContracted
   def persist(call)
     params.each do |name, value|
       set_setting_value(name, value)
+    rescue Setting::NotWritableError
+      i18n_name = I18n.t("setting_#{name}", default: name)
+      call.success = false
+      call.errors.add(:base, I18n.t("settings.errors.failed_to_update",
+                                    message: I18n.t("settings.errors.not_writable"),
+                                    name: i18n_name))
     end
+
     call
   end
 

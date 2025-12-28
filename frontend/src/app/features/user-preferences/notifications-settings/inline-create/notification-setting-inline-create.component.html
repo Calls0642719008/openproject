@@ -1,26 +1,25 @@
 <div
   class="inline-create-container"
->
-  <button
-    *ngIf="!active"
-    (click)="active = true"
-    class="spot-link"
-    type="button"
   >
-    <span class="spot-icon spot-icon_add"></span>
-    <span [textContent]="text.add_setting"></span>
-  </button>
+  @if (!active) {
+    <button
+      (click)="active = true"
+      class="spot-link"
+      type="button"
+      >
 
-  <op-project-autocompleter
-    *ngIf="active"
+      <svg plus-icon size="small" />
+      <span [textContent]="text.add_setting"></span>
+    </button>
+  }
 
-    (change)="selectProject($event)"
-    (keydown.escape)="active = false"
-
-    [filters]="APIFilters"
-    [mapResultsFn]="this.mapProjectsFn.bind(this)"
-
-    [placeholder]="text.please_select"
-    dropdownPosition="top"
-  ></op-project-autocompleter>
+  @if (active) {
+    <op-project-autocompleter (change)="selectProject($event)"
+      (keydown.escape)="active = false"
+      [filters]="APIFilters"
+      [mapResultsFn]="this.mapProjectsFn.bind(this)"
+      [placeholder]="text.please_select"
+      dropdownPosition="top"
+     />
+  }
 </div>

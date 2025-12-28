@@ -82,7 +82,7 @@ export class WorkPackageViewColumnsService extends WorkPackageQueryStateService<
       queryColumnTypes.RELATION_OF_TYPE,
       queryColumnTypes.RELATION_TO_TYPE,
     ];
-    return !!_.find(this.getColumns(), (c) => relationColumns.indexOf(c._type) >= 0);
+    return !!_.find(this.getColumns(), (c) => relationColumns.includes(c._type));
   }
 
   /**

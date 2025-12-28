@@ -56,9 +56,9 @@ module Pages
           field_name = WorkPackage.human_attribute_name(key)
           case key
           when :subject, :story_points
-            fill_in field_name, with: value
+            fill_in field_name, with: value.to_s
           when :status, :type
-            select value, from: field_name
+            select value.to_s, from: field_name
           else
             raise NotImplementedError
           end
@@ -211,7 +211,7 @@ module Pages
     def expect_story_link_to_wp_page(story)
       within_story(story) do
         expect(page)
-          .to have_link(story.id, href: work_package_path(story))
+          .to have_link(story.to_param, href: work_package_path(story))
       end
     end
 

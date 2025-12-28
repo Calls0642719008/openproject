@@ -28,12 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# Lazy loads translations based on the current locale.
-# It avoids a 2 to 4 seconds penalty when all locales are loaded.
-# Need to make LocaleExtractor recognize our js-<locale>.yaml file format
+# Enable translations lazy loading by default, except on CI where we want to
+# have all translations loaded during application eager loading to be closer to
+# production configuration.
+return if ENV["CI"]
 
+# Lazy loading translations avoids a 2 to 4 seconds penalty on first call to
+# `I18n.translate` by loading only the translations for the current locale
+# instead of loading them for all locales.
 require "i18n/backend/lazy_loadable"
 
+# Need to make LocaleExtractor recognize our js-<locale>.yaml file format
 class I18n::Backend::LocaleExtractor
   def self.locale_from_path(path)
     name = File.basename(path, ".*")

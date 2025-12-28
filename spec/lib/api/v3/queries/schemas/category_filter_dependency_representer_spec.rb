@@ -51,7 +51,7 @@ RSpec.describe API::V3::Queries::Schemas::CategoryFilterDependencyRepresenter do
       describe "value" do
         let(:path) { "values" }
         let(:type) { "[]Category" }
-        let(:href) { api_v3_paths.categories_by_project(project.identifier) }
+        let(:href) { api_v3_paths.categories_by_workspace(project.identifier) }
 
         context "for operator 'Queries::Operators::Equals'" do
           let(:operator) { Queries::Operators::Equals }

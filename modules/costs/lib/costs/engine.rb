@@ -41,14 +41,15 @@ module Costs
                    permissible_on: :project
         permission :view_own_time_entries,
                    {},
-                   permissible_on: %i[work_package project]
+                   permissible_on: %i[work_package project],
+                   contract_actions: { time_entries: %i[read_own] }
 
         permission :log_own_time,
                    {},
                    permissible_on: %i[work_package project],
                    require: :loggedin,
-                   dependencies: :view_own_time_entries
-
+                   dependencies: :view_own_time_entries,
+                   contract_actions: { time_entries: %i[create_own] }
         permission :log_time,
                    {},
                    permissible_on: :project,
@@ -58,8 +59,8 @@ module Costs
         permission :edit_own_time_entries,
                    {},
                    permissible_on: %i[work_package project],
-                   require: :loggedin
-
+                   require: :loggedin,
+                   contract_actions: { time_entries: %i[edit_own destroy_own] }
         permission :edit_time_entries,
                    {},
                    permissible_on: :project,
@@ -234,7 +235,7 @@ module Costs
              current_user.allowed_in_project?(:view_cost_entries, represented.project) ||
              current_user.allowed_in_project?(:view_own_cost_entries, represented.project)
            } do
-        next unless represented.persisted? && represented.project.costs_enabled?
+        next unless represented.persisted? && represented.project&.costs_enabled?
 
         {
           href: cost_reports_path(represented.project_id,

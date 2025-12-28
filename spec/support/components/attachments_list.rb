@@ -28,6 +28,15 @@ module Components
       drop_box_element.drop(path)
     end
 
+    def delete(file_name)
+      item = find("#{context_selector} [data-test-selector='op-attachment-list-item']", text: file_name)
+      item.hover
+      item.find(:button, title: I18n.t("js.label_remove_file", fileName: file_name)).click
+      # confirm delete confirmation dialog
+      expect(page).to have_content(I18n.t("js.attachments.delete_confirmation"))
+      find(:button, text: I18n.t("js.attachments.delete")).click
+    end
+
     def expect_empty
       expect(page).to have_no_css("#{context_selector} [data-test-selector='op-attachment-list-item']")
     end

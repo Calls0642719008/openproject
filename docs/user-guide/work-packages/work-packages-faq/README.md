@@ -101,7 +101,7 @@ Please note: You can't change the default view "All open", clicking Save will ha
 
 ### How can I set certain filters and columns in the work package tables for my colleagues?
 
-Tick the box next to "Public" when saving the work package view. We suggest ticking the box next to "Favored", too.
+Tick the box next to "Public" when saving the work package view. We suggest ticking the box next to "Favorited", too.
 
 ### How can I remove or change the pre-set filter "open" in the work package view?
 

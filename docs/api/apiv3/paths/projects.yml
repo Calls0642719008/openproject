@@ -9,6 +9,10 @@ get:
     query parameters similar to how work packages are filtered. In addition to the
     provided filter, the result set is always limited to only contain projects the
     client is allowed to see.
+
+    Prior to OpenProject 17.0, only projects existed and the concept of workspaces wasn't implemented in the API.
+    With 17.0 the other workspace types (program and portfolio) exist and will be returned alongside projects by this endpoint.
+    This might surprise typed clients.
   parameters:
     - name: filters
       schema:
@@ -24,12 +28,13 @@ get:
         + ancestor: filters projects by their ancestor. A project is not considered to be its own ancestor.
         + available_project_attributes: filters projects based on the activated project project attributes.
         + created_at: based on the time the project was created
+        + favorited: based on the favorited property of the project
         + id: based on projects' id.
         + latest_activity_at: based on the time the last activity was registered on a project.
-        + project_phase_any: based on the project phases active in a project.
         + name_and_identifier: based on both the name and the identifier.
         + parent_id: filters projects by their parent.
         + principal: based on members of the project.
+        + project_phase_any: based on the project phases active in a project.
         + project_status_code: based on status code of the project
         + storage_id: filters projects by linked storages
         + storage_url: filters projects by linked storages identified by the host url

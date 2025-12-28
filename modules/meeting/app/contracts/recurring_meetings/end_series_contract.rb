@@ -42,7 +42,7 @@ module RecurringMeetings
     end
 
     def meeting_ended
-      return if model.end_date == Time.zone.today
+      return if model.end_date == Time.zone.yesterday
 
       errors.add :end_date, :invalid
     end

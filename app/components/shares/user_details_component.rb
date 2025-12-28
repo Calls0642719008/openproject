@@ -68,7 +68,7 @@ module Shares
     end
 
     def user_in_non_active_status?
-      user.locked? || user.invited?
+      user.locked? || user.invited? || user.deleted?
     end
   end
 end

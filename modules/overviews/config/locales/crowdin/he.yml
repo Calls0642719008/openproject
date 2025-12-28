@@ -1,4 +1,6 @@
 he:
   overviews:
-    label: 'Overview'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "דאשבורד"
+    label_overview: 'Overview'
   permission_manage_overview: 'Manage overview page'

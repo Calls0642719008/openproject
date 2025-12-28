@@ -54,15 +54,16 @@ en:
       label_edit: Edit SAML identity provider %{name}
       label_uid: Internal user id
       label_mapping: Mapping
-
       label_requested_attribute_for: "Requested attribute for: %{attribute}"
+
       no_results_table: No SAML identity providers have been defined yet.
+      notice_created: A new SAML identity provider was successfully created.
       plural: SAML identity providers
       singular: SAML identity provider
       requested_attributes: Requested attributes
       attribute_mapping: Attribute mapping
       attribute_mapping_text: >
-        The following fields control which attributes provided by the SAML identity provider 
+        The following fields control which attributes provided by the SAML identity provider
         are used to provide user attributes in OpenProject
       metadata:
         dialog: "This is the URL where the OpenProject SAML metadata is available. Optionally use it to configure your identity provider:"
@@ -71,7 +72,7 @@ en:
         description: Connect OpenProject to a SAML identity provider
       request_attributes:
         title: 'Requested attributes'
-        legend: > 
+        legend: >
           These attributes are added to the SAML XML metadata to signify to the identify provider which attributes OpenProject requires.
           You may still need to explicitly configure your identity provider to send these attributes. Please refer to your IdP's documentation.
         name: 'Requested attribute key'
@@ -113,7 +114,7 @@ en:
       idp_sso_service_url: >
         The URL of the identity provider login endpoint.
       idp_slo_service_url: >
-        The URL of the identity provider login endpoint.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Enter the X509 PEM-formatted public certificate of the identity provider.
         You can enter multiple certificates by separating them with a newline.

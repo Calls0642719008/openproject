@@ -28,36 +28,15 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { I18n.t("label_home") }
-    header.with_breadcrumbs([I18n.t(:label_home)], skip_home_on_mobile: true)
+    header.with_title { organization_name }
+    header.with_breadcrumbs(nil)
   end
 %>
 
-<%= render partial: "announcements/show" %>
+<%= render Homescreen::AnnouncementComponent.new(announcement: @announcement) %>
 
-<% if @homescreen[:blocks].any? %>
-  <section class="widget-boxes -flex">
-  <% @homescreen[:blocks].each do |block| %>
-    <% if block[:if].nil? || instance_eval(&block[:if]) %>
-      <div class="widget-box <%= block[:partial] %>">
-        <%= render partial: "homescreen/blocks/#{block[:partial]}", locals: block[:locals] || {} %>
-      </div>
-    <% end %>
-  <% end %>
-  </section>
-<% end %>
+<%= render Homescreen::BlocksGridComponent.new(homescreen: @homescreen) %>
 
-<% if show_homescreen_links? && @homescreen[:links].any? %>
-  <section class="homescreen--links">
-
-  <% @homescreen[:links].each do |link| %>
-    <% title = I18n.t(link[:label], scope: "homescreen.links") %>
-    <a class="homescreen--links--item" href="<%= link[:url] %>" target="_blank" aria-label="<%= title %>">
-      <%= op_icon(link[:icon]) %>
-      <%= title %>
-    </a>
-  <% end %>
-  </section>
-<% end %>
+<%= render Homescreen::LinksComponent.new(homescreen: @homescreen) %>
 
 <%= call_hook :homescreen_after_links %>

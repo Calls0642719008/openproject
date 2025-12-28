@@ -88,6 +88,8 @@ ca:
     button_list_view: "Vista de llista"
     button_show_view: "Vista en pantalla completa"
     button_log_time: "Registrar temps"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "Més"
     button_open_details: "Obrir vista detallada"
     button_close_details: "Tancar vista detallada"
@@ -288,17 +290,6 @@ ca:
         format:
           date: "%{attribute} no és una data vàlida - s'espera en format AAAA-MM-DD."
         general: "S'ha produït un error."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Llegeix sobre les noves funcions i actualitzacions del producte. "
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "S'ha produït un error en carregar les dades."
@@ -306,12 +297,13 @@ ca:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copia l'URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Activar"
     label_assignee: "Assignat a"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Afegir una columna després"
     label_add_column_before: "Afegir una columna abans"
     label_add_columns: "Afegir una columna"
@@ -324,7 +316,7 @@ ca:
     label_added_time_by: 'Afegit per <a href=%{authorLink}>%{author}</a> el %{age}'
     label_ago: "dies abans"
     label_all: "tot"
-    label_all_projects: "All projects"
+    label_all_projects: "Tots els projectes"
     label_all_uppercase: "Totes"
     label_all_work_packages: "tots els paquets de treball"
     label_and: "i"
@@ -353,6 +345,7 @@ ca:
     label_collapse: "Col·lapsa"
     label_collapsed: "col·lapsat"
     label_collapse_all: "Col·lapsar tot"
+    label_collapse_text: "Collapse text"
     label_comment: "Comentari"
     label_committed_at: "%{committed_revision_link} el %{date}"
     label_committed_link: "revisió acceptada %{revision_identifier}"
@@ -365,6 +358,7 @@ ca:
     label_expand: "Expandir"
     label_expanded: "expandit"
     label_expand_all: "Expandir tot"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Expandieix el menú de projecte"
     label_export: "Exportar"
     label_export_preparing: "S'està preparant l'exportació i serà descarregada aviat."
@@ -444,7 +438,7 @@ ca:
     label_sort_lower: "Mou avall"
     label_sorting: "Ordenació"
     label_spent_time: "Temps utilitzat"
-    label_star_query: "Favorit"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Prem enter per guardar."
     label_public_query: "Públic"
     label_sum: "Suma"
@@ -563,7 +557,7 @@ ca:
       date_alerts:
         milestone_date: "Data de fita"
         overdue: "Vençut"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -782,7 +776,7 @@ ca:
     autocompleter:
       placeholder: "Escriviu per cercar"
       notFoundText: "Elements no trobats"
-      search: "Search"
+      search: "Cercar"
       project:
         placeholder: "Select project"
     repositories:
@@ -1114,6 +1108,7 @@ ca:
       child_work_packages:
         one: "un paquet de treball fill"
         other: "%{count} paquets de treball fills"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1134,6 +1129,7 @@ ca:
       current_project_and_all_descendants: "En aquest projecte + subprojectes"
       current_project: "En aquest projecte"
       recently_viewed: "Vist recentment"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "tots els projectes"
         project_and_subprojects: "i tots els subprojectes"
@@ -1143,71 +1139,8 @@ ca:
       list: "Taula"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Endarrere"
       invite: "Convida"
-      title:
-        invite: "Invitar usuari"
-        invite_to_project: "Convida %{type} a %{project}"
-        User: "usuari"
-        Group: "grup"
-        PlaceholderUser: "usuari de marcador de posició"
-        invite_principal_to_project: "Convida %{principal} a %{project}"
-      project:
-        label: "Projecte"
-        required: "Si us plau, selecciona un projecte"
-        lacking_permission: "Si us plau, selecciona un projecte diferent, ja que no tens permisos per assignar usuaris al projecte seleccionat actualment."
-        lacking_permission_info: "No tens permisos per assignar usuaris al projecte en el qual et trobes. Necessites seleccionar-ne un de diferent."
-        next_button: "Següent"
-        no_results: "No s'han trobat projectes"
-        no_invite_rights: "No tens permisos per convidar membres a aquest projecte"
-      type:
-        required: "Si us plau, selecciona la classe a convidar"
-        user:
-          title: "Usuari"
-          description: "Permisos basats en el rol assignat en el projecte seleccionat"
-        group:
-          title: "Grup"
-          description: "Permisos basats en el rol assignat en el projecte seleccionat"
-        placeholder:
-          title: "Usuari de marcador de posició"
-          title_no_ee: "Usuari de marcador de posició (extensió només de l'edició Enterprise)"
-          description: "No té accés al projecte i no s'han enviat els correus electrònics."
-          description_no_ee: 'No tens accés al projecte i per tant, no s''han enviat els correus electrònics. <br>Fes una ullada a <a href="%{eeHref}" target="_blank">l''edició Enterprise</a>'
-      principal:
-        label:
-          name_or_email: "Nom o adreça de correu electrònic"
-          name: "Nom"
-        already_member_message: "Ja és membre del %{project}"
-        no_results_user: "No s'ha trobat cap usuari"
-        invite_user: "Convida:"
-        no_results_placeholder: "No s'ha trobat cap usuari de marcador de posició."
-        create_new_placeholder: "Crea un usuari de marcador de posició:"
-        no_results_group: "No s'ha trobat cap grup"
-        next_button: "Següent"
-        required:
-          user: "Si us plau, selecciona un usuari"
-          placeholder: "Si us plau, selecciona un usuari de marcador de posició"
-          group: "Si us plau, selecciona un grup"
-      role:
-        label: "Rol en %{project}"
-        no_roles_found: "No s'ha trobat cap rol"
-        description: >-
-          Aquest és el rol que l'usuari rebrà quan s'uneixin al teu projecte. El rol defineix quines accions els hi són permeses i quina informació poden veure. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Més informació sobre rols i permisos. </a>
-        required: "Si us plau, selecciona un rol"
-        next_button: "Següent"
-      message:
-        label: "Missatge d'invitació"
-        description: "Enviarem un correu electrònic a l'usuari, al qual pots afegir un missatge personal aquí. Una explicació per a la invitació pot ser útil, o potser una mica d'informació amb relació al projecte per ajudar als usuaris a començar."
-        next_button: "Següent"
-      summary:
-        next_button: "Enviar la invitació"
-      success:
-        title: "S'ha convidat al %{principal}!"
-        description:
-          user: "L'usuari ara pot iniciar sessió per accedir a %{project}. Per tant, ja pots planejar amb aquest usuari i assignar-li paquets de treball."
-          placeholder: "L'usuari de marcador de posició ara pot ser utilitzat a %{project}. Per tant, ja pots planejar amb aquest usuari i assignar-li paquets de treball."
-          group: "El grup és ara part de %{project}. Per tant, ja pots planejar amb aquest grup i assignar-li paquets de treball."
-        next_button: "Continua"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1224,7 +1157,7 @@ ca:
       selected_filter:
         all: "Tots els projectes"
         selected: "Només seleccionats"
-      search_placeholder: "Cerca projecte..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Inclou tots els subprojectes"
       tooltip:
@@ -1233,6 +1166,11 @@ ca:
         does_not_match_search: "El projecte no coincideix amb la cerca."
       no_results: "Cap projecte s'ajusta a la teva cerca."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Base de referència"
       clear: "Esborra"

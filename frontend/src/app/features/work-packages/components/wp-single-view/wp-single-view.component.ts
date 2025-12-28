@@ -140,7 +140,7 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
 
   public uiSelfRef:string;
 
-  $element:JQuery;
+  element:HTMLElement;
 
   projectStorages = new BehaviorSubject<IProjectStorage[]>([]);
 
@@ -166,7 +166,7 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
   }
 
   public ngOnInit():void {
-    this.$element = jQuery(this.elementRef.nativeElement as HTMLElement);
+    this.element = this.elementRef.nativeElement as HTMLElement;
 
     this.isNewResource = isNewResource(this.workPackage);
 
@@ -265,16 +265,6 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
   }
 
   /**
-   * angular 2 doesn't support track by property any more but requires a custom function
-   * https://github.com/angular/angular/issues/12969
-   * @param _index
-   * @param elem
-   */
-  public trackByName(_index:number, elem:{ name:string }):string {
-    return elem.name;
-  }
-
-  /**
    * Allow other modules to register groups to insert into the single view
    */
   public prependedAttributeGroupComponents() {
@@ -319,7 +309,7 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
   }
 
   showTwoColumnLayout():boolean {
-    return this.$element[0].getBoundingClientRect().width > 750;
+    return this.element.getBoundingClientRect().width > 750;
   }
 
   private rebuildGroupedFields(change:WorkPackageChangeset, attributeGroups:any) {
@@ -416,7 +406,7 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
     const schema = this.schema(workPackage);
 
     let schemaHref:string|null;
-    const projectHref:string|null = workPackage.project && workPackage.project.href;
+    const projectHref:string|null = workPackage.project?.href;
 
     if (schema.baseSchema) {
       schemaHref = schema.baseSchema.href;
@@ -441,9 +431,9 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
   }
 
   private getAttributesGroupId(group:any):string {
-    const overflowingIdentifier = this.$element
-      .find(`[data-group-name=\'${group.name}\']`)
-      .data(overflowingContainerAttribute);
+    const overflowingIdentifier = this.element
+      .querySelector<HTMLElement>(`[data-group-name=\'${group.name}\']`)
+      ?.dataset[overflowingContainerAttribute];
 
     if (overflowingIdentifier) {
       return overflowingIdentifier.replace('.__overflowing_', '');

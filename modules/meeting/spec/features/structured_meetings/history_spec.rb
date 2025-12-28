@@ -158,7 +158,6 @@ RSpec.describe "history",
     show_page.edit_agenda_item(item) do
       fill_in "Title", with: "Updated title"
       fill_in "Duration", with: "5"
-      click_on "Save"
     end
 
     # dynamically wait for the item to be updated successfully
@@ -239,7 +238,6 @@ RSpec.describe "history",
       select_autocomplete(find_test_selector("op-agenda-items-wp-autocomplete"),
                           query: "Changed task",
                           results_selector: "body")
-      click_link_or_button "Save"
     end
 
     show_page.expect_agenda_item title: "Changed task"

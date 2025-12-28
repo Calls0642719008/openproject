@@ -38,14 +38,15 @@ Rails.application.configure do |application|
 
       formatter WorkPackage, Exports::Formatters::CustomField
       formatter WorkPackage, Exports::Formatters::CustomFieldPdf
-      formatter WorkPackage, WorkPackage::Exports::Formatters::CompoundDoneRatio
-      formatter WorkPackage, WorkPackage::Exports::Formatters::CompoundHours
-      formatter WorkPackage, WorkPackage::Exports::Formatters::Costs
-      formatter WorkPackage, WorkPackage::Exports::Formatters::Currency
-      formatter WorkPackage, WorkPackage::Exports::Formatters::Date
-      formatter WorkPackage, WorkPackage::Exports::Formatters::Days
-      formatter WorkPackage, WorkPackage::Exports::Formatters::DoneRatio
-      formatter WorkPackage, WorkPackage::Exports::Formatters::Hours
+      formatter WorkPackage, WorkPackage::Exports::Formatters::PDF::CompoundDoneRatio
+      formatter WorkPackage, WorkPackage::Exports::Formatters::PDF::CompoundHours
+      formatter WorkPackage, WorkPackage::Exports::Formatters::XLS::Costs
+      formatter WorkPackage, WorkPackage::Exports::Formatters::XLS::Hours
+      formatter WorkPackage, WorkPackage::Exports::Formatters::PDF::Currency
+      formatter WorkPackage, WorkPackage::Exports::Formatters::PDF::Date
+      formatter WorkPackage, WorkPackage::Exports::Formatters::PDF::Days
+      formatter WorkPackage, WorkPackage::Exports::Formatters::XLS::DoneRatio
+      formatter WorkPackage, WorkPackage::Exports::Formatters::PDF::Hours
       formatter WorkPackage, WorkPackage::Exports::Formatters::ProjectPhase
       formatter WorkPackage, WorkPackage::Exports::Formatters::SpentUnits
 
@@ -55,10 +56,10 @@ Rails.application.configure do |application|
       formatter Project, Exports::Formatters::CustomFieldPdf
       formatter Project, Projects::Exports::Formatters::Status
       formatter Project, Projects::Exports::Formatters::Description
-      formatter Project, Projects::Exports::Formatters::Public
-      formatter Project, Projects::Exports::Formatters::Active
-      formatter Project, Projects::Exports::Formatters::Favored
-      formatter Project, Projects::Exports::Formatters::RequiredDiskSpace
+      formatter Project, Projects::Exports::Formatters::PDF::Public
+      formatter Project, Projects::Exports::Formatters::PDF::Active
+      formatter Project, Projects::Exports::Formatters::PDF::Favorited
+      formatter Project, Projects::Exports::Formatters::PDF::RequiredDiskSpace
     end
   end
 end

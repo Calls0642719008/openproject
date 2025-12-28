@@ -1,8 +1,10 @@
-<ng-container *ngIf="mergeRequests.length === 0">
+@if (mergeRequests.length === 0) {
   <p
     class="op-tab-content--text-box"
     [innerHTML]="getEmptyText()"
   ></p>
-</ng-container>
+}
 
-<gitlab-merge-request [mergeRequest]="mergeRequest" *ngFor="let mergeRequest of mergeRequests"></gitlab-merge-request>
+@for (mergeRequest of mergeRequests; track mergeRequest) {
+  <gitlab-merge-request [mergeRequest]="mergeRequest" />
+}

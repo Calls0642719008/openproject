@@ -1,28 +1,29 @@
-<ng-container *ngIf="shouldShowGroup()">
+@if (shouldShowGroup()) {
   <div class="attributes-group description-group">
     <div class="attributes-group--header">
       <div class="attributes-group--header-container">
         <h3 class="attributes-group--header-text"
-            [textContent]="text.bcf"></h3>
+        [textContent]="text.bcf"></h3>
       </div>
     </div>
-
-    <div class="bcf--viewpoints" *ngIf="galleryImages.length > 0">
-      <ngx-gallery [options]="galleryOptions"
-                   [images]="galleryImages"
-                   (change)="onGalleryChanged($event)"
-                   (imagesReady)="selectViewpointInGallery()"
-                   (previewOpen)="galleryPreviewOpen()"
-                   (previewClose)="galleryPreviewClose()">
-      </ngx-gallery>
-    </div>
-
-    <a *ngIf="viewerVisible && createAllowed"
-       [title]="text.add_viewpoint"
-       class="button"
-       (click)="saveViewpoint(workPackage)">
-      <op-icon icon-classes="button--icon icon-add"></op-icon>
-      <span class="button--text"> {{text.viewpoint}} </span>
-    </a>
+    @if (galleryImages.length > 0) {
+      <div class="bcf--viewpoints">
+        <ngx-gallery [options]="galleryOptions"
+          [images]="galleryImages"
+          (change)="onGalleryChanged($event)"
+          (imagesReady)="selectViewpointInGallery()"
+          (previewOpen)="galleryPreviewOpen()"
+          (previewClose)="galleryPreviewClose()" />
+      </div>
+    }
+    @if (viewerVisible && createAllowed) {
+      <a
+        [title]="text.add_viewpoint"
+        class="button"
+        (click)="saveViewpoint(workPackage)">
+        <op-icon icon-classes="button--icon icon-add" />
+        <span class="button--text"> {{text.viewpoint}} </span>
+      </a>
+    }
   </div>
-</ng-container>
+}

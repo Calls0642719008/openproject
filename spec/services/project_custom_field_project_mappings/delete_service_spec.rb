@@ -38,4 +38,65 @@ RSpec.describe ProjectCustomFieldProjectMappings::DeleteService do
       "#{namespace}::UpdateContract".constantize
     end
   end
+
+  describe "calculated values",
+           with_ee: %i[calculated_values],
+           with_flag: { calculated_value_project_attribute: true } do
+    using CustomFieldFormulaReferencing
+
+    shared_let(:user) { create(:admin) }
+
+    shared_let(:project) { create(:project) }
+    shared_let(:project_custom_field_section) { create(:project_custom_field_section) }
+    shared_let(:static) { create(:integer_project_custom_field, project_custom_field_section:) }
+    shared_let(:calculated) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "#{static} * 7", project_custom_field_section:)
+    end
+    shared_let(:enabled) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "11", project_custom_field_section:)
+    end
+    shared_let(:disabled) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "13", project_custom_field_section:)
+    end
+
+    shared_let(:static_mapping) { create(:project_custom_field_project_mapping, project:, project_custom_field: static) }
+    shared_let(:calculated_mapping) { create(:project_custom_field_project_mapping, project:, project_custom_field: calculated) }
+    shared_let(:enabled_mapping) { create(:project_custom_field_project_mapping, project:, project_custom_field: enabled) }
+
+    let(:instance) { described_class.new(user:, model:) }
+
+    let(:without_calculated) { { static.id => "2", calculated.id => nil, enabled.id => "11", disabled.id => nil } }
+
+    before do
+      {
+        static => 2,
+        calculated => 14,
+        enabled => 11
+      }.each { |custom_field, value| create(:custom_value, custom_field:, value:, customized: project) }
+    end
+
+    context "when removing referenced static field" do
+      let(:model) { static_mapping }
+
+      it "recalculates the value" do
+        expect(instance.call).to be_success
+
+        project.reload
+        expect(project.project_custom_fields).to contain_exactly(calculated, enabled)
+        expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+      end
+    end
+
+    context "when removing calculated field" do
+      let(:model) { calculated_mapping }
+
+      it "recalculates the value" do
+        expect(instance.call).to be_success
+
+        project.reload
+        expect(project.project_custom_fields).to contain_exactly(static, enabled)
+        expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+      end
+    end
+  end
 end

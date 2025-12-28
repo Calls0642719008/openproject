@@ -48,6 +48,7 @@ import {
 } from 'core-app/shared/components/fields/macros/attribute-model-loader.service';
 import { capitalize } from 'core-app/shared/helpers/string-helpers';
 import { firstValueFrom } from 'rxjs';
+import { IOPFieldSchema } from 'core-app/features/hal/interfaces';
 
 @Component({
   templateUrl: './attribute-label-macro.html',
@@ -96,8 +97,8 @@ export class AttributeLabelMacroComponent implements OnInit {
   ngOnInit():void {
     const element = this.elementRef.nativeElement as HTMLElement;
     const model = element.dataset.model as SupportedAttributeModels;
-    const id = element.dataset.id as string;
-    const attributeName = element.dataset.attribute as string;
+    const id = element.dataset.id!;
+    const attributeName = element.dataset.attribute!;
     this.attributeScope = capitalize(model);
 
     void this.loadResourceAttribute(model, id, attributeName);

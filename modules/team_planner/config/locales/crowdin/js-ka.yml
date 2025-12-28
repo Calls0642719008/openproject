@@ -3,7 +3,7 @@ ka:
   js:
     team_planner:
       add_existing: 'არსებულის დამატება'
-      label_team_planner_plural: 'Team planners'
+      label_team_planner_plural: 'გუნდის მგეგმავები'
       add_existing_title: 'Add existing work packages'
       create_label: 'გუნდის მგეგმავი'
       create_title: 'ახალი გუნდის მგეგმავის შექმნა'
@@ -18,7 +18,7 @@ ka:
       work_week: 'სამუშაო კვირა'
       today: 'დღეს'
       drag_here_to_remove: 'Drag here to remove assignee and start and end dates.'
-      cannot_drag_here: 'Cannot remove the work package due to permissions or editing restrictions.'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'This work package cannot start/finish on a non-working day.'
       quick_add:
         empty_state: 'Use the search field to find work packages and drag them to the planner to assign it to someone and define start and end dates.'

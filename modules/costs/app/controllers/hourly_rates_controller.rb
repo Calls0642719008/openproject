@@ -174,10 +174,6 @@ class HourlyRatesController < ApplicationController
     @project = Project.find(params[:project_id])
   end
 
-  def find_optional_project
-    @project = params[:project_id].blank? ? nil : Project.find(params[:project_id])
-  end
-
   def find_user
     @user = params[:id] ? User.find(params[:id]) : User.current
   end

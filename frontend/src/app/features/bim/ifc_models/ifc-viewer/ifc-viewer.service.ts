@@ -45,6 +45,7 @@ import { BIMViewer } from '@xeokit/xeokit-bim-viewer/dist/xeokit-bim-viewer.es';
 import { BcfViewpointData, CreateBcfViewpointData } from 'core-app/features/bim/bcf/api/bcf-api.model';
 import { HalResource } from 'core-app/features/hal/resources/hal-resource';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
+import { getMetaContent } from 'core-app/core/setup/globals/global-helpers';
 
 export interface XeokitElements {
   canvasElement:HTMLElement;
@@ -85,9 +86,9 @@ export interface BCFLoadOptions {
 /**
  * Wrapping type from xeokit module. Can be removed after we get a real type package.
  */
-type Controller = {
+interface Controller {
   on:(event:string, callback:(event:unknown) => void) => string
-};
+}
 
 /**
  * Wrapping type from xeokit module. Can be removed after we get a real type package.
@@ -136,7 +137,7 @@ export class IFCViewerService extends ViewerBridgeService {
     viewerUI.loadProject(projects[0].id);
 
     viewerUI.on('addModel', () => { // "Add" selected in Models tab's context menu
-      window.location.href = this.pathHelper.ifcModelsNewPath(this.currentProjectService.identifier as string);
+      window.location.href = this.pathHelper.ifcModelsNewPath(this.currentProjectService.identifier!);
     });
 
     viewerUI.on('openInspector', () => {
@@ -144,7 +145,7 @@ export class IFCViewerService extends ViewerBridgeService {
     });
 
     viewerUI.on('editModel', (event:{ modelId:number|string }) => { // "Edit" selected in Models tab's context menu
-      window.location.href = this.pathHelper.ifcModelsEditPath(this.currentProjectService.identifier as string, event.modelId);
+      window.location.href = this.pathHelper.ifcModelsEditPath(this.currentProjectService.identifier!, event.modelId);
     });
 
     viewerUI.on('deleteModel', (event:{ modelId:number|string }) => { // "Delete" selected in Models tab's context menu
@@ -152,7 +153,7 @@ export class IFCViewerService extends ViewerBridgeService {
       const formData = new FormData();
       formData.append(
         'authenticity_token',
-        jQuery('meta[name=csrf-token]').attr('content') as string,
+        getMetaContent('csrf-token')
       );
       formData.append(
         '_method',
@@ -160,7 +161,7 @@ export class IFCViewerService extends ViewerBridgeService {
       );
 
       this.httpClient.post(
-        this.pathHelper.ifcModelsDeletePath(this.currentProjectService.identifier as string, event.modelId),
+        this.pathHelper.ifcModelsDeletePath(this.currentProjectService.identifier!, event.modelId),
         formData,
       )
         .subscribe()

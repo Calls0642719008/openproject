@@ -34,11 +34,19 @@ module WaitHelpers
   # Useful to wait for a primer dialog to finish opening, as they have an
   # opening animation.
   #
-  # @param selector [String] CSS selector for the element to wait for
+  # @param selector_or_element [String or Capybara::Node::Element] CSS selector or element to wait for
   # @param wait [Integer] Optional maximum time to wait in seconds, defaults to
   #   Capybara's default wait time
-  def wait_for_size_animation_completion(selector, wait: Capybara.default_max_wait_time)
-    element = page.find(selector, wait:)
+  def wait_for_size_animation_completion(selector_or_element, wait: Capybara.default_max_wait_time)
+    element =
+      case selector_or_element
+      when String
+        page.find(selector_or_element, wait:)
+      when Capybara::Node::Element
+        selector_or_element
+      else
+        raise ArgumentError, "Invalid selector or element"
+      end
     page.document.synchronize do
       initial_position = page.evaluate_script("arguments[0].getBoundingClientRect()", element)
       sleep 0.1 # Small delay to allow for animation

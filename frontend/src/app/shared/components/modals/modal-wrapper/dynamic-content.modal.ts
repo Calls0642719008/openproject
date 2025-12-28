@@ -59,12 +59,12 @@ export class DynamicContentModalComponent extends OpModalComponent implements On
     super.ngOnInit();
 
     // Append the dynamic body
-    const wrapper = this.$element.children[0];
+    const wrapper = this.element.children[0];
     const classes = (this.locals.modalClassName as string) || '';
     wrapper.classList.add(...classes.split(' '));
     wrapper.innerHTML = this.locals.modalBody as string;
 
-    const modal = document.querySelector('.spot-modal') as HTMLElement;
+    const modal = document.querySelector('.spot-modal')!;
     const closeButton = modal.querySelector<HTMLButtonElement>('[dynamic-content-modal-close-button]');
     closeButton?.addEventListener('click', () => this.closeMe());
   }

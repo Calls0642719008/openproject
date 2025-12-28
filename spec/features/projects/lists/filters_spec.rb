@@ -175,9 +175,9 @@ RSpec.describe "Projects list filters", :js, with_settings: { login_required?: f
 
       # Test visibility of 'more' menu list items
       projects_page.activate_menu_of(parent_project) do |menu|
-        expect(menu).to have_text("Add to favorites")
         expect(menu).to have_text("Unarchive")
         expect(menu).to have_text("Delete")
+        expect(menu).to have_no_text("Add to favorites")
         expect(menu).to have_no_text("Archive")
         expect(menu).to have_no_text("Copy")
         expect(menu).to have_no_text("Settings")
@@ -670,7 +670,6 @@ RSpec.describe "Projects list filters", :js, with_settings: { login_required?: f
       projects_page.expect_projects_not_listed(public_project)
 
       # Applies the filters to the filters section
-      projects_page.toggle_filters_section
       projects_page.expect_filter_set "active"
       projects_page.expect_filter_set "name_and_identifier"
 
@@ -679,7 +678,9 @@ RSpec.describe "Projects list filters", :js, with_settings: { login_required?: f
     end
   end
 
-  context "when filtering via calculated values", with_flag: { calculated_value_project_attribute: true } do
+  context "when filtering via calculated values",
+          with_ee: %i[calculated_values],
+          with_flag: { calculated_value_project_attribute: true } do
     let(:projects_with_calculated_value) do
       [project, public_project]
     end

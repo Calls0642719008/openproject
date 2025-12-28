@@ -28,7 +28,7 @@ allOf:
 
                   **Resource**: urn:openproject-org:api:v3:storages:storage_file:no_link_provided
 example:
-  id: 42
+  id: "42"
   name: readme.md
   _type: StorageFile
   location: '/readme.md'

@@ -23,9 +23,12 @@ keywords: members, project participants
 
 On the left side menu you will see **Members**. When selected, it will show a list of project members, project groups, as well as the users with whom work packages from this project have been shared. You can **edit** or **delete** a user or a group by clicking the respective icon at the end of the line listing the user or group.
 
-![Project members overview in OpenProject](members-overview.png)
+> [!IMPORTANT]
+> If you do not have a global permission to **View all users and groups**, you may not see all project members.  The selection is limited to users who you share a project with or are in the same group with. 
 
-Standard filters on the left side menu include the following:
+![Project members overview in OpenProject](openproject_user_guide_members_overview.png)
+
+Standard filters on the left-side menu include the following:
 
 - **All** - returns all members and groups of the project, as well as non-members, with whom one or more work packages from this project have been shared
 
@@ -43,26 +46,28 @@ Standard filters on the left side menu include the following:
 
   - **Edit** - returns all users that are permitted to edit a work package that has been shared with them
 
-> Note: users, with whom work packages from a given project have been shared, can not be edited or deleted under **Members**. To edit or revoke their viewing rights you can click on the "Number of work package(s) in the column "Shared" (3 work packages in the example above). This will open an already filtered work package list of all  work packages shared with that user.
+> [!NOTE]
+> Users, with whom work packages from a given project have been shared,  be edited or deleted under **Members**. To edit or revoke their viewing rights you can click on the "Number of work package(s) in the column "Shared" (3 work packages in the example above). This will open an already filtered work package list of all  work packages shared with that user.
 >
 > Another way is to navigate to **Work packages**, select the **Shared with users** filter and adjust the privileges accordingly. [Read more here](../work-packages/share-work-packages/#remove-sharing-privileges).
 
-- **Groups** lists all the groups that have been added to this project (this filter will only be visible if a group has been added to the project).
+- **Groups** lists all groups that have been added to this project (this filter will only be visible if a group has been added to the project).
 
-> Note: members that are part of a group will also be displayed as members individually. In that case you can only edit the roles assigned to the users, but not delete him or her. If you want to delete a user that is a member of a group (also added to this project) you will have to delete the entire group and add group members individually if needed.
+> [!NOTE]
+> Members that are part of a group will also be displayed as members individually. In that case you can only edit the roles assigned to the users, but not delete them. If you want to delete a user that is a member of a group (also added to this project) you will have to delete the entire group and add group members individually if needed.
 
-![Group project member in OpenProject](members-overview-group.png)
+!["Marketing" group members shown under Members module in a project in OpenProject](openproject_user_guide_members_module_group.png)
 
-You can adjust the displayed members by clicking on the **filter icon** in the top right corner next to **+ Member** button. Once you are done adjusting your preferences, click the green **Apply** button.
+You can adjust the displayed members by clicking on the **Filter**  button in the left corner under the module name. Once you are done adjusting your preferences, click the green **Apply** button.
 
-![Filter project members overview](filter-project-members.png)
+![Filter project members in members module in OpenProject](openproject_user_guide_members_module_filters.png)
 
-You can adjust the project member overview based on following filters:
+You can adjust the project member overview based on the following filters:
 
 - **Status** - allows filtering based on the user status, such as active, invited, locked or registered.
 - **Group** - allows filtering for project members that are part of an existing group (all groups available in your instance will be listed as options), even if the group itself has not been added to the project.
-- **Role** - allows filtering based on all the user roles that have been assigned to users in that specific project. The options of this filters are the same as in the left side menu.
-- **Work package shares** - provides same filters as listed in the left side menu, based on all the roles available for sharing work packages. They include all shares, view, comment, edit.
+- **Role** - allows filtering based on all the user roles that have been assigned to users in that specific project. The options of these filters are the same as in the left side menu.
+- **Work package shares** - provides the same filters as listed in the left side menu, based on all the roles available for sharing work packages. They include all shares, view, comment, edit.
 - **Name** - allows searching for a specific user or group by typing in a user or group name.
 
 ## Add members
@@ -73,35 +78,45 @@ Find out [here](../../getting-started/invite-members/#add-existing-users) how to
 
 To change the role of a member within a project, select the corresponding project and open the Members module.
 
-To edit an existing member of a project, click the **More** icon in the list next to the member on the right and select **Manage roles**. Add and remove roles, then press the green **Change** button so save your changes.
+To edit an existing member of a project, click the **More** icon in the list next to the member on the right and select **Manage roles**. Add and remove roles, then press the green **Change** button to save your changes.
 
-![Edit project members in OpenProject](edit-project-member.png)
+![Edit project members in OpenProject](openproject_user_guide_members_manage_roles.png)
 
 ## Remove members
 
-To remove members from a project, [select the project](../../getting-started/projects/#open-an-existing-project) for which you want to remove the members. In the project menu on the left, select the **Members** module. In the members list, click the **More** icon at the right end of the row with the corresponding member name and select Remove member.
+To remove members from a project, [select the project](../../getting-started/projects/#open-an-existing-project) for which you want to remove the members. In the project menu on the left, select the **Members** module. In the members list, click the **More** icon at the right end of the row with the corresponding member name and select **Remove member**.
 
-![Remove project members in OpenProject](delete-project-member.png)
+![Remove project members in OpenProject](openproject_user_guide_members_remove_members.png)
 
 You will be asked to confirm your decision.
 
-![Confirm removing a user from a project in OpenProject](confirm-user-deletion.png)
+> [!NOTE]
+>
+> A project member can be a part of the project either individually, as a member of a group, or both. The role removal will only affect the member's individual roles. All those roles obtained via a group will not be removed. To remove those group roles you can either remove the member from the group or remove the entire group from the project.
+
+
+
+If the project member you are removing is also part of a group that is also a member of the project, you will be notified that they will keep the access to the project as a member of the group.
+
+![A message when removing an OpenProject project member who is also a member of a project group](openproject_user_guide_members_remove_user_group_member.png)
+
+
 
 If the project member you are removing has shared work packages, you will also be asked whether these sharing rights also need to be removed.
 
 ![Confirm removing a user with shared work packages from a project in OpenProject](openproject_user_guide_confirm_user_removal_with_shares.png)
 
-> [!NOTE]
-> Please keep in mind that removing project members can only be done if you have correct permissions.  
-> A project member can be a part of the project either individually, as a member of a group, or both. The role removal will only affect the member's individual roles. All those roles obtained via a group will not be removed. To remove those group roles you can either remove the member from the group or remove the entire group from the project.
+> [!IMPORTANT]
+> Please keep in mind that removing project members can only be done if you have the correct permissions.  
 
 ## Revoke sharing privileges
 
-If a work package has been [shared](../work-packages/share-work-packages), you may need to revoke sharing privileges at a later stage in the project. To do that select the **More** icon at the right end of the row with the corresponding member name and select **Revoke work package shares**. You can also choose the **View shared work packages** option to see the list of all  work packages shared with the user.
+If a work package has been [shared](../work-packages/share-work-packages), you may need to revoke sharing privileges at a later stage in the project. To do that select the **More** icon at the right end of the row with the corresponding member name and select **Revoke work package shares**. You can also choose the **View shared work packages** option to see the list of all work packages shared with the user.
 
 ![Remove sharing privileges in OpenProject](openproject_user_guide_members_remove_work_package_shares.png)
 
-> Note: a project member can be a part of the project either individually, as a member of a group, or both. The revoking action will only affect the individual work packages shares. All work package shares with the user as part of a group will not be revoked. To revoke those group shares you can either remove the member from the group or revoke the privileges from the entire group.
+> [!NOTE]
+> A project member can be a part of the project either individually, as a member of a group, or both. The revoking action will only affect the individual work package shares. All work package shares with the user as part of a group will not be revoked. To revoke those group shares you can either remove the member from the group or revoke the privileges from the entire group.
 
 ## Roles and permissions
 

@@ -1,15 +1,15 @@
 #English strings go here for Rails i18n
 sv:
   plugin_openproject_bim:
-    name: "OpenProject BIM and BCF functionality"
-    description: "This OpenProject plugin introduces BIM and BCF functionality."
+    name: "OpenProject BIM- och BCF-funktionalitet"
+    description: "Denna OpenProject plugin introducerar BIM och BCF funktionalitet."
   bim:
     label_bim: 'BIM'
   bcf:
     label_bcf: 'BCF'
     label_imported_failed: 'Misslyckad import av BCF-ämnen'
     label_imported_successfully: 'BCF-ämnen har importerats'
-    label_bcf_issue_associated: "BCF issue associated"
+    label_bcf_issue_associated: "BCF-frågan associerad"
     issues: "Problem"
     recommended: 'rekommenderad'
     not_recommended: 'rekommenderas inte'
@@ -81,22 +81,22 @@ sv:
       bim/ifc_models/ifc_model: "IFC-modell"
     attributes:
       bim/ifc_models/ifc_model:
-        ifc_attachment: "IFC file"
-        is_default: "Default model"
-        attachments: "IFC file"
+        ifc_attachment: "IFC-fil"
+        is_default: "Förvald modell"
+        attachments: "IFC-fil"
       bim/bcf/issue:
-        bcf_comment: "BCF comment"
+        bcf_comment: "BCF kommentar"
         bim_snippet: "BIM snippet"
-        reference_links: "Reference links"
-        stage: "Stage"
-        viewpoint: "Viewpoint"
+        reference_links: "Referenslänkar"
+        stage: "Skede"
+        viewpoint: "Utsiktspunkt"
     errors:
       models:
         bim/ifc_models/ifc_model:
           attributes:
             base:
-              ifc_attachment_missing: "No ifc file attached."
-              invalid_ifc_file: "The provided file is not a valid IFC file."
+              ifc_attachment_missing: "Ingen ifc-fil bifogad."
+              invalid_ifc_file: "Den angivna filen är inte en giltig IFC-fil."
         bim/bcf/viewpoint:
           bitmaps_not_writable: "bitmaps är inte skrivbara eftersom de ännu inte har implementerats."
           index_not_integer: "index är inte ett heltal."
@@ -111,33 +111,33 @@ sv:
           snapshot_data_blank: "snapshot_data måste tillhandahållas."
           unsupported_key: "En icke stödd json egendom ingår."
         bim/bcf/issue:
-          uuid_already_taken: "Can't import this BCF issue as there already is another with the same GUID. Could it be that this BCF issue had already been imported into a different project?"
+          uuid_already_taken: "Kan inte importera detta BCF-problem eftersom det redan finns ett annat med samma GUID. Kan det vara så att denna BCF-fråga redan hade importerats till ett annat projekt?"
   ifc_models:
     label_ifc_models: 'IFC-modeller'
     label_new_ifc_model: 'Ny IFC-modell'
     label_show_defaults: 'Visa standardinställningar'
-    label_default_ifc_models: 'Default IFC models'
-    label_edit_defaults: 'Edit defaults'
+    label_default_ifc_models: 'Standardmodeller för IFC'
+    label_edit_defaults: 'Redigera standardvärden'
     no_defaults_warning:
-      title: 'No IFC model was set as default for this project.'
-      check_1: 'Check that you have uploaded at least one IFC model.'
-      check_2: 'Check that at least one IFC model is set to "Default".'
-    no_results: "No IFC models have been uploaded in this project."
+      title: 'Ingen IFC-modell har angetts som standard för detta projekt.'
+      check_1: 'Kontrollera att du har laddat upp minst en IFC-modell.'
+      check_2: 'Kontrollera att minst en IFC-modell är satt till "Standard".'
+    no_results: "Inga IFC-modeller har laddats upp i detta projekt."
     conversion_status:
-      label: 'Processing?'
-      pending: 'Pending'
-      processing: 'Processing'
-      completed: 'Completed'
+      label: 'Bearbetar?'
+      pending: 'Väntande'
+      processing: 'Bearbetar'
+      completed: 'Slutförda'
       error: 'Fel'
     processing_notice:
-      processing_default: 'The following default IFC models are still being processed and are thus not available, yet:'
+      processing_default: 'Följande IFC-modeller bearbetas fortfarande och är därför inte tillgängliga, ännu:'
     flash_messages:
-      upload_successful: 'Upload succeeded. It will now get processed and will be ready to use in a couple of minutes.'
+      upload_successful: 'Uppladdningen lyckades. Den kommer nu att bearbetas och kommer att vara klar att användas om ett par minuter.'
     conversion:
-      missing_commands: "The following IFC converter commands are missing on this system: %{names}"
+      missing_commands: "Följande IFC-omvandlarkommandon saknas på detta system: %{names}"
   project_module_ifc_models: "IFC-modeller"
-  permission_view_ifc_models: "View IFC models"
-  permission_manage_ifc_models: "Import and manage IFC models"
+  permission_view_ifc_models: "Visa IFC-modeller"
+  permission_manage_ifc_models: "Importera och hantera IFC-modeller"
   extraction:
     available:
-      ifc_convert: "IFC conversion pipeline available"
+      ifc_convert: "IFC-konvertering pipeline tillgänglig"

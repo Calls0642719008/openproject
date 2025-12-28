@@ -38,7 +38,6 @@ export class HierarchyQueryLinkHelperService {
   ) {}
 
   public addHref(link:HTMLAnchorElement, resource:HalResource):void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (resource && resource.id) {
       const wpID = resource.id.toString();
       const props = {

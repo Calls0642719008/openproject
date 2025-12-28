@@ -44,7 +44,7 @@ export default class FormController extends Controller<HTMLFormElement> {
   }
 
   generateExportURL(formData:FormData):string {
-    const actionURL = this.element.getAttribute('action') as string;
+    const actionURL = this.element.getAttribute('action')!;
     const searchParams = this.getExportParams(formData);
     const append = actionURL.includes('?') ? '&' : '?';
     return `${actionURL}${append}${searchParams.toString()}`;
@@ -87,9 +87,9 @@ export default class FormController extends Controller<HTMLFormElement> {
     if (format === 'pdf') {
       // find the currently visible section (we have several columns on the form)
       const pdfExportType = formData.get('pdf_export_type') as string;
-      return this.element.querySelector(`[data-pdf-export-type="${pdfExportType}"] [data-columns-selection]`) as HTMLElement;
+      return this.element.querySelector(`[data-pdf-export-type="${pdfExportType}"] [data-columns-selection]`)!;
     }
-    return this.element.querySelector('[data-columns-selection]') as HTMLElement;
+    return this.element.querySelector('[data-columns-selection]')!;
   }
 
   private mustHaveColumns(formData:FormData):boolean {

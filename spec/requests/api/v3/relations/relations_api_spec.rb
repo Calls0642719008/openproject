@@ -305,7 +305,7 @@ RSpec.describe "API v3 Relation resource", content_type: :json do
       it "lets the user know the attribute is read-only" do
         msg = JSON.parse(last_response.body)["message"]
 
-        expect(msg).to include "Related work package cannot be changed for existing relations."
+        expect(msg).to include "The selected work package cannot be changed for existing relations."
       end
     end
   end
@@ -338,8 +338,8 @@ RSpec.describe "API v3 Relation resource", content_type: :json do
     context "without manage_work_package_relations" do
       let(:permissions) { [:view_work_packages] }
 
-      it "is forbidden" do
-        expect(last_response).to have_http_status :forbidden
+      it "returns 422" do
+        expect(last_response).to have_http_status :unprocessable_entity
       end
     end
 
@@ -347,7 +347,7 @@ RSpec.describe "API v3 Relation resource", content_type: :json do
     # This one is expected to fail (422) because the `to` work package
     # is in another project for which the user does not have permission to
     # view work packages.
-    context "without manage_work_package_relations" do
+    context "without manage_work_package_relations for 'to' work package" do
       let!(:to) { create(:work_package) }
 
       it "returns 422" do
@@ -401,8 +401,8 @@ RSpec.describe "API v3 Relation resource", content_type: :json do
     context "lacking the permission" do
       let(:permissions) { %i[view_work_packages] }
 
-      it "returns 403" do
-        expect(last_response).to have_http_status :forbidden
+      it "returns 422" do
+        expect(last_response).to have_http_status :unprocessable_entity
       end
 
       it "leaves the relation" do

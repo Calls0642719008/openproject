@@ -47,6 +47,14 @@ module Sessions
       where(user_id: nil)
     end
 
+    scope :autologged, -> do
+      where(id: ::Sessions::AutologinSessionLink.select(:session_id))
+    end
+
+    scope :not_autologged, -> do
+      where.not(id: ::Sessions::AutologinSessionLink.select(:session_id))
+    end
+
     ##
     # Mark all records as readonly so they cannot
     # modify the database

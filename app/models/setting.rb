@@ -29,6 +29,8 @@
 #++
 
 class Setting < ApplicationRecord
+  class NotWritableError < StandardError; end
+
   extend Aliases
   extend MailSettings
 
@@ -174,7 +176,7 @@ class Setting < ApplicationRecord
 
   def set_value!(val, force: false)
     unless force || definition.writable?
-      raise NoMethodError, "#{name} is not writable but can be set through env vars or configuration.yml file."
+      raise NotWritableError, "#{name} is not writable but can be set through env vars or configuration.yml file."
     end
 
     self[:value] = formatted_value(val)

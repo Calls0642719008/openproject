@@ -112,9 +112,9 @@ RSpec.describe "Role creation", :js do
     select type.name, from: "Type"
     click_button "Edit"
 
-    from_id = existing_workflow.old_status_id
-    to_id = existing_workflow.new_status_id
+    old_status = existing_workflow.old_status.name
+    new_status = existing_workflow.new_status.name
 
-    expect(page).to have_field("status_#{from_id}_#{to_id}_", checked: true)
+    expect(page).to have_checked_field("Allow transition from #{old_status} to #{new_status}")
   end
 end

@@ -9,3 +9,5 @@ styles:
     path: "modules/meeting/app/workers/meetings/pdf/default"
   - name: "project-report"
     path: "app/models/projects/exports/pdf_export"
+  - name: "project-initiation"
+    path: "app/models/project/pdf_export/project_initiation"

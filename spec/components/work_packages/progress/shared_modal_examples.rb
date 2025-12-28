@@ -30,23 +30,11 @@
 
 RSpec.shared_examples_for "progress modal validations" do
   describe "validations" do
-    context "when focused_field is not an accepted value" do
-      it "raises an ArgumentError" do
+    context "when focused_field is not an accepted value (Regression #62075)" do
+      it "returns :no_field" do
         work_package = build(:work_package)
 
-        expect do
-          described_class.new(work_package, focused_field: :foo)
-        end.to raise_error(ArgumentError, /The selected field is not one of/)
-      end
-    end
-
-    context "when given another progress related not accepted by the component" do
-      it "raises an ArgumentError" do
-        work_package = build(:work_package)
-
-        expect do
-          described_class.new(work_package, focused_field: "jerry")
-        end.to raise_error(ArgumentError, /The selected field is not one of/)
+        expect(described_class.new(work_package, focused_field: "global-search--input").focused_field).to eq(:no_field)
       end
     end
   end
@@ -86,7 +74,7 @@ RSpec.shared_examples_for "progress modal help links" do
 
       expect(page)
         .to have_link("Learn more",
-                      href: OpenProject::Static::Links.links[:progress_tracking_docs][:href])
+                      href: OpenProject::Static::Links.url_for(:progress_tracking_docs))
     end
   end
 end

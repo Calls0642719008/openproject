@@ -24,11 +24,11 @@
 //
 // See COPYRIGHT and LICENSE files for more details.
 
-import { Injector, NgModule, } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { OpSharedModule } from 'core-app/shared/shared.module';
 import { OpenprojectTabsModule } from 'core-app/shared/components/tabs/openproject-tabs.module';
 import {
-  WorkPackageTabsService
+  WorkPackageTabsService,
 } from 'core-app/features/work-packages/components/wp-tabs/services/wp-tabs/wp-tabs.service';
 import { GitHubTabComponent } from './github-tab/github-tab.component';
 import { TabHeaderComponent } from './tab-header/tab-header.component';
@@ -40,7 +40,7 @@ import { WorkPackageResource } from 'core-app/features/hal/resources/work-packag
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GithubPullRequestResourceService } from './state/github-pull-request.service';
-import { PullRequestMacroComponent, } from './pull-request/pull-request-macro.component';
+import { PullRequestMacroComponent } from './pull-request/pull-request-macro.component';
 import { PullRequestStateComponent } from './pull-request/pull-request-state.component';
 import { registerCustomElement } from 'core-app/shared/helpers/angular/custom-elements.helper';
 
@@ -58,13 +58,16 @@ export function workPackageGithubPrsCount(
 
 export function initializeGithubIntegrationPlugin(injector:Injector) {
   const wpTabService = injector.get(WorkPackageTabsService);
-  wpTabService.register({
-    component: GitHubTabComponent,
-    name: I18n.t('js.github_integration.work_packages.tab_name'),
-    id: 'github',
-    displayable: (workPackage) => !!workPackage.github,
-    count: workPackageGithubPrsCount,
-  });
+  wpTabService.registerBefore(
+    'watchers',
+    {
+      component: GitHubTabComponent,
+      name: I18n.t('js.github_integration.work_packages.tab_name'),
+      id: 'github',
+      displayable: (workPackage) => !!workPackage.github,
+      count: workPackageGithubPrsCount,
+    },
+  );
 }
 
 @NgModule({

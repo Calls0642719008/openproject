@@ -35,7 +35,7 @@ class Queries::Capabilities::Filters::IdFilter < Queries::Capabilities::Filters:
 
   def split_values
     values.map do |value|
-      if (matches = value.match(/\A(\w+\/\w+)\/([pg])(\d*)-(\d+)\z/))
+      if (matches = value.match(/\A(\w+\/\w+)\/([wg])(\d*)-(\d+)\z/))
         {
           action: matches[1],
           context_key: matches[2],
@@ -51,9 +51,9 @@ class Queries::Capabilities::Filters::IdFilter < Queries::Capabilities::Filters:
       conditions = ["action = '#{value[:action]}' AND principal_id = #{value[:principal_id]}"]
 
       conditions << if value[:context_id].present?
-                      ["context_id = #{value[:context_id]}"]
+                      "context_id = #{value[:context_id]}"
                     else
-                      ["context_id IS NULL"]
+                      "context_id IS NULL"
                     end
 
       "(#{conditions.join(' AND ')})"

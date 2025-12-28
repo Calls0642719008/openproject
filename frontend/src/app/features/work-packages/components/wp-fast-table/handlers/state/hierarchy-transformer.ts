@@ -15,6 +15,7 @@ import { indicatorCollapsedClass } from 'core-app/features/work-packages/compone
 import { tableRowClassName } from 'core-app/features/work-packages/components/wp-fast-table/builders/rows/single-row-builder';
 import { WorkPackageViewHierarchies } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-table-hierarchies';
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
+import { getNodeIndex } from 'core-app/shared/helpers/dom-helpers';
 
 export class HierarchyTransformer {
   @InjectField() public wpTableHierarchies:WorkPackageViewHierarchiesService;
@@ -61,16 +62,20 @@ export class HierarchyTransformer {
     const rendered = this.querySpace.tableRendered.value!;
 
     // Show all hierarchies
-    jQuery('[class^="__hierarchy-group-"]').removeClass((i:number, classNames:string):string => (classNames.match(/__collapsed-group-\d+/g) || []).join(' '));
+    document.querySelectorAll('[class^="__hierarchy-group-"]').forEach((el) => {
+      Array.from(el.classList)
+        .filter((className) => /__collapsed-group-\d+/g.test(className))
+        .forEach((className) => el.classList.remove(className));
+    });
 
     // Mark which rows were hidden by some other hierarchy group
     // (e.g., by a collapsed parent)
-    const collapsed:{ [index:number]:boolean } = {};
+    const collapsed:Record<number, boolean> = {};
 
     // Hide all collapsed hierarchies
     _.each(state.collapsed, (isCollapsed:boolean, wpId:string) => {
       // Toggle the root style
-      jQuery(`.${hierarchyRootClass(wpId)} .wp-table--hierarchy-indicator`).toggleClass(indicatorCollapsedClass, isCollapsed);
+      document.querySelector(`.${hierarchyRootClass(wpId)} .wp-table--hierarchy-indicator`)?.classList.toggle(indicatorCollapsedClass, isCollapsed);
 
       // Get parent row and mark/unmark it as collapsed
       const hierarchyRoot = document.querySelector(`.wp-timeline-cell.__hierarchy-root-${wpId}`);
@@ -84,15 +89,17 @@ export class HierarchyTransformer {
       }
 
       // Get all affected children rows
-      const affected = jQuery(`.${hierarchyGroupClass(wpId)}`);
+      const affected = Array.from(document.querySelectorAll(`.${hierarchyGroupClass(wpId)}`));
 
       // Hide/Show the descendants.
-      affected.toggleClass(collapsedGroupClass(wpId), isCollapsed);
+      affected.forEach((el) => el.classList.toggle(collapsedGroupClass(wpId), isCollapsed));
 
       // Update the hidden section of the rendered state
-      affected.filter(`.${tableRowClassName}`).each((i, el) => {
+      affected
+        .filter((el) => el.matches(`.${tableRowClassName}`))
+        .forEach((el) => {
         // Get the index of this row
-        const index = jQuery(el).index();
+        const index = getNodeIndex(el);
 
         // Update the hidden state
         if (!collapsed[index]) {

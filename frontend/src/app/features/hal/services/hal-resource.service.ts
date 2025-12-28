@@ -50,7 +50,7 @@ import { getPaginatedCollections } from 'core-app/core/apiv3/helpers/get-paginat
 
 export interface HalResourceFactoryConfigInterface {
   cls?:any;
-  attrTypes?:{ [attrName:string]:string };
+  attrTypes?:Record<string, string>;
 }
 
 interface ErrorWithType {
@@ -62,7 +62,7 @@ export class HalResourceService {
   /**
    * List of all known hal resources, extendable.
    */
-  private config:{ [typeName:string]:HalResourceFactoryConfigInterface } = {};
+  private config:Record<string, HalResourceFactoryConfigInterface> = {};
 
   constructor(
     readonly injector:Injector,
@@ -291,7 +291,7 @@ export class HalResourceService {
    */
   protected getResourceClassOfType<T extends HalResource>(type:string):HalResourceClass<T> {
     const config = this.config[type];
-    return (config && config.cls) ? config.cls : this.defaultClass as HalResourceClass<T>;
+    return (config?.cls) ? config.cls : this.defaultClass as HalResourceClass<T>;
   }
 
   /**
@@ -303,7 +303,7 @@ export class HalResourceService {
    */
   protected getResourceClassOfAttribute<T extends HalResource = HalResource>(type:string, attribute:string):string|null {
     const typeConfig = this.config[type];
-    const types = (typeConfig && typeConfig.attrTypes) || {};
+    const types = (typeConfig?.attrTypes) || {};
     return types[attribute];
   }
 
@@ -319,7 +319,6 @@ export class HalResourceService {
     let resource:ErrorResource|null = null;
 
     const body = error.error as string|ErrorWithType|unknown;
-    // eslint-disable-next-line no-underscore-dangle
     if (typeof body === 'object' && (body as ErrorWithType)?._type) {
       resource = this.createHalResource<ErrorResource>(error.error);
     }

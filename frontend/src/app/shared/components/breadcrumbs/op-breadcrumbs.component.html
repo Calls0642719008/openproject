@@ -2,48 +2,55 @@
   <!-- Desktop Version -->
   <nav [attr.aria-label]="text.breadcrumb" class="hidden-for-mobile">
     <ol class="op-breadcrumbs--items">
-      <li
-        class="op-breadcrumbs--item"
-        data-test-selector="op-breadcrumbs--item"
-        *ngFor="let item of items; let last = last"
-      >
-        <ng-container *ngIf="!last">
-          <ng-container *ngIf="isLink(item); else plainText">
-            <a [href]="item.href" target="_top">{{ item.text }}</a>
-          </ng-container>
-            <ng-template #plainText>
-                <a class="op-breadcrumbs--text"
-                   href="#"
-                   target="_top">
-                    {{ item }}
-                </a>
-            </ng-template>
-        </ng-container>
-        <ng-container *ngIf="last">
-          <a href="#"
-            aria-current="page"
-            class="op-breadcrumbs--current"
-             target="_self"
+      @for (item of items; track item; let last = $last) {
+        <li
+          class="op-breadcrumbs--item"
+          data-test-selector="op-breadcrumbs--item"
           >
-            <ng-container *ngIf="lastItemSection">
-              <span class="op-breadcrumbs--section">{{ lastItemSection }}: </span>
-            </ng-container>
-            <b>{{ getText(item) }}</b>
-          </a>
-        </ng-container>
-      </li>
+
+          <span class="Truncate">
+            <span class="Truncate-text">
+              @if (!last) {
+                @if (isLink(item)) {
+                  <a [href]="item.href" target="_top">{{ item.text }}</a>
+                } @else {
+                  <a class="op-breadcrumbs--text"
+                    href="#"
+                    target="_top">
+                    {{ item }}
+                  </a>
+                }
+              }
+              @if (last) {
+                <a href="#"
+                  aria-current="page"
+                  class="op-breadcrumbs--current"
+                  target="_self"
+                  >
+                  @if (lastItemSection) {
+                    <span class="op-breadcrumbs--section">{{ lastItemSection }}: </span>
+                  }
+                  <b>{{ getText(item) }}</b>
+                </a>
+              }
+            </span>
+          </span>
+        </li>
+      }
     </ol>
   </nav>
 
   <!-- Mobile Version -->
   <nav [attr.aria-label]="text.breadcrumb" class="hidden-for-desktop">
-    <div class="op-breadcrumbs--mobile" *ngIf="items.length > 1">
-      <ng-container *ngIf="getHref(items[items.length - 2]) as href">
-        <a class="op-breadcrumbs--back" [href]="href" target="_top">
-          <svg arrow-left-icon size="small"></svg>
-          {{ getText(items[items.length - 2]) }}
-        </a>
-      </ng-container>
-    </div>
+    @if (items.length > 1) {
+      <div class="op-breadcrumbs--mobile">
+        @if (getHref(items[items.length - 2]); as href) {
+          <a class="op-breadcrumbs--back" [href]="href" target="_top">
+            <svg arrow-left-icon size="small"></svg>
+            {{ getText(items[items.length - 2]) }}
+          </a>
+        }
+      </div>
+    }
   </nav>
 </div>

@@ -35,6 +35,7 @@ import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decora
 import { GroupObject } from 'core-app/features/hal/resources/wp-collection-resource';
 import { groupName } from './grouped-rows-helpers';
 import { ProjectPhaseDisplayField } from 'core-app/shared/components/fields/display/field-types/project-phase-display-field.module';
+import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 
 export function groupClassNameFor(group:GroupObject) {
   return `group-${group.identifier}`;
@@ -98,13 +99,14 @@ export class GroupHeaderBuilder {
    * @private
    */
   private leadingIcon(group:GroupObject) {
-    const isProjectPhase = group.href.some((item) =>
-      // will also match project phase definitions
-      item.href !== null && item.href.includes('api/v3/project_phase'));
+    // will also match project phase definitions
+    const groupLink = group.href.find(
+      (item) =>item.href?.includes('api/v3/project_phase')
+    );
 
-    if (isProjectPhase) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return ProjectPhaseDisplayField.phaseIconByName(groupName(group), false);
+    if (groupLink) {
+      const definitionId = idFromLink(groupLink.href);
+      return ProjectPhaseDisplayField.phaseIconById(definitionId, false);
     }
 
     return null;

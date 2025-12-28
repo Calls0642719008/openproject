@@ -38,7 +38,8 @@ module Users
               }
     attribute :firstname
     attribute :lastname
-    attribute :mail
+    attribute :mail,
+              writable: ->(*) { model.new_record? || model.id == user.id || user.admin? }
     attribute :admin,
               writable: ->(*) { user.admin? && model.id != user.id }
     attribute :language

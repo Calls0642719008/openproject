@@ -48,7 +48,7 @@ export abstract class CachedBoardActionService extends BoardActionService {
       .putFromPromiseIfPristine(() => firstValueFrom(this.loadUncached()));
 
     return firstValueFrom(this.cache.values$())
-      .then((results:HalResource[]) => results.find((resource) => resource.id === id) as HalResource);
+      .then((results:HalResource[]) => results.find((resource) => resource.id === id)!);
   }
 
   protected abstract loadUncached():Observable<HalResource[]>;

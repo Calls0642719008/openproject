@@ -13,14 +13,8 @@ ro:
           no_results: 'Încă nu există documente.'
         members:
           title: 'Membri'
-          no_results: 'Nu există membri vizibili.'
-          view_all_members: 'Vezi toți membrii'
-          add: 'Membru'
-          too_many: 'Afișarea a %{count} din %{total} membri.'
         news:
           title: 'Noutăţi'
-          at: 'la'
-          no_results: 'Nimic nou de raportat.'
         project_description:
           title: 'Descriere proiect'
           no_results: "Nu a fost scrisă încă nicio descriere. Aceasta poate fi adăugată în \"Setări proiect\"."
@@ -33,9 +27,10 @@ ro:
           not_set: 'Nesetat'
           finished: 'Finalizat'
           discontinued: 'Anulat'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: 'Subproiecte'
-          no_results: 'Cu subproiecte'
+          title: 'Subitems'
         project_favorites:
           title: 'Proiecte favorite'
           no_results: 'Nu ai niciun proiect favorit. Clic pe pictograma cu steluță din tabloul de bord al proiectului pentru a adăuga unul la favorite.'
@@ -57,6 +52,7 @@ ro:
           title: 'Tabelul pachetelor de lucru'
         work_packages_graph:
           title: 'Graficul pachetelor de lucru'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Calendar'
         work_packages_overview:

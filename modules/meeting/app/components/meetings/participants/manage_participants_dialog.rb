@@ -30,6 +30,8 @@
 
 module Meetings
   class Participants::ManageParticipantsDialog < ApplicationComponent
+    DIALOG_ID = "manage-participants-dialog"
+
     include ApplicationHelper
     include OpenProject::FormTagHelper
     include OpTurbo::Streamable

@@ -227,12 +227,12 @@ RSpec.describe Attachment do
       let(:url_options) { {} }
       let(:query) { attachment.external_url(**url_options).to_s.split("?").last }
 
-      it "has a default expiry time" do
+      it "has a default expiration time" do
         expect(query).to include "X-Amz-Expires="
         expect(query).not_to include "X-Amz-Expires=3600"
       end
 
-      context "with a custom expiry time" do
+      context "with a custom expiration time" do
         let(:url_options) { { expires_in: 1.hour } }
 
         it "uses that time" do
@@ -240,7 +240,7 @@ RSpec.describe Attachment do
         end
       end
 
-      context "with expiry time exceeding maximum" do
+      context "with expiration time exceeding maximum" do
         let(:url_options) { { expires_in: 1.year } }
 
         it "uses the allowed max" do

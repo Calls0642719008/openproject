@@ -27,8 +27,8 @@ Once enabled, clicking on the **Calendars** entry on the left sidebar takes you 
 
 - You can create a new calendar by clicking on either the **+ Calendar** button at the top right corner near your avatar or at the bottom of the sidebar on the left.
 - Click on an existing (saved) calendar to view it.
-- You can change the visibility settings of any calendar by clicking on **\[⋮\] (more)** -> **Visibility settings.**
-  - Any calendar that has the **Favored** option checked will be displayed under the **Favorite** heading in the sidebar to the left.
+- You can change the visibility settings of any calendar by clicking on **\[⋮\] more** -> **Visibility settings.**
+  - Any calendar that has the **Favorited** option checked will be displayed under the **Favorite** heading in the sidebar to the left.
   - Any calendar that has the **Public** option checked will be visible to all members of the current project and listed under the **Public** heading in the sidebar to the left.
   - Any calendar that has the **Public** option unchecked will be considered **private** and displayed under the **Private** heading in the menu bar to the left.
 
@@ -108,7 +108,7 @@ This makes it possible for you to keep an eye on your project schedule from any 
 
 To subscribe to a calendar:
 
-1. Click on the **\[⋮\] (more) button** on the toolbar and select **Subscribe to calendar**.
+1. Click on the **\[⋮\] more button** on the toolbar and select **Subscribe to calendar**.
 2. In the modal that appears, give this calendar a unique name (you can only use it once). We recommend naming it based on where you will be subscribing to this calendar from ("personal phone" or "work tablet" for example).  
 3. Click on **Copy URL**. This creates the a [calendar token](../../user-guide/account-settings/#access-tokens) and copies the calendar URL to your clipboard.
 4. Paste this URL in your desired calendar client to subscribe.

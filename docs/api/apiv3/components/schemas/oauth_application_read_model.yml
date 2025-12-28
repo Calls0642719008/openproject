@@ -7,7 +7,7 @@ required:
   - name
   - clientId
   - confidential
-  - _link
+  - _links
 properties:
   id:
     type: integer
@@ -77,7 +77,7 @@ properties:
             - $ref: './link.yml'
             - description: |-
                 A redirect URI of the OAuth application
-  
+
                 **Resource**: N/A
 
 example:

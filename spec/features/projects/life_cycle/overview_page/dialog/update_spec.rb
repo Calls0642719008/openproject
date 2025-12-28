@@ -263,6 +263,10 @@ RSpec.describe "Edit project phases on project overview page", :js do
     end
 
     context "when only the first Project::Phase has dates set" do
+      around do |example|
+        Timecop.travel("2024-08-22T09:22:00Z".to_datetime) { example.run }
+      end
+
       it "shows updates the following Project::Phase correctly" do
         life_cycle_planning.update!(start_date: nil, finish_date: nil, duration: nil)
 

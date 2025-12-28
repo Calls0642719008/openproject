@@ -45,6 +45,7 @@ RSpec.describe RecurringMeetings::ICalService, type: :model do # rubocop:disable
            project:,
            title: "Weekly",
            frequency: "weekly",
+           time_zone: "America/New_York",
            start_time: DateTime.parse("2024-12-01T10:00:00Z"),
            end_date: "2025-12-01")
   end
@@ -75,10 +76,10 @@ RSpec.describe RecurringMeetings::ICalService, type: :model do # rubocop:disable
     it "contains serise and template information" do
       expect(parsed_events.count).to eq(1)
       expect(series_ical).to include("LOCATION:https://example.com/meet/important-meeting")
-      expect(series_ical).to include("SUMMARY:[My Project] Weekly")
+      expect(series_ical).to include("SUMMARY:Weekly")
       expect(series_ical).to include("CN=OpenProject:mailto:openproject@example.net")
-      expect(series_ical).to include("ATTENDEE;CN=Bob Barker;EMAIL=bob@example.com;PARTSTAT=NEEDS-ACTION;RSVP=TRU")
-      expect(series_ical).to include("ATTENDEE;CN=Foo Fooer;EMAIL=foo@example.com;PARTSTAT=NEEDS-ACTION;RSVP=TRUE")
+      expect(series_ical).to include("ATTENDEE;CN=Bob Barker;EMAIL=bob@example.com")
+      expect(series_ical).to include("ATTENDEE;CN=Foo Fooer;EMAIL=foo@example.com")
       expect(series_ical).to include("RRULE:FREQ=WEEKLY;UNTIL=20251202T000000Z")
     end
   end
@@ -90,6 +91,7 @@ RSpec.describe RecurringMeetings::ICalService, type: :model do # rubocop:disable
              project:,
              title: "Weekly",
              frequency: "weekly",
+             time_zone: "America/New_York",
              start_time: DateTime.parse("2024-12-01T10:00:00Z"),
              end_after: "never")
     end
@@ -97,9 +99,9 @@ RSpec.describe RecurringMeetings::ICalService, type: :model do # rubocop:disable
     it "contains serise and template information" do
       expect(parsed_events.count).to eq(1)
       expect(series_ical).to include("LOCATION:https://example.com/meet/important-meeting")
-      expect(series_ical).to include("SUMMARY:[My Project] Weekly")
-      expect(series_ical).to include("ATTENDEE;CN=Bob Barker;EMAIL=bob@example.com;PARTSTAT=NEEDS-ACTION;RSVP=TRU")
-      expect(series_ical).to include("ATTENDEE;CN=Foo Fooer;EMAIL=foo@example.com;PARTSTAT=NEEDS-ACTION;RSVP=TRUE")
+      expect(series_ical).to include("SUMMARY:Weekly")
+      expect(series_ical).to include("ATTENDEE;CN=Bob Barker;EMAIL=bob@example.com")
+      expect(series_ical).to include("ATTENDEE;CN=Foo Fooer;EMAIL=foo@example.com")
       expect(series_ical).to include("RRULE:FREQ=WEEKLY")
     end
   end
@@ -159,15 +161,15 @@ RSpec.describe RecurringMeetings::ICalService, type: :model do # rubocop:disable
 
       expect(first).to include("DTSTART;TZID=America/New_York:20241208T050000")
       expect(first).to include("DTEND;TZID=America/New_York:20241208T060000")
-      expect(first).to include("URL:http://#{Setting.host_name}/projects/my-project/meetings/#{schedule.meeting_id}")
+      expect(first).to include("URL:http://#{Setting.host_name}/meetings/#{schedule.meeting_id}")
 
       expect(second).to include("DTSTART;TZID=America/New_York:20250216T050000")
       expect(second).to include("DTEND;TZID=America/New_York:20250216T060000")
-      expect(second).to include("URL:http://#{Setting.host_name}/projects/my-project/meetings/#{schedule2.meeting_id}")
+      expect(second).to include("URL:http://#{Setting.host_name}/meetings/#{schedule2.meeting_id}")
 
       expect(moved).to include("DTSTART;TZID=America/New_York:20241216T063000")
       expect(moved).to include("DTEND;TZID=America/New_York:20241216T073000")
-      expect(moved).to include("URL:http://#{Setting.host_name}/projects/my-project/meetings/#{moved_schedule.meeting_id}")
+      expect(moved).to include("URL:http://#{Setting.host_name}/meetings/#{moved_schedule.meeting_id}")
     end
   end
 end

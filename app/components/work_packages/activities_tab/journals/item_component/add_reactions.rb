@@ -44,6 +44,14 @@ module WorkPackages
           @grouped_emoji_reactions = grouped_emoji_reactions || {}
         end
 
+        def self.menu_id(journal)
+          "reactions-menu-#{journal.id}"
+        end
+
+        def menu_id
+          self.class.menu_id(journal)
+        end
+
         def render?
           current_user_can_react?
         end

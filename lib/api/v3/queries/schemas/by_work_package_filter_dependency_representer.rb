@@ -38,7 +38,7 @@ module API
 
           def href_callback
             if filter.project
-              api_v3_paths.work_packages_by_project(filter.project.id)
+              api_v3_paths.work_packages_by_workspace(filter.project.id)
             else
               api_v3_paths.work_packages
             end

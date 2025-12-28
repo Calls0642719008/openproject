@@ -44,7 +44,7 @@ import { SchemaCacheService } from 'core-app/core/schemas/schema-cache.service';
   standalone: false,
 })
 export class WorkPackageStatusButtonComponent extends UntilDestroyedMixin implements OnInit {
-  @Input('workPackage') public workPackage:WorkPackageResource;
+  @Input() public workPackage:WorkPackageResource;
 
   @Input() public small = false;
 

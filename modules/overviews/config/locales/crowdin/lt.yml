@@ -1,4 +1,6 @@
 lt:
   overviews:
-    label: 'Peržiūra'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Skydelis"
+    label_overview: 'Peržiūra'
   permission_manage_overview: 'Valdyti apžvalgos puslapį'

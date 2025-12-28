@@ -91,7 +91,7 @@ module Token
     private
 
     def initialize_values
-      if new_record? && !value.present?
+      if new_record? && value.blank?
         @plain_value = self.class.generate_token_value
         self.value = hash_function(@plain_value)
       end

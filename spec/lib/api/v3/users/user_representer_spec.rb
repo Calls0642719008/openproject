@@ -60,6 +60,10 @@ RSpec.describe API::V3::Users::UserRepresenter do
         expect(subject).not_to have_json_path("email")
         expect(subject).not_to have_json_path("language")
       end
+
+      it "fulfills the documented schema" do
+        expect(generated).to match_json_schema.from_docs("user_model")
+      end
     end
 
     context "as the represented user" do
@@ -79,6 +83,10 @@ RSpec.describe API::V3::Users::UserRepresenter do
 
         expect(subject).not_to have_json_path("admin")
       end
+
+      it "fulfills the documented schema" do
+        expect(generated).to match_json_schema.from_docs("user_model")
+      end
     end
 
     context "as admin" do
@@ -94,6 +102,10 @@ RSpec.describe API::V3::Users::UserRepresenter do
         expect(subject).to have_json_path("email")
         expect(subject).to have_json_path("admin")
         expect(subject).to have_json_path("language")
+      end
+
+      it "fulfills the documented schema" do
+        expect(generated).to match_json_schema.from_docs("user_model")
       end
 
       it_behaves_like "has UTC ISO 8601 date and time" do

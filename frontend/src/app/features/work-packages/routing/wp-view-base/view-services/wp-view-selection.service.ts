@@ -10,7 +10,7 @@ import Mousetrap from 'mousetrap';
 
 export interface WorkPackageViewSelectionState {
   // Map of selected rows
-  selected:{ [workPackageId:string]:boolean };
+  selected:Record<string, boolean>;
   // Index of current selection
   // required for shift-offsets
   activeRowIndex:number|null;

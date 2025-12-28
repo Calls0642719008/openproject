@@ -30,7 +30,7 @@ export function boardTourSteps(edition:'basic'|'enterprise'):OnboardingStep[] {
       nextButton: { text: I18n.t('js.onboarding.buttons.next') },
       containerClass: '-dark -hidden-arrow',
       onNext() {
-        jQuery('[data-tour-selector="main-menu--arrow-left_boards"]')[0].click();
+        document.querySelector<HTMLElement>('[data-tour-selector="main-menu--arrow-left_boards"]')?.click();
       },
     },
   ];
@@ -49,7 +49,7 @@ export function navigateToBoardStep(edition:'basic'|'enterprise'):OnboardingStep
     showSkip: false,
     nextButton: { text: I18n.t('js.onboarding.buttons.next') },
     onNext() {
-      jQuery('#boards-wrapper>.boards-menu-item ~ .toggler')[0].click();
+      document.querySelector<HTMLElement>('#boards-wrapper>.boards-menu-item ~ .toggler')?.click();
       waitForElement(
         '.op-submenu--item-action',
         '#main-menu',

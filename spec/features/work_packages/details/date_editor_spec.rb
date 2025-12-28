@@ -321,7 +321,7 @@ RSpec.describe "date inplace editor", :js, :selenium, with_settings: { date_form
       create_page.expect_and_dismiss_toaster message: "Successful creation"
 
       wp = WorkPackage.last
-      expect(wp.custom_value_for(date_cf.id).value).to eq Time.zone.today.iso8601
+      expect(wp.custom_value_for(date_cf).value).to eq Time.zone.today.iso8601
     end
 
     it "can set the date via the in-place editing" do
@@ -468,8 +468,7 @@ RSpec.describe "date inplace editor", :js, :selenium, with_settings: { date_form
         wp_timeline.expect_timeline!
       end
 
-      context "when parent is not manually scheduled, child has workdays only set" do
-        let(:schedule_manually) { false }
+      context "and child has working days only set" do
         let!(:child) do
           create(:work_package,
                  project:,
@@ -486,17 +485,20 @@ RSpec.describe "date inplace editor", :js, :selenium, with_settings: { date_form
           datepicker.expect_working_days_only_disabled
           datepicker.expect_working_days_only true
 
-          # When toggling manually scheduled
-          start_date.toggle_scheduling_mode
-          datepicker.expect_working_days_only_enabled
-          datepicker.toggle_working_days_only
-          datepicker.expect_working_days_only false
-
+          # When switching to manually scheduled, "working days only" can be changed
+          datepicker.click_manual_scheduling_mode
           expect(page).to have_css(test_selector("op-modal-banner-warning").to_s,
                                    text: "Manually scheduled. Dates not affected by relations.\nThis has child work packages but their start dates are ignored.")
 
-          # Reset when disabled
-          start_date.toggle_scheduling_mode
+          datepicker.expect_working_days_only_enabled
+          datepicker.expect_working_days_only true
+
+          datepicker.toggle_working_days_only
+          datepicker.wait_for_preview_update
+          datepicker.expect_working_days_only false
+
+          # Reset "working days only" when switching back to automatic scheduling
+          datepicker.click_automatic_scheduling_mode
           datepicker.expect_working_days_only_disabled
           datepicker.expect_working_days_only true
 

@@ -33,6 +33,7 @@ require "spec_helper"
 RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
   include Redmine::I18n
   include PDFExportSpecUtils
+
   let(:type) do
     create(:type_bug,
            custom_fields: [cf_long_text, cf_empty_long_text, cf_disabled_in_project, cf_global_bool, cf_link])
@@ -52,7 +53,7 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
   let(:project_custom_field_long_text) do
     create(:project_custom_field, :text,
            name: "Rich text project custom field",
-           default_value: "rich text field value")
+           default_value: "rich text field value with a table <table></table>")
   end
   let(:project) do
     create(:project,
@@ -60,6 +61,7 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
            types: [type],
            public: true,
            status_code: "on_track",
+           description: "A **rich** text description",
            active: true,
            parent: parent_project,
            custom_field_values: {
@@ -84,6 +86,7 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
            public: false,
            status_code: "on_track",
            active: true,
+           description: "A **rich** text description",
            parent: parent_project,
            work_package_custom_fields: [cf_long_text, cf_empty_long_text, cf_disabled_in_project, cf_global_bool, cf_link],
 
@@ -148,6 +151,12 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
           <figcaption>Image Caption</figcaption>
          </figure>
       </p>
+      <figure class="op-uc-figure">
+         <div class="op-uc-figure--content">
+            <img class="op-uc-image" src="/attachments/#{image_attachment.id}/image.png" alt='"image redirect"'>
+         </div>
+         <figcaption>Image Redirect</figcaption>
+      </figure>
       <p><unknown-tag>Foo</unknown-tag></p>
       <img class="op-uc-image op-uc-image_inline" src="/api/v3/attachments/#{image_attachment_elsewhere.id}/content">
     DESCRIPTION
@@ -290,13 +299,14 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
           "Lorem", " ", "ipsum", " ", "dolor", " ", "sit", " ",
           "amet", ", consetetur sadipscing elitr.", " ", "@OpenProject Admin",
           "Image Caption",
-          "Foo",
           "1", export_date_formatted, project.name,
+          "Image Redirect",
+          "Foo",
           "2", export_date_formatted, project.name
         ].flatten.join(" ")
         expect(result).to eq(expected_result)
         expect(result).not_to include("DisabledCustomField")
-        expect(pdf[:images].length).to eq(3)
+        expect(pdf[:images].length).to eq(4)
       end
     end
 
@@ -334,7 +344,7 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
           ["status", status.name],
           ["subject", "Work package 1"],
           ["type", type.name],
-          ["description", "[#{I18n.t('export.macro.rich_text_unsupported')}]"]
+          ["description", "[#{I18n.t('export.macro.nested_rich_text_unsupported')}]"]
         ]
       end
       let(:supported_work_package_embeds_table) do
@@ -375,14 +385,19 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
         DESCRIPTION
       end
 
-      def expected_description
+      def expected_description_first
         [
           "Custom field boolean", I18n.t(:general_text_Yes),
-          "Custom field rich text", "[#{I18n.t('export.macro.rich_text_unsupported')}]",
+          "Custom field rich text", "foo   faa",
           "My link in table", "https://example.com",
-          "No replacement of:", "workPackageValue:1:assignee", " ", "workPackageLabel:assignee",
+          "No replacement of:", "workPackageValue:1:assignee", "workPackageLabel:assignee",
           "workPackageValue:2:assignee workPackageLabel:assignee",
           "workPackageValue:3:assignee", "workPackageLabel:assignee",
+        ]
+      end
+
+      def expected_description_second
+        [
           "https://example.com",
           "Work package not found:  ",
           "[#{I18n.t('export.macro.error', message:
@@ -406,8 +421,10 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
               API::Utilities::PropertyNameConverter.to_ar_name(embed[0].to_sym, context: work_package)
             ), embed[1]]
           end,
-          *expected_description,
-          "2", export_date_formatted, project.name
+          *expected_description_first,
+          "2", export_date_formatted, project.name,
+          *expected_description_second,
+          "3", export_date_formatted, project.name
         ].flatten.join(" ")
         expect(result).to eq(expected_result)
       end
@@ -417,11 +434,10 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
       let(:supported_project_embeds) do
         [
           ["active", I18n.t(:general_text_Yes)],
-          ["description", "[#{I18n.t('export.macro.rich_text_unsupported')}]"],
+          ["description", "A  rich  text description"],
           ["identifier", project.identifier],
           ["name", project.name],
-          ["status", I18n.t("activerecord.attributes.project.status_codes.#{project.status_code}")],
-          ["statusExplanation", "[#{I18n.t('export.macro.rich_text_unsupported')}]"],
+          ["status", I18n.t("activerecord.attributes.project.status_codes.#{project.status_code}"), "statusExplanation"],
           ["parent", parent_project.name],
           ["public", I18n.t(:general_text_Yes)]
         ]
@@ -472,8 +488,6 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
         [
           *expected_details,
           label_title(:description),
-          "1", export_date_formatted, project.name,
-
           "Project attributes and labels",
           supported_project_embeds.map do |embed|
             [Project.human_attribute_name(
@@ -481,7 +495,9 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
             ), embed[1]]
           end,
           "Custom field boolean", I18n.t(:general_text_Yes),
-          "Custom field rich text", "[#{I18n.t('export.macro.rich_text_unsupported')}]",
+          "Custom field rich text", "foo",
+          "1", export_date_formatted, project.name,
+
           "Custom field hidden",
           "No replacement of:",
           "projectValue:1:status",

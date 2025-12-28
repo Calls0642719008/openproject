@@ -35,8 +35,8 @@ RSpec.describe API::V3::UserPreferences::NotificationSettingRepresenter, "render
 
   subject(:generated) { representer.to_json }
 
-  let(:project) { build_stubbed(:project) }
-  let(:notification_setting) { build_stubbed(:notification_setting, overdue: 3, project:) }
+  let(:workspace) { build_stubbed(:project) }
+  let(:notification_setting) { build_stubbed(:notification_setting, overdue: 3, project: workspace) }
 
   let(:representer) do
     described_class.create notification_setting,
@@ -48,6 +48,12 @@ RSpec.describe API::V3::UserPreferences::NotificationSettingRepresenter, "render
 
   current_user { build_stubbed(:user) }
 
+  before do
+    allow(workspace)
+      .to receive(:visible?)
+            .and_return(true)
+  end
+
   describe "_links" do
     describe "self" do
       # No self link as the representer is rendered as part of the user preferences.
@@ -57,10 +63,32 @@ RSpec.describe API::V3::UserPreferences::NotificationSettingRepresenter, "render
     end
 
     describe "project" do
-      it_behaves_like "has a titled link" do
-        let(:link) { "project" }
-        let(:href) { api_v3_paths.project(project.id) }
-        let(:title) { project.name }
+      context "for a project" do
+        it_behaves_like "has a titled link" do
+          let(:link) { "project" }
+          let(:href) { api_v3_paths.project(workspace.id) }
+          let(:title) { workspace.name }
+        end
+      end
+
+      context "for a program" do
+        let(:workspace) { build_stubbed(:program) }
+
+        it_behaves_like "has a titled link" do
+          let(:link) { "project" }
+          let(:href) { api_v3_paths.program(workspace.id) }
+          let(:title) { workspace.name }
+        end
+      end
+
+      context "for a portfolio" do
+        let(:workspace) { build_stubbed(:portfolio) }
+
+        it_behaves_like "has a titled link" do
+          let(:link) { "project" }
+          let(:href) { api_v3_paths.portfolio(workspace.id) }
+          let(:title) { workspace.name }
+        end
       end
     end
   end
@@ -111,7 +139,7 @@ RSpec.describe API::V3::UserPreferences::NotificationSettingRepresenter, "render
 
   context "when duration settings are all nil" do
     let(:notification_setting) do
-      build_stubbed(:notification_setting, project:, start_date: nil, due_date: nil, overdue: nil)
+      build_stubbed(:notification_setting, project: workspace, start_date: nil, due_date: nil, overdue: nil)
     end
 
     it "does not represent them in the resulting json" do

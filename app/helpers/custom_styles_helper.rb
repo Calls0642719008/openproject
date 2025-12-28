@@ -78,6 +78,34 @@ module CustomStylesHelper
       (CustomStyle.current.logo.present? || CustomStyle.current.theme_logo.present?)
   end
 
+  def desktop_logo_present?
+    style = CustomStyle.current
+    return false unless style
+
+    style.logo.present? || style.theme_logo.present?
+  end
+
+  def mobile_logo_present?
+    style = CustomStyle.current
+    return false unless style
+
+    style.logo_mobile.present?
+  end
+
+  def show_waffle_icon?
+    # Both logos → show icon (mobile logo will be applied by CSS)
+    return true if desktop_logo_present? && mobile_logo_present?
+
+    # Only mobile → show icon
+    return true if mobile_logo_present?
+
+    # Only desktop → hide icon on mobile
+    return false if desktop_logo_present?
+
+    # No logos → show fallback icon
+    true
+  end
+
   # The default favicon and touch icons are both the same for normal OP and BIM.
   def apply_custom_favicon?
     apply_custom_styles?(skip_ee_check: false) && CustomStyle.current.favicon.present?

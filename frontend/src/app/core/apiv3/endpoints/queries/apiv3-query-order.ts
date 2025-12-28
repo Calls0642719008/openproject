@@ -31,7 +31,7 @@ import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decora
 import { HttpClient } from '@angular/common/http';
 import { SimpleResource } from 'core-app/core/apiv3/paths/path-resources';
 
-export type QueryOrder = { [wpId:string]:number };
+export type QueryOrder = Record<string, number>;
 
 export class ApiV3QueryOrder extends SimpleResource {
   @InjectField() http:HttpClient;

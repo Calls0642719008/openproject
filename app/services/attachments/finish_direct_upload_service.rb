@@ -91,7 +91,7 @@ module Attachments
     end
 
     def schedule_jobs
-      attachment.extract_fulltext
+      attachment.enqueue_jobs
     end
 
     def journalize_container

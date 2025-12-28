@@ -41,7 +41,7 @@ jobs:
           - dev
           - "${{ needs.setup.outputs.latest_release_branch }}"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ matrix.branch }}
           fetch-depth: 1

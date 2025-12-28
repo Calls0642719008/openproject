@@ -1,5 +1,4 @@
-<ndc-dynamic
-  [ndcDynamicComponent]="autocompleterComponent()"
+<ndc-dynamic [ndcDynamicComponent]="autocompleterComponent()"
   [ndcDynamicInputs]="{
     availableValues: requests.output$ | async,
     appendTo: appendTo,
@@ -13,4 +12,4 @@
     hideSelected: true
   }"
   [ndcDynamicOutputs]="referenceOutputs"
-></ndc-dynamic>
+ />

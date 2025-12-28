@@ -32,6 +32,7 @@ class JournalsController < ApplicationController
   before_action :load_and_authorize_in_optional_project, only: [:index]
   before_action :find_journal,
                 :ensure_permitted,
+                :ensure_valid_for_diffing,
                 only: [:diff]
   authorization_checked! :diff
 
@@ -62,8 +63,6 @@ class JournalsController < ApplicationController
   end
 
   def diff
-    return render_404 unless valid_field_for_diffing?
-
     unless @journal.details[field_param] in [from, to]
       return render_400 message: I18n.t(:error_journal_attribute_not_present, attribute: field_param)
     end
@@ -103,14 +102,22 @@ class JournalsController < ApplicationController
     @field_param ||= params[:field].parameterize.underscore
   end
 
-  def valid_field_for_diffing?
+  def ensure_valid_for_diffing
     case field_param
     when "description",
          "status_explanation",
          /\Aagenda_items_\d+_notes\z/
-      true
+      # no additional checks
     when /\Acustom_fields_(?<id>\d+)\z/
-      ::CustomField.exists?(id: Regexp.last_match[:id], field_format: "text")
+      cf = CustomField.select(:field_format, :admin_only).find_by(id: Regexp.last_match[:id])
+
+      if cf.admin_only && !User.current.admin?
+        render_403
+      elsif cf.field_format != "text"
+        render_404
+      end
+    else
+      render_404
     end
   end
 

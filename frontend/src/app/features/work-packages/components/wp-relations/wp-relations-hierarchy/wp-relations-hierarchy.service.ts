@@ -132,7 +132,7 @@ export class WorkPackageRelationsHierarchyService {
           args[0] = 'work-packages.new';
         }
 
-        (<any> this.$state).go(...args);
+        (this.$state as any).go(...args);
       });
   }
 

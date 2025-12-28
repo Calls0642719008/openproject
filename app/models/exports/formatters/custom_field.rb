@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -58,7 +58,7 @@ module Exports
           value == nil ? false : value
         when "text"
           object.typed_custom_value_for(custom_field)
-        when "hierarchy"
+        when "hierarchy", "weighted_item_list"
           HierarchyFormatter.new.format(object, custom_field)
         else
           object.formatted_custom_value_for(custom_field)

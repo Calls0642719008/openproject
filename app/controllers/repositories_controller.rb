@@ -129,7 +129,8 @@ class RepositoriesController < ApplicationController
     else
       flash[:error] = repository.errors.full_messages
     end
-    redirect_to project_settings_repository_path(@project)
+    redirect_to project_settings_repository_path(@project),
+                status: :see_other
   end
 
   alias_method :browse, :show

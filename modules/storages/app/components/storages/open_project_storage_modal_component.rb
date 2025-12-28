@@ -32,7 +32,7 @@ class Storages::OpenProjectStorageModalComponent < ViewComponent::Base
   attr_reader :controller, :project_storage_open_url, :redirect_url, :state
 
   def initialize(project_storage_open_url:, redirect_url:, state:, **options)
-    super
+    super()
     @controller = "storages--open-project-storage-modal"
     @project_storage_open_url = project_storage_open_url
     @redirect_url = redirect_url
@@ -57,7 +57,7 @@ class Storages::OpenProjectStorageModalComponent < ViewComponent::Base
   end
 
   def subtitle_timeout_text
-    href = OpenProject::Static::Links[:storage_docs][:health_status][:href]
+    href = OpenProject::Static::Links.url_for(:storage_docs, :health_status)
     I18n.t(
       "storages.open_project_storage_modal.timeout.subtitle",
       storages_health_link: render(Primer::Beta::Link.new(href:, target: "_blank", underline: true)) do

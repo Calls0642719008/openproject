@@ -51,6 +51,13 @@ export default class extends Controller {
     useMeta(this, { suffix: false });
     this.focusInput();
     this.addNotes();
+    this.storeInitialValues();
+  }
+
+  storeInitialValues():void {
+    this.element.querySelectorAll('input[type="text"], input[type="number"]').forEach((input) => {
+      (input as HTMLInputElement).dataset.initialValue = (input as HTMLInputElement).value;
+    });
   }
 
   focusInput():void {

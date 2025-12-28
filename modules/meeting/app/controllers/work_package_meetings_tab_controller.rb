@@ -69,7 +69,7 @@ class WorkPackageMeetingsTabController < ApplicationController
           work_package_id: @work_package.id,
           presenter_id: current_user.id,
           item_type: MeetingAgendaItem::ITEM_TYPES[:work_package],
-          meeting_section_id: backlog_id
+          meeting_section_id: params[:meeting_agenda_item][:meeting_section_id]
         )
       )
 
@@ -83,6 +83,30 @@ class WorkPackageMeetingsTabController < ApplicationController
       # show errors in form
       update_add_to_meeting_form_component_via_turbo_stream(meeting_agenda_item:, base_errors: call.errors[:base])
     end
+
+    respond_with_turbo_streams
+  end
+
+  def refresh_form
+    @meeting_agenda_item = MeetingAgendaItem.new(
+      meeting: Meeting.find(params[:meeting_agenda_item][:meeting_id]),
+      notes: params[:meeting_agenda_item][:notes]
+    )
+
+    call = MeetingAgendaItems::SetAttributesService.new(
+      user: current_user,
+      model: @meeting_agenda_item,
+      contract_class: EmptyContract
+    ).call
+
+    meeting_agenda_item = call.result
+
+    update_via_turbo_stream(
+      component: WorkPackageMeetingsTab::AddWorkPackageToMeetingFormComponent.new(
+        work_package: @work_package,
+        meeting_agenda_item: meeting_agenda_item
+      )
+    )
 
     respond_with_turbo_streams
   end

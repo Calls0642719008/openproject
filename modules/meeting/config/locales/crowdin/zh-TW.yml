@@ -59,12 +59,13 @@ zh-TW:
         end_date: "結束日期"
         iterations: "出現次數"
       meeting_participant:
-        invited: "Invited"
-        attended: "Attended"
+        invited: "已邀請"
+        attended: "已出席"
+        participation_status: "參與狀態"
     errors:
       models:
         meeting_participant:
-          invalid_user: "%{name} is not a valid participant."
+          invalid_user: "%{name} 不是有效的參與者。"
         recurring_meeting:
           must_cover_existing_meetings:
             one: "該系列中有一個公開會議未包含在新的時間表中。調整時間表以包含所有現有會議。"
@@ -112,7 +113,7 @@ zh-TW:
   label_meeting_new_dynamic: "建立一次性會議"
   label_meeting_new_recurring: "新的重複性會議"
   label_meeting_create: "新增會議"
-  label_meeting_copy: "複製會議"
+  label_meeting_duplicate: "重複會議"
   label_meeting_edit: "編輯會議"
   label_meeting_agenda: "會議大綱"
   label_meeting_minutes: "會議記錄"
@@ -124,7 +125,8 @@ zh-TW:
   label_meeting_date_time: "日期 / 時間"
   label_meeting_date_and_time: "日期和時間"
   label_meeting_diff: "比較"
-  label_meeting_send_updates: "透過電子郵件發送行事曆更新"
+  label_meeting_send_updates: "傳送電子郵件行事曆邀請和更新"
+  label_meeting_send_updates_caption: "向本次會議的所有與會者發送電子郵件邀請函"
   label_recurring_meeting: "重複性會議"
   label_recurring_meeting_part_of: "系列會議的一部分"
   label_recurring_meeting_new: "新的重複性會議"
@@ -132,7 +134,7 @@ zh-TW:
   label_template: "模板"
   label_recurring_meeting_view: "檢視會議系列"
   label_recurring_meeting_create: "開啟"
-  label_recurring_meeting_copy: "一次性複製"
+  label_recurring_meeting_duplicate: "複製為一次性會議"
   label_recurring_meeting_cancel: "取消此事件"
   label_recurring_meeting_delete: "刪除此事件"
   label_recurring_meeting_restore: "恢復此事件"
@@ -202,7 +204,7 @@ zh-TW:
       agenda_items: "新增議程項目"
       agenda_text: "複製舊會議之議程"
       participants: "複製與會者名單"
-      to_clipboard: "複製到剪貼簿"
+      to_clipboard: "複製連結到剪貼簿"
     email:
       send_emails: "寄發參與者"
       send_invitation_emails: >
@@ -212,12 +214,12 @@ zh-TW:
       open_my_meetings_link: "前往我的會議"
       series:
         title: "[%{project_name}] 會議系列 '%{title}'"
-        summary: "%{actor} 已設立新的會議系列 '%{title}'"
+        summary: "%{actor} 已邀請您參加新的會議系列 '%{title}'"
       series_updated:
-        title: "[%{project_name}] Meeting series '%{title}' has been updated"
-        summary: "Meeting series '%{title}' has been updated by %{actor}"
-        old_schedule: "Old schedule"
-        new_schedule: "New schedule"
+        title: "[%{project_name}] 會議系列 '%{title}' 已更新"
+        summary: "會議系列 '%{title}' 已由 %{actor}更新"
+        old_schedule: "舊排程"
+        new_schedule: "新增排程"
       invited:
         summary: "%{actor} 已向您發出會議邀請 '%{title}'"
       cancelled:
@@ -228,14 +230,17 @@ zh-TW:
         summary_series: "'%{title}' 系列會議已被 %{actor}取消。"
         summary: "%{title}' 已被 %{actor}取消。"
         date_time: "排定日期/時間"
+      ended:
+        header_series: "結束：會議系列 '%{title}'"
+        summary_series: "會議系列 '%{title}' 已由 %{actor}結束。"
       updated:
-        header: "Meeting '%{title}' has been updated"
-        summary: "Meeting '%{title}' has been updated by %{actor}"
-        body: "The meeting '%{title}' has been updated by %{actor}."
-        old_date_time: "Old date/time"
-        new_date_time: "New date/time"
-        old_location: "Old location"
-        new_location: "New location"
+        header: "會議 '%{title}' 已更新"
+        summary: "會議 '%{title}' 已由 %{actor}更新"
+        body: "會議 '%{title}' 已由 %{actor}更新。"
+        old_date_time: "舊日期/時間"
+        new_date_time: "新日期/時間"
+        old_location: "舊位置"
+        new_location: "新位置"
     label_mail_all_participants: "發送電子郵件邀請參加者"
     types:
       one_time: "一次性"
@@ -257,8 +262,8 @@ zh-TW:
           任何不在範本中的會議資訊將會遺失。 要繼續嗎？
         confirm_button: "取消事件"
     blankslate:
-      title: "沒有可顯示的會議"
-      desc: "沒有符合篩選條件的會議。"
+      title: "沒有會議要顯示"
+      desc: "您可以建立新的會議或變更篩選條件"
     label_export_pdf: "匯出 PDF"
     export:
       your_meeting_export: "正在進行會議匯出作業"
@@ -323,14 +328,14 @@ zh-TW:
       banner:
         participants:
           enabled: >
-            All participants will receive updated calendar invites via email when you add or remove participants.
+            當您新增或移除參與者時，所有參與者都會透過電子郵件收到更新的行事曆邀請。
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them when you add or remove participants.
+            電子郵件行事曆更新已停用。當您新增或移除參與者時，參與者將不會收到通知他們的電子郵件。
         onetime:
           enabled: >
-            所有參與者都會透過電子郵件收到更新的行事曆邀請，通知他們您的變更。
+            當您新增或移除參與者時，所有參與者都會透過電子郵件收到更新的行事曆。
           disabled: >
-            電子郵件行事曆更新已停用。參與者將不會收到通知您變更的電子郵件。
+            參與者將不會收到有關會議日期、時間或參與者變更的通知電子郵件。
         occurrence:
           enabled: >
             已啟用系列會議的電子郵件行事曆更新。所有與會者都會收到更新的行事曆邀請，通知他們您對此事件所做的變更。
@@ -341,11 +346,31 @@ zh-TW:
             已為會議系列啟用電子郵件行事曆更新。所有與會者都會收到更新的行事曆邀請，通知他們您對此範本或個別事件所做的變更。
           disabled: >
             會議系列的電子郵件行事曆更新已停用。與會者將不會收到電子郵件，通知他們您對此範本或個別事件所做的變更。
+    presentation_mode:
+      title: "簡報模式"
+      button_present: "顯示按鈕"
+      exit: "退出簡報"
+      current_item: "目前項目"
+      total_items: "%{current} of %{total}"
+      previous: "上一頁"
+      next: "下一頁"
+      no_items: "沒有議程項目"
+      no_items_flash: "沒有要提出的議程項目。"
+    ical_response:
+      update_failed: "無法更新參與狀態。"
+      meeting_not_found: "未找到指定 UID 的會議。"
   meeting_section:
     untitled_title: "無標題章節"
     delete_confirmation: "刪除該章節也會刪除其所有的議程項目。您確定要這麼做？"
     placeholder_title: "新增章節"
     empty_text: "將項目拖曳至此處或建立新項目"
+  meeting_participant:
+    participation_status:
+      needs_action: "沒有回應"
+      accepted: "已接受"
+      declined: "拒絕"
+      tentative: "不確定"
+      unknown: "未知"
   recurring_meeting:
     time_zone_difference_banner:
       title: "時區差異"
@@ -371,7 +396,9 @@ zh-TW:
       label_view_template: "查看範本"
       label_edit_template: "編輯範本"
       banner_html: >
-        您目前正在編輯會議系列的範本： %{link}。系列會議中的每次新會議都會使用此範本。變更不會影響過去或已建立的會議。
+        您目前正在編輯會議系列的範本：%{link}。此系列中每一個新建立的會議都會使用此範本。變更內容不會影響過去或已建立的會議。
+      draft_banner_html: >
+        您目前正在編輯會議系列的範本：%{link}。此系列中每一個新建立的會議都會使用此範本。變更內容不會影響過去或已建立的會議。在您開啟第一場會議之前，不會寄出任何電子郵件邀請（目前為草稿模式）。
     frequency:
       x_daily:
         other: "每 %{count} 天"
@@ -447,6 +474,12 @@ zh-TW:
   text_meeting_agenda_open_are_you_sure: "將會覆蓋所有會議紀錄中的變動！您希望繼續嗎？"
   text_meeting_minutes_for_meeting: '%{meeting} 的會議記錄'
   text_notificiation_invited: "此郵件包含以下會議的 ics 條目:"
+  text_meeting_ics_description: >-
+    會議連結： %{url}
+  text_meeting_ics_meeting_series_description: >-
+    連至系列會議： %{url}
+  text_meeting_occurrence_ics_description: >-
+    會議單次連結：%{url} 會議系列連結：%{series_url}
   text_meeting_empty_heading: "暫無會議資料(會議建立後，請記得點選右上角功能「發送電子郵件給所有參與者」)"
   text_meeting_empty_description1: "可以點選下幫「增加」來新增項目。 每個項目可以像標題一樣簡單，但您也可以加上其他詳細信息，例如開會時間與備註。"
   text_meeting_empty_description2: '你也可以引用到現有工作套件。當您這樣做時，相關的紀錄將自動呈現於於工作套件的「會議」標籤。'
@@ -474,16 +507,21 @@ zh-TW:
   label_agenda_item_move_to_next: "移至下次會議"
   label_agenda_item_move_to_backlog: "移至待辦清單"
   label_agenda_item_move_to_current_meeting: "移至目前會議"
+  label_agenda_item_move_to_section: "移動到區段"
   label_agenda_item_move_to_top: "移到頂部"
   label_agenda_item_move_to_bottom: "移到底部"
   label_agenda_item_move_up: "向上移 "
   label_agenda_item_move_down: "向下移 "
+  label_agenda_item_duplicate: "複製"
+  label_agenda_item_duplicate_in_next: "在下次出現時重複"
+  label_agenda_item_duplicate_in_next_title: "下次發生時會重複嗎？"
   label_agenda_item_add_notes: "新增註記"
   label_agenda_item_add_outcome: "新增結果"
   label_agenda_item_work_package_add: "新增工作套件"
   label_agenda_item_work_package: "議程項目工作套件"
   label_section_rename: "重新命名區段"
   label_agenda_outcome: "結果"
+  label_agenda_new_outcome: "新結果"
   label_agenda_outcome_actions: "議程結果行動"
   label_agenda_outcome_edit: "編輯結果"
   label_agenda_outcome_delete: "移除結果"
@@ -512,6 +550,7 @@ zh-TW:
   label_meeting_series_details: "會議詳細資訊"
   label_meeting_details_edit: "編輯會議詳情"
   label_meeting_state: "會議狀態"
+  label_meeting_state_draft: "草稿"
   label_meeting_state_open: "開啟"
   label_meeting_state_closed: "關閉"
   label_meeting_state_agenda_created: "議程已建立"
@@ -522,26 +561,39 @@ zh-TW:
   label_meeting_reopen_action: "重新開啟會議"
   label_meeting_close_action: "關閉會議"
   label_meeting_in_progress_action: "會議開始"
-  text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
+  label_meeting_open_action: "開啟本次會議"
+  text_meeting_draft_description: "以草稿模式準備您的議程。即使您變更會議詳細資訊或新增/移除參與者，此會議也不會傳送任何行事曆更新或邀請。"
+  text_meeting_open_description: "您可以新增/移除議程項目和與會者。一旦議程準備就緒，請將它標記為進行中，以記錄結果。"
   text_meeting_closed_description: "此會議已關閉。您不能再新增/移除議程項目。"
-  text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
+  text_meeting_in_progress_description: "您可以修改議程、記錄每個項目的結果，並追蹤與會者的出席率。會議結束後，您可以將會議標記為關閉，以鎖定會議。"
   text_meeting_open_dropdown_description: "任何現有的結果都會保留，但使用者將無法新增新的結果。"
   text_meeting_in_progress_dropdown_description: "記錄會議期間的結果，例如資訊需求或所做的決策。"
   text_meeting_closed_dropdown_description: "此會議已結束，您無法再修改議程項目或結果。"
+  text_meeting_draft_banner: "您目前處於草稿模式。即使您變更會議詳細資訊或新增/移除參與者，此會議也不會傳送任何行事曆更新或邀請。"
+  text_exit_draft_mode_dialog_title: "開啟此會議並發送邀請函？"
+  text_exit_draft_mode_dialog_subtitle: "一旦排定會議，就無法返回草稿模式。"
+  text_exit_draft_mode_dialog_template_title: "要開啟此會議系列的第一場會議嗎？"
+  text_exit_draft_mode_dialog_template_subtitle: "之後您就無法回到草稿模式。"
   text_meeting_not_editable_anymore: "本次會議已不可編輯。"
   text_meeting_not_present_anymore: "此次會議已被刪除。請選擇另一場會議。"
-  label_add_work_package_to_meeting_dialog_title: "將工作套件新增到到會議"
+  label_add_work_package_to_meeting_dialog_title: "選擇會議"
+  label_add_work_package_to_meeting_section_label: "區段"
   label_add_work_package_to_meeting_dialog_button: "增加到會議"
-  label_meeting_selection_caption: "將此工作套件新增至即將舉行或正在進行的會議。"
+  label_meeting_selection_caption: "此工作套件只能新增至即將舉行或正在進行的會議。"
+  label_section_selection_caption: "選擇議程中的特定區段，或將其新增至待辦清單。"
+  placeholder_section_select_meeting_first: "必須先選擇會議"
+  text_add_work_package_to_meeting_form: "此工作套件將作為議程項目新增至所選會議或待辦清單。"
   text_add_work_package_to_meeting_description: "工作套件可以新增到一或多個會議供討論。相關的說明也可在這裡看到。"
   text_agenda_item_no_notes: "沒註記"
   text_agenda_item_not_editable_anymore: "本次會議已不可編輯。"
   text_agenda_item_move_next_meeting: "本項目將移至 %{date} %{time}的下次會議上討論。"
   text_agenda_item_moved_to_next_meeting: "議程項目移至下次會議討論： %{date}"
+  text_agenda_item_duplicate_in_next_meeting: "您確定要在下次會議中加入此議程項目的副本， %{date} ，網址為 %{time}? 結果不會重複。"
+  text_agenda_item_duplicated_in_next_meeting: "與下次會議重複的議程項目， %{date}"
   text_work_package_has_no_upcoming_meeting_agenda_items: "該工作套件尚未被安排到即將舉行的會議議程中。"
   text_agenda_item_move_next_meeting_cancelled: "由於下次會議已被取消，因此無法轉到下次會議。"
   text_work_package_add_to_meeting_hint: '使用"增加到會議"按鈕將此工作套件新增到即將舉行的會議。'
-  text_work_package_has_no_past_meeting_agenda_items: "在過往會議中沒有提及本工作套件。"
+  text_work_package_has_no_past_meeting_agenda_items: "此工作套件未被新增為過去會議中的議程項目。"
   text_email_updates_muted: "將停止電子郵件通知「行事曆更新」。當您變更時，參與者將不會透過電子郵件收到更新的邀請。"
   text_email_updates_enabled: "已啟用電子郵件行事曆更新。當您作出變更時，所有參與者都會透過電子郵件收到更新的邀請。"
   my_account:
@@ -560,7 +612,7 @@ zh-TW:
           dialog_body: "此令牌(Tokens)將產生一個 iCal 訂閱網址，讓您能在外部行事曆應用程式中檢視所有會議。"
           create_button: "建立訂閱"
           name_label: "令牌名稱"
-          name_caption: '您可以依使用位置為其命名，例如「我的手機」或「工作電腦」。'
+          name_caption: '您可以根據使用地點來命名，例如「我的手機」或「工作電腦」。'
       created_dialog:
         token/ical_meeting:
           title: "已生成一個 iCal 會議訂閱令牌(Token)。"

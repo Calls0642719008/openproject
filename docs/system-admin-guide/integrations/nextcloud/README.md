@@ -132,7 +132,7 @@ In case you want to use this functionality you will be requested to enter a pass
 > [!NOTE]
 > When you use the **Terms of Service** app on the Nextcloud side, all terms also need to be accepted for the OpenProject user that gets created during the setup. This is set to happen automatically during the initial set-up. If you see an error message indicating otherwise or the integration does not behave as expected, please refer to the [Troubleshooting](#troubleshooting) section at the bottom of this page.
 
-At this point, you can click on **Done, complete setup** in both applications and your instance configuration will be completed.
+At this point, you can click on **Finish setup** in both applications and your instance configuration will be completed.
 
 ![Integration successfully completed on the OpenProject end](openproject_system_guide_nextcloud_integration_setup_step_10.png)
 

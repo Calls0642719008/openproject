@@ -18,7 +18,7 @@ zh-CN:
       work_week: '工作周'
       today: '今天'
       drag_here_to_remove: '拖动到此处可移除受理人及开始日期和结束日期。'
-      cannot_drag_here: '由于权限或编辑限制，无法移除工作包。'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: '这个工作包不能在非工作日开始/完成。'
       quick_add:
         empty_state: '使用搜索字段查找工作包并将它们拖动到规划工具以将其分配给某人并定义开始日期和结束日期。'

@@ -1,5 +1,0 @@
-imports:
-  - ./colors.yml
-  - ./spacings.yml
-  - ./shadows.yml
-  - ./media-queries.yml

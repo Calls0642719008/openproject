@@ -34,6 +34,9 @@ export interface DraggableOption {
   templateUrl: './draggable-autocomplete.component.html',
   styleUrls: ['./draggable-autocomplete.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    DragulaService
+  ],
   standalone: false,
 })
 export class DraggableAutocompleteComponent extends UntilDestroyedMixin implements OnInit, AfterViewInit, OnDestroy {

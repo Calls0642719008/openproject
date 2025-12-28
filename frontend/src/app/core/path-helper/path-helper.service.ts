@@ -51,11 +51,11 @@ export class PathHelperService {
   }
 
   public attachmentContentPath(attachmentIdentifier:number|string) {
-    return `${this.staticBase}/attachments/${attachmentIdentifier}/content`;
+    return `${this.staticBase}/attachments/${attachmentIdentifier.toString()}/content`;
   }
 
   public attributeHelpTextsShowDialogPath(id:string|number) {
-    return `${this.staticBase}/attribute_help_texts/${id}/show_dialog`;
+    return `${this.staticBase}/attribute_help_texts/${id.toString()}/show_dialog`;
   }
 
   public fileLinksPath():string {
@@ -63,7 +63,7 @@ export class PathHelperService {
   }
 
   public bannerFramePath(feature:string, dismissable:boolean):string {
-    return `${this.staticBase}/my/banner?feature_key=${feature}&dismissable=${dismissable}`;
+    return `${this.staticBase}/my/banner?feature_key=${feature}&dismissable=${dismissable.toString()}`;
   }
 
   public ifcModelsPath(projectIdentifier:string) {
@@ -75,18 +75,28 @@ export class PathHelperService {
   }
 
   public ifcModelsEditPath(projectIdentifier:string, modelId:number|string) {
-    return `${this.ifcModelsPath(projectIdentifier)}/${modelId}/edit`;
+    return `${this.ifcModelsPath(projectIdentifier)}/${modelId.toString()}/edit`;
+  }
+
+  public inviteUserPath(projectId:string|null) {
+    const path = `${this.staticBase}/users/invite`;
+
+    if (projectId) {
+      return `${path}?user_invitation[project_id]=${projectId}`;
+    }
+
+    return path;
   }
 
   public ifcModelsDeletePath(projectIdentifier:string, modelId:number|string) {
-    return `${this.ifcModelsPath(projectIdentifier)}/${modelId}`;
+    return `${this.ifcModelsPath(projectIdentifier)}/${modelId.toString()}`;
   }
 
   public bimDetailsPath(projectIdentifier:string, workPackageId:string, viewpoint:number|string|null = null) {
     let path = `${this.projectPath(projectIdentifier)}/bcf/details/${workPackageId}`;
 
     if (viewpoint !== null) {
-      path += `?query_props=%7B"t"%3A"id%3Adesc"%2C"dr"%3A"splitCards"%7D&viewpoint=${viewpoint}`;
+      path += `?query_props=%7B"t"%3A"id%3Adesc"%2C"dr"%3A"splitCards"%7D&viewpoint=${viewpoint.toString()}`;
     }
 
     return path;
@@ -114,6 +124,10 @@ export class PathHelperService {
 
   public myPagePath() {
     return `${this.staticBase}/my/page`;
+  }
+
+  public myAccessTokensPath() {
+    return `${this.staticBase}/my/access_tokens`;
   }
 
   public myNotificationsSettingsPath() {
@@ -160,6 +174,14 @@ export class PathHelperService {
     return `${this.projectPath(projectId)}/calendars`;
   }
 
+  public projectCreationWizardPath(projectId:string) {
+    return `${this.projectPath(projectId)}/creation_wizard`;
+  }
+
+  public projectCreationWizardHelpTextPath(projectId:string, customFieldId:string) {
+    return `${this.projectCreationWizardPath(projectId)}/help_text?custom_field_id=${customFieldId}`;
+  }
+
   public projectTeamplannerPath(projectId:string) {
     return `${this.projectPath(projectId)}/team_planners`;
   }
@@ -192,7 +214,7 @@ export class PathHelperService {
   }
 
   public projectWorkPackagePath(projectId:string, wpId:string|number) {
-    return `${this.workPackagesPath(projectId)}/${wpId}`;
+    return `${this.workPackagesPath(projectId)}/${wpId.toString()}`;
   }
 
   public workPackagesPath(projectId:string|null) {
@@ -200,6 +222,10 @@ export class PathHelperService {
       return `${this.projectPath(projectId)}/work_packages`;
     }
     return `${this.staticBase}/work_packages`;
+  }
+
+  public workPackageNewPath():string {
+    return `${this.staticBase}/work_packages/new`;
   }
 
   public projectWorkPackageNewPath(projectId:string) {
@@ -219,6 +245,10 @@ export class PathHelperService {
 
   public projectDashboardsPath(projectIdentifier:string) {
     return `${this.projectPath(projectIdentifier)}/dashboards`;
+  }
+
+  public projectWidgetPath(projectIdentifier:string, widgetName:string) {
+    return `${this.projectPath(projectIdentifier)}/widgets/${widgetName}`;
   }
 
   public timeEntriesPath(workPackageId:string|number) {
@@ -243,19 +273,19 @@ export class PathHelperService {
   }
 
   public userPath(id:string|number) {
-    return `${this.usersPath()}/${id}`;
+    return `${this.usersPath()}/${id.toString()}`;
   }
 
   public userHoverCardPath(id:string|number) {
-    return `${this.usersPath()}/${id}/hover_card`;
+    return `${this.usersPath()}/${id.toString()}/hover_card`;
   }
 
   public placeholderUserPath(id:string|number) {
-    return `${this.placeholderUsersPath()}/${id}`;
+    return `${this.placeholderUsersPath()}/${id.toString()}`;
   }
 
   public groupPath(id:string|number) {
-    return `${this.groupsPath()}/${id}`;
+    return `${this.groupsPath()}/${id.toString()}`;
   }
 
   public rolesPath() {
@@ -263,7 +293,7 @@ export class PathHelperService {
   }
 
   public rolePath(id:string|number) {
-    return `${this.rolesPath()}/${id}`;
+    return `${this.rolesPath()}/${id.toString()}`;
   }
 
   public versionsPath() {
@@ -271,22 +301,38 @@ export class PathHelperService {
   }
 
   public versionEditPath(id:string|number) {
-    return `${this.staticBase}/versions/${id}/edit`;
+    return `${this.staticBase}/versions/${id.toString()}/edit`;
   }
 
   public versionShowPath(id:string|number) {
-    return `${this.staticBase}/versions/${id}`;
+    return `${this.staticBase}/versions/${id.toString()}`;
+  }
+
+  public widgetPath(widgetName:string) {
+    return `${this.staticBase}/widgets/${widgetName}`;
   }
 
   public workPackagePath(id:string|number) {
-    return `${this.staticBase}/work_packages/${id}`;
+    return `${this.staticBase}/work_packages/${id.toString()}`;
+  }
+
+  public genericWorkPackagePath(projectIdentifier:string|null, workPackageId:string|number, tab = 'activity') {
+    if (projectIdentifier) {
+      return `${this.projectWorkPackagePath(projectIdentifier, workPackageId)}/${tab}`;
+    }
+
+    return `${this.workPackagePath(workPackageId)}/${tab}`;
   }
 
   public workPackageShortPath(id:string|number) {
-    return `${this.staticBase}/wp/${id}`;
+    return `${this.staticBase}/wp/${id.toString()}`;
   }
 
-  public workPackageCopyPath(workPackageId:string|number) {
+  public workPackageCopyPath(projectIdentifier:string|null, workPackageId:string|number) {
+    if (projectIdentifier) {
+      return `${this.workPackagesPath(projectIdentifier)}/${workPackageId}/copy`;
+    }
+
     return `${this.workPackagePath(workPackageId)}/copy`;
   }
 
@@ -295,9 +341,10 @@ export class PathHelperService {
       return `${this.projectWorkPackagePath(projectIdentifier, workPackageId)}/details/${tab}`;
     }
 
-    return `${this.workPackagesPath(projectIdentifier)}/details/${workPackageId}`;
+    return `${this.workPackagesPath(projectIdentifier)}/details/${workPackageId.toString()}`;
   }
 
+  // Todo: Remove?
   public workPackageDetailsCopyPath(projectIdentifier:string, workPackageId:string|number) {
     return this.workPackageDetailsPath(projectIdentifier, workPackageId, 'copy');
   }
@@ -394,6 +441,10 @@ export class PathHelperService {
 
   public myTimeTrackingRefresh(date:string, viewMode:string, mode:string) {
     return `${this.staticBase}/my/time-tracking/refresh?date=${date}&view_mode=${viewMode}&mode=${mode}`;
+  }
+
+  public previewCustomFieldRoleAssignmentDialog(customFieldId:number, roleId:number) {
+    return `${this.staticBase}/admin/settings/project_custom_fields/${customFieldId}/role_assignment_preview_dialog?role_id=${roleId}`;
   }
 
   public homePath() {

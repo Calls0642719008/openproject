@@ -30,6 +30,25 @@
 
 module ProjectCustomFieldProjectMappings
   class DeleteService < ::BaseServices::Delete
+    protected
+
+    def after_perform(service_result)
+      super.tap do
+        recalculate_values(service_result)
+      end
+    end
+
+    def recalculate_values(service_result)
+      mapping = service_result.result
+      project = mapping.project
+
+      affected_cfs = project.all_available_custom_fields.affected_calculated_fields([mapping.custom_field_id])
+
+      project.calculate_custom_fields(affected_cfs)
+
+      project.save if project.changed_for_autosave?
+    end
+
     # Mappings have custom deletion rules that are similar to the update rules all derived from the base contract
     # Reuse the update contract to ensure that the deletion rules are consistent with the update rules
     def default_contract_class

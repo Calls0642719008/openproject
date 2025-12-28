@@ -31,15 +31,15 @@ tr:
         spent: "Harcanan"
         spent_on: "Tarih"
         logged_by: "Giriş yapan:"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Şunun için kaydedildi
+        entity_id: Şunun için kaydedildi
+        entity_gid: Şunun için kaydedildi
       cost_type:
         unit: "Birim adı"
         unit_plural: "Birimin çoğul adı"
         default: "Varsayılan maliyet türü"
       work_package:
-        costs_by_type: "Harcanan maliyet"
+        costs_by_type: "Harcanan birimler"
         labor_costs: "İş gücü maliyetleri"
         material_costs: "Birim maliyeti"
         overall_costs: "Tüm maliyetler"
@@ -61,9 +61,9 @@ tr:
         start_time: Başlama tarihi
         end_time: Bitiş zamanı
         time: Zaman
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Şunun için kaydedildi
+        entity_id: Şunun için kaydedildi
+        entity_gid: Şunun için kaydedildi
     models:
       time_entry:
         one: "Zaman girişi"
@@ -77,7 +77,7 @@ tr:
       time_entry_activity:
         one: "Zaman izleme etkinliği"
         other: "Zaman izleme faaliyetleri"
-      rate: "Oranlar"
+      rate: "Oran"
     errors:
       models:
         time_entry:
@@ -95,7 +95,7 @@ tr:
     hours: "Saat"
     units: "Birimler"
     valid_from: "Geçerlilik"
-    fixed_date: "Düzenleme Tarihi"
+    fixed_date: "Düzenleme tarihi"
   button_add_rate: "Oran ekle"
   button_log_costs: "Günlük birim maliyetleri"
   button_log_time: "Kayıt"
@@ -142,7 +142,7 @@ tr:
   label_work_package_filter_add: "İş paketi filtresi ekle"
   label_kind: "Tür"
   label_less_or_equal: "<="
-  label_log_costs: "Birim maliyet kaydet"
+  label_log_costs: "Günlük birim maliyetleri"
   label_new_time_entry_activity: "Yeni zaman girişi etkinliği"
   label_time_entry_activity_form_description: "Bu zaman girişi etkinliğinde yapılan değişiklikler, etkin olduğu tüm projelere yansıtılacaktır."
   label_no: "Hayır"
@@ -188,7 +188,7 @@ tr:
   notice_cost_logged_successfully: "Birim maliyet başarıyla kaydedildi."
   notice_different_time_zones: "Bu kullanıcı farklı bir saat dilimine sahiptir (%{tz}). Zaman, onun zaman dilimi kullanılarak kaydedilecektir."
   notice_time_entry_update_failed: "Zaman girişi güncellenemedi. Hatalar: %{errors}"
-  notice_time_entry_delete_failed: "Failed to delete time entry. Errors: %{errors}"
+  notice_time_entry_delete_failed: "Zaman girişi silinemedi. Hatalar: %{errors}"
   permission_edit_cost_entries: "Rezervasyon birimi maliyetlerini düzenle"
   permission_edit_own_cost_entries: "Kendi rezervasyonu birim maliyetlerini düzenleme"
   permission_edit_hourly_rates: "Saatlik oranları düzenleme"

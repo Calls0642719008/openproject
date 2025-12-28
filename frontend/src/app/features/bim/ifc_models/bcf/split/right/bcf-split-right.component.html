@@ -1,4 +1,4 @@
-<op-bcf-list
-  [showResizer]="true"
-  *ngIf="showWorkPackages$ | async"
-></op-bcf-list>
+@if (showWorkPackages$ | async) {
+  <op-bcf-list [showResizer]="true"
+   />
+}

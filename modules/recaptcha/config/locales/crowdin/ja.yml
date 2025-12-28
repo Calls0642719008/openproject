@@ -22,4 +22,4 @@ ja:
       type_hcaptcha: 'HCaptcha'
       type_turnstile: 'Cloudflare Turnstile™'
       captcha_description_html: >
-        reCAPTCHA は Google による無料のサービスで、OpenProject のインスタンスで有効にすることができます。有効にすると、まだキャプチャを確認していないすべてのユーザに対して、ログイン時にキャプチャフォームがレンダリングされます。 <br/> reCAPTCHAとそのバージョンの詳細、ウェブサイトとシークレットキーの作成方法については、以下のリンクを参照してください： %{recaptcha_link} <br/> HCaptchaは、reCAPTCHAを使用したくない場合に使用できるGoogleフリーの代替手段です。詳しくはこちらのリンクをご覧ください： %{hcaptcha_link} <br/> Cloudflare Turnstile™は、同レベルのセキュリティを提供しながら、ユーザーにとってより便利な別の代替手段です。詳しくはこちらのリンクをご覧ください: %{turnstile_link}
+        reCAPTCHA は Google による無料のサービスで、OpenProject のサイトで有効にすることができます。有効にすると、まだキャプチャを確認していないすべてのユーザに対して、ログイン時にキャプチャフォームがレンダリングされます。 <br/> reCAPTCHAとそのバージョンの詳細、ウェブサイトとシークレットキーの作成方法については、以下のリンクを参照してください： %{recaptcha_link} <br/> HCaptchaは、reCAPTCHAを使用したくない場合に使用できるGoogleフリーの代替手段です。詳しくはこちらのリンクをご覧ください： %{hcaptcha_link} <br/> Cloudflare Turnstile™は、同レベルのセキュリティを提供しながら、ユーザーにとってより便利な別の代替手段です。詳しくはこちらのリンクをご覧ください: %{turnstile_link}

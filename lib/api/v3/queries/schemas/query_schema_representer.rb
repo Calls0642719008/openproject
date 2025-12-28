@@ -277,7 +277,7 @@ module API
 
           def filter_instance_schemas_href
             if represented.project
-              api_v3_paths.query_project_filter_instance_schemas(represented.project.id)
+              api_v3_paths.query_workspace_filter_instance_schemas(represented.project.id)
             else
               api_v3_paths.query_filter_instance_schemas
             end

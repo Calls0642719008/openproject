@@ -45,7 +45,6 @@ export class BeforeunloadController extends ApplicationController {
       return;
     }
 
-    // eslint-disable-next-line no-alert
     if (window.confirm(I18n.t('js.text_are_you_sure_to_cancel'))) {
       return;
     }

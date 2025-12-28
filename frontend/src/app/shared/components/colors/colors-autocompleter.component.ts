@@ -83,7 +83,7 @@ export class ColorsAutocompleterComponent implements OnInit {
   ngOnInit() {
     this.setColorOptions();
 
-    this.updateInputField = document.getElementsByName(this.elementRef.nativeElement.dataset.updateInput as string)[0] as HTMLInputElement|undefined;
+    this.updateInputField = document.getElementsByName(this.elementRef.nativeElement.dataset.updateInput!)[0] as HTMLInputElement|undefined;
     this.highlightTextInline = JSON.parse(this.elementRef.nativeElement.dataset.highlightTextInline || 'false') as boolean;
     this.classes = this.elementRef.nativeElement.dataset.classes || '';
   }
@@ -95,7 +95,7 @@ export class ColorsAutocompleterComponent implements OnInit {
   }
 
   private setColorOptions() {
-    this.options = JSON.parse(this.elementRef.nativeElement.dataset.colors as string) as {
+    this.options = JSON.parse(this.elementRef.nativeElement.dataset.colors!) as {
       name:string,
       value:string
     }[];
@@ -107,7 +107,7 @@ export class ColorsAutocompleterComponent implements OnInit {
       this.selectedOption = this.selectedOption.value;
     } else {
       // Differentiate between "No color" and a color that is now not selectable any more
-      this.selectedColorId = this.elementRef.nativeElement.dataset.selectedColor as string;
+      this.selectedColorId = this.elementRef.nativeElement.dataset.selectedColor!;
       this.selectedOption = this.selectedColorId ? this.selectedColorId : '';
     }
   }

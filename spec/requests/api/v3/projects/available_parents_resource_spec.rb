@@ -98,7 +98,7 @@ RSpec.describe "API v3 Project available parents resource", content_type: :json 
     end
 
     context "with a project candidate" do
-      let(:path) { api_v3_paths.projects_available_parents + "?of=#{project.id}" }
+      let(:path) { api_v3_paths.projects_available_parents(of: project.id) }
 
       before do
         response

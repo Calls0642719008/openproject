@@ -161,7 +161,7 @@ RSpec.describe DigestMailer do
         end
 
         it "matches generated text" do
-          expect(mail_body).to have_text("Overdue since 3 days.")
+          expect(mail_body).to have_text("Overdue for 3 days.")
         end
       end
 
@@ -194,7 +194,7 @@ RSpec.describe DigestMailer do
         end
 
         it "matches generated text" do
-          expect(mail_body).to include('<span style="color: #C92A2A">Overdue since 2 days.</span>')
+          expect(mail_body).to include('<span style="color: #C92A2A">Overdue for 2 days.</span>')
         end
       end
 

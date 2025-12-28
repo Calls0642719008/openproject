@@ -88,6 +88,8 @@ ro:
     button_list_view: "Vizualizare listă"
     button_show_view: "Vizualizare pe tot ecranul"
     button_log_time: "Înregistrare timp"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Oprește cronometrul"
     button_more: "Mai mult"
     button_open_details: "Deschide vizualizare detaliată"
     button_close_details: "Închide vizualizare detalii"
@@ -287,17 +289,6 @@ ro:
         format:
           date: "%{attribute} nu este o dată validă - Este necesar formatul AAAA-LL-ZZ."
         general: "A apărut o eroare."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Citește despre noile caracteristici și actualizări de produse."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                Versiunea conţine diverse caracteristici noi şi îmbunătăţiri, cum ar fi <br> <ul class="%{list_styling_class}"> <li>UX/UI îmbunătăţiri pentru un aspect mai modern.</li> <li>Întâlniri: Opțiunea de a dezactiva notificările prin e-mail și ICS.</li> <li>temporizatoare în curs afișate în modulul de urmărire a timpului meu.</li> <li>Raportare progresivă: % Suma completă este afișată și în modul Status.</li> <li>Verificarea stării de sănătate a Nextcloud: Indicați capacitatea de schimb a tokenurilor lipsă (Suplimentul Întreprinderilor).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -305,12 +296,13 @@ ro:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copiază URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'URL-ul "%{name}" a fost copiat cu succes în clipboard-ul tău. Lipiți-l în clientul calendar pentru a finaliza abonamentul.'
     label_activate: "Activează"
     label_assignee: "Executant"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Adaugă coloană după"
     label_add_column_before: "Adaugă coloană înainte"
     label_add_columns: "Adaugă coloane"
@@ -352,6 +344,7 @@ ro:
     label_collapse: "Restrângere"
     label_collapsed: "restrâns"
     label_collapse_all: "Restrângere totală"
+    label_collapse_text: "Collapse text"
     label_comment: "Comentariu"
     label_committed_at: "%{committed_revision_link} la data de %{date}"
     label_committed_link: "revizia încărcată %{revision_identifier}"
@@ -364,6 +357,7 @@ ro:
     label_expand: "Extindere"
     label_expanded: "extins"
     label_expand_all: "Extindere totală"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Deschide meniu proiect"
     label_export: "Exportă"
     label_export_preparing: "Exportul este în curs de pregătire și va fi descărcat în curând."
@@ -392,7 +386,7 @@ ro:
     label_less_than_ago: "acum mai puțin de zile"
     label_loading: "Se încarcă..."
     label_mail_notification: "Notificări prin e-mail"
-    label_manage_columns: "Manage and reorder columns"
+    label_manage_columns: "Gestionează și reordonează coloanele"
     label_me: "eu"
     label_meeting_agenda: "Agendă"
     label_meeting_minutes: "Minute"
@@ -443,7 +437,7 @@ ro:
     label_sort_lower: "Mută în jos"
     label_sorting: "Sortare"
     label_spent_time: "Timp consumat"
-    label_star_query: "Favorite"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Apăsați tasta ”Enter” pentru a salva."
     label_public_query: "Public"
     label_sum: "Sumă"
@@ -562,7 +556,7 @@ ro:
       date_alerts:
         milestone_date: "Dată etapă"
         overdue: "Restanțe"
-        overdue_since: "de %{difference_in_days}"
+        overdue_since: "for %{difference_in_days}."
         property_today: "este azi."
         property_is: "este în %{difference_in_days}"
         property_was: "a fost acum %{difference_in_days}"
@@ -733,7 +727,7 @@ ro:
       typeahead_placeholder: Căutarea de posibili observatori
     relation_labels:
       parent: "Părinte"
-      child: "Child"
+      child: "Copil"
       children: "Copii"
       relates: "În relație cu"
       duplicates: "Dublează"
@@ -782,7 +776,7 @@ ro:
     autocompleter:
       placeholder: "Tastează pentru a căuta"
       notFoundText: "Niciun articol găsit"
-      search: "Search"
+      search: "Căutare"
       project:
         placeholder: "Select project"
     repositories:
@@ -1116,6 +1110,7 @@ ro:
         one: "Un pachet de lucru descendent"
         few: "%{count} descendenți ai pachetului de lucru"
         other: "%{count} copii din pachetul de lucru"
+      hour_string: "%{hours} h"
       hour:
         one: "1 oră"
         other: "%{count} ora"
@@ -1137,6 +1132,7 @@ ro:
       current_project_and_all_descendants: "In acest proiect + subproiecte"
       current_project: "În acest proiect"
       recently_viewed: "Vizualizate recent"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "toate proiectele"
         project_and_subprojects: "si toate subproiectele"
@@ -1146,71 +1142,8 @@ ro:
       list: "Tabel"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Înapoi"
       invite: "Invită"
-      title:
-        invite: "Invită utilizator"
-        invite_to_project: "Invită %{type} la %{project}"
-        User: "utilizator"
-        Group: "grup"
-        PlaceholderUser: "utilizator placeholder"
-        invite_principal_to_project: "Invitați %{principal} la %{project}"
-      project:
-        label: "Proiect"
-        required: "Te rog selectează un proiect"
-        lacking_permission: "Te rog selectează un alt proiect, deoarece nu ai permisiuni pentru a atribui utilizatori la cel selectat în prezent."
-        lacking_permission_info: "Nu aveți permisiunea de a atribui utilizatori la proiectul în care vă aflați în prezent. Trebuie să selectați un alt proiect."
-        next_button: "Înainte"
-        no_results: "Nu au fost găsite proiecte"
-        no_invite_rights: "Nu aveți voie să invitați membri în acest proiect"
-      type:
-        required: "Te rog selectează tipul de invitat"
-        user:
-          title: "Utilizator"
-          description: "Permisiuni bazate pe rolul atribuit în proiectul selectat"
-        group:
-          title: "Grup"
-          description: "Permisiuni bazate pe rolul atribuit în proiectul selectat"
-        placeholder:
-          title: "Utilizator placeholder"
-          title_no_ee: "Utilizator de tip Placeholder (add-on numai pentru ediția Enterprise)"
-          description: "Nu are acces la proiect și nu se trimite niciun e-mail."
-          description_no_ee: 'Nu are acces la proiect și nu se trimite niciun e-mail.  <br>Verificați<a href="%{eeHref}" ținta="_blank">ediția Enterprise</a>'
-      principal:
-        label:
-          name_or_email: "Numele și adresa dvs. de e-mail."
-          name: "Nume"
-        already_member_message: "Deja membru al %{project}"
-        no_results_user: "Nu au fost găsiți utilizatori"
-        invite_user: "Invită"
-        no_results_placeholder: "Nu au fost găsiți spații libere"
-        create_new_placeholder: "Creați un nou spațiu rezervat:"
-        no_results_group: "Nu au fost găsite grupuri"
-        next_button: "Înainte"
-        required:
-          user: "Te rog selectează un utilizator"
-          placeholder: "Te rog selectează un substituent"
-          group: "Te rog selectează un grup"
-      role:
-        label: "Rolul în %{project}"
-        no_roles_found: "Nu au fost găsite roluri"
-        description: >-
-          This is the role that the user will receive when they join your project. Rolul definește acțiunile pe care utilizatorul are voie să le întreprindă și informațiile pe care le poate vedea. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Aflați mai multe despre roluri și permisiuni. </a>
-        required: "Te rog selectează un rol"
-        next_button: "Înainte"
-      message:
-        label: "Mesaj invitație"
-        description: "Vom trimite un e-mail utilizatorului, la care puteți adăuga un mesaj personal aici. Ar putea fi utilă o explicație pentru invitație sau poate câteva informații despre proiect pentru a-i ajuta să înceapă."
-        next_button: "Înainte"
-      summary:
-        next_button: "Trimite invitație"
-      success:
-        title: "%{principal} a fost invitat!"
-        description:
-          user: "Utilizatorul se poate autentifica acum pentru a accesa %{project}. Între timp, puteți deja să planificați cu acel utilizator și să atribuiți pachete de lucru, de exemplu."
-          placeholder: "Marca de poziție poate fi utilizată acum în %{project}. Între timp, puteți deja să planificați cu acel utilizator și să atribuiți pachete de lucru, de exemplu."
-          group: "Grupul este acum o parte din %{project}. Între timp, puteți deja să planificați cu acest grup și să atribuiți pachete de lucru, de exemplu."
-        next_button: "Continuă"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status exclus din totalul ierarhic"
@@ -1227,8 +1160,8 @@ ro:
       selected_filter:
         all: "Toate Proiectele"
         selected: "Numai selecția"
-      search_placeholder: "Caută proiect..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Caută proiecte..."
+      search_placeholder_favorites: "Caută favorite..."
       include_subprojects: "Include toate subproiectele"
       tooltip:
         include_all_selected: "Proiectul este deja inclus, din moment ce opțiunea Include toate subproiectele este activată."
@@ -1236,6 +1169,11 @@ ro:
         does_not_match_search: "Proiectul nu corespunde criteriilor de căutare."
       no_results: "Niciun proiect nu corespunde criteriilor de căutare."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Referință"
       clear: "Șterge"

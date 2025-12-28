@@ -1,16 +1,7 @@
 a.hover-input, a.hover-input:visited
-  border: 1px solid transparent !important
-  border-radius: var(--borderRadius-medium, 6px) !important
+  @include hover-input-base
   color: inherit !important
-  display: inline-block
-  width: 100%
-  padding: var(--base-size-4, 4px) !important
   text-decoration: none !important
-  @media (hover: none) and (pointer: coarse)
-    border-color: var(--borderColor-default) !important
-  @media (hover: hover)
-    &:hover
-      border-color: var(--borderColor-default) !important
 
 .FormControl-input-trailingAction + .FormControl-input-trailingVisualWrap
   margin-right: var(--base-size-20)

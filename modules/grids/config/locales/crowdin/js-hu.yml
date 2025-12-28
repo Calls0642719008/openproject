@@ -13,14 +13,8 @@ hu:
           no_results: 'Még nincs dokumentum.'
         members:
           title: 'Tagok'
-          no_results: 'Nincsenek látható tagok.'
-          view_all_members: 'Az összes tag megtekintése'
-          add: 'Tag'
-          too_many: 'Megjelenítve %{count} tag %{total} az összesből.'
         news:
           title: 'Hírek'
-          at: '-kor'
-          no_results: 'Semmi új jelenteni való.'
         project_description:
           title: 'Projekt leírása'
           no_results: "Még nem írt leírást. Az egyik megtalálható a 'Projekt beállításai' részben."
@@ -33,9 +27,10 @@ hu:
           not_set: 'Nincs beállítva'
           finished: 'Befejezett'
           discontinued: 'Megszakított'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: 'Alprojektek'
-          no_results: "Nincsenek alprojektek\n"
+          title: 'Subitems'
         project_favorites:
           title: 'Kedvenc projektek'
           no_results: 'Jelenleg nincsenek kedvenc projektjei. Kattintson a csillag ikonra a projekt műszerfalon, hogy felvegyen egyet a kedvencei közé.'
@@ -57,6 +52,7 @@ hu:
           title: 'Munka-csomag tábla'
         work_packages_graph:
           title: 'Munka-csomag grafikon'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Naptár'
         work_packages_overview:

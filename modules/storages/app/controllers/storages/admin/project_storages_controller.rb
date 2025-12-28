@@ -30,6 +30,7 @@
 
 class Storages::Admin::ProjectStoragesController < Projects::SettingsController
   include Storages::OAuthAccessGrantable
+  include OpTurbo::ComponentStream
 
   model_object Storages::ProjectStorage
 
@@ -57,6 +58,18 @@ class Storages::Admin::ProjectStoragesController < Projects::SettingsController
     @last_project_folders = {}
 
     render template: "/storages/project_settings/new"
+  end
+
+  def edit
+    @project_storage = @object
+    @project_storage.project_folder_mode = project_folder_mode_from_params if project_folder_mode_from_params.present?
+
+    @last_project_folders = Storages::LastProjectFolder
+                              .where(project_storage: @project_storage)
+                              .pluck(:mode, :origin_folder_id)
+                              .to_h
+
+    render "/storages/project_settings/edit"
   end
 
   def create
@@ -90,18 +103,6 @@ class Storages::Admin::ProjectStoragesController < Projects::SettingsController
     end
   end
 
-  def edit
-    @project_storage = @object
-    @project_storage.project_folder_mode = project_folder_mode_from_params if project_folder_mode_from_params.present?
-
-    @last_project_folders = Storages::LastProjectFolder
-                              .where(project_storage: @project_storage)
-                              .pluck(:mode, :origin_folder_id)
-                              .to_h
-
-    render "/storages/project_settings/edit"
-  end
-
   def update
     service_result = ::Storages::ProjectStorages::UpdateService
                        .new(user: current_user, model: @object)
@@ -127,9 +128,10 @@ class Storages::Admin::ProjectStoragesController < Projects::SettingsController
   end
 
   def destroy_info
-    @project_storage_to_destroy = @object
-
-    render "/storages/project_settings/destroy_info"
+    respond_with_dialog Storages::ProjectStorages::DestroyConfirmationDialogComponent.new(
+      project_storage: @object,
+      target: :project
+    )
   end
 
   private

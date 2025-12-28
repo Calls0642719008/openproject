@@ -10,5 +10,5 @@ export type PrincipalLike =
 
 export interface PrincipalData {
   principal:PrincipalLike|null;
-  customFields:{ [key:string]:any },
+  customFields:Record<string, any>,
 }

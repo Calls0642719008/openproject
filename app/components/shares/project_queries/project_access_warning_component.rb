@@ -34,7 +34,7 @@ module Shares
       include OpPrimer::ComponentHelpers
 
       def initialize(strategy:, modal_body_container:)
-        super
+        super()
 
         @strategy = strategy
         @container = modal_body_container

@@ -119,8 +119,8 @@ module UserInvitation
   def invite_user!(user, send_notification: true)
     user, token = user_invitation user
 
-    if token && send_notification
-      OpenProject::Notifications.send(Events.user_invited, token)
+    if token
+      OpenProject::Notifications.send(Events.user_invited, token) if send_notification
 
       user
     end

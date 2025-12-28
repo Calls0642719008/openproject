@@ -110,7 +110,7 @@ RSpec.shared_examples_for "relation filter dependency" do
         context "within project" do
           let(:path) { "values" }
           let(:type) { "[]WorkPackage" }
-          let(:href) { api_v3_paths.work_packages_by_project(project.id) }
+          let(:href) { api_v3_paths.work_packages_by_workspace(project.id) }
 
           context "for operator 'Queries::Operators::Equals'" do
             let(:operator) { Queries::Operators::Equals }

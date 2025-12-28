@@ -127,7 +127,7 @@ RSpec.describe Admin::EnterpriseTokens::TableComponent, type: :component do
       expect(subscription_cells).to all(have_primer_label("Expiring soon", scheme: "attention"))
     end
 
-    it "has expiry date in :attention color in the dates column" do
+    it "has expiration date in :attention color in the dates column" do
       render_inline(component)
 
       expect(dates_cells[0]).to have_primer_text(format_date(tokens.first.starts_at), color: "subtle")
@@ -152,7 +152,7 @@ RSpec.describe Admin::EnterpriseTokens::TableComponent, type: :component do
       expect(subscription_cells).to all(have_primer_label("In grace period", scheme: "attention"))
     end
 
-    it "has expiry date in :attention color in the dates column" do
+    it "has expiration date in :attention color in the dates column" do
       render_inline(component)
 
       expect(dates_cells[0]).to have_primer_text(format_date(tokens.first.starts_at), color: "subtle")
@@ -178,7 +178,7 @@ RSpec.describe Admin::EnterpriseTokens::TableComponent, type: :component do
       expect(subscription_cells).to all(have_primer_label("Expired", scheme: "danger"))
     end
 
-    it "has expiry date in :danger color in the dates column" do
+    it "has expiration date in :danger color in the dates column" do
       render_inline(component)
 
       expect(dates_cells[0]).to have_primer_text(format_date(tokens.first.starts_at), color: "subtle")

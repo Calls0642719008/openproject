@@ -36,7 +36,7 @@ module Queries::Projects
     filter Filters::AvailableProjectAttributesFilter
     filter Filters::CreatedAtFilter
     filter Filters::CustomFieldFilter
-    filter Filters::FavoredFilter
+    filter Filters::FavoritedFilter
     filter Filters::IdFilter
     filter Filters::LatestActivityAtFilter
     filter Filters::ProjectPhaseAnyFilter
@@ -52,6 +52,7 @@ module Queries::Projects
     filter Filters::TemplatedFilter
     filter Filters::TypeFilter
     filter Filters::TypeaheadFilter
+    filter Filters::UpdatedAtFilter
     filter Filters::UserActionFilter
     filter Filters::VisibleFilter
 
@@ -63,14 +64,16 @@ module Queries::Projects
     order Orders::ProjectStatusOrder
     order Orders::RequiredDiskSpaceOrder
     order Orders::TypeaheadOrder
+    order Orders::UpdatedAtOrder
 
     select Selects::CreatedAt
     select Selects::CustomField
     select Selects::Default
-    select Selects::Favored
+    select Selects::Favorited
     select Selects::LatestActivityAt
     select Selects::ProjectPhase
     select Selects::RequiredDiskSpace
     select Selects::Status
+    select Selects::UpdatedAt
   end
 end

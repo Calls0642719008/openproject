@@ -37,6 +37,7 @@ class Enumeration < ApplicationRecord
   acts_as_tree order: "position ASC"
 
   before_save :unmark_old_default_value, if: :became_default_value?
+  before_save :ensure_activated, if: -> { self.class.can_have_default_value? && is_default? }
   before_destroy :check_integrity
 
   validates :name, presence: true
@@ -172,5 +173,9 @@ class Enumeration < ApplicationRecord
 
   def check_integrity
     raise "Can't delete enumeration" if in_use?
+  end
+
+  def ensure_activated
+    self.active = true
   end
 end

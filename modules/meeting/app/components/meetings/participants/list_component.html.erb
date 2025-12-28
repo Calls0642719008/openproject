@@ -28,7 +28,7 @@
             end
           else
             render(Primer::BaseComponent.new(tag: :div, classes: "participants-list")) do
-              @meeting_participants.sort.each do |participant|
+              @meeting_participants.each do |participant|
                 box.with_row do
                   render(Meetings::Participants::BoxRowComponent.new(meeting: @meeting, participant:))
                 end

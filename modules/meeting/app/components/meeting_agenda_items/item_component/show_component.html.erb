@@ -1,6 +1,6 @@
 <%=
   component_wrapper do
-    grid_layout("op-meeting-agenda-item", tag: :div, id: "item-#{@meeting_agenda_item.id}") do |grid|
+    grid_layout("op-meeting-agenda-item", tag: :div) do |grid|
       if drag_and_drop_enabled?
         grid.with_area(:"drag-handle", tag: :div, classes: "hide-when-print") do
           render(Primer::OpenProject::DragHandle.new(classes: "handle"))
@@ -49,7 +49,7 @@
         grid.with_area(:presenter, tag: :div, classes: "ellipsis") do
           flex_layout(align_items: :flex_end) do |flex|
             flex.with_column(classes: "ellipsis custom-presenter-flex") do
-              render(Users::AvatarComponent.new(user: @meeting_agenda_item.presenter, size: "mini", title:, classes: "op-principal_flex"))
+              render(Users::AvatarComponent.new(user: @meeting_agenda_item.presenter, size: "mini", classes: "op-principal_flex"))
             end
           end
         end
@@ -65,33 +65,47 @@
             test_selector: "op-meeting-agenda-actions"
           )
 
-          edit_action_item(menu)
-          if !in_backlog?
-            copy_action_item(menu)
+          with_item_group(menu) do
+            edit_action_item(menu)
+            copy_action_item(menu) unless in_backlog?
           end
 
-          menu.with_divider if note_or_outcome_action_added? && editable?
-
-          add_note_action_item(menu) if add_note_action?
-          add_outcome_action_item(menu) if add_outcome_action?
-
-          unless first? && last?
-            menu.with_divider if editable?
-            move_actions(menu)
+          with_item_group(menu) do
+            add_note_action_item(menu) if add_note_action?
+            add_outcome_action_item(menu) if add_outcome_action?
           end
 
-          menu.with_divider if move_to_different_section_or_meeting_action_added?
+          if editable? && !presentation_mode?
+            with_item_group(menu) do
+              menu.with_sub_menu_item(label: I18n.t("label_agenda_item_move")) do |submenu|
+                submenu.with_leading_visual_icon(icon: :"op-arrow-in")
+                with_item_group(submenu) { move_actions(submenu) } unless first? && last?
 
-          if !in_template? || in_backlog?
-            move_to_current_meeting_action_item(menu) if in_backlog?
-            move_to_backlog_action_item(menu) if !in_backlog?
-          end
-          if move_to_next_meeting_enabled?
-            move_to_next_meeting_action_item(menu)
+                with_item_group(submenu) do
+                  move_to_section_action_item(submenu)
+
+                  if !in_template? || in_backlog?
+                    if in_backlog?
+                      move_to_current_meeting_action_item(submenu)
+                    else
+                      move_to_backlog_action_item(submenu)
+                    end
+                  end
+                end
+
+                with_item_group(submenu) { move_to_next_meeting_action_item(submenu) }
+              end
+            end
+
+            with_item_group(menu) do
+              menu.with_sub_menu_item(label: I18n.t("label_agenda_item_duplicate")) do |submenu|
+                submenu.with_leading_visual_icon(icon: :duplicate)
+                with_item_group(submenu) { duplicate_in_next_meeting_action_item(submenu) }
+              end
+            end
           end
 
-          menu.with_divider if editable?
-          delete_action_item(menu)
+          with_item_group(menu) { delete_action_item(menu) }
         end
       end
 
@@ -104,11 +118,7 @@
       end
 
       grid.with_area(:outcomes, tag: :div) do
-        flex_layout do |flex|
-          flex.with_row do
-            render(MeetingAgendaItems::Outcomes::BaseComponent.new(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item, meeting_outcome: nil, edit: false))
-          end
-        end
+        render(MeetingAgendaItems::Outcomes::WrapperComponent.new(meeting_agenda_item: @meeting_agenda_item))
       end
     end
   end

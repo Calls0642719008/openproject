@@ -59,13 +59,25 @@ class Exports::PDF::Common::View
   end
 
   def self.valid_custom_font?
-    CustomStyle.current.present? &&
-      CustomStyle.current.export_font_regular.present? &&
-      CustomStyle.current.export_font_regular.local_file.present?
+    cs = CustomStyle.current
+    return false if cs.blank?
+
+    valid_custom_font_cut?(cs.export_font_regular) &&
+      valid_optional_custom_font_cut?(cs.export_font_bold) &&
+      valid_optional_custom_font_cut?(cs.export_font_italic) &&
+      valid_optional_custom_font_cut?(cs.export_font_bold_italic)
+    # Something in the remote storage failed. Log, but do not stop PDF generation
+  rescue StandardError => e
+    Rails.logger.error "Failed to apply custom PDF font to export: #{e.message}:\n#{e.backtrace.join("\n")}"
+    false
   end
 
   def self.valid_custom_font_cut?(cut)
     cut.present? && cut.local_file.present?
+  end
+
+  def self.valid_optional_custom_font_cut?(cut)
+    cut.blank? || cut.local_file.present?
   end
 
   def options

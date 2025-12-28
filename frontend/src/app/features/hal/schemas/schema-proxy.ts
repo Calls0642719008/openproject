@@ -84,7 +84,7 @@ export class SchemaProxy implements ProxyHandler<SchemaResource> {
     const propertySchema = this.schema[this.mappedName(property)];
 
     if (propertySchema) {
-      return { ...propertySchema, writable: this.isEditable && propertySchema && propertySchema.writable };
+      return { ...propertySchema, writable: this.isEditable && propertySchema?.writable };
     }
     return null;
   }

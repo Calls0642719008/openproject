@@ -75,7 +75,7 @@ ar:
     task_color: "لون المهمّة"
     unassigned: "غير المعيّنة"
     user_preference:
-      header_backlogs: "Backlogs module"
+      header_backlogs: ""
       button_update_backlogs: "Update backlogs module"
     x_more: "%{count} أكثر..."
   backlogs_active: "نشِط"

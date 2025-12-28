@@ -27,7 +27,10 @@ ko:
       no_results_table: 아직 정의된 Webhook이 없습니다.
       label_add_new: 새로운 Webhook 추가
       label_edit: Webhook 편집
-      label_event_resources: 이벤트 리소스
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "생성됨"
         updated: "업데이트됨"

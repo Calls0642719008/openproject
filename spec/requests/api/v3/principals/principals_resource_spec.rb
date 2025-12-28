@@ -36,6 +36,30 @@ RSpec.describe "API v3 Principals resource" do
   include API::V3::Utilities::PathHelper
 
   describe "#GET /api/v3/principals" do
+    shared_let(:project) { create(:project) }
+    shared_let(:other_project) { create(:project) }
+    shared_let(:non_member_project) { create(:project) }
+    shared_let(:other_user) do
+      create(:user,
+             member_with_permissions: { other_project => %i[view_project] },
+             lastname: "Bbbb")
+    end
+    shared_let(:user_in_non_member_project) do
+      create(:user,
+             member_with_permissions: { non_member_project => %i[view_project] },
+             lastname: "Cccc")
+    end
+    shared_let(:group) do
+      create(:group,
+             member_with_permissions: { project => %i[view_project] },
+             lastname: "Gggg")
+    end
+    shared_let(:placeholder_user) do
+      create(:placeholder_user,
+             member_with_permissions: { project => %i[view_project] },
+             name: "Pppp")
+    end
+
     subject(:response) { last_response }
 
     let(:path) do
@@ -44,9 +68,6 @@ RSpec.describe "API v3 Principals resource" do
     let(:order) { { name: :desc } }
     let(:filter) { nil }
     let(:select) { nil }
-    let(:project) { create(:project) }
-    let(:other_project) { create(:project) }
-    let(:non_member_project) { create(:project) }
     let(:role) { create(:project_role, permissions:) }
     let(:standard_global_role) { nil }
     let(:permissions) { [] }
@@ -62,26 +83,6 @@ RSpec.describe "API v3 Principals resource" do
              roles: [role])
 
       user
-    end
-    let!(:other_user) do
-      create(:user,
-             member_with_roles: { other_project => role },
-             lastname: "Bbbb")
-    end
-    let!(:user_in_non_member_project) do
-      create(:user,
-             member_with_roles: { non_member_project => role },
-             lastname: "Cccc")
-    end
-    let!(:group) do
-      create(:group,
-             member_with_roles: { project => role },
-             lastname: "Gggg")
-    end
-    let!(:placeholder_user) do
-      create(:placeholder_user,
-             member_with_roles: { project => role },
-             name: "Pppp")
     end
 
     current_user { user }
@@ -163,7 +164,7 @@ RSpec.describe "API v3 Principals resource" do
       end
 
       context "when user has permission to view user emails" do
-        let(:standard_global_role) { create :standard_global_role }
+        let(:standard_global_role) { create :standard_global_role, permissions: %i[view_user_email] }
 
         it_behaves_like "API V3 collection response", 1, 1, "User"
       end
@@ -196,22 +197,16 @@ RSpec.describe "API v3 Principals resource" do
     context "with the permission to `manage_members`" do
       let(:permissions) { [:manage_members] }
 
-      it_behaves_like "API V3 collection response", 5, 5 do
-        let(:elements) { [placeholder_user, group, user_in_non_member_project, other_user, user] }
+      # The user herself, the other user in the project, the group and the placeholder user
+      it_behaves_like "API V3 collection response", 4, 4 do
+        let(:elements) { [placeholder_user, group, other_user, user] }
       end
     end
 
-    context "with the permission to `manage_user`" do
-      let(:permissions) { [:manage_user] }
+    context "with the global permission to `view_all_principals`" do
+      let(:standard_global_role) { create :standard_global_role, permissions: %i[view_all_principals] }
 
-      it_behaves_like "API V3 collection response", 5, 5 do
-        let(:elements) { [placeholder_user, group, user_in_non_member_project, other_user, user] }
-      end
-    end
-
-    context "with the permission to `share_work_packages`" do
-      let(:permissions) { [:share_work_packages] }
-
+      # See's all user, even unrelated non_member_project
       it_behaves_like "API V3 collection response", 5, 5 do
         let(:elements) { [placeholder_user, group, user_in_non_member_project, other_user, user] }
       end

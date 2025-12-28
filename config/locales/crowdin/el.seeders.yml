@@ -43,13 +43,6 @@ el:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Τεκμηρίωση
-        item_1:
-          name: Προδιαγραφές
-        item_2:
-          name: Άλλο
       project_query_roles:
         item_0:
           name: Project query viewer
@@ -122,7 +115,7 @@ el:
             item_2:
               name: Tasks
             item_3:
-              name: Team planner
+              name: Προγραμματισμός Ομάδας
           boards:
             kanban:
               name: Kanban board

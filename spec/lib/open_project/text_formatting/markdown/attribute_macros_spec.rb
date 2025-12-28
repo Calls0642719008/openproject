@@ -42,6 +42,8 @@ RSpec.shared_examples_for "resolving macros" do
 
           Inline reference to WP by ID: workPackageLabel:1234:subject
 
+          Inline reference to WP by ID with CF with a dot: workPackageLabel:1234:"1. test"
+
           Inline reference to WP by subject: workPackageLabel:"Some subject":"Some custom field with spaces"
 
           Inline reference to project: projectLabel:status
@@ -63,6 +65,9 @@ RSpec.shared_examples_for "resolving macros" do
           </p>
           <p class="op-uc-p">
             Inline reference to WP by ID: <opce-macro-attribute-label data-model="workPackage" data-id="1234" data-attribute="subject"></opce-macro-attribute-label>
+          </p>
+          <p class="op-uc-p">
+            Inline reference to WP by ID with CF with a dot: <opce-macro-attribute-label data-model="workPackage" data-id="1234" data-attribute="1. test"></opce-macro-attribute-label>
           </p>
           <p class="op-uc-p">
             Inline reference to WP by subject: <opce-macro-attribute-label data-model="workPackage" data-id="Some subject" data-attribute="Some custom field with spaces"></opce-macro-attribute-label>

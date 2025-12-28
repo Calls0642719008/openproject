@@ -30,6 +30,7 @@
 
 class WorkPackageRelationsController < ApplicationController
   include OpTurbo::ComponentStream
+  include OpTurbo::FlashStreamHelper
 
   before_action :set_work_package
   before_action :set_relation, only: %i[edit update]
@@ -48,10 +49,16 @@ class WorkPackageRelationsController < ApplicationController
   end
 
   def edit
-    respond_with_dialog(
-      WorkPackageRelationsTab::WorkPackageRelationDialogComponent
-        .new(work_package: @work_package, relation: @relation)
-    )
+    contract = Relations::UpdateContract.new(@relation, current_user)
+
+    if contract.valid?
+      respond_with_dialog(
+        WorkPackageRelationsTab::WorkPackageRelationDialogComponent
+          .new(work_package: @work_package, relation: @relation)
+      )
+    else
+      respond_with_flash_error(message: I18n.t(:"activerecord.errors.models.relation.attributes.base.error_not_editable"))
+    end
   end
 
   def create
@@ -97,7 +104,11 @@ class WorkPackageRelationsController < ApplicationController
         ServiceResult.success
       end
 
-    respond_with_relations_tab_update(service_result)
+    if service_result.failure?
+      respond_with_flash_error(message: service_result.message)
+    else
+      respond_with_relations_tab_update(service_result)
+    end
   end
 
   private

@@ -38,36 +38,36 @@ RSpec.describe Roles::BaseContract do
     context "for a work package role" do
       let(:role) { work_package_role }
 
-      it "does not include manage_overview" do
+      it "does not include manage_dashboards" do
         expect(contract.assignable_permissions.map(&:name))
-          .not_to include :manage_overview
+          .not_to include :manage_dashboards
       end
     end
 
     context "for a member role" do
       let(:role) { member_role }
 
-      it "includes manage_overview" do
+      it "includes manage_dashboards" do
         expect(contract.assignable_permissions.map(&:name))
-          .to include :manage_overview
+          .to include :manage_dashboards
       end
     end
 
     context "for a global role" do
       let(:role) { global_role }
 
-      it "does not include manage_overview" do
+      it "does not include manage_dashboards" do
         expect(contract.assignable_permissions.map(&:name))
-          .not_to include :manage_overview
+          .not_to include :manage_dashboards
       end
     end
 
     context "for a builtin role" do
       let(:role) { anonymous_role }
 
-      it "does not include manage_overview" do
+      it "does not include manage_dashboards" do
         expect(contract.assignable_permissions.map(&:name))
-          .not_to include :manage_overview
+          .not_to include :manage_dashboards
       end
     end
   end

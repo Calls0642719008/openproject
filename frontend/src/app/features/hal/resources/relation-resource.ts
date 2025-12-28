@@ -110,7 +110,7 @@ export class RelationResource extends HalResource {
    * @return {boolean}
    */
   public isInvolved(wpId:string) {
-    return _.values(this.ids).indexOf(wpId.toString()) >= 0;
+    return _.values(this.ids).includes(wpId.toString());
   }
 
   /**
@@ -118,8 +118,8 @@ export class RelationResource extends HalResource {
    */
   public get ids() {
     return {
-      from: idFromLink(this.from.href!),
-      to: idFromLink(this.to.href!),
+      from: idFromLink(this.from.href),
+      to: idFromLink(this.to.href),
     };
   }
 

@@ -59,8 +59,7 @@ class WorkPackage::PDFExport::DocumentGenerator < Exports::Exporter
     render_doc
     success(pdf.render)
   rescue StandardError => e
-    Rails.logger.error "Failed to generate PDF export:  #{e.message}:\n#{e.backtrace.join("\n")}"
-    error(I18n.t(:error_pdf_failed_to_export, error: e.message))
+    error(e)
   ensure
     delete_all_resized_images
   end

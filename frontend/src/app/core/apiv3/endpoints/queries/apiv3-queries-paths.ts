@@ -77,7 +77,7 @@ export class ApiV3QueriesPaths extends ApiV3ResourceCollection<QueryResource, Ap
   public find(
     queryData:object,
     queryId?:string|null,
-    projectIdentifier?:string|null|undefined,
+    projectIdentifier?:string|null,
   ):Observable<QueryResource> {
     let path:string;
 
@@ -97,7 +97,7 @@ export class ApiV3QueriesPaths extends ApiV3ResourceCollection<QueryResource, Ap
    *
    * @param params
    */
-  public parameterised(params:Object):Observable<QueryResource> {
+  public parameterised(params:object):Observable<QueryResource> {
     return this.halResourceService
       .get<QueryResource>(
         this.default.path,
@@ -111,7 +111,7 @@ export class ApiV3QueriesPaths extends ApiV3ResourceCollection<QueryResource, Ap
    * @param payload Payload object or query HAL resource
    * @param form Form resource, needed when QueryResource is passed
    */
-  public post(payload:QueryResource|Object, form?:QueryFormResource):Observable<QueryResource> {
+  public post(payload:QueryResource|object, form?:QueryFormResource):Observable<QueryResource> {
     if (payload instanceof QueryResource && form) {
       // Extracting requires having the filter schemas loaded as the dependencies
       this.queryFilters.mapSchemasIntoFilters(payload, form);

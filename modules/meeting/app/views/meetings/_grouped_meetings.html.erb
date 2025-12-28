@@ -28,19 +28,18 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <% if @grouped_meetings.empty? || @grouped_meetings.values.all?(&:empty?) -%>
-  <%= render Meetings::TableComponent.new(
-        rows: [],
-        current_project: @project
-      ) %>
+  <%= render Meetings::BlankSlateComponent.new(project: @project) %>
 <% end %>
 <% %i[today tomorrow this_week later].each_with_index do |key, i| %>
   <% group = @grouped_meetings[key] %>
   <% if group.present? %>
-    <%= render(Primer::OpenProject::Heading.new(
-                 tag: :h3,
-                 mb: 3,
-                 mt: i == 0 ? 0 : 3
-               )) { I18n.t("label_meeting_index_#{key}") } %>
+    <%= render(
+          Primer::OpenProject::Heading.new(
+            tag: :h3,
+            mb: 3,
+            mt: i == 0 ? 0 : 3
+          )
+        ) { I18n.t("label_meeting_index_#{key}") } %>
     <%= render Meetings::TableComponent.new(
           rows: group,
           current_project: @project,

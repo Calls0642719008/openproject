@@ -44,12 +44,14 @@ module Users
 
     def call!
       autologin_requested = session.delete(:autologin_requested)
+      autologin_token_id = session.delete(:autologin_token_id)
       retain_session_values do
         reset_session!
 
         User.current = user
 
         set_autologin_cookie if autologin_requested
+        assign_autologin_session(autologin_token_id) if autologin_token_id.present?
       end
 
       successful_login
@@ -61,18 +63,25 @@ module Users
       return unless Setting::Autologin.enabled?
 
       # generate a key and set cookie if autologin
-      expires_on =  Setting.autologin.days.from_now.beginning_of_day
-      token = Token::AutoLogin.create(user:, data: session_identification, expires_on:)
+      token = Token::AutoLogin.create!(user:, data: token_session_information)
       cookie_options = {
         value: token.plain_value,
-        # The autologin expiry is checked on validating the token
+        # The autologin expiration is checked on validating the token
         # but still expire the cookie to avoid unnecessary retries
-        expires: expires_on,
+        expires: token.expires_on,
         path: OpenProject::Configuration["autologin_cookie_path"],
         secure: OpenProject::Configuration.https?,
         httponly: true
       }
       cookies[OpenProject::Configuration["autologin_cookie_name"]] = cookie_options
+
+      # Tie the current session to this autologin token already
+      assign_autologin_session(token.id)
+    end
+
+    def assign_autologin_session(token_id)
+      session_id = ::Sessions::UserSession.where(session_id: session.id.private_id).pick(:id)
+      ::Sessions::AutologinSessionLink.create!(token_id:, session_id:)
     end
 
     def successful_login
@@ -122,8 +131,16 @@ module Users
       }
     end
 
+    def token_session_information
+      session_identification.merge(session_id: session.id)
+    end
+
     def retained_session_values
-      controller.session.to_h.slice *(default_retained_keys + omniauth_provider_keys)
+      controller
+        .session
+        .to_h
+        .with_indifferent_access
+        .slice *(default_retained_keys + omniauth_provider_keys)
     end
 
     def omniauth_provider_keys
@@ -137,7 +154,7 @@ module Users
     end
 
     def default_retained_keys
-      %w[omniauth_provider user_from_auth_header]
+      %w[omniauth_provider user_from_auth_header autologin_token_id]
     end
 
     ##

@@ -108,7 +108,7 @@ uk:
   button_log_costs: "Витрати лог-одиниць"
   button_log_time: "Записати"
   button_add_activity: "Дія"
-  button_add_time_entry: "Записування часу"
+  button_add_time_entry: "Записати час"
   button_stop_timer: "Зупинити таймер"
   caption_booked_on_project: "Записаний на проект"
   caption_default: "За замовчуванням"

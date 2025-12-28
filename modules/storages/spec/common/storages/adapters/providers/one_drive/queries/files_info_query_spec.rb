@@ -42,7 +42,7 @@ module Storages
             let(:auth_strategy) { Registry["one_drive.authentication.user_bound"].call(user, storage) }
             let(:input_data) { Input::FilesInfo.build(file_ids:).value! }
 
-            it_behaves_like "adapter files_info_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "files_info"
 
             context "with an empty array of file ids" do
               let(:file_ids) { [] }

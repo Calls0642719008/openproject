@@ -38,6 +38,13 @@ module Storages
     }
     discard_on HTTPX::HTTPError
 
+    # Performs project folder copying.
+    #
+    # @param source [Storages::ProjectStorage]
+    # @param target [Storages::ProjectStorage]
+    # @param work_packages_map [Hash]
+    #
+    # @return [nil]
     def perform(source:, target:, work_packages_map:)
       @source = source
       user = batch.properties[:user]
@@ -50,7 +57,9 @@ module Storages
                                           project_folder_mode: source.project_folder_mode)
                                     .on_failure { |failed| log_failure(failed) and return failed }
 
-      FileLinks::CopyFileLinksService.call(source: @source, target: target.reload, user:, work_packages_map:)
+      # TODO why do we have to reload target here?
+      FileLinks::CopyFileLinksService.call(source:, target: target.reload, user:, work_packages_map:)
+      nil
     end
 
     private

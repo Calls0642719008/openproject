@@ -40,48 +40,53 @@ See COPYRIGHT and LICENSE files for more details.
       <div class="generic-table--container">
         <div class="generic-table--results-container">
           <table class="generic-table" data-controller="table-highlighting">
-            <%= render  partial: "token_table_header",
-                        locals: {
-                          column_headers: [
-                            t("attributes.name"),
-                            User.human_attribute_name(:created_at),
-                            t("my_account.access_tokens.headers.expiration")
-                          ]
-                        } %>
+            <%= render partial: "token_table_header",
+                       locals: {
+                         column_headers: [
+                           t("attributes.name"),
+                           User.human_attribute_name(:created_at),
+                           t("my_account.access_tokens.headers.expiration")
+                         ]
+                       } %>
             <tbody>
-              <% granted_applications.each do |application, tokens| %>
-                <% latest = tokens.max_by(&:created_at) %>
-                <tr id="oauth-application-grant-<%= application.id %>">
-                  <td class="-w-rel-60" data-test-selector="oauth-token-row-<%= application.id %>-name">
-                    <%= t("oauth.application.named", name: application.name) %>
-                    &nbsp;
-                    (<%= t("oauth.x_active_tokens", count: tokens.count) %>)
-                  </td>
-                  <td>
-                    <span><%= format_time(latest.created_at) %></span>
-                  </td>
-                  <td>
-                    <span><%= format_time(latest.created_at + latest.expires_in.seconds) %></span>
-                  </td>
-                  <td class="buttons">
-                   <%= link_to "",
-                               revoke_my_oauth_application_path(application_id: application.id),
-                               data: { confirm: t(
-                                 "oauth.revoke_my_application_confirmation",
-                                 token_count: t("oauth.x_active_tokens", count: tokens.count)
-                               ),
-                                       test_selector: "oauth-token-row-#{application.id}-revoke" },
-                               method: :post,
-                               class: "icon icon-delete" %>
-                  </td>
-                </tr>
-              <% end %>
+            <% granted_applications.each do |application, tokens| %>
+              <% latest = tokens.max_by(&:created_at) %>
+              <tr id="oauth-application-grant-<%= application.id %>">
+                <td class="-w-rel-60" data-test-selector="oauth-token-row-<%= application.id %>-name">
+                  <%= t("oauth.application.named", name: application.name) %>
+                  &nbsp;
+                  (<%= t("oauth.x_active_tokens", count: tokens.count) %>)
+                </td>
+                <td>
+                  <span><%= format_time(latest.created_at) %></span>
+                </td>
+                <td>
+                  <span><%= format_time(latest.created_at + latest.expires_in.seconds) %></span>
+                </td>
+                <td class="buttons">
+                  <%= link_to "",
+                              revoke_my_oauth_application_path(application_id: application.id),
+                              data: {
+                                turbo_method: :post,
+                                turbo_confirm: t(
+                                  "oauth.revoke_my_application_confirmation",
+                                  token_count: t(
+                                    "oauth.x_active_tokens",
+                                    count: tokens.count
+                                  )
+                                ),
+                                test_selector: "oauth-token-row-#{application.id}-revoke"
+                              },
+                              class: "icon icon-delete" %>
+                </td>
+              </tr>
+            <% end %>
             </tbody>
           </table>
         </div>
       </div>
     <% else %>
-      <span class="spot-icon spot-icon_inline spot-icon_info1"></span>
+      <%= render Primer::Beta::Octicon.new(icon: :info, mr: 1) %>
       <i><%= t("my_account.access_tokens.oauth.empty_text_hint") %></i>
     <% end %>
   </div>

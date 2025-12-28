@@ -57,17 +57,17 @@ export default class BudgetSubformController extends Controller {
 
   connect():void {
     useMeta(this, { suffix: false });
-    this.form = this.element.closest('form') as HTMLFormElement;
+    this.form = this.element.closest('form')!;
     this.submitButtons = this.form.querySelectorAll("button[type='submit']");
   }
 
-  private debounceTimers:{ [id:string]:ReturnType<typeof setTimeout> } = {};
+  private debounceTimers:Record<string, ReturnType<typeof setTimeout>> = {};
 
   valueChanged(evt:Event) {
     const row = this.eventRow(evt.target);
 
     if (row) {
-      const id:string = row.getAttribute('id') as string;
+      const id:string = row.getAttribute('id')!;
 
       clearTimeout(this.debounceTimers[id]);
 
@@ -126,13 +126,13 @@ export default class BudgetSubformController extends Controller {
    * Returns the params for the update request
    */
   private buildRefreshRequest(row_identifier:string) {
-    const row = this.element.querySelector(`#${row_identifier}`) as HTMLElement;
+    const row = this.element.querySelector(`#${row_identifier}`)!;
     const body = new FormData();
     body.append('element_id', row_identifier);
     body.append('fixed_date', (document.querySelector('#budget_fixed_date') as HTMLInputElement).value);
 
     row.querySelectorAll('.budget-item-value').forEach((itemValue:HTMLInputElement|HTMLSelectElement) => {
-      body.append(itemValue.dataset.requestKey as string, (itemValue.value || '0'));
+      body.append(itemValue.dataset.requestKey!, (itemValue.value || '0'));
     });
 
     if (this.csrfToken !== null) {

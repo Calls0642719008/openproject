@@ -96,8 +96,8 @@ module PaginationHelper
   ##
   # For "Show more" paginated links, we want to load an initial number of items (defaulting to 5)
   # unless a higher number is provided. These values do not correspond to the per_page_options
-  def show_more_limit_param(options = params, initial_limit: SHOW_MORE_DEFAULT_LIMIT)
-    limit = options[:limit].to_i
+  def show_more_limit_param(limit: nil, initial_limit: SHOW_MORE_DEFAULT_LIMIT)
+    limit = limit.to_i
     if limit.zero?
       initial_limit
     else
@@ -107,8 +107,8 @@ module PaginationHelper
 
   ##
   # Paginate an AR relation for the "show more" pagination functionality
-  def show_more_pagination(paginator, options = params)
-    paginator.paginate(page: 1, per_page: show_more_limit_param(options))
+  def show_more_pagination(paginator, limit: nil)
+    paginator.paginate(page: 1, per_page: show_more_limit_param(limit:))
   end
 
   private

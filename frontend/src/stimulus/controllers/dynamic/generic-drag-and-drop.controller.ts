@@ -78,10 +78,9 @@ export default class GenericDragAndDropController extends Controller {
 
     // Setup autoscroll
     void window.OpenProject.getPluginContext().then((pluginContext) => {
-      // eslint-disable-next-line no-new
       new pluginContext.classes.DomAutoscrollService(
         [
-          document.getElementById('content-body') as HTMLElement,
+          document.getElementById('content-body')!,
         ],
         {
           margin: 25,
@@ -119,7 +118,7 @@ export default class GenericDragAndDropController extends Controller {
       const containerAccessor = target.getAttribute('data-target-container-accessor');
 
       if (containerAccessor) {
-        target = target.querySelector(containerAccessor) as Element;
+        target = target.querySelector(containerAccessor)!;
         targetConfig.container = target;
       }
 

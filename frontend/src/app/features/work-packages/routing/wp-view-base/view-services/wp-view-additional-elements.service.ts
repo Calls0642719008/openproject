@@ -119,7 +119,7 @@ export class WorkPackageViewAdditionalElementsService {
     }
 
     const ids = _.flatten(
-      rows.map((el) => el.children?.map((child) => child.id as string) || []),
+      rows.map((el) => el.children?.map((child) => child.id!) || []),
     );
 
     return Promise.resolve(ids);
@@ -186,7 +186,7 @@ export class WorkPackageViewAdditionalElementsService {
         map((elements) => {
           const shares = elements as ShareResource[];
 
-          const sharedWpIds = _.uniq(shares.map((share) => share.entity.id as string));
+          const sharedWpIds = _.uniq(shares.map((share) => share.entity.id!));
 
           sharedWpIds.forEach((wpId) => {
             this

@@ -18,10 +18,10 @@ Your projects can be available publicly or internally. OpenProject does not limi
 | [Select project lists](#select-project-lists)                | Get an overview of all your projects in the project lists.   |
 | [Filter project lists](#project-lists-filters)               | Adjust filters in the project lists.                         |
 | [Favorite project lists](#favorite-project-lists)            | Mark project lists as favorite.                              |
-| [Share project lists with individual users and groups (Enterprise add-on)](#share-project-lists-with-individual-users-and-groups-enterprise-add-on) | Share project lists with individual users and groups.                   |
+| [Share project lists with individual users and groups (Enterprise add-on)](#share-project-lists-with-individual-users-and-groups-enterprise-add-on) | Share project lists with individual users and groups.        |
 | [Share project lists with everyone](#share-with-everyone-at-openproject) | Share project lists with everyone within your OpenProject instance. |
-| [Export project list](#export-project-lists)                 | You can export the project list to XLS or CSV.               |
-| [Project overarching reports](#project-overarching-reports)  | How to create project overarching reports across multiple projects. |
+| [Export project list](#export-project-lists)                 | Export project lists as XLS, CSV or PDF.                     |
+| [Project overarching reports](#project-overarching-reports)  | Create project overarching reports across multiple projects. |
 
 ## Select project lists
 
@@ -210,7 +210,7 @@ You can mark project lists as favorites, both shared and private, but not the st
 
 ![Mark project list as favorite in OpenProject](star-project-list.png)
 
-The star will turn yellow and the favorite project list will move to the top of the list within the respective sidebar section. If multiple project lists are favored, they will be listed alphabetically.
+The star will turn yellow and the favorite project list will move to the top of the list within the respective sidebar section. If multiple project lists are favorited, they will be listed alphabetically.
 
 ![Favorite project list in OpenProject](star-yellow-project-list.png)
 
@@ -238,8 +238,7 @@ You can reverse the action by unselecting the *Share with everyone* toggle. The 
 
 ### Share project lists with individual users and groups (Enterprise add-on)
 
-> [!NOTE] 
-> Sharing project lists with users and groups is an Enterprise add-on and will only be displayed here for Enterprise on-premises and Enterprise cloud.
+[feature: project_list_sharing ]
 
 You can share non-static project lists with specific users or groups in OpenProject. To do that navigate to a project list and click the **Share** icon. Then specify a user or a group using the search field, define whether they can only view or edit a project list and finally click the **Share** button. That user or group will see that shared project list under **Shared project lists**.  
 
@@ -252,13 +251,13 @@ If a project list has already been shared, you will see the list of users that h
 
 ## Export project lists
 
-You can export a project list by clicking on the three dots in the upper right hand corner and selecting > **Export**.
+You can export a project list by clicking on the three dots in the upper right hand corner and selecting **Export**.
 
 ![Export projects in OpenProject](export-projects.png)
 
 Next, you can select the format in which you want to export the project list.
 
-It can be exported as .xls or .csv.
+It can be exported as XLS, CSV or PDF file.
 
 ![Export project list formats](export-project-list-formats.png)
 

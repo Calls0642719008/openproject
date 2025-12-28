@@ -45,8 +45,8 @@
         )
       end
 
-      if can_toggle_favor?
-        if currently_favored?
+      if can_toggle_favorite?
+        if currently_favorited?
           header.with_action_icon_button(
             icon: "star-fill",
             mobile_icon: "star-fill",
@@ -54,7 +54,7 @@
             classes: "op-primer--star-icon",
             tag: :a,
             href: helpers.build_favorite_path(query, format: :html),
-            data: { method: :delete, "test-selector": "project-query-unfavorite" }
+            data: { turbo_method: :delete, "test-selector": "project-query-unfavorite" }
           )
         else
           header.with_action_icon_button(
@@ -63,7 +63,7 @@
             label: t(:button_favorite),
             tag: :a,
             href: helpers.build_favorite_path(query, format: :html),
-            data: { method: :post, "test-selector": "project-query-favorite" }
+            data: { turbo_method: :post, "test-selector": "project-query-favorite" }
           )
         end
       end
@@ -125,13 +125,15 @@
           )
         end
 
-        menu.with_item(
-          tag: :a,
-          label: t("js.label_export"),
-          href: export_list_modal_projects_path(projects_query_params),
-          content_arguments: { data: { controller: "async-dialog" }, rel: "nofollow" }
-        ) do |item|
-          item.with_leading_visual_icon(icon: "sign-out")
+        if can_export?
+          menu.with_item(
+            tag: :a,
+            label: t("js.label_export"),
+            href: export_list_modal_projects_path(projects_query_params),
+            content_arguments: { data: { controller: "async-dialog" }, rel: "nofollow" }
+          ) do |item|
+            item.with_leading_visual_icon(icon: "sign-out")
+          end
         end
 
         menu.with_item(
@@ -157,7 +159,7 @@
         menu.with_item(
           tag: :button,
           label: t("label_zen_mode"),
-          content_arguments: { data: { controller: "projects-zen-mode", target: "projects-zen-mode.button", action: "click->projects-zen-mode#performAction" } }
+          content_arguments: { data: { controller: "zen-mode", action: "click->zen-mode#performAction" } }
         ) do |item|
           item.with_leading_visual_icon(icon: "screen-full")
         end

@@ -319,8 +319,13 @@ module Pages
       find(".inline-edit--container.subject input")
     end
 
-    def go_back
-      find(".work-packages-back-button").click
+    def go_back(wait: true)
+      page.go_back
+
+      if wait
+        wait_for_network_idle
+        ensure_page_loaded
+      end
     end
 
     def mark_notifications_as_read

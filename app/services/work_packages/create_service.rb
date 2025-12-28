@@ -32,12 +32,13 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
   include ::WorkPackages::Shared::UpdateAncestors
   include ::Shared::ServiceContext
 
-  attr_reader :user, :contract_class
+  attr_reader :user, :contract_class, :contract_options
 
-  def initialize(user:, contract_class: WorkPackages::CreateContract)
+  def initialize(user:, contract_class: WorkPackages::CreateContract, contract_options: {})
     super()
     @user = user
     @contract_class = contract_class
+    @contract_options = contract_options
   end
 
   def perform
@@ -64,7 +65,7 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
 
     if result.success?
       # update ancestors before rescheduling, as the parent might switch to automatic mode
-      update_ancestors_all_attributes(result.all_results).each do |ancestor_result|
+      multi_update_ancestors(result.all_results).each do |ancestor_result|
         result.merge!(ancestor_result)
       end
 
@@ -84,7 +85,7 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
   end
 
   def set_attributes(attributes, work_package)
-    attributes_service_class.new(user:, model: work_package, contract_class:).call(attributes)
+    attributes_service_class.new(user:, model: work_package, contract_class:, contract_options:).call(attributes)
   end
 
   def reschedule_related(work_package)

@@ -17,7 +17,7 @@ allOf:
               - $ref: "./link.yml"
               - description: |-
                   This file links collection
-                  
+
                   **Resource**: ProjectStorageCollectionModel
       _embedded:
         type: object
@@ -40,8 +40,8 @@ example:
     elements:
       - id: 1337
         _type: ProjectStorage
-        _hint: project storage resource shortened for brevity
+        _abbreviated: project storage resource shortened for brevity
       - id: 1338
         _type: ProjectStorage
-        _hint: File Link resource shortened for brevity
+        _abbreviated: File Link resource shortened for brevity
 

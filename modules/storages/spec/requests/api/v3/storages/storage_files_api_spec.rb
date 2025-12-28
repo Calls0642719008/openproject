@@ -206,7 +206,7 @@ RSpec.describe "API v3 storage files", :storage_server_helpers, :webmock, conten
           expect(last_response).to have_http_status(:internal_server_error)
 
           body = JSON.parse(last_response.body)
-          expect(body["message"]).to eq(I18n.t("api_v3.errors.code_500_outbound_request_failure", status_code: 403))
+          expect(body["message"]).to eq(I18n.t("services.errors.messages.forbidden"))
           expect(body["errorIdentifier"]).to eq("urn:openproject-org:api:v3:errors:OutboundRequest:Forbidden")
         end
       end

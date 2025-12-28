@@ -82,7 +82,28 @@ RSpec.describe Users::UpdateContract do
       end
     end
 
-    context "when global user" do
+    context "when user is an admin" do
+      let(:current_user) { create(:admin) }
+
+      describe "can update the email" do
+        before do
+          user.mail = "a.new@email.address"
+        end
+
+        it_behaves_like "contract is valid"
+      end
+
+      describe "can update the password" do
+        before do
+          user.password = "newpassword"
+          user.password_confirmation = "newpassword"
+        end
+
+        it_behaves_like "contract is valid"
+      end
+    end
+
+    context "when user with global manage_user permission" do
       let(:current_user) { create(:user, global_permissions: :manage_user) }
 
       describe "can lock the user" do
@@ -98,6 +119,14 @@ RSpec.describe Users::UpdateContract do
 
         it_behaves_like "contract is invalid"
       end
+
+      describe "cannot update the email" do
+        before do
+          user.mail = "a.new@email.address"
+        end
+
+        it_behaves_like "contract is invalid", mail: :error_readonly
+      end
     end
 
     context "when updated user is current user" do
@@ -112,6 +141,14 @@ RSpec.describe Users::UpdateContract do
         end
 
         it_behaves_like "contract is invalid", status: :error_readonly
+      end
+
+      describe "can update the email" do
+        before do
+          user.mail = "a.new@email.address"
+        end
+
+        it_behaves_like "contract is valid"
       end
     end
   end

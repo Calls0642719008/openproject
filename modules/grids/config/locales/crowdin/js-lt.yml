@@ -13,14 +13,8 @@ lt:
           no_results: 'Dar nėra dokumentų.'
         members:
           title: 'Nariai'
-          no_results: 'Nėra matomų narių.'
-          view_all_members: 'Rodyti visus narius'
-          add: 'Narys'
-          too_many: 'Rodomi %{count} iš %{total} narių.'
         news:
           title: 'Naujienos'
-          at: '>'
-          no_results: 'Nėra jokių ataskaitų.'
         project_description:
           title: 'Projekto aprašymas'
           no_results: "Dar neįrašytas aprašymas. Jį galima nurodyti „Projekto nustatymuose“."
@@ -33,9 +27,10 @@ lt:
           not_set: 'Nenustatyta'
           finished: 'Baigta'
           discontinued: 'Nutrauktas'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: 'Sub-projektai'
-          no_results: 'Nėra subprojektų.'
+          title: 'Subitems'
         project_favorites:
           title: 'Mėgstami projektai'
           no_results: 'Jūs šiuo metu neturite mėgiamų projektų. Spauskite žvaigždutės piktogramą projekto skydelyje, kad pridėtumėte prie jūsų mėgstamų.'
@@ -57,6 +52,7 @@ lt:
           title: 'Darbo paketų lentelė'
         work_packages_graph:
           title: 'Darbo paketų grafas'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Kalendorius'
         work_packages_overview:

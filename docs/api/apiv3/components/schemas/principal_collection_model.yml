@@ -28,12 +28,12 @@ example:
       href: '/api/v3/principals'
   _embedded:
     elements:
-      - _hint: User resource shortened for brevity
+      - _abbreviated: User resource shortened for brevity
         _type: User
         id: 1337
-      - _hint: Group resource shortened for brevity
+      - _abbreviated: Group resource shortened for brevity
         _type: Group
         id: 1338
-      - _hint: PlaceholderUser resource shortened for brevity
+      - _abbreviated: PlaceholderUser resource shortened for brevity
         _type: PlaceholderUser
         id: 1339

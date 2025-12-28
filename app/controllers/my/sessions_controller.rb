@@ -44,13 +44,14 @@ module My
     menu_item :sessions
 
     def index
-      @sessions = ::Sessions::UserSession
-        .for_user(current_user)
-        .order(updated_at: :desc)
-
       @autologin_tokens = ::Token::AutoLogin
         .for_user(current_user)
         .order(expires_on: :asc)
+
+      @unmapped_sessions = ::Sessions::UserSession
+        .for_user(current_user)
+        .not_autologged
+        .order(updated_at: :desc)
 
       token = cookies[OpenProject::Configuration["autologin_cookie_name"]]
       if token
@@ -64,7 +65,7 @@ module My
       @session.delete
 
       flash[:notice] = I18n.t(:notice_successful_delete)
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     private

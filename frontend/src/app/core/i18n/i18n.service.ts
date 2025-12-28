@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgSelectConfig } from '@ng-select/ng-select';
 import { I18n } from 'i18n-js';
 import { FormatNumberOptions, TranslateOptions } from 'i18n-js/src/typing';
+import { getMetaValue } from '../setup/globals/global-helpers';
 
 @Injectable({ providedIn: 'root' })
 export class I18nService {
@@ -11,8 +12,7 @@ export class I18nService {
   constructor(
     private config:NgSelectConfig,
   ) {
-    const meta = document.querySelector<HTMLMetaElement>('meta[name=openproject_initializer]');
-    this.instanceLocale = meta?.dataset.instancelocale || 'en';
+    this.instanceLocale = getMetaValue('openproject_initializer', 'instanceLocale', 'en');
 
     this.config.addTagText = this.t('js.autocomplete_ng_select.add_tag');
     this.config.clearAllText = this.t('js.autocomplete_ng_select.clear_all');

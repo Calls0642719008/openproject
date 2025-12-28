@@ -42,7 +42,7 @@ export default class SubformController extends Controller {
 
   connect() {
     // We can't use a target as we duplicate the "template" without  much cleaning up
-    const item = this.element.querySelector('[data-row-target]') as HTMLElement;
+    const item = this.element.querySelector('[data-row-target]')!;
     this.rowTemplate = item.outerHTML;
     item.remove();
   }

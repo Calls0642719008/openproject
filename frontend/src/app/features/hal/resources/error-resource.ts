@@ -41,7 +41,6 @@ export interface IHalErrorBase {
 }
 
 export function isHalError(err:unknown):err is IHalErrorBase {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const hasOwn = (key:string):boolean => Object.prototype.hasOwnProperty.call(err, key);
   return !!err && hasOwn('_type') && hasOwn('message') && hasOwn('errorIdentifier');
 }
@@ -111,7 +110,7 @@ export class ErrorResource extends HalResource {
     }));
   }
 
-  public getMessagesPerAttribute():{ [attribute:string]:string[] } {
+  public getMessagesPerAttribute():Record<string, string[]> {
     const perAttribute:any = {};
 
     if (this.details) {

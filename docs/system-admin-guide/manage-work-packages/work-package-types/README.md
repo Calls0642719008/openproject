@@ -40,12 +40,13 @@ Click the green **+ Type** button to add a new work package type in the system, 
 You can freely **configure the attributes shown** for each work package type to decide which attributes are shown in the form and how they are grouped.
 
 > [!NOTE]
-> Some parts of the Work package form configuration are an Enterprise add-on and only available for the [OpenProject Enterprise cloud](https://www.openproject.org/enterprise-edition/#hosting-options) and the [Enterprise On-premises edition](https://www.openproject.org/enterprise-edition/).
-> The Enterprise edition allows you to customize form configuration with these additional features:
->
-> - **Add new attribute groups**
+> Following parts of the Work package form configuration are an Enterprise add-on:
+> 
+>- **Add new attribute groups**
 > - **Rename attribute groups**
 > - **Add table of related work packages to a work package form**
+
+[feature: edit_attribute_groups ]
 
 To configure a type, first select the type from the list of types (see above) and select the tab **Form configuration**.
 
@@ -80,8 +81,7 @@ Watch the following video to see how you can customize your work packages with c
 
 Also, you can add a table of related work packages to your work package form. Click the green **+ Group** button and choose **Add table of related work package** from the drop-down list.
 
-> [!NOTE]
-> Adding a table of related work package in OpenProject is an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/) or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easily possible.
+[feature: work_package_query_relation_columns ]
 
 ![Sys-admin-table-of-related-work-packages](openproject_system_guide_table_of_related_wp.png)
 
@@ -97,8 +97,7 @@ The embedded related work package table in the work package form will look like 
 
 ## Work package automatic subject configuration (Enterprise add-on)
 
-> [!NOTE]
-> Configuring automatically generated work package subjects is an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/) or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easily possible.
+[feature: work_package_subject_generation ]
 
 Please refer to [this guide](automatic-subjects) for a detailed description of automatically generated work packages subjects in OpenProject. 
 

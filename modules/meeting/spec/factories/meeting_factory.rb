@@ -40,7 +40,7 @@ FactoryBot.define do
 
     trait :author_participates do
       after(:build) do |meeting|
-        meeting.participants.build(user: meeting.author, invited: true)
+        meeting.participants << build(:meeting_participant, meeting: meeting, user: meeting.author, invited: true)
       end
     end
 
@@ -48,7 +48,7 @@ FactoryBot.define do
       meeting.project = evaluator.project if evaluator.project
 
       # create backlog
-      create(:meeting_section, meeting:, backlog: true)
+      create(:meeting_section, meeting:, backlog: true, title: I18n.t(:label_agenda_backlog))
     end
 
     factory :meeting_template do |meeting|

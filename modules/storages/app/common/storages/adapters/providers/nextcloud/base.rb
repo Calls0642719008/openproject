@@ -78,6 +78,17 @@ module Storages
               Failure(error.with(payload: "No origin user ID or user token found. Cannot execute query without user context."))
             end
           end
+
+          # Validates the OCS Meta Statuscode for fatal errors (i.e. unexpected server-side errors). Client-side errors,
+          # such as a 404 File Not Found do not cause an error.
+          # @return [Dry::Result]
+          def fail_on_ocs_error(json, error)
+            if json.dig(:ocs, :meta, :statuscode) < 500
+              Success(json)
+            else
+              Failure(error.with(code: :error))
+            end
+          end
         end
       end
     end

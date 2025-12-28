@@ -35,7 +35,8 @@ class Tables::UserPreferences < Tables::Base
     create_table migration do |t|
       t.bigint :user_id, null: false
       t.jsonb :settings, default: {}
-      t.timestamps default: DateTime.now
+      t.timestamps
+      t.jsonb :dismissed_enterprise_banners, null: false, default: {}
 
       t.index :user_id,
               name: "index_user_preferences_on_user_id"

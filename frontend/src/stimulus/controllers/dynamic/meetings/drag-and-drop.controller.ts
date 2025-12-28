@@ -29,7 +29,8 @@
  */
 
 import GenericDragAndDropController from '../generic-drag-and-drop.controller';
-import { appendCollapsedState } from '../../../helpers/collapsible-helper';
+import { appendCollapsedState } from '../../../helpers/meetings-helpers';
+import { hasUnsavedChanges } from '../../../helpers/meetings-helpers';
 
 export default class extends GenericDragAndDropController {
   protected override buildData(el:Element, target:Element):FormData {
@@ -38,5 +39,18 @@ export default class extends GenericDragAndDropController {
     appendCollapsedState(data);
 
     return data;
+  }
+
+  override async drop(el:Element, target:Element, source:Element|null, sibling:Element|null) {
+    if (hasUnsavedChanges()) {
+      if (!window.confirm(I18n.t('js.text_are_you_sure_to_cancel'))) {
+        if (this.drake) {
+          this.drake.cancel(true);
+        }
+        return;
+      }
+    }
+
+    await super.drop(el, target, source, sibling);
   }
 }

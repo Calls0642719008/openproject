@@ -127,7 +127,7 @@ module Pages::RecurringMeeting
     end
 
     def expect_modal(...)
-      expect(page).to have_modal(...)
+      Components::Common::Modal.new.expect_modal(...)
     end
 
     def expect_no_meeting(date:)

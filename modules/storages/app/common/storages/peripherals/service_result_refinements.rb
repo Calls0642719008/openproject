@@ -91,6 +91,11 @@ module Storages
           self.success = false
           self
         end
+
+        def to_monad
+          match(on_success: ->(result) { Dry::Monads::Success(result) },
+                on_failure: ->(error) { Dry::Monads::Failure(error) })
+        end
       end
     end
   end

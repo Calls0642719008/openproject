@@ -9,7 +9,7 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild, OnDestroy,
 } from '@angular/core';
 import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
@@ -54,7 +54,7 @@ export type CardViewOrientation = 'horizontal'|'vertical';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class WorkPackageCardViewComponent extends UntilDestroyedMixin implements OnInit, AfterViewInit, WorkPackageViewOutputs {
+export class WorkPackageCardViewComponent extends UntilDestroyedMixin implements OnInit, AfterViewInit, WorkPackageViewOutputs, OnDestroy {
   @Input('dragOutOfHandler') public canDragOutOf:(wp:WorkPackageResource) => boolean;
 
   @Input() public dragInto:boolean;
@@ -150,7 +150,7 @@ export class WorkPackageCardViewComponent extends UntilDestroyedMixin implements
         map((events) => events.filter((event) => event.eventType === 'updated')),
         filter((events) => {
           const wpIds:string[] = this.workPackages.map((el) => el.id!.toString());
-          return !!events.find((event) => wpIds.indexOf(event.id) !== -1);
+          return !!events.find((event) => wpIds.includes(event.id));
         }),
       ).subscribe(() => {
         this.workPackages = this.workPackages.map((wp) => this.states.workPackages.get(wp.id!).getValueOr(wp));

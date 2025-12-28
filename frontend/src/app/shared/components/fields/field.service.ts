@@ -40,10 +40,10 @@ export abstract class AbstractFieldService<T extends Field, C extends IFieldType
   public defaultFieldType:string;
 
   /** Registered attribute types => field identifier */
-  protected fields:{ [attributeType:string]:string } = {};
+  protected fields:Record<string, string> = {};
 
   /** Registered field classes */
-  protected classes:{ [type:string]:C } = {};
+  protected classes:Record<string, C> = {};
 
   /**
    * Get the field type for the given attribute type.

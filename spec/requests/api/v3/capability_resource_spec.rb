@@ -189,7 +189,7 @@ RSpec.describe "API v3 capabilities resource", content_type: :json do
           .at_path("total")
 
         expect(subject.body)
-          .to be_json_eql("activities/read/p#{project.id}-#{other_user.id}".to_json)
+          .to be_json_eql("activities/read/w#{project.id}-#{other_user.id}".to_json)
           .at_path("_embedded/elements/0/id")
       end
     end
@@ -220,7 +220,7 @@ RSpec.describe "API v3 capabilities resource", content_type: :json do
           .at_path("total")
 
         expect(subject.body)
-          .to be_json_eql("activities/read/p#{project.id}-#{other_user.id}".to_json)
+          .to be_json_eql("activities/read/w#{project.id}-#{other_user.id}".to_json)
           .at_path("_embedded/elements/0/id")
       end
     end
@@ -284,7 +284,7 @@ RSpec.describe "API v3 capabilities resource", content_type: :json do
       let(:filters) do
         [{ "context" => {
           "operator" => "=",
-          "values" => ["p#{other_project.id}"]
+          "values" => ["w#{other_project.id}"]
         } }]
       end
 
@@ -339,16 +339,16 @@ RSpec.describe "API v3 capabilities resource", content_type: :json do
           _embedded: {
             elements: [
               {
-                id: "activities/read/p#{project.id}-#{current_user.id}"
+                id: "activities/read/w#{project.id}-#{current_user.id}"
               },
               {
-                id: "memberships/create/p#{project.id}-#{current_user.id}"
+                id: "memberships/create/w#{project.id}-#{current_user.id}"
               },
               {
-                id: "memberships/destroy/p#{project.id}-#{current_user.id}"
+                id: "memberships/destroy/w#{project.id}-#{current_user.id}"
               },
               {
-                id: "memberships/update/p#{project.id}-#{current_user.id}"
+                id: "memberships/update/w#{project.id}-#{current_user.id}"
               }
             ]
           }
@@ -404,14 +404,14 @@ RSpec.describe "API v3 capabilities resource", content_type: :json do
           .at_path("total")
 
         expect(subject.body)
-          .to be_json_eql("memberships/create/p#{project.id}-#{other_user.id}".to_json)
+          .to be_json_eql("memberships/create/w#{project.id}-#{other_user.id}".to_json)
           .at_path("_embedded/elements/0/id")
       end
     end
   end
 
   describe "GET /api/v3/capabilities/:id" do
-    let(:path) { api_v3_paths.capability("memberships/create/p#{project.id}-#{other_user.id}") }
+    let(:path) { api_v3_paths.capability("memberships/create/w#{project.id}-#{other_user.id}") }
 
     let(:setup) do
       other_user_member
@@ -434,12 +434,12 @@ RSpec.describe "API v3 capabilities resource", content_type: :json do
         .at_path("_type")
 
       expect(subject.body)
-        .to be_json_eql("memberships/create/p#{project.id}-#{other_user.id}".to_json)
+        .to be_json_eql("memberships/create/w#{project.id}-#{other_user.id}".to_json)
         .at_path("id")
     end
 
     context "if querying a non existing capability" do
-      let(:path) { api_v3_paths.capability("foo/bar/p#{project.id}-#{other_user.id}") }
+      let(:path) { api_v3_paths.capability("foo/bar/w#{project.id}-#{other_user.id}") }
 
       it "returns 404 NOT FOUND" do
         expect(subject.status)

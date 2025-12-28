@@ -4,6 +4,33 @@
       section.with_title { t(:label_meeting_state) }
 
       case @meeting.state
+      when "draft"
+        flex_layout(classes: "op-meeting-sidebar-state") do |draft_state|
+          draft_state.with_row do
+            status_button
+          end
+
+          draft_state.with_row(mt: 3, classes: "hidden-for-mobile") do
+            render(Primer::Beta::Text.new(color: :subtle)) { t("text_meeting_draft_description") }
+          end
+
+          if edit_enabled?
+            section.with_footer_button(
+              color: :accent,
+              tag: :button,
+              classes: "hide-when-print",
+              data: {
+                action: "click->meetings--submit#intercept",
+                href: exit_draft_mode_dialog_project_meeting_path(@project, @meeting),
+                method: "GET"
+              }
+            ) do |button|
+              button.with_leading_visual_icon(icon: :"issue-opened")
+              @meeting.recurring? ? t("recurring_meeting.template.button_finalize") : t("label_meeting_open_action")
+            end
+          end
+        end
+
       when "open"
         flex_layout(classes: "op-meeting-sidebar-state") do |open_state|
           open_state.with_row do

@@ -11,6 +11,7 @@ import { debugLog, whenDebugging } from 'core-app/shared/helpers/debug_output';
 import { TURBO_EVENTS } from './constants';
 import { StreamActions } from '@hotwired/turbo';
 import { addTurboAngularWrapper } from 'core-turbo/turbo-angular-wrapper';
+import { TurboStreamElement } from 'core-typings/turbo';
 
 Turbo.session.drive = true;
 Turbo.setProgressBarDelay(100);
@@ -20,10 +21,17 @@ Turbo.start();
 
 // Register logging of events
 whenDebugging(() => {
-  TURBO_EVENTS.forEach((name:string) => {
+  TURBO_EVENTS
+    .filter((name) => name !== 'turbo:before-stream-render')
+    .forEach((name:string) => {
     document.addEventListener(name, (event) => {
       debugLog(`[TURBO EVENT ${name}] %O`, event);
     });
+  });
+
+  document.addEventListener('turbo:before-stream-render', (event) => {
+    const stream:TurboStreamElement = (event.detail as { newStream:TurboStreamElement }).newStream;
+    debugLog(`[TURBO EVENT turbo-before-stream-render] ${stream.action.toUpperCase()} target=${stream.target} %O`, event);
   });
 });
 

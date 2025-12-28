@@ -40,7 +40,7 @@ module Meetings
 
     def call(cancelled: false)
       User.execute_as(user) do
-        calendar = Meetings::IcalendarBuilder.new(timezone: Time.zone || Time.zone_default)
+        calendar = Meetings::IcalendarBuilder.new(timezone: Time.zone || Time.zone_default, user: user)
         calendar.add_single_meeting_event(meeting:, cancelled:)
         calendar.update_calendar_status(cancelled:)
 

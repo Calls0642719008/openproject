@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,10 +25,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 
 <% html_title t(:label_log_costs) %>
-<h2><%= t(:label_log_costs) %></h2>
+
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { I18n.t(:label_log_costs) }
+    header.with_breadcrumbs(
+      [({ href: project_overview_path(@project.id), text: @project.name }),
+       ({ href: project_work_packages_path(@project), text: t(:label_work_package_plural) }),
+       I18n.t(:label_log_costs)]
+    )
+  end
+%>
 
 <% url = if @cost_entry.new_record?
            { action: "create", project_id: @project.id }
@@ -89,7 +99,7 @@ See COPYRIGHT and LICENSE files for more details.
                    required: true,
                    class: "remote-field--input",
                    data: { "remote-field-key": "cost_type_id" }
-                 } %></p>
+                 } %>
   </div>
   <div class="form--field -required">
     <% if @cost_entry.cost_type.nil? %>

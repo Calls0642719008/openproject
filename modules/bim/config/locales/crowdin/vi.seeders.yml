@@ -34,7 +34,7 @@ vi:
         item_0:
           name: Nhiệm vụ
         item_1:
-          name: Cột mốc
+          name: Milestone
         item_2:
           name: Giai đoạn
         item_3:
@@ -144,7 +144,7 @@ vi:
                   name: Thành viên
               item_5:
                 options:
-                  name: Gói công việc
+                  name: Work Packages
               item_6:
                 options:
                   name: Các mốc thời gian
@@ -199,7 +199,7 @@ vi:
                   name: Thành viên
               item_5:
                 options:
-                  name: Gói công việc
+                  name: Work Packages
               item_6:
                 options:
                   name: Các mốc thời gian
@@ -456,7 +456,7 @@ vi:
                   name: Thành viên
               item_5:
                 options:
-                  name: Gói công việc
+                  name: Work Packages
               item_6:
                 options:
                   name: Các mốc thời gian
@@ -731,4 +731,4 @@ vi:
                   name: Thành viên
               item_5:
                 options:
-                  name: Nhiệm vụ
+                  name: Work Packages

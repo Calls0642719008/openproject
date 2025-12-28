@@ -37,7 +37,8 @@ See COPYRIGHT and LICENSE files for more details.
         action: move_to_next_meeting_agenda_item_path(
           @agenda_item.meeting,
           @agenda_item,
-          datetime: @datetime
+          datetime: @datetime,
+          current_occurrence: @current_occurrence
         ),
         method: :post
       }

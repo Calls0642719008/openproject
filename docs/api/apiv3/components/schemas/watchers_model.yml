@@ -59,6 +59,7 @@ example:
       login: j.sheppard
       firstName: John
       lastName: Sheppard
+      name: John Sheppard
       mail: shep@mail.com
       avatar: https://example.org/users/1/avatar
       status: active
@@ -81,6 +82,7 @@ example:
       login: j.sheppard2
       firstName: Jim
       lastName: Sheppard
+      name: Jim Sheppard
       mail: shep@mail.net
       avatar: https://example.org/users/1/avatar
       status: active

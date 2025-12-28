@@ -45,6 +45,9 @@ module Projects::Copy
     protected
 
     def copy_dependency(*)
+      # Ensure we get the default role added for the copied project
+      target.members.reload
+
       # Copy users and placeholder users first,
       # then groups to handle members with inherited and given roles
       source_memberships.sort_by { |m| m.principal.is_a?(Group) ? 1 : 0 }.each do |member|
@@ -52,24 +55,35 @@ module Projects::Copy
       end
     end
 
-    def create_membership(member)
+    def create_membership(member) # rubocop:disable Metrics/AbcSize
       # only copy non inherited roles
       # inherited roles will be added when copying the group membership
-      role_ids = member.member_roles.reject(&:inherited?).map(&:role_id)
-
+      role_ids = member.member_roles
+                       .reject(&:inherited?)
+                       .reject { |mr| excluded_role_ids.include?(mr.role_id) }
+                       .map(&:role_id)
       return if role_ids.empty?
 
-      attributes = member
-                     .attributes.dup.except("id", "project_id", "created_at", "updated_at")
-                     .merge(role_ids:,
-                            project: target,
-                            # This is magic for now. The settings has been set before in the Projects::CopyService
-                            # It would be better if this was not sneaked in but rather passed in as a parameter.
-                            send_notifications: ActionMailer::Base.perform_deliveries)
+      # There should only be zero or one members in this new project
+      # which gets created from the default +ProjectRole.in_new_project+ if enabled.
+      target_member = target.members.detect { |m| m.principal == member.user }
+      if target_member
+        Members::UpdateService
+          .new(model: target_member, user: User.current, contract_class: EmptyContract)
+          .call(role_ids: (target_member.role_ids + role_ids).uniq)
+      else
+        attributes = member
+          .attributes.dup.except("id", "project_id", "created_at", "updated_at")
+          .merge(role_ids:, project: target)
 
-      Members::CreateService
-        .new(user: User.current, contract_class: EmptyContract)
-        .call(attributes)
+        Members::CreateService
+          .new(user: User.current, contract_class: EmptyContract)
+          .call(attributes)
+      end
+    end
+
+    def excluded_role_ids
+      @excluded_role_ids ||= Array(source.excluded_role_ids_on_copy).map(&:to_i)
     end
   end
 end

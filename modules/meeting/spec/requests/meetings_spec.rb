@@ -52,6 +52,19 @@ RSpec.describe "Meeting requests",
     end
   end
 
+  describe "show" do
+    context "when meeting belongs to another project the user has no access to" do
+      let(:other_project) { create(:project, enabled_module_names: %i[meetings]) }
+      let(:other_meeting) { create(:meeting, project: other_project) }
+
+      it "returns 404" do
+        get meeting_path(other_meeting)
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "copy" do
     let(:base_params) do
       {
@@ -83,31 +96,17 @@ RSpec.describe "Meeting requests",
       end
     end
 
-    describe "send_notifications" do
-      let(:params) { { notify: } }
+    describe "does not send notifications" do
+      before do
+        post meetings_path(project),
+             params: base_params
 
-      context "when enabled" do
-        let(:notify) { "1" }
-
-        before do
-          post meetings_path(project),
-               params: base_params.deep_merge(meeting: params)
-
-          Meeting.find_by(title: "Copied meeting")
-          perform_enqueued_jobs
-        end
-
-        it "sends out emails" do
-          expect(ActionMailer::Base.deliveries.size).to eq 1
-        end
+        Meeting.find_by(title: "Copied meeting")
+        perform_enqueued_jobs
       end
 
-      context "when disabled" do
-        let(:notify) { "0" }
-
-        it "sends out no emails" do
-          expect(ActionMailer::Base.deliveries).to be_empty
-        end
+      it do
+        expect(ActionMailer::Base.deliveries.size).to eq 0
       end
     end
 

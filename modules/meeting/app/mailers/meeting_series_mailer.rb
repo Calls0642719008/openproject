@@ -28,7 +28,7 @@
 #++
 
 class MeetingSeriesMailer < UserMailer
-  def template_completed(series, user, actor)
+  def invited(series, user, actor)
     @actor = actor
     @series = series
     @template = series.template

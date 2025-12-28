@@ -24,7 +24,7 @@ If you want to add a common pattern, manually register the controller under `fro
 If you want to add a stimulus controller from plugin code, you can do so by manually adding it to the preregister:
 
 ```typescript
-import { OpenProjectStimulusApplication } from 'core-app/stimulus/app';
+import { OpenProjectStimulusApplication } from 'core-stimulus/openproject-stimulus-application';
 import { MyTestControllerClass } from './test/foo/my-test.controller';
   
 

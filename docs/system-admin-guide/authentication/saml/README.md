@@ -8,7 +8,8 @@ keywords: SAML, SSO, single sign-on, authentication
 # SAML (Enterprise add-on)
 
 > [!NOTE]
-> Single sign-on with SAML is an Enterprise add-on. [Click here for more information](https://www.openproject.org/enterprise-edition/) on the OpenProject Enterprise edition.
+>
+> Single sign-on with SAML is an Enterprise add-on.
 
 You can integrate your active directory or other SAML compliant identity provider in your OpenProject Enterprise edition. To activate and configure SAML providers in OpenProject, navigate to *Administration* -> *Authentication* and choose -> *SAML providers*.
 

@@ -6,7 +6,9 @@ required:
   - id
   - name
   - startGate
+  - startGateName
   - finishGate
+  - finishGateName
   - createdAt
   - updatedAt
 properties:
@@ -23,11 +25,15 @@ properties:
   startGate:
     type: boolean
   startGateName:
-    type: string
+    type:
+      - "string"
+      - "null"
   finishGate:
     type: boolean
   finishGateName:
-    type: string
+    type:
+      - "string"
+      - "null"
   createdAt:
     type: string
     format: date-time
@@ -51,7 +57,7 @@ properties:
 example:
   _type: 'ProjectPhaseDefinition'
   id: 1337
-  title: 'Initiating'
+  name: 'Initiating'
   startGate: true
   startGateName: "Before Initiating"
   finishGate: true

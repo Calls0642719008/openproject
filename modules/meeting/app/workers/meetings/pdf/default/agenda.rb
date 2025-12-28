@@ -100,7 +100,7 @@ module Meetings::PDF::Default::Agenda
       write_agenda_title_item_wp(agenda_item)
     end
     write_notes(agenda_item)
-    write_outcome(agenda_item) if with_outcomes?
+    write_outcomes(agenda_item) if with_outcomes?
   end
 
   def write_agenda_item_title(title, duration, user)

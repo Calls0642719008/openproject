@@ -168,7 +168,7 @@ module Authorization
     end
 
     def authorizable_user?
-      !user.locked? || user.is_a?(SystemUser)
+      !(user.locked? || user.deleted?) || user.is_a?(SystemUser)
     end
 
     def permissions_by_enabled_project_modules(project, permissions)

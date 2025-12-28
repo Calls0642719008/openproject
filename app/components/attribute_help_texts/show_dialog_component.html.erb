@@ -1,21 +1,9 @@
 <%=
-  render(Primer::Alpha::Dialog.new(id: dialog_id, title:, size: :large)) do |dialog|
+  render(Primer::Alpha::Dialog.new(**@system_arguments)) do |dialog|
     dialog.with_header(variant: :large)
 
     dialog.with_body do
-      concat(
-        render(Primer::Box.new(mt: 1, classes: "op-uc-container op-uc-container__no-permalinks")) do
-          helpers.format_text(@attribute_help_text, :help_text)
-        end
-      )
-
-      if has_attachments?
-        concat render(Primer::Beta::Heading.new(tag: :h4)) { I18n.t(:label_attachment_plural) }
-        concat helpers.list_attachments(
-          resource_representer,
-          inputs: { allowUploading: false, allowRemoval: false }
-        )
-      end
+      render(AttributeHelpTexts::ShowComponent.new(attribute_help_text:, current_user:))
     end
 
     dialog.with_footer(show_divider: true) do

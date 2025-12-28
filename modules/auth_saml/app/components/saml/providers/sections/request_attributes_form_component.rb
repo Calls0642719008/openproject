@@ -30,16 +30,16 @@
 #
 module Saml::Providers::Sections
   class RequestAttributesFormComponent < FormComponent
-    def initialize(provider, edit_mode: nil)
+    def initialize(provider, new_mode: nil)
       super(provider,
             edit_state: :requested_attributes,
-            edit_mode:,
+            new_mode:,
             form_class: Saml::Providers::RequestAttributesForm,
             heading: I18n.t("saml.instructions.requested_attributes"))
     end
 
     def button_label
-      if edit_mode
+      if new_mode
         I18n.t(:button_finish_setup)
       else
         I18n.t(:button_save)

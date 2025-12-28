@@ -99,6 +99,7 @@ RSpec.shared_examples_for "relation contract" do
   before do
     mock_permissions_for(current_user) do |mock|
       mock.allow_in_project *permissions, project: canonical_relation_from.project
+      mock.allow_in_project *permissions, project: canonical_relation_to.project
     end
   end
 
@@ -108,7 +109,17 @@ RSpec.shared_examples_for "relation contract" do
     context "when lacking the necessary permission" do
       let(:permissions) { [] }
 
-      it_behaves_like "contract is invalid", base: :error_unauthorized
+      it_behaves_like "contract is invalid", from_id: :error_not_manageable
+    end
+
+    context "when lacking the necessary permission for the to work package" do
+      before do
+        mock_permissions_for(current_user) do |mock|
+          mock.allow_in_project *permissions, project: canonical_relation_from.project
+        end
+      end
+
+      it_behaves_like "contract is invalid", to_id: :error_not_manageable
     end
 
     context "when the work package for from is not visible" do

@@ -44,7 +44,7 @@ export class CellBuilder {
 
     const schema = this.schemaCache.of(workPackage);
     const fieldSchema = schema.ofProperty(attribute);
-    if (fieldSchema && fieldSchema.type === 'User') {
+    if (fieldSchema?.type === 'User') {
       td.classList.add('-contains-avatar');
     }
 
@@ -81,7 +81,7 @@ export class CellBuilder {
     workPackage:WorkPackageResource,
     attribute:string,
   ):void {
-    const base = (workPackage.attributesByTimestamp as IWorkPackageTimestamp[])[0];
+    const base = (workPackage.attributesByTimestamp!)[0];
     base.$links.schema = base.$links.schema || workPackage.$links.schema;
     const span = this.fieldRenderer.render(base, attribute, null);
     span.classList.add('op-table-baseline--field', 'op-table-baseline--old-field');

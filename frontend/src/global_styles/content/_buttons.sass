@@ -144,6 +144,15 @@ a.button
     display: inline-flex
     align-items: center
 
+  // This is very bad :(
+  // but as long as we have that mixture of old buttons with octicons inside we have to enforce the alignment
+  // Unfortunately, each browser/OS combination behaves differently
+  // This fix works for all browsers, except for Firefox on Windows (:cry:)
+  &:has(> .octicon)
+    body:not(.-browser-windows):not(.-browser-firefox) &
+      display: inline-flex
+      align-items: center
+
 .button--icon
   @include icon-common
 

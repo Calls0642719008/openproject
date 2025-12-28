@@ -44,30 +44,26 @@ Depending on the module for which the new custom field is being created, slightl
 
 There are multiple format options for custom fields in OpenProject. You can select one of the following formats:
 
-- **Text custom field** - creates a custom field in text format with the specified length restrictions.
-- **Long text custom field** - creates a custom field for cases where longer text needs to entered.
-- **Link (URL) custom field** - creates a custom field for URLs.
-- **Integer custom field** - creates a custom field for integers.
-- **Float custom field** - creates a custom field for rational numbers.
-- **List custom field** - creates a custom field with flat list options. 
-- **Date custom field** - creates a custom field, which allows selecting dates from a date picker.
-- **Boolean custom field** - creates a custom field for an attribute, that is either true or false. It is represented by a checkbox that can be checked or unchecked.
-- **User custom field** - creates a custom field, which allows selecting users that are allowed to access the entity containing the custom field.
-- **Version custom field** - creates a custom field, which allows selecting one or multiple versions. Versions are created on the project level in *Backlogs* module.
-- **Hierarchy custom field (Enterprise add-on)** - see more in the section below.
+- **Boolean** - creates a custom field for an attribute, that is either true or false. It is represented by a checkbox that can be checked or unchecked.
+- **Date** - creates a custom field, which allows selecting dates from a date picker.
+- **Float** - creates a custom field for rational numbers.
+- **Hierarchy (Enterprise add-on)** - creates a custom field, which allows selecting one or multiple items from a hierarchical list structure. The structure can be created in the *Items* tab of the custom field. See more in the section below.
+- **Integer** - creates a custom field for integers.
+- **Link (URL)** - creates a custom field for URLs.
+- **List** - creates a custom field with flat list options. 
+- **Text** - creates a custom field in text format with the specified length restrictions.
+- **Long text** - creates a custom field for cases where longer text needs to entered.
+- **User** - creates a custom field, which allows selecting users that are allowed to access the entity containing the custom field.
+- **Version** - creates a custom field, which allows selecting one or multiple versions. Versions are created on the project level in *Backlogs* module.
+- **Weighted item list (Enterprise add-on)** - creates a custom field similar to the *Hierarchy* type, but with underlying numerical values used for project evaluation (e.g., [calculated values project attributes](../projects/project-attributes/)). Please keep in mind that **weighted item lists** custom fields can't be used as multi-select.  
 
 ### Hierarchy custom field (Enterprise add-on)
 
-> [!NOTE]
-> Custom fields with type Hierarchy are an Enterprise add-on. Click here for more information on the [OpenProject Enterprise edition](https://www.openproject.org/enterprise-edition/).
+[feature: custom_field_hierarchies ]
 
-Hierarchy custom fields allow organizing hierarchical structures in work packages by making use of multi-level select lists. To create a custom field of type Hierarchy follow the same steps as you would when [creating a standard custom field](#add-a-new-custom-field) and select **Hierarchy** format. You can then name the custom field, allow multi-select, specify if it should be a required field or used as a filter, and activate it for all projects. Click the **Save** button to proceed.
+Hierarchy custom fields allow organizing hierarchical structures in work packages by making use of multi-level select lists. To create a custom field of type **Hierarchy** follow the same steps as you would when [creating a standard custom field](#add-a-new-custom-field) and select **Hierarchy** format. You can then name the custom field, allow multi-select, specify if it should be a required field or used as a filter, and activate it for all projects. Click the **Save** button to proceed.
 
 ![Create a new custom field of type hierarchy](openproject_system_guide_new_custom_field_new_hierarchy.png)
-
-You will then see the list of all existing custom fields. Click on the name of the custom field you created to edit it, specify selectable items and assign it to projects.
-
-![List of custom fields in OpenProject administration](openproject_system_guide_custom_fields_list.png)
 
 You can edit the name and initial settings under the *Details* tab. 
 
@@ -77,7 +73,7 @@ Under the *Items* tab you can specify which hierarchy items should be selectable
 
 ![Items tab for a hierarchy custom field in OpenProject administration](openproject_system_guide_hierarchy_field_add_item_button.png)
 
-You can then specify labels and short names for each of the items you want to add. The short name can be used e.g. for an abbreviation of a name or another associated short description. The short name will be displayed next to the item label in brackets. 
+You can then specify labels and short names for each of the items you want to add. The short name can be used e.g. for an abbreviation of a name or another associated short description. The short name is optional and will be displayed next to the item label in brackets. 
 
 ![Add an item to the hierarchy custom field in OpenProject administration](openproject_system_guide_hierarchy_field_add_item_form.png)
 
@@ -104,6 +100,30 @@ Once you have specified all items for the hierarchy custom field, you need to:
 1. [Activate this custom field for projects under the *Projects* tab](#add-a-custom-field-to-one-or-multiple-projects)
 2. [Assign a custom field to a work package type](../manage-work-packages/work-package-types/#work-package-form-configuration-enterprise-add-on) 
 
+### Weighted item list custom field (Enterprise add-on)
+
+[feature: weighted_item_lists ]
+
+Weighted item list custom fields work much like the **Hierarchy** type. They also allow you to create a hierarchical structure of items for selection. To create a custom field of type **Weighted item list**, follow the same steps as when [creating a standard custom field](#add-a-new-custom-field) and select **Weighted item list** format.
+
+Creating and editing items in a weighted item list work exactly like with a hierarchy custom field. Unlike **Hierarchy**, the items of a weighted item list do not have a **Short**, but instead have a **Weight**. 
+
+![Specify weight for an item in a custom field of type "weighted item list" in OpenProject administration](openproject_system_guide_new_custom_field_weighted_item_list.png)
+
+This underlying numerical value is mandatory, and can be used for calculation - for example for the project attribute of type [**Calculated value**](../projects/project-attributes/). Due to this constraint, weighted item lists cannot be configured to be multi-select.
+
+## Required custom fields
+
+Custom fields can be configured as **required**. As the name suggests, **required** custom fields need to be filled out when a resource like a work package or a project is created. Without filling in a field, the user will be prevented from creating the resource.
+
+The *required* flag can also be set on existing custom fields. This might lead to a problem for resources that existed before the flag was later set to required. For example, a work package might have already been created and worked with for some time. But because the field was not required before, it might not have been filled in. Once the custom field becomes 'required', the next user wanting to modify the work package *needs* to fill in the field. There are other scenarios where this might occur, for example, when the activation of a required custom field for a project or a work package type. 
+
+In the above scenario of a required custom field being absent on existing resources, OpenProject will try to minimize the times in which users are blocked from performing their intended action. A user might want to change the name of the project with no value filled in for a required custom field. Since the interface for changing the name does not display the custom fields, the user cannot provide a value at this point and OpenProject will not enforce the *required* setting then.
+
+Generally speaking, OpenProject will enforce the *required* characteristic whenever the UI displays the field but allows modifications when it does not. When creating a new resource, it will be enforced.
+
+> [!NOTE]
+> Prior to version 16.6, required custom fields were always enforced, even on existing resources. This led to some actions becoming impossible or unnecessarily hard to perform, which is why the behavior was adjusted.
 
 ## Create a multi-select custom field
 

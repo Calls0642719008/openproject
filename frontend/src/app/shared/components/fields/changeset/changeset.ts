@@ -1,8 +1,8 @@
-export type ChangeItem = {
+export interface ChangeItem {
   from:unknown;
   to:unknown;
-};
-export type ChangeMap = { [attribute:string]:ChangeItem };
+}
+export type ChangeMap = Record<string, ChangeItem>;
 
 export class Changeset {
   private changes:ChangeMap = {};

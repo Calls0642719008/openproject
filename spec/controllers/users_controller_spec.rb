@@ -117,7 +117,7 @@ RSpec.describe UsersController do
       context "when the setting users_deletable_by_self is set to true",
               with_settings: { users_deletable_by_self: true } do
         before do
-          get :deletion_info, params:
+          get :deletion_info, params:, format: :turbo_stream
         end
 
         it { expect(response).to have_http_status(:success) }
@@ -126,13 +126,16 @@ RSpec.describe UsersController do
           expect(assigns(:user)).to eq(user)
         end
 
-        it { expect(response).to render_template("deletion_info") }
+        it "renders a dialog" do
+          expect(response).to be_successful
+          expect(response).to have_turbo_stream action: "dialog", target: "users-delete-dialog-component"
+        end
       end
 
       context "when the setting users_deletable_by_self is set to false",
               with_settings: { users_deletable_by_self: false } do
         before do
-          get :deletion_info, params:
+          get :deletion_info, params:, format: :turbo_stream
         end
 
         it { expect(response).to have_http_status(:not_found) }
@@ -143,15 +146,10 @@ RSpec.describe UsersController do
       current_user { anonymous }
 
       before do
-        get :deletion_info, params:
+        get :deletion_info, params:, format: :turbo_stream
       end
 
-      it {
-        expect(response).to redirect_to(controller: "account",
-                                        action: "login",
-                                        back_url: controller.url_for(controller: "users",
-                                                                     action: "deletion_info"))
-      }
+      it { expect(response).to have_http_status(:unauthorized) }
     end
 
     context "when the current user is admin" do
@@ -160,7 +158,7 @@ RSpec.describe UsersController do
       context "when the setting users_deletable_by_admins is set to true",
               with_settings: { users_deletable_by_admins: true } do
         before do
-          get :deletion_info, params:
+          get :deletion_info, params:, format: :turbo_stream
         end
 
         it { expect(response).to have_http_status(:success) }
@@ -169,13 +167,16 @@ RSpec.describe UsersController do
           expect(assigns(:user)).to eq(user)
         end
 
-        it { expect(response).to render_template("deletion_info") }
+        it "renders a dialog" do
+          expect(response).to be_successful
+          expect(response).to have_turbo_stream action: "dialog", target: "users-delete-dialog-component"
+        end
       end
 
       context "when the setting users_deletable_by_admins is set to false",
               with_settings: { users_deletable_by_admins: false } do
         before do
-          get :deletion_info, params:
+          get :deletion_info, params:, format: :turbo_stream
         end
 
         it { expect(response).to have_http_status(:not_found) }
@@ -473,26 +474,22 @@ RSpec.describe UsersController do
     end
 
     it "to be success" do
-      expect(response)
-        .to have_http_status(:ok)
+      expect(response).to have_http_status(:ok)
     end
 
     it "renders the index" do
-      expect(response)
-        .to have_rendered("index")
+      expect(response).to have_rendered("index")
     end
 
     it "assigns users" do
-      expect(assigns(:users))
-        .to contain_exactly(user, admin)
+      expect(assigns(:users)).to contain_exactly(user, admin)
     end
 
     context "with a name filter" do
       let(:params) { { name: user.firstname } }
 
       it "assigns users" do
-        expect(assigns(:users))
-          .to contain_exactly(user)
+        expect(assigns(:users)).to contain_exactly(user)
       end
     end
 
@@ -504,8 +501,15 @@ RSpec.describe UsersController do
       end
 
       it "assigns users" do
-        expect(assigns(:users))
-          .to contain_exactly(user)
+        expect(assigns(:users)).to contain_exactly(user)
+      end
+    end
+
+    context "with a user scheduled for deletion present" do
+      let!(:deleted_user) { create(:user_marked_for_deletion) }
+
+      it "does not include this user to the users list" do
+        expect(assigns(:users)).to contain_exactly(user, admin)
       end
     end
   end
@@ -614,7 +618,7 @@ RSpec.describe UsersController do
 
   describe "PATCH #update" do
     shared_let(:user_with_manage_user_global_permission) do
-      create(:user, login: "human-resources", global_permissions: [:manage_user])
+      create(:user, login: "human-resources", global_permissions: %i[view_all_principals manage_user])
     end
     shared_let(:some_user) { create(:user, firstname: "User being updated") }
     shared_let(:some_admin) { create(:admin, firstname: "Admin being updated") }
@@ -767,7 +771,7 @@ RSpec.describe UsersController do
                      value: "another_email@example.com",
                      edited_user: :some_admin,
                      current_user: :admin
-    include_examples "it can update field",
+    include_examples "it cannot update field",
                      field: :mail,
                      value: "another_email@example.com",
                      edited_user: :some_user,
@@ -784,7 +788,7 @@ RSpec.describe UsersController do
                      current_user: :user
 
     context "with external authentication" do
-      let(:some_user) { create(:user, identity_url: "some:identity") }
+      let(:some_user) { create(:user, :passwordless, identity_url: "some:identity") }
 
       before do
         as_logged_in_user(admin) do
@@ -795,6 +799,21 @@ RSpec.describe UsersController do
 
       it "ignores setting force_password_change" do
         expect(some_user.force_password_change).to be(false)
+      end
+    end
+
+    context "with external authentication and an existing password" do
+      let(:some_user) { create(:user, identity_url: "some:identity") }
+
+      before do
+        as_logged_in_user(admin) do
+          put :update, params: { id: some_user.id, user: { force_password_change: "true" } }
+        end
+        some_user.reload
+      end
+
+      it "accepts setting force_password_change" do
+        expect(some_user.force_password_change).to be(true)
       end
     end
 
@@ -887,9 +906,9 @@ RSpec.describe UsersController do
         end
 
         context "when not login_required", with_settings: { login_required: false } do
-          it "responds with 200" do
+          it "responds with 404" do
             expect(response)
-              .to have_http_status(:ok)
+              .to have_http_status(:not_found)
           end
         end
 

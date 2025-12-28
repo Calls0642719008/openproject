@@ -17,9 +17,22 @@ get:
     required: false
     schema:
       type: string
+  - description: >-
+      The workspace type of the new project the parent candidate is determined for.
+      Ignored when `of` parameter is provided.
+
+      Note that while 'portfolio' is supported as a type (since it is a type of Workspace), the endpoint will currently
+      always return an empty resultset as portfolios cannot have parents.
+    example: program
+    in: query
+    name: workspace_type
+    required: false
+    schema:
+      type: string
+      enum: [project, program, portfolio]
   - description: |-
       JSON specifying sort criteria.
-      Accepts the same format as returned by the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint and allows all the filters and sortBy supported by the project list end point.
+      Accepts the same format as returned by the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint and allows all the filters and sortBy supported by the project list endpoint.
     example: '[["id", "asc"]]'
     in: query
     name: sortBy
@@ -101,7 +114,7 @@ get:
                       format: markdown
                       html: "<p>Everything super <strong>fine</strong></p>"
                       raw: Everything super **fine**
-                    type: 
+                    type:
                     updatedAt: '2016-02-29T12:50:20+00:00'
                 _links:
                   self:
@@ -137,7 +150,7 @@ get:
 
     To specify the project for which a parent is queried for, the `of` parameter can be provided. If no `of`
     parameter is provided, a new project is assumed. Then, the check for the hierarchy is omitted as a new project cannot be
-    part of a hierarchy yet.
+    part of a hierarchy yet, instead `workspace_type` parameter can be passed defining it for new project.
 
     Candidates can be filtered. Most commonly one will want to filter by name or identifier.
     You can do this through the `filters` parameter which works just like the work package index.

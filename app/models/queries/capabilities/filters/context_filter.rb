@@ -35,7 +35,7 @@ class Queries::Capabilities::Filters::ContextFilter < Queries::Capabilities::Fil
 
   def split_values
     values.map do |value|
-      if (matches = value.match(/\A([gp])(\d*)\z/))
+      if (matches = value.match(/\A([gw])(\d*)\z/))
         {
           context_key: matches[1],
           context_id: matches[2]

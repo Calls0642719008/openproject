@@ -34,7 +34,7 @@ import { OpModalComponent } from 'core-app/shared/components/modal/modal.compone
 import { OpModalLocalsToken } from 'core-app/shared/components/modal/modal.service';
 import { OpModalLocalsMap } from 'core-app/shared/components/modal/modal.types';
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnInit,
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, inject,
 } from '@angular/core';
 import {
   UntypedFormGroup,
@@ -47,6 +47,7 @@ import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/q
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { QueryResource } from 'core-app/features/hal/resources/query-resource';
 import { CopyToClipboardService } from 'core-app/shared/components/copy-to-clipboard/copy-to-clipboard.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 
 interface TokenNameFormValue {
   name:string;
@@ -58,6 +59,19 @@ interface TokenNameFormValue {
   standalone: false,
 })
 export class QueryGetIcalUrlModalComponent extends OpModalComponent implements OnInit {
+  public readonly elementRef = inject(ElementRef);
+  public locals:OpModalLocalsMap = inject(OpModalLocalsToken);
+  public readonly I18n = inject(I18nService);
+  public readonly states = inject(States);
+  public readonly querySpace = inject(IsolatedQuerySpace);
+  public readonly cdRef = inject(ChangeDetectorRef);
+  public readonly wpListService = inject(WorkPackagesListService);
+  public readonly halNotification = inject(HalResourceNotificationService);
+  public readonly toastService = inject(ToastService);
+  public readonly pathService = inject(PathHelperService);
+  protected apiV3Service = inject(ApiV3Service);
+  protected copyToClipboardService = inject(CopyToClipboardService);
+
   public tokenName = '';
 
   public query:QueryResource;
@@ -70,7 +84,10 @@ export class QueryGetIcalUrlModalComponent extends OpModalComponent implements O
     ical_sharing_warning: this.I18n.t('js.ical_sharing_modal.warning'),
     token_name: this.I18n.t('js.ical_sharing_modal.token_name_label'),
     token_name_placeholder: this.I18n.t('js.ical_sharing_modal.token_name_placeholder'),
-    token_name_description_text: this.I18n.t('js.ical_sharing_modal.token_name_description_text'),
+    token_name_description_text: this.I18n.t(
+      'js.ical_sharing_modal.token_name_description_text',
+      { myAccessTokensUrl: this.pathService.myAccessTokensPath() }
+    ),
     token_name_already_in_use_error_text: this.I18n.t('js.ical_sharing_modal.token_name_already_in_use_error_text'),
     button_copy: this.I18n.t('js.ical_sharing_modal.copy_url_label'),
     button_cancel: this.I18n.t('js.button_cancel'),
@@ -86,20 +103,13 @@ export class QueryGetIcalUrlModalComponent extends OpModalComponent implements O
     return this.tokenNameForm.get('name');
   }
 
-  constructor(
-    readonly elementRef:ElementRef,
-    @Inject(OpModalLocalsToken) public locals:OpModalLocalsMap,
-    readonly I18n:I18nService,
-    readonly states:States,
-    readonly querySpace:IsolatedQuerySpace,
-    readonly cdRef:ChangeDetectorRef,
-    readonly wpListService:WorkPackagesListService,
-    readonly halNotification:HalResourceNotificationService,
-    readonly toastService:ToastService,
-    protected apiV3Service:ApiV3Service,
-    protected copyToClipboardService:CopyToClipboardService,
-  ) {
-    super(locals, cdRef, elementRef);
+  constructor() {
+    // Pass required deps to the base class using inject()
+    super(
+      inject(OpModalLocalsToken),
+      inject(ChangeDetectorRef),
+      inject(ElementRef),
+    );
   }
 
   ngOnInit():void {
@@ -122,7 +132,6 @@ export class QueryGetIcalUrlModalComponent extends OpModalComponent implements O
     if (this.isBusy) {
       return;
     }
-
 
     const tokenName = (this.tokenNameForm.value as TokenNameFormValue)?.name;
 

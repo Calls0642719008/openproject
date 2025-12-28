@@ -15,6 +15,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { IOPFieldSchema } from 'core-app/features/hal/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class BoardListsService {
@@ -103,7 +104,7 @@ export class BoardListsService {
     return board;
   }
 
-  private buildQueryRequest(params:Object) {
+  private buildQueryRequest(params:object) {
     return {
       public: true,
       _links: {

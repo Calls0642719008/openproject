@@ -380,7 +380,7 @@ RSpec.describe "API v3 storages resource", :storage_server_helpers, :webmock, co
 
         subject { last_response.body }
 
-        it { is_expected.to be_json_eql("Password is not valid.".to_json).at_path("message") }
+        it { is_expected.to be_json_eql("Application password is not valid.".to_json).at_path("message") }
       end
     end
   end

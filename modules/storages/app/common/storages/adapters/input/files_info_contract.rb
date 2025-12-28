@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class FilesInfoContract < Dry::Validation::Contract
+      class FilesInfoContract < DryApplicationContract
         params do
           required(:file_ids).array(:string)
         end

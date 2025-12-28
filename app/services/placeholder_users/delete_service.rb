@@ -30,7 +30,7 @@
 
 class PlaceholderUsers::DeleteService < BaseServices::Delete
   def destroy(placeholder)
-    placeholder.locked!
+    placeholder.update_column(:status, PlaceholderUser.statuses[:deleted])
     ::Principals::DeleteJob.perform_later(placeholder)
 
     true

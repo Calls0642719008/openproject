@@ -91,8 +91,9 @@ module Storages
                     credentials_request = mock_nextcloud_application_credentials_validation(storage.host, timeout: true)
 
                     expect(subject).not_to be_valid
-                    expect(subject.errors.to_hash)
-                      .to eq({ password: ["could not be validated. Please check your storage connection and try again."] })
+                    message = "could not be validated with the file storage provider. " \
+                              "Please verify that the connection is functioning properly."
+                    expect(subject.errors.to_hash).to eq({ password: [message] })
 
                     # twice due to HTTPX retry plugin being enabled.
                     expect(credentials_request).to have_been_made.twice
@@ -106,8 +107,9 @@ module Storages
                     credentials_request = mock_nextcloud_application_credentials_validation(storage.host, response_code: 500)
 
                     expect(subject).not_to be_valid
-                    expect(subject.errors.to_hash)
-                      .to eq({ password: ["could not be validated. Please check your storage connection and try again."] })
+                    message = "could not be validated with the file storage provider. " \
+                              "Please verify that the connection is functioning properly."
+                    expect(subject.errors.to_hash).to eq({ password: [message] })
 
                     expect(credentials_request).to have_been_made.once
                   end

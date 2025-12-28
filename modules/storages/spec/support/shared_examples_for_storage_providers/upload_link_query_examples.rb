@@ -28,20 +28,6 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-RSpec.shared_examples_for "adapter upload_link_query: basic query setup" do
-  it "is registered as queries.upload_link" do
-    expect(Storages::Adapters::Registry
-             .resolve("#{storage}.queries.upload_link")).to eq(described_class)
-  end
-
-  it "responds to #call with correct parameters" do
-    expect(described_class).to respond_to(:call)
-
-    method = described_class.method(:call)
-    expect(method.parameters).to contain_exactly(%i[keyreq storage], %i[keyreq auth_strategy], %i[keyreq input_data])
-  end
-end
-
 RSpec.shared_examples_for "adapter upload_link_query: successful upload link response" do
   it "returns an upload link" do
     result = described_class.call(storage:, auth_strategy:, input_data:)
@@ -53,29 +39,5 @@ RSpec.shared_examples_for "adapter upload_link_query: successful upload link res
     expect(response.destination).to be_a(URI)
     expect(response.destination.to_s).to eq(upload_url)
     expect(response.method).to eq(upload_method)
-  end
-end
-
-RSpec.shared_examples_for "adapter upload_link_query: not found" do
-  it "returns a failure" do
-    result = described_class.call(storage:, auth_strategy:, input_data:)
-
-    expect(result).to be_failure
-
-    error = result.failure
-    expect(error.code).to eq(:not_found)
-    expect(error.source).to eq(described_class)
-  end
-end
-
-RSpec.shared_examples_for "adapter upload_link_query: error" do
-  it "returns a failure" do
-    result = described_class.call(storage:, auth_strategy:, input_data:)
-
-    expect(result).to be_failure
-
-    error = result.failure
-    expect(error.code).to eq(:error)
-    expect(error.source).to eq(described_class)
   end
 end

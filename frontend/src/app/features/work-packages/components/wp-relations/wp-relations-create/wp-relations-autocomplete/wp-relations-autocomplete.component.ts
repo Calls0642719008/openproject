@@ -97,9 +97,9 @@ export class WorkPackageRelationsAutocompleteComponent extends OpAutocompleterCo
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
         this.ngSelectInstance.dropdownPanel.adjustPosition();
-        jQuery(this.hiddenOverflowContainer).one('scroll', () => {
+        document.querySelector(this.hiddenOverflowContainer)?.addEventListener('scroll', () => {
           this.ngSelectInstance.close();
-        });
+        }, { once: true });
       }, 25);
     });
   }

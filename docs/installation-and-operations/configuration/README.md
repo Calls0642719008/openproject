@@ -79,7 +79,7 @@ x-op-app: &app
     - "${OPDATA:-opdata}:/var/openproject/assets"
 
 # configuration cut off at this point.
-# Please use the file at https://github.com/opf/openproject-docker-compose/blob/stable/16/docker-compose.yml
+# Please use the file at https://github.com/opf/openproject-docker-compose/blob/stable/17/docker-compose.yml
 ```
 
 Alternatively, you can also use an env file for docker-compose like so:
@@ -114,7 +114,7 @@ x-op-app: &app
     # ... more environment variables
 
 # configuration cut off at this point.
-# Please use the file at https://github.com/opf/openproject-docker-compose/blob/stable/16/docker-compose.yml
+# Please use the file at https://github.com/opf/openproject-docker-compose/blob/stable/17/docker-compose.yml
 ```
 
 Let's say you have a `.env.prod`  file with some production-specific configuration. Then, start the services with that special env file specified.
@@ -547,7 +547,7 @@ OPENPROJECT_REMOTE__STORAGE__DOWNLOAD__HOST=mybucket.s3.eu-west.amazonaws.com"
 
 When using remote storage for attachments via fog - usually S3 (see [`attachments_storage`](#attachments-storage) option) - each attachment download will generate a temporary URL. This option determines how long these links will be valid.
 
-The default is 21600 seconds, that is 6 hours, which is the maximum expiry time allowed by S3 when using IAM roles for authentication.
+The default is 21600 seconds, that is 6 hours, which is the maximum expiration time allowed by S3 when using IAM roles for authentication.
 
 *default: 21600*
 
@@ -698,7 +698,7 @@ OPENPROJECT_SECURITY__BADGE__DISPLAYED="false"
 * When using `redis`, the following configuration option is relevant:
   * `cache_redis_url`: The URL of the Redis host (e.g., `redis://host:6379`)
 
-* `cache_expires_in`: Expiration time for memcache entries (default: `nil`, no expiry)
+* `cache_expires_in`: Expiration time for memcache entries (default: `nil`, no expiration)
 * `cache_namespace`: Namespace for cache keys, useful when multiple applications use a single memcache server (default: `nil`)
 
 ### Rails asset host
@@ -719,9 +719,8 @@ OPENPROJECT_AFTER__LOGIN__DEFAULT__REDIRECT__URL="/my/page"
 
 ### Onboarding video url
 
-`onboarding_video_url`: An URL for the video displayed on the onboarding modal. This is only shown when the user logs in for the first time.
-
-*default="[https://player.vimeo.com/video/163426858?autoplay=1](https://player.vimeo.com/video/163426858?autoplay=1)"*
+`onboarding_video_url`: A URL for the video displayed on the onboarding modal.
+This video URL is whitelisted in the content security policy.
 
 ### Enterprise fail fast
 

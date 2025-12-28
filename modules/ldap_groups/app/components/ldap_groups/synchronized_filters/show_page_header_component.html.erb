@@ -29,7 +29,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   render Primer::OpenProject::PageHeader.new do |header|
-    header.with_title { h(@filter.name) }
+    header.with_title_content(@filter.name)
     header.with_breadcrumbs(breadcrumb_items, selected_item_font_weight: :normal)
 
     unless blocked?
@@ -55,8 +55,8 @@ See COPYRIGHT and LICENSE files for more details.
         href: ldap_groups_synchronized_filter_path(@filter),
         aria: { label: I18n.t(:button_delete) },
         data: {
-          confirm: I18n.t(:text_are_you_sure),
-          method: :delete
+          turbo_confirm: I18n.t(:text_are_you_sure),
+          turbo_method: :delete
         },
         title: I18n.t(:button_delete)
       ) do |button|

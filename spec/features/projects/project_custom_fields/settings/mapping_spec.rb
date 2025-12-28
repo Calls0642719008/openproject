@@ -194,34 +194,7 @@ RSpec.describe "Projects custom fields mapping via project settings", :js do
       end
     end
 
-    it "enables all mapping states of a section for a specific project when bulk action button clicked" do
-      visit project_settings_project_custom_fields_path(project)
-
-      within_custom_field_section_container(section_for_input_fields) do
-        page.find("[data-test-selector='enable-all-project-custom-field-mappings-#{section_for_input_fields.id}']").click
-
-        within_custom_field_container(boolean_project_custom_field) do
-          expect_checked_state
-        end
-        within_custom_field_container(string_project_custom_field) do
-          expect_checked_state
-        end
-      end
-
-      within_custom_field_section_container(section_for_select_fields) do
-        within_custom_field_container(list_project_custom_field) do
-          expect_unchecked_state
-        end
-      end
-
-      within_custom_field_section_container(section_for_multi_select_fields) do
-        within_custom_field_container(multi_list_project_custom_field) do
-          expect_unchecked_state
-        end
-      end
-    end
-
-    it "disables all mapping states of a section for a specific project when bulk action button clicked" do
+    it "enables and disables all mapping states of a section for a specific project when bulk action button clicked" do
       visit project_settings_project_custom_fields_path(project)
 
       within_custom_field_section_container(section_for_input_fields) do
@@ -430,6 +403,97 @@ RSpec.describe "Projects custom fields mapping via project settings", :js do
             expect(project.project_custom_fields).not_to include(invisible_project_custom_field)
           end
         end
+      end
+    end
+
+    describe "calculated value fields",
+             with_ee: %i[calculated_values],
+             with_flag: { calculated_value_project_attribute: true } do
+      let!(:admin) do
+        create(:admin)
+      end
+
+      let!(:section_with_calculated_fields) { create(:project_custom_field_section, name: "Section with calculated fields") }
+
+      let!(:calculated_field1) do
+        create(:calculated_value_project_custom_field,
+               name: "Calculated field 1",
+               formula: "123 + 456",
+               project_custom_field_section: section_with_calculated_fields)
+      end
+
+      let!(:calculated_field2) do
+        create(:calculated_value_project_custom_field,
+               name: "Calculated field 2",
+               formula: "6 * 7",
+               project_custom_field_section: section_with_calculated_fields)
+      end
+
+      let(:overview_page) { Pages::Projects::Show.new(project) }
+
+      before do
+        login_as admin
+      end
+
+      it "calculates field when switched individually" do
+        visit project_settings_project_custom_fields_path(project)
+
+        page
+          .find("[data-test-selector='toggle-project-custom-field-mapping-#{calculated_field1.id}'] > button")
+          .click
+
+        overview_page.visit_page
+
+        overview_page.within_custom_field_container(calculated_field1) do
+          expect(page).to have_text "Calculated field 1"
+          expect(page).to have_text "579"
+        end
+        overview_page.expect_no_custom_field(calculated_field2)
+
+        visit project_settings_project_custom_fields_path(project)
+
+        page
+          .find("[data-test-selector='toggle-project-custom-field-mapping-#{calculated_field1.id}'] > button")
+          .click
+
+        overview_page.visit_page
+
+        overview_page.expect_no_custom_field(calculated_field1)
+        overview_page.expect_no_custom_field(calculated_field2)
+      end
+
+      it "calculates fields when switched in bulk" do
+        visit project_settings_project_custom_fields_path(project)
+
+        within_custom_field_section_container(section_with_calculated_fields) do
+          page
+            .find("[data-test-selector='enable-all-project-custom-field-mappings-#{section_with_calculated_fields.id}']")
+            .click
+        end
+
+        overview_page.visit_page
+
+        overview_page.within_custom_field_container(calculated_field1) do
+          expect(page).to have_text "Calculated field 1"
+          expect(page).to have_text "579"
+        end
+        overview_page.within_custom_field_container(calculated_field2) do
+          expect(page).to have_text "Calculated field 2"
+          expect(page).to have_text "42"
+        end
+
+        visit project_settings_project_custom_fields_path(project)
+
+        within_custom_field_section_container(section_with_calculated_fields) do
+          page
+            .find("[data-test-selector='disable-all-project-custom-field-mappings-#{section_with_calculated_fields.id}']")
+            .click
+        end
+
+        overview_page.visit_page
+
+        overview_page.expect_no_custom_field(calculated_field1)
+        overview_page.expect_no_custom_field(calculated_field2)
       end
     end
   end

@@ -48,7 +48,7 @@ module Storages
             let(:auth_strategy) { Registry["nextcloud.authentication.user_bound"].call(user, storage) }
             let(:input_data) { Input::Files.build(folder:).value! }
 
-            it_behaves_like "adapter files_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "files"
 
             context "with parent folder being root", vcr: "nextcloud/files_query_root" do
               let(:folder) { "/" }
@@ -74,7 +74,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:52:09Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/Folder%20with%20spaces",
+                                             location: "/Folder with spaces",
                                              permissions: %i[readable writeable]),
                     Results::StorageFile.new(id: "562",
                                              name: "Ümlæûts",
@@ -84,7 +84,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:51:48Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/%c3%9cml%c3%a6%c3%bbts",
+                                             location: "/Ümlæûts",
                                              permissions: %i[readable writeable])
                   ],
                   parent: Results::StorageFile.new(id: "385",
@@ -117,7 +117,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:53:24Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/Folder/Nested%20Folder/giphy.gif",
+                                             location: "/Folder/Nested Folder/giphy.gif",
                                              permissions: %i[readable writeable]),
                     Results::StorageFile.new(id: "604",
                                              name: "release_meme.jpg",
@@ -127,7 +127,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:53:30Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/Folder/Nested%20Folder/release_meme.jpg",
+                                             location: "/Folder/Nested Folder/release_meme.jpg",
                                              permissions: %i[readable writeable]),
                     Results::StorageFile.new(id: "602",
                                              name: "todo.txt",
@@ -137,7 +137,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:53:35Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/Folder/Nested%20Folder/todo.txt",
+                                             location: "/Folder/Nested Folder/todo.txt",
                                              permissions: %i[readable writeable])
                   ],
                   parent: Results::StorageFile.new(id: "601",
@@ -148,7 +148,7 @@ module Storages
                                                    last_modified_at: Time.zone.parse("2024-08-09T11:53:42Z"),
                                                    created_by_name: "Mara Jade",
                                                    last_modified_by_name: nil,
-                                                   location: "/Folder/Nested%20Folder",
+                                                   location: "/Folder/Nested Folder",
                                                    permissions: %i[readable writeable]),
                   ancestors: [
                     Results::StorageFileAncestor.new(name: "Root", location: "/"),
@@ -173,7 +173,7 @@ module Storages
                                                    last_modified_at: Time.zone.parse("2024-08-09T11:52:04Z"),
                                                    created_by_name: "Mara Jade",
                                                    last_modified_by_name: nil,
-                                                   location: "/Folder%20with%20spaces/very%20empty%20folder",
+                                                   location: "/Folder with spaces/very empty folder",
                                                    permissions: %i[readable writeable]),
                   ancestors: [
                     Results::StorageFileAncestor.new(name: "Root", location: "/"),
@@ -198,7 +198,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:51:40Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/%c3%9cml%c3%a6%c3%bbts/Anr%c3%bcchiges%20deutsches%20Dokument.docx",
+                                             location: "/Ümlæûts/Anrüchiges deutsches Dokument.docx",
                                              permissions: %i[readable writeable]),
                     Results::StorageFile.new(id: "563",
                                              name: "data",
@@ -208,7 +208,7 @@ module Storages
                                              last_modified_at: Time.zone.parse("2024-08-09T11:51:30Z"),
                                              created_by_name: "Mara Jade",
                                              last_modified_by_name: nil,
-                                             location: "/%c3%9cml%c3%a6%c3%bbts/data",
+                                             location: "/Ümlæûts/data",
                                              permissions: %i[readable writeable])
                   ],
                   parent: Results::StorageFile.new(id: "562",
@@ -219,7 +219,7 @@ module Storages
                                                    last_modified_at: Time.zone.parse("2024-08-09T11:51:48Z"),
                                                    created_by_name: "Mara Jade",
                                                    last_modified_by_name: nil,
-                                                   location: "/%c3%9cml%c3%a6%c3%bbts",
+                                                   location: "/Ümlæûts",
                                                    permissions: %i[readable writeable]),
                   ancestors: [
                     Results::StorageFileAncestor.new(name: "Root", location: "/")
@@ -234,7 +234,7 @@ module Storages
               let(:folder) { "/I/just/made/that/up" }
               let(:error_source) { described_class }
 
-              it_behaves_like "adapter files_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

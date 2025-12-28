@@ -67,21 +67,23 @@ See COPYRIGHT and LICENSE files for more details.
       end
     end
 
-    container.with_row(mb: 3) do
-      settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
-        concat(
-          render(Primer::Beta::Subhead.new) do |component|
-            component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_relations") }
-          end
-        )
-        concat(
-          render(
-            Primer::Forms::FormList.new(
-              Projects::Settings::RelationsForm.new(f),
-              Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_parent_project"))
+    if parent_allowed?
+      container.with_row(mb: 3) do
+        settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
+          concat(
+            render(Primer::Beta::Subhead.new) do |component|
+              component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_relations") }
+            end
+          )
+          concat(
+            render(
+              Primer::Forms::FormList.new(
+                Projects::Settings::RelationsForm.new(f),
+                Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_parent_project"))
+              )
             )
           )
-        )
+        end
       end
     end
   end

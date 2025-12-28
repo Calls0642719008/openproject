@@ -55,10 +55,10 @@ module BasicData
         statuses.each do |old_status|
           statuses.each do |new_status|
             [member, project_admin, work_package_editor].each do |role|
-              Workflow.create type:,
-                              role:,
-                              old_status:,
-                              new_status:
+              model_class.create type:,
+                                 role:,
+                                 old_status:,
+                                 new_status:
             end
           end
         end
@@ -66,7 +66,7 @@ module BasicData
     end
 
     def workflows
-      seed_data.lookup(:workflows).map do |workflow_data|
+      seed_data.lookup(seed_data_model_key).map do |workflow_data|
         type = seed_data.find_reference(workflow_data["type"])
         statuses = seed_data.find_references(workflow_data["statuses"])
         [type, statuses]

@@ -11,12 +11,12 @@ export function relationRowClass():string {
   return 'wp-table--relations-additional-row';
 }
 
-export function locateTableRow(workPackageId:string):JQuery {
-  return jQuery(`.${rowId(workPackageId)}`);
+export function locateTableRow(workPackageId:string) {
+  return document.querySelector<HTMLTableRowElement>(`.${rowId(workPackageId)}`);
 }
 
 export function locateTableRowByIdentifier(identifier:string) {
-  return jQuery(`.${identifier}-table`);
+  return document.querySelector<HTMLTableRowElement>(`.${identifier}-table`);
 }
 
 export function isInsideCollapsedGroup(el?:Element | null) {
@@ -42,20 +42,39 @@ export function locatePredecessorBySelector(el:HTMLElement, selector:string):HTM
 
 export function scrollTableRowIntoView(workPackageId:string):void {
   try {
-    const element = locateTableRow(workPackageId);
-    const container = element.scrollParent()!;
-    const containerTop = container.scrollTop()!;
-    const containerBottom = containerTop + container.height()!;
+    const element = locateTableRow(workPackageId)!;
+    const container = getScrollParent(element);
+    const containerTop = container.scrollTop;
+    const containerBottom = containerTop + container.clientHeight;
 
-    const elemTop = element[0].offsetTop;
-    const elemBottom = elemTop + element.height()!;
+    const elemTop = element.offsetTop;
+    const elemBottom = elemTop + element.offsetHeight;
 
     if (elemTop < containerTop) {
-      container[0].scrollTop = elemTop;
+      container.scrollTop = elemTop;
     } else if (elemBottom > containerBottom) {
-      container[0].scrollTop = elemBottom - container.height()!;
+      container.scrollTop = elemBottom - container.clientHeight;
     }
   } catch (e) {
     console.warn(`Can't scroll row element into view: ${e}`);
   }
+}
+
+function getScrollParent(element:HTMLElement, includeHidden = false) {
+  const overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/;
+
+  let parent:HTMLElement|null = element.parentElement;
+
+  while (parent && parent !== document.body) {
+    const style = getComputedStyle(parent);
+    const overflow = style.overflow + style.overflowY + style.overflowX;
+
+    if (overflowRegex.test(overflow)) {
+      return parent;
+    }
+
+    parent = parent.parentElement;
+  }
+
+  return document.scrollingElement || document.documentElement;
 }

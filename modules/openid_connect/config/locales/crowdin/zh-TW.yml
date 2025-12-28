@@ -43,6 +43,10 @@ zh-TW:
               response_is_not_successful: " 回應 %{status}。"
               response_is_not_json: " 沒有回傳JSON正文"
               response_misses_required_attributes: " 未返回所需的屬性。缺少的屬性有： %{missing_attributes}."
+          invalid_claims_essential: "沒有在 %{attribute}定義布林。"
+          invalid_claims_location: "包含不支援的位置： %{invalid}。支援的位置有： %{supported}。"
+          invalid_claims_values: "沒有在 %{attribute}定義陣列。"
+          non_object_attribute: "沒有定義 JSON 物件 %{attribute}。"
   provider:
     delete_warning:
       input_delete_confirmation: 輸入提供者名稱 %{name} 確認刪除。
@@ -58,10 +62,21 @@ zh-TW:
     menu_title: OpenID 提供商
     delete_title: "刪除 OpenID Connect 提供者"
     group_links_heading: OpenID Connect 群組連結
+    groups:
+      match_preview_component:
+        title: 擷取的群組名稱
+        placeholder_none: 目前沒有群組符合該模式。
+      match_preview_dialog_component:
+        description: 這可讓您針對樣本資料測試正則表達式模式，以驗證您想要萃取的群組名稱是否確實被正確萃取。您可以在此修改您的模式，但測試字串和匹配結果本身不會與組態一起儲存。
+        group_names_label: 測試群組名稱
+        group_names_description: 每行輸入一個 OIDC 索賠中出現的群組名稱，看看您的正則表達式模式對它們有何影響。
+        show_button: 測試模式
+        title: 測試正則表達式
     instructions:
       endpoint_url: OpenID Connect 提供者給予您的端點 URL
       group_regexes: 每行一個正則表達模式。請閱讀 [說明文件](docs_url) 以取得更多相關資訊。
       group_regexes_detail: 可選擇使用正規表達式定義模式，以從群組聲稱中匹配群組名稱。例如，輸入類似 ^Level1/Level2/<code>([\w/]+)$</code>的模式將從包含「Level1/Level2/GroupName/SubGroup」的回覆中抽取「Groupname/SubGroup」的群組。如果沒有模式匹配，群組會被忽略。留空可使用群組全名同步處理所有群組。
+      group_regexes_testing: "按一下「測試樣式」，針對 OIDC 使用者資訊範例測試您的正則表達式樣式。"
       group_sync: 自動從身分提供者擷取和同步群組成員資訊。
       groups_claim: 請指定用來表示使用者所屬群組名稱的 claim 名稱。
       metadata_none: 我沒有這些資訊
@@ -116,6 +131,7 @@ zh-TW:
       label_configuration_details: 後設資料
       label_client_details: 客戶端詳細資訊
       label_attribute_mapping: 屬性對應
+      notice_created: 新的 OpenID 提供者已成功建立。
       client_details_description: OpenProject 作為 OIDC 用戶端的細節設定
       no_results_table: 尚未定義任何提供商。
       plural: OpenID 提供商

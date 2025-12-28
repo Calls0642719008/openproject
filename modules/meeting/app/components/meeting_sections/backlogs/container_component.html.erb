@@ -1,5 +1,5 @@
 <%=
-  component_wrapper(data: wrapper_data_attributes) do
+  component_wrapper do
     if show?
       flex_layout(mb: 3) do |flex|
         flex.with_row(mt: 3) do
@@ -11,7 +11,7 @@
             MeetingSections::ShowComponent.new(
               meeting_section: @backlog,
               collapsed: @collapsed,
-              current_meeting: @meeting
+              current_occurrence: @meeting
             )
           )
         end

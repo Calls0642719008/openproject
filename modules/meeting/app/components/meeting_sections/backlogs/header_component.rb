@@ -34,13 +34,13 @@ module MeetingSections
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    def initialize(backlog:, collapsed:, current_meeting:, box: nil)
+    def initialize(backlog:, collapsed:, current_occurrence:, box: nil)
       super
 
       @backlog = backlog
       @meeting = backlog.meeting
       @box = box
-      @current_meeting = current_meeting
+      @current_occurrence = current_occurrence
 
       # When a specific collapsed state is needed, collapsed is passed in as either true or false
       # When the collapsed state needs to be determined based on meeting status, collapsed is nil and set via default
@@ -49,18 +49,10 @@ module MeetingSections
 
     private
 
-    def default_collapsed_state
+    def default_collapsed_state # rubocop:disable Naming/PredicateMethod
       # For a series backlog, the status of the current occurrence needs to be checked instead of the template
-      # For a one-time backlog, @meeting == @current_meeting
-      @current_meeting.in_progress?
-    end
-
-    def title
-      if @meeting.recurring?
-        I18n.t(:label_series_backlog)
-      else
-        I18n.t(:label_agenda_backlog)
-      end
+      # For a one-time backlog, @meeting == @current_occurrence
+      @current_occurrence.in_progress?
     end
 
     def description
@@ -78,7 +70,7 @@ module MeetingSections
     def clear_action_item(menu)
       menu.with_item(
         label: I18n.t(:label_backlog_clear),
-        href: clear_backlog_dialog_meeting_sections_path(@meeting),
+        href: clear_backlog_dialog_meeting_sections_path(@meeting, current_occurrence: @current_occurrence),
         scheme: :danger,
         tag: :a,
         content_arguments: {
@@ -92,7 +84,8 @@ module MeetingSections
     def add_agenda_item_action(menu)
       menu.with_item(
         label: t("label_agenda_item_add", count: 1),
-        href: new_meeting_agenda_item_path(@meeting, type: "simple", meeting_section_id: @backlog.id),
+        href: new_meeting_agenda_item_path(@meeting, type: "simple", meeting_section_id: @backlog.id,
+                                                     current_occurrence: @current_occurrence),
         content_arguments: {
           data: { "turbo-stream": true, "test-selector": "meeting-backlog-add-agenda-item-from-menu" }
         }
@@ -104,7 +97,8 @@ module MeetingSections
     def add_work_package_action(menu)
       menu.with_item(
         label: t("label_agenda_item_work_package_add", count: 1),
-        href: new_meeting_agenda_item_path(@meeting, type: "work_package", meeting_section_id: @backlog.id),
+        href: new_meeting_agenda_item_path(@meeting, type: "work_package", meeting_section_id: @backlog.id,
+                                                     current_occurrence: @current_occurrence),
         content_arguments: {
           data: { "turbo-stream": true, "test-selector": "meeting-backlog-add-work-package-from-menu" }
         }

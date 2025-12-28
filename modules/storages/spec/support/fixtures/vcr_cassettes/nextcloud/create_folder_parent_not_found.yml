@@ -7,49 +7,43 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     headers:
-      Authorization:
-      - Bearer <BEARER TOKEN>
       User-Agent:
-      - httpx.rb/1.2.4
+      - OpenProject 17.1.0 HTTPX Client
       Accept:
       - "*/*"
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer <SECRET>
   response:
     status:
       code: 409
       message: Conflict
     headers:
-      Cache-Control:
-      - no-store, no-cache, must-revalidate
       Content-Security-Policy:
       - default-src 'none';
       Content-Type:
       - application/xml; charset=utf-8
       Date:
-      - Mon, 22 Apr 2024 09:41:52 GMT
-      Expires:
-      - Thu, 19 Nov 1981 08:52:00 GMT
-      Pragma:
-      - no-cache
+      - Wed, 17 Dec 2025 15:40:27 GMT
       Referrer-Policy:
       - no-referrer
       Server:
-      - Apache/2.4.57 (Debian)
+      - Apache/2.4.62 (Debian)
       Set-Cookie:
-      - ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a; path=/; secure; HttpOnly; SameSite=Lax,
-        oc_sessionPassphrase=z8reMZxLaXjDi01xtRT3%2B6WEvbPmS1GZMsfNLd2%2B0sOlKCUGUV9%2BoKK2U7Cx%2Fjr%2B%2FtSYAXauHznH5g7TLKHoY7VHsQrwbHOh8z%2FNkRU76lOT03mCoB5CCfiSwJSE8lws;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
+      - ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=HeLagRoWmO5E2VxeoavrXg3%2Bb6a%2B%2BNlGiOUscDK6p1TX9GtK8H9Yn6qNqq0DoP05krNSScZt%2F%2BexspUxiZIAu0zJHOQhBB4HubxCAJHJSM9IxezX7lrdAxz%2By92VYzlb;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
         path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
         path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
         __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
-        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
-        path=/; secure; HttpOnly; SameSite=Lax, ocirabgzify6=7c2e27d691e6c1d763ecbf32e028a74a;
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
         path=/; secure; HttpOnly; SameSite=Lax
       X-Content-Type-Options:
       - nosniff
@@ -58,7 +52,7 @@ http_interactions:
       X-Permitted-Cross-Domain-Policies:
       - none
       X-Powered-By:
-      - PHP/8.2.16
+      - PHP/8.3.20
       X-Robots-Tag:
       - noindex, nofollow
       X-Xss-Protection:
@@ -73,5 +67,5 @@ http_interactions:
           <s:exception>Sabre\DAV\Exception\Conflict</s:exception>
           <s:message>Parent node does not exist</s:message>
         </d:error>
-  recorded_at: Mon, 22 Apr 2024 09:41:52 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Wed, 17 Dec 2025 15:40:27 GMT
+recorded_with: VCR 6.3.1

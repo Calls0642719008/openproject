@@ -39,11 +39,15 @@ class MeetingOutcomesController < ApplicationController
   before_action :authorize, except: %i[new create]
 
   def new
-    update_all_via_turbo_stream
+    update_meeting_metadata_via_turbo_stream
 
     if @meeting.in_progress? && !@meeting_agenda_item.in_backlog?
-      render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                     meeting_outcome: nil, edit: true)
+      replace_via_turbo_stream(
+        component: MeetingAgendaItems::Outcomes::InputComponent.new(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
+                                                                    meeting_outcome: @meeting_agenda_item.outcomes.new),
+        target: MeetingAgendaItems::Outcomes::NewButtonComponent.component_id(@meeting_agenda_item)
+      )
+
     else
       render_error_flash_message_via_turbo_stream(message: t("text_outcome_cannot_be_added"))
     end
@@ -52,8 +56,23 @@ class MeetingOutcomesController < ApplicationController
   end
 
   def cancel_new
-    render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                   meeting_outcome: nil, edit: false)
+    update_outcomes_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
+    respond_with_turbo_streams
+  end
+
+  def edit
+    if @meeting_outcome.editable?
+      @meeting_agenda_item = @meeting_outcome.meeting_agenda_item
+      replace_via_turbo_stream(
+        component: MeetingAgendaItems::Outcomes::InputComponent.new(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
+                                                                    meeting_outcome: @meeting_outcome),
+        target: MeetingAgendaItems::Outcomes::OutcomeComponent.component_id(@meeting_outcome)
+      )
+
+    else
+      render_error_flash_message_via_turbo_stream(message: t("text_meeting_not_editable_anymore"))
+      update_meeting_metadata_via_turbo_stream
+    end
 
     respond_with_turbo_streams
   end
@@ -67,35 +86,21 @@ class MeetingOutcomesController < ApplicationController
              )
 
     @meeting_outcome = call.result
+
     if call.success?
-      render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                     meeting_outcome: @meeting_outcome, edit: false)
+      update_outcomes_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
     else
       render_base_error_in_flash_message_via_turbo_stream(call.errors)
     end
 
-    update_all_via_turbo_stream
-
-    respond_with_turbo_streams
-  end
-
-  def edit
-    if @meeting_outcome.editable?
-      @meeting_agenda_item = @meeting_outcome.meeting_agenda_item
-      render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                     meeting_outcome: @meeting_outcome, edit: true)
-    else
-      render_error_flash_message_via_turbo_stream(message: t("text_meeting_not_editable_anymore"))
-      update_all_via_turbo_stream
-    end
+    update_meeting_metadata_via_turbo_stream
 
     respond_with_turbo_streams
   end
 
   def cancel_edit
     @meeting_agenda_item = @meeting_outcome.meeting_agenda_item
-    render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                   meeting_outcome: @meeting_outcome, edit: false)
+    update_outcomes_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
 
     respond_with_turbo_streams
   end
@@ -110,13 +115,12 @@ class MeetingOutcomesController < ApplicationController
              )
 
     if call.success?
-      render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                     meeting_outcome: call.result, edit: false)
+      update_outcomes_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
     else
       render_base_error_in_flash_message_via_turbo_stream(call.errors)
     end
 
-    update_all_via_turbo_stream
+    update_meeting_metadata_via_turbo_stream
 
     respond_with_turbo_streams
   end
@@ -128,14 +132,13 @@ class MeetingOutcomesController < ApplicationController
       .call
 
     if call.success?
-      render_base_outcome_component_via_turbo_stream(meeting: @meeting, meeting_agenda_item: @meeting_agenda_item,
-                                                     meeting_outcome: nil, edit: false)
+      update_outcomes_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
       update_header_component_via_turbo_stream
     else
       render_base_error_in_flash_message_via_turbo_stream(call.errors)
     end
 
-    update_all_via_turbo_stream
+    update_meeting_metadata_via_turbo_stream
 
     respond_with_turbo_streams
   end

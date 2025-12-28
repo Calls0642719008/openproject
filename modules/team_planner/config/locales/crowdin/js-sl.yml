@@ -18,7 +18,7 @@ sl:
       work_week: 'Work week'
       today: 'Danes'
       drag_here_to_remove: 'Drag here to remove assignee and start and end dates.'
-      cannot_drag_here: 'Cannot remove the work package due to permissions or editing restrictions.'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'This work package cannot start/finish on a non-working day.'
       quick_add:
         empty_state: 'Use the search field to find work packages and drag them to the planner to assign it to someone and define start and end dates.'

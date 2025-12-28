@@ -61,6 +61,13 @@ RSpec.describe Members::CreateContract do
 
         it_behaves_like "contract is invalid", principal: :unassignable
       end
+
+      context "if the principal is a placeholder user and the project is nil" do
+        let(:member_project) { nil }
+        let(:member_principal) { build(:placeholder_user) }
+
+        it_behaves_like "contract is invalid", principal: :invalid
+      end
     end
 
     describe "#assignable_projects" do

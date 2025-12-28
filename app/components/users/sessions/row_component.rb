@@ -30,66 +30,99 @@
 
 module Users
   module Sessions
-    class RowComponent < ::RowComponent
-      property :firstname, :lastname
-      delegate :current_session, to: :table
+    class RowComponent < ::OpPrimer::BorderBoxRowComponent
+      delegate :current_session, :current_token, to: :table
 
-      def session
+      def record
         model
       end
 
-      def session_data
-        @session_data ||= session.data.with_indifferent_access
+      def session?
+        record.is_a?(::Sessions::UserSession)
+      end
+
+      def token?
+        record.is_a?(::Token::AutoLogin)
       end
 
       def current?
-        @current ||= session.current?(current_session)
-      end
-
-      def is_current # rubocop:disable Naming/PredicateName
-        if current?
-          helpers.op_icon "icon-yes"
-        end
-      end
-
-      def device
-        session_data[:platform] || I18n.t("users.sessions.unknown_os")
+        (session? && record.current?(current_session)) || (token? && record == current_token)
       end
 
       def browser
-        name = session_data[:browser] || "unknown browser"
-        version = session_data[:browser_version]
-        "#{name} #{version ? "(Version #{version})" : ''}"
+        return I18n.t("users.sessions.unknown_browser") unless session? || token?
+
+        data = record.data.with_indifferent_access
+        name = data[:browser] || I18n.t("users.sessions.unknown_browser")
+        version = data[:browser_version]
+        version ? "#{name} (Version #{version})" : name
       end
 
-      def platform
-        session_data[:platform] || "unknown platform"
+      def device
+        return I18n.t("users.sessions.unknown_os") unless session? || token?
+
+        record.data.with_indifferent_access[:platform] || I18n.t("users.sessions.unknown_os")
+      end
+
+      def expires_on
+        if token?
+          expires = record.expires_on || (record.created_at + Setting.autologin.days)
+          render(OpPrimer::RelativeTimeComponent.new(datetime: user_time_zone(expires), prefix: I18n.t(:label_on)))
+        else
+          I18n.t("users.sessions.browser_session")
+        end
       end
 
       def updated_at
         if current?
           I18n.t("users.sessions.current")
+        elsif token?
+          helpers.format_time(record.created_at)
         else
-          helpers.format_time session.updated_at
+          record.respond_to?(:updated_at) ? helpers.format_time(record.updated_at) : "-"
         end
       end
 
+      private
+
       def button_links
-        [delete_link].compact
+        [delete_button]
       end
 
-      def delete_link
+      def row_css_class
+        "session-row"
+      end
+
+      def delete_button
         return if current?
 
-        link_to(
-          helpers.op_icon("icon icon-delete"),
-          { controller: "/my/sessions", action: "destroy", id: session },
-          class: "button--link",
-          role: :button,
-          method: :delete,
-          data: { confirm: I18n.t(:text_are_you_sure), disable_with: I18n.t(:label_loading) },
-          title: I18n.t(:button_delete)
+        render(
+          Primer::Beta::IconButton.new(
+            icon: :x,
+            scheme: :invisible,
+            test_selector: "session-revoke-button",
+            tag: :a,
+            href: revoke_path,
+            "aria-label": I18n.t(:button_revoke),
+            data: {
+              turbo_method: :delete,
+              turbo_confirm: I18n.t("users.sessions.deletion_warning"),
+              turbo_submits_with: I18n.t(:label_loading)
+            }
+          )
         )
+      end
+
+      def revoke_path
+        if token?
+          url_for(controller: "/my/auto_login_tokens", action: "destroy", id: record)
+        else
+          url_for(controller: "/my/sessions", action: "destroy", id: record)
+        end
+      end
+
+      def user_time_zone(time)
+        helpers.in_user_zone(time)
       end
     end
   end

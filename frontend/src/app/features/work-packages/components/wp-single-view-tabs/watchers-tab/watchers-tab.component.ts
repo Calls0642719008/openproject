@@ -36,7 +36,6 @@ import {
   WorkPackageWatchersService,
 } from 'core-app/features/work-packages/components/wp-single-view-tabs/watchers-tab/wp-watchers.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
-import { trackByHref } from 'core-app/shared/helpers/angular/tracking-functions';
 import {
   WorkPackageNotificationService,
 } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
@@ -55,8 +54,6 @@ export class WorkPackageWatchersTabComponent extends UntilDestroyedMixin impleme
 
   public workPackageId:string;
 
-  public trackByHref = trackByHref;
-
   public error = false;
 
   public noResults = false;
@@ -69,7 +66,7 @@ export class WorkPackageWatchersTabComponent extends UntilDestroyedMixin impleme
 
   public availableWatchersPath:string;
 
-  private $element:JQuery;
+  private element:HTMLElement;
 
   public watching:any[] = [];
 
@@ -97,9 +94,9 @@ export class WorkPackageWatchersTabComponent extends UntilDestroyedMixin impleme
   }
 
   public ngOnInit() {
-    this.$element = jQuery(this.elementRef.nativeElement);
+    this.element = this.elementRef.nativeElement;
     const { workPackageId } = this.uiRouterGlobals.params as unknown as { workPackageId:string };
-    this.workPackageId = (this.workPackage.id as string) || workPackageId;
+    this.workPackageId = (this.workPackage.id!) || workPackageId;
 
     this
       .apiV3Service
@@ -183,7 +180,9 @@ export class WorkPackageWatchersTabComponent extends UntilDestroyedMixin impleme
   }
 
   public updateCounter() {
-    const url = this.pathHelper.workPackageUpdateCounterPath(this.workPackageId, 'watchers');
-    void this.turboRequests.request(url);
+    if (this.workPackageId !== undefined) {
+      const url = this.pathHelper.workPackageUpdateCounterPath(this.workPackageId, 'watchers');
+      void this.turboRequests.request(url);
+    }
   }
 }

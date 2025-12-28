@@ -262,7 +262,8 @@ RSpec.describe "Enterprise trial management",
       visit enterprise_tokens_path
 
       expect(page).to have_text("Quick feature overview")
-      expect(page).to have_css("#enterprise-trial-welcome-dialog iframe")
+      expect(page).to have_css("#enterprise-trial-welcome-dialog video")
+      page.find('[data-close-dialog-id="enterprise-trial-welcome-dialog"]').click
 
       expect(page).to have_text("Enterprise Plan")
       expect(page).to have_text("Expired")
@@ -284,7 +285,7 @@ RSpec.describe "Enterprise trial management",
       end
 
       expect(page).to have_text("Quick feature overview")
-      expect(page).to have_css("#enterprise-trial-welcome-dialog iframe")
+      expect(page).to have_css("#enterprise-trial-welcome-dialog video")
 
       expect(page).to have_text("Enterprise Plan")
       expect(page).to have_text("Expired")

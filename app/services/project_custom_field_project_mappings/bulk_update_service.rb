@@ -44,6 +44,8 @@ module ProjectCustomFieldProjectMappings
       service_call
     end
 
+    private
+
     def validate_permissions
       if @user.allowed_in_project?(:select_project_custom_fields, @project)
         ServiceResult.success
@@ -68,15 +70,25 @@ module ProjectCustomFieldProjectMappings
         service_call.errors = e.message
       end
 
+      recalculate_values(custom_field_ids:) if service_call.success?
+
       service_call
     end
 
+    def recalculate_values(custom_field_ids:)
+      affected_cfs = @project.all_available_custom_fields.affected_calculated_fields(custom_field_ids)
+
+      @project.calculate_custom_fields(affected_cfs)
+
+      @project.save if @project.changed_for_autosave?
+    end
+
     def fetch_custom_field_ids
-      # only custom fields which are not set to required can be disabled
+      # only custom fields which are not set "for all projects" can be disabled
       ProjectCustomField
         .visible(@user)
         .where(custom_field_section_id: @project_custom_field_section.id)
-        .where(is_required: false)
+        .where(is_for_all: false)
         .pluck(:id)
     end
 
@@ -88,25 +100,32 @@ module ProjectCustomFieldProjectMappings
     end
 
     def disable_custom_fields(custom_field_ids)
-      ProjectCustomFieldProjectMapping
-        .where(project_id: @project.id, custom_field_id: custom_field_ids)
+      @project.project_custom_field_project_mappings
+        .where(custom_field_id: custom_field_ids)
         .delete_all
+
+      reset_associations
     end
 
     def existing_mappings(custom_field_ids)
-      ProjectCustomFieldProjectMapping
-        .where(project_id: @project.id, custom_field_id: custom_field_ids)
+      @project.project_custom_field_project_mappings
+        .where(custom_field_id: custom_field_ids)
         .pluck(:custom_field_id)
     end
 
     def create_mappings(custom_field_ids)
-      new_mappings = custom_field_ids.map do |id|
-        { project_id: @project.id, custom_field_id: id }
-      end
-      ProjectCustomFieldProjectMapping.insert_all(
-        new_mappings,
-        unique_by: %i[project_id custom_field_id]
-      )
+      @project.project_custom_field_project_mappings
+        .insert_all(
+          custom_field_ids.map { |id| { custom_field_id: id } },
+          unique_by: %i[project_id custom_field_id]
+        )
+
+      reset_associations
+    end
+
+    def reset_associations
+      @project.project_custom_field_project_mappings.reset
+      @project.project_custom_fields.reset
     end
   end
 end

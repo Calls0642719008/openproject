@@ -32,9 +32,9 @@ module OpenProject
   class CustomFieldFormat
     include Redmine::I18n
 
-    class_attribute :registered, default: {}
+    class_attribute :registered_by_name, default: {}
 
-    attr_reader :name, :order, :label, :edit_as, :class_names, :enterprise_feature
+    attr_reader :name, :order, :label, :edit_as
 
     def initialize(name,
                    label:,
@@ -65,6 +65,10 @@ module OpenProject
       Kernel.const_get(@formatter)
     end
 
+    def available?
+      enabled? && enterprise_feature_allowed?
+    end
+
     def enabled?
       @enabled.call
     end
@@ -73,40 +77,58 @@ module OpenProject
       !enabled?
     end
 
+    def enterprise_feature_allowed?
+      !@enterprise_feature || EnterpriseToken.allows_to?(@enterprise_feature)
+    end
+
+    def for_class_name?(class_name)
+      @class_names.nil? || @class_names.include?(class_name)
+    end
+
     class << self
+      def registered = registered_by_name.values
+
       def map(&)
         yield self
       end
 
       # Registers a custom field format
       def register(custom_field_format, _options = {})
-        registered[custom_field_format.name] = custom_field_format unless registered.include?(custom_field_format.name)
+        return if registered_by_name.has_key?(custom_field_format.name)
+
+        registered_by_name[custom_field_format.name] = custom_field_format
       end
 
       def available
-        registered.select do |_, format|
-          format.enabled? && (!format.enterprise_feature || EnterpriseToken.allows_to?(format.enterprise_feature))
-        end
+        registered.select(&:available?)
+      end
+
+      def enabled
+        registered.select(&:enabled?)
       end
 
       def available_formats
-        available.keys
+        available.map(&:name)
       end
 
       def find_by(name:)
-        registered[name.to_s]
+        registered_by_name[name.to_s]
+      end
+
+      def enabled_for_class_name(class_name)
+        enabled
+          .select { |format| format.for_class_name?(class_name) && !format.label.nil? }
+          .sort_by(&:order)
       end
 
       def available_for_class_name(class_name)
         available
-          .values
-          .select { |field| field.class_names.nil? || field.class_names.include?(class_name) }
+          .select { |format| format.for_class_name?(class_name) && !format.label.nil? }
           .sort_by(&:order)
-          .reject { |format| format.label.nil? }
       end
 
       def disabled_formats
-        registered.select { |_, format| format.disabled? }.keys
+        registered.select(&:disabled?).map(&:name)
       end
     end
   end

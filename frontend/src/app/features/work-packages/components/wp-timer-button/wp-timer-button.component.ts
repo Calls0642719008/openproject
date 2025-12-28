@@ -27,39 +27,20 @@
 //++
 
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Injector,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, Input } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
-import { TimeEntryCreateService } from 'core-app/shared/components/time_entries/create/create.service';
-import {
-  filter,
-  map,
-  switchMap,
-} from 'rxjs/operators';
-import {
-  firstValueFrom,
-  from,
-  Observable,
-  timer,
-} from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
 import { TimeEntryResource } from 'core-app/features/hal/resources/time-entry-resource';
-import { HalResourceEditingService } from 'core-app/shared/components/fields/edit/services/hal-resource-editing.service';
-import moment from 'moment';
+import {
+  HalResourceEditingService,
+} from 'core-app/shared/components/fields/edit/services/hal-resource-editing.service';
 import { SchemaCacheService } from 'core-app/core/schemas/schema-cache.service';
 import { TimezoneService } from 'core-app/core/datetime/timezone.service';
 import { TimeEntryTimerService } from 'core-app/shared/components/time_entries/services/time-entry-timer.service';
 import { formatElapsedTime } from 'core-app/features/work-packages/components/wp-timer-button/time-formatter.helper';
-import { OpModalService } from 'core-app/shared/components/modal/modal.service';
-import { StopExistingTimerModalComponent } from 'core-app/shared/components/time_entries/timer/stop-existing-timer-modal.component';
 import { ToastService } from 'core-app/shared/components/toaster/toast.service';
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
@@ -72,7 +53,7 @@ import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class WorkPackageTimerButtonComponent extends UntilDestroyedMixin implements AfterViewInit, OnDestroy {
+export class WorkPackageTimerButtonComponent extends UntilDestroyedMixin {
   @Input() public workPackage:WorkPackageResource;
   @InjectField() PathHelper:PathHelperService;
   @InjectField() TurboRequests:TurboRequestsService;
@@ -93,17 +74,13 @@ export class WorkPackageTimerButtonComponent extends UntilDestroyedMixin impleme
     timer_already_stopped: this.I18n.t('js.timer.timer_already_stopped'),
   };
 
-  private closeDialogHandler:EventListener = this.handleTimeEntryDialogClose.bind(this);
-  private shouldStartNewTimer = false;
 
   constructor(
     readonly injector:Injector,
     readonly I18n:I18nService,
     readonly apiV3Service:ApiV3Service,
     readonly timeEntryService:TimeEntryTimerService,
-    readonly timeEntryCreateService:TimeEntryCreateService,
     readonly halEditing:HalResourceEditingService,
-    readonly modalService:OpModalService,
     readonly schemaCache:SchemaCacheService,
     readonly timezoneService:TimezoneService,
     readonly toastService:ToastService,
@@ -112,13 +89,6 @@ export class WorkPackageTimerButtonComponent extends UntilDestroyedMixin impleme
     super();
   }
 
-  ngAfterViewInit():void {
-    document.addEventListener('dialog:close', this.closeDialogHandler);
-  }
-
-  ngOnDestroy():void {
-    document.removeEventListener('dialog:close', this.closeDialogHandler);
-  }
 
   activeForWorkPackage(entry:TimeEntryResource | null):boolean {
     return !!entry && entry.entity.href === this.workPackage.href;
@@ -128,74 +98,11 @@ export class WorkPackageTimerButtonComponent extends UntilDestroyedMixin impleme
     this.timeEntryService.timer$.next(null);
   }
 
-  async stop() {
-    const active = await firstValueFrom(this.timeEntryService.refresh());
-
-    if (!active) {
-      return this.toastService.addWarning(this.text.timer_already_stopped);
-    }
-
-    return this.TurboRequests.request(
-      `${this.PathHelper.timeEntryEditDialog(active.id as string)}`,
-      { method: 'GET' },
-    );
-  }
-
   start():void {
-    this
-      .timeEntryService
-      .refresh()
-      .subscribe((active) => {
-        if (active) {
-          this.showStopModal(active)
-            .then(() => {
-              this.shouldStartNewTimer = true;
-              void this.stop();
-            })
-            .catch(() => undefined);
-        } else {
-          this.startTimer();
-        }
-      });
+    this.timeEntryService.start(this.workPackage);
   }
 
-  private startTimer():void {
-    this.timeEntryCreateService
-      .createNewTimeEntry(moment(), this.workPackage, true)
-      .pipe(
-        switchMap((changeset) => from(this.halEditing.save(changeset))),
-        map((result) => result.resource as TimeEntryResource),
-      )
-      .subscribe((active) => {
-        this.timeEntryService.timer$.next(active);
-      });
-  }
-
-  private showStopModal(active:TimeEntryResource):Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this
-        .modalService
-        .show(StopExistingTimerModalComponent, this.injector, { timer: active })
-        .subscribe((modal) => modal.closingEvent.subscribe(() => {
-          if (modal.confirmed) {
-            resolve();
-          } else {
-            reject();
-          }
-        }));
-    });
-  }
-
-  private handleTimeEntryDialogClose(event:CustomEvent):void {
-    const { detail: { dialog, submitted } } = event as { detail:{ dialog:HTMLDialogElement, submitted:boolean } };
-    const isOngoing = dialog.dataset.ongoing === 'true';
-
-    if (dialog.id === 'time-entry-dialog' && submitted && isOngoing) {
-      this.timeEntryService.timer$.next(null);
-      if (this.shouldStartNewTimer) {
-        this.shouldStartNewTimer = false;
-        this.startTimer();
-      }
-    }
+  stop():void {
+   void this.timeEntryService.stop();
   }
 }

@@ -109,7 +109,7 @@ pl:
   button_log_time: "Dziennik"
   button_add_activity: "Aktywność"
   button_add_time_entry: "Rejestruj czas pracy"
-  button_stop_timer: "Zatrzymaj pomiar czasu"
+  button_stop_timer: "Zatrzymaj zegar"
   caption_booked_on_project: "Zarezerwowano na projekt"
   caption_default: "Domyślny"
   caption_default_rate_history_for: "Domyślna stawka historii dla %{user}"

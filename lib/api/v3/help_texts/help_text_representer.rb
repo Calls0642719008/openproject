@@ -54,7 +54,10 @@ module API
                  getter: ->(*) {
                    ::API::Utilities::PropertyNameConverter.from_ar_name(attribute_name)
                  }
-        property :attribute_caption
+        property :attribute_field_name
+
+        property :caption
+
         property :attribute_scope,
                  as: :scope
         property :help_text,

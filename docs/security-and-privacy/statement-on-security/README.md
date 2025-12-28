@@ -62,7 +62,11 @@ You can also [report a vulnerability directly in GitHub](https://github.com/opf/
 
 Please include a description on how to reproduce the issue if possible. Our security team will get your email and will attempt to reproduce and fix the issue as soon as possible.
 
-> **Please note:** OpenProject currently does not offer a bug bounty program. We will do our best to give you the appropriate credits for responsibly disclosing a security vulnerability to us. We will gladly reference your work, name, website on every publication we do related to the security update.
+## Bug bounty program
+
+OpenProject is currently subject of a bug bounty program, kindly sponsored by the European Commission. Please see https://yeswehack.com/programs/openproject for more details.
+
+Please note that OpenProject does not offer its own bug bounty program. For any security vulnerability you responsibly disclose to it, whether it's through another bug bounty porgram or through our website, we will do our best to give you the appropriate credits for responsibly disclosing a security vulnerability to us. We will gladly reference your work, name, website on every publication we do related to the security update.
 
 ## OpenProject security features
 

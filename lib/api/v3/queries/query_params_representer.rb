@@ -57,7 +57,7 @@ module API
 
         def self_link
           if query.project
-            api_v3_paths.work_packages_by_project(query.project.id)
+            api_v3_paths.work_packages_by_workspace(query.project.id)
           else
             api_v3_paths.work_packages
           end

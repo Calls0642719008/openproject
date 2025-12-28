@@ -31,8 +31,8 @@
 module OpenProject
   module Menu
     MenuGroup = Data.define(:header, :children)
-    MenuItem = Data.define(:title, :href, :selected, :favored, :icon, :count, :show_enterprise_icon) do
-      def initialize(title:, href:, selected:, favored: false, icon: nil, count: nil, show_enterprise_icon: false)
+    MenuItem = Data.define(:title, :href, :selected, :favorited, :icon, :count, :show_enterprise_icon) do
+      def initialize(title:, href:, selected:, favorited: false, icon: nil, count: nil, show_enterprise_icon: false)
         super
       end
     end

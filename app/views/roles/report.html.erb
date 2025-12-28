@@ -44,91 +44,192 @@ See COPYRIGHT and LICENSE files for more details.
   <%= error_messages_for(call.result) %>
 <% end %>
 
-<%= form_tag(roles_path, method: :put, id: "permissions_form") do %>
+<%= primer_form_with(url: roles_path, method: :put, id: "permissions_form") do |f| %>
   <%= hidden_field_tag "permissions[0]", "", id: nil %>
 
   <% group_permissions_by_module(@permissions).each do |mod, mod_permissions| %>
-    <% module_name = mod.blank? ? "form--" + I18n.t("attributes.project") : "form--" + l_or_humanize(mod, prefix: "project_module_").tr(" ", "_") %>
-    <% escaped_name = module_name.parameterize %>
-    <fieldset class="form--fieldset -collapsible" id="<%= escaped_name %>">
-      <legend class="form--fieldset-legend">
-        <%= permission_header_for_project_module(mod) %>
-      </legend>
-      <div class="form--toolbar">
-        <span class="form--toolbar-item">
-          (<%= check_all_links escaped_name %>)
-        </span>
-      </div>
+    <% module_name = mod.blank? ? Project.model_name.param_key : l_or_humanize(mod, prefix: "project_module_").tr(" ", "_") %>
+    <% module_title = permission_header_for_project_module(mod) %>
+    <% section_id = "#{module_name.parameterize}-section" %>
 
-      <div class="generic-table--container">
-        <div class="generic-table--results-container">
-          <table class="generic-table" data-controller="table-highlighting">
-            <colgroup>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-            </colgroup>
-            <thead>
-              <tr>
-                <th>
-                  <div class="generic-table--sort-header-outer">
-                    <div class="generic-table--sort-header">
-                      <span>
-                        <%= t(:label_permissions) %>
-                      </span>
-                    </div>
-                  </div>
-                </th>
-                <% @roles.each do |role| %>
+    <%= render Primer::OpenProject::CollapsibleSection.new(id: section_id, display: :block, mb: 3) do |section| %>
+      <% section.with_title do %>
+        <%= module_title %>
+      <% end %>
+
+      <% section.with_additional_information do %>
+        <%=
+          check_all_links section_id do |links|
+            links.with_check_all_button.with_tooltip(text: t(".matrix_check_all_label", module: module_title))
+            links.with_uncheck_all_button.with_tooltip(text: t(".matrix_uncheck_all_label", module: module_title))
+          end
+        %>
+      <% end %>
+
+      <% section.with_collapsible_content do %>
+        <div class="generic-table--container">
+          <div class="generic-table--results-container">
+            <table
+              class="generic-table"
+              data-controller="checkable table-highlighting">
+              <caption class="sr-only">
+                <%= t(".matrix_caption", module: module_title) %>
+              </caption>
+              <colgroup>
+                <col data-highlight="false">
+                <% @roles.size.times do |role| %>
+                  <col>
+                <% end %>
+              </colgroup>
+              <thead>
+                <tr>
                   <th>
                     <div class="generic-table--sort-header-outer">
                       <div class="generic-table--sort-header">
                         <span>
-                          <%= content_tag(role.builtin? ? "em" : "span", h(role.name)) %>
-                          <%= link_to_function(
-                                icon_wrapper("icon-context icon-checkmark", "#{t(:button_check_all)}/#{t(:button_uncheck_all)}"),
-                                "OpenProject.helpers.toggleCheckboxesBySelector('input.role-#{role.id}')",
-                                class: "no-decoration-on-hover",
-                                title: "#{t(:button_check_all)}/#{t(:button_uncheck_all)}"
-                              ) %>
+                          <%= t(:label_permissions) %>
                         </span>
                       </div>
                     </div>
                   </th>
-                <% end %>
-              </tr>
-            </thead>
-            <tbody>
-              <% mod_permissions.each do |permission| %>
-                <tr class="permission-<%= permission.name %>">
-                  <td>
-                    <%= link_to_function(
-                          icon_wrapper("icon-context icon-checkmark", "#{t(:button_check_all)}/#{t(:button_uncheck_all)}"),
-                          "OpenProject.helpers.toggleCheckboxesBySelector('.permission-#{permission.name} input')",
-                          class: "no-decoration-on-hover",
-                          title: "#{t(:button_check_all)}/#{t(:button_uncheck_all)}"
-                        ) %>
-                    <%= l_or_humanize(permission.name, prefix: "permission_") %>
-                  </td>
                   <% @roles.each do |role| %>
-                    <td>
-                      <% if setable_permissions(role).include? permission %>
-                        <%= check_box_tag "permissions[#{role.id}][]", permission.name, (role.permissions.include? permission.name), id: nil, class: "role-#{role.id}" %>
-                      <% end %>
-                    </td>
+                    <th>
+                      <div class="generic-table--sort-header-outer p-0">
+                        <div class="generic-table--sort-header">
+                          <%=
+                            render(
+                              Primer::BaseComponent.new(
+                                tag: :div,
+                                display: :flex,
+                                align_items: :center,
+                                classes: "gap-1",
+                                ml: 1,
+                                mr: 2
+                              )
+                            ) do
+                          %>
+                            <%=
+                              render(
+                                Primer::Beta::IconButton.new(
+                                  scheme: :invisible,
+                                  size: :small,
+                                  icon: :check,
+                                  tooltip_direction: :sw,
+                                  aria: {
+                                    label: t(".matrix_check_uncheck_all_in_col_label_html", module: module_title, role: role.name)
+                                  },
+                                  data: {
+                                    action: "checkable#toggleSelection",
+                                    checkable_key_param: "role",
+                                    checkable_value_param: role.id
+                                  }
+                                )
+                              )
+                            %>
+                            <%= render(Primer::Beta::Truncate.new(flex: 1)) do %>
+                              <%= role.name %>
+                              <%= render(Primer::Beta::Label.new(scheme: :secondary)) { t(:label_builtin) } if role.builtin? %>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                    </th>
                   <% end %>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <% mod_permissions.each do |permission| %>
+                  <% humanized_permission_name = l_or_humanize(permission.name, prefix: "permission_") %>
+                  <tr>
+                    <th scope="row" class="-min-300">
+                      <%=
+                        render(
+                          Primer::BaseComponent.new(
+                            tag: :div,
+                            display: :flex,
+                            align_items: :center,
+                            data: { controller: "truncation" },
+                            classes: "gap-1",
+                            ml: 1,
+                            mr: 3
+                          )
+                        ) do
+                      %>
+                        <%=
+                          render(
+                            Primer::Beta::IconButton.new(
+                              scheme: :invisible,
+                              size: :small,
+                              icon: :check,
+                              tooltip_direction: :sw,
+                              aria: {
+                                label: t(".matrix_check_uncheck_all_in_row_label_html", permission: humanized_permission_name)
+                              },
+                              data: {
+                                action: "checkable#toggleSelection",
+                                checkable_key_param: "permission",
+                                checkable_value_param: permission.name
+                              }
+                            )
+                          )
+                        %>
+                        <%=
+                          render(
+                            Primer::Beta::Truncate.new(
+                              data: { truncation_target: "truncate" },
+                              flex: 1
+                            )
+                          ) do
+                            humanized_permission_name
+                          end
+                        %>
+                        <%=
+                          render(
+                            Primer::Alpha::HiddenTextExpander.new(
+                              hidden: true,
+                              aria: { label: t(:"js.label_expand_text") },
+                              data: { truncation_target: "expander" }
+                            )
+                          )
+                        %>
+                      <% end %>
+                    </th>
+                    <% @roles.each.with_index do |role, i| %>
+                      <td>
+                        <% if setable_permissions(role).include?(permission) %>
+                          <%=
+                            render(Primer::BaseComponent.new(tag: :div, display: :flex, align_items: :center, mx: 1)) do
+                              render(
+                                Primer::Alpha::CheckBox.new(
+                                  scheme: :array,
+                                  name: "permissions[#{role.id}]",
+                                  id: "permissions_#{role.id}_#{permission.name}", # See BUG https://github.com/primer/view_components/issues/3811
+                                  value: permission.name,
+                                  checked: role.permissions.include?(permission.name),
+                                  label: t(".matrix_checkbox_label", permission: humanized_permission_name, role: role.name),
+                                  visually_hide_label: true,
+                                  data: {
+                                    checkable_target: "checkbox",
+                                    role: role.id,
+                                    permission: permission.name
+                                  }
+                                )
+                              )
+                            end
+                          %>
+                        <% end %>
+                      </td>
+                    <% end %>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
 
+          </div>
         </div>
-      </div>
-    </fieldset>
+      <% end %>
+    <% end %>
   <% end %>
 
-  <p><%= styled_button_tag t(:button_save), class: "-primary -with-icon icon-checkmark" %></p>
+  <%= render Roles::Save.new(f) %>
 <% end %>

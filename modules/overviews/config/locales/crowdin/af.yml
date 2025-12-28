@@ -1,4 +1,6 @@
 af:
   overviews:
-    label: 'Oorsig'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Beheerpaneel"
+    label_overview: 'Oorsig'
   permission_manage_overview: 'Manage overview page'

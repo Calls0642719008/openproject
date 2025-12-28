@@ -81,25 +81,7 @@ export class OpBasicSingleDatePickerComponent implements ControlValueAccessor, O
     return this._value;
   }
 
-  // Having an `@Input() id;` property breaks the turbo morphing with idiomorph.
-  // The reason is, the `id` set by angular will override the `id` set as html attribute on
-  // the component.
-  // This is problematic, because new elements from the response template
-  // will not have angular initialized on them, and calling `element.id` will return the html
-  // id attribute, while calling `element.id` on existing elements will return the angular
-  // defined `id` property.
-  // It also means, when idiomorph compares the new elements with the old ones,
-  // the same element will have a different id set, and it will not be matched. The old element
-  // will have the angular `@Input id` property, while new one will have the html id attribute.
-  //
-  // The solution is to rename the `id` to `inputId`. The component would still get an id
-  // attribute assigned if provided when declaring the component, but angular will not
-  // programatically overwrite the `id` getter.
-  //
-  // This comment can be removed once the https://github.com/bigskysoftware/idiomorph/pull/131
-  // is accepted.
-
-  @Input() inputId = `flatpickr-input-${+(new Date())}`;
+  @Input() id = `flatpickr-input-${+(new Date())}`;
 
   @Input() name = '';
 
@@ -173,7 +155,7 @@ export class OpBasicSingleDatePickerComponent implements ControlValueAccessor, O
   private initializeDatePicker() {
     this.datePickerInstance = new DatePicker(
       this.injector,
-      this.inputId,
+      this.id,
       this.value || '',
       {
         allowInput: true,

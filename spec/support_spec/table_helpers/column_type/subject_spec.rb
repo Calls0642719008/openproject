@@ -37,17 +37,17 @@ module TableHelpers::ColumnType
     describe "#extract_data" do
       it "extracts the identifier metadata along with the :subject attribute value" do
         attribute = :subject
-        subject_raw_header = "subject   "
+        raw_header = "subject   "
         work_packages_data =
           [
             {
               index: 0,
-              row: { subject_raw_header => "  Work package 2  " }
+              row: { raw_header => "  Work package 2  " }
             }
           ]
         work_package_data = work_packages_data.first
 
-        expect(column_type.extract_data(attribute, subject_raw_header, work_package_data, work_packages_data))
+        expect(column_type.extract_data(attribute, raw_header, work_package_data, work_packages_data))
           .to eq({ attributes: { subject: "Work package 2" },
                    identifier: :work_package2 })
       end

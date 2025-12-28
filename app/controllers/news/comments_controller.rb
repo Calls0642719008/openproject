@@ -41,11 +41,11 @@ class News::CommentsController < ApplicationController
       flash[:notice] = I18n.t(:label_comment_added)
     end
 
-    redirect_to news_path(@news)
+    redirect_to news_path(@news), status: :see_other
   end
 
   def destroy
     @comment.destroy
-    redirect_to news_path(@news)
+    redirect_to news_path(@news), status: :see_other
   end
 end

@@ -116,18 +116,22 @@ display-field
   &.spentTime .time-logging--value
     padding: 0 2px
 
-  &.hierarchy-items
-    .path
-      & > span
-        margin-right: 0.25rem
-
-      & > span:last-child
-        margin-right: 0
-
   &.combinedDate, &.date
     .display-field--scheduling-icon
       position: relative
       top: 1px
+
+display-field .hierarchy-items,
+.inline-edit--display-field.hierarchy-items,
+  .path
+    & > span
+      margin-right: 0.25rem
+
+    & > span:last-child
+      margin-right: 0
+
+    &.-multiline
+      display: block
 
 .wp-table--cell-container
   .inline-edit--display-field.-placeholder,

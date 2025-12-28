@@ -46,11 +46,11 @@ declare global {
   }
 }
 
-type RevitBridgeMessage = {
+interface RevitBridgeMessage {
   messageType:string,
   trackingId:string,
   messagePayload:CreateBcfViewpointData
-};
+}
 
 @Injectable()
 export class RevitBridgeService extends ViewerBridgeService {

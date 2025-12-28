@@ -369,14 +369,14 @@ module Components
         select_autocomplete page.find('[data-test-selector="op-share-dialog-invite-autocomplete"]'),
                             query: user.firstname,
                             select_text: user.name,
-                            results_selector: "body"
+                            results_selector: "#sharing-modal"
       end
 
       def select_not_existing_user_option(email)
         select_autocomplete page.find('[data-test-selector="op-share-dialog-invite-autocomplete"]'),
                             query: email,
                             select_text: "Send invite to\"#{email}\"",
-                            results_selector: "body"
+                            results_selector: "#sharing-modal"
       end
 
       def expect_upsell_banner

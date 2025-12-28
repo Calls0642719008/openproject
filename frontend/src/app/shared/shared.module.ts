@@ -57,7 +57,6 @@ import {
 import { OPContextMenuComponent } from 'core-app/shared/components/op-context-menu/op-context-menu.component';
 import { OpenprojectPrincipalRenderingModule } from 'core-app/shared/components/principal/principal-rendering.module';
 import { FocusModule } from 'core-app/shared/directives/focus/focus.module';
-import { HomescreenNewFeaturesBlockComponent } from 'core-app/features/homescreen/blocks/new-features.component';
 import { TablePaginationComponent } from 'core-app/shared/components/table-pagination/table-pagination.component';
 import { StaticQueriesService } from 'core-app/shared/components/op-view-select/op-static-queries.service';
 import { CopyToClipboardService } from './components/copy-to-clipboard/copy-to-clipboard.service';
@@ -208,8 +207,6 @@ export function bootstrapModule(injector:Injector):void {
 
     PersistentToggleComponent,
     RemoteFieldUpdaterComponent,
-
-    HomescreenNewFeaturesBlockComponent,
 
     OpOptionListComponent,
     OpProjectIncludeComponent,

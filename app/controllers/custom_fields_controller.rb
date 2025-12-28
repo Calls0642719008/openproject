@@ -30,14 +30,16 @@
 
 class CustomFieldsController < ApplicationController
   include CustomFields::SharedActions # share logic with ProjectCustomFieldsControlller
+  include CustomFields::AttributeHelpTextActions
   layout "admin"
 
   # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :require_admin
-  before_action :find_custom_field, only: %i(edit update destroy delete_option reorder_alphabetical)
+  before_action :find_custom_field, only: %i(edit update destroy delete_option reorder_alphabetical attribute_help_text update_attribute_help_text)
   before_action :prepare_custom_option_position, only: %i(update create)
   before_action :find_custom_option, only: :delete_option
   before_action :validate_enterprise_token, only: %i(create)
+  before_action :find_or_initialize_attribute_help_text, only: %i(attribute_help_text update_attribute_help_text)
   # rubocop:enable Rails/LexicallyScopedActionFilter
 
   def index
@@ -61,6 +63,14 @@ class CustomFieldsController < ApplicationController
     check_custom_field
   end
 
+  def attribute_help_text
+    render_attribute_help_text_form
+  end
+
+  def update_attribute_help_text
+    update_help_text
+  end
+
   protected
 
   def validate_enterprise_token
@@ -79,5 +89,13 @@ class CustomFieldsController < ApplicationController
       flash[:error] = "Invalid CF type"
       redirect_to action: :index
     end
+  end
+
+  def show_path
+    attribute_help_text_custom_field_path(@custom_field)
+  end
+
+  def render_attribute_help_text_form(status: :ok)
+    render "custom_fields/attribute_help_texts/show_work_package", status:
   end
 end

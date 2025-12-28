@@ -9,12 +9,12 @@ value:
   updatedAt: '2022-04-06T09:03:24.347Z'
   _embedded:
     project:
-      _hint: Project resource shortened for brevity
+      _abbreviated: Project resource shortened for brevity
       _type: Project
       id: 11
       name: Jedi Remnant Locator
     resource:
-      _hint: WorkPackage resource shortened for brevity
+      _abbreviated: WorkPackage resource shortened for brevity
       _type: WorkPackage
       id: 77
       subject: Educate Visas Marr

@@ -110,7 +110,7 @@ export class IFCViewerComponent implements OnInit, OnDestroy, AfterViewInit {
             'ifc_models/update',
             'ifc_models/destroy',
           ],
-          this.currentProjectService.id as string,
+          this.currentProjectService.id,
         ),
       this.viewInitialized$,
     ])
@@ -181,7 +181,6 @@ export class IFCViewerComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('keydown', ['$event'])
   @HostListener('keyup', ['$event'])
   @HostListener('keypress', ['$event'])
-  // eslint-disable-next-line class-methods-use-this
   cancelAllKeyEvents($event:KeyboardEvent):void {
     $event.stopPropagation();
   }

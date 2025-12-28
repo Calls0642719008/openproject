@@ -78,13 +78,16 @@ export function workPackageMeetingsCount(
 export function initializeMeetingPlugin(injector:Injector) {
   const wpTabService = injector.get(WorkPackageTabsService);
   const I18n = injector.get(I18nService);
-  wpTabService.register({
-    component: MeetingsTabComponent,
-    name: I18n.t('js.label_meetings'),
-    id: 'meetings',
-    displayable: (workPackage) => !!workPackage.meetings,
-    count: workPackageMeetingsCount,
-  });
+  wpTabService.registerAfter(
+    'relations',
+    {
+      component: MeetingsTabComponent,
+      name: I18n.t('js.label_meetings'),
+      id: 'meetings',
+      displayable: (workPackage) => !!workPackage.meetings,
+      count: workPackageMeetingsCount,
+    },
+  );
 }
 
 @NgModule({

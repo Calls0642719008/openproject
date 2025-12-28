@@ -36,6 +36,7 @@ import { WpSingleViewService } from 'core-app/features/work-packages/routing/wp-
 import { BrowserDetector } from 'core-app/core/browser/browser-detector.service';
 import { DeviceService } from 'core-app/core/browser/device.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { UrlHelpers } from 'core-stimulus/controllers/dynamic/work-packages/activities-tab/services/url-helpers';
 
 @Directive()
 export class ActivityPanelBaseController extends UntilDestroyedMixin implements OnInit {
@@ -59,6 +60,18 @@ export class ActivityPanelBaseController extends UntilDestroyedMixin implements 
   }
 
   ngOnInit():void {
-    this.turboFrameSrc = `${this.pathHelper.staticBase}/work_packages/${this.workPackageId}/activities`;
+    this.turboFrameSrc = this.buildTurboFrameSrc();
+  }
+
+  protected buildTurboFrameSrc():string {
+    const baseUrl = window.location.origin;
+    const url = new URL(`${this.pathHelper.staticBase}/work_packages/${this.workPackageId}/activities`, baseUrl);
+    const anchorInfo = UrlHelpers.extractActivityAnchor(window.location.hash);
+
+    if (anchorInfo) {
+      url.searchParams.set('anchor', `${anchorInfo.type}-${anchorInfo.id}`);
+    }
+
+    return url.toString();
   }
 }

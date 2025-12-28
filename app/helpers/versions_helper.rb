@@ -98,6 +98,6 @@ module VersionsHelper
     end
     filters << { version: { operator: "=", values: [version.id] } }
 
-    JSON.dump(filters)
+    filters # return as an array, not JSON string
   end
 end

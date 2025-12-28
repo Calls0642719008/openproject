@@ -78,8 +78,13 @@ module Projects
         # Clear enabled modules
         enabled_module_names: source_enabled_modules,
         types: source_types,
-        work_package_custom_fields: source_custom_fields
+        work_package_custom_fields: source_custom_fields,
+
+        # clear PIR settings
+        project_creation_wizard_artifact_work_package_id: nil
       )
+
+      clean_settings_attributes!(attributes[:settings])
 
       only_allowed_parent_id(attributes)
         .merge(source_custom_field_attributes)
@@ -100,7 +105,13 @@ module Projects
     def after_perform(call)
       super.tap do |super_call|
         copy_activated_custom_fields(super_call)
+        update_calculated_value_custom_fields(super_call.result)
       end
+    end
+
+    def clean_settings_attributes!(settings)
+      # We want to remove the PIR work package as that should be reset on copy
+      settings.delete("project_creation_wizard_artifact_work_package_id")
     end
 
     def copy_activated_custom_fields(call)
@@ -155,6 +166,22 @@ module Projects
         attributes.except(:parent_id)
       else
         attributes
+      end
+    end
+
+    private
+
+    def build_missing_project_custom_field_project_mappings(project)
+      # Build mappings using the concern's logic
+      super
+
+      # Copy creation_wizard flag from source project's mappings to the newly built mappings
+      source_mappings_by_custom_field_id = source.project_custom_field_project_mappings
+        .index_by(&:custom_field_id)
+
+      project.project_custom_field_project_mappings.each do |mapping|
+        source_mapping = source_mappings_by_custom_field_id[mapping.custom_field_id]
+        mapping.creation_wizard = source_mapping.creation_wizard if source_mapping
       end
     end
   end

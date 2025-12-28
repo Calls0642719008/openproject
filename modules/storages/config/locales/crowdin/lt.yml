@@ -24,7 +24,7 @@ lt:
       storages/sharepoint_storage:
         host: Sharepoint Site URL
         library: Library ID
-        name: Name
+        name: Vardas
         site: Site ID
       storages/storage:
         authentication_method: Authentication Method
@@ -32,6 +32,7 @@ lt:
         drive: Disko ID
         host: Serveris
         name: Vardas
+        password: Aplikacijos slaptažpdis
         provider_type: Tiekėjo tipas
         tenant: Direktorijos (savininko) ID
     errors:
@@ -62,7 +63,7 @@ lt:
               op_application_not_installed: panašu neturi įdiegtos „OpenProject integracijos“ aplikacijos. Prašome ją įdiegti ir bandyti dar kartą.
             password:
               invalid_password: netinkamas.
-              unknown_error: nepavyko patikrinti. Prašome patikrinti jūsų saugyklos jungtį ir bandyti dar kartą.
+              unknown_error: could not be validated with the file storage provider. Please verify that the connection is functioning properly.
     models:
       file_link: Failas
       storages/storage: Saugykla
@@ -95,12 +96,6 @@ lt:
       manual: Existing folder manually managed
     remove_project:
       deletion_failure_flash: Failed to remove the project from the storage. %{error}
-      dialog:
-        automatically_managed_appendix: Also, in this case this storage has an automatically managed project folder, this and its files will be deleted forever.
-        confirmation_text: Please, confirm you understand and want to remove this file storage from this project
-        heading_text: Remove project from %{storage}
-        text: This action is irreversible and will remove all links from work packages of this project to files and folders of that storage.
-        title: Remove project from storage
       label: Remove project
   services:
     attributes:
@@ -118,9 +113,16 @@ lt:
         hide_inactive_folders: 'Hide Inactive Folders Step:'
         remote_folders: 'Read contents of the group folder:'
         rename_project_folder: 'Rename managed project Folder:'
+      sharepoint_sync_service:
+        create_folder: 'Managed Project Folder Creation:'
+        ensure_root_folder_permissions: 'Set Base Folder Permissions:'
+        hide_inactive_folders: 'Hide Inactive Folders Step:'
+        remote_folders: 'Read contents of the group folder:'
+        rename_project_folder: 'Rename managed project Folder:'
     errors:
       messages:
         error: An unexpected error occurred. Please check OpenProject logs for more information or contact an administrator
+        forbidden: OpenProject could not access the requested resource. Please check your permissions configuration on the Storage Provider.
         unauthorized: OpenProject could not authenticate with the Storage Provider. Please ensure that you have access to it.
       models:
         copy_project_folders_service:
@@ -158,6 +160,7 @@ lt:
           group_does_not_exist: "%{group} does not exist. Check your Nextcloud instance configuration."
           insufficient_privileges: OpenProject does not have enough privileges to add %{user} to %{group}. Check you group settings in Nextcloud.
           not_allowed: Nextcloud block the request.
+          not_found: OpenProject could not find the file on the Nextcloud Storage Provider. Please check if it wasn't deleted.
           unauthorized: OpenProject could not sync with Nextcloud. Please check your storage and Nextcloud configuration.
           user_does_not_exist: "%{user} does not exist in Nextcloud."
         one_drive_sync_service:
@@ -170,6 +173,23 @@ lt:
             remote_folders:
               request_error: OpenProject could not access your drive %{drive_id}. Please check if your storage configuration is correct.
             rename_project_folder:
+              conflict: OpenProject could not rename the folder %{current_path} to %{project_folder_name} as a folder with the same name already exists.
+              forbidden: OpenProject does not have access to %{current_path} in order to rename it.
+              not_found: "%{current_path} wasn't found."
+            set_folders_permissions:
+              permission_not_set: could not set permissions on %{path}.
+          error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information.
+          not_allowed: OpenProject wasn't allowed to access your OneDrive drive. Please check the permissions set on the Azure Application.
+          unauthorized: OpenProject could not sync with OneDrive. Please check your storage and Azure Application configuration.
+          user_does_not_exist: "%{user} does not exist in Nextcloud."
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: The %{folder_name} already exists on %{parent_location}.
+              not_found: "%{parent_location} wasn't found."
+            hide_inactive_folders:
+              permission_not_set: could not set permissions on %{path}.
+            rename_project_folder:
               conflict: OpenProject could not rename the folder %{current_path} to %{project_folder_name} as a folder with the same name already exists
               forbidden: OpenProject does not have access to %{current_path} in order to rename it.
               not_found: "%{current_path} wasn't found."
@@ -177,14 +197,13 @@ lt:
               permission_not_set: could not set permissions on %{path}.
           error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information
           not_allowed: OpenProject wasn't allowed to access your OneDrive drive. Please check the permissions set on the Azure Application.
+          not_found: OpenProject could not access your library %{drive_name}. Please check you Sharepoint site document libraries.
           unauthorized: OpenProject could not sync with OneDrive. Please check your storage and Azure Application configuration.
           user_does_not_exist: "%{user} does not exist in Nextcloud."
         upload_link_service:
           not_found: The destination folder %{folder} could not be found on %{storage_name}.
   storages:
     buttons:
-      complete_without_setup: Baigti be jo
-      done_complete_setup: Atlikta, baigti nustatymą
       done_continue: Baigta, tęsti
       open_storage: Open file storage
       replace_oauth_application: Keisti OpenProject OAuth
@@ -198,19 +217,17 @@ lt:
         sharepoint: Allow OpenProject to access SharePoint data using OAuth.
       redirect_uri_incomplete:
         one_drive: Baigti nustatymą su tinkamu URI peradresavimu.
-        sharepoint: Complete the setup with the correct URI redirection.
+        sharepoint: Baigti nustatymą su tinkamu URI peradresavimu.
     confirm_replace_oauth_application: Atlikus šį veiksmą bus iš naujo nustatyti dabartiniai OAuth įgaliojimai. Patvirtinę turėsite iš naujo įvesti įgaliojimus saugyklos teikėjo klientui, o visi nuotoliniai naudotojai turės iš naujo autorizuotis OpenProject. Ar tikrai norite tęsti?
     confirm_replace_oauth_client: Atlikus šį veiksmą bus iš naujo nustatyti dabartiniai OAuth įgaliojimai. Patvirtinę turėsite įvesti naujus saugojimo paslaugų teikėjo įgaliojimus, o visi naudotojai turės iš naujo atlikti autorizaciją %{provider_type} . Ar tikrai norite tęsti?
     delete_warning:
-      input_delete_confirmation: Įveskite failų saugyklos pavadinimą %{file_storage}, kad patvirtintumėte trynimą.
-      irreversible_notice: Failų saugyklos trynimas yra neatstatomas veiksmas.
-      project_storage: 'Ar tikrai norite ištrinti %{file_storage} iš šio projekto? Šio veiksmo patvirtinimui prašome įvesti saugyklos pavadinimą lauke žemiau, tai:'
-      project_storage_delete_result_1: Išims iš šio projekto darbo paketų visas nuorodas į tos saugyklos failus ir aplankus.
-      project_storage_delete_result_2: Jei saugykla turi automatiškai tvarkomą projekto aplanką, tai ir jo failai bus visam laikui ištrinti.
-      storage: 'Ar tikrai norite ištrinti %{file_storage}? Šio veiksmo patvirtinimui prašome įvesti saugyklos pavadinimą lake žemiau:'
-      storage_delete_result_1: Išimti visus nustatymus visuose projektuose, naudojančiuose šią saugyklą.
-      storage_delete_result_2: Išimti iš visų projektų darbo paketų visas nuorodas į failus ir aplankus šioje saugykloje.
-      storage_delete_result_3: Jei saugykla turi automatiškai valdomus projekto aplankus, jie ir juose esantys failai bus ištrinti visam laikui.
+      project_storage: Are you sure you want to remove %{file_storage} from this project?
+      project_storage_delete_result_1: All links to corresponding files and folders will be removed
+      project_storage_delete_result_2: The automatically-managed project folder and all files in it will be deleted
+      storage: Are you sure you want to delete %{file_storage} as an external file storage?
+      storage_delete_result_1: The storage will be removed from all projects currently using it
+      storage_delete_result_2: All links to corresponding files and folders will be removed
+      storage_delete_result_3: The automatically-managed project folder and all files in it will be deleted
     dependencies:
       nextcloud:
         group_folders_app: Group Folders
@@ -221,25 +238,32 @@ lt:
     error_invalid_provider_type: Prašome pažymėti tinkamą saugyklos tiekėją.
     file_storage_view:
       access_management:
-        automatic_management: Atutomatiškai valdoma prieiga ir aplankai
-        automatic_management_description: Leisti OpenProject automatiškai kurti projektų aplankus ir tvarkyti naudotojų prieigą. Tai rekomenduojama, nes užtikrina, kad kiekvienas komandos narys visada turi reikiamas prieigos teises.
-        description: Parinkite naudotojų prieigos ir aplankų kūrimo valdymo tipą. Mes rekomenduojame naudoti automatiškai valdomą prieigą, kad turėtumėte labiau organizuotą struktūrą ir garantuotumėte prieigą visiems reikiamiems naudotojams.
-        manual_management: Rankiniu būdu valdoma prieiga ir aplankai
-        manual_management_description: Kurkite ir valdykite projektų aplankus patys rankiniu būdu. Jums reikės rankiniu būdu užtikrinti, kad reikiami naudotojai turi prieigą.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Parinkite naudotojų prieigos ir aplankų kūrimo valdymo tipą.
-        subtitle: Prieigos valdymas
+        subtitle: Folder and access management
       access_management_section: Prieiga ir projekto aplankai
       automatically_managed_folders: Automatiškai valdomi aplankai
       general_information: Bendra informacija
       oauth_configuration: OAuth configuration
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: Projekto aplankai
       redirect_uri: Peradresavimo URI
+      sharepoint_oauth: Azure OAuth
       storage_audience_blank: No audience has been configured.
       storage_audience_description: Exchanging tokens for audience "%{audience}".
       storage_audience_idp: Using access token obtained by identity provider during login, regardless of audience.
-      storage_oauth: Nextcloud OAuth
+      storage_oauth: Storage OAuth
       storage_provider: Saugyklos tiekėjas
       token_exchange: Token Exchange
     health:
@@ -252,12 +276,12 @@ lt:
         ampf_configuration:
           client_folder_creation: Automatic folder creation
           client_folder_removal: Automatic folder deletion
-          drive_contents: Drive has expected content
+          drive_contents: Drive content
           files_request: Fetching group folder files
           group_folder_app: 'Dependency: Group Folders'
-          group_folder_contents: Group folder has expected content
+          group_folder_contents: Group folder content
           group_folder_presence: Group folder exists
-          header: Automatically managed project folders
+          header: Automatiškai valdomi projekto aplankai
           userless_access: Server-side request authentication
         authentication:
           existing_token: User token
@@ -278,6 +302,7 @@ lt:
           drive_id_exists: Drive exists
           drive_id_format: Drive ID format
           header: Configuration
+          host: Stoties URL
           host_url_accessible: Host URL accessible
           storage_configured: Configuration complete
           tenant_id: Tenant ID
@@ -329,9 +354,10 @@ lt:
         sp_client_write_permission_missing: The client seems to have write permissions missing in SharePoint. Please check the setup documentation for your storage.
         sp_existing_test_folder: The folder %{folder_name} needed for testing already exists in SharePoint. Please delete it and try again.
         sp_oauth_request_error: The user-bound request to SharePoint failed. Please check the server logs for further information.
+        sp_oauth_request_unauthorized: The current user isn't authorized to access the remote file storage. Please check the server logs for further information.
         sp_oauth_token_missing: OpenProject cannot test the user level communication with SharePoint as the user did not yet link their SharePoint account.
         sp_tenant_id_missing: The configured directory (tenant) id is missing for SharePoint. Please check the configuration.
-        sp_unexpected_content: Unexpected content found in the SharePoint drive.
+        sp_unexpected_content: Unexpected content found in the SharePoint Document Library.
         unknown_error: The connection could not be validated. An unknown error occurred. Please check the server logs for further information.
       label_error: Klaida
       label_failed: Failed
@@ -402,8 +428,8 @@ lt:
       sharepoint:
         application_link_text: SharePoint site
         integration: SharePoint Administration / OpenProject
-        oauth_configuration: Copy these values from the desired application in the %{application_link_text}.
-        provider_configuration: Please make sure you have administration privileges in the %{application_link_text} or contact your Microsoft administrator before doing the setup. In the portal, you also need to register an Azure application or use an existing one for authentication.
+        oauth_configuration: Kopijuoti šias reikšmes iš norimos aplikacijos %{application_link_text}.
+        provider_configuration: Prašome įsitikinti, kad turite %{application_link_text} administratoriaus privilegijas arba susisiekite su savo Microsoft administratoriumi prieš darydami nustatymus. Portale jums taipogi reikia registruoti Azure aplikaciją arba naudoti esamą autentifikacijai.
       type: 'Prašome įsitikinti, kad turite administratoriaus teises jūsų Nextcloud egzemplioriuje bei kad įdiegtos šios aplikacijos, prieš tęsiant nustatymą:'
       type_link_text: "„Integration OpenProject“"
     label_active: Aktyvus
@@ -476,7 +502,7 @@ lt:
         title: Mes nustatome jūsų teises projekto aplankui.
     page_titles:
       file_storages:
-        delete: Trinti failų saugyklą
+        delete: Delete file storage?
         subtitle: Pridėkite išorinę failų saugyklą, jei norite įkelti, susieti ir valdyti failus darbo paketuose.
       managed_project_folders:
         subtitle: |-
@@ -484,13 +510,14 @@ lt:
         subtitle_short: Leisti OpenProject kurti aplankus projektams automatiškai
         title: Automatiškai valdomi projekto aplankai
       project_settings:
-        delete: Trinti failų saugyklą
         edit: Keisti šio projekto failų saugyklą
         members_connection_status: Narių jungties būsena
         new: Pridėti failų saugyklą šiam projektui
       project_storage_members:
         subtitle: Patikrinkite saugyklos %{storage_name_link} jungties būseną visiems projekto nariams.
         title: Narių jungties būsena
+      project_storages:
+        delete: Remove file storage from project?
     permission_header_explanation: 'Išorinių saugyklų failų prieigos teisės taikomos tik automatiškai projektų valdomiems aplankams ir failams. Pastebėtina, kad kai kurios failų prieigos teisės nepalaikomos kai kurių saugyklų. Daugiau informacijos rasite rasite dokumente <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>failų saugyklų teisės</a>.'
     provider_types:
       label: Tiekėjo tipas
@@ -505,8 +532,9 @@ lt:
         name: OneDrive
         name_placeholder: pvz. OneDrive
       sharepoint:
-        label_oauth_client_id: Azure OAuth Application (client) ID
-        label_oauth_client_secret: Azure OAuth Client Secret Value
+        drive_description: OpenProject access-managed document library
+        label_oauth_client_id: Azure OAuth Application (kliento) ID
+        label_oauth_client_secret: Azure OAuth kliento slapta reikšmė
         name: SharePoint
         name_placeholder: e.g. SharePoint
     show_attachments_toggle:
@@ -519,13 +547,19 @@ lt:
         label: Use access token obtained during user log in
       manual:
         helptext: OpenProject will exchange a token with the identity provider for the given audience.
-        label: Manually specify audience for which to exchange access token
+        label: Manually specify audience for which to exchange access token (Recommended)
     storage_list_blank_slate:
       description: Pridėkite saugyklą, kad matytumėte ją čia.
       heading: Jūs dar neturite jokių saugyklų.
     successful_storage_connection: Storage connected successfully! Remember to activate the storage in the Projects tab for each desired project to use it.
     upsell:
-      description: |-
-        Integrate your OneDrive as a file storage with OpenProject. Upload files and link them directly to
-        work packages in a project.
-      title: OneDrive integration
+      one_drive:
+        description: |-
+          Integrate your OneDrive drive as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: OneDrive integration
+      sharepoint:
+        description: |-
+          Integrate your SharePoint site as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: SharePoint integration

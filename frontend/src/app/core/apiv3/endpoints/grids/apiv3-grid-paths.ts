@@ -41,7 +41,7 @@ export class ApiV3GridPaths extends ApiV3GettableResource<GridResource> {
    * @param resource
    * @param schema
    */
-  public patch(resource:GridResource|Object, schema:SchemaResource|null = null):Observable<GridResource> {
+  public patch(resource:GridResource|object, schema:SchemaResource|null = null):Observable<GridResource> {
     const payload = this.form.extractPayload(resource, schema);
 
     return this

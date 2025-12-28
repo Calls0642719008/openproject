@@ -32,7 +32,7 @@ export class WorkPackageTable {
 
   public colspan:number;
 
-  public originalRowIndex:{ [id:string]:WorkPackageTableRow } = {};
+  public originalRowIndex:Record<string, WorkPackageTableRow> = {};
 
   private hierarchyRowsBuilder = new HierarchyRowsBuilder(this.injector, this);
 
@@ -55,7 +55,7 @@ export class WorkPackageTable {
     public readonly injector:Injector,
     public tableAndTimelineContainer:HTMLElement,
     public scrollContainer:HTMLElement,
-    public tbody:HTMLElement,
+    public tbody:HTMLTableSectionElement,
     public timelineBody:HTMLElement,
     public timelineController:WorkPackageTimelineTableController,
     public configuration:WorkPackageTableConfiguration,
@@ -88,7 +88,7 @@ export class WorkPackageTable {
       // Ensure we get the latest version
       wp = this.apiV3Service.work_packages.cache.current(wpId, wp)!;
 
-      this.originalRowIndex[wpId] = <WorkPackageTableRow>{ object: wp, workPackageId: wpId, position: i };
+      this.originalRowIndex[wpId] = { object: wp, workPackageId: wpId, position: i } as WorkPackageTableRow;
       return wpId;
     });
   }
@@ -143,7 +143,7 @@ export class WorkPackageTable {
     }
 
     _.each(pass.renderedOrder, (row) => {
-      if (row.workPackage && row.workPackage.id === workPackage.id!) {
+      if (row.workPackage?.id === workPackage.id!) {
         debugLog(`Refreshing rendered row ${row.classIdentifier}`);
         row.workPackage = workPackage;
         pass.refresh(row, workPackage, this.tbody);
@@ -179,7 +179,7 @@ export class WorkPackageTable {
     return renderPass;
   }
 
-  setGroupsCollapseState(newState:{ [key:string]:boolean }) {
+  setGroupsCollapseState(newState:Record<string, boolean>) {
     this.querySpace.collapsedGroups.putValue(newState);
 
     const t0 = performance.now();

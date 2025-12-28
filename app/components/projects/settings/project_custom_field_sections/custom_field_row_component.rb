@@ -55,6 +55,31 @@ module Projects
             mapping.custom_field_id == @project_custom_field.id
           end
         end
+
+        def toggle_path
+          toggle_project_settings_project_custom_fields_path(
+            project_custom_field_project_mapping: {
+              project_id: @project.id,
+              custom_field_id: @project_custom_field.id
+            }
+          )
+        end
+
+        def toggle_checked?
+          active_in_project?
+        end
+
+        def toggle_enabled?
+          !@project_custom_field.is_for_all?
+        end
+
+        def toggle_data_attributes
+          {
+            "turbo-method": :put,
+            "turbo-stream": true,
+            test_selector: "toggle-project-custom-field-mapping-#{@project_custom_field.id}"
+          }
+        end
       end
     end
   end

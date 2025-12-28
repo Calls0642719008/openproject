@@ -77,7 +77,7 @@ module My
       else
         flash[:error] = I18n.t("my_account.access_tokens.storages.failed")
       end
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def generate_rss_key # rubocop:disable Metrics/AbcSize
@@ -91,7 +91,7 @@ module My
       Rails.logger.error "Failed to reset user ##{current_user.id} RSS key: #{e}"
       flash[:error] = t("my.access_token.failed_to_reset_token", error: e.message)
     ensure
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def revoke_rss_key
@@ -101,7 +101,7 @@ module My
       Rails.logger.error "Failed to revoke rss token ##{current_user.id}: #{e}"
       flash[:error] = t("my.access_token.failed_to_reset_token", error: e.message)
     ensure
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def generate_api_key
@@ -139,7 +139,7 @@ module My
       end
       # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def revoke_ical_meeting_token # rubocop:disable Metrics/AbcSize
@@ -158,7 +158,7 @@ module My
       end
       # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def revoke_ical_token
@@ -169,7 +169,7 @@ module My
       Rails.logger.error "Failed to revoke all ical tokens for ##{current_user.id}: #{e}"
       flash[:error] = t("my.access_token.failed_to_reset_token", error: e.message)
     ensure
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     private

@@ -34,7 +34,7 @@ class MeetingAgendaItem::Outcome::Notes < ApplicationForm
   form do |outcome_form|
     outcome_form.rich_text_area(
       name: :notes,
-      label: I18n.t(:label_agenda_outcome),
+      label:,
       classes: "ck-editor-primer-adjusted",
       rich_text_options: {
         resource:,
@@ -50,5 +50,15 @@ class MeetingAgendaItem::Outcome::Notes < ApplicationForm
 
     API::V3::Meetings::MeetingRepresenter
       .new(object.meeting_agenda_item.meeting, current_user: User.current, embed_links: false)
+  end
+
+  private
+
+  def label
+    if object.persisted?
+      I18n.t(:label_agenda_outcome_edit)
+    else
+      I18n.t(:label_agenda_new_outcome)
+    end
   end
 end

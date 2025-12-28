@@ -41,6 +41,7 @@ RSpec.describe Queries::WorkPackages::Filter::CustomFieldFilter do
   let(:date_wp_custom_field) { build_stubbed(:date_wp_custom_field) }
   let(:string_wp_custom_field) { build_stubbed(:string_wp_custom_field) }
   let(:link_wp_custom_field) { build_stubbed(:link_wp_custom_field) }
+  let(:hierarchy_wp_custom_field) { build_stubbed(:wp_custom_field, :hierarchy) }
   let(:custom_field) { list_wp_custom_field }
   let(:all_custom_fields) do
     [list_wp_custom_field,
@@ -52,8 +53,10 @@ RSpec.describe Queries::WorkPackages::Filter::CustomFieldFilter do
      version_wp_custom_field,
      date_wp_custom_field,
      string_wp_custom_field,
-     link_wp_custom_field]
+     link_wp_custom_field,
+     hierarchy_wp_custom_field]
   end
+  let(:valid_custom_fields) { all_custom_fields }
   let(:query) { build_stubbed(:query, project:) }
   let(:cf_accessor) { custom_field.column_name }
   let(:instance) do
@@ -67,6 +70,11 @@ RSpec.describe Queries::WorkPackages::Filter::CustomFieldFilter do
     allow(WorkPackageCustomField)
       .to receive(:all)
       .and_return(all_custom_fields)
+
+    allow(Queries::WorkPackages::Filter::CustomFieldContext)
+      .to receive(:custom_fields)
+            .with(query)
+            .and_return(valid_custom_fields)
   end
 
   describe "invalid custom field" do
@@ -334,27 +342,88 @@ RSpec.describe Queries::WorkPackages::Filter::CustomFieldFilter do
     end
   end
 
-  describe ".all_for" do
-    context "with a project" do
-      before do
-        filter_scope = instance_double(ActiveRecord::Relation)
+  describe "#available?" do
+    shared_examples_for "availability checked" do
+      context "with the custom field being available" do
+        let(:valid_custom_fields) { [custom_field] }
 
-        allow(WorkPackageCustomField)
-          .to receive(:filter)
-                .and_return(filter_scope)
-
-        project_cf_scope = instance_double(ActiveRecord::Relation)
-
-        allow(project)
-          .to receive(:all_work_package_custom_fields)
-                .and_return(project_cf_scope)
-
-        allow(project_cf_scope)
-          .to receive(:merge)
-                .with(filter_scope)
-                .and_return(all_custom_fields)
+        it "is true" do
+          expect(instance).to be_available
+        end
       end
 
+      context "with the custom field not being available" do
+        let(:valid_custom_fields) { [] }
+
+        it "is false" do
+          expect(instance).not_to be_available
+        end
+      end
+    end
+
+    context "for a boolean custom field" do
+      let(:custom_field) { bool_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for an int custom field" do
+      let(:custom_field) { int_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a flot custom field" do
+      let(:custom_field) { float_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a text custom field" do
+      let(:custom_field) { text_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a user custom field" do
+      let(:custom_field) { user_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a version custom field" do
+      let(:custom_field) { version_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a date custom field" do
+      let(:custom_field) { date_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a string custom field" do
+      let(:custom_field) { string_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a link custom field" do
+      let(:custom_field) { link_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+
+    context "for a hierarchy custom field" do
+      let(:custom_field) { hierarchy_wp_custom_field }
+
+      it_behaves_like "availability checked"
+    end
+  end
+
+  describe ".all_for" do
+    context "with a project" do
       it "returns a list with a filter for every custom field" do
         filters = described_class.all_for(query)
 
@@ -374,18 +443,20 @@ RSpec.describe Queries::WorkPackages::Filter::CustomFieldFilter do
     end
 
     context "without a project" do
+      let(:valid_custom_fields) do
+        [
+          list_wp_custom_field,
+          bool_wp_custom_field,
+          int_wp_custom_field,
+          float_wp_custom_field,
+          text_wp_custom_field,
+          date_wp_custom_field,
+          string_wp_custom_field
+        ]
+      end
+
       before do
         query.project = nil
-
-        allow(WorkPackageCustomField)
-          .to receive_message_chain(:filter, :for_all, :where, :not)
-          .and_return([list_wp_custom_field,
-                       bool_wp_custom_field,
-                       int_wp_custom_field,
-                       float_wp_custom_field,
-                       text_wp_custom_field,
-                       date_wp_custom_field,
-                       string_wp_custom_field])
       end
 
       it "returns a list with a filter for every custom field" do
@@ -405,6 +476,15 @@ RSpec.describe Queries::WorkPackages::Filter::CustomFieldFilter do
           .to be_nil
         expect(filters.detect { |filter| filter.name == user_wp_custom_field.column_name.to_sym })
           .to be_nil
+      end
+
+      it "sets an empty context to every created cf filter" do
+        filters = described_class.all_for(query)
+
+        valid_custom_fields.each do |cf|
+          expect(filters.detect { |filter| filter.name == cf.column_name.to_sym }.context.project)
+            .to be_nil
+        end
       end
     end
   end

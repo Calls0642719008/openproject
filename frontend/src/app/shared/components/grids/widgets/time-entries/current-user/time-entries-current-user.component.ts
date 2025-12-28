@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector,
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit,
 } from '@angular/core';
 import { TimeEntryResource } from 'core-app/features/hal/resources/time-entry-resource';
 import { CollectionResource } from 'core-app/features/hal/resources/collection-resource';
@@ -10,11 +10,12 @@ import { DisplayedDays } from 'core-app/features/calendar/te-calendar/te-calenda
 import { TimezoneService } from 'core-app/core/datetime/timezone.service';
 
 @Component({
+  selector: 'op-time-entries-current-user-widget',
   templateUrl: './time-entries-current-user.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class WidgetTimeEntriesCurrentUserComponent extends AbstractWidgetComponent {
+export class WidgetTimeEntriesCurrentUserComponent extends AbstractWidgetComponent implements OnInit {
   public entries:TimeEntryResource[] = [];
 
   public displayedDays:DisplayedDays;
@@ -38,10 +39,13 @@ export class WidgetTimeEntriesCurrentUserComponent extends AbstractWidgetCompone
   }
 
   public get total() {
-    const duration = this.entries.reduce((current, entry) => current + this.timezone.toHours(entry.hours), 0);
+    const duration = this
+      .entries
+      .reduce((current, entry) => current + this.timezone.toHours(entry.hours), 0);
 
     if (duration > 0) {
-      return this.i18n.t('js.units.hour', { count: duration });
+      const amount = this.i18n.t('js.units.hour_string', { hours: duration.toFixed(2)});
+      return this.i18n.t('js.label_total_amount', { amount });
     }
     return this.i18n.t('js.placeholders.default');
   }

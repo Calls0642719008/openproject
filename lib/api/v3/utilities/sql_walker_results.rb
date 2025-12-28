@@ -55,6 +55,14 @@ module API
         def offset
           url_query[:offset]
         end
+
+        def select?(*path, attribute)
+          selectable = url_query.dig(:select, *path)
+          return false if selectable.nil?
+
+          selectable = selectable.select { |_, v| v.empty? }.keys
+          selectable.include?(attribute) || selectable.include?("*")
+        end
       end
     end
   end

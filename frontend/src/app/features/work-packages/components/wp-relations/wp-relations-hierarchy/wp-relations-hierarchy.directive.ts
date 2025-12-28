@@ -93,7 +93,7 @@ export class WorkPackageRelationsHierarchyComponent extends UntilDestroyedMixin 
       .id(this.workPackage)
       .requireAndStream()
       .pipe(
-        withLatestFrom(this.schemaCache.requireAndStream(this.schemaCache.getSchemaHref(this.workPackage) as string)),
+        withLatestFrom(this.schemaCache.requireAndStream(this.schemaCache.getSchemaHref(this.workPackage)!)),
         this.untilDestroyed(),
       )
       .subscribe(([wp, _]) => {

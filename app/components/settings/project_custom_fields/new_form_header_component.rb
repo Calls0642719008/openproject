@@ -40,6 +40,10 @@ module Settings
                                             t("settings.project_attributes.new.heading"))
         ]
       end
+
+      def hide_description?
+        model.field_format_calculated_value? && !EnterpriseToken.allows_to?(:calculated_values)
+      end
     end
   end
 end

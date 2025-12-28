@@ -225,6 +225,12 @@ class PermittedParams
     user additional_params
   end
 
+  def user_invitation
+    params
+      .require(:user_invitation)
+      .permit(:project_id, :principal_type, :id_or_email, :role_id, :message)
+  end
+
   def type(args = {})
     permitted = permitted_attributes(:type, args)
 
@@ -266,6 +272,9 @@ class PermittedParams
   def pref
     params.fetch(:pref, {}).permit(:time_zone,
                                    :theme,
+                                   :increase_theme_contrast,
+                                   :force_light_theme_contrast,
+                                   :force_dark_theme_contrast,
                                    :comments_sorting,
                                    :disable_keyboard_shortcuts,
                                    :warn_on_leaving_unsaved,
@@ -287,16 +296,14 @@ class PermittedParams
                                                 type_ids: [],
                                                 enabled_module_names: [])
 
-    if whitelist.has_key?(:status_code) && whitelist[:status_code].blank?
-      whitelist[:status_code] = nil
-    end
-
-    whitelist.merge(custom_field_values(:project))
+    whitelist
+      .tap { nilify_params!(it, :status_code) }
+      .merge(custom_field_values(:project))
   end
 
   def new_project
     params
-      .expect(project: %i[name parent_id workspace_type])
+      .expect(project: %i[name description parent_id workspace_type])
       .merge(custom_field_values(:project))
   end
 
@@ -306,6 +313,12 @@ class PermittedParams
     copy_options_params
   end
 
+  def project_status
+    params
+      .expect(project: %i[status_code status_explanation])
+      .tap { nilify_params!(it, :status_code) }
+  end
+
   def project_phase
     params.require(:project_phase).permit(%i[start_date finish_date])
   end
@@ -313,6 +326,7 @@ class PermittedParams
   def project_custom_field_project_mapping
     params.require(:project_custom_field_project_mapping)
       .permit(*self.class.permitted_attributes[:project_custom_field_project_mapping])
+      .merge(params.permit(:value))
   end
 
   def news
@@ -446,6 +460,7 @@ class PermittedParams
           type
           attribute_name
           help_text
+          caption
         ),
         ldap_auth_source: %i(
           name
@@ -678,5 +693,10 @@ class PermittedParams
     object = required ? params.require(key_to_fetch) : params.fetch(key_to_fetch, {})
     values = key ? object[:custom_field_values] : object
     values || ActionController::Parameters.new
+  end
+
+  def nilify_params!(hash, *keys)
+    keys.each { |k| hash[k] = hash[k].presence if hash.key?(k) }
+    hash
   end
 end

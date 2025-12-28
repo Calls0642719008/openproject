@@ -26,7 +26,7 @@ et:
   activerecord:
     attributes:
       cost_entry:
-        work_package: "Tööpakett"
+        work_package: "Teema"
         overridden_costs: "Overridden costs"
         spent: "Kulutatud"
         spent_on: "Kuupäev"

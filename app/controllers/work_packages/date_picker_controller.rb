@@ -293,8 +293,8 @@ class WorkPackages::DatePickerController < ApplicationController
   def manage_params_for_automatic_mode(wp_params)
     return wp_params if wp_params["schedule_manually"] != "false"
 
-    # For WP with children the dates are always fixed
-    return wp_params.without("start_date", "due_date") if work_package.children.any?
+    # For WP with children the dates and duration are always fixed
+    return wp_params.without("start_date", "due_date", "duration") if work_package.children.any?
 
     # the start should be preserved and will thus be send as a parameter
     wp_params["start_date"] = work_package.start_date.to_s

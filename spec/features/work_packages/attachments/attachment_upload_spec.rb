@@ -62,7 +62,6 @@ RSpec.describe "Upload attachment to work package", :js, :selenium do
       before do
         wp_page.visit!
         wp_page.ensure_page_loaded
-        wp_page.switch_to_tab(tab: "Activity")
         wp_page.wait_for_activity_tab
       end
 
@@ -226,23 +225,31 @@ RSpec.describe "Upload attachment to work package", :js, :selenium do
   describe "attachment dropzone" do
     shared_examples "attachment dropzone common" do
       it "can drag something to the files tab and have it open" do
-        wp_page.switch_to_tab(tab: "Activity")
-        wp_page.wait_for_activity_tab
+        wp_page.switch_to_tab(tab: "Files")
+        wait_for_network_idle
 
-        wp_page.expect_tab "Activity"
+        wp_page = Pages::FullWorkPackage.new(work_package, project)
+        wp_page.ensure_page_loaded
+        wp_page.expect_tab "Files"
+
+        attachments = Components::Attachments.new
         attachments.drag_and_drop_file test_selector("op-attachments--drop-box"),
                                        image_fixture.path,
                                        :center,
                                        page.find('[data-qa-tab-id="files"]'),
                                        delay_dragleave: true
 
-        expect(page).to have_test_selector("op-files-tab--file-list-item-title", text: "image.png", wait: 10)
         editor.wait_until_upload_progress_toaster_cleared
+        expect(page).to have_test_selector("op-files-tab--file-list-item-title", text: "image.png", wait: 10)
         wp_page.expect_tab "Files"
       end
 
       it "can drag something from the files tab and create a comment with it" do
-        wp_page.switch_to_tab(tab: "files")
+        wp_page.switch_to_tab(tab: "Activity")
+        wait_for_network_idle
+        wp_page = Pages::FullWorkPackage.new(work_package, project)
+        wp_page.ensure_page_loaded
+        wp_page.wait_for_activity_tab
 
         attachments.drag_and_drop_file ".work-package-comment",
                                        image_fixture.path,

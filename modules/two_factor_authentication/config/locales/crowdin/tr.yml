@@ -127,10 +127,10 @@ tr:
         further_steps: Bir isim seçtikten sonra Devam düğmesine tıklayabilirsiniz. Tarayıcınız sizden WebAuthn cihazınızı göstermenizi isteyecektir. Bunu yaptığınızda, cihazın kaydını tamamlamış olursunuz.
       totp:
         title: "Uygulama tabanlı kimlik doğrulayıcı"
-        provisioning_uri: "Kurulum adresi"
+        provisioning_uri: "URI sağlama"
         secret_key: "Gizli anahtar"
         time_based: "Zaman bazlı"
-        account: "Hesap adı / Oluşturan"
+        account: "Hesap adı / İhraççı"
         setup: |
           Google Authenticator ile iki faktörlü kimlik doğrulaması ayarlamak için uygulamayı Apple App Store'dan veya Google Play Store'dan indirin.
           Uygulamayı açtıktan sonra, cihazı kaydetmek için aşağıdaki QR kodunu tarayabilirsiniz.

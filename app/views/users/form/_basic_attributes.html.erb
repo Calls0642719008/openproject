@@ -22,6 +22,7 @@
 <div class="form--field -required">
   <%= f.text_field :mail,
                    required: true,
+                   disabled: !(@user.new_record? || User.current.admin?),
                    container_class: "-middle" %>
 </div>
 

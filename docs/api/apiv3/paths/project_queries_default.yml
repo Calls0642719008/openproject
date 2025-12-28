@@ -5,11 +5,14 @@ get:
   operationId: View_default_query_for_project
   tags:
   - Queries
-  description: Same as [viewing an existing, persisted Query](https://www.openproject.org/docs/api/endpoints/queries/#list-queries)
+  description: |-
+    Same as [viewing an existing, persisted Query](https://www.openproject.org/docs/api/endpoints/queries/#list-queries)
     in its response, this resource returns an unpersisted query and by that allows
     to get the default query configuration. The client may also provide additional
     parameters which will modify the default query. The query will already be scoped
-    for the project.
+    to the project.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/queries/default`](https://www.openproject.org/docs/api/endpoints/queries/#view-default-query-for-workspace)
   parameters:
   - description: Id of the project the default query is requested for
     example: '1'
@@ -119,7 +122,7 @@ get:
                       - "<--- shortened for brevity --->"
                     _links:
                       changeSize:
-                        href: "/api/v3/projects/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=1&pageSize=%7Bsize%7D&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
+                        href: "/api/v3/workspaces/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=1&pageSize=%7Bsize%7D&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
                         templated: true
                       createWorkPackage:
                         href: "/api/v3/work_packages/form"
@@ -128,10 +131,10 @@ get:
                         href: "/api/v3/work_packages"
                         method: post
                       jumpTo:
-                        href: "/api/v3/projects/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=%7Boffset%7D&pageSize=2&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
+                        href: "/api/v3/workspaces/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=%7Boffset%7D&pageSize=2&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
                         templated: true
                       self:
-                        href: "/api/v3/projects/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=1&pageSize=2&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
+                        href: "/api/v3/workspaces/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=1&pageSize=2&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
                     _type: WorkPackageCollection
                     count: 30
                     offset: 1
@@ -160,9 +163,9 @@ get:
                     href: "/api/v3/projects/42"
                     title: Lorem ipsum project
                   results:
-                    href: "/api/v3/projects/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=1&pageSize=2&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
+                    href: "/api/v3/workspaces/42/work_packages?filters=%5B%7B%22status%22%3A%7B%22operator%22%3A%22o%22%2C%22values%22%3A%5B%5D%7D%7D%2C%7B%22dueDate%22%3A%7B%22operator%22%3A%22%3Ct%2B%22%2C%22values%22%3A%5B%221%22%5D%7D%7D%5D&offset=1&pageSize=2&sortBy=%5B%5B%22parent%22%2C%22desc%22%5D%5D"
                   self:
-                    href: "/api/v3/projects/42/queries/default"
+                    href: "/api/v3/workspaces/42/queries/default"
                     title: Default
                   sortBy:
                   - href: "/api/v3/queries/sort_bys/parent-desc"
@@ -192,7 +195,7 @@ get:
                 timelineVisible: false
                 timelineZoomLevel: days
           schema:
-            "$ref": "../components/schemas/default_query_for_project_model.yml"
+            "$ref": "../components/schemas/default_query_for_workspace_model.yml"
       description: OK
       headers: {}
     '403':

@@ -43,6 +43,8 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
+<% content_controller "admin--enumerations" %>
+
 <%= primer_form_with(model: @enumeration, scope: :enumeration, url: url_for(action: :create)) do |f| %>
   <%= render(Admin::Enumerations::ItemForm.new(f)) %>
 <% end %>

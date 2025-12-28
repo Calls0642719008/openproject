@@ -42,7 +42,7 @@ class Projects::TemplatedController < ApplicationController
 
   private
 
-  def change_templated_action(templated)
+  def change_templated_action(templated) # rubocop:disable Metrics/AbcSize
     service_call = Projects::UpdateService
                      .new(user: current_user,
                           model: @project)
@@ -59,6 +59,6 @@ class Projects::TemplatedController < ApplicationController
       flash[:error] = messages.join(". ")
     end
 
-    redirect_to project_settings_general_path(@project)
+    redirect_to project_settings_general_path(@project), status: :see_other
   end
 end

@@ -45,7 +45,7 @@ fil:
       meeting_agenda_item:
         title: "Pamagat"
         author: "May-akda"
-        duration_in_minutes: "Duration"
+        duration_in_minutes: "Durasyon"
         description: "Ang mga tala"
         presenter: "Presenter"
       meeting_section:
@@ -62,6 +62,7 @@ fil:
       meeting_participant:
         invited: "Invited"
         attended: "Attended"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:
@@ -114,7 +115,7 @@ fil:
   label_meeting_new_dynamic: "New one-time meeting"
   label_meeting_new_recurring: "New recurring meeting"
   label_meeting_create: "Create meeting"
-  label_meeting_copy: "Copy meeting"
+  label_meeting_duplicate: "Duplicate meeting"
   label_meeting_edit: "I-edit and Pagpupulong"
   label_meeting_agenda: "Agenda"
   label_meeting_minutes: "Minutes"
@@ -126,7 +127,8 @@ fil:
   label_meeting_date_time: "Petsa/Oras"
   label_meeting_date_and_time: "Petsa at oras"
   label_meeting_diff: "Diff"
-  label_meeting_send_updates: "Send email calendar updates"
+  label_meeting_send_updates: "Send email calendar invite and updates"
+  label_meeting_send_updates_caption: "Send out email invites to all participants of this meeting"
   label_recurring_meeting: "Recurring meeting"
   label_recurring_meeting_part_of: "Part of a meeting series"
   label_recurring_meeting_new: "New recurring meeting"
@@ -134,7 +136,7 @@ fil:
   label_template: "Template"
   label_recurring_meeting_view: "View meeting series"
   label_recurring_meeting_create: "Bukas"
-  label_recurring_meeting_copy: "Copy as one-time"
+  label_recurring_meeting_duplicate: "Duplicate as a one-time meeting"
   label_recurring_meeting_cancel: "Cancel this occurrence"
   label_recurring_meeting_delete: "Delete occurrence"
   label_recurring_meeting_restore: "Restore this occurrence"
@@ -181,14 +183,14 @@ fil:
   meeting:
     participants:
       label:
-        participants: "Participants"
+        participants: "Mga Kalahok"
         attended: "Attended"
         mark_as_attended: "Mark as attended"
         mark_all_as_attended: "Mark all as attended"
         remove_participant: "Remove participant"
         manage_participants: "Manage participants"
         no_participants: "No participants"
-        show_all: "Show all"
+        show_all: "Ipakita ang lahat"
       text:
         template: "These participants will be invited automatically to all future meetings as they are created."
         manage_participants: "Search for and add project members as participants to this meeting."
@@ -207,7 +209,7 @@ fil:
       agenda_items: "Copy agenda items"
       agenda_text: "Copy the agenda of the old meeting"
       participants: "Copy list of participants"
-      to_clipboard: "Copy to clipboard"
+      to_clipboard: "Copy link to clipboard"
     email:
       send_emails: "Email participants"
       send_invitation_emails: >
@@ -217,7 +219,7 @@ fil:
       open_my_meetings_link: "Go to My meetings"
       series:
         title: "[%{project_name}] Meeting series '%{title}'"
-        summary: "%{actor} has set up a new meeting series '%{title}'"
+        summary: "%{actor} has invited you to a new meeting series '%{title}'"
       series_updated:
         title: "[%{project_name}] Meeting series '%{title}' has been updated"
         summary: "Meeting series '%{title}' has been updated by %{actor}"
@@ -233,6 +235,9 @@ fil:
         summary_series: "Meeting series '%{title}' has been cancelled by %{actor}."
         summary: "'%{title}' has been cancelled by %{actor}."
         date_time: "Scheduled date/time"
+      ended:
+        header_series: "Ended: Meeting series '%{title}'"
+        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
       updated:
         header: "Meeting '%{title}' has been updated"
         summary: "Meeting '%{title}' has been updated by %{actor}"
@@ -262,17 +267,17 @@ fil:
           Any meeting information not in the template will be lost. Do you want to continue?
         confirm_button: "Cancel occurrence"
     blankslate:
-      title: "No meetings to display"
-      desc: "There are no meetings that meet the active filter criteria."
+      title: "There are no meetings to display"
+      desc: "You can create a new meeting or change filter criteria"
     label_export_pdf: "Export PDF"
     export:
       your_meeting_export: "Meeting is being exported"
       minutes:
         footer_page_numbers: "P. %{current_page} of %{total_pages}"
-        author: "Author"
-        date: "Date"
-        time: "Time"
-        location: "Location"
+        author: "May-akda"
+        date: "Petsa"
+        time: "Oras"
+        location: "Lokasyon"
         title: "Minutes"
     export_pdf_dialog:
       title: Export PDF
@@ -288,7 +293,7 @@ fil:
         label: First page header left
         caption: This text will appear on the first page at the left of the header.
       author:
-        label: Author
+        label: May-akda
         caption: The author of the minutes will be displayed in the subtitle.
       include_participants:
         label: Include list of participants
@@ -305,7 +310,7 @@ fil:
       footer_text:
         label: Footer text
         caption: This text will appear on every page at the center of the footer.
-      submit_button: Download
+      submit_button: I-download
     notifications:
       sidepanel:
         title: "Email calendar updates"
@@ -333,9 +338,9 @@ fil:
             Email calendar updates are disabled. Participants will not receive an email informing them when you add or remove participants.
         onetime:
           enabled: >
-            All participants will receive updated calendar invites via email informing them of your changes.
+            All participants will receive updated calendar invites via email when you add or remove participants.
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them of your changes.
+            Participants will not receive an email informing them of changes to meeting date, time or participants.
         occurrence:
           enabled: >
             Email calendar updates are enabled for the meeting series. All participants will receive updated calendar invites informing them of your changes to this occurrence.
@@ -346,11 +351,31 @@ fil:
             Email calendar updates are enabled for the meeting series. All participants will receive updated calendar invites informing them of your changes to this template or to individual occurrences.
           disabled: >
             Email calendar updates are disabled for the meeting series. Participants will not receive an email informing them of your changes to this template or to individual occurrences.
+    presentation_mode:
+      title: "Presentation Mode"
+      button_present: "Present"
+      exit: "Exit presentation"
+      current_item: "Current item"
+      total_items: "%{current} of %{total}"
+      previous: "Previous"
+      next: "Next"
+      no_items: "No agenda items"
+      no_items_flash: "There are no agenda items to present."
+    ical_response:
+      update_failed: "Could not update participation status."
+      meeting_not_found: "Meeting not found for the given UID."
   meeting_section:
     untitled_title: "Untitled section"
     delete_confirmation: "Deleting the section will also delete all of its agenda items. Are you sure you want to do this?"
     placeholder_title: "New section"
     empty_text: "Drag items here or create a new one"
+  meeting_participant:
+    participation_status:
+      needs_action: "No response"
+      accepted: "Accepted"
+      declined: "Declined"
+      tentative: "Maybe"
+      unknown: "Unknown"
   recurring_meeting:
     time_zone_difference_banner:
       title: "Time zone difference"
@@ -376,7 +401,9 @@ fil:
       label_view_template: "View template"
       label_edit_template: "Edit template"
       banner_html: >
-        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already created meetings.
+        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already-created meetings.
+      draft_banner_html: >
+        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already-created meetings. No email invites will be sent in this current draft mode until you open the first meeting.
     frequency:
       x_daily:
         one: "Every day"
@@ -454,6 +481,12 @@ fil:
   text_meeting_agenda_open_are_you_sure: "This will overwrite all changes in the minutes! Do you want to continue?"
   text_meeting_minutes_for_meeting: 'minutes para sa pulong "%{meeting}"'
   text_notificiation_invited: "Ang mail na ito ay naglalaman ng isang ics entry para sa pagpupulong na makikita sa ibaba:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "Your meeting is empty"
   text_meeting_empty_description1: "Start by adding agenda items below. Each item can be as simple as just a title, but you can also add additional details like duration and notes."
   text_meeting_empty_description2: 'You can also add references to existing work packages. When you do, related notes will automatically be visible in the work package''s "Meetings" tab.'
@@ -477,20 +510,25 @@ fil:
   label_agenda_item_deleted_wp: "Deleted work package reference"
   label_agenda_item_actions: "Agenda items actions"
   label_agenda_item_move_to_next_title: "Move to next meeting?"
-  label_agenda_item_move: "Move"
+  label_agenda_item_move: "Ilipat"
   label_agenda_item_move_to_next: "Move to next meeting"
   label_agenda_item_move_to_backlog: "Move to backlog"
   label_agenda_item_move_to_current_meeting: "Move to current meeting"
+  label_agenda_item_move_to_section: "Move to section"
   label_agenda_item_move_to_top: "Ilipat sa ibabaw"
   label_agenda_item_move_to_bottom: "Ilipat sa ilalim"
   label_agenda_item_move_up: "Lumipat pataas"
   label_agenda_item_move_down: "Ilipat sa ibaba"
+  label_agenda_item_duplicate: "Duplicate"
+  label_agenda_item_duplicate_in_next: "Duplicate in next occurrence"
+  label_agenda_item_duplicate_in_next_title: "Duplicate in next occurrence?"
   label_agenda_item_add_notes: "Magdagdag ng mga talaan"
   label_agenda_item_add_outcome: "Add outcome"
   label_agenda_item_work_package_add: "Add work package"
   label_agenda_item_work_package: "Agenda item work package"
   label_section_rename: "Rename section"
   label_agenda_outcome: "Outcome"
+  label_agenda_new_outcome: "New outcome"
   label_agenda_outcome_actions: "Agenda outcome actions"
   label_agenda_outcome_edit: "Edit outcome"
   label_agenda_outcome_delete: "Remove outcome"
@@ -519,6 +557,7 @@ fil:
   label_meeting_series_details: "Meeting series details"
   label_meeting_details_edit: "Edit meeting details"
   label_meeting_state: "Meeting status"
+  label_meeting_state_draft: "Draft"
   label_meeting_state_open: "Bukas"
   label_meeting_state_closed: "Isinara"
   label_meeting_state_agenda_created: "Agenda created"
@@ -529,26 +568,39 @@ fil:
   label_meeting_reopen_action: "Reopen meeting"
   label_meeting_close_action: "Close meeting"
   label_meeting_in_progress_action: "Start meeting"
+  label_meeting_open_action: "Open meeting"
+  text_meeting_draft_description: "Prepare your agenda in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
   text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
   text_meeting_closed_description: "This meeting is closed. You cannot add/remove agenda items anymore."
   text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
   text_meeting_open_dropdown_description: "Any existing outcomes will remain but users will not be able to add new outcomes."
   text_meeting_in_progress_dropdown_description: "Document outcomes like information needs or decisions taken during the meeting."
   text_meeting_closed_dropdown_description: "This meeting is closed. You cannot modify agenda items or outcomes anymore."
+  text_meeting_draft_banner: "You are currently in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
+  text_exit_draft_mode_dialog_title: "Open this meeting and send invites?"
+  text_exit_draft_mode_dialog_subtitle: "You cannot return to draft mode once you schedule a meeting."
+  text_exit_draft_mode_dialog_template_title: "Open the first occurrence of this meeting series?"
+  text_exit_draft_mode_dialog_template_subtitle: "You cannot return to draft mode after this."
   text_meeting_not_editable_anymore: "This meeting is not editable anymore."
   text_meeting_not_present_anymore: "This meeting was deleted. Please select another meeting."
-  label_add_work_package_to_meeting_dialog_title: "Add work package to meeting"
+  label_add_work_package_to_meeting_dialog_title: "Select meeting"
+  label_add_work_package_to_meeting_section_label: "Section"
   label_add_work_package_to_meeting_dialog_button: "Add to meeting"
-  label_meeting_selection_caption: "It's only possible to add this work package to upcoming or ongoing open meetings."
+  label_meeting_selection_caption: "It is only possible to add this work package to an upcoming or an ongoing meeting."
+  label_section_selection_caption: "Choose a particular section of the agenda or add it to the backlog."
+  placeholder_section_select_meeting_first: "Meeting selection is required first"
+  text_add_work_package_to_meeting_form: "The work package will be added to the selected meeting or backlog as an agenda item."
   text_add_work_package_to_meeting_description: "A work package can be added to one or multiple meetings for discussion. Any notes concerning it are also visible here."
   text_agenda_item_no_notes: "No notes provided"
   text_agenda_item_not_editable_anymore: "This agenda item is not editable anymore."
   text_agenda_item_move_next_meeting: "This item will be moved to the next meeting on %{date} at %{time}."
   text_agenda_item_moved_to_next_meeting: "Agenda item moved to the next meeting, on %{date}"
+  text_agenda_item_duplicate_in_next_meeting: "Are you sure you want to add a copy of this agenda item to the next meeting, on %{date} at %{time}? Outcomes will not be duplicated."
+  text_agenda_item_duplicated_in_next_meeting: "Agenda item duplicated in the next meeting, on %{date}"
   text_work_package_has_no_upcoming_meeting_agenda_items: "This work package is not scheduled in an upcoming meeting agenda yet."
   text_agenda_item_move_next_meeting_cancelled: "Unable to move to the next meeting since it has been cancelled."
   text_work_package_add_to_meeting_hint: 'Use the "Add to meeting" button to add this work package to an upcoming meeting.'
-  text_work_package_has_no_past_meeting_agenda_items: "This work package was not mentioned in a past meeting."
+  text_work_package_has_no_past_meeting_agenda_items: "This work package was not added as an agenda item in a past meeting."
   text_email_updates_muted: "Email calendar updates are muted. Participants will not receive updated invites via email when you make changes."
   text_email_updates_enabled: "Email calendar updates are enabled. All participants will receive updated invites via email when you make changes."
   my_account:
@@ -567,7 +619,7 @@ fil:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

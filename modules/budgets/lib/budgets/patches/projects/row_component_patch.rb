@@ -92,6 +92,7 @@ module Budgets::Patches::Projects::RowComponentPatch
     def with_project_budgets
       @project_budgets ||= ProjectBudgets.new(project)
       return unless @project_budgets.any?
+      return unless User.current.allowed_in_project?(:view_budgets, project)
 
       yield @project_budgets
     end

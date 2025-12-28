@@ -58,6 +58,9 @@ module API
         property :maximum_attachment_file_size,
                  getter: ->(*) { attachment_max_size.to_i.kilobyte }
 
+        property :maximum_api_v3_page_size,
+                 getter: ->(*) { apiv3_max_page_size }
+
         property :per_page_options,
                  getter: ->(*) { per_page_options_array }
 

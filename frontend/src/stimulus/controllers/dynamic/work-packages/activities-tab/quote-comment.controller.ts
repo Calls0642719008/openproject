@@ -33,13 +33,13 @@ import { Controller } from '@hotwired/stimulus';
 import type EditorController from './editor.controller';
 import type InternalCommentController from './internal-comment.controller';
 
-type QuoteParams = {
+interface QuoteParams {
   userId:string;
   userName:string;
   textWrote:string;
   content:string;
   isInternal:boolean;
-};
+}
 
 export default class QuoteCommentController extends Controller {
   static outlets = ['work-packages--activities-tab--editor', 'work-packages--activities-tab--internal-comment'];
@@ -83,7 +83,7 @@ export default class QuoteCommentController extends Controller {
   private setCommentRestriction(isInternal:boolean) {
     if (isInternal && !this.workPackagesActivitiesTabInternalCommentOutlet.internalCheckboxTarget.checked) {
       this.workPackagesActivitiesTabInternalCommentOutlet.internalCheckboxTarget.checked = isInternal;
-      this.workPackagesActivitiesTabInternalCommentOutlet.toggleInternal();
+      this.workPackagesActivitiesTabInternalCommentOutlet.updateInternalState();
     }
   }
 

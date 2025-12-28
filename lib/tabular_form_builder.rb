@@ -101,7 +101,7 @@ class TabularFormBuilder < ActionView::Helpers::FormBuilder
 
     inputs = {
       value: @object.public_send(field),
-      inputId: field_id(field, index: options[:index]),
+      id: field_id(field, index: options[:index]),
       name: options[:name] || field_name(field, index: options[:index])
     }
 

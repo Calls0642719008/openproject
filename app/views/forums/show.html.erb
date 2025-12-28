@@ -27,28 +27,6 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<div id="add-message" style="display:none;">
-  <% if authorize_for('messages', 'new') %>
-    <h2><%= link_to h(@forum.name), project_forum_path(@project, @forum) %> &#187; <%= t(:label_message_new) %></h2>
-    <%= labelled_tabular_form_for Message.new(project: @project),
-                                  url: forum_topics_path(@forum),
-                                  html: {
-                                    multipart: true,
-                                    id: "message-form",
-                                    class: "form",
-                                    data: { turbo: false }
-                                  } do |f| %>
-      <%= render partial: "messages/form", locals: { f: f } %>
-
-      <hr class="form--separator">
-      <%= styled_button_tag t(:button_create), class: "-primary -with-icon icon-checkmark" %>
-      <%= link_to t(:button_cancel), "", class: "cancel-add-message-button button -with-icon icon-cancel" %>
-      <% csp_onclick('jQuery("#add-message").hide();', ".cancel-add-message-button") %>
-    <% end %>
-    <div id="preview"></div>
-  <% end %>
-</div>
-
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
     header.with_title { @forum.name }
@@ -70,7 +48,6 @@ See COPYRIGHT and LICENSE files for more details.
                                      leading_icon: :plus,
                                      label: t(:label_message_new),
                                      tag: :a,
-                                     class: "add-message-button",
                                      href: url_for({ controller: "/messages", action: "new", forum_id: @forum })) do
           t(:label_message)
         end

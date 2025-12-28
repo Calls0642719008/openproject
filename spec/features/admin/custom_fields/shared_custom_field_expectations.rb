@@ -80,9 +80,6 @@ RSpec.shared_examples_for "list custom fields" do |type|
 
     expect(page).to have_text("Successful creation")
 
-    click_on "Operating System"
-    wait_for_reload
-
     expect(page).to have_field("custom_field_multi_value", checked: true)
 
     expect(page).to have_css(".custom-option-row", count: 3)
@@ -259,10 +256,10 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
       end
 
       expect_page_to_have_texts(
-        label_default_value, label_is_required
+        label_default_value
       )
       expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_multi_value,
+        label_min_length, label_max_length, label_regexp, label_multi_value, label_is_required,
         label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
       )
     end

@@ -32,11 +32,11 @@ class HelpController < ApplicationController
   no_authorization_required! :keyboard_shortcuts, :text_formatting
 
   def keyboard_shortcuts
-    redirect_to OpenProject::Static::Links[:shortcuts][:href], allow_other_host: true
+    redirect_to OpenProject::Static::Links.url_for(:shortcuts), allow_other_host: true
   end
 
   def text_formatting
-    default_link = OpenProject::Static::Links[:text_formatting][:href]
+    default_link = OpenProject::Static::Links.url_for(:text_formatting)
     help_link = OpenProject::Configuration.force_formatting_help_link.presence || default_link
 
     redirect_to help_link, allow_other_host: true

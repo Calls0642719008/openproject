@@ -26,7 +26,7 @@ sl:
   activerecord:
     attributes:
       cost_entry:
-        work_package: "Delovni paket"
+        work_package: "Zahtevek"
         overridden_costs: "Povoženi stroški "
         spent: "Porabljeno"
         spent_on: "Datum"

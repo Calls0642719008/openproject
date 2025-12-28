@@ -12,6 +12,30 @@ On the **application home page** (start page) you will get an overview about imp
 
 To get to the application home page, click on the logo in the header of the application.
 
+## Header navigation overview
+
+![Header navigation in OpenProject](openproject_user_guide_home_header_navigation.png)
+
+The header navigation in OpenProject is divided into **three sections**:
+
+**Left corner**: 
+
+- **Global Modules (grid icon):** Opens the menu to access all global modules.
+- **Instance Logo:** Displays the logo of your current instance.
+
+**Center**
+
+- **Search Console:** Enables quick search for projects, users, work packages, or other resources within the application.
+
+**Right corner**
+
+- **+ Button:** Creates new projects, users, or work packages.
+- **Notifications icon:** Shows the number of new or unread notifications.
+- **Help (question mark icon):** Provides quick access to tutorials, guides, videos, and other help resources.
+- **Account avatar:** Opens links to personal page, activity overview, account settings, administration (if you have sufficient rights), and signing out.
+
+## Home page overview
+
 ![User-guide-application-start-page](openproject_user_guide_home_page1.png)
 
 1. **Welcome text block** to welcome your team members, share important project information, or any other information. You can configure the [welcome text](../../system-admin-guide/system-settings/general-settings/#welcome-block-text) block under -> *Administration* -> *System settings* -> *General*.

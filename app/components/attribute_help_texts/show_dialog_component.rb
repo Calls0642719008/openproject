@@ -31,25 +31,27 @@
 class AttributeHelpTexts::ShowDialogComponent < ApplicationComponent
   include OpTurbo::Streamable
 
-  def initialize(attribute_help_text:, current_user: User.current)
+  attr_reader :attribute_help_text, :current_user, :dialog_id
+
+  def initialize(attribute_help_text:, current_user: User.current, **system_arguments)
     super
+
     @attribute_help_text = attribute_help_text
     @current_user = current_user
+
+    @dialog_id = dom_id(@attribute_help_text, :dialog)
+    @system_arguments = system_arguments
+    @system_arguments[:id] = dialog_id
+    @system_arguments[:title] = @attribute_help_text.attribute_field_name
   end
 
   private
 
-  def dialog_id = dom_id(@attribute_help_text, :dialog)
+  def allowed_to_edit? = current_user.allowed_globally?(:edit_attribute_help_texts)
 
-  def title = @attribute_help_text.attribute_caption
-
-  def has_attachments? = @attribute_help_text.attachments.any?
-
-  def allowed_to_edit? = @current_user.allowed_globally?(:edit_attribute_help_texts)
-
-  def edit_button_href = url_helpers.edit_attribute_help_text_path(@attribute_help_text)
+  def edit_button_href = url_helpers.edit_attribute_help_text_path(attribute_help_text)
 
   def resource_representer
-    ::API::V3::HelpTexts::HelpTextRepresenter.new(@attribute_help_text, current_user: @current_user, embed_links: false)
+    ::API::V3::HelpTexts::HelpTextRepresenter.new(attribute_help_text, current_user:, embed_links: false)
   end
 end

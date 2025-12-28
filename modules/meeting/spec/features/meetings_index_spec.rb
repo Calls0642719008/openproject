@@ -128,6 +128,7 @@ RSpec.describe "Meetings", "Index", :js do
       it "does not show under My meetings, but in All meetings" do
         meetings_page.visit!
         meetings_page.expect_no_meetings_listed
+        meetings_page.expect_blank_slate_component
 
         meetings_page.set_sidebar_filter "All meetings"
 
@@ -353,6 +354,7 @@ RSpec.describe "Meetings", "Index", :js do
         meetings_page.navigate_by_project_menu
 
         meetings_page.expect_no_meetings_listed
+        meetings_page.expect_blank_slate_component
       end
     end
 

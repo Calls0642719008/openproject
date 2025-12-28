@@ -40,7 +40,7 @@ module OpenProject
       # @param leading_icon [Boolean] toggle
       # @param trailing_icon [Boolean] toggle
       def default(expanded: true, select_variant: :none, select_strategy: :descendants, leading_icon: true, trailing_icon: true)
-        render(Primer::OpenProject::TreeView.new) do |component|
+        render(Primer::Alpha::TreeView.new) do |component|
           component.with_sub_tree(label: "OpenProject",
                                   expanded: expanded,
                                   select_variant: select_variant,
@@ -83,7 +83,7 @@ module OpenProject
       # @param select_variant [Symbol] select [multiple, none]
       # @param select_strategy [Symbol] select [self, descendants]
       def multi_select(expanded: true, select_variant: :multiple, select_strategy: :descendants)
-        render(Primer::OpenProject::TreeView.new) do |component|
+        render(Primer::Alpha::TreeView.new) do |component|
           component.with_sub_tree(label: "Europe",
                                   expanded: expanded,
                                   select_variant: select_variant,
@@ -113,7 +113,7 @@ module OpenProject
       # @display min_height 200px
       # @param expanded [Boolean] toggle
       def file_tree(expanded: true)
-        render(Primer::OpenProject::FileTreeView.new) do |component|
+        render(Primer::Alpha::FileTreeView.new) do |component|
           component.with_directory(label: "src", expanded: expanded) do |dir|
             dir.with_trailing_visual_icon(icon: :"diff-modified")
 

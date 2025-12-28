@@ -12,11 +12,11 @@ value:
     from:
       id: 108
       _type: WorkPackage
-      _hint: Work package resource shortened for brevity.
+      _abbreviated: Work package resource shortened for brevity.
     to:
       id: 78
       _type: WorkPackage
-      _hint: Work package resource shortened for brevity.
+      _abbreviated: Work package resource shortened for brevity.
   _links:
     self:
       href: /api/v3/relations/650

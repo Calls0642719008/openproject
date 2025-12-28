@@ -23,7 +23,7 @@ module ::Avatars
         else
           flash[:error] = result.errors.full_messages.join(", ")
         end
-        redirect_to redirect_path
+        redirect_to redirect_path, status: :see_other
       else
         head :method_not_allowed
       end

@@ -31,6 +31,8 @@
 module My
   module TimeTracking
     class TimeEntryRow < OpPrimer::BorderBoxRowComponent
+      include Redmine::I18n
+
       def button_links
         [
           action_menu
@@ -43,21 +45,20 @@ module My
         render(Primer::Alpha::ActionMenu.new) do |menu|
           menu.with_show_button(icon: "kebab-horizontal", "aria-label": t("label_more"), scheme: :invisible)
 
-          if time_entry.ongoing?
-            stop_timer_action_button(menu)
-          else
-            edit_action_button(menu)
+          with_item_group(menu) do
+            if time_entry.ongoing?
+              stop_timer_action_button(menu)
+            else
+              edit_action_button(menu)
+            end
           end
 
-          if can_delete_time_entry?
-            menu.with_divider
-            delete_action_button(menu)
-          end
+          with_item_group(menu) { delete_action_button(menu) } if can_delete_time_entry?
         end
       end
 
       def spent_on
-        I18n.l(time_entry.spent_on)
+        format_time(time_entry.spent_on)
       end
 
       def time
@@ -158,20 +159,21 @@ module My
       end
 
       def ongoing_time
-        I18n.t("label_timer_since",
-               time: I18n.l(time_entry.created_at.in_time_zone(time_entry.time_zone), format: :time))
+        time = format_time(time_entry.created_at, include_date: !time_entry.created_at.today?)
+        I18n.t("label_timer_since", time:)
       end
 
       def time_range # rubocop:disable Metrics/AbcSize
         return if time_entry.start_time.blank?
 
-        times = [I18n.l(time_entry.start_timestamp, format: :time)]
+        times = [format_time(time_entry.start_timestamp, include_date: false)]
 
-        times << if time_entry.start_timestamp.to_date == time_entry.end_timestamp.to_date
-                   I18n.l(time_entry.end_timestamp, format: :time)
-                 else
-                   I18n.l(time_entry.end_timestamp, format: :short)
-                 end
+        times <<
+          if time_entry.start_timestamp.to_date == time_entry.end_timestamp.to_date
+            format_time(time_entry.end_timestamp, include_date: false)
+          else
+            format_time(time_entry.end_timestamp, include_date: true)
+          end
 
         times.join(" - ")
       end

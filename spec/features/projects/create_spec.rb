@@ -59,8 +59,13 @@ RSpec.describe "Projects", "creation",
 
     expect(page).to have_heading "New project"
 
+    # Step 1: Select workspace type (blank project)
+    click_on "Continue"
+
+    # Step 2: Fill in project details
+    expect(page).to have_text("2 of 2")
     fill_in "Name", with: "Foo bar"
-    click_on "Create"
+    click_on "Complete"
 
     expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -73,8 +78,12 @@ RSpec.describe "Projects", "creation",
 
     expect(page).to have_heading "New project"
 
+    # Step 1: Select workspace type (blank project)
+    click_on "Continue"
+
+    # Step 2: Fill in project details
     fill_in "Name", with: "Foo project"
-    click_on "Create"
+    click_on "Complete"
 
     expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -84,11 +93,30 @@ RSpec.describe "Projects", "creation",
     expect(project.identifier).to eq "foo-project-1"
   end
 
+  it "does not create a project when the name is not present" do
+    projects_page.create_new_workspace
+
+    expect(page).to have_heading "New project"
+
+    # Step 1: Select workspace type (blank project)
+    click_on "Continue"
+
+    # Step 2: Try to complete without name
+    expect(page).to have_text("2 of 2")
+    click_on "Complete"
+
+    expect_and_dismiss_flash type: :error, message: /^Creation failed/
+
+    expect(page).to have_text("2 of 2")
+    expect(page).to have_field "Name", validation_error: "can't be blank."
+  end
+
   context "with a multi-select list custom field" do
     shared_let(:list_custom_field) do
       create(:list_project_custom_field,
              name: "List CF",
              is_required: true,
+             is_for_all: true,
              multi_value: true,
              project_custom_field_section:)
     end
@@ -104,12 +132,20 @@ RSpec.describe "Projects", "creation",
 
       expect(page).to have_heading "New project"
 
-      fill_in "Name", with: "Foo bar"
+      # Step 1: Select workspace type (blank project)
+      click_on "Continue"
 
+      # Step 2: Fill in project details
+      expect(page).to have_text("2 of 3")
+      fill_in "Name", with: "Foo bar"
+      click_on "Continue"
+
+      # Step 3: Fill in custom fields
+      expect(page).to have_text("3 of 3")
       expect(page).to have_combo_box "List CF *"
       list_field.select_option "A", "B"
 
-      click_on "Create"
+      click_on "Complete"
 
       expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -142,6 +178,7 @@ RSpec.describe "Projects", "creation",
       create(:version_project_custom_field,
              name: "Version CF",
              is_required: true,
+             is_for_all: true,
              multi_value: true,
              project_custom_field_section:)
     end
@@ -158,8 +195,16 @@ RSpec.describe "Projects", "creation",
 
       expect(page).to have_heading "New project"
 
-      fill_in "Name", with: "Foo bar"
+      # Step 1: Select workspace type (blank project)
+      click_on "Continue"
 
+      # Step 2: Fill in project details
+      expect(page).to have_text("2 of 3")
+      fill_in "Name", with: "Foo bar"
+      click_on "Continue"
+
+      # Step 3: Fill in custom fields
+      expect(page).to have_text("3 of 3")
       expect(page).to have_combo_box "Version CF *"
 
       # expect the versions are grouped by the project name
@@ -168,7 +213,7 @@ RSpec.describe "Projects", "creation",
 
       version_field.select_option(versions.first.name, versions.last.name)
 
-      click_on "Create"
+      click_on "Complete"
 
       expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -215,14 +260,36 @@ RSpec.describe "Projects", "creation",
                                            project_custom_field_section:)
       end
 
-      it "renders required custom fields for new" do
+      shared_let(:required_but_inactive_custom_field) do
+        create(:text_project_custom_field,
+               name: "Required inactive",
+               is_required: true,
+               project_custom_field_section:)
+      end
+
+      it "renders activated required custom fields for new" do
         visit new_project_path
 
         expect(page).to have_heading "New project"
 
-        expect(page).to have_field "Required Foo", required: true
-        expect(page).to have_field "Required User *" # FIXME required: true
+        # Step 1: Select workspace type (blank project)
+        click_on "Continue"
+
+        # Step 2: Project details - skip to step 3
+        expect(page).to have_text("2 of 3")
+        fill_in "Name", with: "Test Project"
+        click_on "Continue"
+
+        # Step 3: Custom fields
+        expect(page).to have_text("3 of 3")
+        expect(page).to have_field "Required Foo *"
+        expect(page).to have_field "Required User *"
+
+        # Optional fields should not be shown
         expect(page).to have_no_field "Optional Foo"
+
+        # Inactive fields, even if required, should not be shown
+        expect(page).to have_no_field "Required Inactive *"
       end
     end
 
@@ -234,11 +301,22 @@ RSpec.describe "Projects", "creation",
       it "requires the required custom field" do
         expect(page).to have_heading "New project"
 
-        click_on "Create"
+        # Step 1: Select workspace type (blank project)
+        click_on "Continue"
+
+        # Step 2: Fill in name
+        expect(page).to have_text("2 of 3")
+        fill_in "Name", with: "Test Project"
+        click_on "Continue"
+
+        # Step 3: Try to complete without required custom field
+        expect(page).to have_text("3 of 3")
+        click_on "Complete"
 
         expect_and_dismiss_flash type: :error, message: /^Creation failed/
 
-        expect(page).to have_field "Required Foo", validation_error: "can't be blank."
+        expect(page).to have_text("3 of 3")
+        expect(page).to have_field "Required Foo *", validation_error: "can't be blank."
       end
     end
 
@@ -254,12 +332,19 @@ RSpec.describe "Projects", "creation",
 
         expect(page).to have_heading "New project" # rubocop:disable RSpec/ExpectInHook
 
+        # Step 1: Select workspace type
+        click_on "Continue"
+
+        # Step 2: Fill in project details
         fill_in "Name", with: "Foo bar"
+        click_on "Continue"
+
+        # Step 3: Fill in required custom field
         fill_in "Required Foo", with: "Required value"
       end
 
-      it "enables custom fields with provided values for this project" do
-        click_on "Create"
+      it "enables custom fields with provided values and for_all fields for this project" do
+        click_on "Complete"
 
         expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -269,7 +354,7 @@ RSpec.describe "Projects", "creation",
 
         # unused custom field should not be activated
         expect(project.project_custom_field_ids).to contain_exactly(
-          required_custom_field.id
+          required_custom_field.id, optional_custom_field.id
         )
       end
 
@@ -278,13 +363,14 @@ RSpec.describe "Projects", "creation",
           create(:project_custom_field, name: "Foo with default value",
                                         field_format: "string",
                                         is_required: true,
+                                        is_for_all: true,
                                         default_value: "Default value",
                                         project_custom_field_section:)
         end
 
         it "enables custom fields with default values if not set to blank explicitly" do
           # don't touch the default value
-          click_on "Create"
+          click_on "Complete"
 
           expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -294,7 +380,7 @@ RSpec.describe "Projects", "creation",
 
           # custom_field_with_default_value should be activated and contain the default value
           expect(project.project_custom_field_ids).to contain_exactly(
-            custom_field_with_default_value.id, required_custom_field.id
+            custom_field_with_default_value.id, required_custom_field.id, optional_custom_field.id
           )
 
           expect(project.custom_value_for(custom_field_with_default_value).value).to eq("Default value")
@@ -303,7 +389,7 @@ RSpec.describe "Projects", "creation",
         it "does enable custom fields with default values if overwritten with a new value" do
           fill_in "Foo with default value", with: "foo"
 
-          click_on "Create"
+          click_on "Complete"
 
           expect(page).to have_current_path /\/projects\/foo-bar\/?/
 
@@ -313,7 +399,7 @@ RSpec.describe "Projects", "creation",
 
           # custom_field_with_default_value should be activated and contain the overwritten value
           expect(project.project_custom_field_ids).to contain_exactly(
-            custom_field_with_default_value.id, required_custom_field.id
+            custom_field_with_default_value.id, required_custom_field.id, optional_custom_field.id
           )
 
           expect(project.custom_value_for(custom_field_with_default_value).value).to eq("foo")
@@ -324,6 +410,7 @@ RSpec.describe "Projects", "creation",
         shared_let(:invisible_field) do
           create(:string_project_custom_field, name: "Text for Admins only",
                                                is_required: true,
+                                               is_for_all: true,
                                                admin_only: true,
                                                project_custom_field_section:)
         end
@@ -334,7 +421,7 @@ RSpec.describe "Projects", "creation",
 
             fill_in "Text for Admins only", with: "foo"
 
-            click_on "Create"
+            click_on "Complete"
 
             expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -343,7 +430,7 @@ RSpec.describe "Projects", "creation",
             project = Project.last
 
             expect(project.project_custom_field_ids).to contain_exactly(
-              required_custom_field.id, invisible_field.id
+              required_custom_field.id, optional_custom_field.id, invisible_field.id
             )
 
             expect(project.custom_value_for(invisible_field).typed_value).to eq("foo")
@@ -358,7 +445,7 @@ RSpec.describe "Projects", "creation",
 
             expect(page).to have_no_content "Text for Admins only"
 
-            click_on "Create"
+            click_on "Complete"
 
             expect_and_dismiss_flash type: :success, message: "Successful creation."
 
@@ -367,10 +454,65 @@ RSpec.describe "Projects", "creation",
             project = Project.last
 
             expect(project.project_custom_field_ids).to contain_exactly(
-              required_custom_field.id
+              required_custom_field.id, optional_custom_field.id
             )
           end
         end
+      end
+    end
+  end
+
+  context "with workspace type badges in parent field", with_flag: { portfolio_models: true } do
+    include_context "ng-select-autocomplete helpers"
+
+    shared_let(:portfolio) { create(:portfolio, name: "Parent Portfolio") }
+    shared_let(:program) { create(:program, name: "Parent Program") }
+
+    it "displays workspace type badges for portfolios and programs in the parent field" do
+      visit new_project_path
+
+      # Step 1: Select workspace type (blank project)
+      click_on "Continue"
+
+      # Step 2: Fill in project details
+      fill_in "Name", with: "Test Subproject"
+
+      # Open parent field autocompleter
+      expect(page).to have_combo_box "Subproject of"
+      parent_autocompleter = page.find("opce-project-autocompleter")
+
+      # Search for portfolio
+      dropdown = search_autocomplete(parent_autocompleter,
+                                     query: "Portfolio",
+                                     results_selector: ".ng-dropdown-panel-items")
+
+      within(dropdown) do
+        expect(page).to have_text("Portfolio")
+        expect(page).to have_css("svg.octicon")
+      end
+
+      # Clear and search for program
+      parent_autocompleter.find("input").set("")
+
+      dropdown = search_autocomplete(parent_autocompleter,
+                                     query: "Program",
+                                     results_selector: ".ng-dropdown-panel-items")
+
+      within(dropdown) do
+        expect(page).to have_text("Program")
+        expect(page).to have_css("svg.octicon")
+      end
+
+      # Clear and search for regular project - should not have workspace type badge
+      parent_autocompleter.find("input").set("")
+
+      dropdown = search_autocomplete(parent_autocompleter,
+                                     query: "Foo project",
+                                     results_selector: ".ng-dropdown-panel-items")
+
+      within(dropdown) do
+        expect(page).to have_text("Foo project")
+        expect(page).to have_no_css("svg.octicon")
       end
     end
   end

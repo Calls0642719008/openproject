@@ -48,13 +48,17 @@ RSpec.describe "Meeting notifications", :js do
 
   shared_examples "notification checkbox behaviour" do
     it "shows checkbox checked initially" do
-      within "#meeting-form" do
+      page.find_by_id("open-meeting-button").click
+
+      within "#exit-draft-mode-dialog" do
         expect(page).to have_field(I18n.t("label_meeting_send_updates"), type: "checkbox", checked: true)
       end
     end
 
     it "toggles banner on checkbox change" do
-      within "#meeting-form" do
+      page.find_by_id("open-meeting-button").click
+
+      within "#exit-draft-mode-dialog" do
         # toggle between checkbox states
         checkbox = find_field(I18n.t("label_meeting_send_updates"))
         expect(page).to have_css(".Banner", text: enabled_text.strip)
@@ -81,23 +85,28 @@ RSpec.describe "Meeting notifications", :js do
       meetings_page.visit!
       meetings_page.click_on "add-meeting-button"
       meetings_page.click_on "One-time"
+      meetings_page.set_title "Some title"
+      meetings_page.click_create
     end
 
     include_examples "notification checkbox behaviour"
 
-    it "sets and toggle the calendar updates state" do
-      meetings_page.set_title "Some title"
-      meetings_page.click_create
+    it "sets and toggles the calendar updates state" do
+      # check if the default is set correctly
+      expect(meeting.notify).to be false
 
-      # check if notify is set correct
-      expect(meeting.notify).to be true
+      show_page.visit!
 
-      # send initial mail to meeting creator
+      # check if notify is set to true when opening a meeting without unchecking
+      show_page.open_meeting
+      expect(meeting.reload.notify).to be true
+
+      wait_for_network_idle
+
+      # check if mail is sent on opening meeting (Bug #70109)
       perform_enqueued_jobs
       expect(ActionMailer::Base.deliveries.size).to eq 1
       ActionMailer::Base.deliveries.clear
-
-      show_page.visit!
 
       # check calendar updates sidepanel component
       page.within("[data-test-selector='email-updates-mode-selector']") do
@@ -220,6 +229,8 @@ RSpec.describe "Meeting notifications", :js do
       page.within(".Overlay") do
         meetings_page.click_on "Recurring"
       end
+      meetings_page.set_title "Some title"
+      meetings_page.click_create
     end
 
     include_examples "notification checkbox behaviour"
@@ -227,28 +238,27 @@ RSpec.describe "Meeting notifications", :js do
 
   context "for a recurring meeting" do
     let(:current_user) { user }
-    let(:meeting) do
-      create :recurring_meeting,
-             :skip_validations,
-             project:,
-             start_time: 1.day.from_now.to_date,
-             duration: 1.5,
-             frequency: "weekly",
-             end_after: "specific_date",
-             end_date: 1.year.from_now.to_date,
-             author: current_user
-    end
+    let(:meetings_page) { Pages::Meetings::Index.new(project:) }
+    let(:meeting) { RecurringMeeting.last }
     let(:show_page) { Pages::RecurringMeeting::Show.new(meeting) }
     let(:template_page) { Pages::Meetings::Show.new(meeting.template) }
     let(:occurrence_page) { Pages::Meetings::Show.new(meeting.meetings.where(template: false).first) }
 
+    before do
+      meetings_page.visit!
+      meetings_page.click_on "add-meeting-button"
+      page.within(".Overlay") do
+        meetings_page.click_on "Recurring"
+      end
+      meetings_page.set_title "Some title"
+      meetings_page.click_create
+    end
+
     it "can set and toggle the calendar updates state for the template and occurrences" do
       template_page.visit!
 
-      expect(meeting.template.notify).to be true
-      page.within("#meetings-header-component") do
-        click_on "Open first meeting"
-      end
+      expect(meeting.template.notify).to be false
+      template_page.open_first_meeting
 
       wait_for_network_idle
 
@@ -367,6 +377,18 @@ RSpec.describe "Meeting notifications", :js do
   context "when a meeting is closed" do
     let(:current_user) { user }
     let(:meeting) { create(:meeting, project:, author: current_user, notify: true, state: :closed) }
+    let(:show_page) { Pages::Meetings::Show.new(meeting) }
+
+    it "does not show the sidebar component" do
+      show_page.visit!
+
+      expect(page).to have_no_css("[data-test-selector='email-updates-mode-selector']")
+    end
+  end
+
+  context "when a meeting is in draft state" do
+    let(:current_user) { user }
+    let(:meeting) { create(:meeting, project:, author: current_user, notify: true, state: :draft) }
     let(:show_page) { Pages::Meetings::Show.new(meeting) }
 
     it "does not show the sidebar component" do

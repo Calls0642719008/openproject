@@ -13,14 +13,8 @@ nl:
           no_results: 'Geen documenten.'
         members:
           title: 'Leden'
-          no_results: 'Geen zichtbare leden.'
-          view_all_members: 'Alle leden bekijken'
-          add: 'Deelnemer'
-          too_many: 'Weergave van %{count} van %{total} leden.'
         news:
           title: 'Nieuws'
-          at: 'bij'
-          no_results: 'Niets nieuws om te rapporteren.'
         project_description:
           title: 'Projectbeschrijving'
           no_results: "Er is nog geen beschrijving geschreven. Er kan een vermelding worden verstrekt in de 'Projectinstellingen'."
@@ -33,9 +27,10 @@ nl:
           not_set: 'Niet ingesteld'
           finished: 'Afgewerkt'
           discontinued: 'Stopgezet'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: 'Subprojecten'
-          no_results: 'Geen subprojecten.'
+          title: 'Subitems'
         project_favorites:
           title: 'Favoriete projecten'
           no_results: 'U hebt momenteel geen favoriete projecten. Klik op het sterpictogram in het projectdashboard om er een aan uw favorieten toe te voegen.'
@@ -57,6 +52,7 @@ nl:
           title: 'Werkpakketten tabel'
         work_packages_graph:
           title: 'Werkpakketten grafiek'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Kalender'
         work_packages_overview:

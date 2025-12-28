@@ -106,7 +106,7 @@ RSpec.describe "Recurring meetings move to next meeting", :js do
         create(:scheduled_meeting,
                :cancelled,
                recurring_meeting: series,
-               start_time: series.next_occurrence(from_time: recurring_meeting.start_time))
+               start_time: series.next_occurrence(from_time: Time.current))
       end
 
       it "shows the move to next meeting option" do

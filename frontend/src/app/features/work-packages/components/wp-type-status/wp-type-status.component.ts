@@ -35,5 +35,5 @@ import { Component, Input } from '@angular/core';
   standalone: false,
 })
 export class WorkPackageTypeStatusComponent {
-  @Input('workPackage') workPackage:WorkPackageResource;
+  @Input() workPackage:WorkPackageResource;
 }

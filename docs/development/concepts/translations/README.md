@@ -93,9 +93,11 @@ Then you can use them as below in your template:
   <span class="button—text" [innerText]=”text.saveButton”></span>
 </button>
 
-<div *ngIf="news.author" class="news-author">
-  <span [innerText]="text.addedBy(news)"></span>
-</div>
+@if (news.author) {
+  <div class="news-author">
+    <span [innerText]="text.addedBy(news)"></span>
+  </div>
+}
 ```
 
 For more information on formatting and other helpers of the `I18n.js` library, see [github.com/fnando/i18n-js](https://github.com/fnando/i18n-js)

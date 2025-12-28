@@ -13,14 +13,8 @@ de:
           no_results: 'Keine Dokumente.'
         members:
           title: 'Mitglieder'
-          no_results: 'Kein sichtbaren Mitglieder.'
-          view_all_members: 'Alle Mitglieder anzeigen'
-          add: 'Mitglied'
-          too_many: 'Zeigt %{count} von %{total} Mitgliedern an.'
         news:
           title: 'Neuigkeiten'
-          at: 'um'
-          no_results: 'Nichts Neues zu berichten.'
         project_description:
           title: 'Projektbeschreibung'
           no_results: "Noch keine Beschreibung festgelegt. Sie kann in den 'Projekteinstellungen' erstellt werden."
@@ -33,9 +27,10 @@ de:
           not_set: 'Nicht gesetzt'
           finished: 'Abgeschlossen'
           discontinued: 'Eingestellt'
+        project_status_beta:
+          title: 'Projektstatus (BETA)'
         subprojects:
-          title: 'Unterprojekte'
-          no_results: 'Keine Unterprojekte.'
+          title: 'Unterelemente'
         project_favorites:
           title: 'Favorisierte Projekte'
           no_results: 'Sie haben derzeit keine favorisierten Projekte. Klicken Sie auf den Stern auf der Projektübersicht, um ein Projekt zu Ihren Favoriten hinzuzufügen.'
@@ -57,6 +52,7 @@ de:
           title: 'Arbeitspaket-Tabelle'
         work_packages_graph:
           title: 'Arbeitspaket-Graph'
+          summary: "%{chartType} Tabelle mit Arbeitspaketen, die %{description} sind."
         work_packages_calendar:
           title: 'Kalender'
         work_packages_overview:

@@ -35,6 +35,8 @@ class OpenProject::JournalFormatter::CustomField
   end
 
   def render(key, values, options = { html: true })
+    return if custom_field_for_key(key)&.admin_only && !User.current.admin?
+
     formatter_for_key(key).render(key, values, options)
   end
 

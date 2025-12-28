@@ -88,7 +88,7 @@ ja:
       projects:
         demo-construction-project:
           name: "(デモ) 建設プロジェクト"
-          status_explanation: すべてのタスクとサブプロジェクトは予定通りです。関係者は彼らのタスクを知っています。システムは完全に設定されています。
+          status_explanation: すべてのタスクと子プロジェクトは予定通りです。関係者は彼らのタスクを知っています。システムは完全に設定されています。
           description: これは、このデモ建設プロジェクトの目標の概要です。
           news:
             item_0:
@@ -178,21 +178,21 @@ ja:
                 options:
                   name: はじめに
                   text: |
-                    We are glad you joined! We suggest to try a few things to get started in OpenProject.
+                    ご参加いただきありがとうございます！OpenProjectを始めるにあたって、いくつかのことを試してみることをお勧めします。
 
-                    Here you will find the classical roles, some workflows and work packages for your construction project.
+                    ここでは、建設プロジェクトに必要な古典的な役割、いくつかのワークフロー、ワークパッケージを紹介します。
 
-                    _Try the following steps:_
 
-                    1.  _Invite new members to your project:_ → Go to [Members]({{opSetting:base_url}}/projects/demo-planning-constructing-project/members) in the project navigation.
-                    2.  _View the work in your projects:_ → Go to [Work packages]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) in the project navigation.
-                    3.  _Create a new work package:_ → Go to [Work packages → Create]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages/new?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D&type=11).
-                    4.  _Create and update a Gantt chart:_ → Go to [Gantt chart]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22assignee%22%2C%22responsible%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) in the project navigation.
-                    5.  _Activate further modules:_ → Go to [Project settings → Modules]({{opSetting:base_url}}/projects/demo-planning-constructing-project/settings/modules).
-                    6.  _Working agile? Create a new board:_ → Go to [Boards]({{opSetting:base_url}}/projects/demo-planning-constructing-project/boards)
 
-                    Here you will find our [User Guides](https://www.openproject.org/docs/user-guide/).
-                    Please let us know if you have any questions or need support. Contact us: [support\[at\]openproject.com](mailto:support@openproject.com).
+                    1.  プロジェクトに新しいメンバーを招待する: _ → プロジェクトナビゲーションの [メンバー]({{opSetting:base_url}}/projects/demo-planning-constructing-project/members) に移動します。
+                    2.  プロジェクト内の作業を見る:_ → プロジェクトナビゲーションの[作業パッケージ]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) を開きます。
+                    3.  新しいワークパッケージを作成する：_ → [ワークパッケージ → 作成]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages/new?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D&type=11).
+                    4.  ガントチャートの作成と更新:_ → [ガントチャート]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22assignee%22%2C%22responsible%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) プロジェクトナビゲーションにある。
+                    5.  プロジェクト設定 → モジュール]({{opSetting:base_url}}/projects/demo-planning-constructing-project/settings/modules)に進みます。
+                    6.  アジャイルに働くか？新しいボードを作成する:_ → [ボード]({{opSetting:base_url}}/projects/demo-planning-constructing-project/boards)
+
+                    ここに[ユーザーガイド](https://www.openproject.org/docs/user-guide/)があります。
+                    ご質問やサポートが必要な場合はご連絡ください。ご連絡ください：[support[at]openproject.com](mailto:support@openproject.com)。
               item_4:
                 options:
                   name: メンバー
@@ -214,79 +214,79 @@ ja:
               description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
-                  subject: Gathering first project information
+                  subject: 最初のプロジェクト情報の収集
                   description: |-
-                    ## Goal
+                    ## 目標
 
-                    *   Define tasks based on the customer needs
-                    *   Time frame and cost estimation shall be defined
+                    * 顧客のニーズに基づいてタスクを定義する
+                    * 時間枠と見積もりコストを定義する
 
-                    ## Description
+                    ## 概要
 
-                    *   Identify the customer needs by having a workshop with him/ her
-                    *   Each need shall represent a task with its corresponding work packages
-                    *   Derive the cost estimation and time frame
+                    * 顧客とワークショップを行い、顧客のニーズを特定する
+                    * 各ニーズは、対応する作業パッケージとともにタスクを表す
+                    * 見積もりコストと時間枠を算出する
                 item_1:
-                  subject: Summarize the results
+                  subject: 結果の概要
                   description: |-
-                    ## Goal
+                    ## 目標
 
-                    *   Create a useful overview of the results
-                    *   Check what has been done and summarize the results
-                    *   Communicate all the relevant results with the customer
-                    *   Identify the fundamental boundary conditions of the project
+                    * 使いやすい結果の概要を作成する
+                    * 何が完了したか確認し，結果をまとめる
+                    * すべての関連する結果に関して顧客と会話する
+                    * プロジェクトの基本的な境界条件について認識する
 
-                    ## Description
+                    ## 概要
 
-                    *   Each topic gets its own overview which will be used as a catalogue of results
-                    *   This overview informs all participants about the decisions made
-                    *   ...
+                    * それぞれのトピックについてまとめて，結果のカタログにする
+                    *このまとめには決断を下したすべての参加者を加える
+                    * …
                 item_2:
-                  subject: End of basic evaluation
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  subject: 基礎評価の終了
+                  description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_2:
-              subject: Preliminary planning
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: 予備計画
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
-                  subject: Developing first draft
+                  subject: 最初の下書きの開発
                   description: |-
-                    ## Goal
+                    ## 目標
 
-                    *   Create a useful overview of the results
-                    *   Check what has been done and summarize the results
-                    *   Communicate all the relevant results with the customer
-                    *   Identify the fundamental boundary conditions of the project
+                    * 使いやすい結果の概要を作成する
+                    * 何が完了したか確認し，結果をまとめる
+                    * すべての関連する結果に関して顧客と会話する
+                    * プロジェクトの基本的な境界条件について認識する
 
-                    ## Description
+                    ## 概要
 
-                    *   Each topic gets its own overview which will be used as a catalogue of results
-                    *   This overview informs all participants about the decisions made
-                    *   ...
+                    * それぞれのトピックについてまとめて，結果のカタログにする
+                    *このまとめには決断を下したすべての参加者を加える
+                    * …
                 item_1:
-                  subject: Summarize results
+                  subject: 結果の概要
                   description: |-
-                    ## Goal
+                    ## 目標
 
-                    *   Create a useful overview of the results
-                    *   Check what has been done and summarize the results
-                    *   Communicate all the relevant results with the customer
-                    *   Identify the fundamental boundary conditions of the project
+                    * 使いやすい結果の概要を作成する
+                    * 何が完了したか確認し，結果をまとめる
+                    * すべての関連する結果に関して顧客と会話する
+                    * プロジェクトの基本的な境界条件について認識する
 
-                    ## Description
+                    ## 概要
 
-                    *   Each topic gets its own overview which will be used as a catalogue of results
-                    *   This overview informs all participants about the decisions made
-                    *   ...
+                    * それぞれのトピックについてまとめて，結果のカタログにする
+                    *このまとめには決断を下したすべての参加者を加える
+                    * …
             item_3:
-              subject: Passing of preliminary planning
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: 予備計画の経過
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_4:
-              subject: Design planning
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: 設計
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
-                  subject: Finishing design
+                  subject: 仕上げ
                   description: |-
                     ## Goal
 
@@ -300,13 +300,13 @@ ja:
                     *   The owner is happy with the results
                     *   ...
                 item_1:
-                  subject: Design freeze
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  subject: フリーズ
+                  description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_5:
-              subject: Construction phase
+              subject: 制作フェーズ
               children:
                 item_0:
-                  subject: Start constructing
+                  subject: 制作の開始
                   description: |-
                     ## Goal
 
@@ -320,7 +320,7 @@ ja:
                     *   Get the team together
                     *   ...
                 item_1:
-                  subject: Foundation
+                  subject: 基本
                   description: |-
                     ## Goal
 
@@ -333,7 +333,7 @@ ja:
                     *   Setting up the supply chain for the concrete
                     *   ...
                 item_2:
-                  subject: Building construction
+                  subject: 建物の建設
                   description: |-
                     ## Goal
 
@@ -348,7 +348,7 @@ ja:
                     *   Finishing the roof structure
                     *   ...
                 item_3:
-                  subject: Finishing the facade
+                  subject: ファサードを終了しています
                   description: |-
                     ## Goal
 
@@ -362,7 +362,7 @@ ja:
                     *   Finish the roof
                     *   ...
                 item_4:
-                  subject: Installing the building service systems
+                  subject: 建物サービスシステムのインストール
                   description: |-
                     ## Goal
 
@@ -390,7 +390,7 @@ ja:
                     *   Finishing the facade
                     *   ...
                 item_6:
-                  subject: House warming party
+                  subject: 新築パーティー
                   description: |-
                     ## Goal
 
@@ -402,32 +402,32 @@ ja:
                     *   Invite your friends
                     *   Bring some drinks, snacks and your smile
         demo-bim-project:
-          name: "(Demo) BIM project"
-          status_explanation: All tasks and sub-projects are on schedule. The people involved know their tasks. The system is completely set up.
-          description: This is a short summary of the goals of this demo BIM project.
+          name: "(デモ) BIM プロジェクト"
+          status_explanation: "すべてのタスクと子プロジェクトは予定通りです。\n関係者はタスクを認知しています。システムは完全にセットアップされています。"
+          description: これはデモBIMプロジェクトのゴールの概要です。
           news:
             item_0:
-              title: Welcome to your demo project
+              title: デモ・プロジェクトへようこそ
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
-              description: The actual news
+                ご参加ありがとうございます。
+                このモジュールでは、プロジェクトのニュースをチームメンバーに伝えることができます。
+              description: 実際のニュース
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: カテゴリー1（プロジェクト設定で変更可能）
           queries:
             item_0:
-              name: Project plan
+              name: プロジェクト計画
             item_1:
               name: マイルストーン
             item_2:
-              name: Tasks
+              name: タスク
             item_3:
               name: チーム プランナー
           project-overview:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: ようこそ
               item_1:
                 options:
                   name: はじめに
@@ -461,14 +461,14 @@ ja:
                   name: マイルストーン
           work_packages:
             item_0:
-              subject: Project kick off creating BIM model
+              subject: プロジェクトがBIMモデルの作成を開始
               description: |-
                 キックオフは、会社におけるプロジェクト開始の会議体です。このプロジェクトに参加する人全員をキックオフに招待し、最初のブリーフィングを行う。
 
                 次のステップは、[ガントチャート]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22id%22%2C%22subject%22%2C%22startDate%22%2C%22dueDate%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22status%22%2C%22o%22%3A%22o%22%2C%22v%22%3A%5B%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%7D)。
             item_1:
-              subject: Project preparation
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: プロジェクトの準備
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
                   subject: Gathering the project specific data and information for the BIM model
@@ -501,13 +501,13 @@ ja:
                     *   ...
                 item_2:
                   subject: Completion of the BIM execution plan
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_2:
               subject: End of preparation phase
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_3:
               subject: Creating initial BIM model
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
                   subject: Modelling initial BIM model
@@ -535,10 +535,10 @@ ja:
                     *   ...
                 item_2:
                   subject: Submitting initial BIM model
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_4:
               subject: Modelling, first cycle
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
                   subject: Referencing external BIM models
@@ -575,10 +575,10 @@ ja:
                     *   ...
                 item_3:
                   subject: Submitting BIM model
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_5:
               subject: Coordination, first cycle
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
               children:
                 item_0:
                   subject: Coordinate the different BIM models
@@ -597,22 +597,22 @@ ja:
                   subject: Issue management, first cycle
                 item_2:
                   subject: Finishing coordination, first cycle
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_6:
               subject: Modelling & coordinating, second cycle
               description: "## Goal\r\n\r\n*   ...\r\n\r\n## Description\r\n\r\n* \\  ..."
             item_7:
               subject: Modelling & coordinating, ... cycle
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_8:
               subject: Modelling & coordinating, (n-th minus 1) cycle
               description: "## Goal\r\n\r\n*   ...\r\n\r\n## Description\r\n\r\n* \\  ..."
             item_9:
               subject: Modelling & coordinating n-th cycle
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_10:
               subject: Finishing modelling & coordinating, n-th cycle
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              description: この型は階層的に &quot;Clash&quot; と &quot;Request&quot;型の親であるため、一般的なノートを表します。
             item_11:
               subject: Use model for construction phase
               children:
@@ -664,7 +664,7 @@ ja:
               description: Enjoy your building :)
         demo-bcf-management-project:
           name: "(Demo) BCF management"
-          status_explanation: All tasks are on schedule. The people involved know their tasks. The system is completely set up.
+          status_explanation: すべてのタスクがスケジュール通りに進んでいる。関係者は自分のタスクを把握している。システムは完全にセットアップされている。
           description: This is a short summary of the goals of this demo BCF management project.
           ifc_models:
             item_0:
@@ -674,7 +674,7 @@ ja:
             item_2:
               name: Hospital - Mechanical (cc-by-sa-3.0 Autodesk Inc.)
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: カテゴリー1（プロジェクト設定で変更可能）
           queries:
             item_0:
               name: 課題
@@ -685,11 +685,11 @@ ja:
             item_3:
               name: Remarks
             item_4:
-              name: Project plan
+              name: プロジェクト計画
             item_5:
               name: マイルストーン
             item_6:
-              name: Tasks
+              name: タスク
             item_7:
               name: チーム プランナー
           boards:
@@ -699,7 +699,7 @@ ja:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: ようこそ
               item_1:
                 options:
                   name: はじめに

@@ -35,7 +35,7 @@ export class ProjectResource extends HalResource {
   }
 
   public getEditorContext(fieldName:string):ICKEditorContext {
-    if (['statusExplanation', 'description'].indexOf(fieldName) !== -1) {
+    if (['statusExplanation', 'description'].includes(fieldName)) {
       return { type: 'full', macros: 'resource' };
     }
 

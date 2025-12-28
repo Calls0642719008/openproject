@@ -42,7 +42,7 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<% if @custom_field.hierarchical_list? %>
+<% if CustomFields::DetailsComponent.supported?(@custom_field) %>
   <%= render CustomFields::DetailsComponent.new(@custom_field) %>
 <% else %>
   <%= error_messages_for "custom_field" %>

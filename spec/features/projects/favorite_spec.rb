@@ -31,7 +31,7 @@
 require "spec_helper"
 require_relative "../../../modules/my_page/spec/support/pages/my/page"
 
-RSpec.describe "Favorite projects", :js, :selenium do
+RSpec.describe "Favorite projects", :js do
   shared_let(:project) { create(:public_project, name: "My favorite!", enabled_module_names: []) }
   shared_let(:other_project) { create(:public_project, name: "Other project", enabled_module_names: []) }
   shared_let(:user) do
@@ -66,17 +66,17 @@ RSpec.describe "Favorite projects", :js, :selenium do
       expect(page).to have_css "a", accessible_name: "Remove from favorite"
 
       project.reload
-      expect(project).to be_favored_by(user)
+      expect(project).to be_favorited_by(user)
 
       projects_page.visit!
       projects_page.open_filters
-      projects_page.filter_by_favored "yes"
+      projects_page.filter_by_favorited "yes"
 
       expect(page).to have_text "My favorite!"
 
       projects_page.visit!
       projects_page.open_filters
-      projects_page.filter_by_favored "no"
+      projects_page.filter_by_favorited "no"
 
       expect(page).to have_no_text "My favorite!"
 
@@ -114,10 +114,10 @@ RSpec.describe "Favorite projects", :js, :selenium do
       top_menu.expect_current_mode "All"
     end
 
-    context "when project is favored" do
+    context "when project is favorited" do
       before do
-        project.add_favoring_user(user)
-        other_project.add_favoring_user(user)
+        project.add_favoriting_user(user)
+        other_project.add_favoriting_user(user)
         other_project.update! active: false
       end
 
@@ -137,7 +137,7 @@ RSpec.describe "Favorite projects", :js, :selenium do
     context "when favoriting only one subproject" do
       before do
         project.update! parent: other_project
-        project.add_favoring_user(user)
+        project.add_favoriting_user(user)
       end
 
       it "still shows up in top menu (Regression #54729)" do
@@ -171,7 +171,7 @@ RSpec.describe "Favorite projects", :js, :selenium do
       ProjectRole.anonymous.update permissions: [:view_project]
     end
 
-    it "does not shows favored projects" do
+    it "does not shows favorited projects" do
       visit project_path(project)
 
       retry_block do

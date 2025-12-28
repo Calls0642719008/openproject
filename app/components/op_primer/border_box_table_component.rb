@@ -82,8 +82,8 @@ module OpPrimer
     end
 
     def column_title(name)
-      header = headers.find { |h| h[0] == name }
-      header ? header[1][:caption] : nil
+      _, header_options = headers.assoc(name)
+      header_options&.dig(:caption)
     end
 
     def header_classes(column)

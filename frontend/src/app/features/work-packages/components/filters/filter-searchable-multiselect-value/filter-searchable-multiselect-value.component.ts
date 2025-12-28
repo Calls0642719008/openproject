@@ -146,7 +146,7 @@ export class FilterSearchableMultiselectValueComponent extends UntilDestroyedMix
       filtered = elements;
     } else {
       const lowered = matching.toLowerCase();
-      filtered = elements.filter((el) => (el.id as string).includes(lowered) || el.name.toLowerCase().includes(lowered));
+      filtered = elements.filter((el) => el.id!.includes(lowered) || el.name.toLowerCase().includes(lowered));
     }
 
     return this.withMeValue(matching, filtered);
@@ -186,7 +186,6 @@ export class FilterSearchableMultiselectValueComponent extends UntilDestroyedMix
   }
 
   private get allowedValuesLink():string {
-    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     const { href } = this.filter.currentSchema!.values!.allowedValues as { href:string };
 
     return href;

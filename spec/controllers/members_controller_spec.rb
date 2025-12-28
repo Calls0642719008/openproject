@@ -32,8 +32,9 @@ require "spec_helper"
 
 RSpec.describe MembersController do
   shared_let(:admin) { create(:admin) }
+  shared_let(:project) { create(:project, identifier: "pet_project") }
+
   let(:user) { create(:user) }
-  let(:project) { create(:project, identifier: "pet_project") }
   let(:role) { create(:project_role) }
   let(:member) do
     create(:member, project:,
@@ -117,8 +118,9 @@ RSpec.describe MembersController do
       login_as(user)
     end
 
-    describe "WHEN the user is authorized WHEN a project is provided" do
+    describe "WHEN the user is authorized to view all users WHEN a project is provided" do
       let(:project_permissions) { [:manage_members] }
+      let(:global_permissions) { [:view_all_principals] }
 
       it "is success" do
         subject
@@ -149,7 +151,7 @@ RSpec.describe MembersController do
       end
 
       context "when the user is authorized to see email addresses" do
-        let(:global_permissions) { [:view_user_email] }
+        let(:global_permissions) { %i[view_all_principals view_user_email] }
 
         it "returns id, name, email and href" do
           subject
@@ -182,10 +184,123 @@ RSpec.describe MembersController do
       end
     end
 
+    describe "WHEN the user has manage_members but no view_all_users (reduced visibility)" do
+      let(:project_permissions) { [:manage_members] }
+      let!(:other_project) { create(:project) }
+      let!(:other_user) { create(:user, member_with_permissions: { other_project => %i[view_project] }) }
+      let!(:user) do
+        create(:user, member_with_permissions: { project => project_permissions, other_project => %i[view_project] })
+      end
+
+      context "when the user is not authorized to see email addresses" do
+        it "returns only users visible through shared projects" do
+          subject
+          expect(json_response).to be_an(Array)
+          expect(json_response).to include(
+            {
+              "id" => other_user.id,
+              "name" => other_user.name,
+              "href" => "/api/v3/users/#{other_user.id}"
+            }
+          )
+          expect(json_response).not_to include(
+            {
+              "id" => admin.id,
+              "name" => admin.name,
+              "href" => "/api/v3/users/#{admin.id}"
+            }
+          )
+        end
+
+        context "when searching email addresses" do
+          let(:query) { other_user.mail }
+
+          it "does not return matches from emails" do
+            subject
+            expect(json_response).to be_empty
+          end
+        end
+      end
+
+      context "when the user is authorized to see email addresses" do
+        let(:global_permissions) { [:view_user_email] }
+
+        it "returns id, name, email and href for visible users" do
+          subject
+          expect(json_response).to be_an(Array)
+          expect(json_response).to include(
+            {
+              "id" => other_user.id,
+              "name" => other_user.name,
+              "email" => other_user.mail,
+              "href" => "/api/v3/users/#{other_user.id}"
+            }
+          )
+        end
+
+        context "when searching email addresses" do
+          let(:query) { other_user.mail }
+
+          it "returns matches from emails for visible users" do
+            subject
+            expect(json_response).to include(
+              {
+                "id" => other_user.id,
+                "name" => other_user.name,
+                "email" => other_user.mail,
+                "href" => "/api/v3/users/#{other_user.id}"
+              }
+            )
+          end
+        end
+      end
+    end
+
     describe "WHEN the user is not authorized" do
       it "is forbidden" do
         subject
         expect(response.response_code).to eq(403)
+      end
+    end
+  end
+
+  describe "#create with reduced visibility" do
+    let(:project_permissions) { %i[manage_members invite_members_by_email] }
+    let!(:other_project) { create(:project) }
+    let!(:other_user) { create(:user, member_with_permissions: { other_project => %i[view_project] }) }
+    let!(:user) do
+      create(:user, member_with_permissions: { project => project_permissions, other_project => %i[view_project] })
+    end
+
+    before do
+      login_as(user)
+    end
+
+    context "when inviting by email an existing user who is not visible" do
+      let!(:hidden_user) { create(:user, mail: "hidden@example.com") }
+      let(:params) do
+        {
+          project_id: project.id,
+          member: {
+            role_ids: [role.id],
+            user_ids: [hidden_user.mail]
+          }
+        }
+      end
+
+      it "adds the existing user as a member instead of creating a new invitation" do
+        expect { post :create, params: }
+          .to change(Member, :count).by(1)
+          .and change(User, :count).by(0)
+
+        expect(response).to redirect_to "/projects/pet_project/members?status=all"
+
+        # The hidden user should now be a member of the project
+        hidden_user.reload
+        expect(hidden_user).to be_member_of(project)
+
+        # No invitation email should be sent since the user already exists
+        expect(ActionMailer::Base.deliveries).to be_empty
       end
     end
   end

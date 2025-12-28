@@ -23,9 +23,8 @@
           <% if local_avatar? @user %>
             <%= link_to t(:button_delete),
                         @target_avatar_path,
-                        method: :delete,
                         class: "avatars--local-avatar-delete-link",
-                        data: { confirm: t(:are_you_sure_delete_avatar) } %>
+                        data: { turbo_method: :delete, turbo_confirm: t(:are_you_sure_delete_avatar) } %>
           <% end %>
         </div>
       </div>

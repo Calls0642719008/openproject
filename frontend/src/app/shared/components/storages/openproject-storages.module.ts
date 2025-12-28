@@ -69,7 +69,7 @@ import {
     CommonModule,
     IconModule,
     OpSpotModule,
-    OpSharedModule,
+    OpSharedModule
   ],
   declarations: [
     StorageComponent,
@@ -92,4 +92,5 @@ import {
     StorageInformationService,
   ],
 })
+
 export class OpenprojectStoragesModule {}

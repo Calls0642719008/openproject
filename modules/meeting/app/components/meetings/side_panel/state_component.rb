@@ -58,7 +58,7 @@ module Meetings
 
     def button_data_attributes(href)
       {
-        action: "click->meetings--check-unsaved#handleClick",
+        action: "click->meetings--submit#intercept",
         href: href
       }
     end

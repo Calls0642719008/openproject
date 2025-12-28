@@ -1,16 +1,15 @@
-<div
-  *ngIf="canHaveChildren"
-  class="wp-relations-hierarchy-section wp-relations--children">
-  <div class="attributes-group--header">
-    <div class="attributes-group--header-container">
-      <h3 class="attributes-group--header-text"
+@if (canHaveChildren) {
+  <div
+    class="wp-relations-hierarchy-section wp-relations--children">
+    <div class="attributes-group--header">
+      <div class="attributes-group--header-container">
+        <h3 class="attributes-group--header-text"
           [textContent]="text.childrenHeadline">
-      </h3>
+        </h3>
+      </div>
     </div>
+    <wp-children-query [workPackage]="workPackage"
+      [addExistingChildEnabled]="true"
+      [query]="childrenQueryProps" />
   </div>
-  <wp-children-query
-    [workPackage]="workPackage"
-    [addExistingChildEnabled]="true"
-    [query]="childrenQueryProps">
-  </wp-children-query>
-</div>
+}

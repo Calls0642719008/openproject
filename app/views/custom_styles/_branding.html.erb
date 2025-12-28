@@ -40,6 +40,19 @@ See COPYRIGHT and LICENSE files for more details.
   instructions: I18n.t("text_custom_logo_instructions")
 } } %>
 
+<%= render partial: "custom_styles/uploads/image", locals: { image: {
+  field: :logo_mobile,
+  label: I18n.t(:label_custom_logo_mobile),
+  present: @custom_style.id && @custom_style.logo_mobile.present?,
+  source: @custom_style.id && @custom_style.logo_mobile.present? ?
+            custom_style_logo_mobile_path(digest: @custom_style.digest, filename: @custom_style.logo_mobile_identifier) :
+            nil,
+  img_class: "custom-logo-mobile-preview",
+  accept: "image/*",
+  delete_path: custom_style_logo_mobile_delete_path,
+  instructions: I18n.t("text_custom_logo_mobile_instructions")
+} } %>
+
 <%= render partial: "custom_styles/uploads/image",  locals: { image:{
   field: :favicon,
   label: I18n.t(:label_custom_favicon),

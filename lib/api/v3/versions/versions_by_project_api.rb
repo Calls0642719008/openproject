@@ -43,7 +43,7 @@ module API
             ::API::V3::Utilities::ParamsToQuery.collection_response(@versions,
                                                                     current_user,
                                                                     params.except("id"),
-                                                                    self_link: api_v3_paths.versions_by_project(@project.id))
+                                                                    self_link: api_v3_paths.versions_by_workspace(@project.id))
           end
         end
       end

@@ -40,6 +40,9 @@ class Tables::HierarchicalItems < Tables::Base
       t.boolean :is_deleted, default: false, null: false
       t.timestamps
       t.references :custom_field, foreign_key: true
+      t.bigint :position_cache, null: true
+
+      t.index :position_cache
     end
   end
 end

@@ -2164,7 +2164,6 @@ RSpec.describe WorkPackages::SetAttributesService,
              due_date: child_due_date)
     end
     let(:call_attributes) { { schedule_manually: false } }
-    let(:expected_attributes) { {} }
 
     context "when the child has dates" do
       let(:child_start_date) { Time.zone.today + 2.days }
@@ -2175,6 +2174,108 @@ RSpec.describe WorkPackages::SetAttributesService,
           {
             start_date: child_start_date,
             due_date: child_due_date
+          }
+        end
+      end
+    end
+  end
+
+  describe "ignore_non_working_days when switching back to automatic scheduling" do
+    shared_let(:project) { create(:project) }
+    let!(:work_package) do
+      create(:work_package,
+             subject: "work_package",
+             project:,
+             ignore_non_working_days:,
+             schedule_manually: true)
+    end
+    let(:call_attributes) { { schedule_manually: false } }
+
+    context "without any children" do
+      context "when ignoring non working days" do
+        let(:ignore_non_working_days) { true }
+
+        include_examples "service call", description: "keeps its ignore non-working days value" do
+          let(:expected_attributes) do
+            {
+              ignore_non_working_days: true
+            }
+          end
+        end
+      end
+
+      context "when not ignoring non working days" do
+        let(:ignore_non_working_days) { false }
+
+        include_examples "service call", description: "keeps its ignore non-working days value" do
+          let(:expected_attributes) do
+            {
+              ignore_non_working_days: false
+            }
+          end
+        end
+      end
+    end
+
+    context "with one child ignoring non working days" do
+      let(:ignore_non_working_days) { false }
+      let!(:child) do
+        create(:work_package,
+               subject: "child",
+               project:,
+               parent: work_package,
+               ignore_non_working_days: true)
+      end
+
+      include_examples "service call", description: "sets the parent to ignore non-working days" do
+        let(:expected_attributes) do
+          {
+            ignore_non_working_days: true
+          }
+        end
+      end
+    end
+
+    context "with one child not ignoring non working days" do
+      let(:ignore_non_working_days) { true }
+      let!(:child) do
+        create(:work_package,
+               subject: "child",
+               project:,
+               parent: work_package,
+               ignore_non_working_days: false)
+      end
+
+      include_examples "service call", description: "sets the parent to not ignore non-working days" do
+        let(:expected_attributes) do
+          {
+            ignore_non_working_days: false
+          }
+        end
+      end
+    end
+
+    context "with two children: one ignoring and the other not ignoring non working days" do
+      let(:ignore_non_working_days) { false }
+      let!(:child1) do
+        create(:work_package,
+               subject: "child",
+               project:,
+               parent: work_package,
+               ignore_non_working_days: false)
+      end
+      let!(:child2) do
+        create(:work_package,
+               subject: "child",
+               project:,
+               parent: work_package,
+               ignore_non_working_days: true)
+      end
+
+      include_examples "service call", description: "sets the parent to ignore non-working days" do
+        let(:expected_attributes) do
+          {
+            ignore_non_working_days: true
           }
         end
       end

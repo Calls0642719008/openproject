@@ -106,6 +106,7 @@ RSpec.describe "Persisted lists on projects index page",
                                              at_risk_project)
 
         projects_page.expect_filters_container_hidden
+        projects_page.open_filters
         projects_page.expect_filter_set "active"
       end
     end
@@ -130,6 +131,7 @@ RSpec.describe "Persisted lists on projects index page",
                                                  at_risk_project)
 
         projects_page.expect_filters_container_hidden
+        projects_page.open_filters
         projects_page.expect_filter_set "member_of"
       end
     end
@@ -156,6 +158,7 @@ RSpec.describe "Persisted lists on projects index page",
                                                  at_risk_project)
 
         projects_page.expect_filters_container_hidden
+        projects_page.open_filters
         projects_page.expect_filter_set "active"
       end
     end
@@ -174,6 +177,7 @@ RSpec.describe "Persisted lists on projects index page",
                                                  at_risk_project)
 
         projects_page.expect_filters_container_hidden
+        projects_page.open_filters
         projects_page.expect_filter_set "project_status_code"
       end
     end
@@ -192,6 +196,7 @@ RSpec.describe "Persisted lists on projects index page",
                                                  at_risk_project)
 
         projects_page.expect_filters_container_hidden
+        projects_page.open_filters
         projects_page.expect_filter_set "project_status_code"
       end
     end
@@ -210,6 +215,7 @@ RSpec.describe "Persisted lists on projects index page",
                                                  off_track_project)
 
         projects_page.expect_filters_container_hidden
+        projects_page.open_filters
         projects_page.expect_filter_set "project_status_code"
       end
     end
@@ -254,7 +260,7 @@ RSpec.describe "Persisted lists on projects index page",
       projects_page.open_filters
       projects_page.filter_by_membership("yes")
 
-      wait_for_reload # chnaging filters is still done via page reload
+      wait_for_reload # changing filters is still done via page reload
 
       # Since the query is static, no save button an no menu item is shown
       projects_page.expect_no_notification("Save")
@@ -411,23 +417,25 @@ RSpec.describe "Persisted lists on projects index page",
       projects_page.expect_no_columns("Public")
     end
 
-    it "allows favoring persisted query" do
-      projects_page.expect_sidebar_filter("Persisted query", favored: false)
+    it "allows favoriting persisted query" do
+      projects_page.expect_sidebar_filter("Persisted query", favorited: false)
 
       projects_page.set_sidebar_filter("Persisted query")
-      projects_page.expect_sidebar_filter("Persisted query", selected: true, favored: false)
+      projects_page.expect_sidebar_filter("Persisted query", selected: true, favorited: false)
 
       projects_page.mark_query_favorite
-      projects_page.expect_sidebar_filter("Persisted query", selected: true, favored: true)
+      projects_page.expect_sidebar_filter("Persisted query", selected: true, favorited: true)
 
       projects_page.unmark_query_favorite
-      projects_page.expect_sidebar_filter("Persisted query", selected: true, favored: false)
+      projects_page.expect_sidebar_filter("Persisted query", selected: true, favorited: false)
     end
 
     it "loads the query with a custom field filter (Regression#57298)" do
       projects_page.set_sidebar_filter("Persisted query")
 
       projects_page.expect_filters_container_hidden
+
+      projects_page.open_filters
       projects_page.expect_filter_set "cf_#{custom_field.id}"
     end
   end
@@ -560,9 +568,13 @@ RSpec.describe "Persisted lists on projects index page",
 
       projects_page.visit!
       projects_page.set_sidebar_filter(my_projects_list.name)
-      projects_page.expect_filter_set("project_status_code", value: "On track")
-
+      wait_for_reload
       projects_page.open_filters
+
+      retry_block do
+        projects_page.expect_filter_set("project_status_code", value: "On track")
+      end
+
       projects_page.set_filter(list_custom_field.column_name,
                                list_custom_field.name,
                                "is (OR)",
@@ -572,8 +584,79 @@ RSpec.describe "Persisted lists on projects index page",
       projects_page.save_query
 
       projects_page.set_sidebar_filter(my_projects_list.name)
-      projects_page.expect_filter_set("project_status_code", value: "On track")
 
+      wait_for_reload
+      projects_page.open_filters
+
+      retry_block do
+        projects_page.expect_filter_set("project_status_code", value: "On track")
+        projects_page.expect_filter_set(
+          list_custom_field.column_name,
+          value: list_custom_field.possible_values.first.value
+        )
+      end
+    end
+
+    it "allows saving queries via the header save button" do
+      projects_page.visit!
+      projects_page.set_sidebar_filter("Active projects")
+
+      expect_angular_frontend_initialized
+
+      # Modify the query
+      projects_page.open_filters
+      projects_page.filter_by_membership("yes")
+
+      # The "Save as" button and label should be visible
+      projects_page.expect_header_save_button
+      projects_page.expect_save_as_label
+
+      # Save the query via the header save button and the inline form
+      projects_page.save_query_via_header
+      projects_page.fill_in_the_name("My filtered projects")
+      projects_page.click_on "Save"
+
+      wait_for_network_idle
+
+      # The "Save as" button should not be visible after saving the query.
+      projects_page.expect_no_header_save_button
+
+      # The new query should be saved and selected
+      projects_page.expect_sidebar_filter("My filtered projects", selected: true)
+
+      # The filters should be stored
+      projects_page.expect_filter_count(2)
+      projects_page.expect_filter_set("active")
+      projects_page.expect_filter_set("member_of")
+
+      # Modify the saved query and save it again
+      projects_page.open_filters
+      projects_page.set_filter(list_custom_field.column_name,
+                               list_custom_field.name,
+                               "is (OR)",
+                               [list_custom_field.possible_values.first.value])
+      wait_for_reload
+
+      # The "Save" button and label should be visible
+      projects_page.expect_header_save_button
+      projects_page.expect_save_label
+
+      # Save the query
+      projects_page.save_query_via_header
+      wait_for_reload
+
+      # The "Save" button should not be visible after saving the query.
+      projects_page.expect_no_header_save_button
+
+      # Reload the query and verify all filters were saved
+      projects_page.set_sidebar_filter("Active projects")
+      projects_page.set_sidebar_filter("My filtered projects")
+
+      # All filters should be stored
+      projects_page.expect_filter_count(3)
+      projects_page.open_filters
+      projects_page.expect_filter_set "member_of"
+      projects_page.expect_filter_set "active"
       projects_page.expect_filter_set(
         list_custom_field.column_name,
         value: list_custom_field.possible_values.first.value
@@ -621,10 +704,10 @@ RSpec.describe "Persisted lists on projects index page",
 
     let!(:invalid_list) do
       # Faking a query that has references stored to a custom field that no longer exists (e.g. has been deleted)
-      create(:project_query, name: "My projects list", user:, select: %w[name created_at cf_1]) do |query|
+      create(:project_query, name: "My projects list", user:, select: %w[name latest_activity_at cf_1]) do |query|
         query.where("member_of", "=", OpenProject::Database::DB_VALUE_TRUE)
         query.where("cf_1", "=", 1)
-        query.where("created_at", "=", "2020-01-01")
+        query.where("latest_activity_at", "=", "2020-01-01")
 
         query.save(validate: false)
       end
@@ -633,11 +716,12 @@ RSpec.describe "Persisted lists on projects index page",
     it "still shows the query falling back to a valid subset" do
       visit projects_path(query_id: invalid_list.id)
 
-      # Keeps only the 'Name' column as the cf does not exist and Created on is admin only.
+      # Keeps only the 'Name' column as the cf does not exist and "Latest activity at" is admin only.
       projects_page.expect_columns "Name"
-      projects_page.expect_no_columns "Created on"
+      projects_page.expect_no_columns "Latest activity at"
 
-      # Keeps only the 'I am member' filter as the cf does not exist and created_at is admin only.
+      # Keeps only the 'I am member' filter as the cf does not exist and latest_activity_at is admin only.
+      projects_page.open_filters
       projects_page.expect_filter_count 1
       projects_page.expect_filter_set("member_of")
 

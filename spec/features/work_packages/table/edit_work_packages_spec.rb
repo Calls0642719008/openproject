@@ -3,23 +3,23 @@
 require "spec_helper"
 
 RSpec.describe "Inline editing work packages", :js do
+  let(:manager_permissions) { %i[view_work_packages edit_work_packages] }
   let(:manager_role) do
-    create(:project_role,
-           permissions: %i[view_work_packages
-                           edit_work_packages])
+    create(:project_role, permissions: manager_permissions)
   end
+  let(:manager_projects) { { project => manager_role } }
   let(:manager) do
     create(:user,
            firstname: "Manager",
            lastname: "Guy",
-           member_with_roles: { project => manager_role })
+           member_with_roles: manager_projects)
   end
   let(:type) { create(:type) }
   let(:status1) { create(:status) }
   let(:status2) { create(:status) }
 
-  let(:project) { create(:project, types: [type]) }
-  let(:work_package) do
+  let(:project) { create(:project, name: "Test Project", types: [type]) }
+  let!(:work_package) do
     create(:work_package,
            project:,
            type:,
@@ -45,7 +45,6 @@ RSpec.describe "Inline editing work packages", :js do
 
   context "simple work package" do
     before do
-      work_package
       workflow
 
       wp_table.visit!
@@ -202,6 +201,56 @@ RSpec.describe "Inline editing work packages", :js do
       # Saveguard to let the background update complete
       wp_table.visit!
       wp_table.expect_work_package_listed(work_package)
+    end
+  end
+
+  context "when editing the project field with workspace types",
+          with_flag: { portfolio_models: true } do
+    let!(:portfolio) { create(:portfolio, name: "Test Portfolio") }
+    let!(:program) { create(:program, name: "Test Program") }
+    let(:manager_permissions) { %i[view_work_packages edit_work_packages move_work_packages] }
+    let(:manager_projects) do
+      {
+        project => manager_role,
+        portfolio => manager_role,
+        program => manager_role
+      }
+    end
+    let(:query) do
+      create(:public_query,
+             user: manager,
+             project: work_package.project,
+             column_names: %w[subject project])
+    end
+
+    before do
+      wp_table.visit_query query
+      wp_table.expect_work_package_listed(work_package)
+    end
+
+    it "displays workspace type badges for portfolios and programs in the project column" do
+      project_field = wp_table.edit_field(work_package, :project)
+      project_field.activate!
+
+      # Search for portfolio and verify badge
+      project_field.search_for("Test Portfolio")
+      project_field.expect_option(
+        "Test Portfolio",
+        workspace_badge: "Portfolio"
+      )
+
+      # Search for program and verify badge
+      project_field.clear_search
+      project_field.search_for("Test Program")
+      project_field.expect_option(
+        "Test Program",
+        workspace_badge: "Program"
+      )
+
+      # Search for regular project and verify there is no badge
+      project_field.clear_search
+      project_field.search_for("Project")
+      project_field.expect_option("Test Project", workspace_badge: false)
     end
   end
 end

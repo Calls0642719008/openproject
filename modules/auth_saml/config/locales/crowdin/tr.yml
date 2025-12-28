@@ -6,13 +6,13 @@ tr:
         identifier: Tanımlayıcı
         secret: Gizli Anahtar
         scope: Kapsam
-        assertion_consumer_service_url: ACS (Assertion consumer service) URL
+        assertion_consumer_service_url: ACS (Assertion tüketici hizmeti) URL'si
         limit_self_registration: Kendi kendine kaydı sınırlayın
-        sp_entity_id: Service entity ID
-        metadata_url: Identity provider metadata URL
-        name_identifier_format: Name identifier format
-        idp_sso_service_url: Identity provider login endpoint
-        idp_slo_service_url: Identity provider logout endpoint
+        sp_entity_id: Hizmet kuruluşu kimliği
+        metadata_url: Kimlik sağlayıcı meta veri URL'si
+        name_identifier_format: Ad tanımlayıcı biçimi
+        idp_sso_service_url: Kimlik sağlayıcı oturum açma uç noktası
+        idp_slo_service_url: Kimlik sağlayıcı oturum kapatma uç noktası
         idp_cert: Public certificate of identity provider
         authn_requests_signed: Sign SAML AuthnRequests
         want_assertions_signed: Require signed responses
@@ -56,6 +56,7 @@ tr:
       label_mapping: İlişkilendirme
       label_requested_attribute_for: "%{attribute} için nitelik talebi"
       no_results_table: No SAML identity providers have been defined yet.
+      notice_created: A new SAML identity provider was successfully created.
       plural: SAML kimlik sağlayıcıları
       singular: SAML kimlik sağlayıcısı
       requested_attributes: Talep edilen nitelikler
@@ -72,7 +73,7 @@ tr:
         legend: >
           These attributes are added to the SAML XML metadata to signify to the identify provider which attributes OpenProject requires. You may still need to explicitly configure your identity provider to send these attributes. Please refer to your IdP's documentation.
         name: 'Requested attribute key'
-        format: 'Attribute format'
+        format: 'Öznitelik biçimi'
       section_headers:
         configuration: "Birincil yapılandırma"
         attributes: "Özellikler"
@@ -110,7 +111,7 @@ tr:
       idp_sso_service_url: >
         The URL of the identity provider login endpoint.
       idp_slo_service_url: >
-        The URL of the identity provider login endpoint.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Enter the X509 PEM-formatted public certificate of the identity provider. You can enter multiple certificates by separating them with a newline.
       name_identifier_format: >

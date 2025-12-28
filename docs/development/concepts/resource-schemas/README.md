@@ -72,7 +72,10 @@ This results in work package schemas being defined per project and type combinat
 
 An exemplary schema response on the Community for the OpenProject project (`ID=14`) and the Bug type (`ID=1`) is [community.openproject.org/api/v3/work_packages/schemas/14-1](https://community.openproject.org/api/v3/work_packages/schemas/14-1)
 
-The work package schema also contains the reference to the attribute groups from the form configuration in the `_attributeGroups` property.
+Work package and project schemas contain references to their respective attribute groups in the `_attributeGroups` property:
+
+- Work package schemas reference attribute groups from the form configuration
+- Project schemas reference project attribute sections and their project attributes
 
 ## Frontend usage
 

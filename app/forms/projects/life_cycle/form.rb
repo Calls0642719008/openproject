@@ -146,11 +146,21 @@ module Projects::LifeCycle
       #     when you enter a start date after today, and then open the datepicker for finish date,
       #     it will reset the start date because the finish date is set automatically to today,
       #     but the finish date can't be before the start date.
-      helpers.browser.device.mobile? && !helpers.browser.safari? ? :date : :text
+      browser.device.mobile? && !browser.safari? ? :date : :text
     end
 
     def placeholder
-      helpers.browser.device.mobile? ? "yyyy-mm-dd" : nil
+      browser.device.mobile? ? "yyyy-mm-dd" : nil
+    end
+
+    # N.B. This is an inelegant, and very likely brittle solution.
+    #
+    # The Browser gem uses `helper_method(:browser)` to declare a
+    # controller method as a helper. This helper is available in classic
+    # Rails views, but since upgrading to ViewComponent 4.0, no longer
+    # works with Primer Forms.
+    def browser
+      @view_context.controller.send(:browser)
     end
   end
 end

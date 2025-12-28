@@ -42,6 +42,8 @@ import { OpContextMenuItem } from 'core-app/shared/components/op-context-menu/op
   standalone: false,
 })
 export class IconTriggeredContextMenuComponent extends OpContextMenuTrigger {
+  override readonly placement = 'bottom-end';
+
   constructor(
     readonly elementRef:ElementRef,
     readonly opContextMenu:OPContextMenuService,
@@ -55,26 +57,9 @@ export class IconTriggeredContextMenuComponent extends OpContextMenuTrigger {
 
   @Input() menuItemsFactory:() => Promise<OpContextMenuItem[]>;
 
-  protected async open(evt:JQuery.TriggeredEvent) {
+  protected async open(evt:Event) {
     this.items = await this.buildItems();
     this.opContextMenu.show(this, evt);
-  }
-
-  /**
-   * Positioning args for jquery-ui position.
-   *
-   * @param {Event} openerEvent
-   */
-  public positionArgs(evt:JQuery.TriggeredEvent) {
-    const additionalPositionArgs = {
-      my: 'right top',
-      at: 'right bottom',
-    };
-
-    const position = super.positionArgs(evt);
-    _.assign(position, additionalPositionArgs);
-
-    return position;
   }
 
   private async buildItems() {

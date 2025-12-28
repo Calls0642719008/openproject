@@ -6,4 +6,4 @@ cs:
       title: 'Kalendář'
       too_many: 'Celkem je zde %{count} pracovních balíčků, ale pouze %{max} lze zobrazit.'
       unsaved_title: 'Nepojmenovaný kalendář'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'Kalendáře'

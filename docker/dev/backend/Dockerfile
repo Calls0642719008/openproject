@@ -1,5 +1,5 @@
-FROM ruby:3.4.5-bookworm AS develop
-MAINTAINER operations@openproject.com
+FROM ruby:3.4.7-trixie AS develop
+LABEL org.opencontainers.image.authors="operations@openproject.com"
 
 ARG DEV_UID=1000
 ARG DEV_GID=1001
@@ -22,8 +22,8 @@ WORKDIR /home/$USER
 
 RUN apt-get update -qq && \
   apt-get install -y wget gnupg lsb-release curl && \
-  echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+  echo "deb [signed-by=/usr/share/keyrings/postgrsql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+  wget --quiet -O- https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgrsql.gpg - && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   postgresql-client-17 libffi8 libffi-dev curl && \
@@ -38,7 +38,7 @@ RUN apt-get update
 RUN apt-get install -y nodejs
 
 # Setup java. Needed for https://github.com/NUARIG/ladle which is used in specs to test LDAP related behavior.
-RUN apt-get install -y openjdk-17-jdk
+RUN apt-get install -y openjdk-21-jdk
 
 COPY ./docker/dev/backend/scripts/setup /usr/sbin/setup
 COPY ./docker/dev/backend/scripts/setup-bim /usr/sbin/setup-bim

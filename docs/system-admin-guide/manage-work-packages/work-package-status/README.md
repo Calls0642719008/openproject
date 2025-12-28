@@ -40,8 +40,7 @@ A new window will open, where you will be able to specify the following:
 
 5. Check if this status sets a **work package in read-only mode**. This means no work package attributes can be changed except the status.
 
-> [!NOTE]
-> The read-only modus for work package statuses is an Enterprise add-on and only available for [Enterprise on-premises](https://www.openproject.org/enterprise-edition/) and [Enterprise cloud](https://www.openproject.org/enterprise-edition/#hosting-options) customers.
+[feature: readonly_work_packages ]
 
 6. Check **Exclude from calculation of totals in hierarchy** if you want work packages with this status to *not* be included in the calculation of totals in a hierarchy. This is useful for statuses like *rejected*.
 

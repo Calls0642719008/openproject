@@ -123,7 +123,6 @@ import { HalResourceNotificationService } from 'core-app/features/hal/services/h
 import {
   WorkPackageNotificationService,
 } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
-import { TimeEntryCreateService } from 'core-app/shared/components/time_entries/create/create.service';
 import {
   WorkPackageViewCollapsedGroupsService,
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-collapsed-groups.service';
@@ -131,7 +130,6 @@ import { WorkPackageService } from 'core-app/features/work-packages/services/wor
 import {
   WorkPackageViewBaselineService,
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-baseline.service';
-import { TimeEntryEditService } from 'core-app/shared/components/time_entries/edit/edit.service';
 
 /**
  * Directive to open a work package query 'space', an isolated injector hierarchy
@@ -189,8 +187,6 @@ import { TimeEntryEditService } from 'core-app/shared/components/time_entries/ed
     WorkPackageCardViewService,
 
     HalResourceEditingService,
-    TimeEntryCreateService,
-    TimeEntryEditService,
     WorkPackageCreateService,
 
     WorkPackageStatesInitializationService,

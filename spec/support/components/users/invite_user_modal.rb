@@ -55,14 +55,10 @@ module Components
         # STEP 2: User name
         principal_step
 
-        # STEP 3: Confirmation screen
-        confirmation_step
+        expect_invited_successfully
+      end
 
-        # Step 4: Perform invite
-        click_modal_button "Send invitation"
-
-        expect_text "#{principal_name} was invited!"
-
+      def expect_invited_successfully
         text =
           case principal
           when User
@@ -75,19 +71,16 @@ module Components
             raise ArgumentError, "Wrong type"
           end
 
-        expect_text text
-
-        # Close
-        click_modal_button "Continue"
         expect_closed
+        expect_flash message: text
       end
 
       def project_step(next_step: true, skip_autocomplete: false)
         expect_title "Invite user"
-        autocomplete ".ng-select-container", project.name unless skip_autocomplete
+        autocomplete "opce-project-autocompleter", project.name unless skip_autocomplete
         select_type type
 
-        click_next if next_step
+        click_continue if next_step
       end
 
       def open_select_in_step(selector, query = "")
@@ -95,26 +88,46 @@ module Components
 
         search_autocomplete select_field,
                             query:,
-                            results_selector: "body"
+                            results_selector: "#user-invitation-dialog .ng-dropdown-panel"
       end
 
       def principal_step(next_step: true)
+        principal_autocomplete
+        role_autocomplete
+        invitation_message invite_message unless placeholder?
+        click_continue(label: "Invite") if next_step
+      end
+
+      def role_autocomplete(name = role.name)
+        autocomplete "opce-autocompleter", name
+      end
+
+      def principal_autocomplete(name = principal_name)
         if invite_user?
           retry_block do
-            autocomplete "op-ium-principal-search", principal_name, select_text: "Invite: #{principal_name}"
+            autocomplete "opce-members-autocompleter", name, select_text: "Send invite to #{name}"
           end
         else
-          autocomplete "op-ium-principal-search", principal_name
+          autocomplete "opce-members-autocompleter", name
         end
-        autocomplete "op-ium-role-search", role.name
-        invitation_message invite_message unless placeholder?
-        click_next if next_step
+      end
+
+      def principal_search(query)
+        search_autocomplete(modal_element.find("opce-members-autocompleter"),
+                            query:,
+                            results_selector: "#user-invitation-dialog .ng-dropdown-panel")
+      end
+
+      def project_search(query)
+        search_autocomplete(modal_element.find("opce-project-autocompleter"),
+                            query:,
+                            results_selector: "#user-invitation-dialog .ng-dropdown-panel")
       end
 
       def role_step(next_step: true)
-        autocomplete "op-ium-role-search", role.name
+        autocomplete "opce-autocompleter", role.name
 
-        click_next if next_step
+        click_continue if next_step
       end
 
       def invitation_step(next_step: true)
@@ -137,17 +150,19 @@ module Components
         select_autocomplete select_field,
                             query:,
                             select_text:,
-                            results_selector: "body"
+                            results_selector: "#user-invitation-dialog .ng-dropdown-panel"
+
+        select_field
       end
 
       def select_type(type)
         within_modal do
-          page.find(".op-option-list--item", text: type).click
+          choose type
         end
       end
 
-      def click_next
-        click_modal_button "Next"
+      def click_continue(label: "Continue")
+        click_modal_button label
         wait_for_reload
       end
 
@@ -179,8 +194,7 @@ module Components
 
       def expect_error_displayed(message)
         within_modal do
-          expect(page)
-            .to have_css(".spot-form-field--error", text: message)
+          expect(page).to have_text(message)
         end
       end
 

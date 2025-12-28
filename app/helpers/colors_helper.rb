@@ -68,20 +68,12 @@ module ColorsHelper
   end
 
   # Render the highlighting color for the project phase definition.
-  # On top of the normal classes as done for other resources, we also add a class based on the
-  # base64 encoded name of the project phase definition.
-  #
-  # The class name is based on the project phase definition's name, which is guaranteed to be unique.
-  #
-  # That way the frontend does not have to load the definitions to get the color.
-  # The = signs at the end of the base64 string are replaced with _ to make it a valid class name.
-  # This needs to be kept in sync with the ProjectPhaseDisplayField#phaseIcon method in the front end.
   def project_phase_color_css
     Project::PhaseDefinition.includes(:color).find_each do |definition|
       resource_color_css("project_phase_definition", definition, inline_foreground: true)
 
       set_foreground_colors_for(
-        class_name: ".#{hl_inline_class('project_phase_definition', Base64.strict_encode64(definition.name).tr('=', '_'))}",
+        class_name: ".#{hl_inline_class('project_phase_definition', definition.id)}",
         color: definition.color
       )
     end
@@ -142,7 +134,7 @@ module ColorsHelper
   end
 
   def set_generic_color_for(class_name:, color:)
-    mode_variables = User.current.pref.base_theme_dark? ? default_variables_dark : default_variables_light
+    mode_variables = User.current.pref.dark_color_mode? ? default_variables_dark : default_variables_light
 
     concat "#{class_name} { #{default_color_styles(color.hexcode)} #{mode_variables} }"
   end
@@ -150,7 +142,7 @@ module ColorsHelper
   def set_background_colors_for(class_name:, color:)
     concat "#{class_name} { #{default_color_styles(color.hexcode)} }"
 
-    if User.current.pref.base_theme_dark?
+    if User.current.pref.dark_color_mode?
       concat "#{class_name} { #{default_variables_dark} }"
       concat "#{class_name} { #{highlighted_background_dark} }"
     else
@@ -162,7 +154,7 @@ module ColorsHelper
   def set_foreground_colors_for(class_name:, color:)
     concat "#{class_name} { #{default_color_styles(color.hexcode)} }"
 
-    if User.current.pref.base_theme_dark?
+    if User.current.pref.dark_color_mode?
       concat "#{class_name} { #{default_variables_dark} }"
       concat "#{class_name} { #{highlighted_foreground_dark} }"
     else

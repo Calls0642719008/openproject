@@ -14,6 +14,16 @@ x-op-env-override: &environment
   # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_TOKEN__ENDPOINT: /realms/<REALM>/protocol/openid-connect/token
   # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_USERINFO__ENDPOINT: /realms/<REALM>/protocol/openid-connect/userinfo
   # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_END__SESSION__ENDPOINT: https://keycloak.local/realms/<REALM>/protocol/openid-connect/logout
+  # uncomment the following for using minio (local S3) as file storage with TLS support:
+  # OPENPROJECT_ATTACHMENTS__STORAGE: "fog"
+  # OPENPROJECT_FOG_DIRECTORY: "openproject-uploads"
+  # OPENPROJECT_FOG_CREDENTIALS_PROVIDER: "AWS" # Minio is S3 compliant, so we can use the AWS provider
+  # OPENPROJECT_FOG_CREDENTIALS_ENDPOINT: "https://minio.local"
+  # OPENPROJECT_FOG_CREDENTIALS_AWS__ACCESS__KEY__ID: "minioadmin"
+  # OPENPROJECT_FOG_CREDENTIALS_AWS__SECRET__ACCESS__KEY: "minioadmin"
+  # OPENPROJECT_FOG_CREDENTIALS_PATH__STYLE: "true"
+  # OPENPROJECT_FOG_CREDENTIALS_REGION: "us-east-1"
+  # OPENPROJECT_DEV_EXTRA_HOSTS: "${OPENPROJECT_DEV_HOST},minio.local"
 
 services:
   backend:

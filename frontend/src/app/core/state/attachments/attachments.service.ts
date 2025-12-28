@@ -191,7 +191,7 @@ export class AttachmentsResourceService extends ResourceStoreService<IAttachment
     const links = resource.$links as { prepareAttachment:HalLink };
 
     if (links.prepareAttachment) {
-      return links.prepareAttachment.href as string;
+      return links.prepareAttachment.href!;
     }
 
     if (isNewResource(resource)) {

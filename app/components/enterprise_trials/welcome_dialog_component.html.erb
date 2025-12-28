@@ -3,7 +3,7 @@
     Primer::Alpha::Dialog.new(
       id: "enterprise-trial-welcome-dialog",
       data: {
-        controller: "auto-show-dialog iframe-media-dialog"
+        controller: "auto-show-dialog media-dialog"
       },
       title: I18n.t("ee.trial.welcome_title"),
       size: :xlarge
@@ -17,13 +17,26 @@
         end
         flex.with_row(mt: 2) do
           content_tag :div, class: "onboarding--video" do
-            content_tag(:iframe,
-                        "",
-                        frameborder: "0",
-                        height: "400",
-                        width: "100%",
-                        src: OpenProject::Static::Links.links[:enterprise_welcome_video][:href],
-                        allowfullscreen: true)
+            render(
+              Primer::BaseComponent.new(
+                my: 2,
+                tag: :video,
+                height: "430",
+                width: "100%",
+                controls: true,
+                preload: "none",
+                allowfullscreen: true,
+                data: { "media-dialog-target": "video" }
+              )
+            ) do
+              render(
+                Primer::BaseComponent.new(
+                  tag: :source,
+                  src: OpenProject::Static::Links.url_for(:enterprise_welcome_video),
+                  type: "video/mp4"
+                )
+              )
+            end
           end
         end
       end

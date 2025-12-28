@@ -73,16 +73,19 @@ $content-padding: 10px
 
     .archived
       color: var(--fgColor-muted)
-      span.archived-label
-        text-transform: uppercase
 
   td.name
     @include text-shortener
     a
       white-space: nowrap
 
+    .description
+      @extend %autocomplete-description
+
   td.project--hierarchy
     white-space: nowrap
+    display: flex
+    gap: var(--base-size-8, 8px)
 
   @for $i from 1 through 9
     tr.idnt-#{$i} td.project--hierarchy

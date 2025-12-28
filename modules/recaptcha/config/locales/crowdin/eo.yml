@@ -5,7 +5,7 @@ eo:
     description: "This module provides recaptcha checks during login."
   recaptcha:
     label_recaptcha: "reCAPTCHA"
-    button_please_wait: 'Please wait ...'
+    button_please_wait: 'Bonvolu atendi ...'
     verify_account: "Verify your account"
     error_captcha: "Your account could not be verified. Please contact an administrator."
     settings:

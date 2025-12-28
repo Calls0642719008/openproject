@@ -34,26 +34,27 @@ module CustomFields
 
     def after_perform(service_call)
       super.tap do
-        recalculate_values
+        enqueue_recalculate_values if recalculate_values?
       end
     end
 
     private
 
-    def recalculate_values
-      return unless recalculate_values?
+    def set_attributes_params(params)
+      super.except(:field_format)
+    end
 
-      model.class.customized_class.find_each do |customized|
-        affected_cfs = customized.available_custom_fields.affected_calculated_fields([model.id])
-
-        customized.calculate_custom_fields(affected_cfs)
-
-        customized.save if customized.changed_for_autosave?
-      end
+    def enqueue_recalculate_values
+      CustomFields::RecalculateValuesJob.perform_later(
+        user: User.current,
+        custom_field_id: model.id
+      )
     end
 
     def recalculate_values?
-      model.field_format_calculated_value? && model.formula_previously_changed?
+      return false unless model.field_format_calculated_value?
+
+      model.formula_previously_changed? || (model.is_required_previously_changed? && model.is_required?)
     end
   end
 end

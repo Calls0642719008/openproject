@@ -14,7 +14,7 @@ export interface QueryConfigurationLocals {
   service:any;
   currentQuery:any;
   urlParams?:boolean;
-  disabledTabs?:{ [key:string]:string };
+  disabledTabs?:Record<string, string>;
   callback:(newQuery:any) => void;
 }
 

@@ -19,3 +19,12 @@
     &--journal-notes-body__internal-comment
         border-color: var(--display-brown-borderColor-emphasis)
 
+    & .--anchor-highlighted
+        border: 2px solid var(--borderColor-accent-emphasis)
+        border-radius: var(--borderRadius-medium) // if the element doesn't have a border yet, it should still look good / the same as our Boxes
+        // Box headers may have their own border (e.g. internal comments) which needs to be removed.
+        & .Box-header
+            margin: 0
+            border-top: none
+            border-left: none
+            border-right: none

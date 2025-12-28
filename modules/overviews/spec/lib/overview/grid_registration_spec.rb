@@ -6,7 +6,7 @@ RSpec.describe Overviews::GridRegistration do
   let(:grid) { build_stubbed(:overview, project:) }
 
   describe "writable?" do
-    let(:permissions) { %i[manage_overview view_project] }
+    let(:permissions) { %i[manage_dashboards view_project] }
 
     before do
       mock_permissions_for(user) do |mock|
@@ -14,14 +14,14 @@ RSpec.describe Overviews::GridRegistration do
       end
     end
 
-    context "if the user has the :manage_overview permission" do
+    context "if the user has the :manage_dashboards permission" do
       it "is truthy" do
         expect(described_class)
           .to be_writable(grid, user)
       end
     end
 
-    context "if the user lacks the :manage_overview permission and it is a persisted page" do
+    context "if the user lacks the :manage_dashboards permission and it is a persisted page" do
       let(:permissions) { %i[view_project] }
 
       it "is falsey" do
@@ -30,7 +30,7 @@ RSpec.describe Overviews::GridRegistration do
       end
     end
 
-    context "if the user lacks the :manage_overview permission and it is a new record" do
+    context "if the user lacks the :manage_dashboards permission and it is a new record" do
       let(:permissions) { %i[view_project] }
       let(:grid) { Grids::Overview.new **attributes_for(:overview).merge(project:) }
 

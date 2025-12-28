@@ -37,30 +37,72 @@ module OpenProject
         end
 
         def help_link
-          OpenProject::Configuration.force_help_link.presence || static_links[:user_guides]
+          OpenProject::Configuration.force_help_link.presence || static_links[:user_guides][:href]
         end
 
-        delegate :[], to: :links
-
-        def links
-          @links ||= static_links.merge(dynamic_links)
+        def cache_key
+          @cache_key ||= OpenProject::Cache::CacheKey.expand(links)
         end
 
-        def url_for(*items)
-          links.dig(*items, :href)
+        def label_for(*path)
+          key = links.dig(*path, :label)
+          return if key.nil?
+
+          I18n.t(key)
+        end
+
+        def url_for(*path, localize_url: true, url_params: {})
+          href = links.dig(*path, :href)
+          return if href.nil?
+
+          if localize_url && website_link?(href)
+            url_with_query(href, **url_params, go_to_locale: I18n.locale)
+          else
+            url_with_query(href, **url_params)
+          end
         end
 
         def has?(name)
           @links.key? name
         end
 
+        def website_link?(url)
+          url&.start_with?(website_url)
+        end
+
+        def website_url
+          links[:website][:href]
+        end
+
+        def reset_cache
+          @cache_key = nil
+          @links = nil
+          @static_links = nil
+        end
+
         private
+
+        def links
+          @links ||= static_links.merge(dynamic_links)
+        end
+
+        def url_with_query(href, **params)
+          return href if params.empty?
+
+          url = Addressable::URI.parse(href)
+          url.query_values = (url.query_values || {}).merge(params)
+          url.to_s
+        end
 
         def dynamic_links
           dynamic = {
             help: {
               href: help_link,
               label: "top_menu.help_and_support"
+            },
+            current_release_notes: {
+              href: current_release_notes_link,
+              label: :label_release_notes
             }
           }
 
@@ -72,6 +114,11 @@ module OpenProject
           end
 
           dynamic
+        end
+
+        def current_release_notes_link
+          version = OpenProject::VERSION.to_semver(separator: "-")
+          "https://www.openproject.org/docs/release-notes/#{version}"
         end
 
         def static_links

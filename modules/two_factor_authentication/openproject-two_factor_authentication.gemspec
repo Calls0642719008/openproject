@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "CHANGELOG.md", "README.rdoc"]
 
-  s.add_dependency "messagebird-rest", "~> 1.4.2"
+  s.add_dependency "messagebird-rest", ">= 1.4.2", "< 5.1.0"
   s.add_dependency "rotp", "~> 6.1"
   s.add_dependency "webauthn", "~> 3.0"
 
-  s.add_dependency "aws-sdk-sns", "~> 1.101.0"
+  s.add_dependency "aws-sdk-sns", ">= 1.101", "< 1.110"
   s.metadata["rubygems_mfa_required"] = "true"
 end

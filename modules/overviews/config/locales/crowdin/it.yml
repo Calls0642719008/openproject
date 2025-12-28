@@ -1,4 +1,6 @@
 it:
   overviews:
-    label: 'Panoramica'
+    label_home: "Pagina principale %{workspace_type}"
+    label_dashboard: "Dashboard"
+    label_overview: 'Panoramica'
   permission_manage_overview: 'Gestisci la pagina panoramica'

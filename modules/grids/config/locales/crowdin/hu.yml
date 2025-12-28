@@ -1,6 +1,24 @@
 hu:
   grids:
     label_widget_in_grid: "A Widget Gridet-et%{grid_name} tartalmaz"
+    widgets:
+      empty: "Ez a widget jelenleg üres."
+      not_available: "Ez a widget nem elérhető."
+      subitems:
+        title: "Subitems"
+        no_results: "There are no visible children."
+        view_all_subitems: "View all subitems"
+        button_text: "Subitem"
+      members:
+        title: "Tagok"
+        no_results: "Nincsenek látható tagok."
+        view_all_members: "Az összes tag megtekintése"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          one: "and one more member."
+          other: "and %{count} more members."
+      news:
+        no_results: "Semmi új jelenteni való."
   activerecord:
     attributes:
       grids/grid:

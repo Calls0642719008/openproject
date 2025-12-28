@@ -225,7 +225,7 @@ export class NotificationsSettingsPageComponent extends UntilDestroyedMixin impl
   public saveChanges():void {
     const prefs = this.storeService.store.getValue();
     const notificationSettings = (this.form.value as IFullNotificationSettingsValue);
-    const globalNotification = prefs.notifications.find((notification) => !notification._links.project.href) as INotificationSetting;
+    const globalNotification = prefs.notifications.find((notification) => !notification._links.project.href)!;
     const globalPrefs:INotificationSetting = {
       ...globalNotification,
       _links: { project: { href: null } },

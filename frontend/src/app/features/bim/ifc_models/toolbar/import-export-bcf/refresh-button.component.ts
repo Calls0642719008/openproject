@@ -35,7 +35,7 @@ import { StateService } from '@uirouter/core';
     <a [title]="text.refresh_hover"
        class="button refresh-button"
        (click)="refresh()">
-      <op-icon icon-classes="button--icon icon-workflow"></op-icon>
+      <op-icon icon-classes="button--icon icon-workflow" />
     </a>
   `,
   selector: 'op-refresh-button',

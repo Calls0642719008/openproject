@@ -32,7 +32,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class HookService {
-  private hooks:{ [hook:string]:Function[] } = {};
+  private hooks:Record<string, Function[]> = {};
 
   public register(id:string, callback:Function) {
     if (!callback) {

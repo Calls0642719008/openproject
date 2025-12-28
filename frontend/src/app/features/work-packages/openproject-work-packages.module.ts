@@ -298,9 +298,6 @@ import {
   WorkPackageSingleViewComponent,
 } from 'core-app/features/work-packages/components/wp-single-view/wp-single-view.component';
 import {
-  WorkPackageCopySplitViewComponent,
-} from 'core-app/features/work-packages/components/wp-copy/wp-copy-split-view.component';
-import {
   WorkPackageFormAttributeGroupComponent,
 } from 'core-app/features/work-packages/components/wp-form-group/wp-attribute-group.component';
 import { WorkPackagesGridComponent } from 'core-app/features/work-packages/components/wp-grid/wp-grid.component';
@@ -407,6 +404,9 @@ import { OpenprojectEnterpriseModule } from 'core-app/features/enterprise/openpr
 import {
   WorkPackageReminderContextMenuDirective,
 } from 'core-app/features/work-packages/components/wp-buttons/wp-reminder-button/wp-reminder-context-menu.directive';
+import { WorkPackageFullCopyEntryComponent } from 'core-app/features/work-packages/routing/wp-full-copy/wp-full-copy-entry.component';
+import { WorkPackageFullCreateEntryComponent } from 'core-app/features/work-packages/routing/wp-full-create/wp-full-create-entry.component';
+import { WorkPackageFullViewEntryComponent } from 'core-app/features/work-packages/routing/wp-full-view/wp-full-view-entry.component';
 
 @NgModule({
   imports: [
@@ -491,7 +491,6 @@ import {
 
     // WP Copy
     WorkPackageCopyFullViewComponent,
-    WorkPackageCopySplitViewComponent,
 
     // Embedded table
     WorkPackageEmbeddedTableComponent,
@@ -602,6 +601,9 @@ import {
 
     // Full view
     WorkPackagesFullViewComponent,
+    WorkPackageFullViewEntryComponent,
+    WorkPackageFullCopyEntryComponent,
+    WorkPackageFullCreateEntryComponent,
 
     // Modals
     WpTableConfigurationModalComponent,

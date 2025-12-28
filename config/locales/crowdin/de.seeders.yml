@@ -43,13 +43,6 @@ de:
           name: PM2 Rosa
         item_3:
           name: PM2 Grüngelb
-      document_categories:
-        item_0:
-          name: Dokumentation
-        item_1:
-          name: Spezifikation
-        item_2:
-          name: Andere
       project_query_roles:
         item_0:
           name: Projektabfrage-Viewer

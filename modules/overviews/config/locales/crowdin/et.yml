@@ -1,4 +1,6 @@
 et:
   overviews:
-    label: 'Ülevaade'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Töölaud"
+    label_overview: 'Ülevaade'
   permission_manage_overview: 'Halda ülevaate lehekülge'

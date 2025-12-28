@@ -93,7 +93,7 @@ module WorkPackageTypes
       else
         flash[:error] = destroy_error_message
       end
-      redirect_to action: "index"
+      redirect_to action: "index", status: :see_other
     end
 
     protected

@@ -60,19 +60,19 @@ import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'edit-form,[edit-form]',
-  template: '<ng-content></ng-content>',
+  template: '<ng-content />',
   standalone: false,
 })
 export class EditFormComponent extends EditForm<HalResource> implements OnInit, OnDestroy {
-  @Input('resource') resource:HalResource;
+  @Input() resource:HalResource;
 
   @Input('inEditMode') initializeEditMode = false;
 
-  @Input('skippedFields') skippedFields:string[] = [];
+  @Input() skippedFields:string[] = [];
 
   @Output('onSaved') onSavedEmitter = new EventEmitter<{ savedResource:HalResource, isInitial:boolean }>();
 
-  public fields:{ [attribute:string]:EditableAttributeFieldComponent } = {};
+  public fields:Record<string, EditableAttributeFieldComponent> = {};
 
   private registeredFields = input<string[]>();
 
@@ -192,7 +192,7 @@ export class EditFormComponent extends EditForm<HalResource> implements OnInit, 
     return firstValueFrom(this.registeredFields
       .values$()
       .pipe(
-        filter((keys) => keys.indexOf(name) >= 0),
+        filter((keys) => keys.includes(name)),
         take(1),
         map(() => this.fields[name]),
       ));
@@ -204,16 +204,15 @@ export class EditFormComponent extends EditForm<HalResource> implements OnInit, 
 
   protected focusOnFirstError():void {
     // Focus the first field that is erroneous
-    jQuery(this.elementRef.nativeElement)
-      .find(`.${activeFieldContainerClassName}.-error .${activeFieldClassName}`)
-      .first()
-      .trigger('focus');
+    this.elementRef.nativeElement
+      .querySelector(`.${activeFieldContainerClassName}.-error .${activeFieldClassName}`)
+      ?.focus();
   }
 
   private skipField(field:EditableAttributeFieldComponent) {
     const { fieldName } = field;
 
-    const isSkipField = this.skippedFields.indexOf(fieldName) !== -1;
+    const isSkipField = this.skippedFields.includes(fieldName);
 
     // Only skip status or type
     if (!isSkipField) {

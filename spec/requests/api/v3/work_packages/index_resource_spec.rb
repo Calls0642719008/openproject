@@ -901,6 +901,10 @@ RSpec.describe "API v3 Work package resource",
         before do
           work_package.update_column(:project_id, project2.id)
           current_journal.data.update_column(:project_id, project2.id)
+
+          allow(project2)
+            .to receive(:visible?)
+                  .and_return(true)
         end
 
         it "finds the work package" do
@@ -1053,7 +1057,7 @@ RSpec.describe "API v3 Work package resource",
               .to be_json_eql("The original work package".to_json)
                     .at_path("_embedded/elements/0/_embedded/attributesByTimestamp/0/subject")
             expect(subject.body)
-              .to be_json_eql(project2.name.to_json)
+              .to be_json_eql(I18n.t(:"api_v3.undisclosed.project").to_json)
                     .at_path("_embedded/elements/0/_embedded/attributesByTimestamp/0/_links/project/title")
           end
         end

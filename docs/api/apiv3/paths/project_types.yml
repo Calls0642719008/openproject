@@ -49,7 +49,7 @@ get:
                 count: 2
                 total: 2
           schema:
-            "$ref": "../components/schemas/types_by_project_model.yml"
+            "$ref": "../components/schemas/types_by_workspace_model.yml"
       description: OK
       headers: {}
     '404':
@@ -73,7 +73,9 @@ get:
         That's why a 404 is returned here, even if a 403 might be more appropriate.*
       headers: {}
   tags:
-  - Types
+    - Types
   description: This endpoint lists the types that are *available* in a given project.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/types`](https://www.openproject.org/docs/api/endpoints/types/#list-types-available-in-a-workspace)
   operationId: List_types_available_in_a_project
   summary: List types available in a project

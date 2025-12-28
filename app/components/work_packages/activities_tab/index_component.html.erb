@@ -28,9 +28,7 @@
                 classes: "work-packages-activities-tab-index-component--journals-container work-packages-activities-tab-index-component--journals-container_with-initial-input-compensation",
                 data: { "work-packages--activities-tab--index-target": "journalsContainer" }
               ) do
-                render(
-                  WorkPackages::ActivitiesTab::Journals::IndexComponent.new(work_package:, filter:)
-                )
+                render(list_journals_component)
               end
 
               if adding_comment_allowed?

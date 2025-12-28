@@ -71,6 +71,10 @@ module API
               optional :delta, type: Hash
             end
             patch do
+              authorize_by_policy(:update) do
+                raise API::Errors::NotFound
+              end
+
               params[:delta].each do |work_package_id, new_position|
                 if new_position == -1
                   remove_order(work_package_id)

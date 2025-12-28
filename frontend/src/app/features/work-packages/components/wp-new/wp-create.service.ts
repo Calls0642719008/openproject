@@ -54,8 +54,6 @@ import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destr
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import {
   HalResource,
-  HalSource,
-  HalSourceLink,
 } from 'core-app/features/hal/resources/hal-resource';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import { SchemaResource } from 'core-app/features/hal/resources/schema-resource';
@@ -64,6 +62,7 @@ import { HalResourceService } from 'core-app/features/hal/services/hal-resource.
 import { ResourceChangeset } from 'core-app/shared/components/fields/changeset/resource-changeset';
 import { AttachmentsResourceService } from 'core-app/core/state/attachments/attachments.service';
 import { AttachmentCollectionResource } from 'core-app/features/hal/resources/attachment-collection-resource';
+import { HalSource, HalSourceLink } from 'core-app/features/hal/interfaces';
 
 export const newWorkPackageHref = '/api/v3/work_packages/new';
 

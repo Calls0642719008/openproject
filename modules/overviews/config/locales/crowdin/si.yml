@@ -1,4 +1,6 @@
 si:
   overviews:
-    label: 'දළ විශ්ලේෂණය'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Dashboard"
+    label_overview: 'දළ විශ්ලේෂණය'
   permission_manage_overview: 'Manage overview page'

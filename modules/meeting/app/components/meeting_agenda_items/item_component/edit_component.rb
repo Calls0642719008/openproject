@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -32,26 +33,43 @@ module MeetingAgendaItems
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
 
-    def initialize(meeting_agenda_item:, display_notes_input: nil)
+    def initialize(meeting_agenda_item:,
+                   display_notes_input: nil,
+                   current_occurrence: nil,
+                   presentation_mode: false)
       super
 
       @meeting_agenda_item = meeting_agenda_item
       @type = @meeting_agenda_item.item_type.to_sym
       @display_notes_input = display_notes_input
+      @current_occurrence = current_occurrence
+      @presentation_mode = presentation_mode
     end
 
     def call
       render(Primer::Box.new(pl: 3)) do
-        render(MeetingAgendaItems::FormComponent.new(
-                 meeting: @meeting_agenda_item.meeting,
-                 meeting_section: @meeting_agenda_item.meeting_section,
-                 meeting_agenda_item: @meeting_agenda_item,
-                 method: :put,
-                 submit_path: meeting_agenda_item_path(@meeting_agenda_item.meeting, @meeting_agenda_item, format: :turbo_stream),
-                 cancel_path: cancel_edit_meeting_agenda_item_path(@meeting_agenda_item.meeting, @meeting_agenda_item),
-                 type: @type,
-                 display_notes_input: @display_notes_input
-               ))
+        render(
+          MeetingAgendaItems::FormComponent.new(
+            meeting: @meeting_agenda_item.meeting,
+            meeting_section: @meeting_agenda_item.meeting_section,
+            meeting_agenda_item: @meeting_agenda_item,
+            method: :put,
+            submit_path: meeting_agenda_item_path(
+              @meeting_agenda_item.meeting,
+              @meeting_agenda_item,
+              format: :turbo_stream,
+              current_occurrence: @current_occurrence,
+              presentation_mode: @presentation_mode
+            ),
+            cancel_path: cancel_edit_meeting_agenda_item_path(
+              @meeting_agenda_item.meeting, @meeting_agenda_item,
+              current_occurrence: @current_occurrence,
+              presentation_mode: @presentation_mode
+            ),
+            type: @type,
+            display_notes_input: @display_notes_input
+          )
+        )
       end
     end
   end

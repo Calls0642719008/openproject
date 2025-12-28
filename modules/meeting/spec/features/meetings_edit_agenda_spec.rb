@@ -79,12 +79,50 @@ RSpec.describe "Meetings edit agenda", :js do
 
     second_item = MeetingAgendaItem.find_by(title: "Agenda Item #2")
 
-    show_page.edit_agenda_item(first_item) do
+    show_page.edit_agenda_item(first_item, save: false) do
       expect(show_page).to have_selector :rich_text, "Notes", text: "Preliminary notes ✅"
     end
 
-    show_page.edit_agenda_item(second_item) do
+    show_page.edit_agenda_item(second_item, save: false) do
       expect(show_page).to have_selector :rich_text, "Notes", text: "More notes..."
+    end
+  end
+
+  it "correctly tracks unsaved changes in agenda item forms (Bug #68654)" do
+    show_page.add_agenda_item do
+      fill_in "Title", with: "First Item"
+    end
+    show_page.add_agenda_item do
+      fill_in "Title", with: "Second Item"
+    end
+
+    show_page.expect_agenda_item title: "First Item"
+    show_page.expect_agenda_item title: "Second Item"
+    show_page.assert_agenda_order! "First Item", "Second Item"
+
+    first_item = MeetingAgendaItem.find_by(title: "First Item")
+    second_item = MeetingAgendaItem.find_by(title: "Second Item")
+
+    show_page.select_action(second_item, "Edit")
+
+    # No confirmation when title isn't changed
+    expect do
+      accept_confirm do
+        show_page.select_action(first_item, I18n.t(:label_sort_lowest))
+      end
+    end.to raise_error(Capybara::ModalNotFound)
+
+    show_page.assert_agenda_order! "Second Item", "First Item"
+
+    second_item.reload
+
+    show_page.edit_agenda_item(second_item, save: false) do
+      fill_in "Title", with: "Modified Second Item"
+    end
+
+    # Confirmation when title is changed
+    dismiss_confirm do
+      show_page.select_action(first_item, I18n.t(:label_sort_highest))
     end
   end
 end

@@ -96,7 +96,7 @@ import { IDay } from 'core-app/core/state/days/day.model';
   standalone: false,
 })
 export class WorkPackageTimelineTableController extends UntilDestroyedMixin implements AfterViewInit {
-  private $element:JQuery;
+  private element:HTMLElement;
 
   public workPackageTable:WorkPackageTable;
 
@@ -106,13 +106,13 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
 
   public workPackageIdOrder:RenderedWorkPackage[] = [];
 
-  private renderers:{ [name:string]:(vp:TimelineViewParameters) => void } = {};
+  private renderers:Record<string, (vp:TimelineViewParameters) => void> = {};
 
   private cellsRenderer = new WorkPackageTimelineCellsRenderer(this.injector, this);
 
-  public outerContainer:JQuery;
+  public outerContainer:HTMLElement;
 
-  public timelineBody:JQuery;
+  public timelineBody:HTMLElement;
 
   private selectionParams:{ notification:IToast|null } = {
     notification: null,
@@ -165,7 +165,7 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
   }
 
   ngAfterViewInit() {
-    this.$element = jQuery(this.elementRef.nativeElement);
+    this.element = this.elementRef.nativeElement;
 
     const scrollBar = document.querySelector('.work-packages-tabletimeline--timeline-side');
     if (scrollBar) {
@@ -179,11 +179,11 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
     };
 
     // Get the outer container for width computation
-    this.outerContainer = this.$element.find('.wp-table-timeline--outer');
-    this.timelineBody = this.$element.find('.wp-table-timeline--body');
+    this.outerContainer = this.element.querySelector('.wp-table-timeline--outer')!;
+    this.timelineBody = this.element.querySelector('.wp-table-timeline--body')!;
 
     // Register this instance to the table
-    this.wpTableComponent.registerTimeline(this, this.timelineBody[0]);
+    this.wpTableComponent.registerTimeline(this, this.timelineBody);
 
     // Refresh on window resize events
     window.addEventListener('wp-resize.timeline', () => this.refreshRequest.putValue(undefined));
@@ -224,11 +224,12 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
   }
 
   getAbsoluteLeftCoordinates():number {
-    return this.$element.offset()!.left;
+    const rect = this.element.getBoundingClientRect();
+    return rect.left + window.pageXOffset;
   }
 
   getParentScrollContainer() {
-    return this.outerContainer.closest(selectorTimelineSide)[0];
+    return this.outerContainer.closest<HTMLElement>(selectorTimelineSide)!;
   }
 
   get viewParameters():TimelineViewParameters {
@@ -259,7 +260,7 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
 
     timeOutput('refreshView() in timeline container', async () => {
       // Reset the width of the outer container if its content shrinks
-      this.outerContainer.css('width', 'auto');
+      this.outerContainer.style.setProperty('width', 'auto');
 
       this.calculateViewParams(this._viewParameters);
 
@@ -278,8 +279,8 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
       // Calculate overflowing width to set to outer container
       // required to match width in all child divs.
       // The header is the only one reliable, as it already has the final width.
-      const currentWidth = this.$element.find(timelineHeaderSelector)[0].scrollWidth;
-      this.outerContainer.width(currentWidth);
+      const currentWidth = this.element.querySelector(timelineHeaderSelector)!.scrollWidth;
+      this.outerContainer.style.setProperty('width', `${currentWidth}px`);
 
       // Mark rendering event in a timeout to give DOM some time
       setTimeout(() => {
@@ -335,19 +336,19 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
   }
 
   forceCursor(cursor:string) {
-    jQuery(`.${timelineElementCssClass}`).css('cursor', cursor);
-    jQuery('.wp-timeline-cell').css('cursor', cursor);
-    jQuery('.hascontextmenu').css('cursor', cursor);
-    jQuery('.leftHandle').css('cursor', cursor);
-    jQuery('.rightHandle').css('cursor', cursor);
+    document.querySelectorAll<HTMLElement>(`.${timelineElementCssClass}`).forEach((elem) => elem.style.cursor = cursor);
+    document.querySelectorAll<HTMLElement>('.wp-timeline-cell').forEach((elem) => elem.style.cursor = cursor);
+    document.querySelectorAll<HTMLElement>('.hascontextmenu').forEach((elem) => elem.style.cursor = cursor);
+    document.querySelectorAll<HTMLElement>('.leftHandle').forEach((elem) => elem.style.cursor = cursor);
+    document.querySelectorAll<HTMLElement>('.rightHandle').forEach((elem) => elem.style.cursor = cursor);
   }
 
   resetCursor() {
-    jQuery(`.${timelineElementCssClass}`).css('cursor', '');
-    jQuery('.wp-timeline-cell').css('cursor', '');
-    jQuery('.hascontextmenu').css('cursor', '');
-    jQuery('.leftHandle').css('cursor', '');
-    jQuery('.rightHandle').css('cursor', '');
+    document.querySelectorAll<HTMLElement>(`.${timelineElementCssClass}`).forEach((elem) => elem.style.cursor = '');
+    document.querySelectorAll<HTMLElement>('.wp-timeline-cell').forEach((elem) => elem.style.cursor = '');
+    document.querySelectorAll<HTMLElement>('.hascontextmenu').forEach((elem) => elem.style.cursor = '');
+    document.querySelectorAll<HTMLElement>('.leftHandle').forEach((elem) => elem.style.cursor = '');
+    document.querySelectorAll<HTMLElement>('.rightHandle').forEach((elem) => elem.style.cursor = '');
   }
 
   private resetSelectionMode() {
@@ -360,8 +361,8 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
 
     Mousetrap.unbind('esc');
 
-    this.$element.removeClass('active-selection-mode');
-    jQuery(`.${timelineMarkerSelectionStartClass}`).removeClass(timelineMarkerSelectionStartClass);
+    this.element.classList.remove('active-selection-mode');
+    document.querySelector(`.${timelineMarkerSelectionStartClass}`)?.classList.remove(timelineMarkerSelectionStartClass);
     this.refreshView();
   }
 
@@ -377,7 +378,7 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
     Mousetrap.bind('esc', () => this.resetSelectionMode());
     this.selectionParams.notification = this.toastService.addNotice(this.text.selectionMode);
 
-    this.$element.addClass('active-selection-mode');
+    this.element.classList.add('active-selection-mode');
 
     this.refreshView();
   }
@@ -447,8 +448,7 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
     // RR: kept both variants for documentation purpose.
     // A: calculate the minimal width based on the width of the timeline view
     // B: calculate the minimal width based on the window width
-    const width = this.$element.children().width()!; // A
-    // const width = jQuery('body').width(); // B
+    const width = this.element.children[0]?.clientWidth || document.body.clientWidth; // A with fallback to B
 
     const { pixelPerDay } = currentParams;
     const visibleDays = Math.ceil((width / pixelPerDay) * 1.5);
@@ -484,7 +484,7 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
 
     const workPackagesToCalculateWidthFrom = this.getWorkPackagesToCalculateTimelineWidthFrom();
     const daysSpan = calculateDaySpan(workPackagesToCalculateWidthFrom, this.states.workPackages, this._viewParameters);
-    const timelineWidthInPx = this.$element.parent().width()! - (2 * requiredPixelMarginLeft);
+    const timelineWidthInPx = this.element.parentElement?.clientWidth! - (2 * requiredPixelMarginLeft);
 
     for (const zoomLevel of zoomLevelOrder) {
       const pixelPerDay = getPixelPerDayForZoomLevel(zoomLevel);

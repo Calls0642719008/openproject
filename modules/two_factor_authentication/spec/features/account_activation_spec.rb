@@ -37,7 +37,10 @@ RSpec.describe "activating an invited account",
       activate!
 
       visit my_account_path
-      expect(page).to have_css(".form--field-container", text: user.login)
+
+      within_test_selector "my-account-form" do
+        expect(page).to have_field "user_username", with: user.login
+      end
     end
   end
 
@@ -61,7 +64,10 @@ RSpec.describe "activating an invited account",
       wait_for_network_idle
 
       visit my_account_path
-      expect(page).to have_css(".form--field-container", text: user.login)
+
+      within_test_selector "my-account-form" do
+        expect(page).to have_field "user_username", with: user.login
+      end
     end
 
     it "handles faulty user input on two factor authentication" do

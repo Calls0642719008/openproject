@@ -6,7 +6,7 @@ eo:
         description: 'Would you like to automate your workflows with Boards? Advanced boards are an Enterprise add-on. Please upgrade to a paid plan.'
   js:
     boards:
-      create_new: 'Create new board'
+      create_new: 'Krei novan tabulon'
       label_unnamed_board: 'Nenomita panelo'
       label_unnamed_list: 'Nenomita listo'
       label_board_type: 'Speco de panelo'

@@ -2,7 +2,11 @@ module ::Webhooks
   module Outgoing
     module Webhooks
       class RowComponent < ::RowComponent
+        include OpPrimer::ComponentHelpers
+
         property :description
+
+        delegate :event_names, to: :webhook
 
         def webhook
           model
@@ -20,40 +24,20 @@ module ::Webhooks
         end
 
         def events
-          selected_events =
-            webhook
-              .events
-              .pluck(:name)
-              .map(&method(:lookup_event_name))
-              .compact
-              .uniq
+          return render_warning(t(:"webhooks.outgoing.label_x_events", count: 0).capitalize) if event_names.empty?
 
-          count = selected_events.count
-          if count <= 3
-            selected_events.join(", ")
-          else
-            content_tag("span", count, class: "badge")
-          end
-        end
-
-        def lookup_event_name(name)
-          OpenProject::Webhooks::EventResources.lookup_resource_name(name)
+          event_names
+            .map { OpenProject::Webhooks::EventResources.lookup_resource_name(it) }
+            .group_by(&:first)
+            .transform_values { |pairs| pairs.map(&:last).sort }
+            .then { render_events_list(it) }
         end
 
         def selected_projects
-          if webhook.all_projects?
-            return "(#{I18n.t(:label_all)})"
-          end
+          return t(:"webhooks.outgoing.form.project_ids.all") if webhook.all_projects?
+          return render_warning(t(:label_x_projects, count: 0).capitalize) if webhook.projects.empty?
 
-          selected = webhook.projects.map(&:name)
-
-          if selected.empty?
-            "(#{I18n.t(:label_all)})"
-          elsif selected.size <= 3
-            webhook.projects.pluck(:name).join(", ")
-          else
-            content_tag("span", selected, class: "badge")
-          end
+          t(:label_x_projects, count: webhook.projects.size)
         end
 
         def row_css_class
@@ -81,10 +65,30 @@ module ::Webhooks
           link_to(
             helpers.op_icon("icon icon-delete button--link"),
             { controller: table.target_controller, action: :destroy, webhook_id: webhook.id },
-            method: :delete,
-            data: { confirm: I18n.t(:text_are_you_sure) },
+            data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) },
             title: t(:button_delete)
           )
+        end
+
+        private
+
+        def render_warning(text)
+          render OpPrimer::WarningText.new(show_warning_label: false).with_content(text)
+        end
+
+        def render_events_list(items)
+          render(OpPrimer::ListComponent.new(ml: 0)) do |list|
+            items.each do |resource, events|
+              list.with_item do
+                component_collection do |list_item_parts|
+                  list_item_parts.with_component(Primer::Beta::Text.new.with_content(resource))
+                  list_item_parts.with_component(Primer::Beta::Text.new(font_size: :small, color: :muted)) do
+                    events.join(t(:"support.array.words_connector", default: ", ")).then { "(#{it})" }
+                  end
+                end
+              end
+            end
+          end
         end
       end
     end

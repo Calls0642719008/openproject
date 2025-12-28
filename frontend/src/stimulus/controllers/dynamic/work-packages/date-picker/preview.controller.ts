@@ -50,12 +50,12 @@ export default class PreviewController extends DialogPreviewController {
   private highlightedField:HTMLInputElement|null = null;
 
   // The field values currently used by the controller
-  private currentIgnoreNonWorkingDays:boolean = false;
+  private currentIgnoreNonWorkingDays = false;
   private currentStartDate:Date|null = null;
   private currentDueDate:Date|null = null;
   private currentDuration:number|null = null;
 
-  private isMilestone:boolean = true;
+  private isMilestone = true;
 
   private handleFlatpickrDatesChangedBound = this.handleFlatpickrDatesChanged.bind(this);
 
@@ -317,8 +317,12 @@ export default class PreviewController extends DialogPreviewController {
     this.updateFlatpickrCalendar();
   }
 
+  // Must be true for duration field to avoid modifying the value while the user
+  // is typing or pressing backspace.
+  // Must be false for start and finish date fields to allow value to be
+  // corrected if the date is invalid (non-working day for instance).
   ignoreActiveValueWhenMorphing():boolean {
-    return false;
+    return document.activeElement?.id === 'work_package_duration';
   }
 
   readInitialValues() {

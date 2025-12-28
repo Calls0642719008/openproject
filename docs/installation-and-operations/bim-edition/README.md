@@ -17,12 +17,27 @@ An existing OpenProject on-premises (self hosted) installation can easily be swi
 
 Switching to the BIM Edition will not affect your existing data. Your team will be able to continue working just as before. By switching to the BIM edition additional features will become available  when you activate the "BCF" module in the [project's settings](../../user-guide/projects/project-settings/modules).
 
-### Backup and upgrade
+
+
+## Docker-based installation
+
+For `docker`, `docker-compose`, and `helm-chart` based installations, you are most likely using the `slim` container of OpenProject and will need to switch out the docker image variant.
+
+Please check what docker image you are using for the steps needed to switch to BIM:
+
+- **openproject/openproject:VERSION-slim**: You need to replace your imag with `openproject/openproject:VERSION-slim-bim`, which is prebuilt with the BIM Edition enabled and the pipeline installed
+- **openproject/openproject:VERSION**: You are using the [all-in-one container](../installation/docker#all-in-one-container), which includes BIM support. You only need to set the environment variable `OPENPROJECT_EDITION=bim` to the docker container and restart your container.  Please note that we recommend against using this all-in-one variant in production systems.
+
+
+
+### Packaged installation
+
+#### Backup and upgrade
 
 First, backup your data and update your installation to the latest OpenProject version as described in [Upgrading](../operation/upgrading).
 Make sure that you not only install the new package but also run `sudo openproject configure` as described before proceeding.
 
-### Switching to BIM Edition
+#### Switching to BIM Edition
 
 Now that your OpenProject instance is up to date, you can _reconfigure_ it to be a BIM Edition.
 
@@ -38,6 +53,8 @@ trigger the installation of the necessary libraries and tools for 3D model conve
 
 Congratulations, you've successfully switched to the BIM Edition. However, for the best
 experience you might consider also the next configuration.
+
+## Using the BIM Edition
 
 You can check that all tools for the IFC model conversion were installed by going to
 _-> Administration -> Information_ and check that _IFC conversion pipeline available_

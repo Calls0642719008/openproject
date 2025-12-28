@@ -31,9 +31,9 @@ cs:
         spent: "Strávený čas"
         spent_on: "Datum"
         logged_by: "Zadáno"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Přihlášen 
+        entity_id: Přihlášen 
+        entity_gid: Přihlášen 
       cost_type:
         unit: "Název jednotky"
         unit_plural: "Název Pluralizované jednotky"
@@ -61,9 +61,9 @@ cs:
         start_time: Čas zahájení
         end_time: Čas dokončení
         time: Čas
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Přihlášen 
+        entity_id: Přihlášen 
+        entity_gid: Přihlášen 
     models:
       time_entry:
         one: "Vstup času"

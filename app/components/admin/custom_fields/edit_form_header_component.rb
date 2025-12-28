@@ -62,6 +62,13 @@ module Admin
               path: custom_field_projects_path(@custom_field),
               label: t(:label_project_plural)
             }
+
+          tabs <<
+            {
+              name: "attribute_help_text",
+              path: attribute_help_text_custom_field_path(@custom_field),
+              label: AttributeHelpText.human_plural_model_name
+            }
         end
 
         tabs

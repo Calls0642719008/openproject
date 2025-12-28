@@ -54,7 +54,7 @@ de:
     generating_chart: "Generiere Graph..."
     hours: "Stunden"
     impediment: "Hindernis"
-    label_versions_default_fold_state: "Zeige Versionen eingeklappt"
+    label_versions_default_fold_state: "Versionen eingeklappt anzeigen"
     caption_versions_default_fold_state: "Versionen werden beim Anzeigen des Backlogs standardmäßig nicht aufgeklappt. Sie müssen manuell geöffnet werden."
     work_package_is_closed: "Arbeitspaket ist abgeschlossen, wenn"
     label_is_done_status: "Status %{status_name} bedeutet abgeschlossen"

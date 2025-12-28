@@ -1,6 +1,6 @@
 mn:
   js:
     work_packages:
-      label_gantt_chart_plural: "Gantt charts"
+      label_gantt_chart_plural: "Гант диаграм"
       default_queries:
         milestones: 'Чухал үеүүд'

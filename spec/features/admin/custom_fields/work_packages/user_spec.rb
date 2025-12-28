@@ -53,13 +53,10 @@ RSpec.describe "User custom fields edit", :js do
 
     new_cf_page.expect_and_dismiss_flash(message: "Successful creation.")
 
-    # Expect field to be created
-    index_cf_page.expect_current_path("tab=WorkPackageCustomField")
-    expect(page).to have_list_item("My User CF")
+    cf = CustomField.last
+    expect(page).to have_current_path(edit_custom_field_path(cf))
 
     # Edit again
-    click_on "My User CF"
-
     expect(page).to have_no_field("custom_field_custom_options_attributes_0_value")
     fill_in "Name", with: "My User CF (edited)"
 
@@ -68,8 +65,9 @@ RSpec.describe "User custom fields edit", :js do
     new_cf_page.expect_and_dismiss_flash(message: "Successful update.")
 
     # Expect field to be saved
+    cf.reload
+
     expect(page).to have_css(".PageHeader-title", text: "My User CF (edited)")
-    cf = CustomField.last
     expect(cf.name).to eq("My User CF (edited)")
   end
 end

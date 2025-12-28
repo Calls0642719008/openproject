@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
+  EventEmitter, inject,
   Input,
   OnInit,
   Output,
@@ -43,6 +43,9 @@ import { BaselineMode, getBaselineState } from 'core-app/features/work-packages/
 import {
   CombinedDateDisplayField,
 } from 'core-app/shared/components/fields/display/field-types/combined-date-display.field';
+import {
+  KeepTabService
+} from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
 
 @Component({
   selector: 'wp-single-card',
@@ -92,6 +95,18 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
 
   @Output() cardContextMenu = new EventEmitter<{ workPackageId:string, event:MouseEvent }>();
 
+  readonly pathHelper = inject(PathHelperService);
+  readonly I18n = inject(I18nService);
+  readonly $state = inject(StateService);
+  readonly uiRouterGlobals = inject(UIRouterGlobals);
+  readonly wpTableSelection = inject(WorkPackageViewSelectionService);
+  readonly wpTableFocus = inject(WorkPackageViewFocusService);
+  readonly cardView = inject(WorkPackageCardViewService);
+  readonly cdRef = inject(ChangeDetectorRef);
+  readonly timezoneService = inject(TimezoneService);
+  readonly schemaCache = inject(SchemaCacheService);
+  readonly keepTabService = inject(KeepTabService);
+
   public uiStateLinkClass:string = uiStateLinkClass;
 
   public selected = false;
@@ -104,6 +119,8 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     baseLineIconAdded: this.I18n.t('js.baseline.icon_tooltip.added'),
     baseLineIconChanged: this.I18n.t('js.baseline.icon_tooltip.changed'),
     baseLineIconRemoved: this.I18n.t('js.baseline.icon_tooltip.removed'),
+    assigneeAlt:(assignee:string) =>
+      this.I18n.t('js.label_assignee_alt_text', { name: assignee }),
   };
 
   public isNewResource = isNewResource;
@@ -111,21 +128,6 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
   public tooltipPosition = SpotDropAlignmentOption.BottomLeft;
 
   combinedDateDisplayField = CombinedDateDisplayField;
-
-  constructor(
-    readonly pathHelper:PathHelperService,
-    readonly I18n:I18nService,
-    readonly $state:StateService,
-    readonly uiRouterGlobals:UIRouterGlobals,
-    readonly wpTableSelection:WorkPackageViewSelectionService,
-    readonly wpTableFocus:WorkPackageViewFocusService,
-    readonly cardView:WorkPackageCardViewService,
-    readonly cdRef:ChangeDetectorRef,
-    readonly timezoneService:TimezoneService,
-    readonly schemaCache:SchemaCacheService,
-  ) {
-    super();
-  }
 
   ngOnInit():void {
     // Update selection state
@@ -140,7 +142,7 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
             return this.uiRouterGlobals.params.workPackageId === this.workPackage.id;
           }
 
-          return this.wpTableSelection.isSelected(this.workPackage.id as string);
+          return this.wpTableSelection.isSelected(this.workPackage.id!);
         }),
       )
       .subscribe((selected) => {
@@ -167,7 +169,7 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     event.preventDefault();
   }
 
-  public cardClasses():{ [className:string]:boolean } {
+  public cardClasses():Record<string, boolean> {
     const base = 'op-wp-single-card';
 
     return {
@@ -178,7 +180,6 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
       [`${base}_inline`]: this.showAsInlineCard,
       [`${base}_closed`]: this.isClosed,
       [`${base}_ghosted`]: this.showAsGhost,
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       [`${base}-${this.workPackage.id}`]: !!this.workPackage.id,
       [`${base}_${this.orientation}`]: true,
     };
@@ -193,23 +194,20 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     return this.baselineMode;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public wpTypeAttribute(wp:WorkPackageResource):string {
     return wp.type.name;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public wpSubject(wp:WorkPackageResource):string {
     return wp.subject;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public wpProjectName(wp:WorkPackageResource):string {
     return wp.project?.name;
   }
 
   public fullWorkPackageLink(wp:WorkPackageResource):string {
-    return this.$state.href('work-packages.show', { workPackageId: wp.id });
+    return this.keepTabService.currentShowHref(wp.id!);
   }
 
   public cardHighlightingClass(wp:WorkPackageResource):string {
@@ -228,7 +226,6 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     return this.bcfSnapshotPath(wp) !== null;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public bcfSnapshotPath(wp:WorkPackageResource):string|null {
     return wp.bcfViewpoints && wp.bcfViewpoints.length > 0 ? `${wp.bcfViewpoints[0].href}/snapshot` : null;
   }
@@ -240,7 +237,6 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     return '';
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private attributeHighlighting(type:string, wp:WorkPackageResource):string {
     return Highlighting.inlineClass(type, wp.type.id!);
   }

@@ -11,8 +11,13 @@
     @include spot-body-small (bold)
     line-height: $spot-spacing-2
 
-    &-icon
-      margin-left: auto
+  &--timer-icon
+    margin-left: auto
+    cursor: pointer
+
+    .octicon
+      margin-right: var(--base-size-4)
+
   &--wp-details
     padding: 0 10px
     display: inline-block

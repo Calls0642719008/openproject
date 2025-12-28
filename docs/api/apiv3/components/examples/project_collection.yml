@@ -8,13 +8,13 @@ value:
   offset: 1
   _embedded:
     elements:
-      - _hint: Project resource shortened for brevity
+      - _abbreviated: Project resource shortened for brevity
         id: 1
         identifier: initialproject
         name: DeathStar construction
         active: true
         public: true
-      - _hint: Project resource shortened for brevity
+      - _abbreviated: Project resource shortened for brevity
         id: 2
         identifier: mysecret
         name: Palpatine's secret plan

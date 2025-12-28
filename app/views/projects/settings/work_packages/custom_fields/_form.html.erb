@@ -68,7 +68,7 @@ See COPYRIGHT and LICENSE files for more details.
         </thead>
         <tbody>
           <% all_custom_fields = @project.all_work_package_custom_fields.pluck(:id) %>
-          <% work_package_custom_fields.includes(:types).find_each do |custom_field| %>
+          <% work_package_custom_fields.includes(:types).each do |custom_field| # rubocop:disable Rails/FindEach %>
           <%
             options = {
               lang: custom_field.name_locale,

@@ -39,6 +39,10 @@ RSpec.describe API::V3::Statuses::StatusRepresenter do
 
     it { is_expected.to include_json("Status".to_json).at_path("_type") }
 
+    it "fulfills the documented schema" do
+      expect(generated).to match_json_schema.from_docs("status_model")
+    end
+
     describe "status" do
       it { is_expected.to have_json_path("id") }
       it { is_expected.to have_json_path("name") }

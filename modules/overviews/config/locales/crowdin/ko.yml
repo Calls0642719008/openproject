@@ -1,4 +1,6 @@
 ko:
   overviews:
-    label: '요약'
+    label_home: "%{workspace_type} 홈"
+    label_dashboard: "대시보드"
+    label_overview: '개요'
   permission_manage_overview: '개요 페이지 관리'

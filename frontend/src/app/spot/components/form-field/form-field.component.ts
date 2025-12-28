@@ -56,7 +56,7 @@ export class SpotFormFieldComponent {
 
   /**
    * Hides the input. This is a utility input for usage of `spot-form-field` in dynamic forms.
-   * Outside of dynamic forms, you should be hiding inputs via `*ngIf` or other methods.
+   * Outside of dynamic forms, you should be hiding inputs via `@if` or other methods.
    */
   @Input() hidden = false;
 

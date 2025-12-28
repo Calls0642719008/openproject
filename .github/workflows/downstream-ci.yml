@@ -7,9 +7,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'help/**'
-  # We run this in the less privileged mode to allow external PRs to use this workflow.
-  # This means the workflow will be executed on the base branch, making sure only our own workflow logic is used.
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize]
     branches:
       - dev
@@ -33,9 +31,13 @@ jobs:
     steps:
       - name: Trigger SaaS Tests
         env:
-          TOKEN: ${{ secrets.OPENPROJECT_CI_TOKEN }}
+          TOKEN: ${{ secrets.OPENPROJECTCI_GH_SAAS_WORKFLOW_PAT }}
           REPOSITORY: opf/saas-openproject
           WORKFLOW_ID: test-saas.yml
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REF_NAME: ${{ github.ref_name }}
         # ref:
         #   * on push this will be `dev` or a specific release branch (e.g. release/16.1) - there is always a matching branch for that downstream
         #   * on pull_request we use the PR branch's base (e.g. dev or a release branch) to match the above
@@ -47,13 +49,13 @@ jobs:
           REF=''
           CORE_REF=''
 
-          if [ "${{ github.event_name }}" = "pull_request_target" ]; then
+          if [ "$EVENT_NAME" = "pull_request" ]; then
             echo The workflow was triggered by a pull request targetting the dev or a release branch
-            REF="${{ github.base_ref }}"
-            CORE_REF="${{ github.event.pull_request.head.ref }}"
+            REF="$BASE_REF"
+            CORE_REF="$HEAD_REF"
           else
             echo The workflow was triggered by a push to the dev or a release branch
-            REF="${{ github.ref_name }}"
+            REF="$REF_NAME"
             CORE_REF="$REF"
           fi
 
@@ -62,20 +64,20 @@ jobs:
             exit 0
           fi
 
-          PAYLOAD=$(printf '{"ref": "%s", "inputs": {"core_ref": "%s"}}' "$REF" "$CORE_REF")
+          PAYLOAD=$(jq -n --arg ref "$REF" --arg core_ref "$CORE_REF" '{"ref": $ref, "inputs": {"core_ref": $core_ref}}')
           OUTPUT_FILE=/tmp/request-output
 
           echo "Triggering $WORKFLOW_ID workflow on $REPOSITORY branch '$REF', which will check out core branch '$CORE_REF'"
 
           status=$(
-            curl -i --fail-with-body -s -o $OUTPUT_FILE -w "%{http_code}" \
+            curl -i --fail-with-body --silent --output $OUTPUT_FILE --write-out "%{http_code}" \
               -H"authorization: Bearer $TOKEN" -H"Accept: application/vnd.github.v3+json" \
               -XPOST \
               -d "$PAYLOAD" \
               https://api.github.com/repos/$REPOSITORY/actions/workflows/$WORKFLOW_ID/dispatches
           )
 
-          if [ "$status" = "204" ]; then
+          if [[ "$status" =~ ^2..$ ]]; then
             echo Downstream workflow triggered successfully
           else
             echo Failed to trigger downstream workflow:

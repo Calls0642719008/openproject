@@ -213,6 +213,115 @@ RSpec.describe API::V3::Versions::UpdateFormAPI, content_type: :json do
       end
     end
 
+    describe "custom fields" do
+      context "with a required custom field" do
+        let!(:required_custom_field) do
+          create(:version_custom_field, :string,
+                 name: "Release Notes",
+                 is_required: true)
+        end
+
+        context "when no custom field value is provided" do
+          let(:parameters) do
+            {
+              name: "Updated version"
+            }
+          end
+
+          it "has 0 validation errors" do
+            expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+          end
+
+          it "has a commit link" do
+            expect(subject.body)
+              .to be_json_eql(api_v3_paths.version(version.id).to_json)
+              .at_path("_links/commit/href")
+          end
+        end
+
+        context "when the custom field value is provided but empty" do
+          let(:parameters) do
+            {
+              name: "Updated version",
+              "customField#{required_custom_field.id}" => ""
+            }
+          end
+
+          it "has 1 validation error" do
+            expect(subject.body).to have_json_size(1).at_path("_embedded/validationErrors")
+          end
+
+          it "has a validation error on the custom field" do
+            expect(subject.body).to have_json_path("_embedded/validationErrors/customField#{required_custom_field.id}")
+          end
+
+          it "has no commit link" do
+            expect(subject.body)
+              .not_to have_json_path("_links/commit")
+          end
+        end
+
+        context "when the custom field value is being cleared" do
+          before do
+            # Set an initial value for the custom field
+            version.custom_field_values = { required_custom_field.id => "Initial release notes" }
+            version.save!
+          end
+
+          let(:parameters) do
+            {
+              name: "Updated version",
+              "customField#{required_custom_field.id}" => ""
+            }
+          end
+
+          it "has 1 validation error" do
+            expect(subject.body).to have_json_size(1).at_path("_embedded/validationErrors")
+          end
+
+          it "has a validation error on the custom field" do
+            expect(subject.body).to have_json_path("_embedded/validationErrors/customField#{required_custom_field.id}")
+          end
+
+          it "has no commit link" do
+            expect(subject.body)
+              .not_to have_json_path("_links/commit")
+          end
+        end
+
+        context "when the custom field value is provided and valid" do
+          before do
+            # Set an initial value for the custom field
+            version.custom_field_values = { required_custom_field.id => "Initial release notes" }
+            version.save!
+          end
+
+          let(:parameters) do
+            {
+              name: "New version with valid CF",
+              "customField#{required_custom_field.id}" => "Bug fixes and improvements"
+            }
+          end
+
+          it "has 0 validation errors" do
+            expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+          end
+
+          it "has a commit link" do
+            expect(subject.body)
+              .to be_json_eql(api_v3_paths.version(version.id).to_json)
+              .at_path("_links/commit/href")
+          end
+
+          it "has the custom field value in the payload" do
+            expect(subject.body)
+              .to be_json_eql("Bug fixes and improvements".to_json)
+              .at_path("_embedded/payload/customField#{required_custom_field.id}")
+          end
+        end
+      end
+    end
+
     context "without the necessary edit permission" do
       let(:permissions) { [:view_work_packages] }
 

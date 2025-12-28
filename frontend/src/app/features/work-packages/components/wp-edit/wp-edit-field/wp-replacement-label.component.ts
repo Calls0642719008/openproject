@@ -37,22 +37,22 @@ import { EditFormComponent } from 'core-app/shared/components/fields/edit/edit-f
   standalone: false,
 })
 export class WorkPackageReplacementLabelComponent implements OnInit {
-  @Input('fieldName') public fieldName:string;
+  @Input() public fieldName:string;
 
-  private $element:JQuery;
+  private element:HTMLElement;
 
   constructor(protected wpeditForm:EditFormComponent,
     protected elementRef:ElementRef) {
   }
 
   ngOnInit() {
-    this.$element = jQuery(this.elementRef.nativeElement);
+    this.element = this.elementRef.nativeElement;
   }
 
-  public activate(evt:JQuery.TriggeredEvent) {
+  public activate(evt:Event) {
     // Skip clicks on help texts
-    const target = jQuery(evt.target);
-    if (target.closest('.help-text--entry').length) {
+    const target = evt.target as HTMLElement;
+    if (target.closest('.help-text--entry')) {
       return true;
     }
 

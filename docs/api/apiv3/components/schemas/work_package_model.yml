@@ -36,44 +36,60 @@ properties:
     type: boolean
     description: If true, the work package is in a readonly status so with the exception of the status, no other property can be altered.
   startDate:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
     description: Scheduled beginning of a work package
   dueDate:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
     description: Scheduled end of a work package
   date:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
     description: Date on which a milestone is achieved
   derivedStartDate:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
     description: Similar to start date but is not set by a client but rather deduced
       by the work packages' descendants. If manual scheduleManually is active, the
       two dates can deviate.
     readOnly: true
   derivedDueDate:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
     description: Similar to due date but is not set by a client but rather deduced
       by the work packages' descendants. If manual scheduleManually is active, the
       two dates can deviate.
     readOnly: true
   duration:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: duration
     description: |-
       **(NOT IMPLEMENTED)** The amount of time in hours the work package needs to be completed.
       Not available for milestone type of work packages.
     readOnly: true
   estimatedTime:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: duration
     description: Time a work package likely needs to be completed excluding its descendants
   derivedEstimatedTime:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: duration
     description: Time a work package likely needs to be completed including its descendants
     readOnly: true
@@ -94,12 +110,16 @@ properties:
       **Permission** view time entries
     readOnly: true
   percentageDone:
-    type: integer
+    type:
+      - "integer"
+      - "null"
     description: Amount of total completion for a work package
     minimum: 0
     maximum: 100
   derivedPercentageDone:
-    type: integer
+    type:
+      - "integer"
+      - "null"
     description: Amount of total completion for a work package derived from itself and its descendant work packages
     readOnly: true
     minimum: 0
@@ -120,9 +140,7 @@ properties:
       - self
       - schema
       - ancestors
-      - attachments
       - author
-      - children
       - priority
       - project
       - status
@@ -306,7 +324,7 @@ properties:
 
               # Conditions
 
-              - **Setting**: deactivate_work_package_attachments set to false in related project
+              - **Setting**: deactivate_work_package_attachments set to false in related workspace
       addAttachment:
         allOf:
           - $ref: "./link.yml"
@@ -423,9 +441,9 @@ properties:
         allOf:
           - $ref: "./link.yml"
           - description: |-
-              The project to which the work package belongs
+              The workspace to which the work package belongs
 
-              **Resource**: Project
+              **Resource**: Workspace
       projectPhase:
         allOf:
           - $ref: "./link.yml"
@@ -571,8 +589,8 @@ example:
       href: "/api/v3/priorities/2"
       title: Normal
     project:
-      href: "/api/v3/projects/1"
-      title: A Test Project
+      href: "/api/v3/portfolio/1"
+      title: A Test Portfolio
     status:
       href: "/api/v3/statuses/1"
       title: New

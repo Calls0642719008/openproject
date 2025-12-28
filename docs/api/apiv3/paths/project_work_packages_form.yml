@@ -9,6 +9,8 @@ post:
     This endpoint allows you to validation a new work package creation body in a specific project. It works similarly
     to the `/api/v3/work_packages/form` endpoint, but already specifies the work package's project in the path, so that
     it does not have to be defined in the request body.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/work_packages/form`](https://www.openproject.org/docs/api/endpoints/work-packages/#form-for-creating-work-packages-in-a-workspace)
   parameters:
     - name: id
       description: ID of the project in which the work package will be created

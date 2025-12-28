@@ -61,4 +61,22 @@ RSpec.describe "Workflow copy" do
       expect(page).to have_content("--- #{I18n.t(:actionview_instancetag_blank_option)} ---")
     end
   end
+
+  it "allows navigating to Workflow edit page" do
+    within ".PageHeader-actions" do
+      click_on "Edit"
+    end
+
+    expect(page).to have_heading "Workflow"
+    expect(page).to have_current_path(edit_workflows_path)
+  end
+
+  it "allows navigating to Workflow summary page" do
+    within ".PageHeader-actions" do
+      click_on "Summary"
+    end
+
+    expect(page).to have_heading "Summary"
+    expect(page).to have_current_path(workflows_path)
+  end
 end

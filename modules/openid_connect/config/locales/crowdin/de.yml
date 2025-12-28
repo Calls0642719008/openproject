@@ -43,6 +43,10 @@ de:
               response_is_not_successful: " antwortet mit %{status}."
               response_is_not_json: " gibt kein gültiges JSON zurück."
               response_misses_required_attributes: " gibt die erforderlichen Attribute nicht zurück. Fehlende Attribute sind: %{missing_attributes}."
+          invalid_claims_essential: "definiert keinen Booleschen Wert auf %{attribute}."
+          invalid_claims_location: "enthalten nicht unterstützte Werte: %{invalid}. Unterstützte Werte sind: %{supported}."
+          invalid_claims_values: "definiert kein Array bei %{attribute}."
+          non_object_attribute: "definiert kein JSON-Objekt unter %{attribute}."
   provider:
     delete_warning:
       input_delete_confirmation: Geben Sie den Namen des SSO-Anbieters %{name} ein, um die Löschung zu bestätigen.
@@ -58,15 +62,26 @@ de:
     menu_title: OpenID-Anbieter
     delete_title: "OpenID Connect Anbieter löschen"
     group_links_heading: OpenID Connect Gruppenverknüpfungen
+    groups:
+      match_preview_component:
+        title: Extrahierte Gruppennamen
+        placeholder_none: Es gibt derzeit keine Gruppen, die dem Muster entsprechen.
+      match_preview_dialog_component:
+        description: Damit können Sie das Muster für reguläre Ausdrücke anhand von Beispieldaten testen, um zu überprüfen, ob die Gruppennamen, die Sie extrahieren möchten, tatsächlich richtig extrahiert werden. Sie können Ihr Muster hier ändern, aber die Testzeichenfolge und die Übereinstimmungen selbst werden nicht mit der Konfiguration gespeichert.
+        group_names_label: Namen von Testgruppen
+        group_names_description: Geben Sie einen Gruppennamen pro Zeile so ein, wie er im OIDC-Claim erscheinen würde, um zu sehen, wie sich Ihre Muster für reguläre Ausdrücke auf sie auswirken.
+        show_button: Muster testen
+        title: Reguläre Ausdrücke testen
     instructions:
       endpoint_url: Die Endpunkt-URL, die Sie vom OpenID Connect-Anbieter erhalten haben
       group_regexes: Ein regulärer Ausdruck pro Zeile. Bitte lesen Sie [die Dokumentation](docs_url) für weitere Informationen hierzu.
       group_regexes_detail: Definieren Sie optional Pattern mit regulären Ausdrücken, um Gruppennamen aus dem Gruppenanspruch abzugleichen. Wenn Sie beispielsweise ein Pattern wie ^Level1/Level2/ <code>([\w/]+)$</code> eingeben, wird die Gruppe "Gruppenname/Untergruppe" aus einer Antwort mit "Level1/Level2/Gruppenname/Untergruppe" extrahiert. Wenn kein Pattern übereinstimmt, wird die Gruppe ignoriert. Lassen Sie das Feld leer, um alle Gruppen mit ihrem vollständigen Gruppennamen zu synchronisieren.
+      group_regexes_testing: "Klicken Sie auf 'Muster testen', um Ihr Muster für den regulären Ausdruck mit der OIDC-Benutzerinfo zu vergleichen."
       group_sync: Gruppenzugehörigkeit von Benutzern automatisch vom Identitätsanbieter übertragen.
       groups_claim: Geben Sie den Namen des Claims an, der die Namen von Gruppen enthält, bei denen der Nutzer Mitglied ist.
       metadata_none: Ich habe diese Informationen nicht
       metadata_url: Ich habe eine Discovery-Endpunkt-URL
-      oidc_information: These values are needed to configure the OpenID Connect provider.
+      oidc_information: Diese Werte werden für die Konfiguration des OpenID Connect-Anbieters benötigt.
       client_id: Dies ist die Client-ID, die Sie von Ihrem OpenID Connect-Anbieter erhalten haben
       client_secret: Dies ist das Client-Secret, die Sie von Ihrem OpenID Connect-Anbieter erhalten haben
       limit_self_registration: Wenn diese Option aktiviert ist, können sich Benutzer nur dann über diesen Anbieter registrieren, wenn die Konfiguration aufseiten des Anbieters dies zulässt.
@@ -115,7 +130,8 @@ de:
       label_advanced_configuration: Erweiterte Konfiguration
       label_configuration_details: Metadaten
       label_client_details: Details der Anwendung
-      label_attribute_mapping: Attributzuordnung
+      label_attribute_mapping: Zuordnen von Attributen
+      notice_created: Ein neuer OpenID-Anbieter wurde erfolgreich erstellt.
       client_details_description: Konfigurationsdetails von OpenProject als OIDC-Client
       no_results_table: Noch keine Anbieter definiert.
       plural: OpenID-Anbieter

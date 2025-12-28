@@ -86,7 +86,7 @@ See COPYRIGHT and LICENSE files for more details.
                                   end
 
                   box.with_row(**drag_controls) do
-                    render Admin::CustomFields::Hierarchy::ItemComponent.new(item: item)
+                    render Admin::CustomFields::Hierarchy::ItemComponent.new(item: item, custom_field: root.custom_field)
                   end
                 end
               end

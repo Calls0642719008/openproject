@@ -79,6 +79,18 @@ module Exports
         {}
       end
 
+      def currency_format
+        "#,##0.00 [$#{Setting.costs_currency}]"
+      end
+
+      def number_format
+        "0.00"
+      end
+
+      def percentage_format
+        "0%"
+      end
+
       protected
 
       # By default, use try as a non-destructive accessor

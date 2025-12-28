@@ -107,7 +107,7 @@ module Pages
           visit home_path
 
           expect(page)
-            .to have_css(".PageHeader-title", text: "Home")
+            .to have_css(".PageHeader-title", text: "OpenProject")
 
           visit!
         end

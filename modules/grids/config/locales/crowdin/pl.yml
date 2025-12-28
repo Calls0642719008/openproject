@@ -1,6 +1,26 @@
 pl:
   grids:
     label_widget_in_grid: "Widżet zawarty w siatce %{grid_name}"
+    widgets:
+      empty: "This widget is currently empty."
+      not_available: "This widget is not available."
+      subitems:
+        title: "Podpozycje"
+        no_results: "Nie ma żadnych widocznych elementów podrzędnych."
+        view_all_subitems: "Wyświetl wszystkie podpozycje"
+        button_text: "Subitem"
+      members:
+        title: "Members"
+        no_results: "Brak widocznych członków."
+        view_all_members: "Zobacz wszystkich członków"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          one: "and one more member."
+          few: "and %{count} more members."
+          many: "and %{count} more members."
+          other: "and %{count} more members."
+      news:
+        no_results: "Utwórz nowy raport."
   activerecord:
     attributes:
       grids/grid:

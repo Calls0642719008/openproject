@@ -100,13 +100,25 @@ RSpec.describe Projects::Exports::PDF do
     end
 
     context "without view_project_attributes permission" do
-      let(:permissions) { %i(view_projects) }
+      let(:permissions) { %i(view_projects export_projects) }
 
       it "does not include custom field values in the export" do
         expected_document = [
           *expected_cover_page,
           project.name,
           "ID", project.id.to_s,
+          "1/1", export_time_formatted, query.name
+        ].join(" ")
+        expect(subject).to eq expected_document
+      end
+    end
+
+    context "without export_projects permission" do
+      let(:permissions) { %i(view_projects) }
+
+      it "does not include the project in the export" do
+        expected_document = [
+          *expected_cover_page,
           "1/1", export_time_formatted, query.name
         ].join(" ")
         expect(subject).to eq expected_document
@@ -173,10 +185,12 @@ RSpec.describe Projects::Exports::PDF do
 
     before do
       login_as current_user
-      create(:member,
-             project: child_project,
-             principal: current_user,
-             roles: [role])
+      create(
+        :member,
+        project: child_project,
+        principal: current_user,
+        roles: [create(:project_role, permissions: %i[view_projects export_projects])]
+      )
     end
 
     it "includes both projects in the export" do

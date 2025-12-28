@@ -83,8 +83,8 @@ RSpec.describe "API v3 UserLock resource", content_type: :json do
     end
 
     context "non-admin user" do
-      it "responds with 403" do
-        expect(subject.status).to eq(403)
+      it "responds with 404" do
+        expect(subject.status).to eq(404)
       end
     end
   end
@@ -123,8 +123,8 @@ RSpec.describe "API v3 UserLock resource", content_type: :json do
     end
 
     context "non-admin user" do
-      it "responds with 403" do
-        expect(subject.status).to eq(403)
+      it "responds with 404" do
+        expect(subject.status).to eq(404)
       end
     end
   end

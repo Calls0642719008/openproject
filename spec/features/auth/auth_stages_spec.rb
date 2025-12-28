@@ -88,7 +88,7 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
     end
 
     it "redirects to authentication stage after automatic registration and before login" do
-      visit signin_path
+      visit account_register_path
 
       within("#new_user") do
         fill_in "user_login", with: "h.wurst"
@@ -109,7 +109,7 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
       visit "/my/account"
 
-      expect(page).to have_text "h.wurst" # just double checking we're really logged in
+      expect(page).to have_text "Hans Wurst" # just double checking we're really logged in
     end
 
     it "redirects to authentication stage after registration via omniauth too" do
@@ -129,7 +129,7 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
       visit "/my/account"
 
-      expect(page).to have_text "a.apfel" # just double checking we're really logged in
+      expect(page).to have_text "Adam Apfel" # just double checking we're really logged in
     end
   end
 
@@ -145,7 +145,9 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
     visit "/my/account"
 
-    expect(page).to have_text user.login # just checking we're really logged in
+    within_test_selector "my-account-form" do
+      expect(page).to have_field "user_username", with: user.login # just checking we're really logged in
+    end
   end
 
   it "redirects to the login page and shows an error on verification failure" do
@@ -161,7 +163,7 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
     visit "/my/account"
 
-    expect(page).to have_no_text user.login # just checking we're really not logged in
+    expect(page).to have_no_test_selector "my-account-form" # just checking we're really not logged in
   end
 
   it "redirects to the login page and shows an error on authentication stage failure" do
@@ -177,7 +179,7 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
     visit "/my/account"
 
-    expect(page).to have_no_text user.login # just checking we're really not logged in
+    expect(page).to have_no_test_selector "my-account-form" # just checking we're really not logged in
   end
 
   it "redirects to the login page and shows an error on returning to the wrong stage" do
@@ -193,7 +195,7 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
     visit "/my/account"
 
-    expect(page).to have_no_text user.login # just checking we're really not logged in
+    expect(page).to have_no_test_selector "my-account-form" # just checking we're really not logged in
   end
 
   it "redirects to the referer if there is one" do
@@ -217,7 +219,9 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
     visit "/my/account"
 
-    expect(page).to have_text user.login # just checking we're really logged in
+    within_test_selector "my-account-form" do
+      expect(page).to have_field "user_username", with: user.login # just checking we're really logged in
+    end
   end
 
   context "with two stages" do
@@ -247,7 +251,9 @@ RSpec.describe "Authentication Stages", :skip_2fa_stage do
 
       visit "/my/account"
 
-      expect(page).to have_text user.login # just checking we're really logged in
+      within_test_selector "my-account-form" do
+        expect(page).to have_field "user_username", with: user.login # just checking we're really logged in
+      end
     end
   end
 end

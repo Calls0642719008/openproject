@@ -132,7 +132,7 @@ RSpec.describe "Work package filtering by version custom field", :js do
     expect_ng_option(
       page.find("#values-#{version_cf1.attribute_name(:camel_case)}"),
       version4,
-      grouping: "Project N/A",
+      grouping: I18n.t(:"api_v3.undisclosed.project"),
       results_selector: "body"
     )
   end

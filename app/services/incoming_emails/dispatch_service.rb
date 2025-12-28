@@ -41,6 +41,7 @@ module IncomingEmails
     # Registry for mail handlers
     def self.handlers
       @handlers ||= [
+        IncomingEmails::Handlers::MeetingResponse,
         IncomingEmails::Handlers::MessageReply,
         IncomingEmails::Handlers::WorkPackage
       ]
@@ -147,7 +148,7 @@ module IncomingEmails
     # If the user is not found, we will handle using the given unkown_user option
     def determine_actor
       if sender_email.present?
-        @user = User.find_by_mail(sender_email) # rubocop:disable Rails/DynamicFindBy
+        @user = User.find_by_mail(sender_email)
       end
 
       # If the user is still not set, we have to deal with an unkonwn user
@@ -207,13 +208,21 @@ module IncomingEmails
 
     def mail_from_system?
       # Ignore emails received from the application emission address to avoid hell cycles
-      if sender_email.downcase == Setting.mail_from.to_s.strip.downcase
+      if system_mail_addresses.include?(sender_email.downcase)
         log "ignoring email from emission address [#{sender_email}]", report: false
         # don't report back errors to ourselves
         return true
       end
 
       false
+    end
+
+    def system_mail_addresses
+      [
+        ApplicationMailer.mail_from,
+        ApplicationMailer.reply_to_address
+      ]
+        .map { |mail| mail.to_s.strip.downcase }
     end
 
     def ignored_by_header?

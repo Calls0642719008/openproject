@@ -40,7 +40,7 @@ module Pages
     end
 
     def card_element
-      page.find(card_selector)
+      page.find(card_selector, wait: 10)
     end
 
     def card_selector

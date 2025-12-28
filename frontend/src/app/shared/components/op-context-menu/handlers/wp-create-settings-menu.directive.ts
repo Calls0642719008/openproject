@@ -38,6 +38,8 @@ import { FormResource } from 'core-app/features/hal/resources/form-resource';
   standalone: false,
 })
 export class WorkPackageCreateSettingsMenuDirective extends OpContextMenuTrigger {
+  override readonly placement = 'bottom-end';
+  
   constructor(readonly elementRef:ElementRef,
     readonly opContextMenu:OPContextMenuService,
     readonly states:States,
@@ -45,7 +47,7 @@ export class WorkPackageCreateSettingsMenuDirective extends OpContextMenuTrigger
     super(elementRef, opContextMenu);
   }
 
-  protected open(evt:JQuery.TriggeredEvent) {
+  protected open(evt:Event) {
     const wp = this.states.workPackages.get('new').value;
 
     if (wp) {
@@ -57,23 +59,6 @@ export class WorkPackageCreateSettingsMenuDirective extends OpContextMenuTrigger
         },
       );
     }
-  }
-
-  /**
-   * Positioning args for jquery-ui position.
-   *
-   * @param {Event} openerEvent
-   */
-  public positionArgs(evt:JQuery.TriggeredEvent) {
-    const additionalPositionArgs = {
-      my: 'right top',
-      at: 'right bottom',
-    };
-
-    const position = super.positionArgs(evt);
-    _.assign(position, additionalPositionArgs);
-
-    return position;
   }
 
   private buildItems(form:FormResource) {

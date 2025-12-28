@@ -57,13 +57,13 @@ module Storages::Admin::Forms
     end
 
     def one_drive_integration_link(target: "_blank")
-      href = ::OpenProject::Static::Links[:storage_docs][:one_drive_oauth_application][:href]
+      href = ::OpenProject::Static::Links.url_for(:storage_docs, :one_drive_oauth_application)
       render(Primer::Beta::Link.new(href:, underline: true, target:)) { I18n.t("storages.instructions.one_drive.application_link_text") }
     end
 
-    def share_point_integration_link(target: "_blank")
-      href = ::OpenProject::Static::Links[:storage_docs][:share_point_oauth_application][:href]
-      render(Primer::Beta::Link.new(href:, underline: true, target:)) { I18n.t("storages.instructions.share_point.application_link_text") }
+    def sharepoint_integration_link(target: "_blank")
+      href = ::OpenProject::Static::Links.url_for(:storage_docs, :sharepoint_oauth_application)
+      render(Primer::Beta::Link.new(href:, underline: true, target:)) { I18n.t("storages.instructions.sharepoint.application_link_text") }
     end
 
     def nextcloud_integration_link(target: "_blank")

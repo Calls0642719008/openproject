@@ -54,7 +54,7 @@ class Queries::WorkPackages::Selects::CustomFieldSelect < Queries::WorkPackages:
   end
 
   def value(work_package)
-    work_package.formatted_custom_value_for(@cf.id)
+    work_package.formatted_custom_value_for(@cf)
   end
 
   def self.instances(context = nil)

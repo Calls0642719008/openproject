@@ -56,6 +56,7 @@ pl:
       label_mapping: Mapowanie
       label_requested_attribute_for: "Wymagany atrybut dla: %{attribute}"
       no_results_table: Jeszcze nie zdefiniowano żadnych dostawców tożsamości SAML.
+      notice_created: Nowy dostawca tożsamości SAML został utworzony.
       plural: Dostawcy tożsamości SAML
       singular: Dostawca tożsamości SAML
       requested_attributes: Wymagane atrybuty
@@ -110,7 +111,7 @@ pl:
       idp_sso_service_url: >
         Adres URL punktu końcowego logowania dostawcy tożsamości.
       idp_slo_service_url: >
-        Adres URL punktu końcowego logowania dostawcy tożsamości.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Wprowadź publiczny certyfikat dostawcy tożsamości w formacie X509 PEM. Możesz wprowadzić wiele certyfikatów, oddzielając je nową linią.
       name_identifier_format: >

@@ -71,7 +71,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   @Input() public startDate:string|null;
   @Input() public dueDate:string|null;
 
-  @Input() public isSchedulable:boolean = true;
+  @Input() public isSchedulable = true;
   @Input() public dateMode:DateMode;
   @Input() public minDate:string|null;
 
@@ -79,7 +79,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   @Input() dueDateFieldId:string;
   @Input() durationFieldId:string;
 
-  @Input() isMilestone:boolean = false;
+  @Input() isMilestone = false;
 
   @ViewChild('flatpickrTarget') flatpickrTarget:ElementRef;
 

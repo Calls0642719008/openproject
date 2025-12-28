@@ -17,6 +17,10 @@ module FormFields
       raise NotImplementedError
     end
 
+    def expect_not_visible
+      expect(page).to have_no_selector(selector)
+    end
+
     def expect_required
       expect(field_container)
         .to have_css ".spot-form-field--label-indicator", text: "*"

@@ -3,15 +3,12 @@
 type: object
 required:
 - name
-- filter
+- _links
 properties:
   name:
     type: string
     description: Describes the name attribute
     readOnly: true
-  filter:
-    type: string
-    description: QuerySortBy name
   _links:
     type: object
     required:
@@ -56,19 +53,7 @@ example:
           hasDefault: false
           writable: true
           _links: {}
-  name:
-    type: String
-    name: Name
-    required: true
-    hasDefault: true
-    writable: false
-  filter:
-    type: QueryFilter
-    name: Filter
-    required: true
-    hasDefault: false
-    writable: true
-    _links: {}
+  name: "A name"
   _links:
     self:
       href: "/api/v3/queries/filter_instance_schemas/author"

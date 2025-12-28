@@ -43,13 +43,6 @@ fr:
           name: Magenta PM2
         item_3:
           name: Jaune vert PM2
-      document_categories:
-        item_0:
-          name: Documentation
-        item_1:
-          name: Spécification
-        item_2:
-          name: Autre
       project_query_roles:
         item_0:
           name: Visionneuse de requêtes du projet
@@ -348,7 +341,7 @@ fr:
               subject: Nouveau site Web
               children:
                 item_0:
-                  subject: Formulaire d'inscription à la newsletter
+                  subject: Formulaire d'inscription à la lettre d'information
                 item_1:
                   subject: Implémenter la visite des produits
                 item_2:

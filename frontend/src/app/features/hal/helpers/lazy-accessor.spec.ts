@@ -40,6 +40,7 @@ describe('lazy service', () => {
       prop: void 0,
     };
     lazy(obj, 'prop', () => '');
+
     expect(obj.prop).toBeDefined();
   });
 
@@ -48,6 +49,7 @@ describe('lazy service', () => {
       prop: void 0,
     };
     lazy(obj, 'prop', () => '');
+
     expect(obj.propertyIsEnumerable('prop')).toBeTruthy();
   });
 
@@ -56,6 +58,7 @@ describe('lazy service', () => {
       prop: void 0,
     };
     lazy(obj, 'prop', () => '');
+
     expect((Object as any).getOwnPropertyDescriptor(obj, 'prop').configurable).toBeTruthy();
   });
 
@@ -65,6 +68,7 @@ describe('lazy service', () => {
     };
     lazy(obj, 'prop', () => '', (val:any) => val);
     obj.prop = 'hello';
+
     expect(obj.prop).toEqual('hello');
   });
 
@@ -76,12 +80,14 @@ describe('lazy service', () => {
     try {
       obj.prop = 'hello';
     } catch (Error) {}
+
     expect(obj.prop).not.toEqual('hello');
   });
 
   it('should do nothing if the target is not an object', () => {
     const obj:any = null;
     lazy(obj, 'prop', () => '');
+
     expect(obj).toBeNull();
   });
 });

@@ -30,7 +30,7 @@ sv:
       tab_header_mr:
         title: "Merge requests"
         create_mr:
-          label: Create MR
+          label: Skapa MR
           description: Create a Merge Request
         copy_menu:
           label: Git snippets
@@ -40,7 +40,7 @@ sv:
           commit_message: Commit message
           cmd: Create branch with empty commit
           title: Quick snippets for Git
-          copy_success: '✅ Copied!'
+          copy_success: '✅ Kopierad!'
           copy_error: '❌ Copy failed!'
       tab_issue:
         empty: 'There are no issues linked yet. Link an existing issue by using the code <code>OP#%{wp_id}</code> (or <code>PP#%{wp_id}</code> for private links) in the issue title/description or create a new issue.'

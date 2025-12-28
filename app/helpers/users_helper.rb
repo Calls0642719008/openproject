@@ -130,7 +130,7 @@ module UsersHelper
                                       href: change_status_user_path(user,
                                                                     name.to_sym => "1",
                                                                     back_url: request.fullpath),
-                                      data: { method: :post }) do |button|
+                                      data: { turbo_method: :post }) do |button|
         button.with_leading_visual_icon(icon: change_user_status_icons[name])
         title
       end

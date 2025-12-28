@@ -46,17 +46,17 @@ import {
   standalone: false,
 })
 export class WorkPackageTimelineHeaderController implements OnInit {
-  public $element:JQuery;
+  public element:HTMLElement;
 
   private activeZoomLevel:TimelineZoomLevel;
 
-  private innerHeader:JQuery;
+  private innerHeader:HTMLElement;
 
   constructor(elementRef:ElementRef,
     readonly I18n:I18nService,
     readonly wpTimelineService:WorkPackageViewTimelineService,
     readonly workPackageTimelineTableController:WorkPackageTimelineTableController) {
-    this.$element = jQuery(elementRef.nativeElement);
+    this.element = elementRef.nativeElement;
   }
 
   ngOnInit() {
@@ -65,13 +65,13 @@ export class WorkPackageTimelineHeaderController implements OnInit {
   }
 
   refreshView(vp:TimelineViewParameters) {
-    this.innerHeader = this.$element.find('.wp-table-timeline--header-inner');
+    this.innerHeader = this.element.querySelector('.wp-table-timeline--header-inner')!;
     this.renderLabels(vp);
   }
 
   private renderLabels(vp:TimelineViewParameters):void {
-    this.innerHeader.empty();
-    this.innerHeader.attr('data-current-zoom-level', this.wpTimelineService.zoomLevel);
+    this.innerHeader.innerHTML = '';
+    this.innerHeader.setAttribute('data-current-zoom-level', this.wpTimelineService.zoomLevel);
 
     switch (vp.settings.zoomLevel) {
       case 'days':

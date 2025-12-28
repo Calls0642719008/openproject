@@ -37,9 +37,9 @@ RSpec.describe API::V3::Memberships::MembershipRepresenter, "rendering" do
     build_stubbed(:member,
                   member_roles: [member_role1, member_role2, member_role2, marked_member_role],
                   principal:,
-                  project:)
+                  project: workspace)
   end
-  let(:project) { build_stubbed(:project) }
+  let(:workspace) { build_stubbed(:project) }
   let(:roles) { [role1, role2] }
   let(:role1) { build_stubbed(:project_role) }
   let(:member_role1) { build_stubbed(:member_role, role: role1) }
@@ -60,15 +60,16 @@ RSpec.describe API::V3::Memberships::MembershipRepresenter, "rendering" do
   let(:permissions) do
     [:manage_members]
   end
+  let(:embed_links) { true }
   let(:representer) do
-    described_class.create(member, current_user:, embed_links: true)
+    described_class.create(member, current_user:, embed_links:)
   end
 
   subject { representer.to_json }
 
   before do
     mock_permissions_for(current_user) do |mock|
-      mock.allow_in_project *permissions, project: project || build_stubbed(:project)
+      mock.allow_in_project *permissions, project: workspace || build_stubbed(:project)
     end
   end
 
@@ -123,14 +124,10 @@ RSpec.describe API::V3::Memberships::MembershipRepresenter, "rendering" do
     end
 
     describe "project" do
-      it_behaves_like "has a titled link" do
-        let(:link) { "project" }
-        let(:href) { api_v3_paths.project(project.id) }
-        let(:title) { project.name }
-      end
+      it_behaves_like "has workspace linked"
 
-      context "for a global member" do
-        let(:project) { nil }
+      context "for a global membership" do
+        let(:workspace) { nil }
 
         it_behaves_like "has an empty link" do
           let(:link) { "project" }
@@ -207,20 +204,12 @@ RSpec.describe API::V3::Memberships::MembershipRepresenter, "rendering" do
     describe "project" do
       let(:embedded_path) { "_embedded/project" }
 
-      it "has the project embedded" do
-        expect(subject)
-          .to be_json_eql("Project".to_json)
-          .at_path("#{embedded_path}/_type")
-
-        expect(subject)
-          .to be_json_eql(project.name.to_json)
-          .at_path("#{embedded_path}/name")
-      end
+      it_behaves_like "has workspace embedded"
 
       context "for a global member" do
-        let(:project) { nil }
+        let(:workspace) { nil }
 
-        it "has no project embedded" do
+        it "has no workspace embedded" do
           expect(subject)
             .not_to have_json_path(embedded_path)
         end

@@ -129,7 +129,6 @@ export class WorkPackageViewBaselineService extends WorkPackageQueryStateService
 
   public lastWorkingDate():string {
     const date = moment().subtract(1, 'days');
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       if (this.isNonWorkingDay(date) || this.weekdaysService.isNonWorkingDay(date)) {
         date.subtract(1, 'days');

@@ -33,15 +33,13 @@
 require "open_project/translations/pluralization_backend"
 I18n::Backend::Simple.include OpenProject::Translations::PluralizationBackend
 
-# Adds fallback to default locale for untranslated strings
+# Adds fallback to default locale for untranslated strings. Useful for instance
+# during development when adding new strings and using another locale than
+# English. For production, that's less useful as files downloaded from Crowdin
+# already contain fallback English translations.
+#
+# Also we can't completly remove the fallback mechanism: we still need the it to
+# get translated versions of email header and footer as they are supplied by the
+# admins and may not be provided for all configured languages. (See
+# `Setting#localized_emails_header` and `Setting#localized_emails_footer`.)
 I18n::Backend::Simple.include I18n::Backend::Fallbacks
-
-Rails.application.reloader.to_prepare do
-  # As we enabled +config.i18n.fallbacks+, Rails will fall back
-  # to the default locale.
-  # When other locales are available, fall back to them.
-  if Setting.table_exists? # don't want to prevent migrations
-    defaults = Set.new(I18n.fallbacks.defaults + Redmine::I18n.valid_languages.map(&:to_sym))
-    I18n.fallbacks.defaults = defaults
-  end
-end

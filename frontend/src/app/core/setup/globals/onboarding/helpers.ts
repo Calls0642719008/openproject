@@ -1,5 +1,5 @@
 export const onboardingTourStorageKey = 'openProject-onboardingTour';
-export type OnboardingTourNames = 'homescreen'|'workPackages'|'gantt'|'final'|'boards'|'teamPlanner';
+export type OnboardingTourNames = 'homescreen'|'workPackages'|'workPackagesFullView'|'gantt'|'final'|'boards'|'teamPlanner';
 
 function matchingFilter(list:NodeListOf<HTMLElement>, filterFunction:(match:HTMLElement) => boolean):HTMLElement|null {
   for (let i = 0; i < list.length; i++) {
@@ -17,7 +17,7 @@ export function waitForElement(
   execFunction:(match:HTMLElement) => void,
   filterFunction:(match:HTMLElement) => boolean = () => true,
 ):void {
-  const container = document.querySelector(containerSelector) as HTMLElement;
+  const container = document.querySelector(containerSelector)!;
   // If the element is ready immediately
   const initial = matchingFilter(container.querySelectorAll<HTMLElement>(selector), filterFunction);
   if (initial) {

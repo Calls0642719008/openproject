@@ -39,25 +39,15 @@ RSpec.describe TimeEntries::Scopes::Ongoing do
 
   subject { TimeEntry.visible_ongoing(user) }
 
-  shared_context "for the default use case" do
-    context "when the user has log_own_time permission directly on the work package" do
-      let(:work_package_permissions) { [:log_own_time] }
+  context "when the user has log_own_time permission directly on the work package" do
+    let(:work_package_permissions) { [:log_own_time] }
 
-      before do
-        create(:member, project: project, entity: work_package, user:, roles: [work_package_role])
-      end
-
-      it "returns the visible, ongoing time entry" do
-        expect(subject).to contain_exactly(ongoing_time_entry)
-      end
+    before do
+      create(:member, project: project, entity: work_package, user:, roles: [work_package_role])
     end
-  end
 
-  context "in regular instances", with_settings: { large_instance_wp_allowed_to_sql: false } do
-    include_context "for the default use case"
-  end
-
-  context "in large instances", with_settings: { large_instance_wp_allowed_to_sql: true } do
-    include_context "for the default use case"
+    it "returns the visible, ongoing time entry" do
+      expect(subject).to contain_exactly(ongoing_time_entry)
+    end
   end
 end

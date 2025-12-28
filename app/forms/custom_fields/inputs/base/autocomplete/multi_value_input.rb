@@ -33,6 +33,7 @@ class CustomFields::Inputs::Base::Autocomplete::MultiValueInput < CustomFields::
     base_input_attributes.merge(
       autocomplete_options:,
       wrapper_data_attributes: {
+        "custom-field-id": @custom_field.id,
         "qa-field-name": qa_field_name
       }
     )

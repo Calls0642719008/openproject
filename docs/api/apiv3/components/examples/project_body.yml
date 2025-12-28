@@ -1,4 +1,4 @@
-# Example: Project create request body 
+# Example: Project request payload
 ---
 value:
   name: 'Project example'

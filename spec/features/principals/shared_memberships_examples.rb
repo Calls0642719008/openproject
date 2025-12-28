@@ -48,9 +48,9 @@ RSpec.shared_examples "principal membership management flows" do
   end
 end
 
-RSpec.shared_examples "global user principal membership management flows" do |permission|
+RSpec.shared_examples "global user principal membership management flows" do |permissions|
   context "as global user" do
-    shared_let(:global_user) { create(:user, global_permissions: [permission]) }
+    shared_let(:global_user) { create(:user, global_permissions: permissions) }
     shared_let(:project_members) { { global_user => manager } }
     current_user { global_user }
 
@@ -102,7 +102,7 @@ RSpec.shared_examples "global user principal membership management flows" do |pe
   context "as user with global and project permissions, but not manage_members" do
     current_user do
       create(:user,
-             global_permissions: permission,
+             global_permissions: permissions,
              member_with_permissions: { project => %i[view_work_packages] })
     end
 

@@ -31,13 +31,13 @@
 require "spec_helper"
 require "support/permission_specs"
 
-RSpec.describe Overviews::OverviewsController, "edit_project_attributes permission", # rubocop:disable RSpec/EmptyExampleGroup,RSpec/SpecFilePathFormat
+RSpec.describe Overviews::ProjectCustomFieldsController, "edit_project_attributes permission", # rubocop:disable RSpec/EmptyExampleGroup,RSpec/SpecFilePathFormat
                type: :controller do
   include PermissionSpecs
 
   # render dialog with inputs for editing project attributes with edit_project permission
-  check_permission_required_for("overviews/overviews#project_custom_field_section_dialog", :edit_project_attributes)
+  check_permission_required_for("overviews/project_custom_fields#edit", :edit_project_attributes)
 
   # update project attributes with edit_project permission, deeper permission check via contract in place
-  check_permission_required_for("overviews/overviews#update_project_custom_values", :edit_project_attributes)
+  check_permission_required_for("overviews/project_custom_fields#update", :edit_project_attributes)
 end

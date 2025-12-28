@@ -10,7 +10,7 @@ import {
 } from 'core-app/features/work-packages/components/wp-table/external-configuration/external-query-configuration.component';
 import { OpQueryConfigurationLocalsToken } from 'core-app/features/work-packages/components/wp-table/external-configuration/external-query-configuration.constants';
 
-export type Class = { new(...args:any[]):any; };
+export type Class = new(...args:any[]) => any;
 
 @Injectable()
 export class ExternalQueryConfigurationService {

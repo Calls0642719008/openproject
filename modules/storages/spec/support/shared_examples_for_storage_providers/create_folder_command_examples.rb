@@ -28,19 +28,6 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-RSpec.shared_examples_for "adapter create_folder_command: basic command setup" do
-  it "is registered as commands.create_folder" do
-    expect(Storages::Adapters::Registry.resolve("#{storage}.commands.create_folder")).to eq(described_class)
-  end
-
-  it "responds to #call with correct parameters" do
-    expect(described_class).to respond_to(:call)
-
-    method = described_class.method(:call)
-    expect(method.parameters).to contain_exactly(%i[keyreq storage], %i[keyreq auth_strategy], %i[keyreq input_data])
-  end
-end
-
 RSpec.shared_examples_for "adapter create_folder_command: successful folder creation" do
   it "creates a folder" do
     result = described_class.call(storage:, auth_strategy:, input_data:)
@@ -51,31 +38,8 @@ RSpec.shared_examples_for "adapter create_folder_command: successful folder crea
     expect(response).to be_a(Storages::Adapters::Results::StorageFile)
     expect(response.name).to eq(folder_name)
     expect(response.location).to eq(path)
+    expect(response.mime_type).to eq("application/x-op-directory")
   ensure
     delete_created_folder(response)
-  end
-end
-
-RSpec.shared_examples_for "adapter create_folder_command: parent not found" do
-  it "returns a failure" do
-    result = described_class.call(storage:, auth_strategy:, input_data:)
-
-    expect(result).to be_failure
-
-    error = result.failure
-    expect(error.code).to eq(:not_found)
-    expect(error.source).to eq(described_class)
-  end
-end
-
-RSpec.shared_examples_for "adapter create_folder_command: folder already exists" do
-  it "returns a failure" do
-    result = described_class.call(storage:, auth_strategy:, input_data:)
-
-    expect(result).to be_failure
-
-    error = result.failure
-    expect(error.code).to eq(:conflict)
-    expect(error.source).to eq(described_class)
   end
 end

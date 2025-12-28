@@ -53,13 +53,17 @@ RSpec.describe "Authentication Stages" do
     expect(page).to have_current_path(path)
     visit my_account_path
     wait_for_network_idle
-    expect(page).to have_css(".form--field-container", text: user.login)
+
+    within_test_selector "my-account-form" do
+      expect(page).to have_field "user_username", with: user.login
+    end
   end
 
   def expect_not_logged_in
     visit my_account_path
     wait_for_netowrk_idle
-    expect(page).to have_no_css(".form--field-container", text: user.login)
+
+    expect(page).to have_no_test_selector "my-account-form"
   end
 
   before do

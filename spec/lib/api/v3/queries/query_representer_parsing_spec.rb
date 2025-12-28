@@ -120,55 +120,109 @@ RSpec.describe API::V3::Queries::QueryRepresenter, "parsing" do
   end
 
   describe "project" do
-    let(:request_body) do
-      {
-        "_links" => {
-          "project" => {
-            "href" => "/api/v3/projects/#{project_id}"
+    shared_examples_for "providing a workspace" do
+      before do
+        scope = instance_double(ActiveRecord::Relation)
+
+        allow(Project)
+          .to receive(:where)
+                .with(identifier: project_id)
+                .and_return(scope)
+        allow(scope)
+          .to receive(:pick)
+                .with(:id)
+                .and_return(project.id)
+      end
+
+      context "for a number only id" do
+        let(:project_id) { project.id }
+
+        it "sets the project_id accordingly" do
+          expect(subject.project_id)
+            .to eql project.id
+        end
+      end
+
+      context "for a text only id (identifier)" do
+        let(:project_id) { project.identifier }
+
+        it "deduces the id for the project_id accordingly" do
+          expect(subject.project_id)
+            .to eql project.id
+        end
+      end
+
+      context "for a text starting with numbers (identifier)" do
+        let(:project) { build_stubbed(:project, identifier: "5555-numbered-identifier") }
+        let(:project_id) { project.identifier }
+
+        it "deduces the id for the project_id accordingly" do
+          expect(subject.project_id)
+            .to eql project.id
+        end
+      end
+    end
+
+    context "for a project being provided" do
+      let(:request_body) do
+        {
+          "_links" => {
+            "project" => {
+              "href" => "/api/v3/projects/#{project_id}"
+            }
           }
         }
-      }
-    end
-
-    before do
-      scope = instance_double(ActiveRecord::Relation)
-
-      allow(Project)
-        .to receive(:where)
-              .with(identifier: project_id)
-              .and_return(scope)
-      allow(scope)
-        .to receive(:pick)
-              .with(:id)
-              .and_return(project.id)
-    end
-
-    context "for a number only id" do
-      let(:project_id) { project.id }
-
-      it "sets the project_id accordingly" do
-        expect(subject.project_id)
-          .to eql project.id
       end
+
+      it_behaves_like "providing a workspace"
     end
 
-    context "for a text only id (identifier)" do
-      let(:project_id) { project.identifier }
+    context "for a portfolio being provided" do
+      let(:project) { build_stubbed(:portfolio) }
 
-      it "deduces the id for the project_id accordingly" do
-        expect(subject.project_id)
-          .to eql project.id
+      let(:request_body) do
+        {
+          "_links" => {
+            "project" => {
+              "href" => "/api/v3/portfolios/#{project_id}"
+            }
+          }
+        }
       end
+
+      it_behaves_like "providing a workspace"
     end
 
-    context "for a text starting with numbers (identifier)" do
-      let(:project) { build_stubbed(:project, identifier: "5555-numbered-identifier") }
-      let(:project_id) { project.identifier }
+    context "for a program being provided" do
+      let(:project) { build_stubbed(:program) }
 
-      it "deduces the id for the project_id accordingly" do
-        expect(subject.project_id)
-          .to eql project.id
+      let(:request_body) do
+        {
+          "_links" => {
+            "project" => {
+              "href" => "/api/v3/programs/#{project_id}"
+            }
+          }
+        }
       end
+
+      it_behaves_like "providing a workspace"
+    end
+
+    context "for a portfolio being provided as a workspace" do
+      let(:project) { build_stubbed(:portfolio) }
+
+      let(:request_body) do
+        {
+          "_links" => {
+            "project" => {
+              "href" => "/api/v3/workspaces/#{project_id}"
+            }
+          }
+        }
+      end
+
+      it_behaves_like "providing a workspace"
     end
   end
 

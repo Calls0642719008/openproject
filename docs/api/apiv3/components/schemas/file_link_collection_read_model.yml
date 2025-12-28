@@ -12,7 +12,7 @@ allOf:
               - $ref: './link.yml'
               - description: |-
                   This file links collection
-                  
+
                   **Resource**: FileLinkCollectionReadModel
       _embedded:
         type: object
@@ -44,7 +44,7 @@ example:
         createdAt: '2021-12-20T13:37:00.211Z'
         updatedAt: '2021-12-20T13:37:00.211Z'
         originData:
-          id: 5503
+          id: "5503"
           name: logo.png
           mimeType: image/png
           size: 16042

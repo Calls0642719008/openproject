@@ -14,7 +14,7 @@ import {
 @Component({
   selector: 'boards-entry',
   hostDirectives: [WorkPackageIsolatedQuerySpaceDirective],
-  template: '<ui-view></ui-view>',
+  template: '<ui-view />',
   providers: [
     BoardConfigurationService,
     BoardStatusActionService,

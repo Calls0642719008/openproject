@@ -3,10 +3,13 @@
     render(
       Primer::Beta::Button.new(
         scheme: :secondary,
-        tag: :a,
-        href: new_meeting_outcome_path(@meeting, meeting_agenda_item_id: @meeting_agenda_item.id),
+        tag: :button,
         classes: "hide-when-print",
-        data: { "turbo-stream": true }
+        data: {
+          action: "click->meetings--submit#intercept",
+          href: new_meeting_outcome_path(@meeting, meeting_agenda_item_id: @meeting_agenda_item.id),
+          method: "GET"
+        }
       )
     ) do |button|
       button.with_leading_visual_icon(icon: :plus)

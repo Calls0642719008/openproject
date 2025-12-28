@@ -55,12 +55,18 @@ import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destr
       <span class="filename" [textContent]="fileName"></span>
       <progress max="100" value="0" #progressBar></progress>
       <p #progressPercentage>0%</p>
-      <span class="upload-completed" *ngIf="completed || error">
-      <op-icon icon-classes="icon-close" *ngIf="error"></op-icon>
-      <op-icon icon-classes="icon-checkmark" *ngIf="completed"></op-icon>
-    </span>
+      @if (completed || error) {
+        <span class="upload-completed">
+          @if (error) {
+            <op-icon icon-classes="icon-close" />
+          }
+          @if (completed) {
+            <op-icon icon-classes="icon-checkmark" />
+          }
+        </span>
+      }
     </li>
-  `,
+    `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })

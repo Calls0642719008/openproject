@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { Constructor } from 'core-app/core/util-types';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -39,10 +37,8 @@ export class ApiV3ResourcePath<T = HalResource> extends SimpleResource {
    */
   protected subResource<R = ApiV3GettableResource>(
     segment:string,
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     cls:Constructor<R> = ApiV3GettableResource as unknown as Constructor<R>,
   ):R {
-    // eslint-disable-next-line new-cap
     return new cls(this.apiRoot, this.path, segment, this);
   }
 }
@@ -97,7 +93,7 @@ export class ApiV3ResourceCollection<V, T extends ApiV3GettableResource<V>> exte
     if (typeof input === 'string' || typeof input === 'number') {
       id = input.toString();
     } else {
-      id = input.id as string;
+      id = input.id!;
     }
 
     return new (this.resource || ApiV3GettableResource)(this.apiRoot, this.path, id, this) as T;
@@ -134,12 +130,11 @@ export class ApiV3ResourceCollection<V, T extends ApiV3GettableResource<V>> exte
    */
   public filtered<R = ApiV3GettableResourceCollection<V>>(
     filters:ApiV3FilterBuilder,
-    params:{ [key:string]:string } = {},
+    params:Record<string, string> = {},
     resourceClass?:Constructor<R>,
   ):R {
     const url = addFiltersToPath(this.path, filters, params);
     const cls = resourceClass || ApiV3GettableResourceCollection;
-    // eslint-disable-next-line new-cap
     return new cls(this.apiRoot, url.pathname, url.search, this) as R;
   }
 
@@ -151,7 +146,7 @@ export class ApiV3ResourceCollection<V, T extends ApiV3GettableResource<V>> exte
    * @param select The signalling parameters to request
    * @param params additional URL params to append
    */
-  public signalled<R>(filters:ApiV3FilterBuilder, select:string[], params:{ [key:string]:string } = {}):Observable<R> {
+  public signalled<R>(filters:ApiV3FilterBuilder, select:string[], params:Record<string, string> = {}):Observable<R> {
     const url = addFiltersToPath(this.path, filters, { ...params, select: select.join(',') });
 
     return this
@@ -169,7 +164,6 @@ export class ApiV3ResourceCollection<V, T extends ApiV3GettableResource<V>> exte
     segment:string,
     cls:Constructor<R> = ApiV3GettableResource as unknown as Constructor<R>,
   ):R {
-    // eslint-disable-next-line new-cap
     return new cls(this.apiRoot, this.path, segment, this);
   }
 }

@@ -10,7 +10,7 @@ export default class JobStatusPollingController extends Controller<HTMLElement> 
   declare readonly frameTarget:FrameElement;
 
   interval:ReturnType<typeof setInterval>;
-  userInteraction:boolean = false;
+  userInteraction = false;
 
   connect() {
     this.interval = setInterval(() => this.frameTarget.reload(), 2000);

@@ -32,9 +32,9 @@ export class SelectionTransformer {
       .subscribe(() => {
         this.wpTableFocus.ifShouldFocus((wpId:string) => {
           const element = locateTableRow(wpId);
-          if (element.length) {
+          if (element) {
             scrollTableRowIntoView(wpId);
-            this.FocusHelper.focus(element[0]);
+            this.FocusHelper.focus(element);
           }
         });
       });
@@ -56,12 +56,14 @@ export class SelectionTransformer {
    * Update all currently visible rows to match the selection state.
    */
   private renderSelectionState(state:WorkPackageViewSelectionState) {
-    const context = jQuery(this.table.tableAndTimelineContainer);
+    const context = this.table.tableAndTimelineContainer;
 
-    context.find(`.${tableRowClassName}.${checkedClassName}`).removeClass(checkedClassName);
+    context.querySelectorAll(`.${tableRowClassName}.${checkedClassName}`).forEach((el) => el.classList.remove(checkedClassName));
 
     _.each(state.selected, (selected:boolean, workPackageId:any) => {
-      context.find(`.${tableRowClassName}[data-work-package-id="${workPackageId}"]`).toggleClass(checkedClassName, selected);
+      context.querySelectorAll(`.${tableRowClassName}[data-work-package-id="${workPackageId}"]`).forEach((el) => {
+        el.classList.toggle(checkedClassName, selected);
+      });
     });
   }
 }

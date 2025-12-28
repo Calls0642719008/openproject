@@ -3,11 +3,11 @@
     render(Primer::OpenProject::SidePanel.new) do |panel|
       panel.with_section(Meetings::SidePanel::DetailsComponent.new(meeting: @meeting))
 
-      if @meeting.editable?
+      if @meeting.editable? && !@meeting.draft?
         panel.with_section(email_updates_mode_selector)
       end
 
-      unless @meeting.template?
+      unless @meeting.template? && !@meeting.draft?
         panel.with_section(Meetings::SidePanel::StateComponent.new(meeting: @meeting))
       end
 

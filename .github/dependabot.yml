@@ -5,38 +5,51 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "dev"
-    open-pull-requests-limit: 3
-    versioning-strategy: lockfile-only
     groups:
       angular:
         patterns:
           - '@angular*'
+      blocknote:
+        patterns:
+          - '@blocknote/*'
       fullcalendar:
         patterns:
-          - '@fullcalendar*'
+          - '@fullcalendar/*'
+      html-eslint:
+        patterns:
+          - '@html-eslint/*'
+      ng-select:
+        patterns:
+          - '@ng-select/*'
       appsignal:
         patterns:
-          - '@appsignal*'
+          - '@appsignal/*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
     ignore:
       - dependency-name: "@angular*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "@openproject/octicons"
       - dependency-name: "@openproject/primer-view-components"
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
       interval: "daily"
     target-branch: "dev"
-    open-pull-requests-limit: 3
-    versioning-strategy: lockfile-only
     groups:
       aws-gems:
         patterns:
           - "aws-*"
     ignore:
+      - dependency-name: "openproject-octicons"
+      - dependency-name: "openproject-octicons_helper"
       - dependency-name: "openproject-primer_view_components"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     target-branch: "dev"
-    open-pull-requests-limit: 3

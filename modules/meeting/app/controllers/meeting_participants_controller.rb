@@ -65,8 +65,7 @@ class MeetingParticipantsController < ApplicationController
   def toggle_attendance
     @participant.toggle!(:attended)
 
-    update_add_user_form_component_via_turbo_stream
-    update_list_component_via_turbo_stream
+    update_box_row_component_via_turbo_stream(participant: @participant)
     update_sidebar_participants_component_via_turbo_stream(meeting: @meeting)
 
     respond_with_turbo_streams

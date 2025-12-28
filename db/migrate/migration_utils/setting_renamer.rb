@@ -28,26 +28,28 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Migration::MigrationUtils
-  class SettingRenamer
-    # define all the following methods as class methods
-    class << self
-      def rename(source_name, target_name)
-        ActiveRecord::Base.connection.execute <<-SQL
-          UPDATE #{settings_table}
-          SET name = #{quote_value(target_name)}
-          WHERE name = #{quote_value(source_name)}
-        SQL
-      end
+module Migration
+  module MigrationUtils
+    class SettingRenamer
+      # define all the following methods as class methods
+      class << self
+        def rename(source_name, target_name)
+          ActiveRecord::Base.connection.execute <<-SQL.squish
+            UPDATE #{settings_table}
+            SET name = #{quote_value(target_name)}
+            WHERE name = #{quote_value(source_name)}
+          SQL
+        end
 
-      private
+        private
 
-      def settings_table
-        @settings_table ||= ActiveRecord::Base.connection.quote_table_name("settings")
-      end
+        def settings_table
+          @settings_table ||= ActiveRecord::Base.connection.quote_table_name("settings")
+        end
 
-      def quote_value(s)
-        ActiveRecord::Base.connection.quote(s)
+        def quote_value(value)
+          ActiveRecord::Base.connection.quote(value)
+        end
       end
     end
   end

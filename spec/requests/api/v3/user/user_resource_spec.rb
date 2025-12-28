@@ -31,8 +31,7 @@
 require "spec_helper"
 require "rack/test"
 
-RSpec.describe "API v3 User resource",
-               content_type: :json do
+RSpec.describe "API v3 User resource", content_type: :json do
   include Rack::Test::Methods
   include API::V3::Utilities::PathHelper
 
@@ -41,7 +40,7 @@ RSpec.describe "API v3 User resource",
   let(:admin) { create(:admin) }
   let(:locked_admin) { create(:admin, status: Principal.statuses[:locked]) }
   let(:user_with_global_manage_user) do
-    create(:user, firstname: "Global", lastname: "User", global_permissions: [:manage_user])
+    create(:user, firstname: "Global", lastname: "User", global_permissions: %i[manage_user view_all_principals])
   end
 
   subject(:response) { last_response }
@@ -274,12 +273,9 @@ RSpec.describe "API v3 User resource",
         expect(subject.status).to eq 202
       end
 
-      it "locks the account and mark for deletion" do
-        expect(Principals::DeleteJob)
-          .to have_been_enqueued
-          .with(user)
-
-        expect(user).to be_locked
+      it "marks user as deleted and enqueues a deletion job" do
+        expect(Principals::DeleteJob).to have_been_enqueued.with(user)
+        expect(user).to be_deleted
       end
 
       context "with a non-existent user" do
@@ -316,13 +312,13 @@ RSpec.describe "API v3 User resource",
     context "as locked admin" do
       let(:current_user) { locked_admin }
 
-      it_behaves_like "deletion is not allowed"
+      it_behaves_like "not found"
     end
 
     context "as non-admin" do
       let(:current_user) { create(:user, admin: false) }
 
-      it_behaves_like "deletion is not allowed"
+      it_behaves_like "not found"
     end
 
     context "as user with manage_user permission" do
@@ -358,13 +354,13 @@ RSpec.describe "API v3 User resource",
       end
 
       context "when not login_required", with_settings: { login_required: false } do
-        it_behaves_like "deletion is not allowed"
+        it_behaves_like "not found"
       end
 
       context "requesting current user" do
         let(:get_path) { api_v3_paths.user "me" }
 
-        it_behaves_like "forbidden response based on login_required"
+        it_behaves_like "not found response based on login_required"
       end
     end
   end

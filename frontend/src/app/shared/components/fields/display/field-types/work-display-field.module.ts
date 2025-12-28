@@ -65,7 +65,6 @@ export class WorkDisplayField extends DisplayField {
   }
 
   public get derivedValue():string|null {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return this.resource[this.derivedPropertyName] as string|null;
   }
 

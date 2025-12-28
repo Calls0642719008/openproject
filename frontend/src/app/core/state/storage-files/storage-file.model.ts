@@ -33,7 +33,7 @@ interface IStorageFileLocation {
 }
 
 interface IStorageFilePermissions {
-  permissions:Array<'readable'|'writeable'>;
+  permissions:('readable'|'writeable')[];
 }
 
 export interface IStorageFile extends IFileLinkOriginData, IStorageFileLocation, IStorageFilePermissions {}

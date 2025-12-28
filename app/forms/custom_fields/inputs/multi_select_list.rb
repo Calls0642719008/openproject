@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -59,10 +59,10 @@ class CustomFields::Inputs::MultiSelectList < CustomFields::Inputs::Base::Autoco
 
   def list_items
     case @custom_field.field_format
-    when "hierarchy"
-      hierarchy_items.map do |item|
+    when "hierarchy", "weighted_item_list"
+      hierarchical_list_items.map do |item|
         {
-          label: item.ancestry_path,
+          label: item.ancestry_path(include_shorts_and_weights: true),
           value: item.id,
           selected: custom_values.pluck(:value).map(&:to_i).include?(item.id)
         }
@@ -78,7 +78,7 @@ class CustomFields::Inputs::MultiSelectList < CustomFields::Inputs::Base::Autoco
     end
   end
 
-  def hierarchy_items
+  def hierarchical_list_items
     CustomFields::Hierarchy::HierarchicalItemService.new
       .get_descendants(item: @custom_field.hierarchy_root, include_self: false)
       .value_or([])

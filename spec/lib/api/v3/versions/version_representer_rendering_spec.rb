@@ -31,19 +31,25 @@
 require "spec_helper"
 
 RSpec.describe API::V3::Versions::VersionRepresenter, "rendering" do
-  let(:version) { build_stubbed(:version) }
+  let(:workspace) { build_stubbed(:project) }
+  let(:version) { build_stubbed(:version, project: workspace) }
   let(:permissions) { [:manage_versions] }
-  let(:user) { build_stubbed(:user) }
-  let(:representer) { described_class.create(version, current_user: user) }
+  let(:current_user) { build_stubbed(:user) }
+  let(:embed_links) { true }
+  let(:representer) { described_class.create(version, current_user:, embed_links:) }
 
   include API::V3::Utilities::PathHelper
 
   subject(:generated) { representer.to_json }
 
   before do
-    mock_permissions_for(user) do |mock|
-      mock.allow_in_project *permissions, project: version.project
+    mock_permissions_for(current_user) do |mock|
+      mock.allow_in_project *permissions, project: workspace if workspace
     end
+  end
+
+  it "fulfills the documented schema" do
+    expect(generated).to match_json_schema.from_docs("version_model")
   end
 
   it { is_expected.to include_json("Version".to_json).at_path("_type") }
@@ -101,33 +107,15 @@ RSpec.describe API::V3::Versions::VersionRepresenter, "rendering" do
     end
 
     describe "to the defining project" do
-      context "if the user has the permission to see the project" do
-        before do
-          allow(version.project).to receive(:visible?).with(user).and_return(true)
-        end
-
-        it_behaves_like "has a titled link" do
-          let(:link) { "definingProject" }
-          let(:href) { api_v3_paths.project(version.project.id) }
-          let(:title) { version.project.name }
-        end
-      end
-
-      context "if the user lacks the permission to see the project" do
-        before do
-          allow(version.project).to receive(:visible?).with(user).and_return(false)
-        end
-
-        it_behaves_like "has no link" do
-          let(:link) { "definingProject" }
-        end
+      it_behaves_like "has workspace linked" do
+        let(:link) { :definingProject }
       end
     end
 
     describe "to available projects" do
       it_behaves_like "has an untitled link" do
         let(:link) { "availableInProjects" }
-        let(:href) { api_v3_paths.projects_by_version(version.id) }
+        let(:href) { api_v3_paths.workspaces_by_version(version.id) }
       end
     end
 
@@ -229,14 +217,25 @@ RSpec.describe API::V3::Versions::VersionRepresenter, "rendering" do
     end
   end
 
+  describe "_embedded" do
+    describe "definingProject" do
+      it_behaves_like "has workspace embedded" do
+        let(:embedded_path) { "_embedded/definingProject" }
+      end
+    end
+  end
+
   describe "caching" do
     it "is based on the representer's cache_key" do
-      expect(OpenProject::Cache)
+      allow(OpenProject::Cache)
         .to receive(:fetch)
-        .with(representer.json_cache_key)
-        .and_call_original
+              .and_call_original
 
       representer.to_json
+
+      expect(OpenProject::Cache)
+        .to have_received(:fetch)
+              .with(representer.json_cache_key)
     end
 
     describe "#json_cache_key" do

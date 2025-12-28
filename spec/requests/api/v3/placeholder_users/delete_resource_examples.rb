@@ -32,12 +32,9 @@ RSpec.shared_examples "deletion allowed" do
     expect(last_response).to have_http_status :accepted
   end
 
-  it "locks the account and mark for deletion" do
-    expect(Principals::DeleteJob)
-      .to have_been_enqueued
-            .with(placeholder)
-
-    expect(placeholder.reload).to be_locked
+  it "marks user as deleted and enqueues a deletion job" do
+    expect(Principals::DeleteJob).to have_been_enqueued.with(placeholder)
+    expect(placeholder.reload).to be_deleted
   end
 
   context "with a non-existent user" do

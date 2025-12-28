@@ -48,7 +48,7 @@ module Journals
     private
 
     def activity_comment?(journal)
-      journal.notes.present?
+      journal.notes.present? || journal.attachments.exists?
     end
 
     def claim_attachments_for(journal)

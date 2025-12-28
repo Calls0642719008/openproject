@@ -31,26 +31,11 @@ require "open3"
 
 module OpenProject
   module VERSION # :nodoc:
-    MAJOR = 16
-    MINOR = 4
+    MAJOR = 17
+    MINOR = 1
     PATCH = 0
 
     class << self
-      # Used by semver to define the special version (if any).
-      # A special version "satisfy but have a lower precedence than the associated
-      # normal version". So 2.0.0RC1 would be part of the 2.0.0 series but
-      # be considered to be an older version.
-      #
-      #   1.4.0 < 2.0.0RC1 < 2.0.0RC2 < 2.0.0 < 2.1.0
-      #
-      # This method may be overridden by third party code to provide vendor or
-      # distribution specific versions. They may or may not follow semver.org:
-      #
-      #   2.0.0debian-2
-      def special
-        ""
-      end
-
       def revision
         revision_from_core_sha || revision_from_git
       end
@@ -97,8 +82,8 @@ module OpenProject
 
       def to_s; STRING end
 
-      def to_semver
-        [MAJOR, MINOR, PATCH].join(".") + special
+      def to_semver(separator: ".")
+        [MAJOR, MINOR, PATCH].join(separator)
       end
 
       private

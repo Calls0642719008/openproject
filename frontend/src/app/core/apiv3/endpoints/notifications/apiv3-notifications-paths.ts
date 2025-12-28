@@ -95,7 +95,7 @@ export class ApiV3NotificationsPaths
    * Mark all notifications as read
    * @param ids
    */
-  public markAsReadByIds(ids:Array<ID>):Observable<unknown> {
+  public markAsReadByIds(ids:ID[]):Observable<unknown> {
     return this
       .http
       .post(

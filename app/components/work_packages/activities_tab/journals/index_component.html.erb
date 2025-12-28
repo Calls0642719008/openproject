@@ -37,7 +37,7 @@
               end
             end
 
-            if !journal_sorting_desc? && journals.count > MAX_RECENT_JOURNALS
+            if !journal_sorting.desc? && journals.count > MAX_RECENT_JOURNALS
               journals_index_container.with_row do
                 helpers.turbo_frame_tag("work-package-activities-tab-content-older-journals", src: work_package_activities_path(work_package, filter:, deferred: true))
               end
@@ -58,7 +58,7 @@
               end
             end
 
-            if journal_sorting_desc? && journals.count > MAX_RECENT_JOURNALS
+            if journal_sorting.desc? && journals.count > MAX_RECENT_JOURNALS
               journals_index_container.with_row do
                 helpers.turbo_frame_tag("work-package-activities-tab-content-older-journals", src: work_package_activities_path(work_package, filter:, deferred: true))
               end

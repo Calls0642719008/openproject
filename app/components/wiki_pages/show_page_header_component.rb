@@ -55,5 +55,29 @@ module WikiPages
     def show_rollback?
       User.current.allowed_in_project?(:edit_wiki_pages, @project) && !@page.current_version?
     end
+
+    def show_atom_link?
+      @project.present? && @project.module_enabled?("activity")
+    end
+
+    def export_atom_link
+      url_for(
+        controller: "/activities",
+        action: "index",
+        id: @project,
+        show_wiki_edits: 1,
+        apply: true,
+        key: User.current.rss_key,
+        format: "atom"
+      )
+    end
+
+    def export_markdown_link
+      url_for(
+        version: @page.version,
+        id: @page,
+        format: "markdown"
+      )
+    end
   end
 end

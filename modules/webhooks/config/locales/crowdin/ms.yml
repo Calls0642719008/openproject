@@ -27,11 +27,14 @@ ms:
       no_results_table: Tiada webhook yang ditakrifkan lagi.
       label_add_new: Tambah webhook baru
       label_edit: Edit webhook
-      label_event_resources: Sumber-sumber peristiwa
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Dicipta"
         updated: "Telah dikemas kini"
-        comment: "Comment"
+        comment: "Komen"
         internal_comment: "Internal comment"
       explanation:
         text: >

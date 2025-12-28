@@ -38,7 +38,7 @@ export class ChildRelationsRenderPass extends RelationsRenderPass {
       const column = this.wpTableColumns.findById(expanded)!;
       // Render the child relations
       workPackage.children.forEach((child) => {
-        const target = this.states.workPackages.get(child.id as string).value as WorkPackageResource;
+        const target = this.states.workPackages.get(child.id!).value!;
         // Build each relation row (currently sorted by order defined in API)
         const [relationRow] = this.relationRowBuilder.buildEmptyRelationRow(
           workPackage,

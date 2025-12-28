@@ -39,9 +39,9 @@ import { EditFormComponent } from 'core-app/shared/components/fields/edit/edit-f
   standalone: false,
 })
 export class WorkPackageEditActionsBarComponent {
-  @Output('onSave') public onSave = new EventEmitter<void>();
+  @Output() public onSave = new EventEmitter<void>();
 
-  @Output('onCancel') public onCancel = new EventEmitter<void>();
+  @Output() public onCancel = new EventEmitter<void>();
 
   public _saving = false;
 

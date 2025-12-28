@@ -42,6 +42,8 @@ module WorkPackages
     delegate :to_s,
              to: :model
 
+    def validate_model? = false
+
     private
 
     def validate_version_is_assignable; end

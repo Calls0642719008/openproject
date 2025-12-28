@@ -1,8 +1,7 @@
 <div>
-  <op-enterprise-banner-frame
-    feature="conditional_highlighting"
+  <op-enterprise-banner-frame feature="conditional_highlighting"
     [dismissable]="false"
-  ></op-enterprise-banner-frame>
+   />
 
   <form>
     <p [textContent]="text.highlighting_mode.description"></p>
@@ -32,8 +31,7 @@
                      bindLabel="name"
                      name="highlighting_attributes"
                      placeholder="{{ text.highlighting_mode.inline_all_attributes }}"
-                     appendTo="body">
-          </ng-select>
+                     appendTo="body" />
         </div>
       </div>
     </div>
@@ -63,8 +61,7 @@
                      name="selected_attribute"
                      appendTo="body"
                      id="selected_attribute"
-                     class="form--select-field">
-          </ng-select>
+                     class="form--select-field" />
         </div>
       </div>
     </div>

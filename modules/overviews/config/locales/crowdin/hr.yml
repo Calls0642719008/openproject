@@ -1,4 +1,6 @@
 hr:
   overviews:
-    label: 'Pregled'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Dashboard"
+    label_overview: 'Pregled'
   permission_manage_overview: 'Manage overview page'

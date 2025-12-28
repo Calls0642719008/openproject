@@ -3,12 +3,8 @@
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
     header.with_title { t("my_page.label") }
-    header.with_breadcrumbs(
-      [
-        t("my_page.label")
-      ]
-    )
+    header.with_breadcrumbs(nil)
   end
 %>
 
-<openproject-base></openproject-base>
+<%= angular_component_tag "opce-my-page" %>

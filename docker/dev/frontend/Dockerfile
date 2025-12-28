@@ -1,5 +1,5 @@
-FROM node:22.15.0
-MAINTAINER operations@openproject.com
+FROM node:22.21.0
+LABEL org.opencontainers.image.authors="operations@openproject.com"
 
 ARG DEV_UID=1000
 ARG DEV_GID=1001

@@ -11,7 +11,7 @@
     method: :put
   ) do |form|
     flex_layout do |flex|
-      unless edit_mode
+      unless new_mode
         flex.with_row do
           render(Primer::Alpha::Banner.new(mb: 2, scheme: :warning, icon: :alert)) do
             t("openid_connect.providers.section_texts.metadata_form_banner")
@@ -49,7 +49,7 @@
             form,
             provider:,
             submit_button_options: { label: button_label },
-            cancel_button_options: { hidden: edit_mode },
+            cancel_button_options: { hidden: new_mode },
             state: :metadata
           )
         )

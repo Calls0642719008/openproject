@@ -111,5 +111,7 @@ get:
   - Work Packages
   description: Gets a list of users that can be assigned to work packages in the given
     project.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/available_assignees`](https://www.openproject.org/docs/api/endpoints/work-packages/#workspaces-available-assignees)
   operationId: Project_Available_assignees
   summary: Project Available assignees

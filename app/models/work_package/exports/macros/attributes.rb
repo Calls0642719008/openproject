@@ -87,10 +87,6 @@ module WorkPackage::Exports
         msg_inline I18n.t("export.macro.error", message:)
       end
 
-      def self.msg_macro_error_rich_text
-        msg_inline I18n.t("export.macro.rich_text_unsupported")
-      end
-
       def self.msg_inline(message)
         "[#{message}]"
       end
@@ -160,13 +156,12 @@ module WorkPackage::Exports
 
       def self.resolve_value(obj, attribute, disabled_rich_text_fields)
         custom_field = find_custom_field(obj, attribute)
-        return msg_macro_error_rich_text if custom_field&.formattable?
 
         attribute_name = convert_to_attribute_name(custom_field, attribute, obj)
         return " " unless can_view_attribute?(custom_field, obj, attribute_name)
-        return msg_macro_error_rich_text if disabled_rich_text_fields.include?(attribute_name.to_sym)
 
-        format_attribute_value(attribute_name, obj.class, obj)
+        is_rich_text = custom_field&.formattable? || disabled_rich_text_fields.include?(attribute_name.to_sym)
+        [format_attribute_value(attribute_name, obj.class, obj, is_rich_text), is_rich_text]
       end
 
       def self.can_view_attribute?(custom_field, obj, attribute_name)
@@ -185,7 +180,7 @@ module WorkPackage::Exports
         obj.available_custom_fields.find { |pcf| pcf.name == attribute }
       end
 
-      def self.format_attribute_value(ar_name, model, obj)
+      def self.format_attribute_value(ar_name, model, obj, is_rich_text)
         formatter = Exports::Register.formatter_for(model, ar_name, :pdf)
         value = formatter.format(obj)
         # do NOT escape a tag for custom field link
@@ -193,7 +188,9 @@ module WorkPackage::Exports
 
         # important NOT to return empty string as this could change meaning of markdown
         # e.g. **to_be_replaced** could be rendered as **** (horizontal line and a *)
-        value.blank? ? " " : escape_tags(value)
+        return " " if value.blank?
+
+        is_rich_text ? value : escape_tags(value)
       end
     end
   end

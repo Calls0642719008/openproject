@@ -42,8 +42,15 @@ module Accounts::UserPasswordChange
     # auth sources in the admin UI, so this shouldn't normally happen.
     return if redirect_if_password_change_not_allowed(user)
 
+    # Check if user is locked due to too many failed attempts
+    if user.failed_too_many_recent_login_attempts?
+      flash_and_log_invalid_credentials(is_logged_in: !show_user_name)
+      return render_password_change(user, nil, show_user_name:)
+    end
+
     # Ensure the current password is validated
     unless user.check_password?(params[:password], update_legacy:)
+      user.log_failed_login
       flash_and_log_invalid_credentials(is_logged_in: !show_user_name)
       return render_password_change(user, nil, show_user_name:)
     end
@@ -53,6 +60,9 @@ module Accounts::UserPasswordChange
 
     # Yield the success to the caller
     if call.success?
+      # Reset failed login count on successful password change
+      User.reset_failed_login_count_for(user)
+
       response = yield call
 
       call.apply_flash_message!(flash)

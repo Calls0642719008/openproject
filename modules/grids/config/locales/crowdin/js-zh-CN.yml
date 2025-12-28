@@ -13,14 +13,8 @@ zh-CN:
           no_results: '没有文档。'
         members:
           title: '成员'
-          no_results: '无可见成员。'
-          view_all_members: '查看所有成员'
-          add: '成员'
-          too_many: '正在显示 %{count} 个成员，总共 %{total} 个。'
         news:
           title: '新闻'
-          at: '位置：'
-          no_results: '没有新消息报告。'
         project_description:
           title: '项目描述'
           no_results: "尚未写入任何描述。可以在“项目设置”中提供一个描述。"
@@ -33,9 +27,10 @@ zh-CN:
           not_set: '未设置'
           finished: '已完成'
           discontinued: '已中断'
+        project_status_beta:
+          title: '项目状态（测试版）'
         subprojects:
           title: '子项目'
-          no_results: '无子项目。'
         project_favorites:
           title: '收藏的项目'
           no_results: '您目前没有收藏项目，单击项目仪表板中的星形图标将项目添加到收藏夹。'
@@ -57,6 +52,7 @@ zh-CN:
           title: '工作包表'
         work_packages_graph:
           title: '工作包图'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: '日历'
         work_packages_overview:

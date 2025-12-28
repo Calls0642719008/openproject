@@ -63,6 +63,7 @@ module OpenProject
                 .plugin(:persistent)
                 .plugin(:basic_auth)
                 .plugin(:webdav)
+                .with(headers: { "User-Agent" => "OpenProject #{OpenProject::VERSION.to_semver} HTTPX Client" })
                 .with(
                   timeout: {
                     connect_timeout: OpenProject::Configuration.httpx_connect_timeout,

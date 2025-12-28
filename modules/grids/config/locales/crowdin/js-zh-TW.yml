@@ -13,14 +13,8 @@ zh-TW:
           no_results: '尚未有文檔。'
         members:
           title: '成員'
-          no_results: '無可見成員。'
-          view_all_members: '查看所有成員'
-          add: '成員'
-          too_many: '顯示 %{count} 名成員，共 %{total} 名。'
         news:
           title: '最新消息'
-          at: '在'
-          no_results: '沒有新消息可報告'
         project_description:
           title: '專案描述'
           no_results: "尚未寫入任何描述。可以在「項目設置」中新增。"
@@ -33,17 +27,18 @@ zh-TW:
           not_set: '未設定'
           finished: '已完成'
           discontinued: '已中止'
+        project_status_beta:
+          title: '專案狀態 (BETA)'
         subprojects:
-          title: '子專案'
-          no_results: '無子專案'
+          title: '子項目'
         project_favorites:
           title: '收藏的專案'
           no_results: '您目前沒有收藏的專案。點擊項目儀表板中的星形圖示將其新增到您的收藏夾中。'
         time_entries_current_user:
-          title: '我的耗時'
+          title: '我的工時'
           displayed_days: '小工具顯示天數'
         time_entries_list:
-          title: '耗時（最近7天）'
+          title: '工時（最近7天）'
           no_results: '過去7天沒有時間記錄。'
         work_packages_accountable:
           title: "我負責的工作套件"
@@ -57,6 +52,7 @@ zh-TW:
           title: '工作套件表單'
         work_packages_graph:
           title: '工作套件關聯圖'
+          summary: "%{chartType} 圖表，顯示符合 %{description} 條件的工作套件。"
         work_packages_calendar:
           title: '行事曆'
         work_packages_overview:

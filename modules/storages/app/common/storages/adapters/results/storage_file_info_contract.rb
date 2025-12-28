@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Results
-      class StorageFileInfoContract < Dry::Validation::Contract
+      class StorageFileInfoContract < DryApplicationContract
         params(StorageFileContract.schema) do
           before(:value_coercer) do |input|
             input.to_h.compact

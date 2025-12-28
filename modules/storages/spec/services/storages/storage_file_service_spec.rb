@@ -59,7 +59,7 @@ module Storages
       end
 
       context "when the file exists", vcr: "nextcloud/file_info_query_success_file" do
-        let(:file_id) { "267" }
+        let(:file_id) { "56" }
 
         it_behaves_like "storage file service: successful response"
       end

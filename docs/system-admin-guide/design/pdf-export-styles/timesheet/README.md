@@ -1,3 +1,7 @@
+---
+sidebar_navigation:
+  title:  Timesheet PDF Styling
+---
 
 # Timesheet PDF
 

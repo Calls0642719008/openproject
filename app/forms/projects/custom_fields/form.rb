@@ -35,17 +35,11 @@ module Projects::CustomFields
       render_custom_fields(form: custom_fields_form)
     end
 
-    def initialize(project:, custom_field_section: nil, custom_field: nil, wrapper_id: nil)
+    def initialize(project:, custom_field:, wrapper_id: nil)
       super()
       @project = project
-      @custom_field_section = custom_field_section
       @custom_field = custom_field
       @wrapper_id = wrapper_id
-
-      if @custom_field_section.present? && @custom_field.present?
-        raise ArgumentError,
-              "Either custom_field_section or custom_field must be specified, but not both"
-      end
     end
 
     # override since we want to add the model with @project
@@ -56,16 +50,7 @@ module Projects::CustomFields
     private
 
     def custom_fields
-      @custom_fields ||=
-        if @custom_field.present?
-          [@custom_field]
-        elsif @custom_field_section.present?
-          @project
-            .available_custom_fields
-            .where(custom_field_section_id: @custom_field_section.id)
-        else
-          @project.available_custom_fields
-        end
+      [@custom_field]
     end
   end
 end

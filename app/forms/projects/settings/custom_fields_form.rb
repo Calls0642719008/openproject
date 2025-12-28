@@ -43,9 +43,14 @@ module Projects
       private
 
       def custom_fields
-        @custom_fields ||= model
-          .available_custom_fields
-          .required
+        @custom_fields ||= begin
+          enabled_custom_fields = model.enabled_custom_field_ids.presence || ProjectCustomField.for_all.select(:id)
+
+          model
+            .available_custom_fields
+            .where(id: enabled_custom_fields)
+            .required
+        end
       end
     end
   end

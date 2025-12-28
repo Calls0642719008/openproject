@@ -39,11 +39,7 @@ class EnterpriseTokensController < ApplicationController
   before_action :find_token, only: %i[destroy destroy_dialog]
   before_action :check_trial_status, only: [:index]
 
-  def index
-    # TODO: delete next line. @current_token is used in the old angular thingy.
-    # It should not be needed anymore then.
-    @current_token = EnterpriseToken.active_tokens.first
-  end
+  def index; end
 
   def new
     respond_with_dialog Admin::EnterpriseTokens::CreateDialogComponent.new(EnterpriseToken.new)
@@ -54,16 +50,18 @@ class EnterpriseTokensController < ApplicationController
     saved_encoded_token = @token.encoded_token
     @token.encoded_token = params[:enterprise_token][:encoded_token]
     if @token.save
-      flash[:notice] = t(:notice_successful_update)
       respond_to do |format|
-        format.html { redirect_to action: :index, status: :see_other }
+        format.html do
+          flash[:notice] = t(:notice_successful_update)
+          token_saved_flash if EnterpriseToken.one?
+          redirect_to action: :index, status: :see_other
+        end
         format.json { head :no_content }
       end
     else
       # restore the old token
       if saved_encoded_token
         @token.encoded_token = saved_encoded_token
-        @current_token = @token || EnterpriseToken.new
       end
       respond_to do |format|
         format.html { render action: :index, status: :unprocessable_entity }

@@ -138,7 +138,7 @@ export class GridAddWidgetService implements OnDestroy {
   }
 
   public get isAllowed() {
-    return this.layout.gridResource && this.layout.gridResource.updateImmediately;
+    return this.layout.gridResource?.updateImmediately;
   }
 
   private async createNewWidget():Promise<void> {

@@ -30,6 +30,7 @@
 
 import { opPhaseIconData, toDOMString } from '@openproject/octicons-angular';
 import { DisplayField } from 'core-app/shared/components/fields/display/display-field.module';
+import { HalResource } from 'core-app/features/hal/resources/hal-resource';
 import { ProjectPhaseResource } from 'core-app/features/hal/resources/project-phase-resource';
 
 export class ProjectPhaseDisplayField extends DisplayField {
@@ -51,18 +52,20 @@ export class ProjectPhaseDisplayField extends DisplayField {
    * The icon is wrapped in a span element with the correct css class set for coloring
    * the icon in the color defined for the definition.
    *
+   * @param phaseDefinitionId The ID of the phase definition (used for CSS class)
+   * @param addPadding Whether to add right margin padding
    * @return {HTMLElement} The HTML span element containing the project phase icon.
    * @see phaseIcon
    */
-  public static phaseIconByName(phaseName?:string, addPadding = true) {
+  public static phaseIconById(phaseDefinitionId?:string, addPadding = true) {
     const icon = document.createElement('span');
 
-    if (phaseName) {
+    if (phaseDefinitionId) {
       if (addPadding) {
         icon.classList.add('mr-1');
       }
 
-      icon.setAttribute('data-test-selector', `project-phase-icon ${phaseName}`);
+      icon.setAttribute('data-test-selector', `project-phase-icon phase-definition-${phaseDefinitionId}`);
 
       icon.innerHTML = toDOMString(
         opPhaseIconData,
@@ -70,23 +73,19 @@ export class ProjectPhaseDisplayField extends DisplayField {
         { 'aria-hidden': 'true', class: 'octicon' },
       );
 
-      // Use a base64 encoded string of the project phase name to access the definition's color.
-      // That way the frontend does not have to load the definitions to get the color.
-      // The name is guaranteed to be unique.
-      // The = signs at the end of the base64 string are replaced with _ to make it a valid class name.
-      // This needs to be kept in sync with the ColorsHelper#project_phase_color_css method in the backend.
-      icon.classList.add(`__hl_inline_project_phase_definition_${btoa(phaseName).replace(/=/g, '_')}`);
+      // Use the phase definition ID for the CSS class.
+      // This is more robust than using the name as it avoids issues with special characters.
+      icon.classList.add(`__hl_inline_project_phase_definition_${phaseDefinitionId}`);
     }
 
     return icon;
   }
 
   /**
-   * @see phaseIconByName
+   * @see phaseIconById
    */
   protected phaseIcon():HTMLElement {
-    const projectPhase = this.attribute as ProjectPhaseResource;
-
-    return ProjectPhaseDisplayField.phaseIconByName(projectPhase?.name);
+    const definition = this.resource.projectPhaseDefinition as HalResource;
+    return ProjectPhaseDisplayField.phaseIconById(definition?.id ?? undefined);
   }
 }

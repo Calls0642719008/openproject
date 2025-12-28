@@ -98,6 +98,10 @@ class Projects::IndexPageHeaderComponent < ApplicationComponent
     query.editable?
   end
 
+  def can_export?
+    current_user.allowed_in_any_project?(:export_projects)
+  end
+
   def show_state?
     state == :show
   end
@@ -106,9 +110,9 @@ class Projects::IndexPageHeaderComponent < ApplicationComponent
     query.persisted?
   end
 
-  def can_toggle_favor? = query.persisted?
+  def can_toggle_favorite? = query.persisted?
 
-  def currently_favored? = query.favored_by?(current_user)
+  def currently_favorited? = query.favorited_by?(current_user)
 
   def breadcrumb_items
     [
@@ -147,8 +151,12 @@ class Projects::IndexPageHeaderComponent < ApplicationComponent
       mobile_icon: nil, # Do not show on mobile as it is already part of the menu
       mobile_label: nil,
       href:,
-      data: { "turbo-stream": true, method: },
-      target: ""
+      target: "_self",
+      data: {
+        turbo_stream: true,
+        turbo_method: method
+      },
+      test_selector: "header-save-button"
     ) do
       render(
         Primer::Beta::Octicon.new(
@@ -166,7 +174,10 @@ class Projects::IndexPageHeaderComponent < ApplicationComponent
       label:,
       href:,
       content_arguments: {
-        data: { "turbo-stream": true, method: }
+        data: {
+          turbo_stream: true,
+          turbo_method: method
+        }
       }
     ) do |item|
       item.with_leading_visual_icon(icon: :"op-save")

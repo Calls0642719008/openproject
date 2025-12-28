@@ -141,6 +141,7 @@ module StorageServerHelpers
     folder1_xml_response = build(:webdav_data_folder)
     folder1_fileinfo_response = {
       ocs: {
+        meta: { statuscode: 100 },
         data: {
           status: "OK",
           statuscode: 200,

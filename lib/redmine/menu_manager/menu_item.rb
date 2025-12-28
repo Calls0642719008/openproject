@@ -174,4 +174,8 @@ class Redmine::MenuManager::MenuItem < Redmine::MenuManager::TreeNode
   def heading?
     @is_heading || false
   end
+
+  def enterprise_feature_missing?
+    @enterprise_feature.present? && !EnterpriseToken.allows_to?(@enterprise_feature)
+  end
 end

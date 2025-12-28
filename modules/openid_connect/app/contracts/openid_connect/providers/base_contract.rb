@@ -32,6 +32,8 @@ module OpenIDConnect
     class BaseContract < ModelContract
       include RequiresAdminGuard
 
+      VALID_CLAIMS_KEYS = %w[id_token userinfo].freeze
+
       def self.model
         OpenIDConnect::Provider
       end
@@ -67,7 +69,7 @@ module OpenIDConnect
       end
 
       attribute :groups_claim
-      validates :groups_claim, presence: true
+      validates :groups_claim, presence: true, if: -> { model.sync_groups? }
 
       attribute :group_regexes
       validate :group_regexes_parseable
@@ -81,9 +83,43 @@ module OpenIDConnect
       def claims_are_json
         return if claims.blank?
 
-        JSON.parse(claims)
+        parsed = JSON.parse(claims)
+        return errors.add(:claims, :not_json_object) unless parsed.is_a?(Hash)
+
+        validate_claims_json_structure(parsed)
       rescue JSON::ParserError
         errors.add(:claims, :not_json)
+      end
+
+      def validate_claims_json_structure(parsed)
+        invalid_keys = parsed.keys - VALID_CLAIMS_KEYS
+        if invalid_keys.any?
+          return errors.add(:claims,
+                            :invalid_claims_location,
+                            invalid: invalid_keys.join(", "),
+                            supported: VALID_CLAIMS_KEYS.join(", "))
+        end
+
+        non_object_key, = parsed.find { |_, v| !v.is_a?(Hash) }
+        return errors.add(:claims, :non_object_attribute, attribute: non_object_key) if non_object_key
+
+        parsed.each_key do |key|
+          validate_nested_claims_structure(parsed, key)
+        end
+      end
+
+      def validate_nested_claims_structure(parsed, base_key)
+        claims = parsed.fetch(base_key)
+        claims.each do |key, value|
+          next if value.nil?
+          return errors.add(:claims, :non_object_attribute, attribute: json_path(base_key, key)) unless value.is_a?(Hash)
+          if key_violates_type?(value, "essential", TrueClass, FalseClass)
+            return errors.add(:claims, :invalid_claims_essential, attribute: json_path(base_key, key, "essential"))
+          end
+          if key_violates_type?(value, "values", Array)
+            return errors.add(:claims, :invalid_claims_values, attribute: json_path(base_key, key, "values"))
+          end
+        end
       end
 
       def group_regexes_parseable
@@ -95,6 +131,16 @@ module OpenIDConnect
         end
 
         errors.add(:group_regexes, :regex_list_invalid, invalid_lines: invalid_lines.to_sentence) if invalid_lines.any?
+      end
+
+      def json_path(*elements)
+        elements.join(".")
+      end
+
+      def key_violates_type?(object, key, *types)
+        return false unless object.key?(key)
+
+        types.all? { |t| !object.fetch(key).is_a?(t) }
       end
     end
   end

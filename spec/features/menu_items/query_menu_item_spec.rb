@@ -92,7 +92,7 @@ RSpec.describe "Query menu items", :js do
       wp_table.expect_no_work_package_listed
       wp_table.click_setting_item I18n.t("js.toolbar.settings.visibility_settings")
 
-      check "Favored"
+      check "Favorited"
       click_on "Save"
 
       notification.expect_success("Successful update")

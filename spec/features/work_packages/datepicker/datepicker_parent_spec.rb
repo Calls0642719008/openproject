@@ -69,6 +69,7 @@ RSpec.describe "Datepicker logic on parents", :js, with_settings: { date_format:
       {
         start_date: "2021-02-01",
         due_date: "2021-02-02",
+        duration: 2,
         ignore_non_working_days: true
       }
     end
@@ -115,6 +116,35 @@ RSpec.describe "Datepicker logic on parents", :js, with_settings: { date_format:
         # Therefore, the calendar sheets also show the start_date of the child first
         first_monday = Time.zone.parse(child_attributes[:start_date]).beginning_of_month.next_occurring(:monday)
         datepicker.expect_disabled(first_monday)
+      end
+    end
+
+    context "when the parent is switched to manual, and dates are cleared, " \
+            "and scheduling mode is switched back to automatic" do
+      let(:parent_attributes) do
+        # parent inherits from child attributes
+        child_attributes.merge(schedule_manually: false)
+      end
+
+      it "shows the inherited dates and duration of the child in the date picker" do
+        datepicker.expect_automatic_scheduling_mode
+        datepicker.expect_start_date child_attributes[:start_date], disabled: true
+        datepicker.expect_due_date child_attributes[:due_date], disabled: true
+        datepicker.expect_duration child_attributes[:duration], disabled: true
+
+        datepicker.toggle_scheduling_mode
+        datepicker.wait_for_preview_update
+        datepicker.expect_manual_scheduling_mode
+        datepicker.set_start_date ""
+        datepicker.set_due_date ""
+        datepicker.expect_duration ""
+
+        datepicker.toggle_scheduling_mode
+        datepicker.wait_for_preview_update
+        datepicker.expect_automatic_scheduling_mode
+        datepicker.expect_start_date child_attributes[:start_date], disabled: true
+        datepicker.expect_due_date child_attributes[:due_date], disabled: true
+        datepicker.expect_duration child_attributes[:duration], disabled: true
       end
     end
   end

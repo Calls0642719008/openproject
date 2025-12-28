@@ -47,7 +47,7 @@ module DeployTargets
     def delete_link
       link_to I18n.t(:button_delete),
               deploy_target_path(deploy_target),
-              method: :delete,
+              data: { turbo_method: :delete },
               class: "icon icon-delete"
     end
   end

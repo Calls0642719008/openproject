@@ -1,45 +1,48 @@
 <div
   class="spot-modal spot-modal_autoheight confirm-form-submit--modal loading-indicator--location"
   data-indicator-name="modal"
->
+  >
   <div id="spotModalTitle" class="spot-modal--header">{{ text.title }}</div>
 
   <div class="spot-divider"></div>
 
   <div class="spot-modal--body spot-container">
-    <div *ngIf="showWarning && warningText"
-         class="op-toast -warning">
-      <div class="op-toast--content">
-        <p [innerHTML]="warningText"></p>
+    @if (showWarning && warningText) {
+      <div
+        class="op-toast -warning">
+        <div class="op-toast--content">
+          <p [innerHTML]="warningText"></p>
+        </div>
       </div>
-    </div>
+    }
 
     <div class="form--field">
       <div class="form--field-container">
         <div class="form--select-container">
+          <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
           <label class="form--label" [textContent]="actionService.label"></label>
           <op-autocompleter
             #select
             classes="new-list--action-select"
-            appendTo="body"
             [resource]="autocompleterOptions.resource"
             [openDirectly]="true"
             [fetchDataDirectly]="true"
             [getOptionsFn]=autocompleterOptions.getOptionsFn
             (change)="onModelChange($event)"
-          >
-            <ng-template op-autocompleter-footer-tmp *ngIf="autocompleterOptions.resource==='version'" let-search>
-              <button
-                class="op-select-footer--label"
-                type="button"
-                (click)="onNewActionCreated()">
+            >
+            @if (autocompleterOptions.resource==='version'; as search) {
+              <ng-template op-autocompleter-footer-tmp let-search>
+                <button
+                  class="op-select-footer--label"
+                  type="button"
+                  (click)="onNewActionCreated()">
                   <span class="icon-context">
-                    <op-icon icon-classes="icon-plus icon-context"></op-icon>
+                    <op-icon icon-classes="icon-plus icon-context" />
                     {{ text.button_create }} {{ ngSelectComponent.ngSelectInstance.searchTerm }}
                   </span>
-              </button>
-
-            </ng-template>
+                </button>
+              </ng-template>
+            }
           </op-autocompleter>
         </div>
       </div>

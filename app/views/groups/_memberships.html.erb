@@ -27,7 +27,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 <% roles = ProjectRole.givable %>
-<% projects = Project.active.order(Arel.sql('lft')) %>
+<% projects = Project.active.order(Arel.sql("lft")) %>
 <% memberships = @group.memberships %>
 
 <div class="grid-block grid-block_visible-overflow">
@@ -42,75 +42,87 @@ See COPYRIGHT and LICENSE files for more details.
               <col data-highlight="false">
             </colgroup>
             <thead>
-              <tr>
-                <th>
-                  <div class="generic-table--sort-header-outer">
-                    <div class="generic-table--sort-header">
+            <tr>
+              <th>
+                <div class="generic-table--sort-header-outer">
+                  <div class="generic-table--sort-header">
                       <span>
                         <%= Project.model_name.human %>
                       </span>
-                    </div>
                   </div>
-                </th>
-                <th>
-                  <div class="generic-table--sort-header-outer">
-                    <div class="generic-table--sort-header">
+                </div>
+              </th>
+              <th>
+                <div class="generic-table--sort-header-outer">
+                  <div class="generic-table--sort-header">
                       <span>
                         <%= t(:label_role_plural) %>
                       </span>
-                    </div>
                   </div>
-                </th>
-                <th><div class="generic-table--empty-header"></div></th>
-              </tr>
+                </div>
+              </th>
+              <th>
+                <div class="generic-table--empty-header"></div>
+              </th>
+            </tr>
             </thead>
             <tbody>
-              <% memberships.where.not(project: nil).each do |membership| %>
-                <% next if membership.new_record? %>
-                  <tr id="member-<%= membership.id %>" class="member">
-                    <td class="project">
-                      <%= link_to membership.project.name, project_members_path(membership.project) %>
-                    </td>
-                    <td class="roles">
-                      <span id="member-<%= membership.id %>-roles">
-                        <%=h membership.roles.sort.collect(&:to_s).join(', ') %>
-                      </span>
-                      <%= labelled_tabular_form_for(:membership,
-                                                    url: membership_of_group_path(@group, membership),
-                                                    method: :patch,
-                                                    html: {
-                                                      id: "member-#{membership.id}-roles-form",
-                                                      style: 'display:none;'
-                                                    }) do |f| %>
-                        <% roles.each do |role| %>
-                            <label class="form--label-with-check-box">
-                              <%= f.collection_check_box :role_ids,
-                                                         role.id,
-                                                         membership.roles.include?(role),
-                                                         role.name,
-                                                         no_label: true,
-                                                         id: nil
-                              %>
-                              <%= role %>
-                            </label>
-                        <% end %>
-                        <p class="generic-table--cell-controls">
-                          <%= submit_tag t(:button_change), class: 'button -primary -small' %>
-                          <%= link_to_function t(:button_cancel), "jQuery('#member-#{membership.id}-roles').show(); jQuery('#member-#{membership.id}-roles-form').hide();",
-                                                                  class: 'button -small' %>
-                        </p>
-                      <% end %>
-                    </td>
-                    <td class="buttons">
-                      <%= link_to_function icon_wrapper('icon icon-edit', t(:button_edit)),
-                                           "jQuery('#member-#{membership.id}-roles').hide(); jQuery('#member-#{membership.id}-roles-form').show();" do %>
-                      <% end %>
-                      <%= link_to t(:button_remove), membership_of_group_path(@group, membership),
-                                           method: :delete,
-                                           class: 'icon icon-remove' %>
-                    </td>
-                  </tr>
-              <% end %>
+            <% memberships.where.not(project: nil).each do |membership| %>
+              <% next if membership.new_record? %>
+              <tr id="member-<%= membership.id %>"
+                class="member"
+                data-controller="reveal"
+                data-reveal-hidden-class="d-none">
+                <td class="project">
+                  <%= link_to membership.project.name, project_members_path(membership.project) %>
+                </td>
+                <td class="roles">
+                  <span id="member-<%= membership.id %>-roles" data-reveal-target="item">
+                    <%= h membership.roles.sort.collect(&:to_s).join(", ") %>
+                  </span>
+                  <%= labelled_tabular_form_for(
+                        :membership,
+                        url: membership_of_group_path(@group, membership),
+                        method: :patch,
+                        id: "member-#{membership.id}-roles-form",
+                        data: { reveal_target: "item" },
+                        html: { class: "d-none" }
+                      ) do |f| %>
+                    <% roles.each do |role| %>
+                      <label class="form--label-with-check-box">
+                        <%= f.collection_check_box :role_ids,
+                                                   role.id,
+                                                   membership.roles.include?(role),
+                                                   role.name,
+                                                   no_label: true,
+                                                   id: nil %>
+                        <%= role %>
+                      </label>
+                    <% end %>
+                    <p class="generic-table--cell-controls">
+                      <%= submit_tag t(:button_change), class: "memberships--edit-submit-button button -primary -small" %>
+                      <%= button_tag t(:button_cancel), type: "button",
+                                                        data: { action: "reveal#toggle" },
+                                                        class: "button -small" %>
+                    </p>
+                  <% end %>
+                </td>
+                <td class="buttons">
+                  <%= link_to(
+                        icon_wrapper("icon icon-edit", t(:button_edit)),
+                        "#",
+                        data: { action: "reveal#toggle", reveal_target: "item" },
+                        aria: { label: t(:button_edit) }
+                      ) %>
+                  <%= link_to(
+                        icon_wrapper("icon icon-remove", t(:button_remove)),
+                        membership_of_group_path(@group, membership),
+                        data: { turbo_method: :delete },
+                        aria: { label: t(:button_remove) }
+                      ) %>
+                </td>
+              </tr>
+            <% end %>
             </tbody>
           </table>
 
@@ -124,29 +136,28 @@ See COPYRIGHT and LICENSE files for more details.
     <% if projects.any? %>
       <%= styled_form_tag(memberships_of_group_path(@group), method: :post) do %>
         <fieldset class="form--fieldset add-membership-form-fieldset">
-          <legend class="form--fieldset-legend"><%=t(:label_project_new)%></legend>
+          <legend class="form--fieldset-legend"><%= t(:label_project_new) %></legend>
           <%= label_tag "membership_project_id", t(:description_choose_project), class: "sr-only" %>
 
-          <% group_project_ids = @group.projects.ids  %>
-          <% filters = [{ name: 'active', operator: '=', values: ['t']}] %>
-          <% filters << { name: 'id', operator: '!', values: group_project_ids.map(&:to_s) } if group_project_ids.any? %>
-          <%= angular_component_tag 'opce-project-autocompleter',
+          <% group_project_ids = @group.projects.ids %>
+          <% filters = [{ name: "active", operator: "=", values: ["t"] }] %>
+          <% filters << { name: "id", operator: "!", values: group_project_ids.map(&:to_s) } if group_project_ids.any? %>
+          <%= angular_component_tag "opce-project-autocompleter",
                                     inputs: {
                                       filters: filters,
-                                      inputName: 'membership[project_id]'
+                                      inputName: "membership[project_id]"
                                     },
                                     data: {
-                                      'test-selector': 'membership_project_id'
+                                      "test-selector": "membership_project_id"
                                     },
-                                    class: 'form--field'
-          %>
+                                    class: "form--field" %>
           <div class="form--field -vertical">
             <%= styled_label_tag nil, "#{t(:label_role_plural)}:" %>
             <div class="form--field-container -vertical">
-              <%= labeled_check_box_tags 'membership[role_ids][]', roles %>
+              <%= labeled_check_box_tags "membership[role_ids][]", roles %>
             </div>
           </div>
-          <div><%= styled_button_tag t(:button_add), class: '-primary -with-icon icon-checkmark' %></div>
+          <div><%= styled_button_tag t(:button_add), class: "-primary -with-icon icon-checkmark" %></div>
         </fieldset>
       <% end %>
     <% end %>

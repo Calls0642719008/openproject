@@ -43,7 +43,7 @@ export class PlainFormattableEditFieldComponent extends EditFieldComponent {
     }
     const element = this.resource[this.name];
 
-    return element && element.raw || '';
+    return element?.raw || '';
   }
 
   public set value(newValue:string) {

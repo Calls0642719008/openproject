@@ -1,6 +1,26 @@
 uk:
   grids:
     label_widget_in_grid: "Віджет, що міститься в сітці %{grid_name}"
+    widgets:
+      empty: "Наразі цей віджет порожній."
+      not_available: "Цей віджет недоступний."
+      subitems:
+        title: "Піделементи"
+        no_results: "Немає видимих дочірніх об’єктів."
+        view_all_subitems: "Переглянути всі піделементи"
+        button_text: "Підпункт"
+      members:
+        title: "Учасники"
+        no_results: "Немає видимих учасників."
+        view_all_members: "Переглянути всіх учасників"
+        show_members_count: "Показати всі %{count} користувачів"
+        x_more:
+          one: "та ще один учасник."
+          few: "and %{count} more members."
+          many: "and %{count} more members."
+          other: "та ще %{count} учасників."
+      news:
+        no_results: "Нічого нового для звітування."
   activerecord:
     attributes:
       grids/grid:

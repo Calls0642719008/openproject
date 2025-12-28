@@ -232,11 +232,11 @@ An example where this comes into play is the [`CustomText`](https://github.com/o
 On the example of a work package, this following code snippet would create an edit form for a given work package resource and an attribute for the `subject` attribute of that work package.
 
 ```html
-<edit-form *ngIf="workPackage" [resource]="workPackage">
-    <op-editable-attribute-field [resource]="workPackage"
-                              fieldName="subject">
-    </op-editable-attribute-field>
-</edit-form>
+@if (workPackage) {
+  <edit-form [resource]="workPackage">
+      <op-editable-attribute-field [resource]="workPackage" fieldName="subject"/>
+  </edit-form>
+}
 ```
 
 While this doesn't take care of any labels or styling, it will already provide error handling for the given field and allow proper saving of the changes to the resource.

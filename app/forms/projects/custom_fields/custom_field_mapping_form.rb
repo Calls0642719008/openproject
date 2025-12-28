@@ -34,27 +34,28 @@ module Projects::CustomFields
 
     form do |form|
       form.project_autocompleter(
-          name: :id,
-          label: Project.model_name.human,
-          visually_hide_label: true,
-          validation_message: project_ids_error_message,
-          autocomplete_options: {
-            with_search_icon: true,
-            openDirectly: false,
-            focusDirectly: false,
-            multiple: true,
-            dropdownPosition: "bottom",
-            disabledProjects: projects_with_custom_field_mapping,
-            inputName: "#{input_name}[project_ids]"
-          }
-        )
+        name: :id,
+        label: Project.model_name.human,
+        visually_hide_label: true,
+        validation_message: project_ids_error_message,
+        autocomplete_options: {
+          appendTo: "##{Admin::CustomFields::CustomFieldProjects::NewCustomFieldProjectsFormModalComponent::DIALOG_ID}",
+          with_search_icon: true,
+          openDirectly: false,
+          focusDirectly: false,
+          multiple: true,
+          dropdownPosition: "bottom",
+          disabledProjects: projects_with_custom_field_mapping,
+          inputName: "#{input_name}[project_ids]"
+        }
+      )
 
       form.check_box(
-          name: :include_sub_projects,
-          label: I18n.t(:label_include_sub_projects),
-          checked: false,
-          label_arguments: { class: "no-wrap" }
-        )
+        name: :include_sub_projects,
+        label: I18n.t(:label_include_sub_projects),
+        checked: false,
+        label_arguments: { class: "no-wrap" }
+      )
     end
 
     def initialize(project_mapping:)

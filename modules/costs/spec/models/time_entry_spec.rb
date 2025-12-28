@@ -155,7 +155,6 @@ RSpec.describe TimeEntry do
   describe "given rate" do
     before do
       allow(User).to receive(:current).and_return(user)
-      @default_example = time_entry2
     end
 
     it "returns the current costs depending on the number of hours" do
@@ -168,7 +167,7 @@ RSpec.describe TimeEntry do
 
     it "updates cost if a new rate is added at the end" do
       time_entry.user = User.current
-      time_entry.spent_on = Time.now
+      time_entry.spent_on = Time.zone.now
       time_entry.hours = 1
       time_entry.save!
       expect(time_entry.costs).to eq(hourly_one.rate)
@@ -202,7 +201,7 @@ RSpec.describe TimeEntry do
 
     it "updates cost if a spent_on changes" do
       time_entry.hours = 1
-      (5.days.ago.to_date..Date.today).each do |time|
+      (5.days.ago.to_date..Time.zone.today).each do |time|
         time_entry.spent_on = time.to_date
         time_entry.save!
         expect(time_entry.costs).to eq(time_entry.user.rate_at(time, project.id).rate)
@@ -234,92 +233,93 @@ RSpec.describe TimeEntry do
   end
 
   describe "default rate" do
+    let(:default_example) { time_entry2 }
+
     before do
       allow(User).to receive(:current).and_return(user)
-      @default_example = time_entry2
     end
 
     it "returns the current costs depending on the number of hours" do
       101.times do |hours|
-        @default_example.hours = hours
-        @default_example.save!
-        expect(@default_example.costs).to eq(@default_example.rate.rate * hours)
+        default_example.hours = hours
+        default_example.save!
+        expect(default_example.costs).to eq(default_example.rate.rate * hours)
       end
     end
 
     it "updates cost if a new rate is added at the end" do
-      @default_example.user = user2
-      @default_example.spent_on = Time.now.to_date
-      @default_example.hours = 1
-      @default_example.save!
-      expect(@default_example.costs).to eq(default_hourly_one.rate)
+      default_example.user = user2
+      default_example.spent_on = Time.zone.now.to_date
+      default_example.hours = 1
+      default_example.save!
+      expect(default_example.costs).to eq(default_hourly_one.rate)
       (hourly = DefaultHourlyRate.new.tap do |dhr|
         dhr.valid_from = 1.day.ago.to_date
         dhr.rate       = 1.0
         dhr.user       = user2
       end).save!
-      @default_example.reload
-      expect(@default_example.rate).not_to eq(default_hourly_one)
-      expect(@default_example.costs).to eq(hourly.rate)
+      default_example.reload
+      expect(default_example.rate).not_to eq(default_hourly_one)
+      expect(default_example.costs).to eq(hourly.rate)
     end
 
     it "updates cost if a new rate is added in between" do
-      @default_example.user = user2
-      @default_example.spent_on = 3.days.ago.to_date
-      @default_example.hours = 1
-      @default_example.save!
-      expect(@default_example.costs).to eq(default_hourly_three.rate)
+      default_example.user = user2
+      default_example.spent_on = 3.days.ago.to_date
+      default_example.hours = 1
+      default_example.save!
+      expect(default_example.costs).to eq(default_hourly_three.rate)
       (hourly = DefaultHourlyRate.new.tap do |dhr|
         dhr.valid_from = 3.days.ago.to_date
         dhr.rate       = 1.0
         dhr.user       = user2
       end).save!
-      @default_example.reload
-      expect(@default_example.rate).not_to eq(default_hourly_three)
-      expect(@default_example.costs).to eq(hourly.rate)
+      default_example.reload
+      expect(default_example.rate).not_to eq(default_hourly_three)
+      expect(default_example.costs).to eq(hourly.rate)
     end
 
     it "updates cost if a spent_on changes" do
-      @default_example.hours = 1
-      (5.days.ago.to_date..Date.today).each do |time|
-        @default_example.spent_on = time.to_date
-        @default_example.save!
-        expect(@default_example.costs).to eq(@default_example.user.rate_at(time, project.id).rate)
+      default_example.hours = 1
+      (5.days.ago.to_date..Time.zone.today).each do |time|
+        default_example.spent_on = time.to_date
+        default_example.save!
+        expect(default_example.costs).to eq(default_example.user.rate_at(time, project.id).rate)
       end
     end
 
     it "updates cost if a rate is removed" do
-      @default_example.spent_on = default_hourly_one.valid_from
-      @default_example.hours = 1
-      @default_example.save!
-      expect(@default_example.costs).to eq(default_hourly_one.rate)
+      default_example.spent_on = default_hourly_one.valid_from
+      default_example.hours = 1
+      default_example.save!
+      expect(default_example.costs).to eq(default_hourly_one.rate)
       default_hourly_one.destroy
-      @default_example.reload
-      expect(@default_example.costs).to eq(default_hourly_three.rate)
+      default_example.reload
+      expect(default_example.costs).to eq(default_hourly_three.rate)
       default_hourly_three.destroy
-      @default_example.reload
-      expect(@default_example.costs).to eq(default_hourly_five.rate)
+      default_example.reload
+      expect(default_example.costs).to eq(default_hourly_five.rate)
     end
 
     it "is able to switch between default hourly rate and hourly rate" do
-      @default_example.user = user2
-      @default_example.rate = default_hourly_one
-      @default_example.save!
-      @default_example.reload
-      expect(@default_example.rate).to eq(default_hourly_one)
+      default_example.user = user2
+      default_example.rate = default_hourly_one
+      default_example.save!
+      default_example.reload
+      expect(default_example.rate).to eq(default_hourly_one)
 
       (rate = HourlyRate.new.tap do |hr|
         hr.valid_from = 10.days.ago.to_date
         hr.rate       = 1337.0
-        hr.user       = @default_example.user
+        hr.user       = default_example.user
         hr.project    = project
       end).save!
 
-      @default_example.reload
-      expect(@default_example.rate).to eq(rate)
+      default_example.reload
+      expect(default_example.rate).to eq(rate)
       rate.destroy
-      @default_example.reload
-      expect(@default_example.rate).to eq(default_hourly_one)
+      default_example.reload
+      expect(default_example.rate).to eq(default_hourly_one)
     end
 
     describe "#costs_visible_by?" do
@@ -335,7 +335,7 @@ RSpec.describe TimeEntry do
           time_entry.user = user
         end
 
-        it { expect(time_entry.costs_visible_by?(user)).to be_truthy }
+        it { expect(time_entry).to be_costs_visible_by(user) }
       end
 
       describe "WHEN the time_entry is assigned to the user " \
@@ -346,7 +346,7 @@ RSpec.describe TimeEntry do
           time_entry.user = user
         end
 
-        it { expect(time_entry.costs_visible_by?(user)).to be_falsey }
+        it { expect(time_entry).not_to be_costs_visible_by(user) }
       end
 
       describe "WHEN the time_entry is assigned to another user " \
@@ -357,7 +357,7 @@ RSpec.describe TimeEntry do
           time_entry.user = user
         end
 
-        it { expect(time_entry.costs_visible_by?(user2)).to be_truthy }
+        it { expect(time_entry).to be_costs_visible_by(user2) }
       end
 
       describe "WHEN the time_entry is assigned to another user " \
@@ -368,7 +368,7 @@ RSpec.describe TimeEntry do
           time_entry.user = user
         end
 
-        it { expect(time_entry.costs_visible_by?(user2)).to be_falsey }
+        it { expect(time_entry).not_to be_costs_visible_by(user2) }
       end
     end
   end
@@ -380,7 +380,7 @@ RSpec.describe TimeEntry do
       end
 
       it "is visible" do
-        expect(time_entry.visible_by?(user)).to be_falsey
+        expect(time_entry).not_to be_visible_by(user)
       end
     end
 
@@ -390,7 +390,7 @@ RSpec.describe TimeEntry do
       end
 
       it "is visible" do
-        expect(time_entry.visible_by?(user)).to be_truthy
+        expect(time_entry).to be_visible_by(user)
       end
     end
 
@@ -403,7 +403,7 @@ RSpec.describe TimeEntry do
       end
 
       it "is visible" do
-        expect(time_entry.visible_by?(user)).to be_truthy
+        expect(time_entry).to be_visible_by(user)
       end
     end
 
@@ -416,7 +416,7 @@ RSpec.describe TimeEntry do
       end
 
       it "is visible" do
-        expect(time_entry.visible_by?(user)).to be_falsey
+        expect(time_entry).not_to be_visible_by(user)
       end
     end
   end
@@ -645,6 +645,82 @@ RSpec.describe TimeEntry do
       expect(time_entry.entity_id).to eq(work_package.id)
 
       expect(OpenProject::Deprecation).to have_received(:replaced).with(:work_package_id=, :entity_id=, any_args)
+    end
+  end
+
+  it_behaves_like "acts_as_customizable included" do
+    let!(:model_instance) { time_entry }
+    let!(:new_model_instance) do
+      build(:time_entry,
+            project:,
+            entity: work_package,
+            spent_on: date,
+            hours:,
+            start_time: start_time,
+            user:,
+            time_zone: user.time_zone,
+            rate: hourly_one,
+            comments: "lorem")
+    end
+    let!(:custom_field) { create(:time_entry_custom_field, :string, is_required: false) }
+
+    context "with a required custom field" do
+      let!(:custom_field) { create(:time_entry_custom_field, :string, is_required: true) }
+
+      before do
+        new_model_instance.activate_custom_field_validations!
+      end
+
+      context "for a new not-ongoing entry" do
+        let!(:new_model_instance) do
+          build(:time_entry, entity: work_package, spent_on: date, hours:, user:, ongoing: false)
+        end
+
+        it "validates presence of the custom field" do
+          new_model_instance.custom_field_values = { custom_field.id => nil }
+          expect(new_model_instance).not_to be_valid
+
+          new_model_instance.custom_field_values = { custom_field.id => "Some value" }
+          expect(new_model_instance).to be_valid
+        end
+      end
+
+      context "for a new ongoing entry" do
+        let!(:new_model_instance) do
+          build(:time_entry, entity: work_package, spent_on: date, hours:, user:, ongoing: true)
+        end
+
+        it "does not validate presence of the custom field" do
+          new_model_instance.custom_field_values = { custom_field.id => nil }
+          expect(new_model_instance).to be_valid
+        end
+      end
+
+      context "for a persisted not-ongoing entry" do
+        let!(:new_model_instance) do
+          create(:time_entry, entity: work_package, spent_on: date, hours:, user:, ongoing: false)
+        end
+
+        it "validates presence of the custom field" do
+          new_model_instance.custom_field_values = { custom_field.id => nil }
+
+          expect(new_model_instance).not_to be_valid
+
+          new_model_instance.custom_field_values = { custom_field.id => "Some value" }
+          expect(new_model_instance).to be_valid
+        end
+      end
+
+      context "for a persisted ongoing entry" do
+        let!(:new_model_instance) do
+          create(:time_entry, entity: work_package, spent_on: date, hours:, user:, ongoing: true)
+        end
+
+        it "validates presence of the custom field" do
+          new_model_instance.custom_field_values = { custom_field.id => nil }
+          expect(new_model_instance).not_to be_valid
+        end
+      end
     end
   end
 end

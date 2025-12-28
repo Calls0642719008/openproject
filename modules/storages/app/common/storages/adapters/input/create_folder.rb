@@ -35,7 +35,7 @@ module Storages
         private_class_method :new
 
         def self.build(folder_name:, parent_location:, contract: CreateFolderContract.new)
-          contract.call(folder_name:, parent_location:).to_monad.fmap { |it| new(**it.to_h) }
+          contract.call(folder_name:, parent_location:).to_monad.fmap { new(**it.to_h) }
         end
       end
     end

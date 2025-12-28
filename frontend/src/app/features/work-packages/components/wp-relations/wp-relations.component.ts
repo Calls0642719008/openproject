@@ -119,7 +119,7 @@ export class WorkPackageRelationsComponent extends UntilDestroyedMixin implement
 
       if (updateWorkPackage) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (event.detail && event.detail.success) {
+        if (event.detail?.success) {
           // Update the work package
           void this.apiV3Service
             .work_packages

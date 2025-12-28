@@ -67,9 +67,9 @@ module CostReports
 
     def query_path(query_params)
       if project.present?
-        project_cost_report_path(project, query_params)
+        cost_report_path(project, query_params)
       else
-        global_cost_report_path(query_params)
+        global_cost_reports_path(query_params)
       end
     end
   end

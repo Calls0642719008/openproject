@@ -57,11 +57,9 @@ export class CalendarDragDropService {
       this.isDragging$.next(undefined);
     });
 
-    // eslint-disable-next-line no-new
     new ThirdPartyDraggable(container.nativeElement, {
       itemSelector,
       mirrorSelector: '.gu-mirror', // the dragging element that dragula renders
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       eventData: this.eventData.bind(this),
     });
   }
@@ -123,7 +121,7 @@ export class CalendarDragDropService {
     const diff = duration > 0 ? duration : dueDate.diff(startDate, 'days') + 1;
 
     return {
-      id: `${workPackage.href as string}-external`,
+      id: `${workPackage.href!}-external`,
       title: workPackage.subject,
       duration: {
         days: diff || 1,

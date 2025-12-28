@@ -40,7 +40,13 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<%= styled_form_tag({ action: :update }, method: :patch) do %>
+<%=
+  styled_form_tag(
+    { action: :update },
+    method: :patch,
+    data: { controller: "show-when-value-selected" }
+  ) do
+%>
   <section class="form--section">
     <div class="form--field"><%= setting_check_box :cross_project_work_package_relations %></div>
     <div class="form--field"><%= setting_check_box :display_subprojects_work_packages %></div>
@@ -61,6 +67,10 @@ See COPYRIGHT and LICENSE files for more details.
             Hash.new.tap do |options|
               options[:container_class] = "-middle"
               options[:disabled] = "disabled" unless EnterpriseToken.allows_to?(:conditional_highlighting)
+              options[:data] = {
+                show_when_value_selected_target: "cause",
+                target_name: "work_package_list_default_highlighting_mode"
+              }
             end
           ) %>
       <div class="form--field-extra-actions">
@@ -69,7 +79,12 @@ See COPYRIGHT and LICENSE files for more details.
         %>
       </div>
     <% if EnterpriseToken.allows_to? :conditional_highlighting %>
-      <div class="form--field -indented -vertical settings--highlighted-attributes" style="<%= "display: none" unless Setting[:work_package_list_default_highlighting_mode] == "inline" %>">
+      <div
+        class="form--field -indented -vertical"
+        data-show-when-value-selected-target="effect"
+        data-target-name="work_package_list_default_highlighting_mode"
+        data-value="inline"
+        <%= "hidden" unless Setting[:work_package_list_default_highlighting_mode] == "inline" %>>
         <%= setting_multiselect(
               :work_package_list_default_highlighted_attributes,
               Query.available_columns(nil).select(&:highlightable).map do |column|

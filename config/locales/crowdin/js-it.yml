@@ -64,7 +64,7 @@ it:
     button_add: "Aggiungi"
     button_back: "Indietro"
     button_back_to_list_view: "Torna alla visualizzazione in lista"
-    button_cancel: "Annulla"
+    button_cancel: "Cancella"
     button_close: "Chiudi"
     button_change_project: "Sposta su un altro progetto"
     button_check_all: "Seleziona tutti"
@@ -88,6 +88,8 @@ it:
     button_list_view: "Vista elenco"
     button_show_view: "Visualizzazione a schermo intero"
     button_log_time: "Registra l'orario effettuato"
+    button_start_timer: "Avvia il timer"
+    button_stop_timer: "Ferma il timer"
     button_more: "Più"
     button_open_details: "Mostra dettagli"
     button_close_details: "Nascondi dettagli"
@@ -288,17 +290,6 @@ it:
         format:
           date: "%{attribute} data non valida - atteso YYYY-MM-DD."
         general: "Si è verificato un errore."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Informati sulle nuove funzionalità e sugli aggiornamenti dei prodotti."
-          learn_about: "Scopri di più su tutte le nuove funzionalità"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                Questa release contiene varie nuove funzionalità e miglioramenti, come <br> <ul class="%{list_styling_class}"> <li>Miglioramenti UX/UI per un aspetto più moderno.</li> <li>Riunioni: opzione per disattivare le notifiche email e ICS.</li> <li>Timer in corso mostrati nel modulo Il mio monitoraggio del tempo.</li> <li>Report di avanzamento: somma % completamento mostrata anche in modalità basata sullo stato.</li> <li>Verifica stato di Nextcloud: indicazione della mancanza della capacità di scambio token (componente aggiuntivo Enterprise).</li> </ul>
     ical_sharing_modal:
       title: "Iscriviti al calendario"
       inital_setup_error_message: "Si è verificato un errore recuperando i dati."
@@ -306,12 +297,13 @@ it:
       warning: "Sei pregato di non condividerlo con altri utenti. Chiunque abbia questo link potrà visualizzare i dettagli del pacchetto di lavoro senza un profilo o una password."
       token_name_label: "Dove lo userai?"
       token_name_placeholder: 'Digita un nome, ad esempio "Telefono"'
-      token_name_description_text: 'Se ti iscrivi a questo calendario da più dispositivi, questo nome ti aiuterà a distinguerli nel tuo elenco di <a href="my/access_token", target="_blank">token di accesso</a>.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copia URL"
       ical_generation_error_text: "Si è verificato un errore nella creazione dell'URL del calendario."
       success_message: 'L''URL "%{name}" è stato copiato con successo negli appunti. Incollalo nel tuo client di calendario per completare l''iscrizione.'
     label_activate: "Attiva"
     label_assignee: "Assegnatario"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Aggiungi colonna dopo"
     label_add_column_before: "Aggiungi colonna prima"
     label_add_columns: "Aggiungi colonne"
@@ -353,6 +345,7 @@ it:
     label_collapse: "Comprimi"
     label_collapsed: "collassato"
     label_collapse_all: "Comprimi Tutto"
+    label_collapse_text: "Collapse text"
     label_comment: "Commento"
     label_committed_at: "%{committed_revision_link} il %{date}"
     label_committed_link: "revisione accettata %{revision_identifier}"
@@ -365,6 +358,7 @@ it:
     label_expand: "Espandi"
     label_expanded: "espanso"
     label_expand_all: "Espandi tutto"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Espandi il menù di progetto"
     label_export: "Esporta"
     label_export_preparing: "L'esportazione è in fase di preparazione e il download partirà a breve."
@@ -444,7 +438,7 @@ it:
     label_sort_lower: "Sposta giu"
     label_sorting: "Ordinamento"
     label_spent_time: "Tempo speso"
-    label_star_query: "Preferito"
+    label_star_query: "Preferiti"
     label_press_enter_to_save: "Premi Invio per salvare."
     label_public_query: "Pubblico"
     label_sum: "Somma"
@@ -563,7 +557,7 @@ it:
       date_alerts:
         milestone_date: "Data inizio"
         overdue: "In ritardo"
-        overdue_since: "da %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "è oggi."
         property_is: "tra %{difference_in_days}."
         property_was: "era %{difference_in_days} fa."
@@ -836,7 +830,7 @@ it:
       comment_added: "Il commento è stato aggiunto con successo."
       comment_send_failed: "Si è verificato un errore. Impossibile inviare il commento."
       comment_updated: "Il commento è stato aggiornato correttamente."
-      confirm_edit_cancel: "Sei sicuro di voler annullare la modifica della macro-attività?"
+      confirm_edit_cancel: "Sicuro di voler eliminare questa macro-attività?"
       description_filter: "Filtro"
       description_enter_text: "Inserisci testo"
       description_options_hide: "Nascondi opzioni"
@@ -1060,7 +1054,7 @@ it:
       button_apply: "Applica"
       button_save: "Salva"
       button_submit: "Invia"
-      button_cancel: "Annulla"
+      button_cancel: "Cancella"
       button_delete: "Elimina"
       form_submit:
         title: "Conferma per continuare"
@@ -1080,8 +1074,8 @@ it:
     notice_successful_delete: "Cancellato con successo."
     notice_successful_update: "Aggiornato con successo."
     notice_job_started: "job partito."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "Nessun ID job restituito dal server."
+    invalid_job_response: "Risposta dal server non valida."
     notice_bad_request: "Richiesta non valida."
     relations:
       empty: Non esiste alcuna relazione
@@ -1091,7 +1085,7 @@ it:
       button_save: "%{attribute}: Salva"
       button_cancel: "%{attribute}: Annulla"
       button_save_all: "Salva"
-      button_cancel_all: "Annulla"
+      button_cancel_all: "Cancella"
       link_formatting_help: "Guida di formattazione del testo"
       btn_preview_enable: "Anteprima"
       btn_preview_disable: "Disabilita anteprima"
@@ -1114,6 +1108,7 @@ it:
       child_work_packages:
         one: "una macro-attività subordinata"
         other: "%{count} macro-attività subordinate"
+      hour_string: "%{hours} h"
       hour:
         one: "1 o"
         other: "%{count} o"
@@ -1134,6 +1129,7 @@ it:
       current_project_and_all_descendants: "In questo progetto + sottoprogetti"
       current_project: "In questo progetto"
       recently_viewed: "Visualizzati di recente"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "tutti i progetti"
         project_and_subprojects: "e tutti i sottoprogetti"
@@ -1143,71 +1139,8 @@ it:
       list: "Tabella"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Indietro"
       invite: "Invita"
-      title:
-        invite: "Invita utente"
-        invite_to_project: "Invita %{type} a %{project}"
-        User: "utente"
-        Group: "gruppo"
-        PlaceholderUser: "utente del segnaposto"
-        invite_principal_to_project: "Invita %{principal} a %{project}"
-      project:
-        label: "Progetto"
-        required: "Sei pregato di selezionare un progetto"
-        lacking_permission: "Seleziona un progetto diverso poiché non hai i permessi per assegnare gli utenti a quello attualmente selezionato."
-        lacking_permission_info: "Non hai il permesso di assegnare gli utenti al progetto in cui ti trovi. Devi selezionarne un altro."
-        next_button: "Prossimo"
-        no_results: "Nessun progetto è stato trovato"
-        no_invite_rights: "Non puoi invitare i membri a questo progetto"
-      type:
-        required: "Sei pregato di selezionare il tipo da invitare"
-        user:
-          title: "Utente"
-          description: "I permessi basati sul ruolo assegnato nel progetto selezionato"
-        group:
-          title: "Gruppo"
-          description: "I permessi basati sul ruolo assegnato nel progetto selezionato"
-        placeholder:
-          title: "Utente segnaposto"
-          title_no_ee: "Utente del segnaposto (funzionalità solo dell'edizione Enterprise)"
-          description: "Non ha accesso al progetto e non è inviata alcuna email."
-          description_no_ee: 'Non ha accesso al progetto e non è inviata alcuna email. <br>Dai un''occhiata all''<a href="%{eeHref}" target="_blank">edizione Enterprise</a>'
-      principal:
-        label:
-          name_or_email: "Nome o indirizzo email"
-          name: "Nome"
-        already_member_message: "Già un membro di %{project}"
-        no_results_user: "Nessun utente è stato trovato"
-        invite_user: "Invito:"
-        no_results_placeholder: "Nessun segnaposto è stato trovato"
-        create_new_placeholder: "Crea nuovo segnaposto:"
-        no_results_group: "Nessun gruppo è stato trovato"
-        next_button: "Prossimo"
-        required:
-          user: "Sei pregato di selezionare un utente"
-          placeholder: "Sei pregato di selezionare un segnaposto"
-          group: "Sei pregato di selezionare un gruppo"
-      role:
-        label: "Ruolo in %{project}"
-        no_roles_found: "Nessun ruolo è stato trovato"
-        description: >-
-          Questo è il ruolo che l'utente riceverà una volta unitosi al progetto. Il ruolo definisce che azioni possono intraprendere e che informazioni possono vedere. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Scopri di più sui ruoli e sulle autorizzazioni. </a>
-        required: "Sei pregato di selezionare un ruolo"
-        next_button: "Prossimo"
-      message:
-        label: "Messaggio di invito"
-        description: "Invieremo un'email all'utente, a cui puoi aggiungere qui un messaggio personale. Una spiegazione per l'invito potrebbe essere utile o forse qualche informazione sul progetto per aiutarli a iniziare."
-        next_button: "Avanti"
-      summary:
-        next_button: "Invia invito"
-      success:
-        title: "%{principal} è stato invitato!"
-        description:
-          user: "L'utente può ora connettersi per accedere a %{project}. Nel mentre puoi ad esempio già pianificare con quell'utente e assegnare pacchetti di lavoro."
-          placeholder: "Il segnaposto è ora utilizzabile in %{project}. Nel mentre puoi ad esempio già pianificare con quell'utente e assegnare pacchetti di lavoro."
-          group: "Il gruppo è ora parte di %{project}. Nel mentre puoi ad esempio già pianificare con quel gruppo e assegnare pacchetti di lavoro."
-        next_button: "Continua"
+      placeholder_add_tag: "Crea un utente segnaposto"
     exclusion_info:
       modal:
         title: "Stato escluso dai totali della gerarchia"
@@ -1224,15 +1157,20 @@ it:
       selected_filter:
         all: "Tutti i progetti"
         selected: "Solo selezionati"
-      search_placeholder: "Cerca progetto..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Cerca progetti..."
+      search_placeholder_favorites: "Cerca tra i preferiti..."
       include_subprojects: "Includi tutti i sotto-progetti"
       tooltip:
         include_all_selected: "Il progetto già stato incluso poiché è abilitata l'opzione Includi tutti i sotto-progetti."
         current_project: "Questo è il progetto corrente in cui ti trovi."
         does_not_match_search: "Il progetto non corrisponde ai criteri di ricerca."
       no_results: "Nessun progetto corrisponde ai tuoi criteri di ricerca"
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Nessun progetto preferito corrisponde ai tuoi criteri di ricerca."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Base di riferimento"
       clear: "Pulisci"

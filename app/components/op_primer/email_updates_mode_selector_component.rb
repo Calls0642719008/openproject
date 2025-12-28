@@ -35,7 +35,7 @@ module OpPrimer
 
     def initialize(enabled:, path:, title:, enabled_description:, disabled_description:, alt_text: nil, show_button: true,
                    method: :get)
-      super
+      super()
 
       if !show_button && alt_text.blank?
         raise NotImplementedError, "alt_text must be provided when the button is shown conditionally"

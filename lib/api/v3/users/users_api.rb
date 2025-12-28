@@ -78,7 +78,7 @@ module API
                 if params[:id] == "me"
                   User.current
                 else
-                  User.find_by_unique!(params[:id])
+                  User.visible.find_by_unique!(params[:id]) # rubocop:disable Rails/DynamicFindBy
                 end
             end
 
@@ -97,14 +97,14 @@ module API
 
               desc "Set lock on user account"
               post do
-                user_transition(@user.active? || @user.locked?) do
+                user_transition(@user.active? || @user.locked? || @user.deleted?) do
                   @user.lock! unless @user.locked?
                 end
               end
 
               desc "Remove lock on user account"
               delete do
-                user_transition(@user.locked? || @user.active?) do
+                user_transition(@user.locked? || @user.active? || @user.deleted?) do
                   @user.activate! unless @user.active?
                 end
               end

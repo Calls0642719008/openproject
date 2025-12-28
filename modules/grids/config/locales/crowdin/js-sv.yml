@@ -5,7 +5,7 @@ sv:
       remove: 'Ta bort widget'
       configure: 'Konfigurera widget'
       widgets:
-        missing_permission: "You don't have the necessary permissions to view this widget."
+        missing_permission: "Du har inte de nödvändiga behörigheterna för att visa den här widgeten."
         custom_text:
           title: 'Egen text'
         documents:
@@ -13,14 +13,8 @@ sv:
           no_results: 'Inga dokument ännu.'
         members:
           title: 'Medlemmar'
-          no_results: 'Inga synliga medlemmar.'
-          view_all_members: 'Visa alla medlemmar'
-          add: 'Medlem'
-          too_many: 'Visar %{count} av %{total} medlemmar.'
         news:
           title: 'Nyheter'
-          at: 'vid'
-          no_results: 'Inget nytt att rapportera.'
         project_description:
           title: 'Projektbeskrivning'
           no_results: "Ingen beskrivning har skrivits ännu. Den kan anges i 'Projektinställningar'."
@@ -32,15 +26,16 @@ sv:
           at_risk: 'I riskzonen'
           not_set: 'Ej inställd'
           finished: 'Avslutad'
-          discontinued: 'Discontinued'
+          discontinued: 'Utgången'
+        project_status_beta:
+          title: 'Projektstatus (BETA)'
         subprojects:
-          title: 'Delprojekt'
-          no_results: 'Inga delprojekt.'
+          title: 'Underpunkter'
         project_favorites:
-          title: 'Favorite projects'
-          no_results: 'You currently have no favorite projects. Click on the star icon in the project dashboard to add one to your favorites.'
+          title: 'Favoritprojekt'
+          no_results: 'Du har för närvarande inga favoritprojekt. Klicka på stjärnikonen i projektets instrumentpanel för att lägga till en till dina favoriter.'
         time_entries_current_user:
-          title: 'My spent time'
+          title: 'Min tillbringade tid'
           displayed_days: 'Dagar som visas i widgeten:'
         time_entries_list:
           title: 'Spenderad tid (senaste 7 dagarna)'
@@ -57,6 +52,7 @@ sv:
           title: 'Tabell för arbetspaket'
         work_packages_graph:
           title: 'Graf för arbetspaket'
+          summary: "%{chartType} diagram visar arbetspaket som är %{description}."
         work_packages_calendar:
           title: 'Kalender'
         work_packages_overview:

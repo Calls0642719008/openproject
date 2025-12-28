@@ -53,8 +53,18 @@
         end
       end
 
-      body.with_column(classes: "wp-datepicker-dialog-date-form--duration") do
-        render(Primer::Alpha::TextField.new(**text_field_options(name: :duration, label: WorkPackage.human_attribute_name("duration"))))
+      body.with_column(
+        classes: "wp-datepicker-dialog-date-form--duration",
+        hidden: show_duration?
+      ) do
+        render(
+          Primer::Alpha::TextField.new(
+            **text_field_options(
+              name: :duration,
+              label: WorkPackage.human_attribute_name("duration")
+            )
+          )
+        )
       end
     end
   end

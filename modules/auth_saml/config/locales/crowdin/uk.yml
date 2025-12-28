@@ -56,6 +56,7 @@ uk:
       label_mapping: Зіставлення
       label_requested_attribute_for: "Запитаний атрибут для: %{attribute}"
       no_results_table: Поки не визначеного жодного постачальника ідентифікаційних даних SAML.
+      notice_created: Нового постачальника ідентифікаційних даних SAML успішно створено.
       plural: Постачальники ідентифікаційних даних SAML
       singular: Постачальник ідентифікаційних даних SAML
       requested_attributes: Запитувані атрибути
@@ -110,7 +111,7 @@ uk:
       idp_sso_service_url: >
         URL-адреса кінцевої точки входу постачальника ідентифікаційних даних.
       idp_slo_service_url: >
-        URL-адреса кінцевої точки входу постачальника ідентифікаційних даних.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Введіть загальнодоступний сертифікат постачальника ідентифікаційних даних у форматі X509 PEM. Ви можете ввести кілька сертифікатів по одному в рядку.
       name_identifier_format: >

@@ -44,20 +44,24 @@ RSpec.describe API::V3::Projects::ProjectSqlRepresenter, "rendering" do
     Project
       .where(id: project.id)
   end
+  let(:role) { create(:project_role) }
+  let(:select) { { "*" => {} } }
 
-  let(:project) do
+  shared_let(:portfolio, reload: true) do
+    create(:portfolio)
+  end
+  shared_let(:program, reload: true) do
+    create(:program)
+  end
+  shared_let(:project, reload: true) do
     create(:project)
   end
-
-  let(:role) { create(:project_role) }
-
-  let(:select) { { "*" => {} } }
 
   current_user do
     create(:user, member_with_roles: { project => role })
   end
 
-  context "when rendering all supported properties" do
+  context "when rendering all supported properties of a project" do
     it "renders as expected" do
       expect(json)
         .to be_json_eql(
@@ -80,18 +84,75 @@ RSpec.describe API::V3::Projects::ProjectSqlRepresenter, "rendering" do
     end
   end
 
+  context "when rendering all supported properties of a program" do
+    let(:scope) do
+      Project
+        .where(id: program.id)
+    end
+
+    it "renders as expected" do
+      expect(json)
+        .to be_json_eql(
+          {
+            id: program.id,
+            _type: "Program",
+            name: program.name,
+            identifier: program.identifier,
+            active: true,
+            public: false,
+            _links: {
+              ancestors: [],
+              self: {
+                href: api_v3_paths.program(program.id),
+                title: program.name
+              }
+            }
+          }.to_json
+        )
+    end
+  end
+
+  context "when rendering all supported properties of a portfolio" do
+    let(:scope) do
+      Project
+        .where(id: portfolio.id)
+    end
+
+    it "renders as expected" do
+      expect(json)
+        .to be_json_eql(
+          {
+            id: portfolio.id,
+            _type: "Portfolio",
+            name: portfolio.name,
+            identifier: portfolio.identifier,
+            active: true,
+            public: false,
+            _links: {
+              ancestors: [],
+              self: {
+                href: api_v3_paths.portfolio(portfolio.id),
+                title: portfolio.name
+              }
+            }
+          }.to_json
+        )
+    end
+  end
+
   context "with an ancestor" do
-    let!(:parent) do
-      create(:project, members: { current_user => role }).tap do |parent|
-        project.parent = parent
-        project.save
-      end
+    let!(:elder) do
+      create(:portfolio, members: { current_user => role })
     end
 
     let!(:grandparent) do
-      create(:project, members: { current_user => role }).tap do |grandparent|
-        parent.parent = grandparent
-        parent.save
+      create(:program, members: { current_user => role }, parent: elder)
+    end
+
+    let!(:parent) do
+      create(:project, members: { current_user => role }, parent: grandparent) do |parent|
+        project.parent = parent
+        project.save
       end
     end
 
@@ -104,7 +165,11 @@ RSpec.describe API::V3::Projects::ProjectSqlRepresenter, "rendering" do
             _links: {
               ancestors: [
                 {
-                  href: api_v3_paths.project(grandparent.id),
+                  href: api_v3_paths.portfolio(elder.id),
+                  title: elder.name
+                },
+                {
+                  href: api_v3_paths.program(grandparent.id),
                   title: grandparent.name
                 },
                 {

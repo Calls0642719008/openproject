@@ -37,7 +37,7 @@ public readonly injector:Injector,
    * @param column
    * @return {any}
    */
-  public buildCell(workPackage:WorkPackageResource, column:QueryColumn):HTMLElement|null {
+  public buildCell(workPackage:WorkPackageResource, column:QueryColumn):HTMLTableCellElement|null {
     // handle relation types
     if (isRelationColumn(column)) {
       return this.emptyRelationCell(column);
@@ -49,7 +49,7 @@ public readonly injector:Injector,
   /**
    * Build the columns on the given empty row
    */
-  public buildEmptyRelationRow(from:WorkPackageResource, to:WorkPackageResource):[HTMLElement, WorkPackageResource] {
+  public buildEmptyRelationRow(from:WorkPackageResource, to:WorkPackageResource):[HTMLTableRowElement, WorkPackageResource] {
     // Let the primary row builder build the row
     const row = this.createEmptyRelationRow(from, to);
     const [tr] = super.buildEmptyRow(to, row);
@@ -87,12 +87,12 @@ relationGroupClass(from.id!),
 
   /**
    *
-   * @param jRow
+   * @param row
    * @param typeLabel
    * @param columnId
    */
   public appendRelationLabel(
-    jRow:JQuery,
+    row:HTMLTableRowElement,
     typeLabel:string,
     columnId:string,
   ):void {
@@ -100,8 +100,8 @@ relationGroupClass(from.id!),
     relationLabel.classList.add('relation-row--type-label', 'badge');
     relationLabel.textContent = typeLabel;
 
-    jRow.find(`.${relationCellClassName}`).empty();
-    jRow.find(`.${relationCellClassName}.${columnId}`).append(relationLabel);
+    row.querySelector(`.${relationCellClassName}`)!.innerHTML = '';
+    row.querySelector(`.${relationCellClassName}.${columnId}`)!.append(relationLabel);
   }
 
   protected emptyRelationCell(column:QueryColumn) {

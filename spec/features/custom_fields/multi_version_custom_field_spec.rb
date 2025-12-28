@@ -77,12 +77,11 @@ RSpec.describe "multi version custom field", :js do
 
     work_package.reload
 
-    # only one value, so no array
     cvs = work_package
             .custom_value_for(custom_field)
-            .typed_value
+            .map(&:typed_value)
 
-    expect(cvs).to eq version_old
+    expect(cvs).to eq [version_old]
   end
 
   context "with existing version values" do

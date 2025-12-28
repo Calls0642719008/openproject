@@ -37,7 +37,7 @@ module MeetingSections
     with_collection_parameter :meeting_section
 
     def initialize(meeting_section:, first_and_last: [], form_hidden: true, form_type: :simple, insert_target_modified: true,
-                   force_wrapper: false, state: :show, collapsed: nil, current_meeting: nil)
+                   force_wrapper: false, state: :show, collapsed: nil, current_occurrence: nil)
       super
 
       @meeting = meeting_section.meeting
@@ -50,7 +50,7 @@ module MeetingSections
       @force_wrapper = force_wrapper
       @state = state
       @collapsed = collapsed
-      @current_meeting = current_meeting
+      @current_occurrence = current_occurrence
     end
 
     private

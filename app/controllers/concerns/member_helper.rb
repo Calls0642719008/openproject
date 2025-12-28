@@ -53,21 +53,33 @@ module MemberHelper
     invite_new_users possibly_separated_ids_for_entity(member_params, :user), send_notification: @send_notification
   end
 
+  def invite_new_user(id, send_notification: true)
+    if id.present? && EmailValidator.valid?(id) # we've got an email - invite that user
+      invite_existing_or_new_users(email: id, send_notification:)
+    else
+      id
+    end
+  end
+
+  ##
+  # When inviting a user, it might be that the user already exists but is not visible to the inviting user.
+  # In that case, we just return the existing user.
+  # Otherwise, send an invitation and return the newly created invited user
+  # Users with create_user permission or invite_members_by_email permission can add users.
+  def invite_existing_or_new_users(email:, send_notification:)
+    return unless user_allowed_to_invite?(current_user) && enterprise_allow_new_users?
+
+    user = User.find_by_mail(email) || UserInvitation.invite_new_user(email:, send_notification:)
+    user&.id
+  end
+
+  def user_allowed_to_invite?(user)
+    user.allowed_globally?(:create_user) || user.allowed_in_project?(:invite_members_by_email, @project)
+  end
+
   def invite_new_users(user_ids, send_notification: true)
     user_ids.filter_map do |id|
-      if id.present? && (id.to_i == 0 || EmailValidator.valid?(id)) # we've got an email - invite that user
-        # Only users with the create_user permission can add users.
-        if current_user.allowed_globally?(:create_user) && enterprise_allow_new_users?
-          # The invitation can pretty much only fail due to the user already
-          # having been invited. So look them up if it does.
-          user = UserInvitation.invite_new_user(email: id, send_notification:) ||
-            User.find_by_mail(id)
-
-          user&.id
-        end
-      else
-        id
-      end
+      invite_new_user(id, send_notification:)
     end
   end
 

@@ -66,7 +66,7 @@ RSpec.describe APITokens::CreateContract do
       end
 
       it "is invalid" do
-        expect_valid(false, token_name: %i(taken))
+        expect_valid(false, token_name: %i(in_use))
       end
     end
   end

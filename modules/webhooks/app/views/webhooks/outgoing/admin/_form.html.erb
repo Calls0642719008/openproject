@@ -2,7 +2,7 @@
   <p>
     <%= t "webhooks.outgoing.form.introduction" %>
     <br>
-    <%= link_to t("webhooks.outgoing.form.apiv3_doc_url"), OpenProject::Static::Links.links[:api_docs][:href] %>
+    <%= link_to t("webhooks.outgoing.form.apiv3_doc_url"), OpenProject::Static::Links.url_for(:api_docs) %>
   </p>
 
   <div class="form--field -required">
@@ -32,13 +32,16 @@
   </div>
 </fieldset>
 
-<fieldset class="form--fieldset" id="webhooks-selected-events">
+<fieldset
+  class="form--fieldset"
+  id="webhooks-selected-events"
+  data-controller="checkable">
   <legend class="form--fieldset-legend" title="<%= t "webhooks.outgoing.form.events.title" %>">
       <%= t "webhooks.outgoing.form.events.title" %>
   </legend>
   <div class="form--toolbar">
     <span class="form--toolbar-item">
-        (<%= check_all_links "webhooks-selected-events" %>)
+      <%= check_all_links %>
     </span>
   </div>
 
@@ -49,9 +52,16 @@
       <div class="form--field-container -vertical">
         <% events.each do |key, label| %>
           <label class="form--label-with-check-box">
-            <%= styled_check_box_tag "webhook[events][]",
-                                     key,
-                                     event_names.include?(key) -%>
+            <%=
+              styled_check_box_tag(
+                "webhook[events][]",
+                key,
+                event_names.include?(key),
+                data: {
+                  checkable_target: "checkbox"
+                }
+              )
+            -%>
             <%= label %>
           </label>
         <% end %>

@@ -34,7 +34,7 @@ require_relative "shared_context"
 RSpec.describe "List project custom fields", :js do
   include_context "with seeded project custom fields"
 
-  let(:cf_index_page) { Pages::Admin::CustomFields::CustomFieldsProjects::Index.new }
+  let(:cf_index_page) { Pages::Admin::Settings::ProjectCustomFields::Index.new }
 
   context "with insufficient permissions" do
     it "is not accessible" do
@@ -158,11 +158,17 @@ RSpec.describe "List project custom fields", :js do
 
     describe "managing project custom fields" do
       context "with calculated value feature flag active", with_flag: { calculated_value_project_attribute: true } do
-        it "offers the type for creation" do
-          cf_index_page.expect_having_create_item("Calculated value")
+        it "offers the type for creation with enterprise icon" do
+          cf_index_page.expect_having_create_item(I18n.t("label_calculated_value"), enterprise_icon: true)
         end
 
-        context "with fields of type calculated value" do
+        context "with enterprise feature calculated_values", with_ee: %i[calculated_values] do
+          it "offers the type for creation without enterprise icon" do
+            cf_index_page.expect_having_create_item(I18n.t("label_calculated_value"), enterprise_icon: false)
+          end
+        end
+
+        context "with fields of type calculated value", with_ee: %i[calculated_values] do
           let!(:calculated_value_project_custom_field) do
             create(:calculated_value_project_custom_field,
                    name: "Calculated value field",
@@ -263,16 +269,78 @@ RSpec.describe "List project custom fields", :js do
         within_project_custom_field_container(boolean_project_custom_field) do
           expect(page).to have_text("1 project")
         end
+
+        for_all_cf = create(:project_custom_field, :integer, is_for_all: true)
+        cf_index_page.visit!
+        within_project_custom_field_container(for_all_cf) do
+          expect(page).to have_text("All projects")
+        end
       end
 
-      it "allows to delete a custom field" do
-        within_project_custom_field_menu(boolean_project_custom_field) do
-          accept_confirm do
-            click_on("Delete")
+      describe "deleting custom fields" do
+        it "allows to delete a custom field" do
+          within_project_custom_field_menu(boolean_project_custom_field) do
+            accept_confirm do
+              click_on("Delete")
+            end
           end
+
+          expect(page).to have_no_css("[data-test-selector='project-custom-field-container-#{boolean_project_custom_field.id}']")
         end
 
-        expect(page).to have_no_css("[data-test-selector='project-custom-field-container-#{boolean_project_custom_field.id}']")
+        it "prevents deletion of custom field used in a calculated value custom fields" do
+          within_project_custom_field_menu(integer_project_custom_field) do
+            accept_confirm do
+              click_on("Delete")
+            end
+          end
+          page.within(find_flash_element(type: :error)) do
+            expect(page).to have_cf_admin_link(calculated_from_int_project_custom_field)
+            expect(page).to have_cf_admin_link(calculated_from_int_and_float_project_custom_field)
+          end
+          expect_and_dismiss_flash(
+            message: "Integer field is used in project attribute calculations: Calculated field using int and " \
+                     "Calculated field using int and float.",
+            type: :error
+          )
+          expect(page).to have_css("[data-test-selector='project-custom-field-container-#{integer_project_custom_field.id}']")
+
+          within_project_custom_field_menu(float_project_custom_field) do
+            accept_confirm do
+              click_on("Delete")
+            end
+          end
+          page.within(find_flash_element(type: :error)) do
+            expect(page).to have_cf_admin_link(calculated_from_int_and_float_project_custom_field)
+          end
+          expect_and_dismiss_flash(
+            message: "Float field is used in project attribute calculation Calculated field using int and float.",
+            type: :error
+          )
+          expect(page).to have_css("[data-test-selector='project-custom-field-container-#{float_project_custom_field.id}']")
+
+          # Can delete calculated value field
+          within_project_custom_field_menu(calculated_from_int_and_float_project_custom_field) do
+            accept_confirm do
+              click_on("Delete")
+            end
+          end
+          expect(page).to have_no_css(
+            "[data-test-selector='project-custom-field-container-#{calculated_from_int_and_float_project_custom_field.id}']"
+          )
+
+          # Can delete used custom field afterwards
+          within_project_custom_field_menu(float_project_custom_field) do
+            accept_confirm do
+              click_on("Delete")
+            end
+          end
+          expect(page).to have_no_css("[data-test-selector='project-custom-field-container-#{float_project_custom_field.id}']")
+        end
+
+        def have_cf_admin_link(custom_field)
+          have_link(custom_field.name, href: admin_settings_project_custom_field_path(custom_field))
+        end
       end
 
       it "redirects to the custom field edit page via menu item" do

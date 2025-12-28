@@ -66,18 +66,28 @@ RSpec.describe WorkPackageTypes::Patterns::TokenPropertyMapper do
       project.work_package_custom_fields << custom_field
       work_package.type.custom_fields << custom_field
 
-      work_package.send(:"custom_field_#{custom_field.id}=", true)
-      work_package.save
+      work_package.send(:"custom_field_#{custom_field.id}=", false)
+      work_package.save!
+    end
+  end
+
+  shared_let(:date_custom_field) do
+    create(:date_wp_custom_field).tap do |custom_field|
+      project.work_package_custom_fields << custom_field
+      work_package.type.custom_fields << custom_field
+
+      work_package.send(:"custom_field_#{custom_field.id}=", "2025-10-03T13:37:00Z")
+      work_package.save!
     end
   end
 
   shared_let(:mult_list_custom_field) do
-    create(:multi_list_wp_custom_field).tap do
-      project.work_package_custom_fields << it
-      work_package.type.custom_fields << it
+    create(:multi_list_wp_custom_field).tap do |custom_field|
+      project.work_package_custom_fields << custom_field
+      work_package.type.custom_fields << custom_field
 
-      work_package.send(:"custom_field_#{it.id}=", it.possible_values.take(2))
-      work_package.save
+      work_package.send(:"custom_field_#{custom_field.id}=", custom_field.possible_values.take(2))
+      work_package.save!
     end
   end
 
@@ -111,7 +121,7 @@ RSpec.describe WorkPackageTypes::Patterns::TokenPropertyMapper do
       token = enabled.detect do |t|
         t.key == :"custom_field_#{mult_list_custom_field.id}"
       end
-      expect(token.call(work_package)).to eq(%w[A B])
+      expect(token.call(work_package)).to eq("A, B")
     end
 
     it "supports boolean custom fields" do
@@ -120,7 +130,16 @@ RSpec.describe WorkPackageTypes::Patterns::TokenPropertyMapper do
         t.key == :"custom_field_#{boolean_custom_field.id}"
       end
 
-      expect(token.call(work_package)).to be(true)
+      expect(token.call(work_package)).to eq("false")
+    end
+
+    it "formats date custom fields with a default format" do
+      enabled, = subject
+      token = enabled.detect do |t|
+        t.key == :"custom_field_#{date_custom_field.id}"
+      end
+
+      expect(token.call(work_package)).to eq("2025-10-03")
     end
 
     it "must return :attribute_not_available if custom field is not activated in project" do
@@ -155,6 +174,17 @@ RSpec.describe WorkPackageTypes::Patterns::TokenPropertyMapper do
       enabled, disabled = subject
       expect(detect(enabled, :"custom_field_#{cf.id}")).to be_nil
       expect(detect(disabled, :"custom_field_#{cf.id}")&.label).to eq(cf.name)
+    end
+
+    context "when defining an instance date format", with_settings: { date_format: "%d.%m.%Y" } do
+      it "formats date custom fields according to the instance date format" do
+        enabled, = subject
+        token = enabled.detect do |t|
+          t.key == :"custom_field_#{date_custom_field.id}"
+        end
+
+        expect(token.call(work_package)).to eq("03.10.2025")
+      end
     end
   end
 

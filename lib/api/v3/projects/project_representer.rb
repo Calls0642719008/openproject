@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,9 +28,6 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "roar/decorator"
-require "roar/json/hal"
-
 module API
   module V3
     module Projects
@@ -38,6 +37,7 @@ module API
         include ::API::Caching::CachedRepresenter
         include API::Decorators::FormattableProperty
         extend ::API::V3::Utilities::CustomFieldInjector::RepresenterClass
+        include ::API::V3::Workspaces::LinkedResource
 
         def self.current_user_view_allowed_lambda
           ->(*) { current_user.allowed_in_project?(:view_project, represented) || current_user.allowed_globally?(:add_project) }
@@ -52,7 +52,7 @@ module API
         link :createWorkPackage,
              cache_if: -> { current_user.allowed_in_project?(:add_work_packages, represented) } do
           {
-            href: api_v3_paths.create_project_work_package_form(represented.id),
+            href: api_v3_paths.create_workspace_work_package_form(represented.id),
             method: :post
           }
         end
@@ -60,7 +60,7 @@ module API
         link :createWorkPackageImmediately,
              cache_if: -> { current_user.allowed_in_project?(:add_work_packages, represented) } do
           {
-            href: api_v3_paths.work_packages_by_project(represented.id),
+            href: api_v3_paths.work_packages_by_workspace(represented.id),
             method: :post
           }
         end
@@ -69,7 +69,7 @@ module API
              cache_if: -> {
                current_user.allowed_in_project?(:view_work_packages, represented)
              } do
-          { href: api_v3_paths.work_packages_by_project(represented.id) }
+          { href: api_v3_paths.work_packages_by_workspace(represented.id) }
         end
 
         links :storages,
@@ -85,7 +85,7 @@ module API
         end
 
         link :categories do
-          { href: api_v3_paths.categories_by_project(represented.id) }
+          { href: api_v3_paths.categories_by_workspace(represented.id) }
         end
 
         link :versions,
@@ -93,7 +93,7 @@ module API
                current_user.allowed_in_project?(:view_work_packages, represented) ||
                current_user.allowed_in_project?(:manage_versions, represented)
              } do
-          { href: api_v3_paths.versions_by_project(represented.id) }
+          { href: api_v3_paths.versions_by_workspace(represented.id) }
         end
 
         link :memberships,
@@ -110,7 +110,7 @@ module API
                current_user.allowed_in_project?(:view_work_packages, represented) ||
                current_user.allowed_in_project?(:manage_types, represented)
              } do
-          { href: api_v3_paths.types_by_project(represented.id) }
+          { href: api_v3_paths.types_by_workspace(represented.id) }
         end
 
         link :update,
@@ -141,28 +141,32 @@ module API
           }
         end
 
+        link :favor,
+             method: :post,
+             cache_if: -> {
+               current_user.logged? && !represented.favorited_by?(current_user)
+             } do
+          { href: api_v3_paths.favor_workspace(represented.id) }
+        end
+
+        link :disfavor,
+             method: :delete,
+             cache_if: -> {
+               current_user.logged? && represented.favorited_by?(current_user)
+             } do
+          { href: api_v3_paths.favor_workspace(represented.id) }
+        end
+
         link :schema do
           {
-            href: api_v3_paths.projects_schema
+            href: api_v3_paths.workspace_schema
           }
         end
 
         links :ancestors,
               uncacheable: true do
           represented.ancestors_from_root.map do |ancestor|
-            # Explicitly check for admin as an archived project
-            # will lead to the admin losing permissions in the project.
-            if current_user.admin? || ancestor.visible?
-              {
-                href: api_v3_paths.project(ancestor.id),
-                title: ancestor.name
-              }
-            else
-              {
-                href: API::V3::URN_UNDISCLOSED,
-                title: I18n.t(:"api_v3.undisclosed.ancestor")
-              }
-            end
+            project_link(ancestor, name: :ancestor, getter: :id)
           end
         end
 
@@ -171,12 +175,7 @@ module API
           { href: api_v3_paths.path_for(:project_storages, filters:) }
         end
 
-        associated_resource :parent,
-                            v3_path: :project,
-                            representer: ::API::V3::Projects::ProjectRepresenter,
-                            uncacheable_link: true,
-                            undisclosed: true,
-                            skip_render: ->(*) { represented.parent && !represented.parent.visible? && !current_user.admin? }
+        associated_project :parent
 
         property :id
         property :identifier,
@@ -187,6 +186,13 @@ module API
 
         property :active
         property :public
+
+        property :favorited,
+                 exec_context: :decorator,
+                 uncacheable: true, # this is user specific
+                 getter: ->(*) {
+                   represented.favorited_by?(current_user)
+                 }
 
         formattable_property :description,
                              cache_if: current_user_view_allowed_lambda
@@ -232,10 +238,27 @@ module API
                              cache_if: current_user_view_allowed_lambda
 
         def _type
-          "Project"
+          strategy.type
         end
 
-        self.to_eager_load = [:enabled_modules]
+        def self_v3_path(*)
+          strategy.path(represented)
+        end
+
+        def strategy(resource = represented)
+          case resource.workspace_type
+          when "project"
+            ProjectStrategy
+          when "program"
+            ProgramStrategy
+          when "portfolio"
+            PortfolioStrategy
+          else
+            raise NoMethodError
+          end
+        end
+
+        self.to_eager_load = %i[enabled_modules parent]
 
         self.checked_permissions = %i[add_work_packages view_project]
       end

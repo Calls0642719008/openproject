@@ -29,6 +29,7 @@
 import { Injectable } from '@angular/core';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
+import { getMetaElement } from '../setup/globals/global-helpers';
 
 @Injectable({ providedIn: 'root' })
 export class CurrentProjectService {
@@ -79,11 +80,11 @@ export class CurrentProjectService {
    * Detect the current project from its meta tag.
    */
   public detect() {
-    const element:HTMLMetaElement|null = document.querySelector('meta[name=current_project]');
+    const element = getMetaElement('current_project');
     if (element) {
-      this.currentId = element.dataset.projectId as string;
-      this.currentName = element.dataset.projectName as string;
-      this.currentIdentifier = element.dataset.projectIdentifier as string;
+      this.currentId = element.dataset.projectId!;
+      this.currentName = element.dataset.projectName!;
+      this.currentIdentifier = element.dataset.projectIdentifier!;
     } else {
       this.currentId = null;
       this.currentName = null;

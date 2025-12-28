@@ -75,8 +75,8 @@ module Users
 
     def update_message
       update_message = I18n.t(:notice_account_password_updated)
-      expiry_message = I18n.t(:notice_account_other_session_expired)
-      { message_type: :info, message: "#{update_message} #{expiry_message}" }
+      expiration_message = I18n.t(:notice_account_other_session_expired)
+      { message_type: :info, message: "#{update_message} #{expiration_message}" }
     end
 
     def log_success

@@ -3,7 +3,7 @@ pt-PT:
   js:
     team_planner:
       add_existing: 'Adicionar existente'
-      label_team_planner_plural: 'Planeadores de equipa'
+      label_team_planner_plural: 'Planificadores de equipas'
       add_existing_title: 'Adicionar pacotes de trabalho existentes'
       create_label: 'Planeador de equipa'
       create_title: 'Criar novo planeador de equipa'
@@ -18,7 +18,7 @@ pt-PT:
       work_week: 'Semana de trabalho'
       today: 'Hoje'
       drag_here_to_remove: 'Arraste aqui para remover o responsável e as datas de início e término.'
-      cannot_drag_here: 'Não é possível remover o pacote de trabalho devido a permissões ou restrições de edição.'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'Este pacote de trabalho não pode iniciar/terminar num dia não útil.'
       quick_add:
         empty_state: 'Use o campo de pesquisa para encontrar pacotes de trabalho e arrastá-los para o planeador para atribuí-lo a alguém e definir datas de início e fim.'

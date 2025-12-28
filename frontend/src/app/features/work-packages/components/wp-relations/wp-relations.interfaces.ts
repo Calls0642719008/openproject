@@ -1,3 +1,1 @@
-export interface RelatedWorkPackagesGroup {
-  [key:string]:any;
-}
+export type RelatedWorkPackagesGroup = Record<string, any>;

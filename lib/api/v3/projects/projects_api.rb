@@ -35,6 +35,9 @@ module API
         resources :projects do
           get &::API::V3::Utilities::Endpoints::SqlFallbackedIndex.new(model: Project,
                                                                        scope: -> {
+                                                                         # TODO: This should be scoped to only allow actual
+                                                                         # projects. But since it is an established route,
+                                                                         # we keep it intact for all kinds of workspaces for 17.0.
                                                                          Project
                                                                            .includes(ProjectRepresenter.to_eager_load)
                                                                        })
@@ -42,12 +45,11 @@ module API
 
           post &::API::V3::Utilities::Endpoints::Create.new(model: Project,
                                                             params_modifier: ->(attributes) {
-                                                              attributes[:workspace_type] = Project.workspace_types[:project]
-                                                              attributes
+                                                              attributes.merge!(workspace_type: "project")
                                                             })
                                                        .mount
 
-          mount ::API::V3::Projects::Schemas::ProjectSchemaAPI
+          mount ::API::V3::Workspaces::Schemas::WorkspaceSchemaAPI
           mount ::API::V3::Projects::CreateFormAPI
 
           mount API::V3::Projects::AvailableParentsAPI
@@ -57,28 +59,21 @@ module API
           end
           route_param :id do
             after_validation do
+              # TODO: This should be scoped to only allow actual projects.
+              # But since it and especially the NestedAPIs are established routes,
+              # we keep it intact for all kinds of workspaces for 17.0.
+              # This behaviour is not documented in the API docs to nudge users to switch.
               @project = if current_user.admin?
-                           Project.all
+                           Project
                          else
                            Project.visible(current_user)
                          end.find(params[:id])
             end
 
-            get &::API::V3::Utilities::Endpoints::Show.new(model: Project).mount
-            patch &::API::V3::Utilities::Endpoints::Update.new(model: Project).mount
-            delete &::API::V3::Utilities::Endpoints::Delete.new(model: Project,
-                                                                process_service: ::Projects::ScheduleDeletionService)
-                                                           .mount
-
-            mount ::API::V3::Projects::UpdateFormAPI
-
-            mount API::V3::Projects::AvailableAssigneesAPI
             mount API::V3::Projects::Copy::CopyAPI
-            mount API::V3::WorkPackages::WorkPackagesByProjectAPI
-            mount API::V3::Categories::CategoriesByProjectAPI
-            mount API::V3::Versions::VersionsByProjectAPI
-            mount API::V3::Types::TypesByProjectAPI
-            mount API::V3::Queries::QueriesByProjectAPI
+
+            mount ::API::V3::Workspaces::InstanceApis
+            mount ::API::V3::Workspaces::NestedApis
           end
         end
       end

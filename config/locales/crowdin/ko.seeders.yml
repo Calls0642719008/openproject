@@ -43,13 +43,6 @@ ko:
           name: PM2 심홍색
         item_3:
           name: PM2 녹색 노란색
-      document_categories:
-        item_0:
-          name: 설명서
-        item_1:
-          name: 사양
-        item_2:
-          name: 기타
       project_query_roles:
         item_0:
           name: 프로젝트 쿼리 뷰어

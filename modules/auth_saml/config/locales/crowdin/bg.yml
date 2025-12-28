@@ -56,6 +56,7 @@ bg:
       label_mapping: Картографиране
       label_requested_attribute_for: "Искан атрибут за: %{attribute}"
       no_results_table: Все още не са дефинирани доставчици на SAML идентичност.
+      notice_created: A new SAML identity provider was successfully created.
       plural: Доставчици на идентичност SAML
       singular: Доставчик на идентичност SAML
       requested_attributes: Искани атрибути
@@ -110,7 +111,7 @@ bg:
       idp_sso_service_url: >
         The URL of the identity provider login endpoint.
       idp_slo_service_url: >
-        The URL of the identity provider login endpoint.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Enter the X509 PEM-formatted public certificate of the identity provider. You can enter multiple certificates by separating them with a newline.
       name_identifier_format: >

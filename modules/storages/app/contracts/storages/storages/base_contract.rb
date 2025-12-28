@@ -56,7 +56,7 @@ module Storages
       end
 
       attribute :provider_type
-      validates :provider_type, inclusion: { in: Storage.provider_types.values.map(&:to_s) }, allow_nil: false
+      validates :provider_type, inclusion: { in: -> { Storage.provider_types.values.map(&:to_s) } }, allow_nil: false
 
       attribute :provider_fields
 

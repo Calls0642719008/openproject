@@ -4,9 +4,10 @@
       model: @meeting_outcome,
       method: @method,
       url: @submit_path,
-      namespace: "form_#{wrapper_uniq_by}"
+      namespace: "form_#{wrapper_uniq_by}",
+      data: { action: "submit->meetings--submit#interceptOutcomeFormSubmission" },
+      class: "meeting-agenda-item-outcome-form"
     ) do |f|
-
       flex_layout(tag: :div) do |flex|
         flex.with_row(
           mb: 2,

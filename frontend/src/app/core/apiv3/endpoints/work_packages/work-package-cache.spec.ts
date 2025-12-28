@@ -64,7 +64,7 @@ describe('WorkPackageCache', () => {
         SchemaCacheService,
         PathHelperService,
         { provide: ConfigurationService, useValue: {} },
-        { provide: I18nService, useValue: { t: (...args: any[]) => 'translation' } },
+        { provide: I18nService, useValue: { t: (...args:any[]) => 'translation' } },
         { provide: WorkPackageResource, useValue: {} },
         { provide: ToastService, useValue: {} },
         { provide: HalResourceNotificationService, useValue: { handleRawError: () => false } },
@@ -80,7 +80,7 @@ describe('WorkPackageCache', () => {
     workPackageCache = new WorkPackageCache(injector, states.workPackages);
 
     // sinon.stub(schemaCacheService, 'ensureLoaded').returns(Promise.resolve(true));
-    spyOn(schemaCacheService, 'ensureLoaded').and.returnValue(Promise.resolve(true as any));
+    spyOn(schemaCacheService, 'ensureLoaded').and.resolveTo(true as any);
 
     const workPackage1 = new WorkPackageResource(
       injector,

@@ -31,9 +31,9 @@ id:
         spent: "Dihabiskan"
         spent_on: "Tanggal"
         logged_by: "Dicatat oleh"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Masuk untuk
+        entity_id: Masuk untuk
+        entity_gid: Masuk untuk
       cost_type:
         unit: "Nama unit"
         unit_plural: "Nama plural unit"
@@ -61,9 +61,9 @@ id:
         start_time: Waktu mulai
         end_time: Finish time
         time: Waktu
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Masuk untuk
+        entity_id: Masuk untuk
+        entity_gid: Masuk untuk
     models:
       time_entry:
         other: "Time entries"
@@ -147,7 +147,7 @@ id:
   label_rate: "Rate"
   label_rate_plural: "Rate"
   label_status_finished: "Selesai"
-  label_show: "Lihat"
+  label_show: "Tampilkan"
   label_units: "Biaya unit"
   label_user: "User"
   label_until: "hingga"

@@ -60,7 +60,9 @@ RB.Model = (function ($) {
       this.refresh(result);
 
       if (isNew) {
-        this.$.attr('id', result.$.attr('id'));
+        const id = result.$.filter('.model').attr('id');
+        this.$.attr('id', id);
+
         this.afterCreate(data, response);
       } else {
         this.afterUpdate(data, response);
@@ -382,7 +384,7 @@ RB.Model = (function ($) {
     },
 
     refresh(obj:any) {
-      this.$.html(obj.$.html());
+      this.$.html($(obj.el).filter('.model').html());
 
       if (obj.$.length > 1) {
         // execute script tags, that were attached to the sources
@@ -420,18 +422,22 @@ RB.Model = (function ($) {
       editors.each(function (this:any, index:any) {
         const editor = $(this).find('input,select,textarea').addBack('input,select,textarea');
         const fieldName = editor.attr('name');
-        const type = editor.attr('type');
-        if (type?.match(/select/)) {
+        const tagName = editor.prop('tagName');
+        if (tagName === 'SELECT') {
           // if the user changes the type and that type does not offer the status
           // of the current story, the status field is set to blank
           // if the user saves this edit we will receive a validation error
           // the following 3 lines will prevent the override of the status id
           // otherwise we would loose the status id of the current ticket
-          if (!(editor.val() === '' && fieldName === 'status_id')) {
+          if (!(fieldName === 'status_id' && editor.val() === '')) {
             j.children(`div.${fieldName}`).children('.v').text(editor.val());
           }
+          let text = editor.children(':selected').text().trim();
+          if (fieldName === 'type_id') {
+            text += ':';
+          }
 
-          j.children(`div.${fieldName}`).children('.t').text(editor.children(':selected').text());
+          j.children(`div.${fieldName}`).children('.t').text(text);
         } else {
           j.children(`div.${fieldName}`).text(editor.val());
         }

@@ -27,7 +27,10 @@ zh-CN:
       no_results_table: 尚未定义任何 Webhook。
       label_add_new: 添加新的 Webhook
       label_edit: 编辑 Webhook
-      label_event_resources: 事件资源
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "已创建"
         updated: "已更新"

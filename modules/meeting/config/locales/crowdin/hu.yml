@@ -45,7 +45,7 @@ hu:
       meeting_agenda_item:
         title: "Cím"
         author: "Szerző"
-        duration_in_minutes: "Duration"
+        duration_in_minutes: "Időtartam"
         description: "Jegyzet"
         presenter: "Bemutató"
       meeting_section:
@@ -56,32 +56,33 @@ hu:
         start_date: "Kezdés ideje"
         start_time: "Kezdés"
         start_time_hour: "Kezdés"
-        end_after: "Meeting series ends"
+        end_after: "Az ismétlődő megbeszélés véget ér"
         end_date: "Záró dátuma"
         iterations: "Előfordulások"
       meeting_participant:
-        invited: "Invited"
-        attended: "Attended"
+        invited: "Meghívott"
+        attended: "Részt vett"
+        participation_status: "Részvételi státusz"
     errors:
       models:
         meeting_participant:
-          invalid_user: "%{name} is not a valid participant."
+          invalid_user: "%{name} nem érvényes résztvevő."
         recurring_meeting:
           must_cover_existing_meetings:
-            one: "There is one open meeting in the series that is not covered by the new schedule. Adjust the schedule to include all existing meetings."
-            other: "There are %{count} open meetings in the series that are not covered by the new schedule. Adjust the schedule to include all existing meetings."
+            one: "Az ismétlődő megbeszélésben van egy nyitott megbeszélés, amelyre nem vonatkozik az új ütemezés. Az ütemezésnek az összes létező meeting-et tartalmaznia kell."
+            other: "Az új ütemezésben hiányzik %{count} db nyitott megbeszélés. Az ütemezésnek az összes létező megbeszélést tartalmaznia kell."
             format: "%{message}\n"
       messages:
         invalid_time_format: "nem egy érvényes időpont. Előírt formátum: óó:pp"
     models:
       recurring_meeting: "Ismétlődő megbeszélés"
-      meeting: "One-time meeting"
+      meeting: "Egyszeri megbeszélés"
       meeting_agenda_item: "Napirendi pont"
       meeting_agenda: "Napirend"
       meeting_section: "Szekció "
       token/ical_meeting:
-        one: "iCal Meeting subscription"
-        other: "iCal Meeting subscription"
+        one: "iCal Meeting előfizetés"
+        other: "iCal Meeting előfizetés"
   activity:
     filter:
       meeting: "Megbeszélések"
@@ -111,118 +112,119 @@ hu:
   label_meeting: "Megbeszélés"
   label_meeting_plural: "Megbeszélések"
   label_meeting_new: "Új megbeszélés"
-  label_meeting_new_dynamic: "New one-time meeting"
-  label_meeting_new_recurring: "New recurring meeting"
-  label_meeting_create: "Create meeting"
-  label_meeting_copy: "Copy meeting"
+  label_meeting_new_dynamic: "Új egyszeri megbeszélés"
+  label_meeting_new_recurring: "Új ismétlődő megbeszélés"
+  label_meeting_create: "Megbeszélés létrehozása"
+  label_meeting_duplicate: "Duplicate meeting"
   label_meeting_edit: "Megbeszélés szerkesztése"
   label_meeting_agenda: "Napirend"
   label_meeting_minutes: "Jegyzőkönyv"
   label_meeting_close: "Bezár"
   label_meeting_open: "Megnyit"
   label_meeting_index_delete: "Törlés"
-  label_meeting_open_this_meeting: "Open this meeting"
+  label_meeting_open_this_meeting: "Megbeszélés megnyitása"
   label_meeting_agenda_close: "Napirend lezárása a jegyzőkönyv megkezdéséhez"
   label_meeting_date_time: "Dátum/idő"
   label_meeting_date_and_time: "Dátum és idő"
   label_meeting_diff: "Eltérés"
-  label_meeting_send_updates: "Send email calendar updates"
+  label_meeting_send_updates: "Naptári meghívók és frissítések küldése e-mailben"
+  label_meeting_send_updates_caption: "Send out email invites to all participants of this meeting"
   label_recurring_meeting: "Ismétlődő megbeszélés"
-  label_recurring_meeting_part_of: "Part of a meeting series"
-  label_recurring_meeting_new: "New recurring meeting"
-  label_recurring_meeting_plural: "Recurring meetings"
+  label_recurring_meeting_part_of: "Ismétlődő megbeszélés része"
+  label_recurring_meeting_new: "Új ismétlődő megbeszélés"
+  label_recurring_meeting_plural: "Ismétlődő megbeszélések"
   label_template: "Sablon"
-  label_recurring_meeting_view: "View meeting series"
+  label_recurring_meeting_view: "Ismétlődő megbeszélés megtekintése"
   label_recurring_meeting_create: "Open"
-  label_recurring_meeting_copy: "Copy as one-time"
-  label_recurring_meeting_cancel: "Cancel this occurrence"
-  label_recurring_meeting_delete: "Delete occurrence"
-  label_recurring_meeting_restore: "Restore this occurrence"
-  label_recurring_meeting_schedule: "Schedule"
-  label_recurring_meeting_next_occurrence: "Next occurrence"
-  label_recurring_meeting_no_end_date: "There are more scheduled meetings (%{schedule})."
+  label_recurring_meeting_duplicate: "Duplicate as a one-time meeting"
+  label_recurring_meeting_cancel: "Törölje ezt az eseményt"
+  label_recurring_meeting_delete: "Elem törlése"
+  label_recurring_meeting_restore: "Elem visszaállítása"
+  label_recurring_meeting_schedule: "Ütem"
+  label_recurring_meeting_next_occurrence: "Következő esemény"
+  label_recurring_meeting_no_end_date: "Több tervezett megbeszélés is van (%{schedule})."
   label_recurring_meeting_more:
     one: "There is one more scheduled meeting (%{schedule})."
     other: "There are %{count} more scheduled meetings (%{schedule})."
   label_recurring_meeting_more_past:
     one: "There is one more past meeting."
     other: "There are %{count} more past meetings."
-  label_recurring_meeting_show_more: "Show more"
-  label_recurring_meeting_series_create: "Create meeting series"
-  label_recurring_meeting_series_edit: "Edit meeting series"
-  label_recurring_meeting_series_delete: "Delete meeting series"
-  label_recurring_meeting_series_end: "End meeting series"
-  label_recurring_meeting_series_end_now: "End series now"
+  label_recurring_meeting_show_more: "Több"
+  label_recurring_meeting_series_create: "Ismétlődő megbeszélés létrehozása"
+  label_recurring_meeting_series_edit: "Ismétlődő megbeszélés szerkesztése"
+  label_recurring_meeting_series_delete: "Ismétlődő megbeszélés törlése"
+  label_recurring_meeting_series_end: "Ismétlődő megbeszélés befejezése"
+  label_recurring_meeting_series_end_now: "Ismétlés azonnali megszüntetése"
   label_meeting_more:
-    one: "There is one more meeting."
-    other: "There are %{count} more meetings."
-  label_my_meetings: "My meetings"
-  label_all_meetings: "All meetings"
+    one: "Már csak egy megbeszélés van hátra."
+    other: "Még %{count} megbeszélés van hátra."
+  label_my_meetings: "Megbeszélésim"
+  label_all_meetings: "Összes megbeszélés"
   label_upcoming_meetings: "Közelgő megbeszélések"
   label_past_meetings: "Korábbi megbeszélések"
   label_upcoming_meetings_short: "Közelgő"
   label_past_meetings_short: "Korábbi"
   label_involvement: "Bevonás "
-  label_invitations: "Invitations"
-  label_invited_user: "Invited user"
+  label_invitations: "Meghívók"
+  label_invited_user: "Meghívott felhasználó"
   label_past_invitations: "Korábbi meghívások"
-  label_attended: "Attended"
-  label_attended_user: "Attended user"
+  label_attended: "Részt vett"
+  label_attended_user: "Résztvett felhasználó"
   label_created_by_me: "Általam készített"
   label_notify: "Küldés véleményezésre"
   label_icalendar: "iCalendar küldése"
   label_icalendar_download: "iCalendar esemény letöltése"
-  label_view_meeting_series: "View meeting series"
-  label_meeting_series: "Meeting series"
+  label_view_meeting_series: "Ismétlődő megbeszélések megtekintése"
+  label_meeting_series: "Ismétlődő megbeszélések"
   label_version: "Verzió"
   label_time_zone: "Időzóna"
   label_start_date: "Kezdési dátum"
-  label_subscribe_icalendar: "Subscribe to calendar"
+  label_subscribe_icalendar: "Feliratkozás az iCalendars-ra"
   meeting:
     participants:
       label:
-        participants: "Participants"
-        attended: "Attended"
-        mark_as_attended: "Mark as attended"
-        mark_all_as_attended: "Mark all as attended"
-        remove_participant: "Remove participant"
-        manage_participants: "Manage participants"
-        no_participants: "No participants"
-        show_all: "Show all"
+        participants: "Közreműködők"
+        attended: "Részt vett"
+        mark_as_attended: "Megjelölés résztvevőként"
+        mark_all_as_attended: "Összes megjelölés résztvevőként"
+        remove_participant: "Résztvevő eltávolítása"
+        manage_participants: "Résztvevők kezelése"
+        no_participants: "Nincsenek résztvevők"
+        show_all: "Minden megjelenítése"
       text:
-        template: "These participants will be invited automatically to all future meetings as they are created."
-        manage_participants: "Search for and add project members as participants to this meeting."
-        search_for_members: "Search for project members"
+        template: "Ezek a résztvevők automatikusan meghívást kapnak minden jövőbeli megbeszélésre, amint azok létrejönnek."
+        manage_participants: "Projekttagok keresés és hozzáadása a megbeszéléshez résztvevőként."
+        search_for_members: "Projekttagok keresése"
       blankslate:
-        heading: "No participants"
-        description: "There are no participants yet."
+        heading: "Nincsenek résztvevők"
+        description: "Még nincsenek résztvevők."
     attachments:
-      template: "These attached files will be included in all future meetings in the series."
+      template: "Ezeket a csatolt fájlok minden ismételt megbeszélésben szerepelni fognak."
       text: "A csatolt fájlok az ülés valamennyi résztvevője számára elérhetők. Ezeket a napirendi pontok jegyzeteibe is behúzhatja."
     copy:
       title: "%{title} megbeszélés másolása"
       attachments: "Mellékletek másolása"
       attachments_text: "Másolja át az összes csatolt fájlt az új megbeszélésre"
       agenda: "Napirend másolása"
-      agenda_items: "Copy agenda items"
+      agenda_items: "Napirendi pontok másolása"
       agenda_text: "A régi megbeszélés napirendjének másolása"
-      participants: "Copy list of participants"
-      to_clipboard: "Copy to clipboard"
+      participants: "A résztvevők listájának másolása"
+      to_clipboard: "Hivatkozás másolása a vágólapra"
     email:
       send_emails: "Email participants"
       send_invitation_emails: >
         Azonnal küldjön e-mail meghívót a fent kiválasztott résztvevőknek. Ezt később bármikor manuálisan is megteheti.
-      send_invitation_emails_structured: "Send an email invitation immediately to all participants. You can also do this manually at any time later."
+      send_invitation_emails_structured: "E-mail meghívó azonnali küldése a résztvevőknek. Ez később manuálisan is megtehető."
       open_meeting_link: "Nyitott megbeszélés"
       open_my_meetings_link: "Go to My meetings"
       series:
         title: "[%{project_name}] Meeting series '%{title}'"
-        summary: "%{actor} has set up a new meeting series '%{title}'"
+        summary: "%{actor} has invited you to a new meeting series '%{title}'"
       series_updated:
-        title: "[%{project_name}] Meeting series '%{title}' has been updated"
-        summary: "Meeting series '%{title}' has been updated by %{actor}"
-        old_schedule: "Old schedule"
-        new_schedule: "New schedule"
+        title: "[%{project_name}] A '%{title}' ismétlődő megbeszélést frissítették"
+        summary: "A(z) \"%{title}\" ismétlődő megbeszélést %{actor} frissítette"
+        old_schedule: "Korábbi ütemterv"
+        new_schedule: "Új ütemterv"
       invited:
         summary: "%{actor} has sent you an invitation for the meeting '%{title}'"
       cancelled:
@@ -233,28 +235,31 @@ hu:
         summary_series: "Meeting series '%{title}' has been cancelled by %{actor}."
         summary: "'%{title}' has been cancelled by %{actor}."
         date_time: "Scheduled date/time"
+      ended:
+        header_series: "Ended: Meeting series '%{title}'"
+        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
       updated:
-        header: "Meeting '%{title}' has been updated"
-        summary: "Meeting '%{title}' has been updated by %{actor}"
-        body: "The meeting '%{title}' has been updated by %{actor}."
-        old_date_time: "Old date/time"
-        new_date_time: "New date/time"
-        old_location: "Old location"
-        new_location: "New location"
-    label_mail_all_participants: "Send email invite to participants"
+        header: "A \"%{title}\" megbeszélés frissítve lett"
+        summary: "A(z) \"%{title}\" megbeszélést %{actor} frissítette"
+        body: "A(z) \"%{title}\" megbeszélést %{actor} frissítette."
+        old_date_time: "Régi időpont"
+        new_date_time: "Új időpont"
+        old_location: "Régi helyszín"
+        new_location: "Új helyszín"
+    label_mail_all_participants: "E-mail meghívó küldése a résztvevőknek"
     types:
-      one_time: "One-time"
-      recurring: "Recurring"
-      recurring_text: "Create meeting series with dynamic template for each occurrence."
-      structured_text: "Organize your meeting as a dynamic list of agenda items, optionally linking them to a work package."
+      one_time: "Egyszeri"
+      recurring: "Ismétlődő"
+      recurring_text: "Ismétlődő megbeszélés létrehozása dinamikus sablonnal minden egyes eseményhez."
+      structured_text: "Megbeszélés megszervezése dinamikus napirendi pontok listájaként, amelyek opcionálisan munkacsomaghoz kapcsolhatók."
       structured_text_copy: "A megbeszélés másolásával jelnleg nem fogja átmásolni a hozzákapcsolt napirendi pontokat, csak a megbeszélés részleteit."
     copied: "#%{id} megbeszélésből másolva"
     delete_dialog:
       one_time:
         title: "Megbeszélés törlése"
-        heading: "Delete this meeting?"
+        heading: "Megbeszélés törlése?"
         confirmation_message_html: >
-          This action is not reversible. Please proceed with caution.
+          Nem visszavonható művelet! Biztos benne?
       occurrence:
         title: "Cancel meeting occurrence"
         heading: "Cancel this meeting occurrence?"
@@ -262,140 +267,162 @@ hu:
           Any meeting information not in the template will be lost. Do you want to continue?
         confirm_button: "Cancel occurrence"
     blankslate:
-      title: "No meetings to display"
-      desc: "There are no meetings that meet the active filter criteria."
-    label_export_pdf: "Export PDF"
+      title: "Nincsenek megjelenítendő találkozók"
+      desc: "You can create a new meeting or change filter criteria"
+    label_export_pdf: "PDF exportálása"
     export:
-      your_meeting_export: "Meeting is being exported"
+      your_meeting_export: "Megbeszélés exportálás alatt..."
       minutes:
-        footer_page_numbers: "P. %{current_page} of %{total_pages}"
-        author: "Author"
-        date: "Date"
-        time: "Time"
-        location: "Location"
-        title: "Minutes"
+        footer_page_numbers: "lap %{current_page} / %{total_pages}"
+        author: "Szerző"
+        date: "dátum"
+        time: "Idő"
+        location: "Helyszín"
+        title: "Jegyzőkönyv"
     export_pdf_dialog:
-      title: Export PDF
+      title: Exportálás PDF-be
       description: Generate a printable PDF file of this meeting at the current state.
       templates:
         default:
-          label: Default
-          caption: The default template is suitable for most meetings and represent the current state.
+          label: alapértelmezett
+          caption: Az alapértelmezett sablon alkalmas a legtöbb megbeszéléshez, és a jelenlegi állapotot képviseli.
         minutes:
-          label: Minutes
-          caption: The minutes template is suitable for closed and archived meetings.
+          label: Jegyzőkönyv
+          caption: A perc sablon alkalmas befejezett és archivált megbeszélésekhez.
       first_page_header_left:
-        label: First page header left
-        caption: This text will appear on the first page at the left of the header.
+        label: Első oldal fejléc balra
+        caption: Ez a szöveg az első oldalon, a fejléc bal oldalán fog megjelenni.
       author:
-        label: Author
+        label: Szerző
         caption: The author of the minutes will be displayed in the subtitle.
       include_participants:
-        label: Include list of participants
+        label: A résztvevők listájának hozzáadása
         caption: A list of participants will be preset above the meeting agenda.
       include_attachments:
-        label: Include list of attachments
+        label: A melléklet lista csatolása
         caption: A list containing the filenames of attachments will be appended at the end.
       include_backlog:
-        label: Include backlog
+        label: Teendők csatolása
         caption: Backlog elements are not normally considered part of a meeting occurrence but you can choose to include them.
       include_outcomes:
-        label: Include agenda outcomes
+        label: Napirendi pont megoldásának csatolása
         caption: If your agenda outcomes contain confidential information, you can choose to not include them in the export.
       footer_text:
-        label: Footer text
-        caption: This text will appear on every page at the center of the footer.
-      submit_button: Download
+        label: Lábléc szöveg
+        caption: Ez a szöveg minden oldalon, a fejléc közepén fog megjelenni.
+      submit_button: Letöltés
     notifications:
       sidepanel:
-        title: "Email calendar updates"
+        title: "E-mail naptárfrissítések"
         description:
-          disabled: "Participants will not receive an email informing them of changes."
-          enabled: "All participants will receive updated calendar invites via email informing them of changes."
-          change_via_template: "To change this, edit the series template."
+          disabled: "A résztvevők nem fognak e-mailt kapni a módosításokról."
+          enabled: "Minden résztvevő e-mail meghívót fog kapni az új módosításokkal."
+          change_via_template: "Az elem szerkesztéséhez a sorozat sablont kell szerkeszteni."
       dialog:
         title:
-          enable: "Enable email calendar updates?"
-          disable: "Disable email calendar updates?"
+          enable: "E-mail naptárfrissítések engedélyezése?"
+          disable: "E-mail naptárfrissítések letiltása?"
         message:
           enable: >
             All participants will receive updated calendar invites via email every time there is a change to the meeting date, time, location or participants. Once enabled, an email will be sent out immediately to all participants.
           disable: >
-            Participants will no longer receive updated calendar invites via email when there are changes to the meeting date, time, location or participants. If they already had an invite for this meeting, it might no longer be accurate.
+            A résztvevők nem fognak új naptármeghívót kapni e-mailben az alábbiak módosításakor: megbeszélés dátuma, ideje, helye vagy résztvevői. Amennyiben már kaptak meghívót, az pontatlanná válaht.
         confirm_label:
-          enable: "Enable email updates"
-          disable: "Disable email updates"
+          enable: "E-mail frissítések engedélyezése"
+          disable: "E-mail frissítések tiltása"
       banner:
         participants:
           enabled: >
-            All participants will receive updated calendar invites via email when you add or remove participants.
+            Minden résztvevő e-mail meghívót fog kapni az új módosításokkal amikor a résztvevőket módosították.
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them when you add or remove participants.
+            E-mail naptárfrissítések letiltva. A résztvevők nemkapnak e-mailt a résztvevők módisításáról.
         onetime:
           enabled: >
-            All participants will receive updated calendar invites via email informing them of your changes.
+            A résztvevők hozzáadásakor vagy eltávolításakor minden résztvevő frissített naptármeghívókat kap e-mailben.
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them of your changes.
+            Participants will not receive an email informing them of changes to meeting date, time or participants.
         occurrence:
           enabled: >
-            Email calendar updates are enabled for the meeting series. All participants will receive updated calendar invites informing them of your changes to this occurrence.
+            E-mail naptárfrissítések engedélyezve az ismétlődő megbeszélésnek. Minden résztvevő frissített naptármeghívót kap, amelyben tájékoztatják őket az eseményre vonatkozó változtatásokról.
           disabled: >
-            Email calendar updates are disabled for the meeting series. Participants will not receive an email informing them of your changes to this occurrence.
+            E-mail naptárfrissítések le vannak tiltva az ismétlődő megbeszéléshez. A résztvevők nem fognak frissített naptármeghívót kapni, amelyben tájékoztatják őket az eseményre vonatkozó változtatásokról.
         template:
           enabled: >
-            Email calendar updates are enabled for the meeting series. All participants will receive updated calendar invites informing them of your changes to this template or to individual occurrences.
+            E-mail naptárfrissítések engedélyezve az ismétlődő megbeszélésnek. Minden résztvevő frissített naptármeghívót kap, amelyben tájékoztatják őket a sablon, vagy egyedi esemény változásairól.
           disabled: >
-            Email calendar updates are disabled for the meeting series. Participants will not receive an email informing them of your changes to this template or to individual occurrences.
+            E-mail naptárfrissítések le vannak tiltva az ismétlődő megbeszéléshez. A résztvevők nem fognak e-mail értesítőt kapni a sablon, vagy egyedi esemény változásairól.
+    presentation_mode:
+      title: "Presentation Mode"
+      button_present: "Prezentáció megkezdése"
+      exit: "Kilépés a prezentációból"
+      current_item: "Current item"
+      total_items: "%{current} of %{total}"
+      previous: "Előző"
+      next: "Következő"
+      no_items: "Nincsenek napirendi pontok"
+      no_items_flash: "There are no agenda items to present."
+    ical_response:
+      update_failed: "Nem sikerült frissíteni a részvételi státuszt."
+      meeting_not_found: "Meeting not found for the given UID."
   meeting_section:
     untitled_title: "Untitled section"
     delete_confirmation: "Deleting the section will also delete all of its agenda items. Are you sure you want to do this?"
     placeholder_title: "New section"
     empty_text: "Húzza ide az elemeket, vagy hozzon létre egy újat"
+  meeting_participant:
+    participation_status:
+      needs_action: "Nincs válasz"
+      accepted: "Elfogadva"
+      declined: "Elutasítva"
+      tentative: "Talán"
+      unknown: "Ismeretlen"
   recurring_meeting:
     time_zone_difference_banner:
       title: "Time zone difference"
       description: >
         The dates below are referencing the time zone of the meeting series (%{actual_zone}), not your local time zone (%{user_zone}).
     ended_blankslate:
-      title: "Meeting series ended"
-      message: "This meeting series has come to an end. There are no upcoming meetings. "
-      action: "You can still view past occurrences or edit the meeting series to extend it."
+      title: "Az ismétlődő megbeszélés véget ért"
+      message: "Az ismétlődő megbeszélés véget ért. Nincs több megbeszélés. "
+      action: "Továbbra is megtekintheti a korábbi eseményeket, vagy szerkesztheti az ismétlődő megbeszélést annak meghosszabbítása érdekében."
     occurrence:
-      infoline: "This meeting is part of a recurring meeting series."
-      error_no_next: "There is no next occurrence for this meeting."
-      first_already_exists: "The first occurrence of this meeting series is already instantiated."
+      infoline: "Ez a megbeszélés egy ismétlődő megbeszélés része."
+      error_no_next: "Ennek a megbeszélésnek nincs következő időpontja."
+      first_already_exists: "Az első megbeszélés már megtörtént."
       first_created: >
-        The first meeting has been successfuly created from template. All future meetings will be created automatically at the time of the previous occurrence.
+        Az első megbeszélés sikeresen létrehozásra került a sablonból. Az összes jövőbeli megbeszélés automatikusan létrehozásra kerül az előző megbeszélés időpontjában.
     template:
       button_finalize: "Open first meeting"
-      blank_title: "Your meeting series template is empty"
+      blank_title: "Az ismétlődő megbeszélés sablonja üres"
       description: >
-        This template will be used whenever new meetings in the series get created. You can add agenda items, participants, and attachments to this template.
+        Minden alkalommal ez a sablon lesz használva, amikor új megbeszélés jön létre az ismételt megbeszélésben. Ebbe a sablonba napirendi pontokat, résztvevőket és mellékleteket is felvehet.
       blankslate_finalize: >
-        When you're done preparing this template, click the '%{button_title}' button above to finish the setup and schedule the first meeting of the series.
-      label_view_template: "View template"
-      label_edit_template: "Edit template"
+        Ha elkészült a sablon, kattintson a fenti "%{button_title}" gombra a beállítás befejezéséhez és az első megbeszélés ütemezéséhez.
+      label_view_template: "Sablon megtekintése"
+      label_edit_template: "Sablon szerkesztése"
       banner_html: >
-        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already created meetings.
+        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already-created meetings.
+      draft_banner_html: >
+        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already-created meetings. No email invites will be sent in this current draft mode until you open the first meeting.
     frequency:
       x_daily:
-        one: "Every day"
-        other: "Every %{count} days"
+        one: "Minden nap"
+        other: "Minden %{count}-ik nap"
       x_weekly:
-        one: "Every week"
-        other: "Every %{count} weeks"
-      every_weekday: "Every %{day_of_the_week}"
-      working_days: "Every working day"
+        one: "Minden héten"
+        other: "Minden %{count}-ik héten"
+      every_weekday: "Minden %{day_of_the_week} napon"
+      working_days: "Minden munkanap"
     end_after:
-      never: "never"
-      specific_date: "after a specific date"
-      iterations: "after a number of occurrences"
-    starts: "Starts"
+      never: "soha"
+      specific_date: "egy megadott dátum után"
+      iterations: "megadott előfordulás után"
+    starts: "Indul"
     in_words:
-      daily_interval: "Every %{interval} days"
-      working_days: "Every working day"
-      weekly: "Every week on %{weekday}"
-      weekly_interval: "Every %{interval} weeks on %{weekday}"
+      daily_interval: "Minden %{interval} nap"
+      working_days: "Minden munkanap"
+      weekly: "Minden héten ekkor: %{weekday}"
+      weekly_interval: "Minden %{interval}. héten ekkor: %{weekday}"
       frequency: "%{base} at %{time}"
       full: "%{base} at %{time}, ends on %{end_date}"
       full_past: "%{base} at %{time}, ended on %{end_date}"
@@ -416,7 +443,7 @@ hu:
         desc: >
           There are no additional meetings planned in this series. To schedule additional meetings or extend the series, go to the template and edit meeting details to change the end date, frequency or interval.
     delete_dialog:
-      title: "Delete meeting series"
+      title: "Ismétlődő megbeszélés törlése"
       heading: "Permanently delete this meeting series?"
       confirmation_message_html:
         zero: >
@@ -432,7 +459,7 @@ hu:
         Any meeting information not in the template will be lost. Do you want to continue?
       confirm_button: "Cancel occurrence"
     end_series_dialog:
-      title: "End meeting series"
+      title: "Ismétlődő megbeszélés befejezése"
   notice_successful_notification: "Email calendar update sent to all participants"
   notice_timezone_missing: Nincs időzóna beállítva, %{zone} a feltételezett. Időzóna beállításához kattintson ide.
   notice_meeting_updated: "Ezt az oldalt valaki más frissítette. A változások megtekintéséhez töltse újra."
@@ -454,6 +481,12 @@ hu:
   text_meeting_agenda_open_are_you_sure: "Ez minden változást felül fog írni. Biztosan folytani akarja?"
   text_meeting_minutes_for_meeting: 'a "%{meeting}" megbeszélés jegyzőkönyve'
   text_notificiation_invited: "Ez a levél alább egy ics bejegyzést tartalmaz a megbeszélésről:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "A megbeszélésed üres."
   text_meeting_empty_description1: "Kezdje az alábbi napirendi pontok hozzáadásával. Az egyes napirendi pontok lehetnek egyszerű címek, de további részleteket, például időtartamot és megjegyzéseket is hozzáadhat."
   text_meeting_empty_description2: 'A meglévő munkacsomagokhoz is hozzáadhat hivatkozásokat. Ilyenkor a kapcsolódó jegyzetek automatikusan láthatóvá válnak a munkacsomag "Megbeszélések" lapján.'
@@ -470,27 +503,32 @@ hu:
   label_meeting_index_later: "Next week and later"
   label_agenda_items: "Napirendi pontok"
   label_agenda_items_reordered: "Átrakva"
-  label_agenda_item_add: "Add agenda item"
-  label_agenda_item_remove_from_agenda: "Remove from agenda"
+  label_agenda_item_add: "Napirendi pont hozzáadása"
+  label_agenda_item_remove_from_agenda: "Levétel a napirendről"
   label_agenda_item_remove_from_backlog: "Remove from backlog"
   label_agenda_item_undisclosed_wp: "Munkacsomag #%{id} nem látható"
   label_agenda_item_deleted_wp: "Törölt munkacsomag-hivatkozás"
   label_agenda_item_actions: "A napirendi pontok intézkedései"
   label_agenda_item_move_to_next_title: "Move to next meeting?"
-  label_agenda_item_move: "Move"
+  label_agenda_item_move: "Mozgatás"
   label_agenda_item_move_to_next: "Move to next meeting"
   label_agenda_item_move_to_backlog: "Move to backlog"
   label_agenda_item_move_to_current_meeting: "Move to current meeting"
+  label_agenda_item_move_to_section: "Move to section"
   label_agenda_item_move_to_top: "Mozgatás felfelé"
   label_agenda_item_move_to_bottom: "Mozgatás az aljára"
   label_agenda_item_move_up: "Mozgatás felfelé"
   label_agenda_item_move_down: "Mozgás lefelé"
+  label_agenda_item_duplicate: "Duplicate"
+  label_agenda_item_duplicate_in_next: "Duplicate in next occurrence"
+  label_agenda_item_duplicate_in_next_title: "Duplicate in next occurrence?"
   label_agenda_item_add_notes: "Megjegyzések hozzáadása"
   label_agenda_item_add_outcome: "Add outcome"
   label_agenda_item_work_package_add: "Add work package"
   label_agenda_item_work_package: "Napirendi ponthoz kapcsolódó feladatcsoport"
   label_section_rename: "Rename section"
   label_agenda_outcome: "Outcome"
+  label_agenda_new_outcome: "New outcome"
   label_agenda_outcome_actions: "Agenda outcome actions"
   label_agenda_outcome_edit: "Edit outcome"
   label_agenda_outcome_delete: "Remove outcome"
@@ -519,6 +557,7 @@ hu:
   label_meeting_series_details: "Meeting series details"
   label_meeting_details_edit: "Megbeszélés részleteinek szerkesztése"
   label_meeting_state: "A megbeszélés státusza"
+  label_meeting_state_draft: "Draft"
   label_meeting_state_open: "Open"
   label_meeting_state_closed: "Lezárva"
   label_meeting_state_agenda_created: "Agenda created"
@@ -529,26 +568,39 @@ hu:
   label_meeting_reopen_action: "A megbeszélés újranyitása"
   label_meeting_close_action: "Megbeszélés lezárása"
   label_meeting_in_progress_action: "Start meeting"
+  label_meeting_open_action: "Open meeting"
+  text_meeting_draft_description: "Prepare your agenda in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
   text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
   text_meeting_closed_description: "Ez a megbeszélés zárt. Többé nem tud napirendi pontokat hozzáadni/eltávolítani."
   text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
   text_meeting_open_dropdown_description: "Any existing outcomes will remain but users will not be able to add new outcomes."
   text_meeting_in_progress_dropdown_description: "Document outcomes like information needs or decisions taken during the meeting."
   text_meeting_closed_dropdown_description: "This meeting is closed. You cannot modify agenda items or outcomes anymore."
+  text_meeting_draft_banner: "You are currently in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
+  text_exit_draft_mode_dialog_title: "Open this meeting and send invites?"
+  text_exit_draft_mode_dialog_subtitle: "You cannot return to draft mode once you schedule a meeting."
+  text_exit_draft_mode_dialog_template_title: "Open the first occurrence of this meeting series?"
+  text_exit_draft_mode_dialog_template_subtitle: "You cannot return to draft mode after this."
   text_meeting_not_editable_anymore: "Ez a megbeszélés már nem szerkeszthető."
   text_meeting_not_present_anymore: "Ez a megbeszélés törlésre került. Kérjük, válasszon ki egy másik megbeszélést."
-  label_add_work_package_to_meeting_dialog_title: "Munkacsomag hozzáadása a megbeszéléshez"
+  label_add_work_package_to_meeting_dialog_title: "Select meeting"
+  label_add_work_package_to_meeting_section_label: "Szekció "
   label_add_work_package_to_meeting_dialog_button: "Hozzáadás a megbeszéléshez"
-  label_meeting_selection_caption: "It's only possible to add this work package to upcoming or ongoing open meetings."
+  label_meeting_selection_caption: "It is only possible to add this work package to an upcoming or an ongoing meeting."
+  label_section_selection_caption: "Choose a particular section of the agenda or add it to the backlog."
+  placeholder_section_select_meeting_first: "Meeting selection is required first"
+  text_add_work_package_to_meeting_form: "The work package will be added to the selected meeting or backlog as an agenda item."
   text_add_work_package_to_meeting_description: "Egy munkacsomagot egy vagy több megbeszéléshez is hozzá lehet adni megvitatásra. Az ezzel kapcsolatos megjegyzések szintén itt láthatók."
   text_agenda_item_no_notes: "Nincs hozzáadott jegyzet. "
   text_agenda_item_not_editable_anymore: "Ez a napirendi pont már nem szerkeszthető."
   text_agenda_item_move_next_meeting: "This item will be moved to the next meeting on %{date} at %{time}."
   text_agenda_item_moved_to_next_meeting: "Agenda item moved to the next meeting, on %{date}"
+  text_agenda_item_duplicate_in_next_meeting: "Are you sure you want to add a copy of this agenda item to the next meeting, on %{date} at %{time}? Outcomes will not be duplicated."
+  text_agenda_item_duplicated_in_next_meeting: "Agenda item duplicated in the next meeting, on %{date}"
   text_work_package_has_no_upcoming_meeting_agenda_items: "Ez a munkacsomag még nem szerepel a következő megbeszélések napirendjén."
   text_agenda_item_move_next_meeting_cancelled: "Unable to move to the next meeting since it has been cancelled."
   text_work_package_add_to_meeting_hint: 'Használja a "Hozzáadás a megbeszéléshez" gombot, ha ezt a munkacsomagot hozzá kívánja adni egy közelgő értekezlethez.'
-  text_work_package_has_no_past_meeting_agenda_items: "Ez a munkacsomag nem került említésre egy korábbi megbeszélésen."
+  text_work_package_has_no_past_meeting_agenda_items: "This work package was not added as an agenda item in a past meeting."
   text_email_updates_muted: "Email calendar updates are muted. Participants will not receive updated invites via email when you make changes."
   text_email_updates_enabled: "Email calendar updates are enabled. All participants will receive updated invites via email when you make changes."
   my_account:
@@ -558,7 +610,7 @@ hu:
         text_hint: "iCalendar meeting tokens allow users to subscribe to all their meetings and view up-to-date meeting information in external clients."
         disabled_text: "iCalendar meeting subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
         empty_text_hint: 'To add an iCalendar meeting token, go to the <a href="%{path}">meetings section</a> and subscribe from there.'
-        add_button: "Subscribe to calendar"
+        add_button: "Feliratkozás az iCalendars-ra"
   my:
     access_token:
       dialog:
@@ -567,7 +619,7 @@ hu:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

@@ -390,6 +390,8 @@ module Pages
         DateEditField.new container, key, is_milestone: work_package.milestone?, is_table: true
       when :estimatedTime, :remainingTime
         ProgressEditField.new container, key
+      when :project
+        InlineProjectEditField.new container, key
       else
         EditField.new container, key
       end

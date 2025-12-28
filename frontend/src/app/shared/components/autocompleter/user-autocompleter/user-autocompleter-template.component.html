@@ -2,29 +2,31 @@
   #optionTemplate
   let-item
   let-search="search"
->
-  <op-principal
-    *ngIf="item && item.href"
-    [principal]="item"
-    [hideName]="true"
-    [hoverCard]="hoverCards"
-    size="mini"
-  ></op-principal>
+  >
+  @if (item && item.href) {
+    <op-principal [principal]="item"
+      [hideName]="true"
+      [hoverCard]="hoverCards"
+      size="mini"
+     />
+  }
   <span [opSearchHighlight]="search"
-        [attr.data-hover-card-url]="getHoverCardUrl(item)"
-        data-hover-card-trigger-target="trigger"
-        class="op-user-autocompleter--name">
-      {{ item.name }}
-    </span>
-  <span
-    class="op-autocompleter__option-principal-email"
-    *ngIf="item.email"
-    [opSearchHighlight]="search"
-  >{{ item.email }}</span>
+    [attr.data-hover-card-url]="getHoverCardUrl(item)"
+    data-hover-card-trigger-target="trigger"
+    class="op-user-autocompleter--name">
+    {{ item.name }}
+  </span>
+  @if (item.email) {
+    <span
+      class="op-autocompleter__option-principal-email"
+      [opSearchHighlight]="search"
+    >{{ item.email }}</span>
+  }
 </ng-template>
-<ng-template #footerTemplate *ngIf="inviteUserToProject">
-  <op-invite-user-button
-    [projectId]="inviteUserToProject"
-    class="op-select-footer"
-  ></op-invite-user-button>
-</ng-template>
+@if (inviteUserToProject) {
+  <ng-template #footerTemplate>
+    <op-invite-user-button [projectId]="inviteUserToProject"
+      class="op-select-footer"
+     />
+  </ng-template>
+}

@@ -42,7 +42,7 @@ export class WorkPackageTimelineCellsRenderer {
 
   @InjectField() public halEditing:HalResourceEditingService;
 
-  public cells:{ [classIdentifier:string]:WorkPackageTimelineCell } = {};
+  public cells:Record<string, WorkPackageTimelineCell> = {};
 
   private cellRenderers:{ milestone:TimelineMilestoneCellRenderer, generic:TimelineCellRenderer };
 

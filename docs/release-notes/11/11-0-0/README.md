@@ -291,7 +291,7 @@ There are lots and lots of new things we packed into 11.0 to tell you about.
 - Changed: Improve board creation modal \[[#34070](https://community.openproject.org/wp/34070)\]
 - Changed: Hide derived (Start/Finish) Date from work package forms \[[#34122](https://community.openproject.org/wp/34122)\]
 - Changed: Extend search autocompleter with useful information \[[#34132](https://community.openproject.org/wp/34132)\]
-- Changed: [all projects overview] (Add option to) show status-text in expanded view. \[[#34191](https://community.openproject.org/wp/34191)\]
+- Changed: \[all projects overview\] \(Add option to\) show status-text in expanded view. \[[#34191](https://community.openproject.org/wp/34191)\]
 - Changed: Map board subtasks columns when copying projects \[[#34238](https://community.openproject.org/wp/34238)\]
 - Changed: Having meetings as a linkable resource \[[#34256](https://community.openproject.org/wp/34256)\]
 - Changed: What's new teaser OpenProject BIM 11.0 \[[#34514](https://community.openproject.org/wp/34514)\]

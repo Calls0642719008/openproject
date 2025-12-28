@@ -78,7 +78,7 @@ RSpec.describe "Types", :js do
     from_id = existing_workflow.old_status_id
     to_id = existing_workflow.new_status_id
 
-    checkbox = page.find("input.old-status-#{from_id}.new-status-#{to_id}[value=always]")
+    checkbox = page.find("input[data-old-status=\"#{from_id}\"][data-new-status=\"#{to_id}\"][value=always]")
 
     expect(checkbox).to be_checked
 
@@ -100,6 +100,9 @@ RSpec.describe "Types", :js do
 
     index_page.delete "Renamed type"
 
+    wait_for_network_idle
+
+    expect_and_dismiss_flash(message: I18n.t(:notice_successful_delete))
     index_page.expect_listed(existing_type)
   end
 

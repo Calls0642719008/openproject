@@ -39,7 +39,7 @@ module Storages
         case storage
         when NextcloudStorage
           api_static_link
-        when OneDriveStorage
+        when OneDriveStorage, SharepointStorage
           raise Errors::ConfigurationError, "No OAuth credential information configured." if storage.oauth_client.nil?
 
           oauth_clients_ensure_connection_url(
@@ -56,7 +56,7 @@ module Storages
         case storage
         when NextcloudStorage
           true
-        when OneDriveStorage
+        when OneDriveStorage, SharepointStorage
           storage.oauth_client&.persisted?
         else
           false

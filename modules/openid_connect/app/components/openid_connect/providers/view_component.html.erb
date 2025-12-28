@@ -21,7 +21,7 @@
                                           form_class: OpenIDConnect::Providers::NameInputForm,
                                           edit_state:,
                                           next_edit_state: :client_details,
-                                          edit_mode:,
+                                          new_mode:,
                                           heading: nil,
                                           fetch_metadata: true
                                         )
@@ -44,7 +44,7 @@
                   provider,
                   form_class: OpenIDConnect::Providers::ClientDetailsForm,
                   edit_state:,
-                  edit_mode:,
+                  new_mode:,
                   heading: nil,
                   fetch_metadata: true
                 )
@@ -71,7 +71,7 @@
                                           form_class: OpenIDConnect::Providers::NameInputAndTenantForm,
                                           edit_state:,
                                           next_edit_state: :client_details,
-                                          edit_mode:,
+                                          new_mode:,
                                           heading: nil,
                                           fetch_metadata: true
                                         )
@@ -94,7 +94,7 @@
                   provider,
                   form_class: OpenIDConnect::Providers::ClientDetailsForm,
                   edit_state:,
-                  edit_mode:,
+                  new_mode:,
                   heading: nil,
                   fetch_metadata: true
                 )
@@ -122,7 +122,7 @@
                   form_class: OpenIDConnect::Providers::NameInputForm,
                   edit_state:,
                   next_edit_state: :metadata,
-                  edit_mode:,
+                  new_mode:,
                   heading: nil
                 )
               else
@@ -149,7 +149,7 @@
                   form_class: nil,
                   heading: nil,
                   edit_state:,
-                  edit_mode:,
+                  new_mode:,
                   next_edit_state: :metadata_details,
                   fetch_metadata: true
                 )
@@ -181,7 +181,7 @@
                   form_class: OpenIDConnect::Providers::MetadataDetailsForm,
                   edit_state:,
                   next_edit_state: :client_details,
-                  edit_mode:,
+                  new_mode:,
                   banner: provider.metadata_url.present? ? t("openid_connect.providers.section_texts.configuration_metadata") : nil,
                   banner_scheme: :default,
                   heading: nil
@@ -210,7 +210,7 @@
                   form_class: OpenIDConnect::Providers::ClientDetailsForm,
                   edit_state:,
                   next_edit_state: :attribute_mapping,
-                  edit_mode:,
+                  new_mode:,
                   heading: nil
                 )
               )
@@ -240,8 +240,8 @@
                   provider,
                   form_class: OpenIDConnect::Providers::AttributeMappingForm,
                   edit_state:,
-                  next_edit_state: OpenProject::FeatureDecisions.oidc_group_sync_active? ? :group_mapping : :claims,
-                  edit_mode:,
+                  next_edit_state: :group_mapping,
+                  new_mode:,
                   heading: nil
                 )
               )
@@ -260,30 +260,28 @@
             end
           end
 
-          if OpenProject::FeatureDecisions.oidc_group_sync_active?
-            component.with_row(scheme: :default) do
-              if edit_state == :group_mapping
-                render(
-                  OpenIDConnect::Providers::Sections::FormComponent.new(
-                    provider,
-                    form_class: OpenIDConnect::Providers::GroupMappingForm,
-                    edit_state:,
-                    next_edit_state: :claims,
-                    edit_mode:,
-                    heading: nil
-                  )
+          component.with_row(scheme: :default) do
+            if edit_state == :group_mapping
+              render(
+                OpenIDConnect::Providers::Sections::FormComponent.new(
+                  provider,
+                  form_class: OpenIDConnect::Providers::GroupMappingForm,
+                  edit_state:,
+                  next_edit_state: :claims,
+                  new_mode:,
+                  heading: nil
                 )
-              else
-                render(
-                  OpenIDConnect::Providers::Sections::ShowComponent.new(
-                    provider,
-                    target_state: :group_mapping,
-                    view_mode:,
-                    heading: t("openid_connect.providers.label_group_mapping"),
-                    description: t("openid_connect.providers.section_texts.group_mapping")
-                  )
+              )
+            else
+              render(
+                OpenIDConnect::Providers::Sections::ShowComponent.new(
+                  provider,
+                  target_state: :group_mapping,
+                  view_mode:,
+                  heading: t("openid_connect.providers.label_group_mapping"),
+                  description: t("openid_connect.providers.section_texts.group_mapping")
                 )
-              end
+              )
             end
           end
 
@@ -294,7 +292,7 @@
                   provider,
                   form_class: OpenIDConnect::Providers::ClaimsForm,
                   edit_state:,
-                  edit_mode:,
+                  new_mode:,
                   heading: nil
                 )
               )

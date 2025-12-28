@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -61,6 +62,13 @@ module Meetings
       end
     end
 
+    def can_start_presentation?
+      OpenProject::FeatureDecisions.meetings_presentation_mode_active? &&
+        !@meeting.template? &&
+        !@meeting.draft? &&
+        @meeting.agenda_items.any?
+    end
+
     private
 
     def delete_enabled?
@@ -68,9 +76,32 @@ module Meetings
     end
 
     def finish_setup_enabled?
-      @meeting.template? &&
-        User.current.allowed_in_project?(:create_meetings, @meeting.project) &&
-        @series.scheduled_meetings.none?
+      @meeting.draft? &&
+        User.current.allowed_in_project?(:edit_meetings, @meeting.project)
+    end
+
+    def action_button_params
+      {
+        tag: :button,
+        scheme: :primary,
+        mobile_label: action_button_label,
+        mobile_icon: :check,
+        size: :medium,
+        id: "open-meeting-button",
+        data: {
+          action: "click->meetings--submit#intercept",
+          href: action_button_href,
+          method: "GET"
+        }
+      }
+    end
+
+    def action_button_label
+      @meeting.recurring? ? I18n.t("recurring_meeting.template.button_finalize") : I18n.t("label_meeting_open_action")
+    end
+
+    def action_button_href
+      exit_draft_mode_dialog_project_meeting_path(@project, @meeting)
     end
 
     def send_emails?
@@ -115,9 +146,9 @@ module Meetings
 
     def copy_label
       if @series.present?
-        I18n.t("label_recurring_meeting_copy")
+        I18n.t("label_recurring_meeting_duplicate")
       else
-        I18n.t("button_copy")
+        I18n.t("button_duplicate")
       end
     end
   end

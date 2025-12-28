@@ -216,6 +216,47 @@ RSpec.describe "time entry dialog", :js do
     end
   end
 
+  describe "custom field validation" do
+    let(:permissions) { %i[log_own_time view_own_time_entries view_work_packages] }
+    let!(:required_custom_field) do
+      create(:time_entry_custom_field, :string,
+             name: "Department",
+             is_required: true)
+    end
+
+    before do
+      visit work_package_path(work_package_a)
+
+      find("#action-show-more-dropdown-menu .button").click
+      find(".menu-item", text: "Log time").click
+      time_logging_modal.is_visible(true)
+      time_logging_modal.update_field("hours", "2")
+    end
+
+    it "I can create a time entry with a custom field value including validation" do
+      # validates the required custom field and prevents creation when missing
+      expect do
+        time_logging_modal.submit
+        wait_for_network_idle
+      end.not_to change(TimeEntry, :count)
+
+      time_logging_modal.field_has_error("custom_field_values_#{required_custom_field.id}", "Value can't be blank.")
+
+      # creates the time entry when the required custom field is provided
+      time_logging_modal.update_field("custom_field_values_#{required_custom_field.id}", "Engineering")
+
+      expect do
+        time_logging_modal.submit
+        wait_for_network_idle
+      end.to change(TimeEntry, :count).by(1)
+
+      # Verify the time entry was created with the custom field value
+      time_entry = TimeEntry.last
+      expect(time_entry.typed_custom_value_for(required_custom_field)).to eq("Engineering")
+      expect(time_entry.entity).to eq(work_package_a)
+    end
+  end
+
   describe "when the user can edit time entries" do
     let(:permissions) { %i[log_own_time view_own_time_entries edit_own_time_entries view_work_packages] }
     let!(:time_entry) { create(:time_entry, entity: work_package_a, project: work_package_a.project, user: user) }
@@ -277,6 +318,47 @@ RSpec.describe "time entry dialog", :js do
       # also check that everything is updated in the database
       time_entry.reload
       expect(time_entry.entity).to eq(work_package_b)
+    end
+
+    context "with custom field validation" do
+      let!(:required_custom_field) do
+        create(:time_entry_custom_field, :string,
+               name: "Department",
+               is_required: true)
+      end
+
+      it "I can update a time entry with a custom field value including validation" do
+        visit cost_reports_path(work_package_a.project_id,
+                                { fields: ["WorkPackageId"],
+                                  operators: { WorkPackageId: "=" },
+                                  values: { WorkPackageId: [work_package_a.id] },
+                                  set_filter: 1 })
+
+        # make sure that the work package is shown in the table
+        expect(page).to have_css("#result-table td[raw-data='#{work_package_a.id}']", text: work_package_a.subject)
+        find("opce-time-entry-trigger-actions .icon-edit").click
+
+        time_logging_modal.is_visible(true)
+
+        # ensure the work package autocompleter is filled
+        time_logging_modal.update_field("entity_id", work_package_a.id)
+
+        # validates the required custom field and prevents update when missing
+        time_logging_modal.submit
+        wait_for_network_idle
+
+        time_logging_modal.field_has_error("custom_field_values_#{required_custom_field.id}", "Value can't be blank.")
+
+        # updates the time entry when the required custom field is provided
+        time_logging_modal.update_field("custom_field_values_#{required_custom_field.id}", "Marketing & Sales")
+
+        time_logging_modal.submit
+        wait_for_network_idle
+
+        # Verify the custom field value was updated
+        time_entry.reload
+        expect(time_entry.typed_custom_value_for(required_custom_field)).to eq("Marketing & Sales")
+      end
     end
   end
 end

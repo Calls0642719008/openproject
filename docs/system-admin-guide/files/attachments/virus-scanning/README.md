@@ -10,7 +10,8 @@ keywords: Virus scanning, clamav
 
 # Virus scanning (Enterprise add-on)
 >
-> **Note**: This functionality is an Enterprise add-on. It is currently not available on the Hosted Enterprise Cloud.
+> [!NOTE]
+> This functionality is an Enterprise add-on. It is currently not available on the Hosted Enterprise Cloud.
 
 You can configure OpenProject to automatically scan uploaded attachments for viruses using the [ClamAV antivirus](https://www.clamav.net/) engine.
 

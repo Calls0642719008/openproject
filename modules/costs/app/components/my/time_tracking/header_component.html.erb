@@ -1,11 +1,6 @@
 <%= render(Primer::OpenProject::PageHeader.new) do |header|
       header.with_title { I18n.t(:label_my_time_tracking) }
-      header.with_breadcrumbs(
-        [
-          { text: I18n.t(:label_my_time_tracking), href: my_time_tracking_path }
-        ]
-      )
-
+      header.with_breadcrumbs(nil)
       header.with_tab_nav(label: I18n.t(:label_view_mode_switcher)) do |nav|
         nav.with_tab(selected: view_mode == :calendar, href: view_mode_switch_link(:calendar)) do |tab|
           tab.with_text { I18n.t(:label_calendar) }

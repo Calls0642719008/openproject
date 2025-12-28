@@ -205,7 +205,6 @@ export class ApiV3Service {
   }
 
   private apiV3CustomEndpoint<T>(cls:Constructor<T>):T {
-    // eslint-disable-next-line new-cap
     return new cls(this, this.pathHelper.api.v3.apiV3Base);
   }
 

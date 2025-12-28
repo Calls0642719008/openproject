@@ -88,6 +88,8 @@ hu:
     button_list_view: "Lista nézet"
     button_show_view: "Teljes képernyős nézet"
     button_log_time: "Eltöltött idő rögzítése"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Időzítő leállítása"
     button_more: "További"
     button_open_details: "Részletes nézet megnyitása"
     button_close_details: "Részletes nézet bezárása"
@@ -287,30 +289,20 @@ hu:
         format:
           date: "A(z) %{attribute} nem felel meg az -ÉÉÉÉ-HH-NN- dátumformátumnak."
         general: "Hiba történt."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Itt találhatóak az új funkciók és a frissítések"
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
-      title: "Subscribe to calendar"
+      title: "Feliratkozás az iCalendars-ra"
       inital_setup_error_message: "An error occured while fetching data."
       description: "You can use the URL (iCalendar) to subscribe to this calendar in an external client and view up-to-date work package information from there."
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Aktivál"
     label_assignee: "Megbízott"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Oszlop hozzáadása utána"
     label_add_column_before: "Oszlop hozzáadása előtte"
     label_add_columns: "Oszlopok hozzáadása"
@@ -323,7 +315,7 @@ hu:
     label_added_time_by: 'Added by <a href="%{authorLink}">%{author}</a> at %{age}'
     label_ago: "nappal ezelőtt"
     label_all: "mind"
-    label_all_projects: "All projects"
+    label_all_projects: "Minden projekt"
     label_all_uppercase: "Összes"
     label_all_work_packages: "minden feladatcsoport"
     label_and: "és"
@@ -352,6 +344,7 @@ hu:
     label_collapse: "Collapse"
     label_collapsed: "összecsukott"
     label_collapse_all: "Az összes bezárása"
+    label_collapse_text: "Collapse text"
     label_comment: "Vélemény"
     label_committed_at: "%{committed_revision_link}: %{date}"
     label_committed_link: "végrehajtott változat %{revision_identifier}"
@@ -364,6 +357,7 @@ hu:
     label_expand: "Kibont"
     label_expanded: "kibontott"
     label_expand_all: "Az összes kibontása"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Project menü kibontása"
     label_export: "Exportálás"
     label_export_preparing: "Az exportálás előkészítés alatt áll, és hamarosan letöltésre kerül."
@@ -419,7 +413,7 @@ hu:
     label_per_page: "Oldalanként:"
     label_please_wait: "Kérem várjon"
     label_project: "Projekt"
-    label_project_list: "Project lists"
+    label_project_list: "Projekt listák"
     label_project_plural: "Projektek"
     label_visibility_settings: "Láthatósági beállítások"
     label_quote_comment: "Hozzászólás idézése"
@@ -443,7 +437,7 @@ hu:
     label_sort_lower: "Mozgás lefelé"
     label_sorting: "Rendezés"
     label_spent_time: "Eltöltött idő"
-    label_star_query: "Kedvenc"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Nyomjon Entert a mentéshez"
     label_public_query: "Nyilvános"
     label_sum: "Össz."
@@ -562,7 +556,7 @@ hu:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "%{difference_in_days} napja."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "%{difference_in_days} napon belül."
         property_was: "%{difference_in_days} napja volt."
@@ -737,7 +731,7 @@ hu:
       relates: "Kapcsolódóan"
       duplicates: "Duplikátumok"
       duplicated: "Duplikálta (a)z"
-      blocks: "Blokkolja"
+      blocks: "Akadályoz"
       blocked: "Blokkolta a(z)"
       precedes: "Megelőzi"
       follows: "Követi ezt"
@@ -781,7 +775,7 @@ hu:
     autocompleter:
       placeholder: "Gépeljen a kereséshez"
       notFoundText: "Nem található elem"
-      search: "Search"
+      search: "Keresés"
       project:
         placeholder: "Select project"
     repositories:
@@ -934,7 +928,7 @@ hu:
         all_open: "Nyitottak"
         overdue: "Overdue"
         summary: "Összegzés"
-        shared_with_users: "Shared with users"
+        shared_with_users: "Megosztás felhasználókkal"
         shared_with_me: "Shared with me"
       jump_marks:
         pagination: "Ugrás a táblázat lapszámozásához"
@@ -1047,7 +1041,7 @@ hu:
         save_as: "Mentés másként"
         export: "Exportálás"
         visibility_settings: "Láthatósági beállítások"
-        share_calendar: "Subscribe to calendar"
+        share_calendar: "Feliratkozás az iCalendars-ra"
         page_settings: "Nézet átnevezése"
         delete: "Törlés"
       filter: "Szűrő"
@@ -1113,6 +1107,7 @@ hu:
       child_work_packages:
         one: "egy gyermek munkacsomag"
         other: "%{count} gyermek feladatcsoport"
+      hour_string: "%{hours} h"
       hour:
         one: "1 óra"
         other: "%{count} ó"
@@ -1133,6 +1128,7 @@ hu:
       current_project_and_all_descendants: "Ebben a projektben + alprojektekben"
       current_project: "Ebben a projektben"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "minden projekt"
         project_and_subprojects: "az összes alprojektben"
@@ -1142,71 +1138,8 @@ hu:
       list: "Tábla"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Vissza"
       invite: "Meghívás"
-      title:
-        invite: "Felhasználó meghívása"
-        invite_to_project: "Meghívás %{type} a %{project}"
-        User: "Felhasználó"
-        Group: "csoport"
-        PlaceholderUser: "Teszt felhasználó"
-        invite_principal_to_project: "Meghívás %{principal} a %{project} "
-      project:
-        label: "Projekt"
-        required: "Válasszon projektet"
-        lacking_permission: "Kérjük, válasszon másik projektet, mivel nincs jogosultsága a felhasználók kijelöléséhez.\n"
-        lacking_permission_info: "Nincs jogosultsága arra, hogy felhasználókat rendeljen a projekthez, amelyben éppen dolgozik. Ki kell választania egy másikat.\n"
-        next_button: " Következő"
-        no_results: "Egyetlen projekt sem található"
-        no_invite_rights: "Nincs jogosultságod meghívni felhasználókat ehhez a projekthez"
-      type:
-        required: "Kérjük, válassza ki a meghívandó típust\n"
-        user:
-          title: "Felhasználó"
-          description: "Jogosultságok a kiválasztott projektben kijelölt szerepkör alapján\n"
-        group:
-          title: "Csoport"
-          description: "Jogosultságok a kiválasztott projektben kijelölt szerepkör alapján\n"
-        placeholder:
-          title: "Teszt felhasználó"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "Nincs hozzáférése a projekthez, és nem küld ki e-maileket.\n"
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "Név vagy e-mail cím"
-          name: "Név"
-        already_member_message: "Már tagja a %{project}-nek"
-        no_results_user: "Nem található felhasználó."
-        invite_user: "Meghívás:"
-        no_results_placeholder: "Ben találhatók teszt felhasználók"
-        create_new_placeholder: "Új teszt felhasználó létrehozása"
-        no_results_group: "Nem találhatók csoportok."
-        next_button: " Következő"
-        required:
-          user: "Válassz egy felhasználót"
-          placeholder: "Kérjük válasszon egy tesztfelhasználót"
-          group: "Válaszd ki a csoportot"
-      role:
-        label: "Szerepek a %{project}"
-        no_roles_found: "Nem található szerepkör."
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Kérjük, válasszon szerepet"
-        next_button: " Következő"
-      message:
-        label: "Meghívó üzenet"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: " Következő"
-      summary:
-        next_button: "Meghívó küldése"
-      success:
-        title: "%{principal} meghívást kapott!\n"
-        description:
-          user: "A felhasználó most már bejelentkezhet, hogy hozzáférjen a %{project}-hez. Eközben már tervezhet ezzel a felhasználóval, és például munkacsomagokat rendelhet hozzá."
-          placeholder: "A tesztfelhasználó mostantól használható a %{project}-ben. Eközben már tervezhetünk ezzel a felhasználóval, és például munkacsomagokat rendelhetünk hozzá."
-          group: "A csoport mostantól a %{project} része. Eközben már tervezhet ezzel a csoporttal, és például munkacsomagokat rendelhet hozzá.\n"
-        next_button: "Folytatás"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1223,7 +1156,7 @@ hu:
       selected_filter:
         all: "Minden projekt"
         selected: "Csak a kijelölt"
-      search_placeholder: "Projektek keresése"
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Összes alprojekt bevonása"
       tooltip:
@@ -1232,6 +1165,11 @@ hu:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "Törlés"

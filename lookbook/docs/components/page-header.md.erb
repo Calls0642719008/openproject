@@ -28,6 +28,33 @@ There are minor adjustments on how the composition of this component is defined 
 - A special behaviour occurs when the page can be saved (or saved as) as one of the PageHeader actions will be used to display an informational text and a link to perform the action.
 - Work packages details are the only exceptional case, where the breadcrumb will be used to display the parent work package instead of the navigational hierarchy.
 
+## **Breadcrumb usage**
+By default, every PageHeader should include breadcrumbs. They are a core part of the global navigation in OpenProject and must be present on almost all pages.
+
+Breadcrumbs should not include the instance name, because users can already return to the instance home page by clicking the instance logo or using the waffle menu.
+
+There are a few exceptional cases where the PageHeader may be rendered without breadcrumbs — for example, My Page and the Project Overview page.
+Since the instance name has been removed from the breadcrumbs, these pages would only display their own name in the breadcrumb, which provides no additional navigational value.
+Therefore, omitting the breadcrumb on these pages ensures a cleaner and more meaningful user experience.
+
+If you are unsure whether breadcrumbs should be omitted on a particular page, please consult the Dream team or designers before proceeding.
+
+**To intentionally render a PageHeader without breadcrumbs, always pass nil explicitly**
+
+```html
+  &lt;%=
+    render(Primer::OpenProject::PageHeader.new) do |header|
+      header.with_title { "Hello" }
+      header.with_breadcrumbs(nil)
+      header.with_description { "This PageHeader does not have any breadcrumbs." }
+      header.with_action_button(mobile_icon: "star", mobile_label: "Star") do |button|
+        button.with_leading_visual_icon(icon: "star")
+        "Star"
+      end
+    end
+  %&gt;
+```
+
 ## Best practices
 
 **Do**
@@ -73,6 +100,32 @@ The PageHeader actions offer a set of predefined slots, to use specific componen
   * The button will collapse on mobile into the mobile action menu. Therefore, an additional `mobile_label`, as well as a `mobile_label` have to passed.
 * **Primer::Beta::Text** ([`with_action_text`](../../inspect/primer/open_project/page_header/actions)):
   * The text will be hidden on mobile.
+
+### Editable Title - Text Selection
+
+The `editable-page-header-title` Stimulus controller extends the PageHeader's built-in editable title functionality by automatically selecting the input text when rendered in edit state. This improves UX when presenting a pre-filled title that users can quickly accept or replace.
+
+#### When to use
+
+Use this controller when rendering a PageHeader in edit state with a pre-filled title value, allowing users to:
+- Press **Tab** to accept the current value
+- Press **Delete/Backspace** to clear the entire value in one keystroke
+- Start typing to immediately replace the value
+
+#### Setup
+
+Add the controller to your PageHeader component's data attributes:
+
+```ruby
+{
+  data: {
+    controller: "editable-page-header-title",
+    "editable-page-header-title-input-id-value": "your_input_id"
+  }
+}
+```
+
+The controller activates when the page loads with `?state=edit` in the URL, focusing and selecting the title input text. The `?state=edit` parameter is then removed from the URL to keep it clean.
 
 ### Code structure
 

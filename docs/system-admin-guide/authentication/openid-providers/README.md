@@ -1,5 +1,5 @@
 ---
-sidebar_navigation:
+Sidebar_navigation:
   title: OpenID providers
   priority: 800
 description: OpenID providers for OpenProject.
@@ -8,7 +8,8 @@ keywords: OpenID providers
 # OpenID providers (Enterprise add-on)
 
 > [!IMPORTANT]
-> OpenID Connect providers is an Enterprise add-on. If you do not see the button you will have to activate the Enterprise edition first.
+>
+> OpenID Connect providers is an Enterprise add-on.  If you do not see the button you will have to activate the Enterprise  edition first.
 
 | Topic                                                              | Content                                                                         |
 |--------------------------------------------------------------------|---------------------------------------------------------------------------------|
@@ -237,18 +238,16 @@ For example: Keycloak allows you to map custom properties of the user. This allo
 
 #### Step 7: Group mapping
 
-> [!IMPORTANT]
-> Group mapping is an experimental feature that's not yet intended for production usage. It must be enabled on the page for experimental
-> features of your OpenProject instance (found under `/admin/settings/experimental`). Future versions might change this feature in a breaking
-> way, as we still look for user feedback on this feature.
-
-OpenProject can optionally synchronize groups of users when they log in. If you want to enable this, you have to enable the checkbox
-"Synchronize groups". OpenProject will expect a claim with an array of group names that the user is a member of. By default this claim
+OpenProject can optionally synchronize groups of users when they log in. If you want to enable this, you have to enable the checkbox "Synchronize groups". OpenProject will expect a claim with an array of group names that the user is a member of. By default this claim
 is expected to be named `groups`, but you can change this if desired.
 
-The default behaviour of OpenProject is to create a new group for each unknown group listed in this claim. It will match existing groups
-by their name before creating a new group. You can later rename groups created this way in the group management UI, they will still be linked
+The default behaviour of OpenProject is to create a new group for each unknown group listed in this claim. It will match existing groups by their name before creating a new group. You can later rename groups created this way in the group management UI, they will still be linked
 to the ID with which they are referenced in OpenID Connect claims and recognized that way.
+
+Once this option is enabled, the identity provider becomes fully responsible for managing group assignments. Each time a user logs in through this provider, only the group memberships declared by the identity provider will be assigned to that user. Any group memberships not declared by the identity provider will be removed.
+
+> [!IMPORTANT]
+> There are no exceptions — even if a different assignment was previously configured in OpenProject, it will be overwritten if it is not set in the identity provider.
 
 ##### Matching groups with regular expressions
 
@@ -450,6 +449,9 @@ OPENPROJECT_OPENID__CONNECT_KEYCLOAK_USERINFO__ENDPOINT="/realms/<REALM>/protoco
 # Optional: endpoint to redirect users for logout
 OPENPROJECT_OPENID__CONNECT_KEYCLOAK_END__SESSION__ENDPOINT="http://keycloak.example.com/realms/<REALM>/protocol/openid-connect/logout"
 
+# Optional: space separated list of grant types supported by the provider
+OPENPROJECT_OPENID__CONNECT_KEYCLOAK_GRANT__TYPES__SUPPORTED="authorization_code urn:ietf:params:oauth:grant-type:token-exchange"
+
 # Host name of Keycloak, required if endpoint information are not absolute URLs
 OPENPROJECT_OPENID__CONNECT_KEYCLOAK_HOST="<Hostname of the keycloak server>"
 
@@ -470,6 +472,12 @@ OPENPROJECT_OPENID__CONNECT_KEYCLOAK_ACR__VALUES="phr phrh Multi_Factor"
 
 # Optional: Claim mapping using JSON, see Step 7 above for more information on syntax
 OPENPROJECT_OPENID__CONNECT_KEYCLOAK_CLAIMS="{\"id_token\":{\"acr\":{\"essential\":true,\"values\":[\"phr\",\"phrh\",\"Multi_Factor\"]}}}"
+
+# Optional: Whether group synchronization should be enabled (default: false)
+OPENPROJECT_OPENID__CONNECT_KEYCLOAK_SYNC__GROUPS="true"
+
+# Optional: The name of the claim in the ID token that contains the group memberships
+OPENPROJECT_OPENID__CONNECT_KEYCLOAK_GROUPS__CLAIM="groups"
 ```
 
 

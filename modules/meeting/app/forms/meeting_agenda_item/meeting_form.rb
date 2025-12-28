@@ -38,32 +38,40 @@ class MeetingAgendaItem::MeetingForm < ApplicationForm
       label: I18n.t("label_meeting"),
       caption: I18n.t("label_meeting_selection_caption"),
       autocomplete_options: {
+        component: "opce-meeting-autocompleter",
+        hiddenFieldAction: "change->refresh-on-form-changes#triggerTurboStream",
+        items: meeting_options,
+        group_by: "group_label",
+        focus_directly: true,
+        defaultData: false,
+        bindLabel: "name",
+        bindValue: "id",
         multiple: false,
-        decorated: true,
-        append_to: append_to_container
+        append_to: append_to_container,
+        model: meeting_options.detect { |option| option[:id] == model.meeting_id },
+        inputValue: model.meeting_id,
+        virtualScroll: false
       }
-    ) do |select|
-      MeetingAgendaItems::CreateContract
-        .assignable_meetings(User.current)
-        .where("meetings.start_time + (interval '1 hour' * meetings.duration) >= ?", Time.zone.now)
-        .order("meetings.start_time")
-        .includes(:project)
-        .each do |meeting|
-          select.option(
-            label: "#{meeting.project.name}: " \
-                   "#{meeting.title} " \
-                   "#{format_date(meeting.start_time)} " \
-                   "#{format_time(meeting.start_time, include_date: false)}",
-            value: meeting.id
-          )
-        end
-    end
+    )
   end
 
   def initialize(disabled: false, wrapper_id: nil)
     super()
+
     @disabled = disabled
     @wrapper_id = wrapper_id
+  end
+
+  private
+
+  def meeting_options
+    meetings = MeetingAgendaItems::CreateContract
+      .assignable_meetings(User.current)
+      .where("meetings.start_time + (interval '1 hour' * meetings.duration) >= ?", Time.zone.now)
+      .order("meetings.start_time")
+      .includes(:project)
+
+    GroupMeetingsService.new(meetings, as_options: true).call.result
   end
 
   def append_to_container

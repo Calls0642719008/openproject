@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Project attribute help texts", :js do
+RSpec.describe "Project attribute help texts", :js, with_flag: { new_project_overview: true } do
   let!(:project) { create(:project) }
 
   let!(:name_help_text) do
@@ -73,23 +73,8 @@ RSpec.describe "Project attribute help texts", :js do
   end
 
   shared_examples "allows to view help texts" do |show_edit:|
-    it "shows help text links" do
-      visit project_path(project)
-
-      within "#menu-sidebar" do
-        click_link_or_button "Overview"
-      end
-
-      wait_for_network_idle
-      expect(page).to have_css("#{test_selector('op-widget-box--header')} .help-text--entry", wait: 10, count: 2)
-    end
-
     it "shows help text modal on clicking help text link" do
-      visit project_path(project)
-
-      within "#menu-sidebar" do
-        click_link_or_button "Overview"
-      end
+      visit dashboard_project_overview_path(project)
 
       wait_for_network_idle
       expect(page).to have_css("#{test_selector('op-widget-box--header')} .help-text--entry", wait: 10)
@@ -118,9 +103,13 @@ RSpec.describe "Project attribute help texts", :js do
 
     it_behaves_like "allows to view help texts", show_edit: true
 
-    it "shows the help text on the project create form", :selenium do
+    it "shows the help text on the project create form" do
       visit new_project_path
 
+      # Step 1: Select workspace type (blank project)
+      click_on "Continue"
+
+      # Step 2: Project details - Name field is visible here
       expect(page).to have_field "Name"
 
       within(:element, "label", text: "Name") do

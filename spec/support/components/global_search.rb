@@ -7,11 +7,11 @@ module Components
     include RSpec::Matchers
 
     def container
-      page.find(".top-menu-search--input")
+      page.find(selector)
     end
 
     def selector
-      ".top-menu-search--input"
+      ".global-search"
     end
 
     def input
@@ -19,7 +19,7 @@ module Components
     end
 
     def dropdown
-      container.find(".ng-dropdown-panel")
+      page.find(".ng-dropdown-panel")
     end
 
     def click_input

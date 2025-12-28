@@ -105,11 +105,48 @@ RSpec.describe Users::LogoutService, type: :model do
         expect(Sessions::UserSession.for_user(user).count).to eq(2)
       end
 
-      describe "autologin cookie" do
+      describe "autologin cookie", with_settings: { autologin: 7 } do
         let!(:token) { create(:autologin_token, user:) }
+
+        let!(:linked_sql_session1) do
+          create(:user_session,
+                 user:,
+                 data: { browser: "Firefox", browser_version: "142", platform: "macOS" })
+        end
+
+        let!(:linked_sql_session2) do
+          create(:user_session,
+                 user:,
+                 data: { browser: "Firefox", browser_version: "142", platform: "macOS" })
+        end
+
+        let!(:other_linked_sql_session) do
+          create(:user_session,
+                 user:,
+                 data: { browser: "Firefox", browser_version: "142", platform: "macOS" })
+        end
+
+        let!(:linked_session1) do
+          Sessions::UserSession.find_by(session_id: linked_sql_session1.session_id)
+        end
+
+        let!(:linked_session2) do
+          Sessions::UserSession.find_by(session_id: linked_sql_session2.session_id)
+        end
+
+        let!(:other_session) do
+          Sessions::UserSession.find_by(session_id: other_linked_sql_session.session_id)
+        end
+
         let!(:other_token) { create(:autologin_token, user:) }
 
-        it "removes the matching autologin cookie and token" do
+        before do
+          Sessions::AutologinSessionLink.create(token:, session: linked_session1)
+          Sessions::AutologinSessionLink.create(token:, session: linked_session2)
+          Sessions::AutologinSessionLink.create(token: other_token, session: other_session)
+        end
+
+        it "removes only the matching autologin cookie and token, with associated sessions" do
           cookies[OpenProject::Configuration.autologin_cookie_name] = token.plain_value
 
           subject
@@ -117,6 +154,12 @@ RSpec.describe Users::LogoutService, type: :model do
           expect(cookies[OpenProject::Configuration.autologin_cookie_name]).to be_nil
           expect { token.reload }.to raise_error(ActiveRecord::RecordNotFound)
           expect(Token::AutoLogin.where(user_id: user.id).all).to contain_exactly other_token
+
+          expect { linked_session1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { linked_session2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+          expect { other_token.reload }.not_to raise_error
+          expect { other_session.reload }.not_to raise_error
         end
       end
     end

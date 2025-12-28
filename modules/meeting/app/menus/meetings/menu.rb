@@ -107,15 +107,10 @@ module Meetings
     end
 
     def involvement_sidebar_menu_items
-      invitation_filter = [{ invited_user_id: { operator: "=", values: [User.current.id.to_s] } }].to_json
-
       [
-        menu_item(title: I18n.t(:label_invitations),
-                  query_params: { filters: invitation_filter, sort: "start_time" }),
-        menu_item(title: I18n.t(:label_attended),
-                  query_params: { filters: attendee_filter, upcoming: false }),
-        menu_item(title: I18n.t(:label_created_by_me),
-                  query_params: { filters: author_filter })
+        invitations_menu_item,
+        attended_menu_item,
+        created_by_me_menu_item
       ]
     end
 
@@ -158,6 +153,33 @@ module Meetings
       href_meeting_id = href.split("/").last.to_i
 
       current_recurring_meeting_id == href_meeting_id
+    end
+
+    private
+
+    def invitations_menu_item
+      invitation_filter = [{ invited_user_id: { operator: "=", values: [User.current.id.to_s] } }].to_json
+      menu_item(
+        title: I18n.t(:label_invitations),
+        query_params: { filters: invitation_filter, sort: "start_time" },
+        selected: params[:filters].to_s.include?("invited_user_id")
+      )
+    end
+
+    def attended_menu_item
+      menu_item(
+        title: I18n.t(:label_attended),
+        query_params: { filters: attendee_filter, upcoming: false },
+        selected: params[:filters].to_s.include?("attended_user_id")
+      )
+    end
+
+    def created_by_me_menu_item
+      menu_item(
+        title: I18n.t(:label_created_by_me),
+        query_params: { filters: author_filter },
+        selected: params[:filters].to_s.include?("author_id")
+      )
     end
   end
 end

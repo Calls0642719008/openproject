@@ -13,7 +13,7 @@ import { INotificationSetting } from 'core-app/features/user-preferences/state/n
 export class UserPreferencesQuery extends Query<IUserPreference> {
   notificationSettings$ = this.select('notifications');
 
-  notificationsGroupedByProject$:Observable<{ [key:string]:INotificationSetting[] }> = this
+  notificationsGroupedByProject$:Observable<Record<string, INotificationSetting[]>> = this
     .notificationSettings$
     .pipe(
       map((settings) => settings.filter((setting) => setting._links.project.href)),
@@ -38,7 +38,7 @@ export class UserPreferencesQuery extends Query<IUserPreference> {
     .pipe(
       map((settings) => settings.find((notification) => !notification._links.project.href)),
       filter((global) => !!global),
-    ) as Observable<INotificationSetting>;
+    );
 
   /** Selected projects */
   selectedProjects$ = this

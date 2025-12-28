@@ -39,47 +39,79 @@ RSpec.describe "Programs",
   end
   # Role granted to creator on program creation to be able to access the program.
   shared_let(:default_project_role) { create(:project_role) }
+  shared_let(:add_subproject_role) { create(:project_role, permissions: %i[add_subprojects]) }
+
+  let!(:root_portfolio) do
+    create(:portfolio, name: "Root portfolio", members: { user_with_permissions => add_subproject_role })
+  end
+  let!(:other_portfolio) do
+    create(:portfolio, name: "Other portfolio")
+  end
 
   let(:projects_page) { Pages::Projects::Index.new }
+  let(:parent_field) { FormFields::SelectFormField.new :parent }
 
   current_user { user_with_permissions }
 
-  it "can create a program", with_flag: { portfolio_models: true } do
-    projects_page.visit!
+  context "with enterprise feature enabled", with_ee: :portfolio_management do
+    it "can create a program", with_flag: { portfolio_models: true } do
+      projects_page.visit!
+      projects_page.create_new_workspace
 
-    projects_page.create_new_workspace
+      expect(page).to have_heading "New program"
 
-    expect(page).to have_heading "New program"
-    # This should be an
-    #   expect(page).to have_no_field "Subproject of"
-    # But this leads to a false negative. Even with the field being there, is the
-    # expectation passed.
-    expect(page).to have_no_content "Subproject of"
+      # Step 1: Select workspace type (blank program)
+      click_on "Continue"
 
-    fill_in "Name", with: "Foo bar"
-    click_on "Create"
+      # Step 2: Fill in project details
+      fill_in "Name", with: "Foo bar"
 
-    expect_and_dismiss_flash type: :success, message: "Successful creation."
+      expect(page).to have_combo_box "Subproject of"
+      parent_field.expect_no_option "Other portfolio"
+      parent_field.select_option "Root portfolio"
 
-    expect(page).to have_current_path /\/projects\/foo-bar\/?/
-    expect(page).to have_content "Foo bar"
-  end
+      click_on "Complete"
 
-  context "without the necessary permissions to create programs", with_flag: { portfolio_models: true } do
-    current_user { create(:user) }
+      expect_and_dismiss_flash type: :success, message: "Successful creation."
 
-    it "cannot create the program" do
-      visit new_program_path
+      expect(page).to have_current_path /\/projects\/foo-bar\/?/
+      expect(page).to have_content "Foo bar"
 
-      expect(page).to have_content "[Error 403] You are not authorized to access this page."
+      program = Project.last
+      expect(program.workspace_type).to eq "program"
+      expect(program.identifier).to eq "foo-bar"
+      expect(program.parent).to eq root_portfolio
+    end
+
+    context "without the necessary permissions to create programs", with_flag: { portfolio_models: true } do
+      current_user { create(:user) }
+
+      it "cannot create the program" do
+        visit new_program_path
+
+        expect(page).to have_content "[Error 403] You are not authorized to access this page."
+      end
+    end
+
+    context "without the feature flag being active", with_flag: { portfolio_models: false } do
+      it "cannot create the program" do
+        visit new_program_path
+
+        expect(page).to have_content "[Error 403] You are not authorized to access this page."
+      end
     end
   end
 
-  context "without the feature flag being active", with_flag: { portfolio_models: false } do
-    it "cannot create the program" do
-      visit new_program_path
+  context "without enterprise feature enabled", with_ee: [] do
+    it "shows enterprise banner instead of the form", with_flag: { portfolio_models: true } do
+      projects_page.visit!
+      projects_page.create_new_workspace
 
-      expect(page).to have_content "[Error 403] You are not authorized to access this page."
+      expect(page).to have_heading "New program"
+
+      expect(page).to have_no_button "Continue"
+
+      expect(page).to have_enterprise_banner(:premium, class: "op-enterprise-banner_large")
     end
   end
 end

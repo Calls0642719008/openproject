@@ -1,39 +1,43 @@
-<ng-container *ngIf="!active">
-  <a *ngIf="parent"
-    [attr.title]="parent.name"
-    uiSref="work-packages.show"
-    [uiParams]="{ workPackageId: parent.id }"
-    class="op-wp-breadcrumb-parent nocut"
-    data-test-selector="op-wp-breadcrumb-parent">
-    <span [textContent]="parent.name"></span>
-  </a>
-  <button
-      *ngIf="canModifyParent()"
+@if (!active) {
+  @if (parent) {
+    <a
+      [attr.title]="parent.name"
+      (click)="switchToFullscreenForWp(parent)"
+      class="op-wp-breadcrumb-parent nocut"
+      data-test-selector="op-wp-breadcrumb-parent">
+      <span [textContent]="parent.name"></span>
+    </a>
+  }
+  @if (canModifyParent()) {
+    <button
       type="button"
       class="spot-link wp-relation--parent-change -no-decoration hide-when-print"
       [title]="parent ? text.edit_parent : text.set_parent"
       (click)="open()"
-  >
-    <span *ngIf="!parent" [textContent]="text.set_parent"></span>
-    <op-icon icon-classes="icon-small {{ parent ? 'icon-edit icon5 icon-no-color' : 'icon-add icon4' }}"></op-icon>
-  </button>
-  <button
-      *ngIf="canModifyParent() && parent"
+      >
+      @if (!parent) {
+        <span [textContent]="text.set_parent"></span>
+      }
+      <op-icon icon-classes="icon-small {{ parent ? 'icon-edit icon5 icon-no-color' : 'icon-add icon4' }}" />
+    </button>
+  }
+  @if (canModifyParent() && parent) {
+    <button
       type="button"
       class="spot-link wp-relation--parent-remove hide-when-print -no-decoration"
       [title]="text.remove_parent"
       (click)="updateParent(null)"
-  >
-    <op-icon icon-classes="icon-small icon-no-color icon-remove icon4"></op-icon>
-  </button>
-</ng-container>
+      >
+      <op-icon icon-classes="icon-small icon-no-color icon-remove icon4" />
+    </button>
+  }
+}
 
-<wp-relations-autocomplete
-  *ngIf="active"
-  [placeholder]="text.set_or_remove_parent"
-  [workPackage]="workPackage"
-  (cancel)="close()"
-  (change)="updateParent($event)"
-  data-test-selector="wp-relations-autocomplete"
-  filterCandidatesFor="parent">
-</wp-relations-autocomplete>
+@if (active) {
+  <wp-relations-autocomplete [placeholder]="text.set_or_remove_parent"
+    [workPackage]="workPackage"
+    (cancel)="close()"
+    (change)="updateParent($event)"
+    data-test-selector="wp-relations-autocomplete"
+    filterCandidatesFor="parent" />
+}

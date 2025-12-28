@@ -29,7 +29,7 @@
 
 module MeetingAgendaItems
   class BaseContract < ::ModelContract
-    include ModifiableItem
+    include EditableItem
 
     def self.model
       MeetingAgendaItem

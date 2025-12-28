@@ -31,6 +31,7 @@ module API
     module News
       class NewsRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Decorators::DateProperty
         include API::Decorators::FormattableProperty
         include API::Caching::CachedRepresenter
@@ -51,13 +52,7 @@ module API
         date_time_property :created_at
         date_time_property :updated_at
 
-        associated_resource :project,
-                            link: ->(*) do
-                              {
-                                href: api_v3_paths.project(represented.project.id),
-                                title: represented.project.name
-                              }
-                            end
+        associated_project
 
         associated_resource :author,
                             v3_path: :user,

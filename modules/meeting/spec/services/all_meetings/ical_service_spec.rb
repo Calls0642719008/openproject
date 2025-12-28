@@ -29,8 +29,9 @@
 #++
 
 require "spec_helper"
+require "icalendar"
 
-RSpec.describe AllMeetings::ICalService, type: :model do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe AllMeetings::ICalService, type: :model do
   let(:user) do
     create(:user,
            firstname: "Bob",
@@ -67,6 +68,10 @@ RSpec.describe AllMeetings::ICalService, type: :model do # rubocop:disable RSpec
         expect(subject.message).to eq("Oh noes")
       end
     end
+  end
+
+  it "sets the correct title" do
+    expect(ical.x_wr_calname.first).to eq("#{Setting.app_title} - #{I18n.t('label_my_meetings')}")
   end
 
   context "with only single meetings" do
@@ -129,12 +134,12 @@ RSpec.describe AllMeetings::ICalService, type: :model do # rubocop:disable RSpec
         entry = ical.events.first
 
         expect(entry.uid).to eq(meeting.uid)
-        expect(entry.organizer.to_s).to eq("mailto:#{Setting.mail_from}")
+        expect(entry.organizer.to_s).to eq("mailto:#{ApplicationMailer.reply_to_address}")
         expect(entry.attendee.map(&:to_s)).to match_array([user, user2].map { |u| "mailto:#{u.mail}" })
         expect(entry.dtstart.utc).to eq meeting.start_time
         expect(entry.dtend.utc).to eq meeting.start_time + 1.hour
-        expect(entry.summary).to eq "[My Project] Important meeting"
-        expect(entry.description).to eq "[My Project] Meeting: Important meeting"
+        expect(entry.summary).to eq "Important meeting"
+        expect(entry.description).to eq "Link to meeting: http://#{Setting.host_name}/meetings/#{meeting.id}"
         expect(entry.location).to eq(meeting.location.presence)
         expect(entry.dtstart).to eq (relevant_time + 1.week).in_time_zone("Europe/Berlin")
         expect(entry.dtend).to eq (relevant_time + 1.week + 1.hour).in_time_zone("Europe/Berlin")
@@ -181,10 +186,10 @@ RSpec.describe AllMeetings::ICalService, type: :model do # rubocop:disable RSpec
         entry = ical.events.first
 
         expect(entry.uid).to eq(recurring_meeting.uid)
-        expect(entry.organizer.to_s).to eq("mailto:#{Setting.mail_from}")
+        expect(entry.organizer.to_s).to eq("mailto:#{ApplicationMailer.reply_to_address}")
         expect(entry.attendee.map(&:to_s)).to match_array([user, user2].map { |u| "mailto:#{u.mail}" })
-        expect(entry.summary).to eq "[My Project] Recurring meeting"
-        expect(entry.description).to eq "[My Project] Meeting series: Recurring meeting"
+        expect(entry.summary).to eq "Recurring meeting"
+        expect(entry.description).to eq "Link to meeting series: http://#{Setting.host_name}/recurring_meetings/#{recurring_meeting.id}"
         expect(entry.location).to eq(recurring_meeting.template.location.presence)
 
         expect(entry.exdate).to be_empty
@@ -223,10 +228,15 @@ RSpec.describe AllMeetings::ICalService, type: :model do # rubocop:disable RSpec
 
         expect(entry.uid).to eq(recurring_meeting.uid)
         expect(entry.recurrence_id).to eq(meeting.scheduled_meeting.start_time)
-        expect(entry.organizer.to_s).to eq("mailto:#{Setting.mail_from}")
+        expect(entry.organizer.to_s).to eq("mailto:#{ApplicationMailer.reply_to_address}")
         expect(entry.attendee).to be_empty
-        expect(entry.summary).to eq "[My Project] Recurring meeting"
-        expect(entry.description).to eq "[My Project] Meeting series: Recurring meeting"
+        expect(entry.summary).to eq "Recurring meeting"
+        description = <<~STR.strip
+          Link to meeting occurrence: http://#{Setting.host_name}/meetings/#{meeting.id}
+          Link to meeting series: http://#{Setting.host_name}/recurring_meetings/#{recurring_meeting.id}
+        STR
+
+        expect(entry.description.to_s).to eq description
         expect(entry.location).to eq(recurring_meeting.template.location.presence)
         expect(entry.sequence).to eq(meeting.lock_version)
         expect(entry.status).to eq "CONFIRMED"

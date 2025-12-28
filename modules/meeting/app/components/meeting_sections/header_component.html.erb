@@ -26,16 +26,16 @@
           if editable?
             render(Primer::Alpha::ActionMenu.new(data: { test_selector: "meeting-section-action-menu" })) do |menu|
               menu.with_show_button(icon: "kebab-horizontal", "aria-label": t("settings.project_attributes.label_section_actions"), scheme: :invisible)
-              edit_action_item(menu)
-              menu.with_divider
-              add_agenda_item_action(menu)
-              add_work_package_action(menu)
-              unless first? && last?
-                menu.with_divider
-                move_actions(menu)
+
+              with_item_group(menu) { edit_action_item(menu) }
+
+              with_item_group(menu) do
+                add_agenda_item_action(menu)
+                add_work_package_action(menu)
               end
-              menu.with_divider
-              delete_action_item(menu)
+
+              with_item_group(menu) { move_actions(menu) } unless first? && last?
+              with_item_group(menu) { delete_action_item(menu) }
             end
           end
         end
@@ -63,9 +63,12 @@
             render(
               Primer::Beta::Button.new(
                 scheme: :secondary,
-                tag: :a,
-                href: cancel_edit_meeting_section_path(@meeting_section.meeting, @meeting_section),
-                data: { "turbo-stream": true }
+                tag: :button,
+                data: {
+                  action: "click->meetings--submit#intercept",
+                  href: cancel_edit_meeting_section_path(@meeting_section.meeting, @meeting_section),
+                  method: "POST"
+                }
               )
             ) do |_c|
               t("button_cancel")

@@ -43,13 +43,6 @@ ro:
           name: PM2 Magenta
         item_3:
           name: PM2 Verde Galben
-      document_categories:
-        item_0:
-          name: Documentație
-        item_1:
-          name: Specificație
-        item_2:
-          name: Altele
       project_query_roles:
         item_0:
           name: Project query viewer

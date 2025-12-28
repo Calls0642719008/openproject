@@ -8,11 +8,11 @@
     "main.ts",
     "polyfills.ts",
     "app/core/setup/init-globals.ts",
-    "app/core/setup/init-vendors.ts",
+    "app/core/setup/init-vendors.ts"
   ],
   "include": [
     "src/**/*.ts",
-    "src/**/*.d.ts",
+    "src/**/*.d.ts"
   ],
   "exclude": [
     "stimulus/**/*.ts"

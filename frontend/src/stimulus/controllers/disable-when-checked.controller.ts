@@ -24,9 +24,27 @@ export default class OpDisableWhenCheckedController extends ApplicationControlle
   }
 
   private toggleDisabled(evt:InputEvent):void {
-    const checked = (evt.target as HTMLInputElement).checked;
-    this.effectTargets.forEach((el) => {
+    const input = evt.target as HTMLInputElement;
+    const checked = input.checked;
+    const targetName = input.dataset.targetName;
+
+    const affectedTargets = targetName
+      ? this.effectTargets.filter((el) => targetName === el.dataset.targetName)
+      : this.effectTargets;
+
+    affectedTargets.forEach((el) => {
       el.disabled = (this.hasReversedValue && this.reversedValue) ? !checked : checked;
     });
+
+    // specific handling for select options
+    affectedTargets
+      .filter((el) => el instanceof HTMLOptGroupElement || el instanceof HTMLOptionElement)
+      .map((option) => option.closest('select')!)
+      .filter((select, index, self) => self.indexOf(select) === index) // unique
+      .forEach((select) => {
+        if (select.options[select.selectedIndex]?.disabled) {
+          select.value = '';
+        }
+      });
   }
 }

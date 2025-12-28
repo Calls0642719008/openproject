@@ -42,28 +42,34 @@ require_relative "../../lib_static/open_project/feature_decisions"
 #   end
 
 OpenProject::FeatureDecisions.add :built_in_oauth_applications,
-                                  description: "Allows the display and use of built-in OAuth applications."
-
-OpenProject::FeatureDecisions.add :calculated_value_project_attribute,
-                                  description: "Allows the use of calculated values as a project attribute."
-
-OpenProject::FeatureDecisions.add :oidc_group_sync,
-                                  description: "Allows to synchronize groups from OpenID Connect providers"
-
-OpenProject::FeatureDecisions.add :scim_api,
-                                  description: "Enables SCIM API.",
+                                  description: "Allows the display and use of built-in OAuth applications.",
                                   force_active: true
 
-OpenProject::FeatureDecisions.add :block_note_editor,
-                                  description: "Enables the block note editor for rich text fields where available."
+OpenProject::FeatureDecisions.add :calculated_value_project_attribute,
+                                  description: "Allows the use of calculated values as a project attribute.",
+                                  force_active: true
+
+OpenProject::FeatureDecisions.add :beta_widgets,
+                                  description: "Enables BETA versions of widgets."
 
 OpenProject::FeatureDecisions.add :minutes_styling_meeting_pdf,
                                   description: "Allow exporting a meeting with FITKO styling. " \
                                                "See #65124 for details."
 
-OpenProject::FeatureDecisions.add :scored_list_custom_fields,
-                                  description: "Enables the use of the custom field type 'Scored List', which lets " \
-                                               "the admin add scores to list items."
-
 OpenProject::FeatureDecisions.add :portfolio_models,
-                                  description: "Enables the creation and management of portfolio and program work spaces."
+                                  description: "Enables the creation and management of portfolio and program work spaces.",
+                                  force_active: true
+
+OpenProject::FeatureDecisions.add :new_project_overview,
+                                  description: "Enables the new project overview experience.",
+                                  force_active: true
+
+OpenProject::FeatureDecisions.add :wp_activity_tab_lazy_pagination,
+                                  description: "Enables lazy pagination for the activity tab."
+
+OpenProject::FeatureDecisions.add :project_initiation,
+                                  description: "Activate the project creation and initiation wizard"
+
+OpenProject::FeatureDecisions.add :meetings_presentation_mode,
+                                  description: "Enables presentation mode for meetings.",
+                                  force_active: true

@@ -80,25 +80,28 @@ module Meetings::PDF::Common::Agenda
     end
   end
 
-  def write_outcome(agenda_item)
-    return unless agenda_item.outcomes.exists?
-
-    outcome = agenda_item.outcomes.information_kind.last
-    return if outcome.notes.blank?
-
-    pdf.indent(styles.outcome_indent) do
-      write_optional_page_break
-      write_outcome_title
-      write_outcome_notes(outcome.notes)
+  def write_outcomes(agenda_item)
+    outcomes = agenda_item
+                 .outcomes
+                 .all
+                 .reject { |outcome| outcome.notes.blank? }
+    outcomes.each_with_index do |outcome, index|
+      pdf.indent(styles.outcome_indent) do
+        write_optional_page_break
+        write_outcome_title(index, outcomes.size > 1)
+        write_outcome_notes(outcome.notes)
+      end
     end
   end
 
-  def write_outcome_title
+  def write_outcome_title(index, multiple_outcomes)
+    text = I18n.t("label_agenda_outcome")
+    text = "#{text} #{index + 1}" if multiple_outcomes
     with_vertical_margin(styles.outcome_title_margins) do
       style = styles.outcome_title
       pdf.formatted_text([
                            styles.outcome_symbol.merge({ text: "✓ " }),
-                           style.merge({ text: I18n.t("label_agenda_outcome") })
+                           style.merge({ text: })
                          ], style)
     end
   end

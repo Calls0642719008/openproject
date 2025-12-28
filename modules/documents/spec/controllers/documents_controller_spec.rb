@@ -38,12 +38,12 @@ RSpec.describe DocumentsController do
   let(:user) { create(:user) }
   let(:role) { create(:project_role, permissions: [:view_documents]) }
 
-  let(:default_category) do
-    create(:document_category, project:, name: "Default Category")
+  let(:document_type) do
+    create(:document_type, name: "Default Type")
   end
 
   let!(:document) do
-    create(:document, title: "Sample Document", project:, category: default_category)
+    create(:document, title: "Sample Document", project:, type: document_type)
   end
 
   current_user { admin }
@@ -56,11 +56,6 @@ RSpec.describe DocumentsController do
     it "renders the index-template successfully" do
       expect(response).to be_successful
       expect(response).to render_template("index")
-    end
-
-    it "group documents by category, if no other sorting is given" do
-      expect(assigns(:grouped)).not_to be_nil
-      expect(assigns(:grouped).keys.map(&:name)).to eql [default_category.name]
     end
   end
 
@@ -75,12 +70,38 @@ RSpec.describe DocumentsController do
     end
   end
 
+  describe "edit" do
+    context "with a classic document" do
+      before do
+        document.update(kind: :classic)
+        get :edit, params: { id: document.id }
+      end
+
+      it "renders the edit-template successfully" do
+        expect(response).to be_successful
+        expect(response).to render_template("edit")
+      end
+    end
+
+    context "with a collaborative document" do
+      before do
+        document.update(kind: :collaborative)
+        get :edit, params: { id: document.id }
+      end
+
+      it "responds with a bad request" do
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+  end
+
   describe "create" do
     let(:document_attributes) do
       attributes_for(:document,
                      title: "New Document",
                      project_id: project.id,
-                     category_id: default_category.id)
+                     type_id: document_type.id,
+                     kind: "classic")
     end
 
     before do
@@ -92,14 +113,10 @@ RSpec.describe DocumentsController do
         post :create,
              params: {
                project_id: project.identifier,
-               document: attributes_for(
-                 :document,
-                 title: "New Document",
-                 project_id: project.id,
-                 category_id: default_category.id
-               )
+               document: document_attributes
              }
-      end.to change(Document, :count).by 1
+      end.to change(Document, :count).by(1)
+      expect(Document.last.attributes).to include(document_attributes.stringify_keys)
     end
 
     it "does trigger a workflow job for the document" do
@@ -121,7 +138,8 @@ RSpec.describe DocumentsController do
                document: attributes_for(:document,
                                         title: "New Document",
                                         project_id: notify_project.id,
-                                        category_id: default_category.id),
+                                        type_id: document_type.id,
+                                        kind: "classic"),
                attachments: { "1" => { id: uncontainered.id } }
              }
       end
@@ -142,7 +160,7 @@ RSpec.describe DocumentsController do
 
   describe "show" do
     before do
-      document
+      document.update(kind: :classic)
       get :show, params: { id: document.id }
     end
 
@@ -157,13 +175,47 @@ RSpec.describe DocumentsController do
       document
     end
 
-    it "deletes the document and redirect back to documents-page of the project" do
+    it "deletes the document and redirects with 303 See Other" do
       expect do
         delete :destroy, params: { id: document.id }
       end.to change(Document, :count).by -1
 
-      expect(response).to redirect_to "/projects/#{project.identifier}/documents"
+      expect(response).to have_http_status(:see_other)
+      expect(response).to redirect_to project_documents_path(project)
       expect { Document.find(document.id) }.to raise_error ActiveRecord::RecordNotFound
+    end
+  end
+
+  describe "generate_oauth_token",
+           with_config: { collaborative_editing_hocuspocus_secret: "secret1234" } do
+    let(:manage_role) { create(:project_role, permissions: %i[view_documents manage_documents]) }
+    let(:view_only_role) { create(:project_role, permissions: [:view_documents]) }
+    let(:user_with_manage) { create(:user) }
+    let(:user_without_manage) { create(:user) }
+
+    before do
+      create(:member, project:, user: user_with_manage, roles: [manage_role])
+      create(:member, project:, user: user_without_manage, roles: [view_only_role])
+
+      document.update(kind: :collaborative)
+    end
+
+    context "when user has manage_documents permission" do
+      current_user { user_with_manage }
+
+      it "generates an OAuth token for show action" do
+        get :show, params: { id: document.id }
+        expect(assigns(:oauth_token)).to be_present
+      end
+    end
+
+    context "when user does not have manage_documents permission" do
+      current_user { user_without_manage }
+
+      it "generates an OAuth token for show action" do
+        get :show, params: { id: document.id }
+        expect(assigns(:oauth_token)).to be_present
+      end
     end
   end
 

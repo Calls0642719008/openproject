@@ -48,7 +48,12 @@ module Pages
 
         def click_copy_action
           page.find_test_selector("project-settings-more-menu").click
-          page.find_test_selector("project-settings--copy").click
+          page.find(:menuitem, "Copy").click # TODO: scope to More menu
+        end
+
+        def click_delete_action
+          page.find_test_selector("project-settings-more-menu").click
+          page.find(:menuitem, "Delete").click # TODO: scope to More menu
         end
 
         def expect_field_label_with_help_text(label_text)
@@ -72,6 +77,12 @@ module Pages
 
         def find_field_label(label_text)
           page.find(:element, :label, text: label_text)
+        end
+
+        def parent_project_field
+          @parent_project_field ||= within_section "Project relations" do
+            ProjectEditField.new(page, :parent, selector: "opce-project-autocompleter")
+          end
         end
       end
     end

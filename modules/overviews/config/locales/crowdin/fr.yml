@@ -1,4 +1,6 @@
 fr:
   overviews:
-    label: 'Vue globale'
+    label_home: "Accueil %{workspace_type}"
+    label_dashboard: "Tableau de bord"
+    label_overview: 'Vue d''ensemble'
   permission_manage_overview: 'Gérer la page d''aperçu'

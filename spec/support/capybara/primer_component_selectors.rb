@@ -64,13 +64,16 @@ Capybara.add_selector :primer_label, locator_type: [String, Symbol] do
   describe_expression_filters do |scheme: nil, **|
     " with scheme #{scheme.inspect}" if scheme
   end
+
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 Capybara.add_selector :primer_text, locator_type: [String] do
   label "Primer Text"
 
-  xpath do |locator, **|
+  xpath do |locator, **options|
     xpath = XPath.descendant(:span)
+    xpath = xpath[XPath.attr(:class).contains_word(options[:class])] if options[:class]
     unless locator.nil?
       locator = locator.to_s
       xpath = xpath[XPath.string.n.is(locator)]
@@ -84,7 +87,10 @@ Capybara.add_selector :primer_text, locator_type: [String] do
   # `node_filter` applies the filter on the elements returned by the query so
   # that error message can list them if none matches.
   node_filter :color do |node, color|
-    actual = node[:class].scan(/(?<=color-fg-)[\w-]+/)
+    class_attr = node[:class]
+    next false unless class_attr
+
+    actual = class_attr.scan(/(?<=color-fg-)[\w-]+/)
     color = color.to_s
 
     actual.include?(color).tap do |res|
@@ -96,16 +102,17 @@ Capybara.add_selector :primer_text, locator_type: [String] do
   describe_expression_filters do |color: nil, **|
     " with color #{color.inspect}" if color
   end
+
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 Capybara.add_selector :octicon, locator_type: [String, Symbol] do
   label "Octicon"
 
-  xpath do |locator|
-    xpath = XPath.descendant(:svg)
-    xpath = builder(xpath).add_attribute_conditions(class: "octicon")
-    xpath = builder(xpath).add_attribute_conditions(class: "octicon-#{locator.to_s.downcase}") if locator
-    xpath
+  css do |locator|
+    css_selector = "svg.octicon"
+    css_selector += ".octicon-#{locator.to_s.downcase}" if locator
+    css_selector
   end
 
   expression_filter(:size, valid_values: [Numeric, *Primer::Beta::Octicon::SIZE_OPTIONS]) do |expr, size|
@@ -115,11 +122,11 @@ Capybara.add_selector :octicon, locator_type: [String, Symbol] do
 
   describe_expression_filters do |size: nil, **|
     desc = +""
-    if size.present?
-      desc << size.is_a?(Numeric) ? " with size #{size}px" : " with #{size} size"
-    end
+    desc << (size.is_a?(Numeric) ? " with size #{size}px" : " with #{size.inspect} size") if size.present?
     desc
   end
+
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 module Capybara

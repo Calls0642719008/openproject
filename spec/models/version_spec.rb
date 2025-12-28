@@ -490,8 +490,9 @@ RSpec.describe Version do
   end
 
   it_behaves_like "acts_as_customizable included" do
-    let(:model_instance) { version }
-    let(:custom_field) { create(:version_custom_field) }
+    let!(:model_instance) { create(:version) }
+    let!(:new_model_instance) { version }
+    let!(:custom_field) { create(:version_custom_field) }
   end
 
   describe ".visible scope" do

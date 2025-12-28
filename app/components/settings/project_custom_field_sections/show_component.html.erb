@@ -13,7 +13,42 @@
               end
             end
           end
+
           section_header_container.with_column(flex_layout: true, justify_content: :flex_end) do |actions_container|
+            if OpenProject::FeatureDecisions.new_project_overview_active?
+              actions_container.with_column do
+                render(Primer::Alpha::ActionMenu.new(select_variant: :single, size: :small, test_selector: "section-position-selector")) do |menu|
+                  menu.with_show_button(
+                    mr: 2,
+                    aria: { label: t("settings.project_attributes.sections.display_representation.overview.label") }
+                  ) do |button|
+                    button.with_trailing_visual_icon(icon: :"triangle-down")
+                    button.with_leading_visual_icon(icon: display_representation_icon_for_section(@project_custom_field_section))
+                    display_representation_label_for_section(@project_custom_field_section)
+                  end
+
+                  menu.with_item(
+                    label: t("settings.project_attributes.sections.display_representation.overview.side_panel.label"),
+                    active: @project_custom_field_section.shown_in_overview_sidebar?,
+                    test_selector: "section-position-selector--side-panel-option",
+                    **menu_item_options_for(@project_custom_field_section, ProjectCustomFieldSection::OVERVIEW__SIDEBAR_KEY)
+                  ) do |item|
+                    item.with_leading_visual_icon(icon: :"op-view-split")
+                    item.with_description.with_content(t("settings.project_attributes.sections.display_representation.overview.side_panel.description"))
+                  end
+                  menu.with_item(
+                    label: t("settings.project_attributes.sections.display_representation.overview.main_area.label"),
+                    active: @project_custom_field_section.shown_in_overview_main_area?,
+                    test_selector: "section-position-selector--main-section-option",
+                    **menu_item_options_for(@project_custom_field_section, ProjectCustomFieldSection::OVERVIEW__MAIN_AREA_KEY)
+                  ) do |item|
+                    item.with_leading_visual_icon(icon: :"op-view-cards")
+                    item.with_description.with_content(t("settings.project_attributes.sections.display_representation.overview.main_area.description"))
+                  end
+                end
+              end
+            end
+
             actions_container.with_column do
               render(Primer::Alpha::ActionMenu.new(data: { test_selector: "project-custom-field-section-action-menu" })) do |menu|
                 menu.with_show_button(icon: "kebab-horizontal", "aria-label": t("settings.project_attributes.label_section_actions"), scheme: :invisible)
@@ -26,6 +61,7 @@
                 end
               end
             end
+
             actions_container.with_column do
               render(
                 Primer::Alpha::Dialog.new(
@@ -73,7 +109,7 @@
             data: draggable_item_config(project_custom_field)
           ) do
             render(
-              ::Settings::ProjectCustomFieldSections::CustomFieldRowComponent.new(
+              custom_field_row_component_class.new(
                 project_custom_field:,
                 first_and_last:
               )

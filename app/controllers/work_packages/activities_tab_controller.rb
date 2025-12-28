@@ -31,23 +31,50 @@
 class WorkPackages::ActivitiesTabController < ApplicationController
   include OpTurbo::ComponentStream
   include FlashMessagesOutputSafetyHelper
+  include WorkPackages::ActivitiesTab::JournalSortingInquirable
+  include WorkPackages::ActivitiesTab::StimulusControllers
 
   before_action :find_work_package
   before_action :find_project
-  before_action :find_journal, only: %i[edit cancel_edit update toggle_reaction]
+  before_action :find_journal, only: %i[emoji_actions item_actions edit cancel_edit update toggle_reaction]
   before_action :set_filter
   before_action :authorize
+  before_action :initialize_pagination, only: %i[page_streams]
 
   def index
-    render(
-      WorkPackages::ActivitiesTab::IndexComponent.new(
-        work_package: @work_package,
-        filter: @filter,
-        last_server_timestamp: get_current_server_timestamp,
-        deferred: ActiveRecord::Type::Boolean.new.cast(params[:deferred])
-      ),
-      layout: false
+    index_component =
+      if OpenProject::FeatureDecisions.wp_activity_tab_lazy_pagination_active?
+        initialize_pagination
+        WorkPackages::ActivitiesTab::LazyIndexComponent.new(
+          work_package: @work_package,
+          journals: @paginated_journals,
+          paginator: @paginator,
+          filter: @filter,
+          last_server_timestamp: get_current_server_timestamp
+        )
+      else
+        WorkPackages::ActivitiesTab::IndexComponent.new(
+          work_package: @work_package,
+          filter: @filter,
+          last_server_timestamp: get_current_server_timestamp,
+          deferred: ActiveRecord::Type::Boolean.new.cast(params[:deferred])
+        )
+      end
+
+    render(index_component, layout: false)
+  end
+
+  def page_streams
+    replace_via_turbo_stream(
+      component: WorkPackages::ActivitiesTab::Journals::PageComponent.new(
+        journals: @paginated_journals,
+        emoji_reactions: wp_journals_emoji_reactions,
+        page: @paginator.page,
+        filter: @filter
+      )
     )
+
+    respond_with_turbo_streams
   end
 
   def update_streams
@@ -84,6 +111,17 @@ class WorkPackages::ActivitiesTabController < ApplicationController
     end
 
     respond_with_turbo_streams
+  end
+
+  def emoji_actions
+    render WorkPackages::ActivitiesTab::Journals::ItemComponent::AddReactions
+            .new(journal: @journal, grouped_emoji_reactions: grouped_emoji_reactions_for_journal),
+           layout: false
+  end
+
+  def item_actions
+    render WorkPackages::ActivitiesTab::Journals::ItemComponent::Actions.new(@journal),
+           layout: false
   end
 
   def edit
@@ -173,6 +211,11 @@ class WorkPackages::ActivitiesTabController < ApplicationController
 
   private
 
+  def initialize_pagination
+    @paginator, @paginated_journals = WorkPackages::ActivitiesTab::Paginator
+      .paginate(@work_package, params.merge(filter: @filter, limit: 20))
+  end
+
   def respond_with_error(error_message)
     respond_to do |format|
       # turbo_frame requests (tab is initially rendered and an error occured) are handled below
@@ -215,10 +258,6 @@ class WorkPackages::ActivitiesTabController < ApplicationController
 
   def set_filter
     @filter = (params[:filter] || params.dig(:journal, :filter))&.to_sym || :all
-  end
-
-  def journal_sorting
-    User.current.preference&.comments_sorting || OpenProject::Configuration.default_comment_sort_order
   end
 
   def sanitized_journal_notes
@@ -284,22 +323,37 @@ class WorkPackages::ActivitiesTabController < ApplicationController
   end
 
   def replace_whole_tab
-    replace_via_turbo_stream(
-      component: WorkPackages::ActivitiesTab::IndexComponent.new(
-        work_package: @work_package,
-        filter: @filter,
-        last_server_timestamp: get_current_server_timestamp
-      )
-    )
+    component =
+      if OpenProject::FeatureDecisions.wp_activity_tab_lazy_pagination_active?
+        initialize_pagination # re-initialize pagination to pick up changes to sorting/filtering
+        WorkPackages::ActivitiesTab::LazyIndexComponent.new(
+          work_package: @work_package,
+          journals: @paginated_journals,
+          paginator: @paginator,
+          filter: @filter,
+          last_server_timestamp: get_current_server_timestamp
+        )
+      else
+        WorkPackages::ActivitiesTab::IndexComponent.new(
+          work_package: @work_package,
+          filter: @filter,
+          last_server_timestamp: get_current_server_timestamp
+        )
+      end
+    replace_via_turbo_stream(component:)
   end
 
   def update_index_component
-    update_via_turbo_stream(
-      component: WorkPackages::ActivitiesTab::Journals::IndexComponent.new(
-        work_package: @work_package,
-        filter: @filter
-      )
-    )
+    component =
+      if OpenProject::FeatureDecisions.wp_activity_tab_lazy_pagination_active?
+        initialize_pagination # re-initialize pagination to pick up changes to sorting/filtering
+        WorkPackages::ActivitiesTab::Journals::LazyIndexComponent
+        .new(work_package: @work_package, journals: @paginated_journals, paginator: @paginator, filter: @filter)
+      else
+        WorkPackages::ActivitiesTab::Journals::IndexComponent
+          .new(work_package: @work_package, filter: @filter)
+      end
+    update_via_turbo_stream(component:)
   end
 
   def create_journal_service_call
@@ -339,7 +393,7 @@ class WorkPackages::ActivitiesTabController < ApplicationController
 
     rerender_updated_journals(journals, last_update_timestamp, grouped_emoji_reactions, editing_journals)
     rerender_journals_with_updated_notification(journals, last_update_timestamp, grouped_emoji_reactions, editing_journals)
-    append_or_prepend_journals(journals, last_update_timestamp, grouped_emoji_reactions)
+    insert_latest_journals_via_turbo_stream(journals, last_update_timestamp, grouped_emoji_reactions)
 
     if journals.present?
       remove_potential_empty_state
@@ -348,13 +402,11 @@ class WorkPackages::ActivitiesTabController < ApplicationController
   end
 
   def generate_work_package_journals_emoji_reactions_update_streams
-    wp_journal_emoji_reactions =
-      EmojiReactions::GroupedQueries.grouped_work_package_journals_emoji_reactions_by_reactable(@work_package)
     @work_package.journals.each do |journal|
       update_via_turbo_stream(
         component: WorkPackages::ActivitiesTab::Journals::ItemComponent::Reactions.new(
           journal:,
-          grouped_emoji_reactions: wp_journal_emoji_reactions[journal.id] || {}
+          grouped_emoji_reactions: wp_journals_emoji_reactions[journal.id] || {}
         )
       )
     end
@@ -404,32 +456,30 @@ class WorkPackages::ActivitiesTabController < ApplicationController
     end
   end
 
-  def append_or_prepend_journals(journals, last_update_timestamp, grouped_emoji_reactions)
+  def insert_latest_journals_via_turbo_stream(journals, last_update_timestamp, emoji_reactions)
+    target_component =
+      if OpenProject::FeatureDecisions.wp_activity_tab_lazy_pagination_active?
+        WorkPackages::ActivitiesTab::Journals::LazyIndexComponent.new(
+          work_package: @work_package,
+          journals: Journal.none, # we do not need to pass any journals here since we just want the component key
+          paginator: nil,
+          filter: @filter
+        )
+      else
+        WorkPackages::ActivitiesTab::Journals::IndexComponent.new(
+          work_package: @work_package,
+          filter: @filter
+        )
+      end
+
     journals.where("created_at > ?", last_update_timestamp).find_each do |journal|
-      append_or_prepend_latest_journal_via_turbo_stream(journal, grouped_emoji_reactions.fetch(journal.id, {}))
-    end
-  end
-
-  def append_or_prepend_latest_journal_via_turbo_stream(journal, grouped_emoji_reactions)
-    target_component = WorkPackages::ActivitiesTab::Journals::IndexComponent.new(
-      work_package: @work_package,
-      filter: @filter
-    )
-
-    component = WorkPackages::ActivitiesTab::Journals::ItemComponent.new(
-      journal:, filter: @filter, grouped_emoji_reactions:
-    )
-
-    stream_config = {
-      target_component:,
-      component:
-    }
-
-    # Append or prepend the new journal depending on the sorting
-    if journal_sorting == "asc"
-      append_via_turbo_stream(**stream_config)
-    else
-      prepend_via_turbo_stream(**stream_config)
+      insert_via_turbo_stream(
+        target_component:,
+        component: WorkPackages::ActivitiesTab::Journals::ItemComponent.new(
+          journal:, filter: @filter, grouped_emoji_reactions: emoji_reactions.fetch(journal.id, {})
+        ),
+        action: journal_sorting.asc? ? :append : :prepend
+      )
     end
   end
 
@@ -465,6 +515,11 @@ class WorkPackages::ActivitiesTabController < ApplicationController
     replace_via_turbo_stream(
       component: WorkPackages::Details::UpdateCounterComponent.new(work_package: @work_package, menu_name: "activity")
     )
+  end
+
+  def wp_journals_emoji_reactions
+    @wp_journals_emoji_reactions ||= EmojiReactions::GroupedQueries
+      .grouped_work_package_journals_emoji_reactions_by_reactable(@work_package)
   end
 
   def grouped_emoji_reactions_for_journal

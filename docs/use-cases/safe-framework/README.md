@@ -1,7 +1,7 @@
 ---
 sidebar_navigation:
   title: Scaled Agile Framework (SAFe)
-  priority: 600
+  priority: 975
 description: Learn how to set up and configure OpenProject to support the Scaled Agile Framework (SAFe) to successfully deliver value to customers using agile practices at scale.
 keywords: safe, scaled agile, release train, program increment, ART backlog, roadmap, portfolio backlog, solution train, kanban, enabler, capability, scrum, roadmap
 
@@ -77,7 +77,7 @@ You can also use [project templates](../../user-guide/projects/project-templates
 
 Project portfolios allow you to view, organize, sort and filter through all projects and their hierarchies. Since individual projects represent Agile Release trains, project portfolios can be used to access information at a **Solution train**-level.
 
-OpenProject offers a new **Project list** view that lets you create and save custom lists of Projects using your own set of filter criteria. These lists can also display custom project attributes. Individual projects can also be favored for easier access. Project lists allow you to be build very precise and useful dashboards at a solution-train level.
+OpenProject offers a new **Project list** view that lets you create and save custom lists of Projects using your own set of filter criteria. These lists can also display custom project attributes. Individual projects can also be favorited for easier access. Project lists allow you to be build very precise and useful dashboards at a solution-train level.
 
 ![You can create custom project lists](project_list_-_solution_train.png)
 

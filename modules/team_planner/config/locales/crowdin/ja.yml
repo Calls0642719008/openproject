@@ -12,7 +12,7 @@ ja:
     upsell:
       team_planner_view:
         title: "チーム プランナー"
-        description: "Team Plannerでチームの計画の概要を把握しましょう。クリックやドラッグで作業項目を編集したり、日付を変更したり、担当者を変更したりできます。"
+        description: "Team Plannerでチームの計画の概要を把握しましょう。クリックやドラッグでワークパッケージを編集したり、日付を変更したり、担当者を変更したりできます。"
   team_planner:
     label_team_planner: "チーム プランナー"
     label_new_team_planner: "新しいチームプランナー"

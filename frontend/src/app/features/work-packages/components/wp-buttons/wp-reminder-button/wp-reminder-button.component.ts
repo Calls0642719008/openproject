@@ -101,7 +101,7 @@ export class WorkPackageReminderButtonComponent extends UntilDestroyedMixin impl
     return this
       .apiV3Service
       .work_packages
-      .id(this.workPackage.id as string)
+      .id(this.workPackage.id!)
       .reminders
       .get()
       .pipe(

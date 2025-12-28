@@ -13,14 +13,8 @@ ja:
           no_results: 'まだドキュメントはありません。'
         members:
           title: 'メンバー'
-          no_results: '表示するメンバーはありません。'
-          view_all_members: 'すべてのメンバーを表示'
-          add: 'メンバー'
-          too_many: '%{count} / %{total} メンバーを表示しています。'
         news:
           title: 'ニュース'
-          at: '日時'
-          no_results: '新しい報告はありません。'
         project_description:
           title: 'プロジェクトの説明'
           no_results: "説明はまだ記載されていません。 1つは「プロジェクト設定」で入力できます。"
@@ -33,9 +27,10 @@ ja:
           not_set: '未設定'
           finished: '完了'
           discontinued: '中止'
+        project_status_beta:
+          title: 'Project status (BETA)'
         subprojects:
-          title: '子プロジェクト'
-          no_results: '子プロジェクトはありません。'
+          title: 'Subitems'
         project_favorites:
           title: 'お気に入りプロジェクト'
           no_results: '現在、お気に入りのプロジェクトはありません。プロジェクトダッシュボードの星アイコンをクリックして、お気に入りに追加してください。'
@@ -57,6 +52,7 @@ ja:
           title: 'ワークパッケージの一覧'
         work_packages_graph:
           title: 'ワークパッケージのグラフ'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'カレンダー'
         work_packages_overview:

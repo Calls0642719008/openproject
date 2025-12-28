@@ -49,7 +49,7 @@ module ReorderLinksHelper
                        class: "icon-context #{icon_class} icon-small")
     link_to(text + icon,
             url.merge("#{name}[move_to]" => direction),
-            method:,
+            data: { turbo_method: method },
             title: label)
   end
 end

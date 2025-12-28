@@ -146,7 +146,7 @@ eo:
   points_to_accept: "points not accepted"
   points_to_resolve: "points not resolved"
   project_module_backlogs: "Backlogs"
-  rb_label_copy_tasks: "Copy work packages"
+  rb_label_copy_tasks: "Kopiu laborpakaĵojn"
   rb_label_copy_tasks_all: "Ĉiuj"
   rb_label_copy_tasks_none: "Neniu"
   rb_label_copy_tasks_open: "Malfermi"

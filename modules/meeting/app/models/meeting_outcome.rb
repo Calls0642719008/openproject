@@ -28,8 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 class MeetingOutcome < ApplicationRecord
-  belongs_to :meeting_agenda_item
-  belongs_to :work_package
+  belongs_to :meeting_agenda_item, touch: true
+  belongs_to :work_package, optional: true
   belongs_to :author, class_name: "User", optional: true
 
   enum :kind, {
@@ -38,9 +38,9 @@ class MeetingOutcome < ApplicationRecord
     work_package: 2
   }.freeze, suffix: true, default: "information"
 
-  validates_presence_of :meeting_agenda_item
-  validates_presence_of :notes, if: -> { information_kind? }
-  validates_presence_of :work_package, if: -> { work_package_kind? }
+  validates :meeting_agenda_item, presence: true
+  validates :notes, presence: { if: -> { information_kind? } }
+  validates :work_package, presence: { if: -> { work_package_kind? } }
 
   def editable?
     meeting_agenda_item.meeting.in_progress?

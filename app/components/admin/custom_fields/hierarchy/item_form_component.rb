@@ -46,15 +46,7 @@ module Admin
         end
 
         def http_verb
-          model.new_record? ? :post : :put
-        end
-
-        def url
-          if model.new_record?
-            new_child_custom_field_item_path(root.custom_field_id, model.parent, position: model.sort_order)
-          else
-            custom_field_item_path(root.custom_field_id, model)
-          end
+          new_record? ? :post : :put
         end
 
         def secondary_input_format
@@ -62,8 +54,8 @@ module Admin
           case field_format
           when "hierarchy"
             :short
-          when "scored_list"
-            :score
+          when "weighted_item_list"
+            :weight
           else
             raise ArgumentError, "Unsupported field format: #{field_format}"
           end
@@ -72,7 +64,31 @@ module Admin
         private
 
         def root
-          @root ||= model.new_record? ? model.parent.root : model.root
+          @root ||= new_record? ? model.parent.root : model.root
+        end
+
+        def project_custom_field_context?
+          root.custom_field.is_a?(ProjectCustomField)
+        end
+
+        def new_record? = model.new_record?
+
+        def custom_field_id = root.custom_field_id
+
+        def url # rubocop:disable Metrics/AbcSize
+          parent = model.parent
+          position = model.sort_order
+          if project_custom_field_context?
+            if new_record?
+              new_child_admin_settings_project_custom_field_item_path(custom_field_id, parent, position:)
+            else
+              admin_settings_project_custom_field_item_path(custom_field_id, model)
+            end
+          elsif new_record?
+            new_child_custom_field_item_path(custom_field_id, parent, position:)
+          else
+            custom_field_item_path(custom_field_id, model)
+          end
         end
       end
     end

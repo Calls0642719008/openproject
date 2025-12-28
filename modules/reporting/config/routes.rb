@@ -35,7 +35,6 @@ Rails.application.routes.draw do
       end
 
       member do
-        get :index, as: :project
         post :update
         post :rename
       end
@@ -55,7 +54,6 @@ Rails.application.routes.draw do
     end
 
     member do
-      get :index, as: :global
       post :update
       post :rename
     end

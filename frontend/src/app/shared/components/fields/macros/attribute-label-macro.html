@@ -1,11 +1,12 @@
-<ng-container *ngIf="resource">
+@if (resource) {
   <span [textContent]="label"></span>
   <attribute-help-text [attribute]="attribute"
-                       [attributeScope]="attributeScope">
-  </attribute-help-text>
-</ng-container>
+    [attributeScope]="attributeScope" />
+}
 
-<span *ngIf="error">
-  <i class="icon icon-error"></i>
-  <em [textContent]="error"></em>
-</span>
+@if (error) {
+  <span>
+    <i class="icon icon-error"></i>
+    <em [textContent]="error"></em>
+  </span>
+}

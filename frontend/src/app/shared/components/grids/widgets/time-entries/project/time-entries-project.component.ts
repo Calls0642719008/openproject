@@ -11,14 +11,12 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
 import { FilterOperator } from 'core-app/shared/helpers/api-v3/api-v3-filter-builder';
 import { TimezoneService } from 'core-app/core/datetime/timezone.service';
 import { ConfirmDialogService } from 'core-app/shared/components/modals/confirm-dialog/confirm-dialog.service';
-import { TimeEntryEditService } from 'core-app/shared/components/time_entries/edit/edit.service';
 import { HalResourceEditingService } from 'core-app/shared/components/fields/edit/services/hal-resource-editing.service';
 
 @Component({
   templateUrl: '../list/time-entries-list.component.html',
   providers: [
     HalResourceEditingService,
-    TimeEntryEditService,
   ],
   standalone: false,
 })
@@ -33,7 +31,7 @@ export class WidgetTimeEntriesProjectComponent extends WidgetTimeEntriesListComp
     super(injector, timezone, i18n, pathHelper, confirmDialog, cdr);
   }
 
-  protected dmFilters():Array<[string, FilterOperator, [string]]> {
+  protected dmFilters():[string, FilterOperator, [string]][] {
     return [['spentOn', '>t-', ['7']] as [string, FilterOperator, [string]],
       ['project_id', '=', [this.currentProject.id]] as [string, FilterOperator, [string]]];
   }

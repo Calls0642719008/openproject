@@ -21,12 +21,12 @@
 #++
 eo:
   plugin_budgets_engine:
-    name: "Budgets"
+    name: "Budĝetoj"
   activerecord:
     attributes:
       budget:
         author: "Aŭtoro"
-        available: "Available"
+        available: "Disponebla"
         budget: "Planned"
         budget_ratio: "Spent (ratio)"
         description: "Priskribo"
@@ -40,13 +40,13 @@ eo:
       work_package:
         budget_subject: "Budget title"
     models:
-      budget: "Budget"
+      budget: "Budĝeto"
       material_budget_item: "Unit"
   activity:
     filter:
-      budget: "Budgets"
+      budget: "Budĝetoj"
   attributes:
-    budget: "Budget"
+    budget: "Budĝeto"
   button_add_budget_item: "Add planned costs"
   button_add_budget: "Add budget"
   button_add_cost_type: "Add cost type"
@@ -55,31 +55,31 @@ eo:
   caption_labor: "Labor"
   caption_labor_costs: "Actual labor costs"
   caption_material_costs: "Actual unit costs"
-  budgets_title: "Budgets"
+  budgets_title: "Budĝetoj"
   events:
     budget: "Budget edited"
   help_click_to_edit: "Click here to edit."
   help_currency_format: "Format of displayed currency values. %n is replaced with the currency value, %u ist replaced with the currency unit."
   help_override_rate: "Enter a value here to override the default rate."
-  label_budget: "Budget"
+  label_budget: "Budĝeto"
   label_budget_available: "Budget available"
   label_budget_id: "Budget #%{id}"
-  label_budget_new: "New budget"
+  label_budget_new: "Nova budĝeto"
   label_budget_planned: "Budget planned"
-  label_budget_plural: "Budgets"
+  label_budget_plural: "Budĝetoj"
   label_budget_spent: "Budget spent"
   label_budget_spent_ratio: "Budget spent ratio"
-  label_deliverable: "Budget"
+  label_deliverable: "Budĝeto"
   label_example_placeholder: "ekz., %{decimal}"
-  label_view_all_budgets: "View all budgets"
+  label_view_all_budgets: "Vidu ĉiujn budĝetojn"
   label_yes: "Jes"
   label_budget_totals: "Totals"
   label_budget_details: "Budget details"
   notice_budget_conflict: "Work packages must be of the same project."
   notice_no_budgets_available: "No budgets available."
-  permission_edit_budgets: "Edit budgets"
-  permission_view_budgets: "View budgets"
-  project_module_budgets: "Budgets"
+  permission_edit_budgets: "Redaktu budĝetojn"
+  permission_view_budgets: "Vidu budĝetojn"
+  project_module_budgets: "Budĝetoj"
   text_budget_reassign_to: "Reassign them to this budget:"
   text_budget_delete: "Delete the budget from all work packages"
   text_budget_destroy_assigned_wp: "There are %{count} work packages assigned to this budget. What do you want to do?"

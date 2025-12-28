@@ -1,0 +1,40 @@
+.controller-documents:has(.op-document-view)
+  @include extended-content--top
+  @include extended-content--bottom
+
+  // UNDO "the very ugly hack to make the PageHeader sticky on mobile."
+  @media screen and (max-width: $breakpoint-sm)
+    #content-body div:has(page-header),
+    page-header
+      position: static
+
+  // Do not offset the breadcrumbs within documents as page header is nested within main layout
+  #wrapper .hidden-navigation .PageHeader-contextBar
+    margin-left: 0
+
+.op-document-view
+  height: 100%
+
+  .PageHeader
+    margin-bottom: var(--base-size-8) // Compensate for .bn-editor padding-top increase to maintain visual spacing
+
+  &--main,
+  &--sidebar
+    padding-top: var(--main-menu-toggler-top-spacing)
+    padding-bottom: 10px
+
+  &--header,
+  &--editor
+    max-width: $blocknote-max-width
+    width: 100%
+
+  &--sidebar
+    @media screen and (min-width: $breakpoint-md)
+      border-left: var(--borderWidth-thin, 1px) solid var(--borderColor-muted, var(--color-border-muted))
+
+  @media screen and (min-width: $breakpoint-sm)
+    overflow: hidden
+    &--main,
+    &--sidebar
+      @include no-visible-scroll-bar
+      overflow: auto

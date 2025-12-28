@@ -30,6 +30,7 @@
 
 class MembersController < ApplicationController
   include MemberHelper
+
   model_object Member
   before_action :find_model_object_and_project, except: %i[autocomplete_for_member destroy_by_principal]
   before_action :find_project_by_project_id, only: %i[autocomplete_for_member destroy_by_principal]
@@ -97,15 +98,16 @@ class MembersController < ApplicationController
       display_error(service_call)
     end
 
-    redirect_to project_members_path(project_id: @project)
+    redirect_to project_members_path(project_id: @project), status: :see_other
   end
 
   def autocomplete_for_member
-    @principals = possible_members(params[:q], 100)
+    type = params[:type]
+    @principals = possible_members(params[:q], 100, type:)
 
-    @email = suggest_invite_via_email? current_user,
-                                       params[:q],
-                                       (@principals | @project.principals)
+    if type.nil? || type == "User"
+      @email = suggest_invite_via_email?(current_user, params[:q], @principals | @project.principals)
+    end
 
     respond_to do |format|
       format.json do
@@ -175,10 +177,11 @@ class MembersController < ApplicationController
     }
   end
 
-  def suggest_invite_via_email?(user, query, principals)
-    user.allowed_globally?(:create_user) &&
-      query =~ mail_regex &&
-      principals.none? { |p| p.mail == query || p.login == query } &&
+  def suggest_invite_via_email?(user, query, visible_principals)
+    return false unless user_allowed_to_invite?(user)
+
+    query =~ mail_regex &&
+      visible_principals.none? { |p| p.mail == query || p.login == query } &&
       query # finally return email
   end
 
@@ -200,9 +203,9 @@ class MembersController < ApplicationController
     @principals_available = possible_members("", 1)
   end
 
-  def possible_members(criteria, limit)
+  def possible_members(criteria, limit, type: nil)
     Principal
-      .possible_member(@project)
+      .possible_member(@project, type:)
       .like(criteria, email: user_allowed_to_view_emails?)
       .limit(limit)
   end

@@ -44,6 +44,26 @@ module API
                      condition: "projects.id = work_packages.project_id",
                      select: ["projects.name project_name"] }
 
+        link :status,
+             path: { api: :status, params: %w(id) },
+             column: -> { :status_id },
+             title: -> { "status_name" },
+             join: {
+               table: :statuses,
+               condition: "statuses.id = work_packages.status_id",
+               select: ["statuses.name status_name"]
+             }
+
+        link :type,
+             path: { api: :type, params: %w(id) },
+             column: -> { :type_id },
+             title: -> { "type_name" },
+             join: {
+               table: :types,
+               condition: "types.id = work_packages.type_id",
+               select: ["types.name type_name"]
+             }
+
         associated_user_link :author
 
         associated_user_link :assignee,

@@ -77,22 +77,19 @@ module EnterpriseEdition
 
       trial_overrides! if trial_feature?
 
-      if @variant == :medium && @image.nil?
-        raise ArgumentError, "The 'image' parameter is required when the variant is :medium."
-      end
-
-      if @variant == :large && @video.nil?
-        raise ArgumentError, "The 'video' parameter is required when the variant is :large."
-      end
+      check_media_arguments!
 
       set_system_arguments(system_arguments, feature_key)
 
       super
     end
 
-    def before_render
-      @image_arguments = {}
-      @image_arguments[:style] = @image.present? ? "background-image: url(#{helpers.image_path(@image)})" : nil
+    def image_as_background_arguments
+      { style: "background-image: url(#{helpers.image_path(@image)})" } if @image
+    end
+
+    def inline?
+      @variant == :inline
     end
 
     def medium?
@@ -103,15 +100,21 @@ module EnterpriseEdition
       @variant == :large
     end
 
-    def inline?
-      @variant == :inline
-    end
-
     def wrapper_key
       "enterprise_banner_#{@dismiss_key}"
     end
 
     private
+
+    def check_media_arguments!
+      case @variant
+      when :medium
+        raise ArgumentError, "The 'video' parameter is not used for variant :medium" if @video
+      when :large
+        raise ArgumentError, "Either 'image' or 'video' parameter is required for variant :large" if !@image && !@video
+        raise ArgumentError, "Only one of 'image' and 'video' parameters can be specified for variant :large" if @image && @video
+      end
+    end
 
     def set_system_arguments(system_arguments, feature_key)
       @system_arguments = system_arguments

@@ -28,7 +28,10 @@ properties:
     type: object
     properties:
       project:
-        $ref: './project_model.yml'
+        oneOf:
+          - $ref: './project_model.yml'
+          - $ref: './program_model.yml'
+          - $ref: './portfolio_model.yml'
       principal:
         anyOf:
           - $ref: './user_model.yml'
@@ -82,9 +85,9 @@ properties:
         allOf:
           - $ref: './link.yml'
           - description: |-
-              The project the membership is related to.
+              The workspace the membership is related to.
 
-              **Resource**: Project
+              **Resource**: Workspace
       principal:
         allOf:
           - $ref: './link.yml'
@@ -101,4 +104,3 @@ properties:
                 A role the principal has.
   
                 **Resource**: Role
-    

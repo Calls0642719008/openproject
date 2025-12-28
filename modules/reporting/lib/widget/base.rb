@@ -93,6 +93,12 @@ module ::Widget
       cache? && Rails.cache.exist?(cache_key)
     end
 
+    protected
+
+    def render_view_component(component, &)
+      component.render_in(controller.view_context, &)
+    end
+
     private
 
     def cache?

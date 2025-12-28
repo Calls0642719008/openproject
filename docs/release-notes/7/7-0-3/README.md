@@ -9,7 +9,7 @@ release_date: 2017-06-29
 
 # OpenProject 7.0.3
 
-The release contains an important security fix regarding session expiry
+The release contains an important security fix regarding session expiration
 and several bug fixes.
 
 For details on the security fix, take a look at the [release

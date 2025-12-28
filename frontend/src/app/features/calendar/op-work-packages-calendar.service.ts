@@ -202,7 +202,7 @@ export class OpWorkPackagesCalendarService extends UntilDestroyedMixin {
       // There might also be a query_id but the settings persisted in it are overwritten by the props.
       if (this.urlParams.query_props) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const oldQueryProps:{ [key:string]:unknown } = JSON.parse(this.urlParams.query_props as string);
+        const oldQueryProps:Record<string, unknown> = JSON.parse(this.urlParams.query_props as string);
 
         // Update the date period of the calendar in the filter
         const newQueryProps = {
@@ -221,7 +221,7 @@ export class OpWorkPackagesCalendarService extends UntilDestroyedMixin {
       }
     } else {
       queryProps = this.generateQueryProps(
-        this.querySpace.query.value as QueryResource,
+        this.querySpace.query.value!,
         startDate,
         endDate,
       );
@@ -335,7 +335,7 @@ export class OpWorkPackagesCalendarService extends UntilDestroyedMixin {
 
     event.preventDefault();
 
-    const handler = new WorkPackageViewContextMenu(this.injector, workPackageId, jQuery(event.target as HTMLElement));
+    const handler = new WorkPackageViewContextMenu(this.injector, workPackageId, event.target as HTMLElement);
     this.contextMenuService.show(handler, event);
   }
 

@@ -78,6 +78,15 @@ module API
           }
         end
 
+        link :project do
+          next if !represented.respond_to?(:project) || represented.project.nil?
+
+          {
+            href: api_v3_paths.project(represented.project&.id),
+            title: represented.project&.name
+          }
+        end
+
         property :id
 
         property :name, render_nil: false

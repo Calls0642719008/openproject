@@ -33,11 +33,26 @@ require "spec_helper"
 RSpec.describe Projects::Settings::RelationsForm, type: :forms do
   include_context "with rendered form"
 
-  let(:model) { build_stubbed(:project, parent:) }
+  let(:model) { build_stubbed(:project, parent:, workspace_type:) }
   let(:parent) { nil }
+  let(:workspace_type) { :project }
 
-  it "renders field" do
-    expect(page).to have_element "opce-project-autocompleter", "data-input-name": "\"project[parent_id]\""
+  %i[program project].each do |workspace_type|
+    context "for workspace type #{workspace_type}" do
+      let(:workspace_type) { workspace_type }
+
+      it "renders field" do
+        expect(page).to have_element "opce-project-autocompleter", "data-input-name": "\"project[parent_id]\""
+      end
+    end
+  end
+
+  context "for workspace type portfolio" do
+    let(:workspace_type) { "portfolio" }
+
+    it "does not render" do
+      expect(page).not_to have_element "opce-project-autocompleter", "data-input-name": "\"project[parent_id]\""
+    end
   end
 
   context "without parent" do
@@ -56,7 +71,7 @@ RSpec.describe Projects::Settings::RelationsForm, type: :forms do
       it "renders field with model" do
         expect(page).to have_element "opce-project-autocompleter", "data-qa-field-name": "parent" do |element|
           expect(element["data-model"]).to be_json_eql(
-            %{{"name": "Undisclosed - The selected parent is invisible because of lacking permissions."}}
+            %{{"name": "Undisclosed - The parent is invisible because of lacking permissions."}}
           )
         end
       end
@@ -83,6 +98,17 @@ RSpec.describe Projects::Settings::RelationsForm, type: :forms do
           expect(element["data-model"]).to be_json_eql(%{{"name": "New Project"}})
         end
       end
+    end
+  end
+
+  context "with validation errors" do
+    before do
+      model.errors.add(:parent, :invalid)
+      render_form
+    end
+
+    it "renders error message" do
+      expect(page).to have_css ".FormControl-inlineValidation", text: "Subproject of is invalid"
     end
   end
 end

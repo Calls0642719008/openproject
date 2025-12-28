@@ -39,7 +39,7 @@ import { BoardConfigurationModalComponent } from 'core-app/features/boards/board
 import { BoardService } from 'core-app/features/boards/board/board.service';
 import { StateService } from '@uirouter/core';
 import { ToastService } from 'core-app/shared/components/toaster/toast.service';
-import { triggerEditingEvent } from 'core-app/shared/components/editable-toolbar-title/editable-toolbar-title.component';
+import { selectableTitleIdentifier, triggerEditingEvent } from 'core-app/shared/components/editable-toolbar-title/editable-toolbar-title.component';
 
 @Directive({
   selector: '[boardsToolbarMenu]',
@@ -69,7 +69,7 @@ export class BoardsToolbarMenuDirective extends OpContextMenuTrigger {
     };
   }
 
-  protected open(evt:JQuery.TriggeredEvent) {
+  protected open(evt:Event) {
     this.buildItems();
     this.opContextMenu.show(this, evt);
   }
@@ -93,7 +93,7 @@ export class BoardsToolbarMenuDirective extends OpContextMenuTrigger {
         icon: 'icon-edit',
         onClick: () => {
           if (this.board.grid.updateImmediately) {
-            jQuery('.toolbar-container .editable-toolbar-title--input').trigger(triggerEditingEvent);
+            document.querySelector(selectableTitleIdentifier)?.dispatchEvent(new CustomEvent(triggerEditingEvent, { bubbles: true }));
           }
 
           return true;
@@ -109,7 +109,7 @@ export class BoardsToolbarMenuDirective extends OpContextMenuTrigger {
             && window.confirm(this.I18n.t('js.text_query_destroy_confirmation'))) {
             void this.http
               .delete(
-                `/boards/${this.board.id}`,
+                `/projects/${this.board.projectId}/boards/${this.board.id}`,
                 { responseType: 'json' },
               )
               .subscribe(

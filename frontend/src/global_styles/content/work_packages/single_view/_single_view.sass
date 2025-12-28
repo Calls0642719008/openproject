@@ -39,16 +39,13 @@
   display: grid
   grid-template-columns: auto 1fr auto
   grid-template-rows: minmax(30px, auto) 1fr
-  grid-template-areas: "breadcrumb breadcrumb breadcrumb" "backButton subject toolbar"
+  grid-template-areas: "breadcrumb breadcrumb breadcrumb" "subject subject toolbar"
   align-items: center
   grid-column-gap: 5px
 
   &--breadcrumb
     grid-area: breadcrumb
     align-self: baseline
-
-  &--back-button
-    grid-area: backButton
 
   &--subject
     grid-area: subject

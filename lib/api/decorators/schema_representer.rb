@@ -63,6 +63,7 @@ module API
                    max_length: nil,
                    regular_expression: nil,
                    options: {},
+                   formula: nil,
                    show_if: true,
                    description: nil,
                    deprecated: nil)
@@ -77,6 +78,7 @@ module API
                                    max_length,
                                    regular_expression,
                                    options,
+                                   formula,
                                    location,
                                    description,
                                    deprecated)
@@ -299,6 +301,7 @@ module API
                                  max_length,
                                  regular_expression,
                                  options,
+                                 formula,
                                  location,
                                  description,
                                  deprecated)
@@ -317,6 +320,7 @@ module API
         schema.max_length = max_length
         schema.regular_expression = regular_expression
         schema.options = options
+        schema.formula = formula
 
         schema
       end

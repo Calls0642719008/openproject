@@ -45,7 +45,7 @@ vi:
         referenced_message: "Yêu cầu kéo #%{pr_number} %{pr_link} cho %{repository_link} do %{github_user_link} viết đã tham chiếu đến gói công việc này."
         states:
           opened: 'mở'
-          closed: 'đóng'
+          closed: 'đã đóng'
           draft: 'dự thảo'
           merged: 'gộp'
           ready_for_review: 'đánh dấu sẵn sàng để xem xét'

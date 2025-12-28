@@ -118,8 +118,6 @@ module Exports::PDF::Components::WpTable
     list = key.map { |v| v&.value }
     if list.empty?
       nil
-    elsif list.length == 1
-      list.first
     else
       list
     end

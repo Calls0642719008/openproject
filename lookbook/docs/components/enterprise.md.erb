@@ -2,6 +2,8 @@ OpenProject provides multiple ways to render upsell components. These adapt auto
 
 This document describes the different components and how to use them.
 
+For a list of all currently used feature IDs, please see the [enterprise feature list](./enterprise-feature-list).
+
 # Requirements
 
 ## Token Gem
@@ -113,7 +115,7 @@ render EnterpriseEdition::BannerComponent.new(:enterprise_feature, variant: :med
 ## Large variant banners
 
 The large variant upsell banner is used when an entire page is inaccessible to the current user because their plan does not include that feature (vs. only a part of that feature not being available).
-This banner is used when there is an illustration video present that requires this amount of space.
+This banner is used when there is an illustration video or image present that requires this amount of space.
 
 For example: when a community user clicks on the 'Team planner' module (but it's not included in their plan)
 

@@ -44,7 +44,6 @@ import { ComponentType } from '@angular/cdk/overlay';
 import { Ng2StateDeclaration } from '@uirouter/angular';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { OpModalService } from 'core-app/shared/components/modal/modal.service';
-import { InviteUserModalComponent } from 'core-app/features/invite-user-modal/invite-user.component';
 import { WorkPackageFilterContainerComponent } from 'core-app/features/work-packages/components/filters/filter-container/filter-container.directive';
 import isPersistedResource from 'core-app/features/hal/helpers/is-persisted-resource';
 import { UIRouterGlobals } from '@uirouter/core';
@@ -55,8 +54,8 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
 
 export interface DynamicComponentDefinition {
   component:ComponentType<any>;
-  inputs?:{ [inputName:string]:any };
-  outputs?:{ [outputName:string]:Function };
+  inputs?:Record<string, any>;
+  outputs?:Record<string, Function>;
 }
 
 export interface ToolbarButtonComponentDefinition extends DynamicComponentDefinition {
@@ -94,7 +93,7 @@ export class PartitionedQuerySpacePageComponent extends WorkPackagesViewBase imp
 
   @InjectField() configuration:ConfigurationService;
 
-  text:{ [key:string]:string } = {
+  text:Record<string, string> = {
     jump_to_pagination: this.I18n.t('js.work_packages.jump_marks.pagination'),
     text_jump_to_pagination: this.I18n.t('js.work_packages.jump_marks.label_pagination'),
   };
@@ -128,9 +127,6 @@ export class PartitionedQuerySpacePageComponent extends WorkPackagesViewBase imp
 
   /** We need to pass the correct partition state to the view to manage the grid */
   currentPartition:ViewPartitionState = '-split';
-
-  /** What route (if any) should we go back to using the back button left of the title? */
-  backButtonCallback:() => void|undefined;
 
   /** Which filter container component to mount */
   filterContainerDefinition:DynamicComponentDefinition = {
@@ -199,7 +195,7 @@ export class PartitionedQuerySpacePageComponent extends WorkPackagesViewBase imp
    * @param state The current or entering state
    */
   protected setPartition(state:Ng2StateDeclaration):void {
-    this.currentPartition = (state.data && state.data.partition) ? state.data.partition : '-split';
+    this.currentPartition = (state.data?.partition) ? state.data.partition : '-split';
   }
 
   protected setupInformationLoadedListener():void {
@@ -274,8 +270,6 @@ export class PartitionedQuerySpacePageComponent extends WorkPackagesViewBase imp
       });
     }
   }
-
-  protected inviteModal = InviteUserModalComponent;
 
   protected loadQuery(firstPage = false):Promise<QueryResource> {
     let promise:Promise<QueryResource>;

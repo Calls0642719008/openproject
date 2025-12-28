@@ -30,8 +30,6 @@ module API
   module V3
     module Relations
       class RelationPaginatedCollectionRepresenter < ::API::Decorators::OffsetPaginatedCollection
-        self.to_eager_load = ::API::V3::Relations::RelationRepresenter.to_eager_load
-
         element_decorator RelationRepresenter
       end
     end

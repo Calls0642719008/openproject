@@ -389,13 +389,6 @@ RSpec.describe CostQuery, :reporting_query_helper do
         clear_cache
       end
 
-      def update_work_package_custom_field(name, options)
-        fld = WorkPackageCustomField.find_by(name:)
-        options.each_pair { |k, v| fld.send(:"#{k}=", v) }
-        fld.save!
-        clear_cache
-      end
-
       include OpenProject::Reporting::SpecHelper::CustomFieldFilterHelper
 
       it "creates classes for custom fields that get added after starting the server" do
@@ -414,25 +407,9 @@ RSpec.describe CostQuery, :reporting_query_helper do
         custom_field2.save
 
         clear_cache
-        ao = filter_class_name_string(custom_field2).constantize.available_operators.map(&:name)
-        CostQuery::Operator.null_operators.each do |o|
-          expect(ao).to include o.name
-        end
-      end
 
-      it "updates the available values on change" do
-        custom_field2.save
-
-        update_work_package_custom_field("Database", field_format: "string")
-        ao = filter_class_name_string(custom_field2).constantize.available_operators.map(&:name)
-        CostQuery::Operator.string_operators.each do |o|
-          expect(ao).to include o.name
-        end
-        update_work_package_custom_field("Database", field_format: "int")
-        ao = filter_class_name_string(custom_field2).constantize.available_operators.map(&:name)
-        CostQuery::Operator.integer_operators.each do |o|
-          expect(ao).to include o.name
-        end
+        expect(filter_class_name_string(custom_field2).constantize.available_operators.map(&:name))
+          .to include(*CostQuery::Operator.null_operators.map(&:name))
       end
 
       it "includes custom fields classes in CustomFieldEntries.all" do

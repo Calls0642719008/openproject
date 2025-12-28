@@ -26,7 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 import { ANIMATION_RATE_MS } from 'core-app/core/top-menu/top-menu.service';
-import ClickEvent = JQuery.ClickEvent;
+import { slideDown, slideUp } from 'es6-slide-up-down';
 
 /*
   The action menu is a menu that usually belongs to an OpenProject entity (like an Issue, WikiPage, Meeting, ..).
@@ -43,37 +43,42 @@ import ClickEvent = JQuery.ClickEvent;
     </ul>
   The following code is responsible to open and close the "more functions" submenu.
 */
-function closeMenu(event:any) {
-  const menu = jQuery(event.data.menu);
+function closeMenu(menu:HTMLElement, event:MouseEvent, cleanup:() => void) {
   // do not close the menu, if the user accidentally clicked next to a menu item (but still within the menu)
-  if (event.target !== menu.find(' > li.drop-down.open > ul').get(0)) {
-    menu.find(' > li.drop-down.open').removeClass('open').find('> ul').slideUp(ANIMATION_RATE_MS);
+  if (event.target !== menu.querySelector(':scope > li.drop-down.open > ul')) {
+    const li = menu.querySelector(':scope > li.drop-down.open')!;
+    li.classList.remove('open');
+    const ul = li.querySelector<HTMLUListElement>(':scope > ul');
+    slideUp(ul!, ANIMATION_RATE_MS);
     // no need to watch for clicks, when the menu is already closed
-    jQuery('html').off('click', closeMenu);
+    cleanup();
   }
 }
 
-function openMenu(menu:JQuery) {
-  const dropDown = menu.find(' > li.drop-down');
+function openMenu(menu:HTMLElement) {
+  const dropDown = menu.querySelector(':scope > li.drop-down')!;
   // do not open a menu, which is already open
-  if (!dropDown.hasClass('open')) {
-    dropDown.find('> ul').slideDown(ANIMATION_RATE_MS, () => {
-      dropDown.find('li > a:first').focus();
+  if (!dropDown.classList.contains('open')) {
+    const ul = dropDown.querySelector<HTMLUListElement>(':scope > ul')!;
+    slideDown(ul, ANIMATION_RATE_MS);
+    window.requestAnimationFrame(() => {
+      dropDown.querySelector<HTMLAnchorElement>('li > a:first-child')?.focus();
       // when clicking on something, which is not the menu, close the menu
-      jQuery('html').on('click', { menu: menu.get(0) }, closeMenu);
+      const clickHandler = (evt:MouseEvent) => closeMenu(menu, evt, () => document.removeEventListener('click', clickHandler));
+      document.addEventListener('click', clickHandler);
     });
-    dropDown.addClass('open');
+    dropDown.classList.add('open');
   }
 }
 
 // open the given submenu when clicking on it
-export function installMenuLogic(menu:JQuery) {
-  menu.find(' > li.drop-down').on('click', (event:ClickEvent) => {
+export function installMenuLogic(menu:HTMLElement) {
+  menu.querySelector(':scope > li.drop-down')?.addEventListener('click', (event) => {
     openMenu(menu);
     // and prevent default action (href) for that element
     // but not for the menu items.
-    const target = jQuery(event.target);
-    if (target.is('.drop-down') || target.closest('li, ul').is('.drop-down')) {
+    const target = event.target;
+    if (target instanceof HTMLElement && (target.matches('.drop-down') || target.closest('li, ul')?.matches('.drop-down'))) {
       event.preventDefault();
     }
   });

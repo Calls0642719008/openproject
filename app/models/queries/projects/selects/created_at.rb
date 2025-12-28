@@ -32,8 +32,4 @@ class Queries::Projects::Selects::CreatedAt < Queries::Selects::Base
   def self.key
     :created_at
   end
-
-  def self.available?
-    User.current.admin?
-  end
 end

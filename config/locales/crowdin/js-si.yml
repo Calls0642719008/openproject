@@ -88,6 +88,8 @@ si:
     button_list_view: "ලැයිස්තුව දැක්ම"
     button_show_view: "පූර්ණ තිර දර්ශනය"
     button_log_time: "ලොග් වේලාව"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "තවත්"
     button_open_details: "විවෘත විස්තර දැක්ම"
     button_close_details: "වසන්න විස්තර දැක්ම"
@@ -288,17 +290,6 @@ si:
         format:
           date: "%{attribute} වලංගු දිනයක් නොවේ - YYY-MM-DD අපේක්ෂා කෙරේ."
         general: "දෝෂයක් සිදුවී ඇත."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "නව විශේෂාංග සහ නිෂ්පාදන යාවත්කාලීන කිරීම් ගැන කියවන්න."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -306,12 +297,13 @@ si:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "සක්රිය කරන්න"
     label_assignee: "අස්ගිනී"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "පසු තීරුව එකතු කරන්න"
     label_add_column_before: "පෙර තීරුව එකතු කරන්න"
     label_add_columns: "තීරු එකතු කරන්න"
@@ -353,6 +345,7 @@ si:
     label_collapse: "බිඳවැටීම"
     label_collapsed: "කඩා වැටී"
     label_collapse_all: "සියල්ල කඩා වැටෙන්න"
+    label_collapse_text: "Collapse text"
     label_comment: "අදහස් දක්වන්න"
     label_committed_at: "%{committed_revision_link} දී %{date}"
     label_committed_link: "කැපවූ සංශෝධනය %{revision_identifier}"
@@ -365,6 +358,7 @@ si:
     label_expand: "පුළුල්"
     label_expanded: "පුළුල්"
     label_expand_all: "සියල්ල පුළුල්"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "ව්යාපෘති මෙනුව පුළුල් කරන්න"
     label_export: "අපනයන"
     label_export_preparing: "The export is being prepared and will be downloaded shortly."
@@ -444,7 +438,7 @@ si:
     label_sort_lower: "පහළට ගෙනයන්න"
     label_sorting: "තෝරා බේරා ගැනීමේ"
     label_spent_time: "වැය කළ කාලය"
-    label_star_query: "අනුග්රහය"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "සුරැකීමට ඔබන්න ඇතුල් කරන්න."
     label_public_query: "පොදු"
     label_sum: "මුදල"
@@ -563,7 +557,7 @@ si:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -782,7 +776,7 @@ si:
     autocompleter:
       placeholder: "සෙවීමට ටයිප් කරන්න"
       notFoundText: "No items found"
-      search: "Search"
+      search: "සොයන්න"
       project:
         placeholder: "Select project"
     repositories:
@@ -1114,6 +1108,7 @@ si:
       child_work_packages:
         one: "එක් ළමා වැඩ පැකේජය"
         other: "%{count} වැඩ පැකේජය දරුවන්"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} ඌ"
@@ -1134,6 +1129,7 @@ si:
       current_project_and_all_descendants: "මෙම ව්යාපෘතිය+උප ව්යාපෘති"
       current_project: "මෙම ව්යාපෘතියේ"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "සියලු ව්යාපෘති"
         project_and_subprojects: "සහ සියළු උප ව්යාපෘති"
@@ -1143,71 +1139,8 @@ si:
       list: "මේසය"
       timeline: "ගැන්ට්"
     invite_user_modal:
-      back: "ආපසු"
       invite: "Invite"
-      title:
-        invite: "පරිශීලකයාට ආරාධනා කරන්න"
-        invite_to_project: "Invite %{type} to %{project}"
-        User: "user"
-        Group: "group"
-        PlaceholderUser: "placeholder user"
-        invite_principal_to_project: "Invite %{principal} to %{project}"
-      project:
-        label: "ව්යාපෘති"
-        required: "Please select a project"
-        lacking_permission: "Please select a different project since you lack permissions to assign users to the currently selected."
-        lacking_permission_info: "You lack the permission to assign users to the project you are currently in. You need to select a different one."
-        next_button: "ඊළඟ"
-        no_results: "No projects were found"
-        no_invite_rights: "You are not allowed to invite members to this project"
-      type:
-        required: "Please select the type to be invited"
-        user:
-          title: "පරිශීලක"
-          description: "Permissions based on the assigned role in the selected project"
-        group:
-          title: "කණ්ඩායම"
-          description: "Permissions based on the assigned role in the selected project"
-        placeholder:
-          title: "Placeholder user"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "Has no access to the project and no emails are sent out."
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "Name or email address"
-          name: "නම"
-        already_member_message: "Already a member of %{project}"
-        no_results_user: "No users were found"
-        invite_user: "Invite:"
-        no_results_placeholder: "No placeholders were found"
-        create_new_placeholder: "Create new placeholder:"
-        no_results_group: "No groups were found"
-        next_button: "ඊළඟ"
-        required:
-          user: "Please select a user"
-          placeholder: "Please select a placeholder"
-          group: "Please select a group"
-      role:
-        label: "Role in %{project}"
-        no_roles_found: "No roles were found"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Please select a role"
-        next_button: "ඊළඟ"
-      message:
-        label: "Invitation message"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "ඊළඟ"
-      summary:
-        next_button: "ආරාධනය යවන්න"
-      success:
-        title: "%{principal} was invited!"
-        description:
-          user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
-        next_button: "ඉදිරියට යන්න"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1224,7 +1157,7 @@ si:
       selected_filter:
         all: "All projects"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:
@@ -1233,6 +1166,11 @@ si:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "පැහැදිලි"

@@ -47,7 +47,7 @@ class DigestMailer < ApplicationMailer
   class << self
     def generate_message_id(_, user)
       hash = "openproject.digest-#{user.id}-#{Time.current.strftime('%Y%m%d%H%M%S')}"
-      host = Setting.mail_from.to_s.gsub(%r{\A.*@}, "")
+      host = ApplicationMailer.mail_from.to_s.gsub(%r{\A.*@}, "")
       host = "#{::Socket.gethostname}.openproject" if host.empty?
       "#{hash}@#{host}"
     end

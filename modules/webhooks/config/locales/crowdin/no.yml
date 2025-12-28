@@ -27,11 +27,14 @@
       no_results_table: Ingen webhooks har blitt definert ennå.
       label_add_new: Legg til ny webhook
       label_edit: Rediger webhook
-      label_event_resources: Hendelsesressurser
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Opprettet"
         updated: "Oppdatert"
-        comment: "Comment"
+        comment: "Kommentar"
         internal_comment: "Internal comment"
       explanation:
         text: >

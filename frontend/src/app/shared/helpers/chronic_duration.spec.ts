@@ -40,6 +40,7 @@ import {
   parseChronicDuration,
   outputChronicDuration,
   DurationParseError,
+  type DurationFormat,
 } from './chronic_duration';
 
 
@@ -160,9 +161,9 @@ describe('parseChronicDuration', () => {
     });
   });
 
-  describe('with .ignoreSecondsWhenColonSeperated param', () => {
+  describe('with .ignoreSecondsWhenColonSeparated param', () => {
     it('parses 8:15 to 8 hours 15 minutes when seconds are ignored', () => {
-      expect(parseChronicDuration('8:15', { ignoreSecondsWhenColonSeperated: true })).toBe(8 * 3600 + 15 * 60);
+      expect(parseChronicDuration('8:15', { ignoreSecondsWhenColonSeparated: true })).toBe(8 * 3600 + 15 * 60);
     });
 
     it('parses 8:15 to 8 minutes 15 seconds when seconds are not ignored', () => {
@@ -273,18 +274,19 @@ describe('outputChronicDuration', () => {
       hours_only: '12960h',
       chrono: '18:00:00:00:00',
     },
-  };
+  } as const;
 
   Object.entries(EXEMPLARS).forEach(([k, v]) => {
     const kf = parseFloat(k);
-    Object.entries(v).forEach(([key, val]) => {
+    (Object.keys(v) as DurationFormat[]).forEach((key) => {
+      const val = v[key];
       it(`properly outputs a duration of ${kf} seconds as ${val} using the ${key} format option`, () => {
         expect(outputChronicDuration(kf, { format: key })).toBe(val);
       });
     });
   });
 
-  const KEEP_ZERO_EXEMPLARS = {
+  const KEEP_ZERO_EXEMPLARS:Record<string, Partial<Record<DurationFormat, string|null>>> = {
     true: {
       micro: '0s',
       short: '0s',
@@ -303,7 +305,8 @@ describe('outputChronicDuration', () => {
 
   Object.entries(KEEP_ZERO_EXEMPLARS).forEach(([k, v]) => {
     const kb = Boolean(k);
-    Object.entries(v).forEach(([key, val]) => {
+    (Object.keys(v) as Partial<DurationFormat>[]).forEach((key) => {
+      const val = v[key] ?? null;
       it(`should properly output a duration of 0 seconds as ${val} using the ${key} format option, if the .keepZero option is ${kb}`, () => {
         expect(outputChronicDuration(0, { format: key, keepZero: kb })).toBe(val);
       });
@@ -379,6 +382,12 @@ describe('outputChronicDuration', () => {
     ).toBe('6 months 1 day 1 hour');
   });
 
+  it('returns hours only if hoursOnly option specified', () => {
+    expect(outputChronicDuration(60 * 60 * 24 * 3 + 60 * 60 * 3, { hoursOnly: true })).toBe('75h');
+    expect(outputChronicDuration(4 * 3600 + 45 * 60, { hoursOnly: true })).toBe('4h 45m');
+    expect(outputChronicDuration(5 * 3600, { hoursOnly: true })).toBe('5h');
+  });
+
   describe('when the format is not specified', () => {
     it('uses the default format', () => {
       expect(outputChronicDuration(2 * 3600 + 20 * 60)).toBe('2 hrs 20 mins');
@@ -387,11 +396,11 @@ describe('outputChronicDuration', () => {
 
   Object.entries(EXEMPLARS).forEach(([seconds, formatSpec]) => {
     const secondsF = parseFloat(seconds);
-    Object.keys(formatSpec).forEach((format) => {
+    (Object.keys(formatSpec) as DurationFormat[]).forEach((format) => {
       if (format === 'days_and_hours' || format === 'hours_only') return;
 
       it(`outputs a duration for ${seconds} that parses back to the same thing when using the ${format} format`, () => {
-        expect(parseChronicDuration(outputChronicDuration(secondsF, { format }))).toBe(secondsF);
+        expect(parseChronicDuration(outputChronicDuration(secondsF, { format })!)).toBe(secondsF);
       });
     });
   });

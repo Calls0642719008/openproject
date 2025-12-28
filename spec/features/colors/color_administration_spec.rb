@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe "color administration", :js, :selenium do
+RSpec.describe "color administration", :js do
   shared_let(:admin) { create(:admin) }
 
   before do

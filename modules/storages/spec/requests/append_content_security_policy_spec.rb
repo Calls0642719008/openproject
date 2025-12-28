@@ -32,12 +32,7 @@ require "spec_helper"
 require_module_spec_helper
 
 RSpec.describe "Appendix of default CSP for external file storage hosts" do
-  def parse_csp(csp_string)
-    csp_string
-      .split("; ")
-      .map(&:split)
-      .each_with_object({}) { |csp_part, csp_hash_map| csp_hash_map[csp_part[0]] = csp_part[1..] }
-  end
+  include CspHelper
 
   shared_let(:project) { create(:project) }
   shared_let(:storage) { create(:nextcloud_storage) }

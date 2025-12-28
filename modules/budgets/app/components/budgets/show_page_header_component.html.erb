@@ -43,8 +43,8 @@
         href: url_for({ controller: "budgets", action: "destroy", id: @budget }),
         aria: { label: I18n.t(:button_delete) },
         data: {
-          confirm: I18n.t(:text_are_you_sure),
-          method: :delete,
+          turbo_confirm: I18n.t(:text_are_you_sure),
+          turbo_method: :delete,
           test_selector: "budget-delete-button"
         },
         title: I18n.t(:button_delete)

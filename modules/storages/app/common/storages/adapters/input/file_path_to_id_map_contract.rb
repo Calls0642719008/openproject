@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class FilePathToIdMapContract < Dry::Validation::Contract
+      class FilePathToIdMapContract < DryApplicationContract
         params do
           required(:folder).filter(:filled?, :str?).value(AdapterTypes::Location)
           required(:depth).filled { (int? & gteq?(0)) | eql?(Float::INFINITY) }

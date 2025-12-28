@@ -1,4 +1,6 @@
 nl:
   overviews:
-    label: 'Overzicht'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Dashboard"
+    label_overview: 'Overzicht'
   permission_manage_overview: 'Overzichtspagina beheren'

@@ -17,7 +17,7 @@ The document follows the structure of the standard specification to ease compari
 
 ## 1. Introduction
 
-All end points are nested within the `/api` path. So for a server listening on `https://foo.com/` the API root will be
+All endpoints are nested within the `/api` path. So for a server listening on `https://foo.com/` the API root will be
 `https://foo.com/api/bcf/2.1`. For a server listening on `https://foo.com/bar` the API root will be
 `https://foo.com/bar/api/bcf/2.1`.
 
@@ -134,13 +134,13 @@ is used instead of the integer within a url. So the following urls might point t
 
 _Partly implemented_
 
-The end point is implemented but lacks the `authorization` property. However, the [Project Extension Service](#414-get-project-extension-service) is completely implemented and provides the same information.
+The endpoint is implemented but lacks the `authorization` property. However, the [Project Extension Service](#414-get-project-extension-service) is completely implemented and provides the same information.
 
 #### 4.1.2 GET Project Service
 
 _Partly implemented_
 
-The end point is implemented but lacks the `authorization` property. However, the [Project Extension Service](#414-get-project-extension-service) is completely implemented and provides the same information.
+The endpoint is implemented but lacks the `authorization` property. However, the [Project Extension Service](#414-get-project-extension-service) is completely implemented and provides the same information.
 
 #### 4.1.3 PUT Project Service
 
@@ -150,7 +150,7 @@ _Implemented_
 
 _Implemented and extended_
 
-However, as some end points are not implemented, the actions indicating the ability to call those end points will also not be returned, e.g. `updateDocumentReferences`
+However, as some endpoints are not implemented, the actions indicating the ability to call those endpoints will also not be returned, e.g. `updateDocumentReferences`
 
 #### 4.1.5 Expressing User Authorization Through Project Extensions
 

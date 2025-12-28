@@ -71,14 +71,9 @@ module Projects::Copy
     end
 
     def copy_wiki_page(source_page, new_parent_id)
-      # Relying on ActionMailer::Base.perform_deliveries is violating cohesion
-      # but the value is currently not otherwise provided
       service_call = WikiPages::CopyService
                      .new(user:, model: source_page, contract_class: WikiPages::CopyContract)
-                     .call(wiki: target.wiki,
-                           parent_id: new_parent_id,
-                           send_notifications: ActionMailer::Base.perform_deliveries,
-                           copy_attachments: copy_attachments?)
+                     .call(wiki: target.wiki, parent_id: new_parent_id, copy_attachments: copy_attachments?)
 
       if service_call.success?
         service_call.result

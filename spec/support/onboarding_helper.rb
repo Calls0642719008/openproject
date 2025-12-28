@@ -33,17 +33,15 @@ require "spec_helper"
 module OnboardingHelper
   def step_through_onboarding_wp_tour(project, wp)
     expect(page).to have_no_css(".op-loading-indicator")
+    expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.create_button")), normalize_ws: true, wait: 10
+
+    next_button.click
     expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.list")), normalize_ws: true
 
     next_button.click
     expect(page).to have_current_path project_work_package_path(project, wp.id, "activity")
-    expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.full_view")), normalize_ws: true
-
-    next_button.click
-    expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.back_button")), normalize_ws: true
-
-    next_button.click
-    expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.create_button")), normalize_ws: true
+    expect(page).to have_no_css(".op-loading-indicator")
+    expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.full_view")), normalize_ws: true, wait: 10
 
     next_button.click
     expect(page).to have_text sanitize_string(I18n.t("js.onboarding.steps.wp.gantt_menu")), normalize_ws: true

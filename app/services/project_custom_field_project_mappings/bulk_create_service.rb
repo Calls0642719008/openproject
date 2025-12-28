@@ -41,6 +41,28 @@ module ProjectCustomFieldProjectMappings
       super(user:, mapping_context:)
     end
 
+    protected
+
+    def after_perform(service_result, _params)
+      super.tap do
+        recalculate_values(service_result)
+      end
+    end
+
+    def recalculate_values(service_result)
+      mappings = service_result.result
+
+      mappings.each do |mapping|
+        project = mapping.project
+
+        affected_cfs = project.available_custom_fields.affected_calculated_fields([mapping.custom_field_id])
+
+        project.calculate_custom_fields(affected_cfs)
+
+        project.save if project.changed_for_autosave?
+      end
+    end
+
     private
 
     def permission = :select_project_custom_fields

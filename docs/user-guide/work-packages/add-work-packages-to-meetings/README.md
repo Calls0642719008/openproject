@@ -8,7 +8,7 @@ keywords: meetings, dynamic meetings, meeting agenda
 
 # Add work packages to meetings
 
-Starting with OpenProject 13.1, meetings and work packages can be linked to one another. This can be done either from the detailed view of a work package or when editing [a one-time or recurring meetings](../../meetings/one-time-meetings/#add-a-work-package-to-the-agenda).
+Meetings and work packages can be linked to one another in OpenProject. This can be done either from the detailed view of a work package or when editing [a one-time or a recurring meeting](../../meetings/one-time-meetings/#add-a-work-package-to-the-agenda).
 
 To add a work package to a meeting, open the detailed view of that work package, select the **Meetings** tab and click the **+Add to meeting** button.
 
@@ -18,7 +18,9 @@ To add a work package to a meeting, open the detailed view of that work package,
 > The upcoming meetings are displayed in chronological order, from the nearest meeting to the most distant.
 > The past meetings are displayed in reverse chronological order, from the most recent meeting to the oldest.
 
-In the dialog that appears, select a meeting from the list of open upcoming meetings. You can also add any relevant notes (like discussion points, open questions or decision need). Click **Save** to add a new work package to the selected meeting as an agenda item.
+In the dialog that appears, select a meeting from the list of upcoming meetings. Once a meeting is selected, you can add the work package to a specific meeting section or to the backlog. If no sections have been created for the meeting yet, you can add the work package to the meeting or meeting series backlog (for a one-time meeting, this happens automatically).
+
+You can also add any relevant notes (like discussion points, open questions or decision need). Click **Save** to add a new work package to the selected meeting as an agenda item.
 
 ![Add a work package to a new meeting](openproject_user_guide_meeting_dialogue.png)
 

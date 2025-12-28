@@ -31,189 +31,336 @@
 require "spec_helper"
 
 RSpec.describe ProjectCustomFieldProjectMappings::ToggleService do
-  let!(:project) { create(:project) }
-  let!(:section_with_invisible_fields) { create(:project_custom_field_section, name: "Section with invisible fields") }
-
-  let!(:visible_project_custom_field) do
-    create(:project_custom_field,
-           name: "Visible field",
-           admin_only: false,
-           project_custom_field_section: section_with_invisible_fields)
-  end
-
-  let!(:visible_required_project_custom_field) do
-    create(:project_custom_field,
-           name: "Visible required field",
-           admin_only: false,
-           is_required: true,
-           project_custom_field_section: section_with_invisible_fields)
-  end
-
-  let!(:invisible_project_custom_field) do
-    create(:project_custom_field,
-           name: "Admin only field",
-           admin_only: true,
-           project_custom_field_section: section_with_invisible_fields)
-  end
+  shared_let(:project) { create(:project) }
+  shared_let(:project_custom_field_section) { create(:project_custom_field_section) }
 
   let(:instance) { described_class.new(user:) }
 
-  context "with admin permissions" do
-    let(:user) { create(:admin) }
-
-    it "toggles visible, non-required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-
-      expect(instance.call(project_id: project.id, custom_field_id: visible_project_custom_field.id)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field, visible_project_custom_field
-      )
-
-      expect(instance.call(project_id: project.id, custom_field_id: visible_project_custom_field.id)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+  describe "permissions" do
+    shared_let(:visible_custom_field) do
+      create(:project_custom_field,
+             name: "Visible field",
+             admin_only: false,
+             project_custom_field_section:)
     end
 
-    it "toggles invisible, non-required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-
-      expect(instance.call(project_id: project.id, custom_field_id: invisible_project_custom_field.id)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field, invisible_project_custom_field
-      )
-
-      expect(instance.call(project_id: project.id, custom_field_id: invisible_project_custom_field.id)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    shared_let(:required_custom_field) do
+      create(:project_custom_field,
+             name: "Required field",
+             admin_only: false,
+             is_required: true,
+             project_custom_field_section:)
     end
 
-    it "does not toggle required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    shared_let(:forced_active_custom_field) do
+      create(:project_custom_field,
+             name: "Visible forced-active field",
+             admin_only: false,
+             is_for_all: true,
+             project_custom_field_section:)
+    end
 
-      expect(instance.call(project_id: project.id, custom_field_id: visible_required_project_custom_field.id)).to be_failure
+    shared_let(:invisible_custom_field) do
+      create(:project_custom_field,
+             name: "Admin only field",
+             admin_only: true,
+             project_custom_field_section:)
+    end
 
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    let(:visible_custom_field_params) { { project_id: project.id, custom_field_id: visible_custom_field.id } }
+    let(:required_custom_field_params) { { project_id: project.id, custom_field_id: required_custom_field.id } }
+    let(:forced_active_custom_field_params) { { project_id: project.id, custom_field_id: forced_active_custom_field.id } }
+    let(:invisible_custom_field_params) { { project_id: project.id, custom_field_id: invisible_custom_field.id } }
+
+    context "with admin permissions" do
+      shared_let(:user) { create(:admin) }
+
+      it "toggles visible, non-is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        2.times do
+          expect(instance.call(**visible_custom_field_params, value: "1")).to be_success
+
+          expected = [forced_active_custom_field, visible_custom_field]
+          expect(project.reload.project_custom_fields).to match_array(expected)
+        end
+
+        2.times do
+          expect(instance.call(**visible_custom_field_params, value: "0")).to be_success
+
+          expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+        end
+      end
+
+      it "toggles invisible, non-is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        2.times do
+          expect(instance.call(**invisible_custom_field_params, value: "1")).to be_success
+
+          expected = [forced_active_custom_field, invisible_custom_field]
+          expect(project.reload.project_custom_fields).to match_array(expected)
+        end
+
+        2.times do
+          expect(instance.call(**invisible_custom_field_params, value: "0")).to be_success
+
+          expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+        end
+      end
+
+      it "does not toggle is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**forced_active_custom_field_params, value: "1")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**forced_active_custom_field_params, value: "0")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+      end
+
+      it "does toggle required fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        2.times do
+          expect(instance.call(**required_custom_field_params, value: "1")).to be_success
+
+          expected = [forced_active_custom_field, required_custom_field]
+          expect(project.reload.project_custom_fields).to match_array(expected)
+        end
+
+        2.times do
+          expect(instance.call(**required_custom_field_params, value: "0")).to be_success
+
+          expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+        end
+      end
+    end
+
+    context "with non-admin but sufficient permissions" do
+      shared_let(:user) do
+        create(:user,
+               firstname: "Project",
+               lastname: "Admin",
+               member_with_permissions: {
+                 project => %w[
+                   view_work_packages
+                   edit_project
+                   select_project_custom_fields
+                 ]
+               })
+      end
+
+      it "toggles visible, non-is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        2.times do
+          expect(instance.call(**visible_custom_field_params, value: "1")).to be_success
+
+          expected = [forced_active_custom_field, visible_custom_field]
+          expect(project.reload.project_custom_fields).to match_array(expected)
+        end
+
+        2.times do
+          expect(instance.call(**visible_custom_field_params, value: "0")).to be_success
+
+          expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+        end
+      end
+
+      it "does not toggle invisible, non-required fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**invisible_custom_field_params, value: "1")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**invisible_custom_field_params, value: "0")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+      end
+
+      it "does not toggle is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**forced_active_custom_field_params, value: "1")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**forced_active_custom_field_params, value: "0")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+      end
+    end
+
+    context "with insufficient permissions" do
+      shared_let(:user) do
+        create(:user,
+               firstname: "Project",
+               lastname: "Editor",
+               member_with_permissions: {
+                 project => %w[
+                   view_work_packages
+                   edit_project
+                 ]
+               })
+      end
+
+      it "does not toggle visible, non-is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**visible_custom_field_params, value: "1")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**visible_custom_field_params, value: "0")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+      end
+
+      it "does not toggle invisible, non-is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**invisible_custom_field_params, value: "1")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**invisible_custom_field_params, value: "0")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+      end
+
+      it "does not toggle is_for_all fields" do
+        expect(project.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**forced_active_custom_field_params, value: "1")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+
+        expect(instance.call(**forced_active_custom_field_params, value: "0")).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(forced_active_custom_field)
+      end
     end
   end
 
-  context "with non-admin but sufficient permissions" do
-    let(:user) do
-      create(:user,
-             firstname: "Project",
-             lastname: "Admin",
-             member_with_permissions: {
-               project => %w[
-                 view_work_packages
-                 edit_project
-                 select_project_custom_fields
-               ]
-             })
+  describe "calculated values",
+           with_ee: %i[calculated_values],
+           with_flag: { calculated_value_project_attribute: true } do
+    using CustomFieldFormulaReferencing
+
+    shared_let(:user) { create(:admin) }
+
+    shared_let(:static) { create(:integer_project_custom_field, project_custom_field_section:) }
+    shared_let(:calculated) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "#{static} * 7", project_custom_field_section:)
+    end
+    shared_let(:enabled) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "11", project_custom_field_section:)
+    end
+    shared_let(:disabled) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "13", project_custom_field_section:)
     end
 
-    it "toggles visible, non-required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    let(:with_calculated) { { static.id => "2", calculated.id => "14", enabled.id => "11", disabled.id => nil } }
+    let(:without_calculated) { { static.id => "2", calculated.id => nil, enabled.id => "11", disabled.id => nil } }
 
-      expect(instance.call(project_id: project.id, custom_field_id: visible_project_custom_field.id)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field, visible_project_custom_field
-      )
-
-      expect(instance.call(project_id: project.id, custom_field_id: visible_project_custom_field.id)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    before do
+      # this will auto enable custom fields for the project
+      {
+        static => 2,
+        enabled => 11
+      }.each { |custom_field, value| create(:custom_value, custom_field:, value:, customized: project) }
     end
 
-    it "does not toggle invisible, non-required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    context "when toggling referenced static field" do
+      let(:custom_field_id) { static.id }
 
-      expect(instance.call(project_id: project.id, custom_field_id: invisible_project_custom_field.id)).to be_failure
+      context "when referencing calculated field is enabled" do
+        before do
+          project.project_custom_fields = [calculated, enabled]
+        end
 
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+        it "recalculates the value" do
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "1")).to be_success
+
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(calculated, enabled, static)
+          expect(project.custom_value_attributes(all: true)).to eq(with_calculated)
+
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "0")).to be_success
+
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(calculated, enabled)
+          expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+        end
+      end
+
+      context "when referencing calculated field is disabled" do
+        before do
+          project.project_custom_fields = [enabled]
+        end
+
+        it "doesn't recalculate the value" do
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "1")).to be_success
+
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(enabled, static)
+          expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "0")).to be_success
+
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(enabled)
+          expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+        end
+      end
     end
 
-    it "does not toggle required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    context "when toggling calculated field" do
+      let(:custom_field_id) { calculated.id }
 
-      expect(instance.call(project_id: project.id, custom_field_id: visible_required_project_custom_field.id)).to be_failure
+      context "when referenced static field is enabled" do
+        before do
+          project.project_custom_fields = [static, enabled]
+        end
 
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-    end
-  end
+        it "recalculates the value" do
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "1")).to be_success
 
-  context "with insufficient permissions" do
-    let(:user) do
-      create(:user,
-             firstname: "Project",
-             lastname: "Editor",
-             member_with_permissions: {
-               project => %w[
-                 view_work_packages
-                 edit_project
-               ]
-             })
-    end
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(static, enabled, calculated)
+          expect(project.custom_value_attributes(all: true)).to eq(with_calculated)
 
-    it "does not toggle visible, non-required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "0")).to be_success
 
-      expect(instance.call(project_id: project.id, custom_field_id: visible_project_custom_field.id)).to be_failure
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(static, enabled)
+          expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+        end
+      end
 
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-    end
+      context "when referenced static field is disabled" do
+        before do
+          project.project_custom_fields = [enabled]
+        end
 
-    it "does not toggle invisible, non-required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+        it "doesn't recalculate the value" do
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "1")).to be_success
 
-      expect(instance.call(project_id: project.id, custom_field_id: invisible_project_custom_field.id)).to be_failure
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(enabled, calculated)
+          expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
 
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-    end
+          expect(instance.call(project_id: project.id, custom_field_id:, value: "0")).to be_success
 
-    it "does not toggle required fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-
-      expect(instance.call(project_id: project.id, custom_field_id: visible_required_project_custom_field.id)).to be_failure
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+          project.reload
+          expect(project.project_custom_fields).to contain_exactly(enabled)
+          expect(project.custom_value_attributes(all: true)).to eq(without_calculated)
+        end
+      end
     end
   end
 end

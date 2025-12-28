@@ -115,7 +115,7 @@ node_modules/
 
 # Ignore global package-lock.json that generates
 plaintext.yml
-structure.sql
+db/*.sql
 
 # Local development
 # used by dotenv

@@ -29,8 +29,10 @@
 #++
 module Projects
   class RowComponent < ::RowComponent
+    include CalculatedValues::ErrorsHelper
+
     delegate :identifier, to: :project
-    delegate :favored_project_ids,
+    delegate :favorited_project_ids,
              :project_phase_by_definition,
              to: :table
 
@@ -47,25 +49,27 @@ module Projects
       ""
     end
 
-    def favored
+    def favorited # rubocop:disable Metrics/AbcSize
+      return nil if project.archived?
+
       render(Primer::Beta::IconButton.new(
-               icon: currently_favored? ? "star-fill" : "star",
+               icon: currently_favorited? ? "star-fill" : "star",
                scheme: :invisible,
-               mobile_icon: currently_favored? ? "star-fill" : "star",
+               mobile_icon: currently_favorited? ? "star-fill" : "star",
                size: :medium,
                tag: :a,
                tooltip_direction: :e,
                href: helpers.build_favorite_path(project, format: :html),
-               data: { "turbo-method": currently_favored? ? :delete : :post },
-               classes: currently_favored? ? "op-primer--star-icon " : "op-project-row-component--favorite",
-               label: currently_favored? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite),
-               aria: { label: currently_favored? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite) },
+               data: { turbo_method: currently_favorited? ? :delete : :post },
+               classes: currently_favorited? ? "op-primer--star-icon " : "op-project-row-component--favorite",
+               label: currently_favorited? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite),
+               aria: { label: currently_favorited? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite) },
                test_selector: "project-list-favorite-button"
              ))
     end
 
-    def currently_favored?
-      @currently_favored ||= favored_project_ids.include?(project.id)
+    def currently_favorited?
+      @currently_favorited ||= favorited_project_ids.include?(project.id)
     end
 
     def column_value(column)
@@ -78,7 +82,7 @@ module Projects
       end
     end
 
-    def custom_field_column(column)
+    def custom_field_column(column) # rubocop:disable Metrics/AbcSize
       return nil unless user_can_view_project?
 
       cf = column.custom_field
@@ -93,6 +97,25 @@ module Projects
         )
       elsif custom_value.is_a?(Array)
         safe_join(Array(custom_value).compact_blank, ", ")
+      elsif cf.calculated_value?
+        render_calculated_value(cf, custom_value)
+      else
+        custom_value
+      end
+    end
+
+    def render_calculated_value(custom_field, custom_value)
+      if (error = custom_field.first_calculation_error(project))
+        render(Primer::Alpha::Dialog.new(title: I18n.t("calculated_values.error_dialog.title"),
+                                         data: {
+                                           test_selector: "calculated-value-error-dialog-#{custom_field.id}"
+                                         })) do |dialog|
+          dialog.with_show_button(icon: "alert-fill",
+                                  "aria-label": I18n.t("calculated_values.error_dialog.title"),
+                                  data: { test_selector: "calculated-value-error-btn-#{custom_field.id}" },
+                                  scheme: :invisible)
+          dialog.with_body { calculated_value_error_msg(error) }
+        end
       else
         custom_value
       end
@@ -116,6 +139,10 @@ module Projects
       helpers.format_date(project.latest_activity_at)
     end
 
+    def updated_at
+      helpers.format_date(project.updated_at)
+    end
+
     def required_disk_space
       return "" unless project.required_disk_space.to_i > 0
 
@@ -127,16 +154,19 @@ module Projects
     end
 
     def name
-      content = content_tag(:i, "", class: "projects-table--hierarchy-icon")
+      content = [content_tag(:i, "", class: "projects-table--hierarchy-icon")]
+
+      content << helpers.link_to_project(project, {}, { data: { turbo: false } }, false)
 
       if project.archived?
-        content << " "
-        content << content_tag(:span, I18n.t("project.archive.archived"), class: "archived-label")
+        content << content_tag(:span, "(#{I18n.t('project.archive.archived')})", class: "archived-label")
       end
 
-      content << " "
-      content << helpers.link_to_project(project, {}, { data: { turbo: false } }, false)
-      content
+      if workspace_type_badge && OpenProject::FeatureDecisions.portfolio_models_active?
+        content << workspace_type_badge
+      end
+
+      safe_join(content, " ")
     end
 
     def project_status
@@ -215,10 +245,10 @@ module Projects
 
     def additional_css_class(column)
       if column.attribute == :name
-        "project--hierarchy #{project.archived? ? 'archived' : ''}"
+        "project--hierarchy #{'archived' if project.archived?}"
       elsif %i[status_explanation description].include?(column.attribute)
         "project-long-text-container"
-      elsif column.attribute == :favored
+      elsif column.attribute == :favorited
         "-w-abs-45"
       elsif custom_field_column?(column)
         cf = column.custom_field
@@ -267,7 +297,7 @@ module Projects
     end
 
     def more_menu_favorite_item
-      return if currently_favored?
+      return if currently_favorited? || project.archived?
 
       {
         scheme: :default,
@@ -280,7 +310,7 @@ module Projects
     end
 
     def more_menu_unfavorite_item
-      return unless currently_favored?
+      return if !currently_favorited? || project.archived?
 
       {
         scheme: :default,
@@ -337,8 +367,8 @@ module Projects
           label: I18n.t(:button_archive),
           href: project_archive_path(project, status: params[:status]),
           data: {
-            confirm: t("project.archive.are_you_sure", name: project.name),
-            method: :post
+            turbo_method: :post,
+            turbo_confirm: t("project.archive.are_you_sure", name: project.name)
           }
         }
       end
@@ -351,7 +381,7 @@ module Projects
           icon: :unlock,
           label: I18n.t(:button_unarchive),
           href: project_archive_path(project, status: params[:status]),
-          data: { method: :delete }
+          data: { turbo_method: :delete }
         }
       end
     end
@@ -375,7 +405,7 @@ module Projects
           icon: :trash,
           label: I18n.t(:button_delete),
           href: confirm_destroy_project_path(project),
-          data: { turbo: false }
+          data: { turbo_stream: true }
         }
       end
     end
@@ -398,6 +428,19 @@ module Projects
 
     def current_page
       table.model.current_page.to_s
+    end
+
+    def workspace_type_badge
+      # Only show icon and type for non-project workspaces
+      return unless project.workspace_type.in?(["portfolio", "program"])
+
+      render(Primer::Beta::Text.new(classes: "description")) do
+        icon = render(Primer::Beta::Octicon.new(
+                        icon: helpers.workspace_icon(project.workspace_type),
+                        size: :xsmall
+                      ))
+        safe_join([icon, " ", I18n.t(:"label_#{project.workspace_type}")])
+      end
     end
   end
 end

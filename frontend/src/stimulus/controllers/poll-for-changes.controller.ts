@@ -36,6 +36,7 @@ export default class PollForChangesController extends ApplicationController {
     url: String,
     interval: Number,
     reference: String,
+    continuous: Boolean,
   };
 
   static targets = ['reference'];
@@ -46,6 +47,7 @@ export default class PollForChangesController extends ApplicationController {
   declare referenceValue:string;
   declare urlValue:string;
   declare intervalValue:number;
+  declare continuousValue:boolean;
 
   private interval:number;
 
@@ -66,21 +68,22 @@ export default class PollForChangesController extends ApplicationController {
 
   buildReference():string {
     if (this.hasReferenceTarget) {
-      return this.referenceTarget.dataset.referenceValue as string;
+      return this.referenceTarget.dataset.referenceValue!;
     }
 
     return this.referenceValue;
   }
 
   triggerTurboStream() {
-    void fetch(`${this.urlValue}?reference=${this.buildReference()}`, {
-      headers: {
-        Accept: 'text/vnd.turbo-stream.html',
-        'X-Authentication-Scheme': 'Session',
-      },
-    }).then(async (r) => {
+    const url = new URL(this.urlValue, window.location.origin);
+    url.searchParams.set('reference', this.buildReference());
+
+    void fetch(url.toString())
+      .then(async (r) => {
       if (r.status === 200) {
-        clearInterval(this.interval);
+        if (!this.continuousValue) {
+          clearInterval(this.interval);
+        }
 
         const html = await r.text();
         renderStreamMessage(html);

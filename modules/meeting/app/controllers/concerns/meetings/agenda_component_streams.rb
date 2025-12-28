@@ -95,25 +95,33 @@ module Meetings
         )
       end
 
-      def update_show_items_via_turbo_stream(meeting: @meeting)
+      def update_box_row_component_via_turbo_stream(participant:, meeting: @meeting)
+        update_via_turbo_stream(
+          component: Meetings::Participants::BoxRowComponent.new(meeting:, participant:)
+        )
+      end
+
+      def update_show_items_via_turbo_stream(meeting: @meeting, current_occurrence: nil)
         meeting.sections.each do |meeting_section|
-          update_show_items_of_section_via_turbo_stream(meeting_section:)
+          update_show_items_of_section_via_turbo_stream(meeting_section:, current_occurrence:)
         end
       end
 
-      def update_show_items_of_section_via_turbo_stream(meeting_section: @meeting_section)
+      def update_show_items_of_section_via_turbo_stream(current_occurrence:, meeting_section: @meeting_section)
         agenda_items = meeting_section.agenda_items.with_includes_to_render
         first_and_last = [agenda_items.first, agenda_items.last]
 
         agenda_items.each do |meeting_agenda_item|
           update_via_turbo_stream(
-            component: MeetingAgendaItems::ItemComponent::ShowComponent.new(meeting_agenda_item:, first_and_last:)
+            component: MeetingAgendaItems::ItemComponent::ShowComponent.new(meeting_agenda_item:, first_and_last:,
+                                                                            current_occurrence:)
           )
         end
       end
 
-      def update_new_component_via_turbo_stream(hidden: false, meeting_section: @meeting_section, meeting_agenda_item: nil,
-                                                meeting: @meeting, type: :simple)
+      def update_new_component_via_turbo_stream(hidden: false, meeting_section: @meeting_section,
+                                                meeting_agenda_item: nil, meeting: @meeting, type: :simple,
+                                                current_occurrence: nil)
         if meeting_section.nil? && meeting_agenda_item.nil?
           meeting_section = meeting.sections.last
         end
@@ -128,7 +136,8 @@ module Meetings
             meeting:,
             meeting_section:,
             meeting_agenda_item:,
-            type:
+            type:,
+            current_occurrence:
           )
         )
       end
@@ -145,12 +154,12 @@ module Meetings
         )
       end
 
-      def render_agenda_item_form_via_turbo_stream(collapsed:, meeting: @meeting, meeting_section: @meeting_section,
-                                                   type: :simple)
+      def render_agenda_item_form_via_turbo_stream(collapsed:, current_occurrence:, meeting: @meeting,
+                                                   meeting_section: @meeting_section, type: :simple)
         if meeting.sections.empty? && meeting_section != meeting.backlog
           render_agenda_item_form_for_empty_meeting_via_turbo_stream(type:)
         else
-          render_agenda_item_form_in_section_via_turbo_stream(meeting:, meeting_section:, type:, collapsed:)
+          render_agenda_item_form_in_section_via_turbo_stream(meeting:, meeting_section:, type:, collapsed:, current_occurrence:)
         end
 
         update_new_button_via_turbo_stream(disabled: true) unless meeting_section == meeting.backlog
@@ -164,31 +173,21 @@ module Meetings
         )
       end
 
-      def render_agenda_item_form_in_section_via_turbo_stream(collapsed:, meeting: @meeting, meeting_section: @meeting_section,
-                                                              type: :simple)
+      def render_agenda_item_form_in_section_via_turbo_stream(collapsed:, current_occurrence:, meeting: @meeting,
+                                                              meeting_section: @meeting_section, type: :simple)
         if meeting_section.nil?
           meeting_section = meeting.sections.last
         end
         if meeting_section.agenda_items.empty?
-          update_section_via_turbo_stream(meeting_section:, form_hidden: false, form_type: type, collapsed:)
+          update_section_via_turbo_stream(meeting_section:, form_hidden: false, form_type: type, collapsed:, current_occurrence:)
         else
           update_new_component_via_turbo_stream(
             hidden: false,
             meeting_section:,
-            type:
+            type:,
+            current_occurrence:
           )
         end
-      end
-
-      def render_base_outcome_component_via_turbo_stream(meeting:, meeting_agenda_item:, meeting_outcome:, edit:)
-        update_via_turbo_stream(
-          component: MeetingAgendaItems::Outcomes::BaseComponent.new(
-            meeting:,
-            meeting_agenda_item:,
-            meeting_outcome:,
-            edit:
-          )
-        )
       end
 
       def update_list_via_turbo_stream(meeting: @meeting, form_hidden: true, form_type: :simple)
@@ -204,27 +203,34 @@ module Meetings
         update_new_button_via_turbo_stream(disabled: false, meeting:) if form_hidden == true
       end
 
-      def update_item_via_turbo_stream(state: :show, meeting_agenda_item: @meeting_agenda_item, display_notes_input: nil)
+      def update_item_via_turbo_stream(current_occurrence:,
+                                       state: :show,
+                                       meeting_agenda_item: @meeting_agenda_item,
+                                       presentation_mode: false,
+                                       **)
         update_via_turbo_stream(
           component: MeetingAgendaItems::ItemComponent.new(
             state:,
             meeting_agenda_item:,
-            display_notes_input:
+            current_occurrence:,
+            presentation_mode:,
+            **
           )
         )
-        update_show_items_via_turbo_stream
+        update_show_items_via_turbo_stream(current_occurrence:)
       end
 
-      def add_item_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item, clear_slate: false) # rubocop:disable Metrics/AbcSize
+      def add_item_via_turbo_stream(current_occurrence:, meeting_agenda_item: @meeting_agenda_item, clear_slate: false) # rubocop:disable Metrics/AbcSize
         if clear_slate
           update_list_via_turbo_stream(form_hidden: false, form_type: @agenda_item_type)
-        elsif meeting_agenda_item.meeting.agenda_items.count == 1 && meeting_agenda_item.meeting.sections.present?
+        elsif meeting_agenda_item.meeting.agenda_items.one? && meeting_agenda_item.meeting.sections.present?
           update_list_via_turbo_stream(form_hidden: true)
 
           update_new_component_via_turbo_stream(
             hidden: true,
             meeting_section: meeting_agenda_item.meeting_section,
-            type: @agenda_item_type
+            type: @agenda_item_type,
+            current_occurrence:
           )
         else
           update_section_header_via_turbo_stream(meeting_section: meeting_agenda_item.meeting_section)
@@ -232,7 +238,8 @@ module Meetings
           add_before_via_turbo_stream(
             component: MeetingAgendaItems::ItemComponent.new(
               state: :show,
-              meeting_agenda_item:
+              meeting_agenda_item:,
+              current_occurrence:
             ),
             target_component: MeetingSections::ShowComponent.new(
               meeting_section: @meeting_agenda_item.meeting_section
@@ -242,7 +249,8 @@ module Meetings
           update_new_component_via_turbo_stream(
             hidden: true,
             meeting_section: meeting_agenda_item.meeting_section,
-            type: @agenda_item_type
+            type: @agenda_item_type,
+            current_occurrence:
           )
 
           update_new_button_via_turbo_stream(disabled: false)
@@ -251,105 +259,25 @@ module Meetings
         end
       end
 
-      def remove_item_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item, clear_slate: false)
+      def remove_item_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item, clear_slate: false, current_occurrence: nil)
         if clear_slate
           update_list_via_turbo_stream
         else
-          update_show_items_of_section_via_turbo_stream(meeting_section: meeting_agenda_item.meeting_section)
+          update_show_items_of_section_via_turbo_stream(meeting_section: meeting_agenda_item.meeting_section, current_occurrence:)
           if meeting_agenda_item.meeting_section.agenda_items.empty?
             # Show the empty section state by updating the whole section if items are empty
-            update_section_via_turbo_stream(meeting_section: meeting_agenda_item.meeting_section)
+            update_section_via_turbo_stream(meeting_section: meeting_agenda_item.meeting_section, current_occurrence:)
           else
             remove_via_turbo_stream(
               component: MeetingAgendaItems::ItemComponent.new(
                 state: :show,
                 meeting_agenda_item:,
-                display_notes_input: nil
+                display_notes_input: nil,
+                current_occurrence:
               )
             )
           end
         end
-      end
-
-      def move_item_within_section_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
-        move_item_via_turbo_stream(meeting_agenda_item:)
-
-        # Update the header for updated timestamp
-        update_header_component_via_turbo_stream unless @meeting_agenda_item.meeting_section.backlog?
-
-        # update the displayed time slots of all other items in the section
-        update_show_items_of_section_via_turbo_stream(meeting_section: meeting_agenda_item.meeting_section)
-      end
-
-      # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
-      def move_item_to_other_section_via_turbo_stream(old_section:, current_section:, meeting_agenda_item: @meeting_agenda_item,
-                                                      collapsed: nil)
-        # old_section.meeting and current_section.meeting are different when items are moved to/from a series backlog
-        current_section_meeting = current_section.meeting
-        old_section_meeting = old_section.meeting
-
-        move_item_via_turbo_stream(meeting_agenda_item:)
-
-        # update the old section
-        if old_section.backlog?
-          update_backlog_via_turbo_stream(meeting: current_section_meeting, collapsed:)
-        else
-          update_header_component_via_turbo_stream(meeting: old_section_meeting)
-          update_section_header_via_turbo_stream(meeting_section: old_section)
-
-          if old_section.agenda_items.empty?
-            if old_section.title.blank?
-              # Special case when the only item is being moved out of current meeting
-              update_list_via_turbo_stream
-            else
-              update_section_via_turbo_stream(meeting_section: old_section)
-            end
-          else
-            update_show_items_of_section_via_turbo_stream(meeting_section: old_section)
-          end
-        end
-
-        # update the new section
-        if current_section.backlog?
-          update_backlog_via_turbo_stream(meeting: old_section_meeting, collapsed:)
-        elsif current_section_meeting.sections.count == 1 && current_section_meeting.agenda_items.count == 1
-          # Special case when first item is being moved from backlog to empty meeting
-          update_list_via_turbo_stream(meeting: current_section_meeting)
-          update_header_component_via_turbo_stream(meeting: current_section_meeting)
-        else
-          update_header_component_via_turbo_stream(meeting: current_section_meeting)
-          update_section_header_via_turbo_stream(meeting_section: current_section)
-
-          if current_section.agenda_items.count == 1
-            update_section_via_turbo_stream(meeting_section: current_section)
-          else
-            update_show_items_of_section_via_turbo_stream(meeting_section: current_section)
-          end
-        end
-      end
-      # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
-
-      def move_item_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
-        # Note: The `remove_component` and the `component` are pointing to the same
-        # component, but we still need to instantiate them separately, otherwise re-adding
-        # of the item will render and empty component.
-        remove_component = MeetingAgendaItems::ItemComponent.new(state: :show, meeting_agenda_item:)
-        remove_via_turbo_stream(component: remove_component)
-
-        component = MeetingAgendaItems::ItemComponent.new(state: :show, meeting_agenda_item:)
-
-        target_component = if meeting_agenda_item.lower_item
-                             MeetingAgendaItems::ItemComponent.new(
-                               state: :show,
-                               meeting_agenda_item: meeting_agenda_item.lower_item
-                             )
-                           else
-                             MeetingSections::ShowComponent.new(
-                               meeting_section: meeting_agenda_item.meeting_section
-                             )
-                           end
-
-        add_before_via_turbo_stream(component:, target_component:)
       end
 
       def render_base_error_in_flash_message_via_turbo_stream(errors)
@@ -384,8 +312,16 @@ module Meetings
         )
       end
 
+      def update_outcomes_via_turbo_stream(meeting_agenda_item: @meeting_agenda_item)
+        update_via_turbo_stream(
+          component: MeetingAgendaItems::Outcomes::WrapperComponent.new(
+            meeting_agenda_item:
+          )
+        )
+      end
+
       def update_section_via_turbo_stream(meeting_section: @meeting_section, form_hidden: true, form_type: :simple,
-                                          force_wrapper: false, state: :show, collapsed: nil)
+                                          force_wrapper: false, state: :show, collapsed: nil, current_occurrence: nil)
         update_via_turbo_stream(
           component: MeetingSections::ShowComponent.new(
             meeting_section:,
@@ -393,7 +329,8 @@ module Meetings
             form_hidden:,
             force_wrapper:,
             state:,
-            collapsed:
+            collapsed:,
+            current_occurrence:
           )
         )
       end
@@ -461,11 +398,21 @@ module Meetings
         end
       end
 
+      def update_meeting_metadata_via_turbo_stream
+        update_header_component_via_turbo_stream
+        update_sidebar_component_via_turbo_stream
+      end
+
       def update_all_via_turbo_stream
         update_header_component_via_turbo_stream
         update_sidebar_component_via_turbo_stream
         update_new_button_via_turbo_stream
         update_list_via_turbo_stream
+      end
+
+      def update_agenda_via_turbo_stream
+        update_list_via_turbo_stream
+        update_new_button_via_turbo_stream
       end
     end
   end

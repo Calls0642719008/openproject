@@ -135,7 +135,7 @@ RSpec.describe API::V3::Projects::ProjectPayloadRepresenter, "parsing" do
 
   describe "_links" do
     context "with a parent link" do
-      context "with the href being an url" do
+      context "with the href being a project url" do
         let(:hash) do
           {
             "_links" => {
@@ -150,7 +150,45 @@ RSpec.describe API::V3::Projects::ProjectPayloadRepresenter, "parsing" do
           project = representer.from_hash(hash)
 
           expect(project[:parent_id])
-            .to eq "5"
+            .to eq 5
+        end
+      end
+
+      context "with the href being a program url" do
+        let(:hash) do
+          {
+            "_links" => {
+              "parent" => {
+                "href" => api_v3_paths.program(5)
+              }
+            }
+          }
+        end
+
+        it "sets the parent_id to the value" do
+          project = representer.from_hash(hash)
+
+          expect(project[:parent_id])
+            .to eq 5
+        end
+      end
+
+      context "with the href being a portfolio url" do
+        let(:hash) do
+          {
+            "_links" => {
+              "parent" => {
+                "href" => api_v3_paths.portfolio(5)
+              }
+            }
+          }
+        end
+
+        it "sets the parent_id to the value" do
+          project = representer.from_hash(hash)
+
+          expect(project[:parent_id])
+            .to eq 5
         end
       end
 

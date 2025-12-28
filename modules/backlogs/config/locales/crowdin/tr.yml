@@ -37,7 +37,7 @@ tr:
               can_only_contain_work_packages_of_current_sprint: "yalnızca geçerli sprintteki iş paketlerinin kimliklerini içerebilir."
               must_block_at_least_one_work_package: "en az bir biletin kimliğini içermelidir."
             version_id:
-              task_version_must_be_the_same_as_story_version: "üst hikaye sürümüyle aynı olmalıdır."
+              task_version_must_be_the_same_as_story_version: "ana hikaye sürümüyle aynı olmalıdır."
         sprint:
           cannot_end_before_it_starts: "Sprint başlamadan önce bitemez."
   backlogs:
@@ -56,7 +56,7 @@ tr:
     impediment: "Engel"
     label_versions_default_fold_state: "Katlanmış sürümleri göster"
     caption_versions_default_fold_state: "Birikmiş işler görüntülenirken sürümler öntanımlı olarak genişletilmeyecektir. Her birinin ayrı ayrı genişletilmesi gerekir."
-    work_package_is_closed: "İş paketi şu durumlarda tamamlanır"
+    work_package_is_closed: "İş paketi, ne zaman"
     label_is_done_status: "Durum %{status_name} tamamlandı anlamına geliyor"
     no_burndown_data: "Burndown verileri mevcut değil. Sprint başlangıç ve bitiş tarihlerinin ayarlanması gereklidir."
     points: "Puanlar / Noktalar"
@@ -156,7 +156,7 @@ tr:
   required_burn_rate_points: "gerekli yanma oranı (puan)"
   todo_work_package_description: "%{summary}:%{url}\n%{description}"
   todo_work_package_summary: "%{type}:%{summary}"
-  version_settings_display_label: "İş listesindeki sütunlar"
+  version_settings_display_label: "Sütununda birikim var"
   version_settings_display_option_left: "sol"
   version_settings_display_option_none: "hiçbiri"
   version_settings_display_option_right: "sağ"

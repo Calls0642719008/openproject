@@ -141,10 +141,10 @@ See COPYRIGHT and LICENSE files for more details.
             <td>
               <%= link_to "",
                           delete_option_of_custom_field_path(id: custom_field.id || 0, option_id: custom_option.id || 0),
-                          method: :delete,
                           data: {
+                            turbo_method: :delete,
                             action: "admin--custom-fields#removeOption",
-                            confirm: t(:"custom_fields.confirm_destroy_option")
+                            turbo_confirm: t(:"custom_fields.confirm_destroy_option")
                           },
                           class: "icon icon-delete delete-custom-option",
                           title: t(:button_delete) %>

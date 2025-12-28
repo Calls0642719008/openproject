@@ -94,9 +94,9 @@ class OpenProject::JournalFormatter::Cause < JournalFormatter::Base
       case feature
       when "progress_calculation_adjusted_from_disabled_mode",
            "progress_calculation_adjusted"
-        { href: OpenProject::Static::Links.links[:blog_article_progress_changes][:href] }
+        { href: OpenProject::Static::Links.url_for(:blog_article_progress_changes) }
       when "totals_removed_from_childless_work_packages"
-        { href: OpenProject::Static::Links.links[:release_notes_14_0_1][:href] }
+        { href: OpenProject::Static::Links.url_for(:release_notes_14_0_1) }
       else
         {}
       end

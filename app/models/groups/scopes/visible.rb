@@ -33,12 +33,24 @@ module Groups::Scopes
     extend ActiveSupport::Concern
 
     class_methods do
-      def visible(current_user = User.current)
-        if current_user.allowed_in_any_project?(:manage_members)
-          Group.all
+      ##
+      # Returns the groups visible to the given user.
+      # which is either all groups (if the user has the `view_all_principals` permission)
+      # or the following conditions:
+      # - groups that are members of a project the user can view members of
+      # - groups that the user themselves is a member of
+      def visible(user = User.current)
+        if user.allowed_globally?(:view_all_principals)
+          all
         else
-          Group
-            .in_project(Project.allowed_to(current_user, :view_members))
+          where(
+            Group.arel_table[:id].in(
+              Arel::Nodes::UnionAll.new(
+                Group.unscoped.containing_user(user).select(:id).arel,
+                Group.unscoped.in_visible_project(user).select(:id).arel
+              )
+            )
+          )
         end
       end
     end

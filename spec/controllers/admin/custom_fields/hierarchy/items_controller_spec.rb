@@ -132,10 +132,16 @@ RSpec.describe Admin::CustomFields::Hierarchy::ItemsController, with_ee: [:custo
     end
 
     context "when validation fails" do
-      it "renders the new page" do
-        post :update, params: { custom_field_id: custom_field.id, id: luke.id, label: nil }
-        expect(response).to be_successful
-        expect(response).to render_template "edit"
+      before do
+        allow(controller).to receive(:respond_with_turbo_streams).and_call_original
+        allow(controller).to receive(:add_errors_to_edit_form).and_call_original
+      end
+
+      it "renders the errors on the page" do
+        post :update, params: { custom_field_id: custom_field.id, id: luke.id, label: nil, format: :turbo_stream }
+
+        expect(controller).to have_received(:respond_with_turbo_streams).once
+        expect(controller).to have_received(:add_errors_to_edit_form).once
       end
     end
   end

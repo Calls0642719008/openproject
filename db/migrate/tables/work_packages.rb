@@ -51,7 +51,7 @@ class Tables::WorkPackages < Tables::Base
       t.date :start_date, index: true
       t.belongs_to :responsible
       t.float :derived_estimated_hours
-      t.boolean :schedule_manually, default: false # rubocop:disable Rails/ThreeStateBooleanColumn
+      t.boolean :schedule_manually, default: true, null: false
       t.bigint :parent_id, null: true, index: true
       t.integer :duration
       t.boolean :ignore_non_working_days, default: false, null: false
@@ -62,6 +62,8 @@ class Tables::WorkPackages < Tables::Base
       t.index :schedule_manually, where: :schedule_manually
 
       t.check_constraint "due_date >= start_date", name: "work_packages_due_larger_start_date"
+
+      t.references :project_phase, foreign_key: false, null: true
     end
   end
 end

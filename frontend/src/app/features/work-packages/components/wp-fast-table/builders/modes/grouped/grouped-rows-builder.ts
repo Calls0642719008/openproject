@@ -15,6 +15,7 @@ import { RowsBuilder } from '../rows-builder';
 import { GroupHeaderBuilder } from './group-header-builder';
 import { GroupedRenderPass } from './grouped-render-pass';
 import { groupedRowClassName, groupIdentifier } from './grouped-rows-helpers';
+import { getNodeIndex } from 'core-app/shared/helpers/dom-helpers';
 
 export class GroupedRowsBuilder extends RowsBuilder {
   // Injections
@@ -70,10 +71,10 @@ export class GroupedRowsBuilder extends RowsBuilder {
     const rendered = this.querySpace.tableRendered.value!;
     const builder = new GroupHeaderBuilder(this.injector);
 
-    jQuery(this.workPackageTable.tableAndTimelineContainer)
-      .find(`.${rowGroupClassName}`)
-      .each((i:number, oldRow:Element) => {
-        const groupIndex = jQuery(oldRow).data('groupIndex');
+    this.workPackageTable.tableAndTimelineContainer
+      .querySelectorAll<HTMLTableRowElement>(`.${rowGroupClassName}`)
+      .forEach((oldRow) => {
+        const groupIndex = parseInt(oldRow.dataset.groupIndex || '', 10);
         const group = groups[groupIndex];
 
         // Refresh the group header
@@ -84,14 +85,17 @@ export class GroupedRowsBuilder extends RowsBuilder {
         }
 
         // Set expansion state of contained rows
-        const affected = jQuery(this.workPackageTable.tableAndTimelineContainer)
-          .find(`.${groupedRowClassName(groupIndex)}`);
-        affected.toggleClass(collapsedRowClass, !!group.collapsed);
+        const affected = Array.from(this.workPackageTable.tableAndTimelineContainer
+          .querySelectorAll(`.${groupedRowClassName(groupIndex)}`));
+
+        affected.forEach((el) => el.classList.toggle(collapsedRowClass, !!group.collapsed));
 
         // Update the hidden section of the rendered state
-        affected.filter(`.${tableRowClassName}`).each((i, el) => {
+        affected
+          .filter((el) => el.matches(`.${tableRowClassName}`))
+          .forEach((el) => {
           // Get the index of this row
-          const index = jQuery(el).index();
+          const index = getNodeIndex(el);
 
           // Update the hidden state
           rendered[index].hidden = !!group.collapsed;

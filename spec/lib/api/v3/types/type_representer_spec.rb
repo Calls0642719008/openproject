@@ -37,7 +37,7 @@ RSpec.describe API::V3::Types::TypeRepresenter do
   include API::V3::Utilities::PathHelper
 
   context "generation" do
-    subject { representer.to_json }
+    subject(:generated) { representer.to_json }
 
     describe "links" do
       it_behaves_like "has a titled link" do
@@ -45,6 +45,10 @@ RSpec.describe API::V3::Types::TypeRepresenter do
         let(:href) { api_v3_paths.type(type.id) }
         let(:title) { type.name }
       end
+    end
+
+    it "fulfills the documented schema" do
+      expect(generated).to match_json_schema.from_docs("type_model")
     end
 
     it "indicates its id" do

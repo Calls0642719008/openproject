@@ -43,6 +43,10 @@ ko:
               response_is_not_successful: " - 응답 상태는 %{status}입니다."
               response_is_not_json: " - JSON 본문을 반환하지 않습니다."
               response_misses_required_attributes: " - 필수 특성을 반환하지 않습니다. 누락된 특성: %{missing_attributes}."
+          invalid_claims_essential: "does not define a boolean at %{attribute}."
+          invalid_claims_location: "contain unsupported locations: %{invalid}. Supported locations are: %{supported}."
+          invalid_claims_values: "does not define an array at %{attribute}."
+          non_object_attribute: "does not define a JSON object at %{attribute}."
   provider:
     delete_warning:
       input_delete_confirmation: 삭제를 확인하려면 공급자 이름 %{name}(을)를 입력하세요.
@@ -58,15 +62,26 @@ ko:
     menu_title: OpenID 공급자
     delete_title: "OpenID Connect 공급자 삭제"
     group_links_heading: OpenID Connect 그룹 링크
+    groups:
+      match_preview_component:
+        title: 추출된 그룹 이름
+        placeholder_none: 패턴과 일치하는 그룹이 현재 없습니다.
+      match_preview_dialog_component:
+        description: 샘플 데이터에 대해 정규 표현식 패턴을 테스트하여, 추출하려는 그룹 이름이 실제로 제대로 추출되는지 확인할 수 있습니다. 여기에서 패턴을 수정할 수 있지만, 테스트 문자열과 일치 항목 자체가 구성과 함께 저장되지는 않습니다.
+        group_names_label: 그룹 이름 테스트
+        group_names_description: 정규 표현식 패턴이 그룹에 어떤 영향을 미치는지 확인하려면 OIDC 클레임에 표시되는 대로 라인당 그룹 이름을 하나씩 입력하세요.
+        show_button: 패턴 테스트
+        title: 정규 표현식 테스트
     instructions:
       endpoint_url: OpenID Connect 공급자가 귀하에게 제공한 엔드포인트 URL
       group_regexes: 라인별로 하나의 정규 표현식 패턴을 사용하세요. 작업 방법에 대한 자세한 내용은 [설명서](docs_url)를 참조하세요.
       group_regexes_detail: 선택적으로 정규 표현식을 사용하여 그룹 클레임의 그룹 이름과 일치하는 패턴을 정의할 수 있습니다. 예를 들어, <code>^Level1/Level2/([\w/]+)$</code> 같은 패턴을 입력하면 응답에서 “Level1/Level2/GroupName/SubGroup”을 포함한 “Groupname/SubGroup” 그룹이 추출됩니다. 일치하는 패턴이 없으면 해당 그룹은 무시됩니다. 전체 그룹 이름을 사용하여 모든 그룹을 동기화하려면 비워 두세요.
+      group_regexes_testing: "'패턴 테스트'를 클릭하여 샘플 OIDC 사용자 정보에 대해 정규 표현식 패턴을 테스트하세요."
       group_sync: ID 공급자로부터 그룹 멤버십 정보를 자동으로 추출하고 동기화합니다.
       groups_claim: 사용자가 속한 그룹 이름을 나타내는 클레임의 이름을 지정합니다.
       metadata_none: 이 정보가 없습니다
       metadata_url: 검색 엔드포인트 URL이 있습니다
-      oidc_information: These values are needed to configure the OpenID Connect provider.
+      oidc_information: 이러한 값은 OpenID Connect 공급자를 구성하는 데 필요합니다.
       client_id: OpenID Connect 공급자가 귀하에게 제공한 클라이언트 ID입니다
       client_secret: OpenID Connect 공급자가 귀하에게 제공한 클라이언트 비밀번호입니다
       limit_self_registration: 활성화된 경우, 사용자는 공급자 측의 구성에서 허용하는 경우에만 이 공급자를 사용하여 등록할 수 있습니다.
@@ -116,6 +131,7 @@ ko:
       label_configuration_details: 메타데이터
       label_client_details: 클라이언트 세부 정보
       label_attribute_mapping: 특성 매핑
+      notice_created: 새로운 OpenID 공급자가 생성되었습니다.
       client_details_description: OIDC 클라이언트인 OpenProject의 구성 세부 정보
       no_results_table: 아직 정의된 공급자가 없습니다.
       plural: OpenID 공급자

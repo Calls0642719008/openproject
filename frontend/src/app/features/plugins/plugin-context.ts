@@ -30,6 +30,7 @@ import { AttachmentsResourceService } from 'core-app/core/state/attachments/atta
 import { HttpClient } from '@angular/common/http';
 import { TimezoneService } from 'core-app/core/datetime/timezone.service';
 import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 /**
  * Plugin context bridge for plugins outside the CLI compiler context
  * in order to access services and parts of the core application
@@ -65,6 +66,7 @@ export class OpenProjectPluginContext {
     attachmentsResourceService: this.injector.get(AttachmentsResourceService),
     http: this.injector.get(HttpClient),
     turboRequests: this.injector.get(TurboRequestsService),
+    currentProject: this.injector.get(CurrentProjectService),
   };
 
   public readonly helpers = {
@@ -83,7 +85,7 @@ export class OpenProjectPluginContext {
 
   // Hooks
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  public readonly hooks:{ [hook:string]:(callback:(...args:any[]) => unknown) => void } = {};
+  public readonly hooks:Record<string, (callback:(...args:any[]) => unknown) => void> = {};
 
   // Angular zone reference
   @InjectField() public readonly zone:NgZone;

@@ -13,14 +13,8 @@ pt-BR:
           no_results: 'Nenhum documento ainda.'
         members:
           title: 'Membros'
-          no_results: 'Nenhum membro visível.'
-          view_all_members: 'Visualizar todos os membros'
-          add: 'Membro'
-          too_many: 'Exibindo %{count} de %{total} membros.'
         news:
           title: 'Notícias'
-          at: 'em'
-          no_results: 'Nada de novo para relatar.'
         project_description:
           title: 'Descrição do projeto'
           no_results: "Nenhuma descrição foi escrita. Uma pode ser fornecida nas 'Configurações do Projeto'."
@@ -33,9 +27,10 @@ pt-BR:
           not_set: 'Não definido'
           finished: 'Finalizado'
           discontinued: 'Descontinuado'
+        project_status_beta:
+          title: 'Status do projeto (BETA)'
         subprojects:
-          title: 'Subprojetos'
-          no_results: 'Nenhum subprojeto.'
+          title: 'Subitens'
         project_favorites:
           title: 'Projetos favoritos'
           no_results: 'No momento, você não possui projetos favoritos. Clique no ícone de estrela no painel do projeto para adicionar um aos seus favoritos.'
@@ -57,6 +52,7 @@ pt-BR:
           title: 'Tabela de pacotes de trabalho'
         work_packages_graph:
           title: 'Gráfico de pacotes de trabalho'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Calendário'
         work_packages_overview:

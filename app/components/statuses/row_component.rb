@@ -78,8 +78,7 @@ module Statuses
       link_to(
         helpers.op_icon("icon icon-delete"),
         status_path(status),
-        method: :delete,
-        data: { confirm: I18n.t(:text_are_you_sure) },
+        data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) },
         title: t(:button_delete)
       )
     end

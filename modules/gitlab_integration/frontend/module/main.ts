@@ -30,7 +30,9 @@
 import { Injector, NgModule } from '@angular/core';
 import { OpSharedModule } from 'core-app/shared/shared.module';
 import { OpenprojectTabsModule } from 'core-app/shared/components/tabs/openproject-tabs.module';
-import { WorkPackageTabsService } from 'core-app/features/work-packages/components/wp-tabs/services/wp-tabs/wp-tabs.service';
+import {
+  WorkPackageTabsService,
+} from 'core-app/features/work-packages/components/wp-tabs/services/wp-tabs/wp-tabs.service';
 
 
 import { GitlabTabComponent } from './gitlab-tab/gitlab-tab.component';
@@ -70,13 +72,16 @@ export function workPackageGitlabCount(
 
 export function initializeGitlabIntegrationPlugin(injector:Injector) {
   const wpTabService = injector.get(WorkPackageTabsService);
-  wpTabService.register({
-    component: GitlabTabComponent,
-    name: I18n.t('js.gitlab_integration.work_packages.tab_name'),
-    id: 'gitlab',
-    displayable: (workPackage) => !!workPackage.gitlab,
-    count: workPackageGitlabCount,
-  });
+  wpTabService.registerBefore(
+    'watchers',
+    {
+      component: GitlabTabComponent,
+      name: I18n.t('js.gitlab_integration.work_packages.tab_name'),
+      id: 'gitlab',
+      displayable: (workPackage) => !!workPackage.gitlab,
+      count: workPackageGitlabCount,
+    },
+  );
 }
 
 

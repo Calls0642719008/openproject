@@ -33,7 +33,7 @@
             label: t("settings.project_attributes.label_new_attribute"),
             content_arguments: { data: { test_selector: "add-project-custom-field-attribute" } }
           ) do |sub_menu|
-            OpenProject::CustomFieldFormat.available_for_class_name("Project")
+            OpenProject::CustomFieldFormat.enabled_for_class_name("Project")
                                           .sort_by(&:name)
                                           .map do |format|
               sub_menu.with_item(
@@ -42,7 +42,11 @@
                 href: new_admin_settings_project_custom_field_path(field_format: format.name),
                 content_arguments: { data: { turbo: "false",
                                              test_selector: "new-project-custom-field-button" } }
-              )
+              ) do |item|
+                unless format.enterprise_feature_allowed?
+                  item.with_trailing_visual_icon(icon: :"op-enterprise-addons", classes: "upsell-colored")
+                end
+              end
             end
           end
         end

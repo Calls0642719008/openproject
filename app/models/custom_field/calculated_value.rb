@@ -37,13 +37,17 @@ module CustomField::CalculatedValue
   MATH_OPERATORS_FOR_FORMULA = %w[+ - * / % ( )].freeze
 
   # Field formats that can be used within a formula.
-  FIELD_FORMATS_FOR_FORMULA = %w[int float calculated_value].freeze
+  FIELD_FORMATS_FOR_FORMULA = %w[int float calculated_value weighted_item_list].freeze
 
   def self.calculator_instance
     Dentaku::Calculator.new(case_sensitive: true)
   end
 
   class_methods do
+    def with_formula_referencing(id)
+      where("(formula -> 'referenced_custom_fields') @> ?", id)
+    end
+
     # Select custom fields of type calculated_value that are listed in
     # changed_cf_ids, or are referencing custom fields in changed_cf_ids either
     # directly or through other calculated fields

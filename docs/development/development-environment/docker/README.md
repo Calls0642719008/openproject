@@ -539,6 +539,35 @@ docker compose up -d frontend
 
 Upon setting up all the things correctly, we can see a login with `keycloak` option in login page of `OpenProject`.
 
+
+## MinIO Service (local S3 storage backend)
+
+Within `docker/dev/minio` a compose file is provided for running a local MinIO instance with TLS support which can be used as a S3 storage for uploading files. 
+When running with TLS support, the MinIO instance will be accessible on `https://minio.local` and a management UI (MinIO Console) will be available on `https://minioadmin.local/`.
+
+### Running the MinIO Instance
+
+MinIO is a S3 compatible data store which can be used for simulating uploads of files to S3.
+
+Start up the docker compose service for MinIO:
+
+```shell
+docker compose --project-directory docker/dev/minio up -d
+```
+This will automatically create a bucket named `openproject-uploads` which is used to store uploaded files.
+
+If you want to use TLS support, make sure to copy and uncomment the MinIO configuration environment variables in `docker/dev/tls/docker-compose.core.override.example.yml` to your `docker-compose.override.yml` file in the project root directory. If you want to use MinIO without TLS support, make sure to copy the environment variables from `docker/dev/minio/docker-compose.core-override.example.yml` to your `docker-compose.override.yml` file (in the project root directory). 
+After that, hard restart the `backend` service to apply the changes: 
+
+```
+docker compose down backend
+docker compose up backend
+```
+
+Another option is to use the MinIO service running in docker with OpenProject running locally. To do this, adapt the environment variables in `docker/dev/minio/docker-compose.core.override.example.yml` to your `.env` file and restart the OpenProject after that.
+
+After uploading a file, by e.g. adding an image to a work package, you should be able to see the file in the MinIO Console (a graphical Management UI accessible in the browser). With the TLS setup you can access the MinIO Console on `https://minioadmin.local/`, without TLS it is available on `http://localhost:9001`. For login credentials see `docker/dev/minio/docker-compose.yml`.
+
 ## Local files
 
 Running the docker images will change some of your local files in the mounted code directory. The

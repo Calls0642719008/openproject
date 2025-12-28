@@ -35,12 +35,13 @@ RSpec.describe OpenProject::Common::AttributeLabelComponent, type: :component do
 
   let(:attribute) { "name" }
   let(:model) { create(:project) }
+  let(:required) { false }
   let(:tag) { :span }
   let(:current_user) { create(:user) }
   let(:content) { "Name" }
 
   subject do
-    render_inline(described_class.new(attribute:, model:, tag:, current_user:)) do
+    render_inline(described_class.new(attribute:, model:, tag:, current_user:, required:)) do
       content
     end
 
@@ -66,6 +67,14 @@ RSpec.describe OpenProject::Common::AttributeLabelComponent, type: :component do
 
     it "renders content" do
       expect(subject).to have_text "Name"
+    end
+
+    context "with a required field" do
+      let(:required) { true }
+
+      it "renders a required star" do
+        expect(subject).to have_text "*"
+      end
     end
   end
 

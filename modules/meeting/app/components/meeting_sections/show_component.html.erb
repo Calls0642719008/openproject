@@ -7,7 +7,7 @@
         end
       elsif render_backlog?
         component.with_header do
-          render(MeetingSections::Backlogs::HeaderComponent.new(backlog: @meeting_section, box: component, collapsed: @collapsed, current_meeting: @current_meeting))
+          render(MeetingSections::Backlogs::HeaderComponent.new(backlog: @meeting_section, box: component, collapsed: @collapsed, current_occurrence: @current_occurrence))
         end
       end
       if render_new_button_in_section?
@@ -17,7 +17,7 @@
               render(Primer::Beta::Text.new(color: :subtle)) { t("meeting_section.empty_text") }
             end
             empty_list_container.with_column do
-              render(MeetingAgendaItems::NewButtonComponent.new(meeting: @meeting, meeting_section: @meeting_section))
+              render(MeetingAgendaItems::NewButtonComponent.new(meeting: @meeting, meeting_section: @meeting_section, current_occurrence: @current_occurrence))
             end
           end
         end
@@ -28,13 +28,14 @@
             MeetingAgendaItems::ItemComponent.new(
               meeting_agenda_item: agenda_item,
               container: component,
-              first_and_last:
+              first_and_last:,
+              current_occurrence: @current_occurrence
             )
           )
         end
       end
       component.with_row(p: 0, border_top: 0, id: insert_target_modifier_id) do
-        render(MeetingAgendaItems::NewComponent.new(meeting: @meeting, meeting_section: @meeting_section, hidden: @form_hidden, type: @form_type))
+        render(MeetingAgendaItems::NewComponent.new(meeting: @meeting, meeting_section: @meeting_section, hidden: @form_hidden, type: @form_type, current_occurrence: @current_occurrence))
       end
     end
   end

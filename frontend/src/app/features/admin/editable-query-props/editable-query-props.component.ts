@@ -33,11 +33,11 @@ export class EditableQueryPropsComponent implements OnInit {
 
   ngOnInit() {
     const element = this.elementRef.nativeElement;
-    this.id = element.dataset.id as string;
-    this.name = element.dataset.name as string;
+    this.id = element.dataset.id!;
+    this.name = element.dataset.name!;
     this.urlParams = element.dataset.urlParams === 'true';
 
-    this.queryProps = element.dataset.query as string;
+    this.queryProps = element.dataset.query!;
   }
 
   public editQuery() {
@@ -61,7 +61,6 @@ export class EditableQueryPropsComponent implements OnInit {
       currentQuery: queryProperties,
       urlParams: this.urlParams,
       callback: (queryProps:string) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.queryProps = this.urlParams ? queryProps : JSON.stringify(queryProps);
         this.cdRef.detectChanges();
       },

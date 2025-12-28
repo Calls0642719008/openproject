@@ -90,6 +90,40 @@ RSpec.describe "Recurring meetings end series", :js do
     expect(page).to have_text("Meeting series ended")
   end
 
+  context "with invited participants" do
+    let(:participant) do
+      create(:user,
+             member_with_permissions: { project => %i[view_meetings] })
+    end
+
+    before do
+      meeting.template.participants.create!(user: participant, invited: true)
+    end
+
+    it "sends series ended emails to each participant" do
+      show_page.visit!
+
+      show_page.end_meeting_series
+      show_page.within_modal "End meeting series" do
+        retry_block do
+          check "I understand that this deletion cannot be reversed", allow_label_click: true
+          click_on "End series now"
+        end
+      end
+
+      expect(page).to have_text("Meeting series ended")
+
+      perform_enqueued_jobs
+
+      expect(ActionMailer::Base.deliveries.size).to eq 2
+      expect(ActionMailer::Base.deliveries.map(&:to).flatten)
+        .to contain_exactly user.mail, participant.mail
+      subject = ActionMailer::Base.deliveries.map(&:subject).uniq.first
+      expect(subject).to include("Ended:")
+      expect(subject).to include(meeting.title)
+    end
+  end
+
   context "when meeting start time is in the future" do
     before do
       meeting.update! start_time: DateTime.parse("2025-01-30T10:30:00Z")

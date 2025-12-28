@@ -57,7 +57,7 @@ export class ApiV3WorkPackageCachedSubresource extends ApiV3GettableResource<Wor
 
   private updateSchemas(schemas:CollectionResource<SchemaResource>) {
     schemas.elements.forEach((schema) => {
-      this.states.schemas.get(schema.href as string).putValue(schema);
+      this.states.schemas.get(schema.href!).putValue(schema);
     });
   }
 }

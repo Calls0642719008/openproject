@@ -54,7 +54,7 @@ export class WorkPackageViewFocusService extends WorkPackageViewBaseService<WPFo
   public ifShouldFocus(callback:(workPackageId:string) => void) {
     const value = this.current;
 
-    if (value && value.focusAfterRender) {
+    if (value?.focusAfterRender) {
       callback(value.workPackageId);
       value.focusAfterRender = false;
       this.update(value);

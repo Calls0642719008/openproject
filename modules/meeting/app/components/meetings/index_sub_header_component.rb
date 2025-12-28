@@ -73,5 +73,9 @@ module Meetings
     def current_params
       @current_params ||= params.slice(:filters, :page, :per_page).permit!
     end
+
+    def filters_expanded?
+      params[:filters].present?
+    end
   end
 end

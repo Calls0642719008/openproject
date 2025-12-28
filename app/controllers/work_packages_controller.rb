@@ -39,14 +39,15 @@ class WorkPackagesController < ApplicationController
 
   before_action :authorize_on_work_package,
                 :project, only: %i[show generate_pdf_dialog generate_pdf]
-  before_action :load_and_authorize_in_optional_project,
-                :check_allowed_export,
+  before_action :check_allowed_export,
                 :protect_from_unauthorized_export, only: %i[index export_dialog]
 
+  before_action :load_and_authorize_in_optional_project, only: %i[index new show copy export_dialog]
   before_action :authorize, only: %i[show_conflict_flash_message share_upsell]
-  authorization_checked! :index, :show, :export_dialog, :generate_pdf_dialog, :generate_pdf
+  authorization_checked! :index, :show, :new, :copy, :export_dialog, :generate_pdf_dialog, :generate_pdf
 
-  before_action :load_and_validate_query, only: :index, unless: -> { request.format.html? }
+  before_action :load_and_validate_query, only: %i[index copy], unless: -> { request.format.html? }
+
   before_action :load_work_packages, only: :index, if: -> { request.format.atom? }
   before_action :load_and_validate_query_for_export, only: :export_dialog
 
@@ -71,21 +72,34 @@ class WorkPackagesController < ApplicationController
   def show
     respond_to do |format|
       format.html do
+        if show_route_incomplete?
+          redirect_to_complete_route
+
+          return
+        end
+
         render :show,
-               locals: { work_package:, menu_name: project_or_global_menu },
-               layout: "angular/angular"
+               locals: { work_package:, menu_name: project_or_global_menu }
       end
 
-      format.any(*supported_single_formats) do
-        export_single(request.format.symbol)
-      end
+      handle_standard_show_formats(format)
+    end
+  end
 
-      format.atom do
-        atom_journals
+  def copy
+    respond_to do |format|
+      format.html do
+        render :copy,
+               locals: { query: @query, project: @project, menu_name: project_or_global_menu }
       end
+    end
+  end
 
-      format.all do
-        head :not_acceptable
+  def new
+    respond_to do |format|
+      format.html do
+        render :new,
+               locals: { query: @query, project: @project, menu_name: project_or_global_menu }
       end
     end
   end
@@ -177,6 +191,20 @@ class WorkPackagesController < ApplicationController
 
   private
 
+  def handle_standard_show_formats(format)
+    format.any(*supported_single_formats) do
+      export_single(request.format.symbol)
+    end
+
+    format.atom do
+      atom_journals
+    end
+
+    format.all do
+      head :not_acceptable
+    end
+  end
+
   def save_export_settings
     # Saving export settings is only allowed for saved queries
     return false if @query.new_record?
@@ -213,7 +241,9 @@ class WorkPackagesController < ApplicationController
   end
 
   def work_package
-    @work_package ||= WorkPackage.visible(current_user).find_by(id: params[:id])
+    return @work_package if defined?(@work_package)
+
+    @work_package = WorkPackage.visible(current_user).find_by(id: params[:id])
   end
 
   def journals
@@ -257,5 +287,17 @@ class WorkPackagesController < ApplicationController
 
   def login_back_url_params
     params.permit(:query_id, :state, :query_props)
+  end
+
+  def redirect_to_complete_route
+    # redirect /work_packages/:id to a full route with project and tab
+    redirect_to action: "show",
+                id: params[:id],
+                project_id: params[:project_id] || work_package.project.identifier,
+                tab: params[:tab] || "activity"
+  end
+
+  def show_route_incomplete?
+    params[:project_id].blank? || params[:tab].blank?
   end
 end

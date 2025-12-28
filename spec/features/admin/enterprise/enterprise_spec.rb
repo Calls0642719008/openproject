@@ -35,10 +35,12 @@ RSpec.describe "Enterprise token", :js do
 
   shared_let(:admin) { create(:admin) }
 
+  let(:enterprise_tokens_page) { Pages::Admin::EnterpriseTokens::Index.new }
+
   describe "EnterpriseToken management" do
     before do
       login_as admin
-      visit enterprise_tokens_path
+      enterprise_tokens_page.visit!
     end
 
     it "shows a teaser page and has a button to add a token with a dialog" do
@@ -53,14 +55,11 @@ RSpec.describe "Enterprise token", :js do
 
     context "with invalid input" do
       it "shows an error message" do
-        click_button "Add Enterprise token"
-        fill_in "Type support token text", with: "foobar"
-        click_button "Add"
+        enterprise_tokens_page.add_enterprise_token("foobar")
 
         # The dialog is still open with an error message on token field
-        expect(page).to have_dialog("Add Enterprise token")
         validation_error = "Enterprise support token can't be read. Are you sure it is a support token?"
-        expect(page).to have_field("Type support token text", validation_error:)
+        enterprise_tokens_page.expect_add_token_validation_error(validation_error)
       end
     end
 
@@ -74,17 +73,16 @@ RSpec.describe "Enterprise token", :js do
           token.domain = Setting.host_name
         end
       end
+      let(:modals) { Components::Common::Modal.new }
 
       before do
         allow(OpenProject::Token).to receive(:import).and_return(token_object)
       end
 
       it "allows token import flow" do
-        click_button "Add Enterprise token"
-        fill_in "Type support token text", with: "foobar"
-        click_button "Add"
+        enterprise_tokens_page.add_enterprise_token("foobar")
 
-        expect_and_dismiss_flash(message: I18n.t(:notice_successful_update))
+        enterprise_tokens_page.close_welcome_video_modal
 
         # Table headers
         [
@@ -115,7 +113,7 @@ RSpec.describe "Enterprise token", :js do
         wait_for_network_idle
 
         # Expect deletion modal
-        expect(page).to have_dialog("Delete enterprise token")
+        modals.expect_modal("Delete enterprise token")
         within_dialog("Delete enterprise token") do
           click_button "Delete"
         end
@@ -126,29 +124,22 @@ RSpec.describe "Enterprise token", :js do
       end
 
       it "cannot import same token twice" do
-        click_button "Add Enterprise token"
-        fill_in "Type support token text", with: "foobar"
-        click_button "Add"
+        enterprise_tokens_page.add_enterprise_token("foobar")
 
-        expect_and_dismiss_flash(message: I18n.t(:notice_successful_update))
+        enterprise_tokens_page.close_welcome_video_modal
 
-        click_button "Add Enterprise token"
-        fill_in "Type support token text", with: "foobar"
-        click_button "Add"
+        # Add the token a second time
+        enterprise_tokens_page.add_enterprise_token("foobar")
 
         # The dialog is still open with an error message on token field
-        expect(page).to have_dialog("Add Enterprise token")
-        validation_error = "This token has already been added."
-        expect(page).to have_field("Type support token text", validation_error:)
+        enterprise_tokens_page.expect_add_token_validation_error("This token has already been added.")
 
         # Try importing with blank spaces and newlines before and after
         fill_in "Type support token text", with: " \nfoobar \n"
         click_button "Add"
 
         # The dialog is still open with an error message on token field
-        expect(page).to have_dialog("Add Enterprise token")
-        validation_error = "This token has already been added."
-        expect(page).to have_field("Type support token text", validation_error:)
+        enterprise_tokens_page.expect_add_token_validation_error("This token has already been added.")
       end
     end
   end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -40,7 +41,9 @@ module MeetingAgendaItems
       state: :show,
       container: nil,
       display_notes_input: nil,
-      first_and_last: []
+      first_and_last: [],
+      current_occurrence: nil,
+      presentation_mode: false
     )
       super
 
@@ -49,10 +52,15 @@ module MeetingAgendaItems
       @display_notes_input = display_notes_input
       @container = container
       @first_and_last = first_and_last
+      @current_occurrence = current_occurrence
+      @presentation_mode = presentation_mode
     end
 
-    def wrapper_uniq_by
-      @meeting_agenda_item.id
+    ##
+    # This wrapper key is used for identifying the agenda item
+    # through anchor hashes.
+    def wrapper_key
+      "meeting-agenda-item-#{@meeting_agenda_item.id}"
     end
 
     def call
@@ -73,7 +81,9 @@ module MeetingAgendaItems
     def child_component_params
       {
         meeting_agenda_item: @meeting_agenda_item,
-        display_notes_input: (@display_notes_input if @state == :edit)
+        display_notes_input: (@display_notes_input if @state == :edit),
+        current_occurrence: @current_occurrence,
+        presentation_mode: @presentation_mode
       }.compact
     end
 
@@ -85,11 +95,13 @@ module MeetingAgendaItems
       {
         pl: 0,
         scheme: :default,
+        classes: "op-meeting-agenda-item-wrapper",
         data: {
           id: @meeting_agenda_item.id,
           "draggable-id": @meeting_agenda_item.id,
           "draggable-type": "agenda-item",
-          "drop-url": drop_meeting_agenda_item_path(@meeting_agenda_item.meeting, @meeting_agenda_item)
+          "drop-url": drop_meeting_agenda_item_path(@meeting_agenda_item.meeting, @meeting_agenda_item,
+                                                    current_occurrence: @current_occurrence)
         }
       }
     end

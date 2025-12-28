@@ -27,7 +27,10 @@ it:
       no_results_table: Non è stato definito ancora nessun webhook.
       label_add_new: Aggiungi nuovo webhook
       label_edit: Modifica webhook
-      label_event_resources: Risorse evento
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Creato"
         updated: "Aggiornato"

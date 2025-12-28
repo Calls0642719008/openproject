@@ -1,30 +1,3 @@
-//-- copyright
-// OpenProject is an open source project management software.
-// Copyright (C) the OpenProject GmbH
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License version 3.
-//
-// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
-// Copyright (C) 2006-2013 Jean-Philippe Lang
-// Copyright (C) 2010-2013 the ChiliProject Team
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-//
-// See COPYRIGHT and LICENSE files for more details.
-//++
 
 import {
   AfterViewInit,
@@ -64,6 +37,7 @@ import {
 } from 'core-app/core/apiv3/endpoints/work_packages/api-v3-work-package-cached-subresource';
 import { RecentItemsService } from 'core-app/core/recent-items.service';
 import { populateInputsFromDataset } from 'core-app/shared/components/dataset-inputs';
+import { ApiV3FilterBuilder } from 'core-app/shared/helpers/api-v3/api-v3-filter-builder';
 
 interface SearchResultItem {
   id:string;
@@ -107,6 +81,13 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
 
   public expanded = false;
 
+  // Computed placeholder that changes based on expanded state
+  public get effectivePlaceholder():string {
+    return this.expanded 
+      ? this.I18n.t('js.global_search.search_placeholder_expanded')
+      : this.placeholder;
+  }
+
   private _markable = new BehaviorSubject<boolean>(false);
 
   public markable$ = this._markable.asObservable();
@@ -136,7 +117,7 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
 
   private unregisterGlobalListener:(() => unknown)|undefined;
 
-  public text:{ [key:string]:string } = {
+  public text:Record<string, string> = {
     all_projects: this.I18n.t('js.global_search.all_projects'),
     close_search: this.I18n.t('js.global_search.close_search'),
     current_project_and_all_descendants: this.I18n.t('js.global_search.current_project_and_all_descendants'),
@@ -191,7 +172,7 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
 
   // detect if click is outside or inside the element
   @HostListener('click', ['$event'])
-  public handleClick(event:JQuery.TriggeredEvent):void {
+  public handleClick(event:MouseEvent):void {
     event.preventDefault();
 
     // handle click on search button
@@ -199,7 +180,7 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
       if (this.deviceService.isTablet) {
         this.toggleMobileSearch();
         // open ng-select menu on default
-        jQuery('.ng-input input').focus();
+        document.querySelector<HTMLInputElement>('.ng-input input')?.focus();
         // only for mobile and not for all devices!
         // See https://github.com/opf/openproject/commit/a2eb0cd6025f2ecaca00f4ed81c4eb8e9399bd86
         event.stopPropagation();
@@ -254,7 +235,7 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
       this.toggleTopMenuClass();
     }
 
-    (<HTMLInputElement>document.activeElement).blur();
+    (document.activeElement as HTMLInputElement).blur();
   }
 
   public onClose():void {
@@ -288,7 +269,7 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
   public followItem(item:WorkPackageResource|SearchOptionItem|undefined):void {
     this.selectedItem = item;
     if (item instanceof HalResource) {
-      window.location.href = this.wpPath(item.id as string);
+      window.location.href = this.wpPath(item.id!);
     } else if (item) {
       this.searchInScope(item.projectScope);
     }
@@ -302,28 +283,17 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
 
   // return all project scope items and all items which contain the search term
   public customSearchFn(term:string, item:SearchResultItem):boolean {
-    return item.id === undefined || item.subject.toLowerCase().indexOf(term.toLowerCase()) !== -1;
+    return item.id === undefined || item.subject.toLowerCase().includes(term.toLowerCase());
   }
 
   private autocompleteWorkPackages():Observable<(WorkPackageResource|SearchOptionItem)[]> {
     const query = this.searchTerm;
-    if (query === null || query.match(/^\s+$/)) {
+    if (query === null || /^\s+$/.test(query)) {
       return of([]);
     }
 
     if (!query.length) {
-      return this.recentItemsService.recentItems$.pipe(
-        switchMap((wpIds) => {
-          // It is needed, because otherwise we get infinite spin running
-          // in the searchbar with no recent workpackages IDs inside localStorage
-          if (wpIds.length === 0) {
-            return of([]);
-          }
-
-          void this.apiV3Service.work_packages.requireAll(wpIds);
-          return this.apiV3Service.work_packages.cache.observeSome(wpIds);
-        }),
-      );
+      return this.loadRecentItems();
     }
 
     // Reset the currently selected item.
@@ -345,7 +315,42 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
       );
   }
 
-  // Remove ID marker # when searching for #<number>
+  private loadRecentItems() {
+    return this.recentItemsService.recentItems$.pipe(
+      switchMap((wpIds) => {
+        // It is needed, because otherwise we get infinite spin running
+        // in the searchbar with no recent workpackages IDs inside localStorage
+        if (wpIds.length === 0) {
+          return of([]);
+        }
+
+
+        // Ensure we only load the five recent items
+        // in case none of them are available in the cache
+        const filters = new ApiV3FilterBuilder().add('id', '=', wpIds);
+        const params = {
+          offset: '1',
+          pageSize: '5',
+          valid_subset: 'true',
+        };
+
+        return this
+          .apiV3Service
+          .work_packages
+          .filtered(filters, params)
+          .get()
+          .pipe(
+            map((collection) => {
+              // In case none of the wpIds exist anymore or are not accessible
+              // this API call would return five arbitrary work packages, as that's the way valid_subset works
+              return collection.elements.filter((wp) => wpIds.includes(wp.id!));
+            })
+          );
+      }),
+    );
+  }
+
+// Remove ID marker # when searching for #<number>
   private queryWithoutHash(query:string):string {
     if (/^#(\d+)/.exec(query)) {
       return query.substr(1);

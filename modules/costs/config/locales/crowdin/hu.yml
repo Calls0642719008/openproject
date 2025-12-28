@@ -31,15 +31,15 @@ hu:
         spent: "Elköltve"
         spent_on: "Dátum"
         logged_by: "Naplózta"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Következőnek naplózva
+        entity_id: Következőnek naplózva
+        entity_gid: Következőnek naplózva
       cost_type:
         unit: "Egység neve"
         unit_plural: "Többes számú egység neve"
-        default: "Cost type by default"
+        default: "Költségtípus alapértelmezés szerint"
       work_package:
-        costs_by_type: "Elhasznált egységek"
+        costs_by_type: "Elköltött egység"
         labor_costs: "Munkaerő költségek"
         material_costs: "Egység költségek"
         overall_costs: "Összes költség"
@@ -59,31 +59,31 @@ hu:
         activity: Tevékenység
         spent_on: dátum
         start_time: Kezdés
-        end_time: Finish time
+        end_time: Befejezési idő
         time: Idő
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Következőnek naplózva
+        entity_id: Következőnek naplózva
+        entity_gid: Következőnek naplózva
     models:
       time_entry:
         one: "Belépési idő"
-        other: "Time entries"
+        other: "Idők rögzítése"
       cost_entry:
         one: "Költség tétel"
-        other: "Cost entries"
+        other: "Költségek rögzítése"
       cost_type:
         one: "Költségtípus"
         other: "Költségtípusok"
       time_entry_activity:
-        one: "Time tracking activity"
+        one: "Időkövetési tevékenység"
         other: "Időnyilvántartási tevékenységek"
       rate: "Díj"
     errors:
       models:
         time_entry:
-          invalid_time: "must be between 00:00 and 23:59."
-          cannot_log_for_this_work_package: "Cannot log time for this work package."
-          duplicate_ongoing: "An ongoing time entry already exists for this user."
+          invalid_time: "00:00 és 23:59 között kell lennie."
+          cannot_log_for_this_work_package: "Erre a munkacsomagra nem lehet időt naplózni."
+          duplicate_ongoing: "Erre a felhasználóra már létezik egy folyamatban lévő időbejegyzés."
         work_package:
           is_not_a_valid_target_for_cost_entries: "Munkacsomag #%{id} nem érvényes cél a költség újrahozzárendeléséhez."
           nullify_is_not_valid_for_cost_entries: "Költségek nem hozzárendelhetőek a projekthez."
@@ -98,10 +98,10 @@ hu:
     fixed_date: "Fix dátum"
   button_add_rate: "Új díj"
   button_log_costs: "Költségek naplózása"
-  button_log_time: "Log"
+  button_log_time: "Napló"
   button_add_activity: "Tevékenység"
   button_add_time_entry: "Eltöltött idő rögzítése"
-  button_stop_timer: "Stop timer"
+  button_stop_timer: "Időzítő leállítása"
   caption_booked_on_project: "Foglalt projekt"
   caption_default: "Alapértelmezett"
   caption_default_rate_history_for: "Alapértelmezett díj történet %{user}-nek"
@@ -115,8 +115,8 @@ hu:
   caption_show_locked: "Zárolt nemek mutatása"
   caption_log_time_dialog: "Eltöltött idő rögzítése"
   description_date_for_new_rate: "Új díj dátuma"
-  description_costs_settings: "Define the desired format for the costs in all projects."
-  description_time_settings: "Define which fields are mandatory to fill when logging time in all projects."
+  description_costs_settings: "Határozza meg az összes projektben a költségek kívánt formátumát."
+  description_time_settings: "Határozza meg, hogy mely mezők kitöltése kötelező az idő naplózásakor minden projektben."
   group_by_others: "nincs egy csoportban sem"
   label_between: "között"
   label_cost_filter_add: "Költség tétel szűrő hozzáadása"
@@ -142,9 +142,9 @@ hu:
   label_work_package_filter_add: "Munkacsomag szűrő hozzáadása"
   label_kind: "Típus"
   label_less_or_equal: "<="
-  label_log_costs: "Naplózott költségek"
-  label_new_time_entry_activity: "New time entry activity"
-  label_time_entry_activity_form_description: "Changes to this time entry activity will be reflected in all projects where it is enabled."
+  label_log_costs: "Költségek naplózása"
+  label_new_time_entry_activity: "Új időrögzítési tevékenység"
+  label_time_entry_activity_form_description: "A munkaidő-nyilvántartási tevékenység változásai minden olyan projektben tükröződnek, ahol ez engedélyezve van."
   label_no: "Nem"
   label_option_plural: "Beállítások"
   label_overall_costs: "Összes költség"
@@ -158,37 +158,37 @@ hu:
   label_valid_from: "Innentől érvényes"
   label_yes: "Igen"
   label_time: "Idő"
-  label_cost: "Cost"
+  label_cost: "Költség"
   label_costs: "Költségek"
-  label_mandatory_fields: "Mandatory fields"
-  label_my_time_tracking: "My time tracking"
-  label_no_time: "No time tracked"
-  label_next_day: "Next day"
+  label_mandatory_fields: "Kötelező mezők"
+  label_my_time_tracking: "Időnaplóm"
+  label_no_time: "Nincs naplózott idő"
+  label_next_day: "Holnap"
   label_next_week: "A jövő héten"
-  label_next_workweek: "Next work week"
-  label_next_month: "Next month"
-  label_previous_day: "Previous day"
-  label_previous_workweek: "Previous work week"
+  label_next_workweek: "Következő munkahét"
+  label_next_month: "Következő hónap"
+  label_previous_day: "Tegnap"
+  label_previous_workweek: "Előző munkahét"
   label_previous_week: "Előző héten"
-  label_previous_month: "Previous month"
-  label_specific_day: "Day %{day}"
-  label_specific_week: "Calendar week %{week}"
-  label_specific_month: "Month %{month}"
+  label_previous_month: "Előző hónap"
+  label_specific_day: "Nap %{day}"
+  label_specific_week: "Naptári hét %{week}"
+  label_specific_month: "Hónap %{month}"
   label_list: "Lista"
   label_month: "Havi"
   label_workweek: "Munkahét"
   label_day: "Nap"
   label_today_capitalized: "Ma"
-  label_view_mode_switcher: "Change view"
-  label_timer_since: "Started at %{time}"
-  placeholder_activity_select_work_package_first: Work package selection is required first
+  label_view_mode_switcher: "Nézet módosítása"
+  label_timer_since: "Elkezdődött %{time}-kor"
+  placeholder_activity_select_work_package_first: Először a munkacsomag(ok) kiválasztása szükséges
   notice_something_wrong: "Valami hiba történt. Kérlek próbáld újra."
   notice_successful_restore: "Sikeres visszaállítás."
   notice_successful_lock: "Sikeresen zárolt."
   notice_cost_logged_successfully: "Egységköltség sikeresen naplózva."
-  notice_different_time_zones: "This user has a different time zone (%{tz}). Time will be logged using their time zone."
-  notice_time_entry_update_failed: "Failed to update time entry. Errors: %{errors}"
-  notice_time_entry_delete_failed: "Failed to delete time entry. Errors: %{errors}"
+  notice_different_time_zones: "Ez a felhasználó más időzónában van: (%{tz}). Az idő az ő időzónájával lesz naplózva."
+  notice_time_entry_update_failed: "Nem sikerült frissíteni az időbejegyzést. Hibák: %{errors}"
+  notice_time_entry_delete_failed: "Nem sikerült törölni az időbejegyzést. Hibák: %{errors}"
   permission_edit_cost_entries: "Könyvelt egységköltségek szerkesztése"
   permission_edit_own_cost_entries: "Saját könyvelt egységköltségek szerkesztése"
   permission_edit_hourly_rates: "Órabérek szerkesztése"
@@ -203,11 +203,11 @@ hu:
   permission_view_own_hourly_rate: "Saját óradíj megtekintése"
   permission_view_own_time_entries: "Az eltöltött idő megtekintése"
   project_module_costs: "Idő és költség"
-  setting_allow_tracking_start_and_end_times: "Allow start and finish times"
+  setting_allow_tracking_start_and_end_times: "Engedélyezze a kezdési és befejezési időpontokat"
   setting_costs_currency: "Pénznem"
   setting_costs_currency_format: "Pénznem formátuma"
-  setting_enforce_tracking_start_and_end_times: "Require start and finish times"
-  setting_enforce_without_allow: "Requiring start and finish times is not possible without allowing them"
+  setting_enforce_tracking_start_and_end_times: "Kezdési és befejezési idő megadása kötelező"
+  setting_enforce_without_allow: "A kezdési és befejezési idő megkövetelése nem lehetséges anélkül, hogy engedélyeznénk azok megadását"
   setting_allow_tracking_start_and_end_times_caption: "Enables entering start and finish times when logging time."
   setting_enforce_tracking_start_and_end_times_caption: "Makes entering start and finish times mandatory when logging time."
   text_assign_time_and_cost_entries_to_project: "Idők és költségek projekthez rendelése"
@@ -218,17 +218,17 @@ hu:
   text_warning_hidden_elements: "Néhány bejegyzés lehet, hogy kimaradt az összesítésből."
   week: "hét"
   total_times:
-    workweek: "Workweek Total: %{hours}"
-    week: "Week Total: %{hours}"
-    month: "Month Total: %{hours}"
-    day: "Day Total: %{hours}"
+    workweek: "Munkahét összesen: %{hours}"
+    week: "Hét összesen: %{hours}"
+    month: "Hónap Összesen: %{hours}"
+    day: "Nap összesen: %{hours}"
   api_v3:
     errors:
       validation:
-        start_time_different_date: "Date part of startTime (%{start_time}) must be the same as the spentOn (%{spent_on}) date."
+        start_time_different_date: "A startTime (%{start_time}) dátumrészének meg kell egyeznie a spentOn (%{spent_on}) dátummal."
   ee:
     features:
-      time_entry_time_restrictions: Require exact time tracking
+      time_entry_time_restrictions: Pontos időnaplózást igényel
     upsell:
       time_entry_time_restrictions:
-        description: "Improve your time tracking by requiring exact start and finish times when logging time."
+        description: "Javítsa az időnyilvántartást azáltal, hogy pontos kezdési és befejezési időpontokat követel meg az időnaplózás során."

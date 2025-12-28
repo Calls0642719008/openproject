@@ -46,9 +46,7 @@ module API
 
         collection :elements,
                    getter: ->(*) {
-                     cost_helper.summarized_cost_entries.map do |kvp|
-                       type = kvp[0]
-                       units = kvp[1]
+                     cost_helper.summarized_cost_entries.map do |type, units|
                        ::API::V3::CostEntries::AggregatedCostEntryRepresenter.new(type, units)
                      end
                    },

@@ -29,11 +29,9 @@
 #++
 
 module Token
-  class ICalMeeting < HashedToken
+  class ICalMeeting < Token::Named
     include OpenProject::StaticRouting::UrlHelpers
     include ActionView::Helpers::UrlHelper
-
-    store_attribute :data, :token_name, :string
 
     def display_value
       if plain_value.present?
@@ -44,10 +42,6 @@ module Token
     end
 
     private
-
-    def single_value?
-      false
-    end
 
     def url_helpers
       @url_helpers ||= OpenProject::StaticRouting::StaticUrlHelpers.new

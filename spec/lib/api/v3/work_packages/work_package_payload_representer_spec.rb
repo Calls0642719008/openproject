@@ -146,12 +146,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackagePayloadRepresenter do
       describe "startDate" do
         before do
           allow(work_package)
-            .to receive(:milestone?)
-            .and_return(false)
-
-          allow(work_package)
-            .to receive(:leaf?)
-            .and_return(true)
+            .to receive_messages(milestone?: false, leaf?: true)
         end
 
         it_behaves_like "has ISO 8601 date only" do
@@ -183,12 +178,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackagePayloadRepresenter do
       describe "dueDate" do
         before do
           allow(work_package)
-            .to receive(:milestone?)
-            .and_return(false)
-
-          allow(work_package)
-            .to receive(:leaf?)
-            .and_return(true)
+            .to receive_messages(milestone?: false, leaf?: true)
         end
 
         it_behaves_like "has ISO 8601 date only" do
@@ -220,12 +210,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackagePayloadRepresenter do
       describe "date" do
         before do
           allow(work_package)
-            .to receive(:milestone?)
-            .and_return(true)
-
-          allow(work_package)
-            .to receive(:leaf?)
-            .and_return(true)
+            .to receive_messages(milestone?: true, leaf?: true)
         end
 
         it_behaves_like "has ISO 8601 date only" do
@@ -727,6 +712,99 @@ RSpec.describe API::V3::WorkPackages::WorkPackagePayloadRepresenter do
 
         it "leaves attribute unchanged" do
           expect(subject.parent).to eql(parent)
+        end
+      end
+    end
+
+    describe "_meta property" do
+      let(:meta) { OpenStruct.new } # rubocop:disable Style/OpenStructUse
+      let(:representer) do
+        described_class.create(work_package, meta:, current_user: user)
+      end
+
+      describe "generation" do
+        subject { representer.to_json }
+
+        it "has a _meta property without validateCustomFields when not set" do
+          expect(subject).to have_json_path "_meta"
+          expect(subject).not_to have_json_path("_meta/validateCustomFields")
+        end
+
+        context "with validate_custom_fields set to true" do
+          let(:meta) { OpenStruct.new validate_custom_fields: true } # rubocop:disable Style/OpenStructUse
+
+          it "renders validate_custom_fields as true" do
+            expect(subject)
+              .to be_json_eql(true.to_json)
+              .at_path("_meta/validateCustomFields")
+          end
+        end
+
+        context "with validate_custom_fields set to false" do
+          let(:meta) { OpenStruct.new validate_custom_fields: false } # rubocop:disable Style/OpenStructUse
+
+          it "renders validate_custom_fields as false" do
+            expect(subject)
+              .to be_json_eql(false.to_json)
+              .at_path("_meta/validateCustomFields")
+          end
+        end
+      end
+
+      describe "parsing" do
+        let(:representer) do
+          described_class.create(
+            OpenStruct.new(available_custom_fields: []), # rubocop:disable Style/OpenStructUse
+            meta: OpenStruct.new, # rubocop:disable Style/OpenStructUse
+            current_user: user
+          )
+        end
+
+        subject { representer.from_hash(parsed_hash) }
+
+        context "with validate_custom_fields set to true in meta" do
+          let(:parsed_hash) do
+            {
+              "subject" => "Updated subject",
+              "_meta" => {
+                "validateCustomFields" => true
+              }
+            }
+          end
+
+          it "sets validate_custom_fields to true" do
+            expect(subject.subject).to eq "Updated subject"
+            expect(subject.meta.validate_custom_fields).to be true
+          end
+        end
+
+        context "with validate_custom_fields set to false in meta" do
+          let(:parsed_hash) do
+            {
+              "subject" => "Updated subject",
+              "_meta" => {
+                "validateCustomFields" => false
+              }
+            }
+          end
+
+          it "sets validate_custom_fields to false" do
+            expect(subject.subject).to eq "Updated subject"
+            expect(subject.meta.validate_custom_fields).to be false
+          end
+        end
+
+        context "with no meta property" do
+          let(:parsed_hash) do
+            {
+              "subject" => "Updated subject"
+            }
+          end
+
+          it "does not set meta" do
+            expect(subject.subject).to eq "Updated subject"
+            expect(subject.meta).to be_nil
+          end
         end
       end
     end

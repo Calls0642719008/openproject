@@ -43,13 +43,6 @@ ca:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Documentació
-        item_1:
-          name: Especificació
-        item_2:
-          name: Altres
       project_query_roles:
         item_0:
           name: Project query viewer

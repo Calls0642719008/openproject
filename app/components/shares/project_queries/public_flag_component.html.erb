@@ -1,11 +1,7 @@
 <%=
 container.with_row do
   render(
-    Primer::Box.new(
-      border: true,
-      border_radius: BOX_BORDER_RADIUS,
-      p: BOX_PADDING
-    )
+    OpPrimer::InsetBoxComponent.new
   ) do
     content_tag(:div, class: tooltip_wrapper_classes, data: { tooltip: tooltip_message }) do
       render(

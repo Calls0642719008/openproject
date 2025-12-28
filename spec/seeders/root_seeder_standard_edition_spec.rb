@@ -70,6 +70,7 @@ RSpec.describe RootSeeder,
       expect(Boards::Grid.count).to eq 5
       expect(Boards::Grid.count { |grid| grid.options.has_key?(:filters) }).to eq 1
       expect(Project::PhaseDefinition.count).to eq 4
+      expect(DocumentType.count).to be >= 3 # at least the 3 default types
     end
 
     it "links work packages to their version" do
@@ -143,7 +144,7 @@ RSpec.describe RootSeeder,
     end
 
     include_examples "it creates records", model: Color, expected_count: 148
-    include_examples "it creates records", model: DocumentCategory, expected_count: 3
+    include_examples "it creates records", model: DocumentType, expected_count: 6
     include_examples "it creates records", model: GlobalRole, expected_count: 2
     include_examples "it creates records", model: WorkPackageRole, expected_count: 3
     include_examples "it creates records", model: ProjectRole, expected_count: 5

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -39,26 +41,36 @@ module API
         super(models, current_user:)
       end
 
-      class_attribute :element_decorator_class
+      class << self
+        attr_writer :element_decorator_class
 
-      def self.element_decorator(klass)
-        self.element_decorator_class = klass
+        def element_decorator_class
+          @element_decorator_class ||= begin
+            unless name.end_with?("CollectionRepresenter")
+              raise ArgumentError,
+                    "Can't deduce representer name from #{name}, please specify it with `element_decorator ClassName`"
+            end
+
+            name.gsub("CollectionRepresenter", "Representer")
+                .constantize
+          end
+        end
+
+        def element_decorator(klass)
+          self.element_decorator_class = klass
+        end
+
+        def to_eager_load
+          super || element_decorator_class.to_eager_load
+        end
+
+        def to_preload
+          super || element_decorator_class.to_preload
+        end
       end
 
       def element_decorator
-        self.class.element_decorator_class || deduce_element_decorator
-      end
-
-      def deduce_element_decorator
-        name = self.class.name
-
-        unless name.end_with?("CollectionRepresenter")
-          raise ArgumentError, "Can't deduce representer name from #{name}, please specify it with `element_decorator ClassName`"
-        end
-
-        name
-          .gsub("CollectionRepresenter", "Representer")
-          .constantize
+        self.class.element_decorator_class
       end
 
       link :self do
@@ -66,7 +78,7 @@ module API
       end
 
       property :total, getter: ->(*) { @total }, exec_context: :decorator
-      property :count, getter: ->(*) { count }
+      property :count, getter: ->(*) { represented.to_a.size }, exec_context: :decorator
 
       property :groups,
                exec_context: :decorator,

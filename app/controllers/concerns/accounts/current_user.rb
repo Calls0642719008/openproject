@@ -82,14 +82,11 @@ module Accounts::CurrentUser
     return unless Setting::Autologin.enabled?
 
     autologin_cookie_name = OpenProject::Configuration["autologin_cookie_name"]
-    autologin_token = cookies[autologin_cookie_name]
-    return unless autologin_token
-
-    user = User.try_to_autologin(autologin_token)
-
-    if user
-      login_user(user)
-      user
+    token = Token::AutoLogin.find_valid_token cookies[autologin_cookie_name]
+    if token.present?
+      session[:autologin_token_id] = token.id
+      login_user(token.user)
+      token.user
     else
       cookies.delete(autologin_cookie_name)
       nil

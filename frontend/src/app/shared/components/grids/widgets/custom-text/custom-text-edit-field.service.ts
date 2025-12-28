@@ -9,6 +9,7 @@ import { ResourceChangeset } from 'core-app/shared/components/fields/changeset/r
 import { SchemaCacheService } from 'core-app/core/schemas/schema-cache.service';
 import { ICKEditorContext } from 'core-app/shared/components/editor/components/ckeditor/ckeditor.types';
 import { GridResource } from 'core-app/features/hal/resources/grid-resource';
+import { HalSource } from 'core-app/features/hal/interfaces';
 
 @Injectable()
 export class CustomTextEditFieldService extends EditFieldHandler {
@@ -154,7 +155,7 @@ export class CustomTextEditFieldService extends EditFieldHandler {
     };
 
     if (grid.prepareAttachment as { href?:string }) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       resourceSource._links.prepareAttachment = grid.prepareAttachment;
     }
 

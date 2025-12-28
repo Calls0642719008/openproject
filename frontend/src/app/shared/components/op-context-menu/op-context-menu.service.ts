@@ -21,6 +21,7 @@ export class OPContextMenuService {
 
   // Allow temporarily disabling the close handler
   private isOpening = false;
+  private openSeq = 0;
 
   constructor(
     readonly FocusHelper:FocusHelperService,
@@ -45,10 +46,10 @@ export class OPContextMenuService {
     );
 
     // Close context menus on state change
-    this.$transitions.onStart({}, () => this.close());
+    this.$transitions.onStart({}, () => { this.close(); });
 
     // Listen to keyups on window to close context menus
-    jQuery(window).on('keydown', (evt:JQuery.TriggeredEvent) => {
+    window.addEventListener('keydown', (evt) => {
       if (this.active && evt.key === 'Escape') {
         this.close(true);
       }
@@ -81,21 +82,48 @@ export class OPContextMenuService {
    * @param component The context menu component to mount
    *
    */
-  public show(menu:OpContextMenuHandler, event:JQuery.TriggeredEvent|Event, component:ComponentType<unknown> = OPContextMenuComponent):void {
+  public show(menu:OpContextMenuHandler, event:Event, component:ComponentType<unknown> = OPContextMenuComponent):void {
     this.close();
-
-    // Create a portal for the given component class and render it
     this.isOpening = true;
+    const seq = this.openSeq += 1;
+
+    // Create and attach portal
     const portal = new ComponentPortal(component, null, this.injectorFor(menu.locals));
     this.bodyPortalHost.attach(portal);
-    this.portalHostElement.style.display = 'block';
+
+    // Avoid flicker until positioned
+    const hostEl = this.portalHostElement;
+    hostEl.style.visibility = 'hidden';
+    hostEl.style.display = 'block';
     this.active = menu;
 
-    setTimeout(() => {
-      this.reposition(event);
-      // Focus on the first element
-      this.active?.onOpen(this.activeMenu);
-      this.isOpening = false;
+    // Wait one frame to ensure component DOM exists, then position
+    requestAnimationFrame(() => {
+      if (!this.active || this.openSeq !== seq) {
+        this.isOpening = false;
+        return;
+      }
+
+      void this.reposition(event)
+        .then(() => {
+          if (this.active && this.openSeq === seq) {
+            hostEl.style.visibility = 'visible';
+            requestAnimationFrame(() => {
+              // Defer onOpen to next frame to ensure styles are applied
+              if (this.active && this.openSeq === seq) {
+                this.active.onOpen(this.activeMenu);
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          // Fail-safe: close if positioning fails
+          console.error('Context menu positioning failed:', err);
+          if (this.openSeq === seq) this.close();
+        })
+        .finally(() => {
+          if (this.openSeq === seq) this.isOpening = false;
+        });
     });
   }
 
@@ -118,18 +146,24 @@ export class OPContextMenuService {
     this.active = null;
   }
 
-  public reposition(event:JQuery.TriggeredEvent|Event):void {
+  public reposition(event:Event):Promise<void> {
     if (!this.active) {
-      return;
+      return Promise.resolve();
     }
 
-    this.activeMenu
-      .position(this.active.positionArgs(event))
-      .css('visibility', 'visible');
+    return this.active.computePosition(this.activeMenu, event)
+      .then(({ x, y }) => {
+        Object.assign(this.activeMenu.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+          position: 'absolute',
+          visibility: 'visible'
+        });
+      });
   }
 
-  public get activeMenu():JQuery {
-    return jQuery(this.portalHostElement).find('.dropdown');
+  public get activeMenu():HTMLElement {
+    return this.portalHostElement.querySelector('.dropdown')!;
   }
 
   /**

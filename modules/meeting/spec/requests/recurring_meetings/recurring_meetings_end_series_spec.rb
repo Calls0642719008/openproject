@@ -43,7 +43,7 @@ RSpec.describe "Recurring meetings complete template",
     create :recurring_meeting,
            project:,
            author: user,
-           start_time: DateTime.parse("2024-12-05T10:00:00Z"),
+           start_time: DateTime.parse("2024-12-03T10:00:00Z"),
            frequency: "daily"
   end
 
@@ -90,13 +90,13 @@ RSpec.describe "Recurring meetings complete template",
     end
 
     subject do
-      Timecop.freeze("2024-12-04T10:00:00Z".to_datetime) { request }
+      Timecop.freeze("2024-12-03T10:00:00Z".to_datetime) { request }
     end
 
     it "returns an error" do
       expect { subject }.not_to change { recurring_meeting.reload.updated_at }
       expect(response).to be_redirect
-      expect(flash[:error]).to include "End date must be after 2024-12-05."
+      expect(flash[:error]).to include "End date must be after 2024-12-03."
     end
   end
 
@@ -113,7 +113,7 @@ RSpec.describe "Recurring meetings complete template",
       expect(response).to be_redirect
 
       recurring_meeting.reload
-      expect(recurring_meeting.end_date).to eq Date.parse("2025-01-29")
+      expect(recurring_meeting.end_date).to eq Date.parse("2025-01-28")
 
       expect(recurring_meeting.scheduled_meetings.count).to eq(1)
       first = recurring_meeting.scheduled_meetings.first
@@ -137,7 +137,7 @@ RSpec.describe "Recurring meetings complete template",
       expect(response).to be_redirect
 
       recurring_meeting.reload
-      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-05")
+      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-04")
       expect(recurring_meeting.scheduled_meetings.count).to eq(1)
     end
   end
@@ -158,7 +158,7 @@ RSpec.describe "Recurring meetings complete template",
       expect(response).to be_redirect
 
       recurring_meeting.reload
-      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-05")
+      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-04")
     end
   end
 
@@ -185,7 +185,7 @@ RSpec.describe "Recurring meetings complete template",
       expect(response).to be_redirect
 
       recurring_meeting.reload
-      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-05")
+      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-04")
     end
   end
 
@@ -205,7 +205,7 @@ RSpec.describe "Recurring meetings complete template",
       expect(response).to be_redirect
 
       recurring_meeting.reload
-      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-05")
+      expect(recurring_meeting.end_date).to eq Date.parse("2024-12-04")
       expect(recurring_meeting.scheduled_meetings.count).to eq(0)
       expect { schedule.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end

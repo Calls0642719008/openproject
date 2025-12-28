@@ -146,7 +146,6 @@ FactoryBot.define do
       end
     end
 
-
     # force done_ratio in status-based mode if given done_ratio is different from status default
     callback(:after_create) do |work_package, evaluator|
       next unless WorkPackage.status_based_mode?

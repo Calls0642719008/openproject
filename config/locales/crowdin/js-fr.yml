@@ -88,6 +88,8 @@ fr:
     button_list_view: "Vue en liste"
     button_show_view: "Affichage plein écran"
     button_log_time: "Afficher l'horodatage"
+    button_start_timer: "Démarrer le suivi du temps"
+    button_stop_timer: "Arrêter le suivi du temps"
     button_more: "Plus"
     button_open_details: "Ouvrir la vue détaillée"
     button_close_details: "Fermer la vue détaillée"
@@ -188,7 +190,7 @@ fr:
           without_type: "Créer un lot de travaux"
           with_type: "Créer un lot de travaux (Type : %{typename})"
         embedded_table:
-          button: "Intégrer le lot de travaux"
+          button: "Intégrer le tableau du lot de travaux"
           text: "[Placeholder] Tableau du lot de travaux intégré"
         embedded_calendar:
           text: "[Placeholder] Calendrier embarqué"
@@ -237,7 +239,7 @@ fr:
       more_values_not_shown: "Il y a %{total} résultats supplémentaires, effectuez une recherche pour filtrer les résultats."
       description:
         text_open_filter: "Ouvrir ce filtre avec la touche « ALT » et les touches fléchées."
-        text_close_filter: "Pour sélectionner une entrée, laissez le focus par exemple en appuyant sur Entrée. Pour quitter sans filtre, sélectionnez la première entrée (vide)."
+        text_close_filter: "Pour sélectionner une entrée, laissez le focus par exemple en appuyant sur enter. Pour quitter sans filtre, sélectionnez la première entrée (vide)."
       noneElement: "(aucun)"
       time_zone_converted:
         two_values: "%{from} - %{to} dans votre heure locale."
@@ -288,17 +290,6 @@ fr:
         format:
           date: "%{attribute} n’est pas une date valide. Format attendu : AAAA-MM-JJ."
         general: "Une erreur s'est produite."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "En savoir plus sur les nouvelles fonctionnalités et les mises à jour des produits."
-          learn_about: "En savoir plus sur les nouvelles fonctionnalités"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                Cette version contient plusieurs nouvelles fonctionnalités et améliorations, telles que <br> <ul class="%{list_styling_class}"> <li>Améliorations UX/UI pour un look plus moderne.</li> <li>Réunions : option permettant de désactiver les notifications par e-mail et ICS.</li> <li>Les minuteries en cours sont affichées dans le module de suivi du temps.</li> <li>Rapport d'avancement : la somme du % d'achèvement est également affichée dans le mode basé sur l'état.</li> <li>Bilan de santé Nextcloud : indique la capacité d'échange de jetons manquante (add-on Enterprise).</li> </ul>
     ical_sharing_modal:
       title: "S'abonner au calendrier"
       inital_setup_error_message: "Une erreur est survenue lors de la récupération des données."
@@ -306,12 +297,13 @@ fr:
       warning: "Veillez à ne pas partager pas cette adresse URL avec d'autres utilisateurs. Quiconque disposant de ce lien sera en mesure de voir les détails du lot de travaux sans nécessité d'avoir un compte ou de saisir un mot de passe."
       token_name_label: "Où comptez-vous l'utiliser ?"
       token_name_placeholder: 'Saisissez un nom, par exemple « Téléphone »'
-      token_name_description_text: 'Si vous vous abonnez à ce calendrier à partir de plusieurs appareils, ce nom vous aidera à les distinguer dans votre liste de <a href="my/access_token", target="_blank">jetons d''accès</a>.'
+      token_name_description_text: 'Si vous vous abonnez à ce calendrier à partir de plusieurs appareils, ce nom vous permettra de les distinguer dans votre liste de <a href="%{myAccessTokensUrl}" target="_blank">jetons d''accès.</a>'
       copy_url_label: "Copier l'URL"
       ical_generation_error_text: "Une erreur s'est produite lors de la génération de l'URL du calendrier."
       success_message: 'L''adresse URL « %{name} » a été copiée avec succès dans votre presse-papiers. Collez-la dans votre client de calendrier pour compléter l''abonnement.'
     label_activate: "Activer"
     label_assignee: "Assigné"
+    label_assignee_alt_text: "Ce lot de travail est attribué à %{name}"
     label_add_column_after: "Ajouter une colonne après"
     label_add_column_before: "Ajouter une colonne avant"
     label_add_columns: "Ajouter des colonnes"
@@ -353,6 +345,7 @@ fr:
     label_collapse: "Replier"
     label_collapsed: "replié"
     label_collapse_all: "Tout replier"
+    label_collapse_text: "Collapse text"
     label_comment: "Commentaire"
     label_committed_at: "%{committed_revision_link} le %{date}"
     label_committed_link: "révision %{revision_identifier} soumise"
@@ -365,6 +358,7 @@ fr:
     label_expand: "Déplier"
     label_expanded: "déplié"
     label_expand_all: "Tout déplier"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Déplier le menu du projet"
     label_export: "Exporter"
     label_export_preparing: "L'export est en cours de préparation et sera téléchargé sous peu."
@@ -396,7 +390,7 @@ fr:
     label_manage_columns: "Gérer et réorganiser les colonnes"
     label_me: "moi"
     label_meeting_agenda: "Ordre du jour"
-    label_meeting_minutes: "Compte-rendu"
+    label_meeting_minutes: "Minutes"
     label_menu_collapse: "réduire"
     label_menu_expand: "développer"
     label_more_than_ago: "il y a plus de quelques jours"
@@ -444,7 +438,7 @@ fr:
     label_sort_lower: "Déplacer vers le bas"
     label_sorting: "Tri"
     label_spent_time: "Temps passé"
-    label_star_query: "Favori"
+    label_star_query: "Favoris"
     label_press_enter_to_save: "Appuyer sur \"entrée\" pour enregistrer."
     label_public_query: "Public"
     label_sum: "Total"
@@ -563,7 +557,7 @@ fr:
       date_alerts:
         milestone_date: "Date jalon"
         overdue: "En retard"
-        overdue_since: "depuis %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "a lieu aujourd'hui."
         property_is: "a lieu dans %{difference_in_days}."
         property_was: "avait lieu il y a %{difference_in_days}."
@@ -696,7 +690,7 @@ fr:
           first_day: "Premier jour"
           last_day: "Dernier jour"
     text_are_you_sure: "Êtes-vous sûr ?"
-    text_are_you_sure_to_cancel: "Vous avez des modifications non enregistrées sur cette page. Êtes-vous sûr de vouloir les supprimer ?"
+    text_are_you_sure_to_cancel: "Vous avez des modifications non enregistrées sur cette page. Voulez-vous vraiment les supprimer ?"
     breadcrumb: "Fil d'Ariane"
     text_data_lost: "Toutes les données saisies seront perdues."
     text_user_wrote: "%{value} écrit:"
@@ -717,11 +711,11 @@ fr:
       tracking: "Suivi du temps"
       stop: "Arrêter"
     timer:
-      start_new_timer: "Démarrer une nouvelle minuterie"
-      timer_already_running: "Pour démarrer une nouvelle minuterie, vous devez d'abord arrêter la minuterie actuelle :"
-      timer_already_stopped: "Aucune minuterie active pour ce lot de travaux, l'avez-vous arrêtée dans une autre fenêtre ?"
+      start_new_timer: "Démarrer un nouveau suivi du temps"
+      timer_already_running: "Pour démarrer un nouveau suivi du temps, vous devez d'abord arrêter le suivi actuel :"
+      timer_already_stopped: "Aucun suivi du temps n'est actif pour ce lot de travaux, l'avez-vous arrêté dans une autre fenêtre ?"
       tracking_time: "Temps de suivi"
-      button_stop: "Arrêter la minuterie actuelle"
+      button_stop: "Arrêter le suivi du temps actuel"
     two_factor_authentication:
       label_two_factor_authentication: "Authentification à deux facteurs"
     watchers:
@@ -953,8 +947,8 @@ fr:
         hierarchy_disabled_by_group_by: "Le mode hiérarchie est désactivé, car les résultats sont groupés par %{column}."
         sort_ascending: "Trier par ordre croissant"
         sort_descending: "Trier par ordre décroissant"
-        move_column_left: "Déplacer la colonne à gauche"
-        move_column_right: "Déplacer la colonne à droite"
+        move_column_left: "Déplacer la colonne de gauche"
+        move_column_right: "Déplacer le colonne de droite"
         hide_column: "Masquer la colonne"
         insert_columns: "Insérer des colonnes"
         filters: "Filtres"
@@ -992,7 +986,7 @@ fr:
         configure_button: "Configurer le tableau du lot de travaux"
         summary: "Tableau avec lignes de lots de travaux et colonnes d’attributs de lots de travaux."
         text_inline_edit: "La plupart des cellules de ce tableau sont des boutons qui activent la fonctionnalité d'édition en ligne de l’attribut."
-        text_sort_hint: "Avec les liens dans les entêtes de tableau, vous pouvez trier, regrouper, réorganiser, supprimer et ajouter des colonnes."
+        text_sort_hint: "Avec les liens dans les en-têtes de tableau vous pouvez trier, regrouper, réorganiser, supprimer et ajouter des colonnes."
         text_select_hint: "Les boîtes de sélection doivent être ouvertes avec la touche « ALT » et les flèches directionelles."
       table_configuration:
         button: "Configurer ce tableau du lot de travaux"
@@ -1012,7 +1006,7 @@ fr:
           none: "Pas de surlignement"
           inline: "Attribut(s) en surbrillance"
           inline_all: "Tous les attributs"
-          entire_row_by: "Ligne entière selon"
+          entire_row_by: "Ligne entière par"
           status: "Statut"
           priority: "Priorité"
           type: "Type"
@@ -1021,7 +1015,7 @@ fr:
           automatic: "Automatique"
           manually: "Manuellement"
           warning: "Vous perdrez votre tri précédent lors de l'activation du mode de tri automatique."
-        columns_help_text: "Utilisez le champ de saisie ci-dessus pour ajouter des colonnes à votre vue de tableau. Vous pouvez glisser-déposer les colonnes pour les réorganiser."
+        columns_help_text: "Utilisez le champ de saisie ci-dessus pour ajouter des colonnes à votre vue table. Vous pouvez glisser-déposer les colonnes pour les réorganiser."
         relation_filters:
           filter_work_packages_by_relation_type: "Filtrer les lots de travaux par type de relation"
       tabs:
@@ -1080,8 +1074,8 @@ fr:
     notice_successful_delete: "Suppression réussie."
     notice_successful_update: "Mise à jour réussie."
     notice_job_started: "tâche démarrée."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "Aucun ID de tâche n'a été renvoyé par le serveur."
+    invalid_job_response: "Réponse invalide du serveur."
     notice_bad_request: "Mauvaise requête."
     relations:
       empty: Aucune relation n'existe
@@ -1114,6 +1108,7 @@ fr:
       child_work_packages:
         one: "un lot de travaux enfant"
         other: "%{count} lots de travaux enfant"
+      hour_string: "%{hours} h"
       hour:
         one: "1h"
         other: "%{count} h"
@@ -1134,6 +1129,7 @@ fr:
       current_project_and_all_descendants: "Dans ce projet + sous-projets"
       current_project: "Pour ce projet"
       recently_viewed: "Consultés récemment"
+      search_placeholder_expanded: "Recherchez des lots de travaux par sujet, projet, type, statut ou identifiant"
       title:
         all_projects: "tous les projets"
         project_and_subprojects: "et tous les sous-projets"
@@ -1143,71 +1139,8 @@ fr:
       list: "Tableau"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Retour"
       invite: "invite"
-      title:
-        invite: "Inviter utilisateur"
-        invite_to_project: "Inviter %{type} à %{project}"
-        User: "utilisateur"
-        Group: "groupe"
-        PlaceholderUser: "utilisateur fictif"
-        invite_principal_to_project: "Inviter %{principal} à %{project}"
-      project:
-        label: "Projet"
-        required: "Veuillez sélectionner un projet"
-        lacking_permission: "Veuillez sélectionner un projet différent car vous n'avez pas les autorisations nécessaires pour assigner des utilisateurs au projet actuellement sélectionné."
-        lacking_permission_info: "Vous n'avez pas la permission d'affecter des utilisateurs au projet dans lequel vous vous trouvez. Vous devez en sélectionner un autre."
-        next_button: "Suivante"
-        no_results: "Aucun projet trouvé"
-        no_invite_rights: "Vous n'êtes pas autorisé à inviter des membres à ce projet"
-      type:
-        required: "Veuillez sélectionner le type d'invité"
-        user:
-          title: "Utilisateur"
-          description: "Permissions basées sur le rôle attribué dans le projet sélectionné"
-        group:
-          title: "Groupe"
-          description: "Permissions basées sur le rôle attribué dans le projet sélectionné"
-        placeholder:
-          title: "Utilisateur de remplacement"
-          title_no_ee: "Utilisateur fictif (add-on de la version Entreprise uniquement)"
-          description: "N'a pas d'accès au projet et aucun e-mail n'est envoyé."
-          description_no_ee: 'N''a pas accès au projet et aucun courriel n''est envoyé. <br>Consultez la <a href="%{eeHref}" target="_blank">version Entreprise</a>.'
-      principal:
-        label:
-          name_or_email: "Nom ou adresse e-mail"
-          name: "Nom"
-        already_member_message: "Déjà membre de %{project}"
-        no_results_user: "Aucun utilisateur n'a été trouvé"
-        invite_user: "Invité :"
-        no_results_placeholder: "Aucuns utilisateurs fictifs n'a été trouvé"
-        create_new_placeholder: "Créer un nouveau utilisateur fictif :"
-        no_results_group: "Aucun groupe n'a été trouvé"
-        next_button: "Suivante"
-        required:
-          user: "Veuillez sélectionner un utilisateur"
-          placeholder: "Veuillez sélectionner un utilisateur fictif"
-          group: "Veuillez sélectionner un groupe"
-      role:
-        label: "Rôle dans %{project}"
-        no_roles_found: "Aucun rôle trouvé."
-        description: >-
-          C'est le rôle que l'utilisateur recevra quand il rejoindra votre projet. Le rôle définit quelles actions il est autorisé à entreprendre et quelles informations il peut voir. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> En savoir plus sur les rôles et les permissions. </a>
-        required: "Veuillez sélectionner un rôle"
-        next_button: "Suivante"
-      message:
-        label: "Message d'invitation"
-        description: "Nous enverrons un e-mail à l'utilisateur, auquel vous pourrez ajouter un message personnel ici. Une explication concernant l'invitation pourrait être utile, ou peut-être quelques informations concernant le projet pour les aider à démarrer."
-        next_button: "Suivant"
-      summary:
-        next_button: "Envoyer une invitation"
-      success:
-        title: "%{principal} a été invité !"
-        description:
-          user: "L'utilisateur peut maintenant se connecter pour accéder à %{project}. En attendant, vous pouvez déjà planifier avec cet utilisateur et assigner des lots de travaux par exemple."
-          placeholder: "Le utilisateur fictif peut maintenant être utilisé dans %{project}. En attendant, vous pouvez déjà planifier des taches avec cet utilisateur et l'assigner à des lots de travaux par exemple."
-          group: "Le groupe fait maintenant partie du %{project}. Entre-temps, vous pouvez déjà planifier avec ce groupe et l'assigner des lots de travaux par exemple."
-        next_button: "Continuer"
+      placeholder_add_tag: "Créer un utilisateur fictif"
     exclusion_info:
       modal:
         title: "Statut exclu des totaux de la hiérarchie"
@@ -1224,15 +1157,20 @@ fr:
       selected_filter:
         all: "Tous les projets"
         selected: "Uniquement la sélection"
-      search_placeholder: "Rechercher un projet..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Recherche de projets..."
+      search_placeholder_favorites: "Recherche de favoris..."
       include_subprojects: "inclure tous les sous-projets"
       tooltip:
         include_all_selected: "Projet déjà inclus puisque Include tous les sous-projets sont activés."
         current_project: "Ceci est le projet dans lequel vous vous trouvez actuellement."
         does_not_match_search: "Le projet ne correspond pas aux critères de recherche."
       no_results: "Aucun projet ne correspond à vos critères de recherche."
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Aucun projet favori ne correspond à vos critères de recherche."
+    include_workspaces:
+      search_placeholder: "Rechercher..."
+      types:
+        program: "Programme"
+        portfolio: "Portefeuille"
     baseline:
       toggle_title: "Référence"
       clear: "Effacer"
@@ -1241,7 +1179,7 @@ fr:
       show_changes_since: "Afficher les modifications depuis"
       help_description: "Fuseau horaire de référence pour la Référence."
       time_description: "Dans votre fuseau horaire : %{datetime}"
-      time: "Heure"
+      time: "Heure "
       from: "De"
       to: "À"
       drop_down:

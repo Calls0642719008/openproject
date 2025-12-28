@@ -56,11 +56,11 @@ export class BackupComponent implements AfterViewInit {
     attachmentsDisabled: this.i18n.t('js.backup.attachments_disabled'),
   };
 
-  public jobStatusId = this.elementRef.nativeElement.dataset.jobStatusId as string;
+  public jobStatusId = this.elementRef.nativeElement.dataset.jobStatusId!;
 
-  public lastBackupDate = this.elementRef.nativeElement.dataset.lastBackupDate as string;
+  public lastBackupDate = this.elementRef.nativeElement.dataset.lastBackupDate!;
 
-  public lastBackupAttachmentId = this.elementRef.nativeElement.dataset.lastBackupAttachmentId as string;
+  public lastBackupAttachmentId = this.elementRef.nativeElement.dataset.lastBackupAttachmentId!;
 
   public mayIncludeAttachments = this.elementRef.nativeElement.dataset.mayIncludeAttachments !== 'false';
 
@@ -84,7 +84,6 @@ export class BackupComponent implements AfterViewInit {
   }
 
   ngAfterViewInit():void {
-    /* eslint-disable-next-line @typescript-eslint/no-unsafe-call */
     this.backupTokenInput.nativeElement.focus();
   }
 
@@ -101,7 +100,7 @@ export class BackupComponent implements AfterViewInit {
     return this.mayIncludeAttachments ? '' : this.text.attachmentsDisabled;
   }
 
-  public triggerBackup(event?:JQuery.TriggeredEvent) {
+  public triggerBackup(event?:Event) {
     if (event) {
       event.stopPropagation();
       event.preventDefault();

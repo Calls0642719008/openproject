@@ -39,48 +39,98 @@ RSpec.describe "My account Interface settings",
     visit my_account_path
   end
 
-  it "allows the user to specify their preferred colour mode" do
-    click_on "Interface"
+  it "allows the user to specify their preferred color mode" do
+    navigate_to_interface_settings
 
-    select "Light", from: "Colour mode"
-    click_on "Update look and feel"
+    select_theme "Light"
+    expect(page).to have_theme("light")
 
-    expect(page).to have_css("body[data-color-mode='light'][data-light-theme='light']")
+    select_theme "Dark"
+    expect(page).to have_theme("dark")
 
-    select "Light high contrast", from: "Colour mode"
-    click_on "Update look and feel"
-
-    expect(page).to have_css("body[data-color-mode='light'][data-light-theme='light_high_contrast']")
-
-    select "Dark", from: "Colour mode"
-    click_on "Update look and feel"
-
-    expect(page).to have_css("body[data-color-mode='dark'][data-dark-theme='dark']")
-
-    select "Dark high contrast", from: "Colour mode"
-    click_on "Update look and feel"
-
-    expect(page).to have_css("body[data-color-mode='dark'][data-dark-theme='dark_high_contrast']")
-
-    select "Automatic (match OS colour mode)", from: "Colour mode"
-    click_on "Update look and feel"
-
-    expect(page).to have_css("body[data-auto-theme-switcher-mode-value='sync_with_os']")
+    select_theme "Automatic (match OS color mode)"
+    expect(page).to have_auto_theme_config
   end
 
-  describe "Automatic (match OS colour mode)" do
-    def set_automatic_mode_with_reload
-      click_on "Interface"
+  it "allows user to increase contrast for single theme modes" do
+    navigate_to_interface_settings
 
-      select "Automatic (match OS colour mode)", from: "Colour mode"
-      click_on "Update look and feel"
+    select "Light", from: "Color mode"
+
+    expect(page).to have_field("Increase contrast")
+    expect(page).to have_no_field("Force high-contrast when in Light mode")
+    expect(page).to have_no_field("Force high-contrast when in Dark mode")
+
+    enable_contrast_for_single_theme
+    expect(page).to have_theme("light", contrast: true)
+
+    select "Dark", from: "Color mode"
+    enable_contrast_for_single_theme
+    expect(page).to have_theme("dark", contrast: true)
+  end
+
+  it "shows appropriate contrast options based on theme selection" do
+    navigate_to_interface_settings
+
+    select "Light", from: "Color mode"
+    expect(page).to have_field("Increase contrast")
+    expect(page).to have_no_field("Force high-contrast when in Light mode")
+    expect(page).to have_no_field("Force high-contrast when in Dark mode")
+
+    select "Automatic (match OS color mode)", from: "Color mode"
+    expect(page).to have_no_field("Increase contrast")
+    expect(page).to have_field("Force high-contrast when in Light mode")
+    expect(page).to have_field("Force high-contrast when in Dark mode")
+
+    select "Dark", from: "Color mode"
+    expect(page).to have_field("Increase contrast")
+    expect(page).to have_no_field("Force high-contrast when in Light mode")
+    expect(page).to have_no_field("Force high-contrast when in Dark mode")
+  end
+
+  describe "Automatic (match OS color mode)" do
+    def set_automatic_mode_with_reload
+      navigate_to_interface_settings
+      select_theme "Automatic (match OS color mode)"
+    end
+
+    it "allows user to configure auto-contrast for both light and dark modes" do
+      navigate_to_interface_settings
+
+      select "Automatic (match OS color mode)", from: "Color mode"
+      configure_auto_contrast(light: true, dark: true)
+
+      expect(page).to have_auto_theme_config(
+        force_light_contrast: true,
+        force_dark_contrast: true
+      )
     end
 
     context "with OS in dark mode", driver: :chrome_dark_mode do
       it "syncs with OS colour mode" do
         set_automatic_mode_with_reload
-        expect(page).to have_css("body[data-color-mode='dark'][data-dark-theme='dark']")
+        expect(page).to have_theme("dark")
       end
     end
+  end
+
+  def select_theme(theme)
+    select theme, from: "Color mode"
+    click_on "Update look and feel"
+  end
+
+  def enable_contrast_for_single_theme
+    check "Increase contrast"
+    click_on "Update look and feel"
+  end
+
+  def configure_auto_contrast(light: false, dark: false)
+    check "Force high-contrast when in Light mode" if light
+    check "Force high-contrast when in Dark mode" if dark
+    click_on "Update look and feel"
+  end
+
+  def navigate_to_interface_settings
+    click_on "Interface"
   end
 end

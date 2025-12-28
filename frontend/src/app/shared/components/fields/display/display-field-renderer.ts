@@ -33,12 +33,12 @@ export class DisplayFieldRenderer<T extends HalResource = HalResource> {
   @InjectField() I18n!:I18nService;
 
   /** We cache the previously used fields to avoid reinitialization */
-  private fieldCache:{ [key:string]:DisplayField } = {};
+  private fieldCache:Record<string, DisplayField> = {};
 
   constructor(
     public readonly injector:Injector,
     public readonly container:'table'|'single-view'|'timeline',
-    public readonly options:{ [key:string]:unknown } = {},
+    public readonly options:Record<string, unknown> = {},
   ) {
   }
 
@@ -96,7 +96,6 @@ export class DisplayFieldRenderer<T extends HalResource = HalResource> {
     let field = this.fieldCache[attributeName];
 
     if (!field) {
-      // eslint-disable-next-line no-multi-assign
       field = this.fieldCache[attributeName] = this.getFieldForCurrentContext(resource, attributeName, fieldSchema);
     }
 
@@ -159,8 +158,10 @@ export class DisplayFieldRenderer<T extends HalResource = HalResource> {
 
     if (field.isFormattable && !field.isEmpty()) {
       try {
-        titleContent = _.escape(jQuery(`<div>${labelContent}</div>`).text());
-      } catch (e) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(labelContent, 'text/html');
+        titleContent = _.escape(doc.body.textContent ?? '');
+      } catch {
         console.error('Failed to parse formattable labelContent');
         titleContent = `Label for ${field.displayName}`;
       }

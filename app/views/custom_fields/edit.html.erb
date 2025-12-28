@@ -31,7 +31,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= render(Admin::CustomFields::EditFormHeaderComponent.new(custom_field: @custom_field, selected: :edit)) %>
 
-<% if @custom_field.hierarchical_list? %>
+<% if CustomFields::DetailsComponent.supported?(@custom_field) %>
   <%= render CustomFields::DetailsComponent.new(@custom_field) %>
 <% else %>
   <%= error_messages_for "custom_field" %>

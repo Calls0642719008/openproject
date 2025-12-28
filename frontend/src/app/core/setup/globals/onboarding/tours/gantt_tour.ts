@@ -13,7 +13,7 @@ export function ganttOnboardingTourSteps():OnboardingStep[] {
       showSkip: false,
       nextButton: { text: I18n.t('js.onboarding.buttons.next') },
       onNext() {
-        jQuery('[data-tour-selector="main-menu--arrow-left_gantt"]')[0].click();
+        document.querySelector<HTMLElement>('[data-tour-selector="main-menu--arrow-left_gantt"]')?.click();
       },
     },
   ];

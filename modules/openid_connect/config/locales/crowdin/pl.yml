@@ -43,6 +43,10 @@ pl:
               response_is_not_successful: " odpowiada: %{status}."
               response_is_not_json: " nie zwraca treści JSON."
               response_misses_required_attributes: " nie zwraca wymaganych atrybutów. Brakujące atrybuty to: %{missing_attributes}."
+          invalid_claims_essential: "does not define a boolean at %{attribute}."
+          invalid_claims_location: "contain unsupported locations: %{invalid}. Supported locations are: %{supported}."
+          invalid_claims_values: "does not define an array at %{attribute}."
+          non_object_attribute: "does not define a JSON object at %{attribute}."
   provider:
     delete_warning:
       input_delete_confirmation: Wprowadź nazwę dostawcy %{name}, aby potwierdzić usunięcie.
@@ -58,15 +62,26 @@ pl:
     menu_title: Dostawcy OpenID
     delete_title: "Usuń dostawcę OpenID Connect"
     group_links_heading: Linki do grup OpenID Connect
+    groups:
+      match_preview_component:
+        title: Wyodrębnione nazwy grup
+        placeholder_none: Obecnie żadna grupa nie pasuje do wzorca.
+      match_preview_dialog_component:
+        description: Umożliwia to przetestowanie wzorca wyrażenia regularnego na przykładowych danych w celu sprawdzenia, czy nazwy grup, które mają zostać wyodrębnione, są rzeczywiście wyodrębniane prawidłowo. W tym miejscu można modyfikować wzorzec, ale ciąg testowy i same dopasowania nie zostaną zapisane wraz z konfiguracją.
+        group_names_label: Testowe nazwy grup
+        group_names_description: Wprowadź jedną nazwę grupy w każdym wierszu, tak jak w żądaniu OIDC, aby sprawdzić, jak wpływają na nią wzorce wyrażeń regularnych.
+        show_button: Testuj wzorzec
+        title: Testuj wyrażenia regularne
     instructions:
       endpoint_url: Adres URL punktu końcowego podany Ci przez dostawcę OpenID Connect
       group_regexes: Jeden wzorzec wyrażenia regularnego w wierszu. Przeczytaj [dokumentację](docs_url), aby uzyskać więcej informacji na temat tego, jak to zrobić.
       group_regexes_detail: Opcjonalnie można zdefiniować wzorce za pomocą wyrażeń regularnych, aby dopasować nazwy grup z oświadczenia grup. Na przykład wprowadzenie wzorca takiego jak ^Level1/Level2/ <code>([\w/]+)$</code> wyodrębni grupę „Groupname/SubGroup” z odpowiedzi zawierającej ciąg „Level1/Level2/GroupName/SubGroup”. Jeśli żaden wzorzec nie pasuje, grupa jest ignorowana. Pozostaw puste, aby zsynchronizować wszystkie grupy przy użyciu pełnej nazwy grupy.
+      group_regexes_testing: "Kliknij przycisk „Testuj wzorzec”, aby przetestować wzorzec wyrażenia regularnego na przykładowych informacjach o użytkowniku OIDC."
       group_sync: Automatycznie wyodrębniaj i synchronizuj informacje o członkostwie w grupie od dostawcy tożsamości.
       groups_claim: Określ nazwę oświadczenia, które ma wskazywać nazwy grup, których użytkownik jest członkiem.
       metadata_none: Nie mam tych informacji
       metadata_url: Mam adres URL punktu końcowego odkrywania
-      oidc_information: These values are needed to configure the OpenID Connect provider.
+      oidc_information: Wartości te są wymagane do skonfigurowania dostawcy OpenID Connect.
       client_id: Jest to identyfikator klienta nadany Ci przez dostawcę OpenID Connect
       client_secret: Jest to klucz tajny klienta podany Ci przez dostawcę OpenID Connect
       limit_self_registration: Jeśli opcja jest włączona, użytkownicy mogą rejestrować się przy użyciu tego dostawcy tylko wtedy, gdy pozwala na to konfiguracja po stronie dostawcy.
@@ -116,6 +131,7 @@ pl:
       label_configuration_details: Metadane
       label_client_details: Szczegóły klienta
       label_attribute_mapping: Mapowanie atrybutów
+      notice_created: Nowy dostawca OpenID został utworzony.
       client_details_description: Szczegóły konfiguracji OpenProject jako klienta OIDC
       no_results_table: Jeszcze nie określono żadnych dostawców.
       plural: Dostawcy OpenID

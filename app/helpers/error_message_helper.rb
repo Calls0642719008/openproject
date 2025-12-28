@@ -54,28 +54,24 @@ module ErrorMessageHelper
     }
   end
 
-  def error_flash_description(_object, base_error_messages, fields_error_messages)
-    capture do
-      concat list_of_messages(base_error_messages)
-      concat text_header_invalid_fields(base_error_messages, fields_error_messages)
-      concat list_of_messages(fields_error_messages)
-    end
-  end
-
   def error_message_header(object_name, count)
     t("activerecord.errors.template.header", model: object_name, count:)
+  end
+
+  def error_flash_description(_object, base_error_messages, fields_error_messages)
+    safe_join([
+      list_of_messages(base_error_messages),
+      text_header_invalid_fields(base_error_messages, fields_error_messages),
+      list_of_messages(fields_error_messages)
+    ].compact, "<br/>".html_safe)
   end
 
   def text_header_invalid_fields(base_error_messages, fields_error_messages)
     return if fields_error_messages.blank?
 
     i18n_key = base_error_messages.present? ? "errors.header_additional_invalid_fields" : "errors.header_invalid_fields"
-    out = "".html_safe
 
-    out << t(i18n_key, count: fields_error_messages.count)
-    out << "<br/>".html_safe
-
-    out
+    t(i18n_key, count: fields_error_messages.count)
   end
 
   def list_of_messages(messages)

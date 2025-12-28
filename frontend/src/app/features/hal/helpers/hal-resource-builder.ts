@@ -3,13 +3,7 @@ import { HalResource } from 'core-app/features/hal/resources/hal-resource';
 import { HalLink } from 'core-app/features/hal/hal-link/hal-link';
 import { HalResourceService } from 'core-app/features/hal/services/hal-resource.service';
 import { OpenprojectHalModuleHelpers } from 'core-app/features/hal/helpers/lazy-accessor';
-
-interface HalSource {
-  _links:any;
-  _embedded:any;
-  _type?:string;
-  type?:any;
-}
+import { HalSource } from 'core-app/features/hal/interfaces';
 
 export function cloneHalResourceCollection<T extends HalResource>(values:T[]|undefined):T[] {
   if (_.isNil(values)) {
@@ -173,7 +167,7 @@ export function initializeHalProperties<T extends HalResource>(halResourceServic
     if (!val) {
       halResource.$source._links[linkName] = { href: null };
     } else if (isArray) {
-      halResource.$source._links[linkName] = (val as HalResource[]).map((el:any) => ({ href: el.href }));
+      halResource.$source._links[linkName] = (val).map((el:any) => ({ href: el.href }));
     } else if (val.hasOwnProperty('$link')) {
       const link = (val as HalResource).$link;
 
@@ -184,11 +178,11 @@ export function initializeHalProperties<T extends HalResource>(halResourceServic
       halResource.$source._links[linkName] = { href: val.href };
     }
 
-    if (halResource.$embedded && halResource.$embedded[linkName]) {
+    if (halResource.$embedded?.[linkName]) {
       halResource.$embedded[linkName] = val;
 
       if (isArray) {
-        halResource.$source._embedded[linkName] = (val as HalResource[]).map((el) => el.$source);
+        halResource.$source._embedded[linkName] = (val).map((el) => el.$source);
       } else {
         halResource.$source._embedded[linkName] = _.get(val, '$source', val);
       }

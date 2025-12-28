@@ -9,8 +9,7 @@ keywords: SCIM, SCIM API, user management, app integration
 
 OpenProject supports automated user synchronization via SCIM API, enabling  seamless integration with your identity provider. Simplify and secure  user provisioning and de-provisioning while ensuring accurate user data  across systems.
 
-> [!NOTE] 
-> SCIM provisioning is an Enterprise add-on. [Click here for more information](https://www.openproject.org/enterprise-edition/) on the OpenProject Enterprise edition.
+[feature: scim_api ]
 
 > [!NOTE]
 > For users deletion to work please make sure the box **User accounts deletable by admins** in **Administration** -> **Users and permissions** -> **User settings** is checked.

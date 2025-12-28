@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -40,6 +40,7 @@ RSpec.describe "API V3 Authentication" do
       "message" => expected_message
     }
   end
+  let(:resource_metadata) { 'resource_metadata="http://test.host/.well-known/oauth-protected-resource"' }
 
   describe "oauth" do
     let(:oauth_access_token) { "" }
@@ -64,10 +65,13 @@ RSpec.describe "API V3 Authentication" do
 
     context "with an invalid access token" do
       let(:oauth_access_token) { "1337" }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+      end
 
       it "returns unauthorized" do
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
@@ -75,10 +79,13 @@ RSpec.describe "API V3 Authentication" do
     context "with a revoked access token" do
       let(:token) { create(:oauth_access_token, resource_owner: user, revoked_at: DateTime.now) }
       let(:oauth_access_token) { token.plaintext_token }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+      end
 
       it "returns unauthorized" do
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
@@ -86,10 +93,13 @@ RSpec.describe "API V3 Authentication" do
     context "when the token's application is disabled" do
       let(:token) { create(:oauth_access_token, resource_owner: user, application: create(:oauth_application, enabled: false)) }
       let(:oauth_access_token) { token.plaintext_token }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+      end
 
       it "returns unauthorized" do
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
@@ -97,6 +107,9 @@ RSpec.describe "API V3 Authentication" do
     context "with an expired access token" do
       let(:token) { create(:oauth_access_token, resource_owner: user) }
       let(:oauth_access_token) { token.plaintext_token }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+      end
 
       around do |ex|
         Timecop.freeze(Time.current + (token.expires_in + 5).seconds) do
@@ -106,7 +119,7 @@ RSpec.describe "API V3 Authentication" do
 
       it "returns unauthorized" do
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
@@ -114,10 +127,13 @@ RSpec.describe "API V3 Authentication" do
     context "with wrong scope" do
       let(:token) { create(:oauth_access_token, resource_owner: user, scopes: "unknown_scope") }
       let(:oauth_access_token) { token.plaintext_token }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="insufficient_scope"}
+      end
 
       it "returns forbidden" do
         expect(last_response).to have_http_status :forbidden
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="insufficient_scope"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
@@ -126,6 +142,9 @@ RSpec.describe "API V3 Authentication" do
       let(:token) { create(:oauth_access_token, resource_owner: user, application:) }
       let(:application) { create(:oauth_application) }
       let(:oauth_access_token) { token.plaintext_token }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+      end
 
       around do |ex|
         user.destroy
@@ -134,7 +153,7 @@ RSpec.describe "API V3 Authentication" do
 
       it "returns unauthorized" do
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
 
@@ -143,7 +162,7 @@ RSpec.describe "API V3 Authentication" do
 
         it "returns unauthorized" do
           expect(last_response).to have_http_status :unauthorized
-          expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+          expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
           expect(JSON.parse(last_response.body)).to eq(error_response_body)
         end
       end
@@ -153,10 +172,13 @@ RSpec.describe "API V3 Authentication" do
       let(:token) { create(:oauth_access_token, resource_owner: user) }
       let(:oauth_access_token) { token.plaintext_token }
       let(:user) { create(:user, :locked) }
+      let(:expected_www_auth_header) do
+        %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+      end
 
       it "returns unauthorized" do
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
@@ -189,10 +211,13 @@ RSpec.describe "API V3 Authentication" do
         context "and the client credentials user is locked" do
           let(:user) { create(:user, :locked) }
           let(:expected_message) { "You did not provide the correct credentials." }
+          let(:expected_www_auth_header) do
+            %{Bearer realm="OpenProject API", #{resource_metadata}, scope="api_v3", error="invalid_token"}
+          end
 
           it "returns unauthorized" do
             expect(last_response).to have_http_status :unauthorized
-            expect(last_response.header["WWW-Authenticate"]).to eq('Bearer realm="OpenProject API", error="invalid_token"')
+            expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
             expect(JSON.parse(last_response.body)).to eq(error_response_body)
           end
         end
@@ -491,6 +516,11 @@ RSpec.describe "API V3 Authentication" do
     let(:token_issuer) { "https://keycloak.local/realms/master" }
     let(:token_scope) { "email profile api_v3" }
     let(:expected_message) { "You did not provide the correct credentials." }
+    let(:expected_www_auth_header) do
+      "Bearer realm=\"OpenProject API\", #{resource_metadata}, scope=\"api_v3\", error=\"#{expected_error}\", " \
+        "error_description=\"#{expected_error_description}\""
+    end
+    let(:expected_error) { "invalid_token" }
     let(:keys_request_stub) do
       stub_request(:get, "https://keycloak.local/realms/master/protocol/openid-connect/certs")
         .to_return(status: 200, body: JWT::JWK::Set.new(jwk_response).export.to_json, headers: {})
@@ -514,66 +544,64 @@ RSpec.describe "API V3 Authentication" do
 
     context "when token is issued by provider not configured in OP" do
       let(:token_issuer) { "https://eve.example.com" }
+      let(:expected_error_description) { "The access token issuer is unknown" }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="The access token issuer is unknown"})
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
 
     context "when token signature algorithm is not supported" do
       let(:token) { JWT.encode(payload, "secret", "HS256", { kid: "97AmyvoS8BFFRfm585GPgA16G1H2V22EdxxuAYUuoKk" }) }
+      let(:expected_error_description) { "Token signature algorithm HS256 is not supported" }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
         expect(last_response).to have_http_status :unauthorized
-        error = "Token signature algorithm HS256 is not supported"
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="#{error}"})
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
 
     context "when aud does not contain client_id" do
       let(:token_aud) { ["Lisa", "Bart"] }
+      let(:expected_error_description) { 'Invalid audience. Expected https://openproject.local, received [\"Lisa\", \"Bart\"]' }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
 
         expect(last_response).to have_http_status :unauthorized
-        error = 'Invalid audience. Expected https://openproject.local, received ["Lisa", "Bart"]'
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="#{error}"})
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
 
     context "when the scope does not permit access to APIv3" do
       let(:token_scope) { "profile email" }
+      let(:expected_error) { "insufficient_scope" }
+      let(:expected_error_description) { "Requires scope api_v3 to access this resource." }
 
       it "fails with HTTP 403 Forbidden" do
         get resource
 
         expect(last_response).to have_http_status :forbidden
-        error = "Requires scope api_v3 to access this resource."
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="insufficient_scope", error_description="#{error}"})
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
     end
 
     context "when access token has expired already" do
       let(:token_exp) { 5.minutes.ago }
+      let(:expected_error_description) { "Signature has expired" }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
 
         expect(last_response).to have_http_status :unauthorized
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="Signature has expired"})
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
       end
 
@@ -590,40 +618,37 @@ RSpec.describe "API V3 Authentication" do
 
     context "when kid is absent in keycloak keys response" do
       let(:jwk_response) { JWT::JWK.new(OpenSSL::PKey::RSA.new(2048), kid: "your-kid", use: "sig", alg: "RS256") }
+      let(:expected_error_description) { "The signature key ID is unknown" }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
         expect(last_response).to have_http_status :unauthorized
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
-        error = "The signature key ID is unknown"
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="#{error}"})
       end
     end
 
     context "when user identified by token is not known" do
       let(:user) { create(:user, authentication_provider: create(:oidc_provider)) }
+      let(:expected_error_description) { "The user identified by the token is not known" }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
         expect(last_response).to have_http_status :unauthorized
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
-        error = "The user identified by the token is not known"
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="#{error}"})
       end
     end
 
     context "when user identified by token is locked" do
       let(:user) { create(:user, :locked, authentication_provider: create(:oidc_provider), external_id: token_sub) }
+      let(:expected_error_description) { "The user account is locked" }
 
       it "fails with HTTP 401 Unauthorized" do
         get resource
         expect(last_response).to have_http_status :unauthorized
+        expect(last_response.header["WWW-Authenticate"]).to eq(expected_www_auth_header)
         expect(JSON.parse(last_response.body)).to eq(error_response_body)
-        error = "The user account is locked"
-        expect(last_response.header["WWW-Authenticate"])
-          .to eq(%{Bearer realm="OpenProject API", error="invalid_token", error_description="#{error}"})
       end
     end
   end

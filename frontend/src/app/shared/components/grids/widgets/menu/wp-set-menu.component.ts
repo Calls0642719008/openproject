@@ -48,7 +48,7 @@ export abstract class WidgetWpSetMenuComponent extends WidgetAbstractMenuCompone
   @InjectField() opModalService:OpModalService;
 
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
-  @Output() onConfigured:EventEmitter<unknown> = new EventEmitter();
+  @Output() onConfigured = new EventEmitter<unknown>();
 
   protected async buildItems():Promise<OpContextMenuItem[]> {
     const items = [

@@ -79,7 +79,7 @@ Multi-select attributes also have one extra options:
 
 - **is (AND)**: returns all work packages that match _all_ of the entered values.
 
-Other attributes like Status might offer additional criteria like _open_ or _closed_. Required attributes might only offer two options, _is (OR)_ and _is not_, since they cannot be empty.
+Other attributes like Version might offer additional criteria like *open*, *closed* or *locked*. Required attributes might only offer two options, _is (OR)_ and _is not_, since they cannot be empty.
 
 ### Filter by text
 
@@ -235,8 +235,7 @@ If you group the work package table, sums will be shown for each group.
 
 ## Attribute highlighting (Enterprise add-on)
 
-> [!NOTE]
-> Attribute highlighting is an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide) or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide). An upgrade from the free community edition is easy and helps support OpenProject.
+[feature: conditional_highlighting ]
 
 You can highlight attributes in the work package table to emphasize the importance of certain attributes and have important topics at a glance. To activate attribute highlighting open the work package configuration table and select the **Highlighting** tab.
 
@@ -276,7 +275,7 @@ In this example, the table was filtered for work packages assigned to me which h
 
 **Public:** Check the public checkbox if you want to have this work package view accessible also for other users from this project.
 
-**Favored:** Check this favored checkbox if you want to have this work package as a menu item in your favorite views.
+**Favorited:** Check this favorited checkbox if you want to have this work package as a menu item in your favorite views.
 
 Press the **Save** button to save your view.
 
@@ -284,7 +283,7 @@ Press the **Save** button to save your view.
 
 The view will then be saved in the work packages menu in your **Favorite views**:
 
-![Favorite view in work package module menu](openproject_user_guide_wp_favored_view_saved.png)
+![Favorited view in work package module menu](openproject_user_guide_wp_favorited_view_saved.png)
 
 If you check the public visibility, the view will be saved under your public views in the work package menu:
 

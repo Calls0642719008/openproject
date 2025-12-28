@@ -80,6 +80,14 @@ RSpec.describe Projects::UpdateContract do
       it_behaves_like "contract is invalid", workspace_type: :error_readonly
     end
 
+    context "if template is changed" do
+      before do
+        project.template_id = 1
+      end
+
+      it_behaves_like "contract is invalid", template_id: :error_readonly
+    end
+
     describe "permissions" do
       context "with edit_project_attributes" do
         let(:project_permissions) { %i(edit_project_attributes) }

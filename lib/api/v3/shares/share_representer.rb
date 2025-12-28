@@ -31,13 +31,14 @@ module API
     module Shares
       class ShareRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Decorators::DateProperty
 
         self_link title_getter: ->(*) { represented.principal&.name }
 
         property :id
 
-        associated_resource :project
+        associated_project
 
         associated_resource :entity,
                             getter: ::API::V3::Shares::EntityRepresenterFactory.create_getter_lambda(:entity),

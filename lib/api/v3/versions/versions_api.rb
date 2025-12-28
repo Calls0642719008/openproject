@@ -70,7 +70,7 @@ module API
             delete &::API::V3::Utilities::Endpoints::Delete.new(model: Version).mount
 
             mount ::API::V3::Versions::UpdateFormAPI
-            mount ::API::V3::Versions::ProjectsByVersionAPI
+            mount ::API::V3::Versions::WorkspacesByVersionAPI
           end
         end
       end

@@ -13,7 +13,7 @@ eo:
   boards:
     label_board: "Tabulo"
     label_boards: "Tabuloj"
-    label_create_new_board: "Create new board"
+    label_create_new_board: "Krei novan tabulon"
     label_board_type: "Speco de panelo"
     board_types:
       free: Basic

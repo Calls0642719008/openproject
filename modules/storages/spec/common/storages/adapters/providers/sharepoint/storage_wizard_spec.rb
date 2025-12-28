@@ -46,9 +46,9 @@ RSpec.describe Storages::Adapters::Providers::Sharepoint::StorageWizard do
 
   it "has all steps pending in correct order" do
     expect(wizard.pending_steps).to eq(%i[general_information
-                                          access_management
                                           oauth_client
-                                          redirect_uri])
+                                          redirect_uri
+                                          access_management])
   end
 
   context "when name was set" do
@@ -70,49 +70,28 @@ RSpec.describe Storages::Adapters::Providers::Sharepoint::StorageWizard do
         wizard.prepare_next_step
       end
 
-      it "automatically finished the access_management step" do
-        expect(wizard.completed_steps).to eq(%i[general_information access_management])
+      it "finishes the oauth_client step" do
+        expect(wizard.completed_steps).to eq(%i[general_information oauth_client])
       end
 
-      it "disabled automatic storage management, and didn't persist it" do
-        expect(model).not_to be_automatic_management_enabled
-        before, after = model.changes["provider_fields"]
-        expect(before.keys).not_to include("automatically_managed")
-        expect(after.keys).to include("automatically_managed")
+      it "now has an unsaved oauth_client" do
+        expect(model.oauth_client).to be_present
+        expect(model.oauth_client).not_to be_persisted
       end
 
-      it "has no oauth_client yet" do
-        expect(model.oauth_client).to be_nil
-      end
-
-      context "and the next step was prepared" do
+      context "when the client was saved" do
         before do
-          wizard.prepare_next_step
+          model.oauth_client.assign_attributes(client_id: "Foo", client_secret: "Bar")
+          model.oauth_client.save!
         end
 
-        it "finishes the oauth_client step" do
-          expect(wizard.completed_steps).to eq(%i[general_information access_management oauth_client])
+        it "did not finish the final step immediately" do
+          expect(wizard.pending_steps).to eq(%i[redirect_uri access_management])
         end
 
-        it "now has an unsaved oauth_client" do
-          expect(model.oauth_client).to be_present
-          expect(model.oauth_client).not_to be_persisted
-        end
-
-        context "when the client was saved" do
-          before do
-            model.oauth_client.assign_attributes(client_id: "Foo", client_secret: "Bar")
-            model.oauth_client.save!
-          end
-
-          it "did not finish the final step immediately" do
-            expect(wizard.pending_steps).to eq(%i[redirect_uri])
-          end
-
-          it "after some time, the final step is completed" do
-            Timecop.travel(15.seconds.from_now) do
-              expect(wizard.completed_steps).to eq(%i[general_information access_management oauth_client redirect_uri])
-            end
+        it "after some time, the final step is completed" do
+          Timecop.travel(15.seconds.from_now) do
+            expect(wizard.completed_steps).to eq(%i[general_information oauth_client redirect_uri])
           end
         end
       end

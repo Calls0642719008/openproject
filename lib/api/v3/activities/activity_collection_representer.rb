@@ -30,6 +30,9 @@ module API
   module V3
     module Activities
       class ActivityCollectionRepresenter < ::API::Decorators::UnpaginatedCollection
+        self.to_eager_load = []
+        self.to_preload = []
+
         def initialize(models, self_link:, current_user:)
           super
 

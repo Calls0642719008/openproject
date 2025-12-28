@@ -31,22 +31,20 @@
 module Storages::Admin
   class AccessManagementForm < ApplicationForm
     form do |access_management_form|
-      access_management_form.radio_button_group(name: :access_management) do |radio_buttons|
+      access_management_form.radio_button_group(name: :automatic_management_enabled, validation_message:) do |radio_buttons|
         radio_buttons.radio_button(
-          name: :automatic_management_enabled,
           value: true,
           checked: @storage.automatic_management_enabled?,
-          label: I18n.t("storages.file_storage_view.access_management.automatic_management"),
-          caption: I18n.t("storages.file_storage_view.access_management.automatic_management_description"),
+          label: access_management_translation("automatic_management"),
+          caption: access_management_translation("automatic_management_description"),
           visually_hide_label: false
         )
 
         radio_buttons.radio_button(
-          name: :automatic_management_enabled,
           value: false,
           checked: !@storage.automatic_management_enabled?,
-          label: I18n.t("storages.file_storage_view.access_management.manual_management"),
-          caption: I18n.t("storages.file_storage_view.access_management.manual_management_description"),
+          label: access_management_translation("manual_management"),
+          caption: access_management_translation("manual_management_description"),
           visually_hide_label: false
         )
       end
@@ -55,6 +53,20 @@ module Storages::Admin
     def initialize(storage:)
       super()
       @storage = storage
+    end
+
+    private
+
+    def validation_message
+      @storage.errors.full_messages.join(", ") if @storage.errors.any?
+    end
+
+    def access_management_translation(key)
+      if @storage.provider_type_one_drive?
+        I18n.t("storages.file_storage_view.one_drive.access_management.#{key}")
+      else
+        I18n.t("storages.file_storage_view.access_management.#{key}")
+      end
     end
   end
 end

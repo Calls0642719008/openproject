@@ -30,24 +30,45 @@
 
 import { Controller } from '@hotwired/stimulus';
 import { useMatchMedia } from 'stimulus-use';
-import { OpTheme } from 'core-app/core/setup/globals/theme-utils';
+import { OpColorMode, OpTheme } from 'core-app/core/setup/globals/theme-utils';
 
 export default class AutoThemeSwitcher extends Controller {
   static values = {
-    mode: String,
+    theme: String,
+    increaseContrast: Boolean,
+    forceLightContrast: Boolean,
+    forceDarkContrast: Boolean,
   };
 
   static targets = ['desktopLogo', 'mobileLogo'];
   static classes = ['desktopLightHighContrastLogo', 'mobileWhiteLogo'];
 
-  declare readonly modeValue:OpTheme;
+  declare readonly themeValue:OpTheme;
+  declare readonly increaseContrastValue:boolean;
+  declare readonly forceLightContrastValue:boolean;
+  declare readonly forceDarkContrastValue:boolean;
   declare readonly desktopLogoTarget:HTMLLinkElement;
   declare readonly mobileLogoTarget:HTMLLinkElement;
   declare readonly desktopLightHighContrastLogoClass:string;
   declare readonly mobileWhiteLogoClass:string;
+  declare readonly hasMobileLogoTarget:boolean;
+  declare readonly hasDesktopLogoTarget:boolean;
+
+  private colorModeContrastPreferences:Record<OpColorMode, boolean>;
 
   connect() {
-    if (this.modeValue !== 'sync_with_os') return;
+    if (this.themeValue === 'sync_with_os') {
+      this.syncWithOS();
+    } else {
+      this.applyTheme(this.themeValue, this.increaseContrastValue);
+    }
+  }
+
+  syncWithOS():void {
+    this.colorModeContrastPreferences = {
+      light: this.forceLightContrastValue,
+      dark: this.forceDarkContrastValue,
+    };
 
     useMatchMedia(this, {
       mediaQueries: {
@@ -59,6 +80,11 @@ export default class AutoThemeSwitcher extends Controller {
     this.applySystemTheme();
   }
 
+  applyTheme(theme:OpColorMode, increaseContrast:boolean):void {
+    window.OpenProject.theme.applyThemeToBody(theme, increaseContrast);
+    this.updateOpLogoContrast(theme, increaseContrast);
+  }
+
   lightModeChanged():void {
     this.applySystemTheme();
   }
@@ -68,13 +94,24 @@ export default class AutoThemeSwitcher extends Controller {
   }
 
   private applySystemTheme():void {
-    window.OpenProject.theme.applySystemThemeImmediately();
-    this.updateOpLogoContrast();
+    const colorMode = window.OpenProject.theme.detectSystemColorMode();
+    const prefersSystemHighContrast = window.OpenProject.theme.prefersSystemHighContrast();
+    const increaseContrast = prefersSystemHighContrast || this.colorModeContrastPreferences[colorMode];
+
+    this.applyTheme(colorMode, increaseContrast);
   }
 
-  private updateOpLogoContrast():void {
-    const prefersSystemLightHighContrast = window.OpenProject.theme.prefersSystemLightHighContrast();
-    this.desktopLogoTarget.classList.toggle(this.desktopLightHighContrastLogoClass, prefersSystemLightHighContrast);
-    this.mobileLogoTarget.classList.toggle(this.mobileWhiteLogoClass, !prefersSystemLightHighContrast);
+  private updateOpLogoContrast(colorMode:OpColorMode, increaseContrast:boolean):void {
+    const isLightHighContrast = (colorMode === 'light' && increaseContrast);
+
+    // Some layouts do not show a logo
+    if (this.hasDesktopLogoTarget) {
+      this.desktopLogoTarget.classList.toggle(this.desktopLightHighContrastLogoClass, isLightHighContrast);
+    }
+
+    // Custom logos are not supported on mobile
+    if (this.hasMobileLogoTarget) {
+      this.mobileLogoTarget.classList.toggle(this.mobileWhiteLogoClass, !isLightHighContrast);
+    }
   }
 }

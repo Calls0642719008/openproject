@@ -379,9 +379,7 @@ RSpec.describe "POST /api/v3/queries/form",
     end
 
     it "has the project set" do
-      project_link = { "href" => "/api/v3/projects/#{project.id}", "title" => project.name }
-
-      expect(form.dig("_embedded", "payload", "_links", "project")).to eq project_link
+      expect(form.dig("_embedded", "payload", "_links", "project", "href")).to eq "/api/v3/projects/#{project.id}"
     end
 
     it "is set to public" do
@@ -461,9 +459,7 @@ RSpec.describe "POST /api/v3/queries/form",
       end
 
       it "still finds the project" do
-        project_link = { "href" => "/api/v3/projects/#{project.id}", "title" => project.name }
-
-        expect(form.dig("_embedded", "payload", "_links", "project")).to eq project_link
+        expect(form.dig("_embedded", "payload", "_links", "project", "href")).to eq "/api/v3/projects/#{project.id}"
       end
     end
 

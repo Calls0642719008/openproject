@@ -54,7 +54,17 @@ RSpec.describe MeetingAgendaItems::Outcomes::FormComponent, type: :component do
     let(:meeting_outcome) { MeetingOutcome.new(meeting_agenda_item:) }
 
     it "renders component wrapper" do
-      expect(rendered_component).to have_element id: "meeting-agenda-items-outcomes-form-component-new"
+      expect(rendered_component).to have_element(
+        id: "meeting-agenda-items-outcomes-form-component-new-for-#{meeting_agenda_item.id}"
+      )
+    end
+
+    it "renders outcome field" do
+      expect(rendered_component).to have_field "New outcome", type: :textarea, visible: :hidden do |textarea|
+        expect(rendered_component).to have_element "opce-ckeditor-augmented-textarea",
+                                                   "data-test-selector": "augmented-text-area-notes",
+                                                   "data-text-area-id": textarea["id"].to_json
+      end
     end
   end
 
@@ -62,18 +72,18 @@ RSpec.describe MeetingAgendaItems::Outcomes::FormComponent, type: :component do
     it "renders component wrapper" do
       expect(rendered_component).to have_element id: "meeting-agenda-items-outcomes-form-component-#{meeting_outcome.id}"
     end
+
+    it "renders outcome field" do
+      expect(rendered_component).to have_field "Edit outcome", type: :textarea, visible: :hidden do |textarea|
+        expect(rendered_component).to have_element "opce-ckeditor-augmented-textarea",
+                                                   "data-test-selector": "augmented-text-area-notes",
+                                                   "data-text-area-id": textarea["id"].to_json
+      end
+    end
   end
 
   it "renders form" do
     expect(rendered_component).to have_element :form, method:, action: submit_path
-  end
-
-  it "renders outcome field" do
-    expect(rendered_component).to have_field "Outcome", type: :textarea, visible: :hidden do |textarea|
-      expect(rendered_component).to have_element "opce-ckeditor-augmented-textarea",
-                                                 "data-test-selector": "augmented-text-area-notes",
-                                                 "data-text-area-id": textarea["id"].to_json
-    end
   end
 
   it "renders Save button" do

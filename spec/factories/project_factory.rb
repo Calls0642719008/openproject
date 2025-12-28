@@ -29,38 +29,11 @@
 #++
 
 FactoryBot.define do
-  factory :project do
-    transient do
-      no_types { false }
-      disable_modules { [] }
-      members { [] }
-    end
+  factory :project, parent: :workspace do
+    workspace_type { "project" }
 
     sequence(:name) { |n| "My Project No. #{n}" }
     sequence(:identifier) { |n| "myproject_no_#{n}" }
-    created_at { Time.zone.now }
-    updated_at { Time.zone.now }
-    enabled_module_names { OpenProject::AccessControl.available_project_modules }
-    public { false }
-    templated { false }
-    workspace_type { "project" }
-
-    callback(:after_build) do |project, evaluator|
-      disabled_modules = Array(evaluator.disable_modules).map(&:to_s)
-      project.enabled_module_names = project.enabled_module_names - disabled_modules
-
-      if !evaluator.no_types && project.types.empty?
-        project.types << (Type.where(is_standard: true).first || build(:type_standard))
-      end
-    end
-
-    callback(:after_create) do |project, evaluator|
-      evaluator.members.each do |user, roles|
-        Members::CreateService
-          .new(user: User.system, contract_class: EmptyContract)
-          .call(principal: user, project:, roles: Array(roles))
-      end
-    end
 
     factory :public_project do
       public { true } # Remark: public defaults to true
@@ -69,42 +42,22 @@ FactoryBot.define do
     factory :template_project do
       sequence(:name) { |n| "Template project No. #{n}" }
       sequence(:identifier) { |n| "template_no_#{n}" }
-      templated { true }
+      template
     end
 
-    factory :project_with_types do
-      # using initialize_with types to prevent
-      # the project's initialize function looking for the default type
-      # when we will be setting the type later on anyway
-      initialize_with do
-        types = if instance_variable_get(:@build_strategy).is_a?(FactoryBot::Strategy::Stub)
-                  [build_stubbed(:type)]
-                else
-                  [build(:type)]
-                end
+    # Factories for
+    # * portfolio
+    # * program
+    # are in separate files.
 
-        new(types:)
-      end
+    factory :project_with_types do
+      with_types
 
       factory :valid_project do
         callback(:after_build) do |project|
           project.types << build(:type_with_workflow)
         end
       end
-    end
-
-    trait :with_status do
-      status_code { Project.status_codes.keys.sample }
-      status_explanation { "some explanation" }
-    end
-
-    trait :archived do
-      active { false }
-    end
-
-    trait :updated_a_long_time_ago do
-      created_at { 2.years.ago }
-      updated_at { 2.years.ago }
     end
   end
 end

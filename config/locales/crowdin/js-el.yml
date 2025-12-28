@@ -73,7 +73,7 @@ el:
     button_continue: "Συνέχεια"
     button_copy: "Αντιγραφή"
     button_copy_to_clipboard: "Αντιγραφή στο πρόχειρο"
-    button_copy_link_to_clipboard: "Copy link to clipboard"
+    button_copy_link_to_clipboard: "Αντιγραφή συνδέσμου στο πρόχειρο"
     button_copy_to_other_project: "Duplicate in another project"
     button_custom-fields: "Προσαρμοσμένα πεδία"
     button_delete: "Διαγραφή"
@@ -88,6 +88,8 @@ el:
     button_list_view: "Προβολή λίστας"
     button_show_view: "Προβολή πλήρης οθόνης"
     button_log_time: "Ιστορικό χρόνου"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Διακοπή χρονόμετρου"
     button_more: "Περισσότερα"
     button_open_details: "Άνοιγμα προβολής λεπτομερειών"
     button_close_details: "Κλείσιμο προβολής λεπτομερειών"
@@ -287,17 +289,6 @@ el:
         format:
           date: "%{attribute} δεν είναι έγκυρη ημερομηνία - αναμένεται ΕΕΕΕ-ΜΜ-ΗΗ."
         general: "Παρουσιάστηκε σφάλμα."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Διαβάστε για τις νέες λειτουργίες και τις ενημερώσεις προϊόντων."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -305,12 +296,13 @@ el:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Ενεργοποίηση"
     label_assignee: "Ανάθεση σε"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Προσθήκη στήλης μετά"
     label_add_column_before: "Προσθήκη στήλης πριν"
     label_add_columns: "Προσθέστε στήλη"
@@ -323,7 +315,7 @@ el:
     label_added_time_by: 'Added by <a href="%{authorLink}">%{author}</a> at %{age}'
     label_ago: "ημέρες πριν"
     label_all: "όλα"
-    label_all_projects: "All projects"
+    label_all_projects: "Όλα τα έργα"
     label_all_uppercase: "Όλα"
     label_all_work_packages: "όλα τα πακέτα εργασίας"
     label_and: "και"
@@ -352,6 +344,7 @@ el:
     label_collapse: "Σύμπτυξη"
     label_collapsed: "συμπτυγμένο"
     label_collapse_all: "Σύμπτυξη όλων"
+    label_collapse_text: "Collapse text"
     label_comment: "Σχόλιο"
     label_committed_at: "%{committed_revision_link} στις %{date}"
     label_committed_link: "δεσμευμένη αναθεώρηση %{revision_identifier}"
@@ -364,6 +357,7 @@ el:
     label_expand: "Επέκταση"
     label_expanded: "επεκταμένη"
     label_expand_all: "Ανάπτυξη όλων"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Επέκταση του μενού έργου"
     label_export: "Εξαγωγή"
     label_export_preparing: "Η εξαγωγή προετοιμάζεται και θα κατεβεί σύντομα."
@@ -443,7 +437,7 @@ el:
     label_sort_lower: "Μετακίνηση προς τα κάτω"
     label_sorting: "Ταξινόμηση"
     label_spent_time: "Χρόνος που δαπανήθηκε"
-    label_star_query: "Αγαπημένο"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Πατήστε enter για αποθήκευση."
     label_public_query: "Δημόσιο"
     label_sum: "Άθροισμα"
@@ -562,7 +556,7 @@ el:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -781,7 +775,7 @@ el:
     autocompleter:
       placeholder: "Πληκτρολογήστε για αναζήτηση"
       notFoundText: "No items found"
-      search: "Search"
+      search: "Αναζήτηση"
       project:
         placeholder: "Select project"
     repositories:
@@ -910,7 +904,7 @@ el:
         percentageDone: "Ποσοστό ολοκλήρωσης"
         priority: "Προτεραιότητα"
         projectName: "Έργο"
-        remainingWork: "Remaining work"
+        remainingWork: "Υπολειπόμενες Ώρες"
         remainingWorkAlternative: "Υπολειπόμενες ώρες"
         responsible: "Υπεύθυνος"
         startDate: "Ημερομηνία έναρξης"
@@ -924,7 +918,7 @@ el:
         version: "Έκδοση"
         work: "Work"
         workAlternative: "Εκτιμώμενος χρόνος"
-        remainingTime: "Remaining work"
+        remainingTime: "Υπολειπόμενες Ώρες"
       default_queries:
         manually_sorted: "New manually sorted query"
         latest_activity: "Τελευταία δραστηριότητα"
@@ -1113,6 +1107,7 @@ el:
       child_work_packages:
         one: "ένα παιδί πακέτο εργασίας"
         other: "%{count} παιδιά πακέτα εργασίας"
+      hour_string: "%{hours} h"
       hour:
         one: "1 ώρα"
         other: "%{count} ώρες"
@@ -1133,6 +1128,7 @@ el:
       current_project_and_all_descendants: "Σε αυτό το έργο + υποέργα"
       current_project: "Σε αυτό το έργο"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "όλα τα έργα"
         project_and_subprojects: "και όλα τα υποέργα"
@@ -1142,71 +1138,8 @@ el:
       list: "Πίνακας"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Επιστροφή"
       invite: "Πρόσκληση"
-      title:
-        invite: "Προσκαλέστε χρήστη"
-        invite_to_project: "Προσκαλέστε %{type} στο %{project}"
-        User: "χρήστης"
-        Group: "ομάδα"
-        PlaceholderUser: "placeholder χρήστης"
-        invite_principal_to_project: "Πρόσκληση %{principal} στο %{project}"
-      project:
-        label: "Έργο"
-        required: "Παρακαλούμε επιλέξτε ένα έργο"
-        lacking_permission: "Παρακαλώ επιλέξτε ένα διαφορετικό πρότζεκτ καθώς δεν έχετε δικαιώματα να εγγράψετε τους χρήστες στο επιλεγμένο."
-        lacking_permission_info: "You lack the permission to assign users to the project you are currently in. You need to select a different one."
-        next_button: "Επόμενο"
-        no_results: "Δεν βρέθηκαν έργα"
-        no_invite_rights: "You are not allowed to invite members to this project"
-      type:
-        required: "Παρακαλώ επιλέξτε τον τύπο που θα προσκληθεί"
-        user:
-          title: "Χρήστης"
-          description: "Permissions based on the assigned role in the selected project"
-        group:
-          title: "Ομάδα"
-          description: "Permissions based on the assigned role in the selected project"
-        placeholder:
-          title: "Placeholder χρήστης"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "Has no access to the project and no emails are sent out."
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "Όνομα ή διεύθυνση email"
-          name: "Όνομα"
-        already_member_message: "Ήδη μέλος του %{project}"
-        no_results_user: "Δεν βρέθηκαν χρήστες"
-        invite_user: "Πρόσκληση:"
-        no_results_placeholder: "Δεν βρέθηκαν placeholders"
-        create_new_placeholder: "Δημιουργία νέου placeholder:"
-        no_results_group: "Δεν βρέθηκαν ομάδες"
-        next_button: "Επόμενο"
-        required:
-          user: "Παρακαλώ επιλέξτε ένα χρήστη"
-          placeholder: "Παρακαλώ επιλέξτε ένα placeholder"
-          group: "Παρακαλούμε επιλέξτε μια ομάδα"
-      role:
-        label: "Ρόλος στο %{project}"
-        no_roles_found: "Δεν βρέθηκε κανένας ρόλος"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Παρακαλούμε επιλέξτε ένα ρόλο"
-        next_button: "Επόμενο"
-      message:
-        label: "Μήνυμα πρόσκλησης"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "Επόμενο"
-      summary:
-        next_button: "Αποστολή πρόσκλησης"
-      success:
-        title: "%{principal} προσκλήθηκε!"
-        description:
-          user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          group: "Η ομάδα είναι τώρα μέρος του %{project}. Εν τω μεταξύ, μπορείτε να προγραμματίσετε ήδη με αυτή την ομάδα και να αντιστοιχίσετε πακέτα εργασίας."
-        next_button: "Συνέχεια"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1223,7 +1156,7 @@ el:
       selected_filter:
         all: "Όλα τα έργα"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:
@@ -1232,6 +1165,11 @@ el:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "Εκκαθάριση"

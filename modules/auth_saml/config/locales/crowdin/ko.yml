@@ -56,6 +56,7 @@ ko:
       label_mapping: 매핑
       label_requested_attribute_for: "요청된 특성 대상: %{attribute}"
       no_results_table: 아직 정의된 SAML ID 공급자가 없습니다.
+      notice_created: 새로운 SAML ID 공급자가 생성되었습니다.
       plural: SAML ID 공급자
       singular: SAML ID 공급자
       requested_attributes: 요청된 특성
@@ -110,7 +111,7 @@ ko:
       idp_sso_service_url: >
         ID 공급자 로그인 엔드포인트의 URL입니다.
       idp_slo_service_url: >
-        ID 공급자 로그인 엔드포인트의 URL입니다.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         ID 공급자의 X509 PEM 형식 공개 인증서를 입력합니다. 여러 인증서를 새 줄로 구분하여 입력할 수 있습니다.
       name_identifier_format: >

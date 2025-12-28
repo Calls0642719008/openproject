@@ -6,6 +6,7 @@ import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decora
 import { tableRowClassName } from '../../builders/rows/single-row-builder';
 import { WorkPackageTable } from '../../wp-fast-table';
 import { ClickOrEnterHandler } from '../click-or-enter-handler';
+import { EventType } from 'core-app/features/work-packages/routing/wp-view-base/event-handling/event-handler-registry';
 
 export class HierarchyClickHandler extends ClickOrEnterHandler implements TableEventHandler {
   // Injections
@@ -17,24 +18,24 @@ export class HierarchyClickHandler extends ClickOrEnterHandler implements TableE
     super();
   }
 
-  public get EVENT() {
-    return 'click.table.hierarchy';
+  public get EVENT():EventType {
+    return 'click';
   }
 
   public get SELECTOR() {
-    return `.wp-table--hierarchy-indicator`;
+    return '.wp-table--hierarchy-indicator';
   }
 
   public eventScope(view:TableEventComponent) {
-    return jQuery(view.workPackageTable.tbody);
+    return view.workPackageTable.tbody;
   }
 
-  public processEvent(table:WorkPackageTable, evt:JQuery.TriggeredEvent):void {
-    const target = jQuery(evt.target);
+  public processEvent(table:WorkPackageTable, evt:MouseEvent|KeyboardEvent):void {
+    const target = evt.target as HTMLElement;
 
     // Locate the row from event
-    const element = target.closest(`.${tableRowClassName}`);
-    const wpId = element.data('workPackageId');
+    const element = target.closest<HTMLElement>(`.${tableRowClassName}`);
+    const wpId = element?.dataset.workPackageId ?? '';
 
     this.wpTableHierarchies.toggle(wpId);
 

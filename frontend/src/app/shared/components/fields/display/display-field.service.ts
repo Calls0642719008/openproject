@@ -57,7 +57,7 @@ export interface DisplayFieldContext {
   container:'table'|'single-view'|'timeline';
 
   /** Options passed to the display field */
-  options:{ [key:string]:any };
+  options:Record<string, any>;
 }
 
 export interface IDisplayFieldType extends IFieldType<DisplayField> {
@@ -89,27 +89,27 @@ export class DisplayFieldService extends AbstractFieldService<DisplayField, IDis
 
   private getFieldForContext(resource:HalResource, fieldName:string, schema:IFieldSchema, context:DisplayFieldContext):DisplayField {
     // We handle multi value fields differently in the single view context
-    const isCustomMultiLinesField = ['[]CustomOption'].indexOf(schema.type) >= 0;
+    const isCustomMultiLinesField = ['[]CustomOption'].includes(schema.type);
     if (context.container === 'single-view' && isCustomMultiLinesField) {
       return new MultipleLinesCustomOptionsDisplayField(fieldName, context) as DisplayField;
     }
 
-    const isHierarchyItemsField = ['CustomField::Hierarchy::Item'].indexOf(schema.type) >= 0;
+    const isHierarchyItemsField = ['CustomField::Hierarchy::Item'].includes(schema.type);
     if (context.container === 'single-view' && isHierarchyItemsField) {
       return new HierarchyItemDisplayField(fieldName, context) as DisplayField;
     }
 
-    const isMultilineHierarchyItemsField = ['[]CustomField::Hierarchy::Item'].indexOf(schema.type) >= 0;
+    const isMultilineHierarchyItemsField = ['[]CustomField::Hierarchy::Item'].includes(schema.type);
     if (context.container === 'single-view' && isMultilineHierarchyItemsField) {
       return new MultipleLinesHierarchyItemDisplayField(fieldName, context) as DisplayField;
     }
 
     // Separate class seems not needed (merge with []CustomOption above?)
-    const isVersionMultiLinesField = ['[]Version'].indexOf(schema.type) >= 0;
+    const isVersionMultiLinesField = ['[]Version'].includes(schema.type);
     if (context.container === 'single-view' && isVersionMultiLinesField) {
       return new MultipleLinesCustomOptionsDisplayField(fieldName, context) as DisplayField;
     }
-    const isUserMultiLinesField = ['[]User'].indexOf(schema.type) >= 0;
+    const isUserMultiLinesField = ['[]User'].includes(schema.type);
     if (context.container === 'single-view' && isUserMultiLinesField) {
       return new MultipleLinesUserFieldModule(fieldName, context) as DisplayField;
     }
@@ -127,7 +127,6 @@ export class DisplayFieldService extends AbstractFieldService<DisplayField, IDis
 
     const cls = this.getSpecificClassFor(resource._type, fieldName, schema.type);
 
-    // eslint-disable-next-line new-cap
     return new cls(fieldName, context);
   }
 }

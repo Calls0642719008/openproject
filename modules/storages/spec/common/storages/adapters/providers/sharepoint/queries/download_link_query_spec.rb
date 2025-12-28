@@ -46,7 +46,7 @@ module Storages
             let(:not_existent_file_link) { create(:file_link, origin_id: "#{drive_id}:IHaveTheHighGround") }
             let(:folder_file_link) { create(:file_link, origin_id: "#{drive_id}:01ANJ53W4MWZNYS4FOTNDI3UVTLEXUZ5TQ") }
 
-            let(:input_data) { Input::DownloadLink.build(file_link:).value! }
+            let(:input_data) { Input::DownloadLink.build(file_id: file_link.origin_id).value! }
 
             subject { described_class.new(storage) }
 
@@ -70,7 +70,7 @@ module Storages
                 end
 
                 it "returns an error on folders", vcr: "sharepoint/download_link_query_folder" do
-                  input_data = Input::DownloadLink.build(file_link: folder_file_link).value!
+                  input_data = Input::DownloadLink.build(file_id: folder_file_link.origin_id).value!
 
                   download_link = subject.call(auth_strategy:, input_data:)
 
@@ -82,7 +82,7 @@ module Storages
                 end
 
                 it "returns an error if the file is not found", vcr: "sharepoint/download_link_query_not_found" do
-                  input_data = Input::DownloadLink.build(file_link: not_existent_file_link).value!
+                  input_data = Input::DownloadLink.build(file_id: not_existent_file_link.origin_id).value!
 
                   download_link = subject.call(auth_strategy:, input_data:)
                   expect(download_link).to be_failure

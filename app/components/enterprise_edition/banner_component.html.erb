@@ -55,12 +55,16 @@
 
             if large?
               flex.with_row(my: 2) do
-                video_tag @video,
-                          controls: false,
-                          class: "op-enterprise-banner--video-control",
-                          autoplay: true,
-                          loop: true,
-                          muted: true
+                if @video
+                  video_tag @video,
+                            controls: false,
+                            class: "op-enterprise-banner--media",
+                            autoplay: true,
+                            loop: true,
+                            muted: true
+                else
+                  image_tag @image, class: "op-enterprise-banner--media"
+                end
               end
 
               flex.with_row do
@@ -77,8 +81,8 @@
           end
         end
 
-        if medium?
-          grid.with_area(:image, **@image_arguments)
+        if medium? && @image
+          grid.with_area(:image, **image_as_background_arguments)
         end
 
         if @dismissable
@@ -89,7 +93,7 @@
                 classes: class_names("op-enterprise-banner--close-icon", classes),
                 scheme: :invisible,
                 tag: :a,
-                href: dismiss_enterprise_banner_path(feature_key: @dismiss_key),
+                href: dismiss_enterprise_banner_path(feature_key: @feature_key, dismiss_key: @dismiss_key),
                 data: { turbo_stream: true, turbo_method: :post },
                 icon: :x,
                 aria: { label: t("ee.upsell.hide_banner") }

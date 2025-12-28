@@ -109,5 +109,3 @@ Special thanks go to all OpenProject contributors without whom this release woul
 We are continuously developing new features and improvements for OpenProject.
 The next release will contain a multi-project portfolio view which provides a quick overview of your most important projects.
 Take a look at the [release timeline](https://community.openproject.org/projects/openproject/work_packages?query_id=918) to see the upcoming features and releases.
-
-To stay up to date with the recent development, feel free to follow OpenProject on [Twitter](https://twitter.com/openproject) and like OpenProject on [Facebook](https://www.facebook.com/openprojectfoundation).

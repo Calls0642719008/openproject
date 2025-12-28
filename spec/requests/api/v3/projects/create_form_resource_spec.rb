@@ -214,5 +214,198 @@ RSpec.describe API::V3::Projects::CreateFormAPI, content_type: :json do
         expect(response).to have_http_status(:forbidden)
       end
     end
+
+    describe "custom fields" do
+      context "when the custom field is required" do
+        shared_let(:required_custom_field) do
+          create(:text_project_custom_field,
+                 name: "Department",
+                 is_required: true)
+        end
+
+        context "when no custom field value is provided" do
+          let(:params) do
+            {
+              identifier: "new_project_identifier",
+              name: "Project name"
+            }
+          end
+
+          it "has validation errors for the required custom field" do
+            expect(subject.body).to have_json_path("_embedded/validationErrors/customField#{required_custom_field.id}")
+            expect(subject.body).not_to have_json_path("_links/commit")
+          end
+
+          it "explains the custom field error" do
+            expect(subject.body)
+              .to be_json_eql("Department can't be blank.".to_json)
+              .at_path("_embedded/validationErrors/customField#{required_custom_field.id}/message")
+          end
+        end
+
+        context "when the custom field is provided but empty" do
+          let(:params) do
+            {
+              identifier: "new_project_identifier",
+              name: "Project name",
+              required_custom_field.attribute_name(:camel_case) => {
+                raw: ""
+              }
+            }
+          end
+
+          it "has validation errors for the required custom field" do
+            expect(subject.body).to have_json_path("_embedded/validationErrors/customField#{required_custom_field.id}")
+            expect(subject.body).not_to have_json_path("_links/commit")
+          end
+
+          it "explains the custom field error" do
+            expect(subject.body)
+              .to be_json_eql("Department can't be blank.".to_json)
+              .at_path("_embedded/validationErrors/customField#{required_custom_field.id}/message")
+          end
+        end
+
+        context "when the custom field value is provided and valid" do
+          let(:params) do
+            {
+              identifier: "new_project_identifier",
+              name: "Project name",
+              required_custom_field.attribute_name(:camel_case) => {
+                raw: "Engineering"
+              }
+            }
+          end
+
+          it "has no validation errors" do
+            expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+          end
+
+          it "has a commit link" do
+            expect(subject.body)
+              .to be_json_eql(api_v3_paths.projects.to_json)
+              .at_path("_links/commit/href")
+          end
+
+          it "has the custom field value in the payload" do
+            expect(subject.body)
+              .to be_json_eql("Engineering".to_json)
+              .at_path("_embedded/payload/customField#{required_custom_field.id}/raw")
+          end
+        end
+      end
+
+      context "with a visible custom field" do
+        let(:visible_custom_field) do
+          create(:text_project_custom_field)
+        end
+
+        let(:params) do
+          {
+            identifier: "new_project_identifier",
+            name: "Project name",
+            visible_custom_field.attribute_name(:camel_case) => {
+              raw: "CF text"
+            }
+          }
+        end
+
+        it "has no validation errors" do
+          expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+        end
+
+        it "includes the cf value in the payload" do
+          expect(subject.body)
+            .to be_json_eql("CF text".to_json)
+            .at_path("_embedded/payload/customField#{visible_custom_field.id}/raw")
+        end
+
+        it "has a commit link" do
+          expect(subject.body)
+            .to be_json_eql(api_v3_paths.projects.to_json)
+            .at_path("_links/commit/href")
+        end
+      end
+
+      context "with an admin only custom field" do
+        let(:admin_only_custom_field) do
+          create(:text_project_custom_field, admin_only: true)
+        end
+
+        let(:params) do
+          {
+            identifier: "new_project_identifier",
+            name: "Project name",
+            admin_only_custom_field.attribute_name(:camel_case) => {
+              raw: "CF text"
+            }
+          }
+        end
+
+        context "with admin permissions" do
+          current_user { create(:admin) }
+
+          it "has no validation errors" do
+            expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+          end
+
+          it "includes the cf value in the payload" do
+            expect(subject.body)
+              .to be_json_eql("CF text".to_json)
+              .at_path("_embedded/payload/customField#{admin_only_custom_field.id}/raw")
+          end
+
+          it "has a commit link" do
+            expect(subject.body)
+              .to be_json_eql(api_v3_paths.projects.to_json)
+              .at_path("_links/commit/href")
+          end
+        end
+
+        context "with non-admin permissions" do
+          it "ignores the invisible custom field" do
+            expect(subject.body)
+              .not_to have_json_path("_embedded/payload/customField#{admin_only_custom_field.id}/raw")
+          end
+
+          it "has no validation errors for visible fields" do
+            expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+          end
+
+          it "has a commit link" do
+            expect(subject.body)
+              .to be_json_eql(api_v3_paths.projects.to_json)
+              .at_path("_links/commit/href")
+          end
+
+          context "and when the custom field is required" do
+            let(:admin_only_custom_field) do
+              create(:text_project_custom_field, admin_only: true, is_required: true)
+            end
+            let(:params) do
+              {
+                identifier: "new_project_identifier",
+                name: "Project name"
+              }
+            end
+
+            it "ignores the invisible custom field" do
+              expect(subject.body)
+                .not_to have_json_path("_embedded/payload/customField#{admin_only_custom_field.id}/raw")
+            end
+
+            it "has no validation errors for visible fields" do
+              expect(subject.body).to have_json_size(0).at_path("_embedded/validationErrors")
+            end
+
+            it "has a commit link" do
+              expect(subject.body)
+                .to be_json_eql(api_v3_paths.projects.to_json)
+                .at_path("_links/commit/href")
+            end
+          end
+        end
+      end
+    end
   end
 end

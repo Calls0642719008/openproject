@@ -57,13 +57,13 @@ export class MultipleLinesHierarchyItemDisplayField extends ResourcesDisplayFiel
     return this.stringValue.join(', ');
   }
 
-  private branches(items:HalResource[]):Observable<HTMLDivElement[]> {
+  private branches(items:HalResource[]):Observable<HTMLSpanElement[]> {
     return combineLatest(items.map((value:HalResource) => {
       const itemLink = value.$link as HalLink;
 
       return from(itemLink.$fetch())
         .pipe(
-          switchMap((resource:HalResource) => renderHierarchyItem(resource)),
+          switchMap((resource:HalResource) => renderHierarchyItem(resource, true)),
         );
     }));
   }

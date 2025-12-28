@@ -38,7 +38,7 @@ export const WpTableConfigurationModalPrependToken = new InjectionToken<Componen
   standalone: false,
 })
 export class WpGraphConfigurationModalComponent extends OpModalComponent implements OnInit, OnDestroy {
-  public $element:HTMLElement;
+  public element:HTMLElement;
 
   public text = {
     title: this.I18n.t('js.chart.modal_title'),
@@ -74,7 +74,7 @@ export class WpGraphConfigurationModalComponent extends OpModalComponent impleme
   }
 
   ngOnInit():void {
-    this.$element = this.elementRef.nativeElement as HTMLElement;
+    this.element = this.elementRef.nativeElement as HTMLElement;
 
     this.loadingIndicator.indicator('modal').promise = this.graphConfiguration.loadForms()
       .then(() => {
@@ -130,6 +130,6 @@ export class WpGraphConfigurationModalComponent extends OpModalComponent impleme
   }
 
   protected get afterFocusOn():HTMLElement {
-    return this.$element;
+    return this.element;
   }
 }

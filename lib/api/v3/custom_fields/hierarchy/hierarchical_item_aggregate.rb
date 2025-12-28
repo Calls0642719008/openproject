@@ -33,16 +33,39 @@ module API
         class HierarchicalItemAggregate
           attr_accessor :depth
 
-          delegate :id, :label, :short, :parent, :children, :root?, to: :item
+          delegate :id, :label, :short, :weight, :parent, :children, :root?, to: :item
 
           def initialize(item:, depth:)
             @item = item
             @depth = depth
           end
 
+          def formatted_weight
+            return nil if weight.nil?
+
+            weight_formatter.format(item:)
+          end
+
+          def title
+            return nil if root?
+
+            ::CustomFields::Hierarchy::HierarchicalItemFormatter.default.format(item:)
+          end
+
           private
 
           attr_accessor :item
+
+          def weight_formatter
+            @weight_formatter ||= ::CustomFields::Hierarchy::HierarchicalItemFormatter
+                                    .new(path: false,
+                                         label: false,
+                                         suffix: true,
+                                         suffix_parentheses: false,
+                                         number_length_limit: 9,
+                                         number_integer_digit_limit: 8,
+                                         number_precision: 4)
+          end
         end
       end
     end

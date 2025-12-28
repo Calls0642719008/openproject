@@ -31,23 +31,19 @@
 require "spec_helper"
 
 RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProjectJob, SendCopyProjectStatusEmailJob] do
+  shared_let(:admin) { create(:admin) }
+  shared_let(:user_de) { create(:admin, language: :de) }
   let(:params) { { name: "Copy", identifier: "copy" } }
-  let(:user_de) { create(:admin, language: :de) }
   let(:mail_double) { double("Mail::Message", deliver: true) } # rubocop:disable RSpec/VerifiedDoubles
 
   before { allow(mail_double).to receive(:deliver_later) }
 
   describe "copy project succeeds with errors" do
-    let(:admin) { create(:admin) }
     let(:source_project) { create(:project, types: [type]) }
 
-    let!(:work_package) { create(:work_package, project: source_project, type:) }
+    let!(:work_package) { create(:work_package, :skip_validations, done_ratio: 101, project: source_project, type:) }
 
     let(:type) { create(:type_bug) }
-    let(:custom_field) do
-      create(:work_package_custom_field, name: "required_field", field_format: "text", is_required: true, is_for_all: true)
-    end
-
     let(:job_args) do
       {
         target_project_params: params,
@@ -55,14 +51,11 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
       }
     end
 
-    let(:params) { { name: "Copy", identifier: "copy", type_ids: [type.id], work_package_custom_field_ids: [custom_field.id] } }
+    let(:params) { { name: "Copy", identifier: "copy", type_ids: [type.id] } }
     let(:expected_error_message) do
-      "#{WorkPackage.model_name.human} '#{work_package.type.name} ##{work_package.id}: #{work_package.subject}': #{custom_field.name} #{I18n.t('errors.messages.blank')}."
-    end
-
-    before do
-      source_project.work_package_custom_fields << custom_field
-      type.custom_fields << custom_field
+      "#{WorkPackage.model_name.human} '#{work_package.type.name} ##{work_package.id}: " \
+        "#{work_package.subject}': % Complete " \
+        "#{I18n.t('activerecord.errors.models.work_package.attributes.done_ratio.inclusion')}"
     end
 
     it "copies the project", :aggregate_failures do
@@ -94,13 +87,59 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
       GoodJob.perform_inline
       batch.reload
 
-      msg = /Arbeitspaket 'Bug #\d+: WorkPackage No. \d+': required_field muss ausgefüllt werden\./
+      msg = /Arbeitspaket 'Bug #\d+: WorkPackage No. \d+': % abgeschlossen muss zwischen 0 und 100 liegen\./
       expect(batch.properties[:errors].first).to match(msg)
     end
   end
 
+  describe "copy project succeeds with invalid custom fields" do
+    let(:source_project) { create(:project, types: [type]) }
+
+    let!(:work_package) { create(:work_package, project: source_project, type:) }
+
+    let(:type) { create(:type_bug) }
+    let(:custom_field) do
+      create(:work_package_custom_field, name: "required_field", field_format: "text", is_required: true, is_for_all: true)
+    end
+
+    let(:job_args) do
+      {
+        target_project_params: params,
+        associations_to_copy: [:work_packages]
+      }
+    end
+
+    let(:params) { { name: "Copy", identifier: "copy", type_ids: [type.id], work_package_custom_field_ids: [custom_field.id] } }
+
+    before do
+      source_project.work_package_custom_fields << custom_field
+      type.custom_fields << custom_field
+    end
+
+    it "copies the project", :aggregate_failures do
+      copy_job = nil
+      batch = GoodJob::Batch.enqueue(user: admin, source_project:) do
+        copy_job = described_class.perform_later(**job_args)
+      end
+      GoodJob.perform_inline
+      batch.reload
+
+      copied_project = Project.find_by(identifier: params[:identifier])
+
+      expect(copied_project).to eq(batch.properties[:target_project])
+      expect(batch.properties[:errors]).to be_empty
+
+      # expect to create a status
+      expect(copy_job.job_status).to be_present
+      expect(copy_job.job_status[:status]).to eq "success"
+      expect(copy_job.job_status[:payload]["redirect"]).to include "/projects/copy"
+
+      expected_link = { "href" => "/api/v3/projects/#{copied_project.id}", "title" => copied_project.name }
+      expect(copy_job.job_status[:payload]["_links"]["project"]).to eq(expected_link)
+    end
+  end
+
   describe "project has an invalid repository" do
-    let(:admin) { create(:admin) }
     let(:source_project) do
       project = create(:project)
 
@@ -136,9 +175,7 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
   end
 
   describe "copy project fails with internal error" do
-    let(:admin) { create(:admin) }
     let(:source_project) { create(:project) }
-    let(:params) { { name: "Copy", identifier: "copy" } }
 
     before do
       allow(User).to receive(:current).and_return(admin)
@@ -173,9 +210,6 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
       set_factory_default(:project, source_project)
       set_factory_default(:project_with_types, source_project)
     end
-
-    let(:admin) { create(:admin) }
-    let(:params) { { name: "Copy", identifier: "copy" } }
 
     let_work_packages(<<~TABLE)
       hierarchy | work | remaining work | start date | end date   | scheduling mode
@@ -235,7 +269,6 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
     end
 
     describe "subproject" do
-      let(:params) { { name: "Copy", identifier: "copy" } }
       let(:subproject) do
         create(:project, parent: project).tap do |p|
           create(:member, principal: user, roles: [role], project: p)
@@ -328,9 +361,6 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
       set_factory_default(:project_with_types, source_project)
     end
 
-    let(:admin) { create(:admin) }
-    let(:params) { { name: "Copy", identifier: "copy" } }
-
     let_work_packages(<<~TABLE)
       hierarchy        | start date | end date   | scheduling mode
       automatic_parent | 2024-01-23 | 2024-01-26 | automatic
@@ -353,6 +383,68 @@ RSpec.describe CopyProjectJob, type: :model, with_good_job_batches: [CopyProject
         manual_parent    | 2024-01-21 | 2024-01-28 | manual
           child_mp       | 2024-01-23 | 2024-01-26 | manual
       TABLE
+    end
+  end
+
+  # Bug #58342: combination of class attribute ActionMailer::Base.perform_deliveries that was not thread local, so was
+  # reset to true before every request and job run, and using it to override Journal::NotificationConfiguration.active?
+  # to decide to send notifications could cause notifications to be sent for adding as member despite selecting not to
+  # do it.
+  describe "sending notifications" do
+    shared_let(:project) { create(:project) }
+    shared_let(:user) { create(:user) }
+    shared_let(:roles) { [create(:project_role)] }
+    shared_let(:member) { create(:member, user:, project:, roles:) }
+
+    def perform_the_job
+      batch = GoodJob::Batch.enqueue(user: admin, source_project: project) do
+        described_class.perform_later(target_project_params: params, associations_to_copy: [:members])
+      end
+      GoodJob.perform_inline
+      batch.reload
+
+      expect(batch).to be_succeeded
+    end
+
+    it "doesn't touch the perform_deliveries" do
+      allow(ActionMailer::Base).to receive(:perform_deliveries=)
+
+      perform_the_job
+
+      expect(ActionMailer::Base).not_to have_received(:perform_deliveries=)
+    end
+
+    it "calls Members::CreateService without send_notifications override" do
+      members_create_service = instance_double(Members::CreateService)
+      allow(Members::CreateService).to receive(:new).and_return(members_create_service)
+      allow(members_create_service).to receive(:call)
+
+      perform_the_job
+
+      expect(members_create_service).to have_received(:call).with(hash_excluding(:send_notifications))
+    end
+  end
+
+  describe "skip_custom_field_validation parameter" do
+    let(:source_project) { create(:project) }
+    let(:job_args) do
+      {
+        target_project_params: { name: "Copy", identifier: "copy" },
+        associations_to_copy: [],
+        skip_custom_field_validation: true
+      }
+    end
+
+    it "passes skip_custom_field_validation to CopyService" do
+      allow(Projects::CopyService).to receive(:new).and_call_original
+      GoodJob::Batch.enqueue(user: admin, source_project:) do
+        described_class.perform_later(**job_args)
+      end
+      GoodJob.perform_inline
+
+      expect(Projects::CopyService).to have_received(:new).with(
+        hash_including(contract_options: { skip_custom_field_validation: true })
+      )
     end
   end
 end

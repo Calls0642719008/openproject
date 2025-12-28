@@ -46,7 +46,7 @@ export class WorkPackageEditFormRoutingService extends EditFormRoutingService {
 
     // In new/copy mode, transitions to the same controller are allowed
     if (fromState.name && (/\.(new|copy)$/.exec(fromState.name))) {
-      return !(toState.data && toState.data.allowMovingInEditMode);
+      return !(toState.data?.allowMovingInEditMode);
     }
 
     // When editing an existing WP, transitions on the same WP id are allowed

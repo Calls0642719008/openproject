@@ -42,9 +42,9 @@ RSpec.describe Token::Base do
 
   it "create_should_remove_existing_tokenses" do
     subject.save!
-    t2 = Token::AutoLogin.create(user:)
+    t2 = described_class.create(user:)
     expect(subject.value).not_to eq(t2.value)
-    expect(Token::AutoLogin.exists?(subject.id)).to be false
-    expect(Token::AutoLogin.exists?(t2.id)).to be true
+    expect(described_class.exists?(subject.id)).to be false
+    expect(described_class.exists?(t2.id)).to be true
   end
 end

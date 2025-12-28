@@ -40,7 +40,7 @@ export default class extends Controller {
 
   connect():void {
     if (this.autofocusValue) {
-      this.focusInput();
+      setTimeout(() => { this.focusInput(); }, 100);
     }
   }
 

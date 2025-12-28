@@ -51,29 +51,29 @@ export interface ApiV3ListResourceInterface<T> {
 export function listParamsString(params?:ApiV3ListParameters):string {
   const queryProps = [];
 
-  if (params && params.sortBy) {
+  if (params?.sortBy) {
     queryProps.push(`sortBy=${JSON.stringify(params.sortBy)}`);
   }
 
-  if (params && params.groupBy) {
+  if (params?.groupBy) {
     queryProps.push(`groupBy=${params.groupBy}`);
   }
 
   // 0 should not be treated as false
-  if (params && params.pageSize !== undefined) {
+  if (params?.pageSize !== undefined) {
     queryProps.push(`pageSize=${params.pageSize}`);
   }
 
   // 0 should not be treated as false
-  if (params && params.offset !== undefined) {
+  if (params?.offset !== undefined) {
     queryProps.push(`offset=${params.offset}`);
   }
 
-  if (params && params.select !== undefined) {
+  if (params?.select !== undefined) {
     queryProps.push(`select=${params.select.join(',')}`);
   }
 
-  if (params && params.filters) {
+  if (params?.filters) {
     const filters = new ApiV3FilterBuilder();
 
     params.filters.forEach((filterParam) => {

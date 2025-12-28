@@ -174,7 +174,7 @@ module Bim
 
       def destroy
         @ifc_model.destroy
-        redirect_to action: :index
+        redirect_to action: :index, status: :see_other
       end
 
       private

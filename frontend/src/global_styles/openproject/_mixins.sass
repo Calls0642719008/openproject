@@ -84,7 +84,7 @@
   background: var(--body-background)
   margin: 10px
   border: var(--borderWidth-thin) solid var(--borderColor-default)
-  box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.1)
+  box-shadow: var(--shadow-resting-small)
   border-radius: var(--borderRadius-medium)
 
 @mixin widget-box--hover-style
@@ -222,8 +222,9 @@ $scrollbar-size: 10px
     padding-bottom: 0
 
 @mixin extended-content--top
-  #content-body
-    padding-top: 0
+  @media screen and (min-width: $breakpoint-sm)
+    #content-body
+      padding-top: 0
 
 @mixin extended-content--left
   #content-body,
@@ -261,6 +262,9 @@ $scrollbar-size: 10px
     background: rgba(218,223,225,0.19)
     border: 1px solid transparent
     padding: 2px
+
+    &:has(.-multiline)
+      display: inline-flex
 
     &:hover
       cursor: default
@@ -371,3 +375,22 @@ $scrollbar-size: 10px
   body[data-color-mode="dark"] &
     filter: invert(100%)
     -webkit-filter: invert(100%)
+
+// Shared mixin for hover input styling across components
+@mixin hover-input-base
+  border: 1px solid transparent !important
+  border-radius: var(--borderRadius-medium, 6px) !important
+  display: inline-block
+  width: 100%
+  padding: var(--base-size-4, 4px) !important
+  @media (hover: none) and (pointer: coarse)
+    border-color: var(--borderColor-default) !important
+  @media (hover: hover)
+    &:hover
+      border-color: var(--borderColor-default) !important
+
+@mixin line-clamp($value)
+  display: -webkit-box
+  -webkit-line-clamp: $value
+  -webkit-box-orient: vertical
+  overflow: hidden

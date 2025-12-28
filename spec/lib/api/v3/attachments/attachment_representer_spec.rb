@@ -62,7 +62,11 @@ RSpec.describe API::V3::Attachments::AttachmentRepresenter do
     end
   end
 
-  subject { representer.to_json }
+  subject(:generated) { representer.to_json }
+
+  it "fulfills the documented schema" do
+    expect(generated).to match_json_schema.from_docs("attachment_model")
+  end
 
   it { is_expected.to be_json_eql("Attachment".to_json).at_path("_type") }
   it { is_expected.to be_json_eql(attachment.id.to_json).at_path("id") }

@@ -125,6 +125,15 @@ patch:
 
     The value of `lockVersion` is used to implement
     [optimistic locking](https://en.wikipedia.org/wiki/Optimistic_concurrency_control).
+
+    **Custom Field Validation**  
+
+    Required custom fields are only validated when they are explicitly provided in the request body. If a custom field
+    is not included in the update request, it will not be validated. This enables clients to update
+    specific attributes independently without having to provide values for all required custom fields.
+
+    To override this behavior and validate all required custom fields regardless of whether they are included in the
+    request, set `validateCustomFields` to `true` in the `_meta` object of the request body.
   parameters:
     - name: id
       description: Work package id
@@ -147,13 +156,16 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../components/schemas/work_package_model.yml'
+          $ref: '../components/schemas/work_package_patch_model.yml'
+        examples:
+          'With custom field validation':
+            $ref: '../components/examples/work_package_with_meta_validation.yml'
   responses:
     '200':
       content:
         application/hal+json:
           schema:
-            '$ref': '../components/schemas/work_package_patch_model.yml'
+            '$ref': '../components/schemas/work_package_model.yml'
       description: OK
     '400':
       $ref: '../components/responses/invalid_request_body.yml'

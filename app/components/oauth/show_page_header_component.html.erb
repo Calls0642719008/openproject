@@ -29,7 +29,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   render Primer::OpenProject::PageHeader.new do |header|
-    header.with_title { h(@application.name) }
+    header.with_title_content(@application.name)
     header.with_breadcrumbs(breadcrumb_items)
 
     unless @application.builtin?
@@ -55,8 +55,8 @@ See COPYRIGHT and LICENSE files for more details.
         href: oauth_application_path(@application),
         aria: { label: I18n.t(:button_delete) },
         data: {
-          confirm: I18n.t(:text_are_you_sure),
-          method: :delete
+          turbo_confirm: I18n.t(:text_are_you_sure),
+          turbo_method: :delete
         },
         title: I18n.t(:button_delete)
       ) do |button|

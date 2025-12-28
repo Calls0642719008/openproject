@@ -11,7 +11,6 @@ import TableHighlightingController from './controllers/table-highlighting.contro
 import OpShowWhenCheckedController from './controllers/show-when-checked.controller';
 import OpShowWhenValueSelectedController from './controllers/show-when-value-selected.controller';
 import FlashController from './controllers/flash.controller';
-import OpProjectsZenModeController from './controllers/dynamic/projects/zen-mode.controller';
 import PasswordConfirmationDialogController from './controllers/password-confirmation-dialog.controller';
 import PreviewController from './controllers/dynamic/work-packages/date-picker/preview.controller';
 import KeepScrollPositionController from './controllers/keep-scroll-position.controller';
@@ -24,12 +23,23 @@ import AutoScrollingController from './controllers/dynamic/work-packages/activit
 import PollingController from './controllers/dynamic/work-packages/activities-tab/polling.controller';
 import StemsController from './controllers/dynamic/work-packages/activities-tab/stems.controller';
 import EditorController from './controllers/dynamic/work-packages/activities-tab/editor.controller';
+import LazyPageController from './controllers/dynamic/work-packages/activities-tab/lazy-page.controller';
+import EditablePageHeaderTitleController from './controllers/dynamic/editable-page-header-title.controller';
 
 import AutoSubmit from '@stimulus-components/auto-submit';
+import RevealController from '@stimulus-components/reveal';
 import AutoThemeSwitcher from './controllers/auto-theme-switcher.controller';
 import { OpenProjectStimulusApplication } from 'core-stimulus/openproject-stimulus-application';
 import { Application } from '@hotwired/stimulus';
 import { BeforeunloadController } from './controllers/beforeunload.controller';
+import ExternalLinksController from './controllers/external-links.controller';
+import DisableWhenClickedController from 'core-stimulus/controllers/disable-when-clicked.controller';
+import HighlightTargetElementController from 'core-stimulus/controllers/highlight-target-element.controller';
+import SelectAutosizeController from 'core-stimulus/controllers/select-autosize.controller';
+import OpZenModeController from 'core-stimulus/controllers/zen-mode.controller';
+import CheckAllController from 'core-stimulus/controllers/check-all.controller';
+import CheckableController from 'core-stimulus/controllers/checkable.controller';
+import TruncationController from 'core-stimulus/controllers/truncation.controller';
 
 declare global {
   interface Window {
@@ -40,6 +50,7 @@ declare global {
 OpenProjectStimulusApplication.preregister('application', OpApplicationController);
 OpenProjectStimulusApplication.preregister('async-dialog', AsyncDialogController);
 OpenProjectStimulusApplication.preregister('disable-when-checked', OpDisableWhenCheckedController);
+OpenProjectStimulusApplication.preregister('disable-when-clicked', DisableWhenClickedController);
 OpenProjectStimulusApplication.preregister('flash', FlashController);
 OpenProjectStimulusApplication.preregister('menus--main', MainMenuController);
 OpenProjectStimulusApplication.preregister('password-confirmation-dialog', PasswordConfirmationDialogController);
@@ -51,20 +62,29 @@ OpenProjectStimulusApplication.preregister('hover-card-trigger', HoverCardTrigge
 OpenProjectStimulusApplication.preregister('show-when-checked', OpShowWhenCheckedController);
 OpenProjectStimulusApplication.preregister('show-when-value-selected', OpShowWhenValueSelectedController);
 OpenProjectStimulusApplication.preregister('table-highlighting', TableHighlightingController);
-OpenProjectStimulusApplication.preregister('projects-zen-mode', OpProjectsZenModeController);
+OpenProjectStimulusApplication.preregister('zen-mode', OpZenModeController);
 OpenProjectStimulusApplication.preregister('work-packages--date-picker--preview', PreviewController);
 OpenProjectStimulusApplication.preregister('keep-scroll-position', KeepScrollPositionController);
 OpenProjectStimulusApplication.preregister('pattern-input', PatternInputController);
 OpenProjectStimulusApplication.preregister('scroll-into-view', ScrollIntoViewController);
 OpenProjectStimulusApplication.preregister('ckeditor-focus', CkeditorFocusController);
 OpenProjectStimulusApplication.preregister('auto-submit', AutoSubmit);
+OpenProjectStimulusApplication.preregister('reveal', RevealController);
 OpenProjectStimulusApplication.preregister('work-packages--activities-tab--index', IndexController);
 OpenProjectStimulusApplication.preregister('work-packages--activities-tab--auto-scrolling', AutoScrollingController);
 OpenProjectStimulusApplication.preregister('work-packages--activities-tab--polling', PollingController);
 OpenProjectStimulusApplication.preregister('work-packages--activities-tab--stems', StemsController);
 OpenProjectStimulusApplication.preregister('work-packages--activities-tab--editor', EditorController);
+OpenProjectStimulusApplication.preregister('work-packages--activities-tab--lazy-page', LazyPageController);
 OpenProjectStimulusApplication.preregister('beforeunload', BeforeunloadController);
 OpenProjectStimulusApplication.preregister('auto-theme-switcher', AutoThemeSwitcher);
+OpenProjectStimulusApplication.preregister('external-links', ExternalLinksController);
+OpenProjectStimulusApplication.preregister('highlight-target-element', HighlightTargetElementController);
+OpenProjectStimulusApplication.preregister('select-autosize', SelectAutosizeController);
+OpenProjectStimulusApplication.preregister('editable-page-header-title', EditablePageHeaderTitleController);
+OpenProjectStimulusApplication.preregister('check-all', CheckAllController);
+OpenProjectStimulusApplication.preregister('checkable', CheckableController);
+OpenProjectStimulusApplication.preregister('truncation', TruncationController);
 
 const instance = OpenProjectStimulusApplication.start();
 window.Stimulus = instance;

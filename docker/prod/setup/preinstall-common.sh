@@ -28,15 +28,16 @@ apt-get update -qq
 apt-get upgrade -y
 
 apt-get install -yq --no-install-recommends \
-	file \
 	curl \
+	file \
 	gnupg2 \
+	lsb-release
 
 # install node + npm
 curl -s https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCHITECTURE}.tar.gz | tar xzf - -C /usr/local --strip-components=1
 
-curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-echo 'deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main' > /etc/apt/sources.list.d/pgdg.list
+wget --quiet -O- https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgrsql.gpg -
+echo "deb [signed-by=/usr/share/keyrings/postgrsql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
 apt-get update -qq
 apt-get install -yq --no-install-recommends \
@@ -61,7 +62,7 @@ if [ ! "$BIM_SUPPORT" = "false" ]; then
 	apt-get install -y wget unzip
 
 	# https://learn.microsoft.com/en-gb/dotnet/core/install/linux-debian#debian-12
-	wget --quiet https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb
+	wget --no-verbose --tries 3 https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb
 	dpkg -i /tmp/packages-microsoft-prod.deb
 	rm /tmp/packages-microsoft-prod.deb
 
@@ -75,16 +76,16 @@ if [ ! "$BIM_SUPPORT" = "false" ]; then
 	npm install -g @xeokit/xeokit-gltf-to-xkt@1.3.1
 
 	# Install COLLADA2GLTF
-	wget --quiet https://github.com/KhronosGroup/COLLADA2GLTF/releases/download/v2.1.5/COLLADA2GLTF-v2.1.5-linux.zip
+	wget --no-verbose --tries 3 https://github.com/KhronosGroup/COLLADA2GLTF/releases/download/v2.1.5/COLLADA2GLTF-v2.1.5-linux.zip
 	unzip -q COLLADA2GLTF-v2.1.5-linux.zip
 	mv COLLADA2GLTF-bin "/usr/local/bin/COLLADA2GLTF"
 
 	# IFCconvert
-	wget --quiet https://s3.amazonaws.com/ifcopenshell-builds/IfcConvert-v0.7.11-fea8e3a-linux64.zip
+	wget --no-verbose --tries 3 https://s3.amazonaws.com/ifcopenshell-builds/IfcConvert-v0.7.11-fea8e3a-linux64.zip
 	unzip -q IfcConvert-v0.7.11-fea8e3a-linux64.zip
 	mv IfcConvert "/usr/local/bin/IfcConvert"
 
-	wget --quiet https://github.com/bimspot/xeokit-metadata/releases/download/1.0.1/xeokit-metadata-linux-x64.tar.gz
+	wget --no-verbose --tries 3 https://github.com/bimspot/xeokit-metadata/releases/download/1.0.1/xeokit-metadata-linux-x64.tar.gz
 	tar -zxvf xeokit-metadata-linux-x64.tar.gz
 	chmod +x xeokit-metadata-linux-x64/xeokit-metadata
 	cp -r xeokit-metadata-linux-x64/ "/usr/lib/xeokit-metadata"

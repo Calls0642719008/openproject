@@ -72,7 +72,7 @@ RSpec.describe MeetingMailer do
       expect(mail.subject).to include(meeting.project.name)
       expect(mail.subject).to include(meeting.title)
       expect(mail.to).to contain_exactly(watcher1.mail)
-      expect(mail.from).to eq([Setting.mail_from])
+      expect(mail.from).to eq([ApplicationMailer.reply_to_address])
     end
 
     it "renders the text body" do
@@ -164,7 +164,7 @@ RSpec.describe MeetingMailer do
       expect(mail.subject).to include(meeting.project.name)
       expect(mail.subject).to include(meeting.title)
       expect(mail.to).to contain_exactly(watcher1.mail)
-      expect(mail.from).to eq([Setting.mail_from])
+      expect(mail.from).to eq([ApplicationMailer.reply_to_address])
     end
 
     describe "text body" do
@@ -214,7 +214,7 @@ RSpec.describe MeetingMailer do
       expect(mail.subject).to include(meeting.project.name)
       expect(mail.subject).to include(meeting.title)
       expect(mail.to).to contain_exactly(author.mail)
-      expect(mail.from).to eq([Setting.mail_from])
+      expect(mail.from).to eq([ApplicationMailer.reply_to_address])
     end
 
     describe "text body" do
@@ -255,8 +255,8 @@ RSpec.describe MeetingMailer do
 
         expect(entry.dtstart.utc).to eq meeting.start_time
         expect(entry.dtend.utc).to eq meeting.start_time + 1.hour
-        expect(entry.summary).to eq "[My project] Important meeting"
-        expect(entry.description).to eq "[My project] Meeting: Important meeting"
+        expect(entry.summary).to eq "Important meeting"
+        expect(entry.description).to eq "Link to meeting: http://#{Setting.host_name}/meetings/#{meeting.id}"
         expect(entry.location).to eq(meeting.location.presence)
       end
 

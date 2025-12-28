@@ -58,6 +58,7 @@ end
 RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
   include Redmine::I18n
   include PDFExportSpecUtils
+
   let!(:status_new) { create(:status, name: "New", is_default: true) }
   let(:type_standard) { create(:type_standard, name: "Standard", color: create(:color, hexcode: "#FFFF00")) }
   let(:type_bug) { create(:type_bug, name: "Bug", color: create(:color, hexcode: "#00FFFF")) }
@@ -104,6 +105,9 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
   let(:work_package_task_due) do
     Date.new(2024, 4, 21)
   end
+  let(:work_package_task_due_too_long) do
+    work_package_task_due + (Exports::PDF::Components::Gantt::GanttBuilder::MAX_YEAR_RANGE + 1).years
+  end
   let(:work_package_milestone_start) do
     nil
   end
@@ -127,6 +131,15 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
            subject: "Work package 2",
            start_date: work_package_milestone_start,
            due_date: work_package_milestone_due)
+  end
+  let(:work_package_task_far_future) do
+    create(:work_package,
+           project:,
+           status: status_new,
+           type: type_standard,
+           subject: "Work package 3",
+           start_date: work_package_task_start,
+           due_date: work_package_task_due_too_long)
   end
   let(:filler_work_packages) do
     Array.new(50) do
@@ -388,6 +401,20 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
         [:fill_path_with_nonzero]
       ]
       expect(include_calls?(task, pdf[:calls])).to be true
+    end
+  end
+
+  describe "with a request for a PDF gantt with too long date range" do
+    let(:work_packages) { [work_package_task_far_future] }
+
+    it "raises as the date range is too long" do
+      expect { export_pdf }.to raise_error(
+        Exports::ExportError,
+        I18n.t(
+          :error_pdf_date_range_too_long,
+          years: Exports::PDF::Components::Gantt::GanttBuilder::MAX_YEAR_RANGE
+        )
+      )
     end
   end
 end

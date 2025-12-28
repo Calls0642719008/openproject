@@ -27,7 +27,10 @@ cs:
       no_results_table: Zatím nebyly definovány žádné webhooky
       label_add_new: Přidat nový webhook
       label_edit: Upravit webhook
-      label_event_resources: Zdroje událostí
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Vytvořeno"
         updated: "Aktualizováno"

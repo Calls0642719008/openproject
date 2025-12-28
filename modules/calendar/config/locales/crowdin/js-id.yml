@@ -6,4 +6,4 @@ id:
       title: 'Kalender'
       too_many: 'Terdapat %{count} paket pekerjaan, tetapi hanya %{max} yang dapat dilihat.'
       unsaved_title: 'Kalender tanpa nama'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'Kalender'

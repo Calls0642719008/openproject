@@ -1,12 +1,19 @@
 import { StateService } from '@uirouter/core';
 import { KeepTabService } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
 
 export const uiStateLinkClass = '__ui-state-link';
 export const checkedClassName = '-checked';
 
 export class UiStateLinkBuilder {
-  constructor(public readonly $state:StateService,
-    public readonly keepTab:KeepTabService) {
+  constructor(
+    public readonly $state:StateService,
+    public readonly keepTab:KeepTabService,
+    public readonly currentProject:CurrentProjectService,
+    public readonly pathHelper:PathHelperService,
+  ) {
   }
 
   public linkToDetails(workPackageId:string, title:string, content:string) {
@@ -21,21 +28,23 @@ export class UiStateLinkBuilder {
     const a = document.createElement('a');
     let tabState:string;
     let tabIdentifier:string;
+    let href:string;
 
     if (state === 'show') {
-      tabState = 'work-packages.show.tabs';
-      tabIdentifier = this.keepTab.currentShowTab;
+      const projectIdentifier = this.currentProject.identifier;
+      href = this.pathHelper.genericWorkPackagePath(projectIdentifier, workPackageId, this.keepTab.currentShowTab) + window.location.search;
     } else {
-      tabState = 'work-packages.partitioned.list.details.tabs';
-      tabIdentifier = this.keepTab.currentDetailsTab;
+      const tab = this.keepTab.currentDetailsTab;
+      href = this.$state.href(
+        'work-packages.partitioned.list.details.tabs',
+        {
+          workPackageId,
+          tab,
+        },
+      );
     }
-    a.href = this.$state.href(
-      tabState,
-      {
-        workPackageId,
-        tabIdentifier,
-      },
-    );
+
+    a.href = href;
     a.classList.add(uiStateLinkClass);
     a.dataset.workPackageId = workPackageId;
     a.dataset.wpState = state;

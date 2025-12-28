@@ -138,10 +138,7 @@ module Projects::Copy
         responsible_id: work_package_responsible_id(source_work_package),
         custom_field_values: custom_value_attributes(source_work_package, user_cf_ids),
         # We don't support copying budgets right now
-        budget_id: nil,
-
-        # We persist the setting in the job which will trigger a delayed job for potentially sending the journal notifications.
-        send_notifications: params.dig(:params, :send_notifications)
+        budget_id: nil
       }
     end
 

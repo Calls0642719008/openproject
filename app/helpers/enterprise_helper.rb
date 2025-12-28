@@ -32,9 +32,23 @@ module EnterpriseHelper
   ##
   # Renders the enterprise banner component with a guard for the given feature key.
   # If the feature is not enabled, it will not render the given block.
-  def with_enterprise_banner_guard(feature_key, **args)
-    concat(render(EnterpriseEdition::BannerComponent.new(feature_key, **args)))
-    yield if EnterpriseToken.allows_to?(feature_key)
+  #
+  # Parameters:
+  # - feature_key: The key that identifies the specific enterprise feature.
+  # - inactive_guard: A boolean flag determining whether the guard should be active
+  #   or bypassed. If set to `true`, the guard is bypassed and only the block is executed.
+  #   Defaults to `false`.
+  # - **args: Additional keyword arguments to be passed to the banner component.
+  #
+  # Yields:
+  # - Executes the provided block within the guard's context.
+  def with_enterprise_banner_guard(feature_key, inactive_guard: false, **args)
+    if inactive_guard
+      yield
+    else
+      concat(render(EnterpriseEdition::BannerComponent.new(feature_key, **args)))
+      yield if EnterpriseToken.allows_to?(feature_key)
+    end
   end
 
   def enterprise_angular_trial_inputs

@@ -164,7 +164,9 @@ RSpec.describe Meetings::PDF::Minutes::Exporter do
              duration_in_minutes: 10,
              notes: "*bar*")
     end
-    let(:outcome) { create(:meeting_outcome, meeting_agenda_item:, notes: "An outcome") }
+    let(:outcome1) { create(:meeting_outcome, meeting_agenda_item:, notes: "An outcome") }
+    let(:outcome2) { create(:meeting_outcome, meeting_agenda_item:, notes: "A second outcome") }
+    let(:outcome3) { create(:meeting_outcome, meeting_agenda_item: wp_agenda_item, notes: "A single outcome") }
     let(:attachment) { create(:attachment, container: meeting) }
     let(:meeting_backlog_item) do
       create(:meeting_agenda_item, meeting_section: meeting.backlog,
@@ -178,7 +180,9 @@ RSpec.describe Meetings::PDF::Minutes::Exporter do
       User.current = user
       meeting_agenda_item # create the agenda item
       wp_agenda_item # create the wp agenda item
-      outcome # create the outcome
+      outcome1 # create the outcome for first agenda item
+      outcome2 # create the outcome for first agenda item
+      outcome3 # create the outcome for wp agenda item
       attachment # create the attachment
       meeting_backlog_item # create the backlog item
       attended # create the attended participant
@@ -202,12 +206,16 @@ RSpec.describe Meetings::PDF::Minutes::Exporter do
           "1. Untitled section", "  ", "15 mins",
           "1.1. Agenda Item TOP 1",
           "foo",
-          "✓   Outcome",
+          "✓   Outcome 1",
           "An outcome",
+          "✓   Outcome 2",
+          "A second outcome",
 
           "2. Second section", "  ", "10 mins",
           "2.1. Task", "##{work_package.id}", "Important task", " (Workin' on it)",
           "bar",
+          "✓   Outcome",
+          "A single outcome",
 
           *expected_header_footer
         ].join(" ")

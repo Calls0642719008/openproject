@@ -43,7 +43,7 @@ module WorkPackageTypes
                             .call(patterns: build_patterns(permitted))
 
       if result.success?
-        redirect_to edit_type_subject_configuration_path(@type), status: :see_other
+        redirect_to edit_type_subject_configuration_path(@type), notice: I18n.t(:notice_successful_update)
       else
         render :edit, status: :unprocessable_entity
       end

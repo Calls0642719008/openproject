@@ -31,8 +31,6 @@
 require "spec_helper"
 require_relative "../../../../spec/seeders/root_seeder_shared_examples"
 
-RSpec::Matchers.define_negated_matcher :not_start_with, :start_with
-
 RSpec.describe RootSeeder,
                "BIM edition",
                with_config: { edition: "bim" } do
@@ -107,7 +105,7 @@ RSpec.describe RootSeeder,
     end
 
     include_examples "it creates records", model: Color, expected_count: 148
-    include_examples "it creates records", model: DocumentCategory, expected_count: 3
+    include_examples "it creates records", model: DocumentType, expected_count: 6
     include_examples "it creates records", model: IssuePriority, expected_count: 4
     include_examples "it creates records", model: Status, expected_count: 4
     include_examples "it creates records", model: TimeEntryActivity, expected_count: 3

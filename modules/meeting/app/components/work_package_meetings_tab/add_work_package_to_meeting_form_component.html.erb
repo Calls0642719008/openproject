@@ -4,7 +4,8 @@
       id: "add-work-package-to-meeting-form",
       model: @meeting_agenda_item,
       method: :post,
-      url: work_package_meeting_agenda_items_path(@work_package)
+      url: work_package_meeting_agenda_items_path(@work_package),
+      data: data_attributes
     ) do |f|
       flex_layout(mb: 3) do |flex|
         flex.with_row do
@@ -12,10 +13,16 @@
             render(Primer::Alpha::Banner.new(mb: 3, icon: :stop, scheme: :danger)) { @base_errors.join("\n") }
           end
         end
-        flex.with_row do
+        flex.with_row(mb: 3) do
+          render(Primer::Beta::Text.new) { I18n.t("text_add_work_package_to_meeting_form") }
+        end
+        flex.with_row(mb: 3) do
           render(MeetingAgendaItem::MeetingForm.new(f, wrapper_id: "add-work-package-to-meeting-dialog"))
         end
-        flex.with_row(mt: 3) do
+        flex.with_row(mb: 3) do
+          render(Meeting::AddToSection.new(f, wrapper_id: "add-work-package-to-meeting-dialog", move_to_section: false))
+        end
+        flex.with_row do
           render(MeetingAgendaItem::Notes.new(f))
         end
       end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -101,11 +102,12 @@ module MeetingSections
 
     def move_action_item(menu, move_to, label_text, icon)
       menu.with_item(label: label_text,
-                     href: move_meeting_section_path(@meeting_section.meeting, @meeting_section, move_to:),
-                     form_arguments: {
-                       method: :put, data: { "turbo-stream": true,
-                                             test_selector: "meeting-section-move-#{move_to}" }
-                     }) do |item|
+                     tag: :button,
+                     content_arguments: { data: {
+                       action: "click->meetings--submit#intercept",
+                       href: move_meeting_section_path(@meeting_section.meeting, @meeting_section, move_to:),
+                       test_selector: "meeting-section-move-#{move_to}"
+                     } }) do |item|
         item.with_leading_visual_icon(icon:)
       end
     end
@@ -153,12 +155,15 @@ module MeetingSections
           t("text_are_you_sure")
         end
       menu.with_item(label: t("text_destroy"),
+                     tag: :button,
                      scheme: :danger,
-                     href: meeting_section_path(@meeting_section.meeting, @meeting_section),
-                     form_arguments: {
-                       method: :delete, data: { confirm: confirm_text, "turbo-stream": true,
-                                                test_selector: "meeting-section-delete" }
-                     }) do |item|
+                     content_arguments: { data: {
+                       action: "click->meetings--submit#intercept",
+                       href: meeting_section_path(@meeting_section.meeting, @meeting_section),
+                       method: "DELETE",
+                       confirm_message: confirm_text,
+                       test_selector: "meeting-section-delete"
+                     } }) do |item|
         item.with_leading_visual_icon(icon: :trash)
       end
     end

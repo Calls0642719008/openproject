@@ -40,6 +40,7 @@ class Queries::WorkPackages::Filter::VersionFilter <
       Queries::Operators::EqualsOr,
       Queries::Operators::NotEquals,
       Queries::Operators::All,
+      Queries::Operators::None,
       Queries::Operators::Versions::OpenStatus,
       Queries::Operators::Versions::LockedStatus,
       Queries::Operators::Versions::ClosedStatus

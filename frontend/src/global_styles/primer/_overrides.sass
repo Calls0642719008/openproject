@@ -73,7 +73,7 @@ ul.SegmentedControl,
     --overlay-width: 640px !important
 
   &-body_autocomplete_height
-    min-height: 300px
+    min-height: 320px
 
   &--size-xlarge-maximized-empty-footer
     min-height: 534px
@@ -136,3 +136,15 @@ ul.SegmentedControl,
   // we override ordering to display help text after the asterisk
   > .op-attribute-help-text
     order: 1
+
+.Truncate
+  &.Truncate--expanded
+    max-width: none
+    min-width: 0
+    overflow: visible
+    white-space: normal
+
+    .Truncate-text
+      white-space: normal
+      overflow: visible
+      text-overflow: clip

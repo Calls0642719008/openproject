@@ -22,6 +22,8 @@ description: |-
   | memberships        | Link to collection of all the group's memberships. The list will only include the memberships in projects in which the requesting user has the necessary permissions. | MemberCollection  |                       | READ                 | **Permission**: view members or manage members in any project            |
   | members            | The list all all the users that are members of the group                                                                                                              | UserCollection    |                       | READ/WRITE           | **Permission**: manage members in any project to read & admin to write   |
 
+  Depending on custom fields defined for versions, additional linked properties might exist.
+
   ## Local Properties
 
   | Property     | Description                                                | Type     | Constraints                                          | Supported operations | Condition                                                      |
@@ -30,4 +32,6 @@ description: |-
   | name         | Group's full name, formatting depends on instance settings | String   |                                                      | READ/WRITE           | Admin to write                                                 |
   | createdAt    | Time of creation                                           | DateTime |                                                      | READ                 | Only visible by admins                                         |
   | updatedAt    | Time of the most recent change to the user                 | DateTime |                                                      | READ                 | Only visible by admins                                         |
+
+  Depending on custom fields defined for versions, additional properties might exist.
 name: Groups

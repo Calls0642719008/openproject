@@ -30,7 +30,7 @@
 
 module OpenIDConnect::Providers::Sections
   class FormComponent < ::Saml::Providers::Sections::SectionComponent
-    attr_reader :edit_state, :next_edit_state, :edit_mode, :fetch_metadata
+    attr_reader :edit_state, :next_edit_state, :new_mode, :fetch_metadata
 
     delegate :form_data, to: :@form_class
 
@@ -41,13 +41,13 @@ module OpenIDConnect::Providers::Sections
                    banner: nil,
                    banner_scheme: :default,
                    next_edit_state: nil,
-                   edit_mode: nil,
+                   new_mode: nil,
                    fetch_metadata: false)
       super(provider)
 
       @edit_state = edit_state
       @next_edit_state = next_edit_state
-      @edit_mode = edit_mode
+      @new_mode = new_mode
       @form_class = form_class
       @heading = heading
       @banner = banner
@@ -64,8 +64,8 @@ module OpenIDConnect::Providers::Sections
     end
 
     def form_url_params
-      if edit_mode
-        { edit_state:, fetch_metadata:, edit_mode:, next_edit_state: }
+      if new_mode
+        { edit_state:, fetch_metadata:, new_mode:, next_edit_state: }
       else
         { edit_state:, fetch_metadata: }
       end
@@ -80,7 +80,7 @@ module OpenIDConnect::Providers::Sections
     end
 
     def button_label
-      return I18n.t(:button_save) unless edit_mode
+      return I18n.t(:button_save) unless new_mode
 
       if next_edit_state.nil?
         I18n.t(:button_finish_setup)

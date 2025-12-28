@@ -51,7 +51,7 @@ module Webhooks
           flash[:error] = I18n.t(:error_failed_to_delete_entry)
         end
 
-        redirect_to action: :index
+        redirect_to action: :index, status: :see_other
       end
 
       private

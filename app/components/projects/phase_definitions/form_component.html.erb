@@ -29,7 +29,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= settings_primer_form_with(
       model: [:admin, :settings, model],
-      data: { controller: "show-when-checked" }
+      data: { controller: "show-when-checked", show_when_checked_visibility_class: "d-none" }
     ) do |f|
       flex_layout do |body|
         body.with_row do
@@ -44,8 +44,7 @@ See COPYRIGHT and LICENSE files for more details.
           classes: model.start_gate.blank? ? "d-none" : "",
           data: {
             target_name: "start_gate",
-            "show-when-checked-target": "effect",
-            visibility_class: "d-none"
+            "show-when-checked-target": "effect"
           }
         ) do
           render Projects::PhaseDefinitions::StartGateNameForm.new(f)
@@ -59,8 +58,7 @@ See COPYRIGHT and LICENSE files for more details.
           classes: model.finish_gate.blank? ? "d-none" : "",
           data: {
             target_name: "finish_gate",
-            "show-when-checked-target": "effect",
-            visibility_class: "d-none"
+            "show-when-checked-target": "effect"
           }
         ) do
           render Projects::PhaseDefinitions::FinishGateNameForm.new(f)

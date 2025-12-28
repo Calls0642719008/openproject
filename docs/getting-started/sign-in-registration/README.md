@@ -88,7 +88,7 @@ After the creation of your account you are logged into the system and see your p
 
 ![select language](openproject_user_guide_sign_in_first_time.png)
 
-If you have already logged in before, you can [set your language in your user profile](../../user-guide/account-settings/#profile-settings).
+If you have already logged in before, you can [set your language in your user profile](../../user-guide/account-settings/#language-and-region-settings).
 
 ## Reset your password
 

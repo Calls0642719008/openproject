@@ -189,7 +189,6 @@ export class LocationPickerModalComponent extends FilePickerBaseModalComponent {
   }
 
   public createAndNavigateToFolder() {
-    // eslint-disable-next-line
     const value = window.prompt(this.text.buttons.newFolder);
     if (!value) { return; }
 

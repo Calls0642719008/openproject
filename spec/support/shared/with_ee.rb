@@ -31,7 +31,7 @@
 def ee_actions(example)
   return [] unless example.respond_to?(:metadata) && example.metadata[:with_ee]
 
-  example.metadata[:with_ee]
+  Array(example.metadata[:with_ee])
 end
 
 def aggregate_parent_array(example, acc)

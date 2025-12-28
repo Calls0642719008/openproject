@@ -54,8 +54,9 @@ id:
       label_edit: Edit penyedia identitas SAML %{name}
       label_uid: ID pengguna internal
       label_mapping: Pemetaan
-      label_requested_attribute_for: "Requested attribute for: %{attribute}"
-      no_results_table: No SAML identity providers have been defined yet.
+      label_requested_attribute_for: "Atribut yang diminta untuk: %{attribute}"
+      no_results_table: Belum ada penyedia identitas SAML yang didefinisikan.
+      notice_created: A new SAML identity provider was successfully created.
       plural: Penyedia identitas SAML
       singular: Penyedia identitas SAML
       requested_attributes: Atribut yang diminta
@@ -65,7 +66,7 @@ id:
       metadata:
         dialog: "Ini adalah URL di mana metadata OpenProject SAML tersedia. Secara opsional, gunakan URL ini untuk mengonfigurasi penyedia identitas Anda:"
       upsell:
-        title: "Single Sign-On (SSO) with SAML"
+        title: "Single Sign-On (SSO) dengan SAML"
         description: Menghubungkan OpenProject ke penyedia identitas SAML
       request_attributes:
         title: 'Atribut yang diminta'
@@ -89,64 +90,64 @@ id:
         requested_attributes: "Tentukan kumpulan atribut yang akan diminta dalam permintaan SAML yang dikirim ke penyedia identitas Anda."
       seeded_from_env: "Penyedia ini diunggulkan dari konfigurasi lingkungan. Tidak dapat diedit."
     settings:
-      metadata_none: "I don't have metadata"
+      metadata_none: "Saya tidak memiliki metadata"
       metadata_url: "URL Metadata"
       metadata_xml: "Metadata XML"
     instructions:
       documentation_link: >
-        Please refer to our [documentation on configuring SAML providers](docs_url) for more information on these configuration options.
+        Silakan merujuk ke dokumentasi kami tentang konfigurasi penyedia SAML (docs_url) untuk informasi lebih lanjut mengenai opsi konfigurasi ini.
       display_name: >
-        The name of the provider. This will be displayed as the login button and in the list of providers.
+        Nama penyedia. Nama ini akan ditampilkan sebagai tombol login dan dalam daftar penyedia.
       metadata_none: >
-        Your identity provider does not have a metadata endpoint or XML download option. You can configure it manually.
+        Penyedia identitas Anda tidak memiliki titik akhir metadata atau opsi unduh XML. Anda dapat mengonfigurasinya secara manual.
       metadata_url: >
-        Your identity provider provides a metadata URL.
+        Penyedia identitas Anda menyediakan URL metadata.
       metadata_xml: >
-        Your identity provider provides a metadata XML download.
+        Penyedia identitas Anda menyediakan unduhan metadata XML.
       limit_self_registration: >
-        If enabled users can only register using this provider if the self registration setting allows for it.
+        Jika diaktifkan, pengguna hanya dapat mendaftar menggunakan penyedia ini jika pengaturan pendaftaran mandiri mengizinkannya.
       sp_entity_id: >
-        The entity ID of the service provider (SP). Sometimes also referred to as Audience. This is the unique client identifier of the OpenProject instance.
+        ID entitas penyedia layanan (SP). Terkadang juga disebut sebagai Audience. Ini adalah identifikasi klien unik dari instance OpenProject.
       idp_sso_service_url: >
-        The URL of the identity provider login endpoint.
+        URL titik akhir login penyedia identitas.
       idp_slo_service_url: >
-        The URL of the identity provider login endpoint.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
-        Enter the X509 PEM-formatted public certificate of the identity provider. You can enter multiple certificates by separating them with a newline.
+        Masukkan sertifikat publik X509 berformat PEM dari penyedia identitas. Anda dapat memasukkan beberapa sertifikat dengan memisahkannya menggunakan baris baru.
       name_identifier_format: >
-        Set the name identifier format to be used for the SAML assertion.
+        Tentukan format identifikasi nama yang akan digunakan untuk pernyataan SAML.
       sp_metadata_endpoint: >
-        This is the URL where the OpenProject SAML metadata is available. Optionally use it to configure your identity provider.
+        Ini adalah URL di mana metadata OpenProject SAML tersedia. Secara opsional, gunakan URL ini untuk mengonfigurasi penyedia identitas Anda.
       mapping: >
-        Configure the mapping between the SAML response and user attributes in OpenProject. You can configure multiple attribute names to look for. OpenProject will choose the first available attribute from the SAML response.
+        Konfigurasikan pemetaan antara respons SAML dan atribut pengguna di OpenProject. Anda dapat mengonfigurasikan beberapa nama atribut yang akan dicari. OpenProject akan memilih atribut pertama yang tersedia dari respons SAML.
       mapping_login: >
-        SAML attributes from the response used for the login.
+        Atribut SAML dari respons yang digunakan untuk proses login.
       mapping_mail: >
-        SAML attributes from the response used for the email of the user.
+        Atribut SAML dari respons yang digunakan untuk alamat email pengguna.
       mapping_firstname: >
-        SAML attributes from the response used for the given name.
+        Atribut SAML dari respons yang digunakan untuk nama yang diberikan.
       mapping_lastname: >
-        SAML attributes from the response used for the last name.
+        Atribut SAML dari respons yang digunakan untuk nama belakang.
       mapping_uid: >
-        SAML attribute to use for the internal user ID. Leave empty to use the name_id attribute instead
+        Atribut SAML yang digunakan untuk ID pengguna internal. Biarkan kosong untuk menggunakan atribut name_id sebagai gantinya
       request_uid: >
-        SAML attribute to request for the internal user ID. By default, the name_id will be used for this field.
+        Atribut SAML yang diminta untuk ID pengguna internal. Secara default, name_id akan digunakan untuk bidang ini.
       requested_attributes: >
-        These attributes are added to the SAML request XML to communicate to the identity provider which attributes OpenProject requires.
+        Atribut-atribut ini ditambahkan ke XML permintaan SAML untuk memberitahu penyedia identitas atribut-atribut apa yang dibutuhkan oleh OpenProject.
       requested_format: >
-        The format of the requested attribute. This is used to specify the format of the attribute in the SAML request. Please see [documentation on configuring requested attributes](docs_url) for more information.
+        Format atribut yang diminta. Ini digunakan untuk menentukan format atribut dalam permintaan SAML. Silakan lihat [dokumentasi tentang konfigurasi atribut yang diminta](docs_url) untuk informasi lebih lanjut.
       authn_requests_signed: >
-        If checked, OpenProject will sign the SAML AuthnRequest. You will have to provide a signing certificate and private key using the fields below.
+        Jika dicentang, OpenProject akan menandatangani permintaan SAML AuthnRequest. Anda harus menyediakan sertifikat penandatanganan dan kunci pribadi menggunakan bidang di bawah ini.
       want_assertions_signed: >
-        If checked, OpenProject will required signed responses from the identity provider using its own certificate keypair. OpenProject will verify the signature against the certificate from the basic configuration section.
+        Jika opsi ini dicentang, OpenProject akan memerlukan respons yang ditandatangani dari penyedia identitas menggunakan pasangan kunci sertifikatnya sendiri. OpenProject akan memverifikasi tanda tangan tersebut dengan sertifikat yang tercantum di bagian konfigurasi dasar.
       want_assertions_encrypted: >
-        If enabled, require the identity provider to encrypt the assertion response using the certificate pair that you provide.
+        Jika diaktifkan, wajibkan penyedia identitas untuk mengenkripsi respons asersi menggunakan pasangan sertifikat yang Anda berikan.
       certificate: >
-        Enter the X509 PEM-formatted certificate used by OpenProject for signing SAML requests.
+        Masukkan sertifikat X509 berformat PEM yang digunakan oleh OpenProject untuk menandatangani permintaan SAML.
       private_key: >
-        Enter the X509 PEM-formatted private key for the above certificate. This needs to be an RSA private key.
+        Masukkan kunci pribadi X509 dalam format PEM untuk sertifikat di atas. Kunci ini harus berupa kunci pribadi RSA.
       signature_method: >
-        Select the signature algorithm to use for the SAML request signature performed by OpenProject (Default: %{default_option}).
+        Pilih algoritma tanda tangan yang akan digunakan untuk tanda tangan permintaan SAML yang dilakukan oleh OpenProject (Default: %{default_option}).
       digest_method: >
         Pilih algoritme intisari yang akan digunakan untuk tanda tangan permintaan SAML yang dilakukan oleh OpenProject (Default: %{default_option}).
       icon: >

@@ -76,7 +76,7 @@ export class HalResourceEditFieldHandler extends EditFieldHandler {
   /**
    * Stop this event from propagating out of the edit field context.
    */
-  public stopPropagation(evt:JQuery.TriggeredEvent) {
+  public stopPropagation(evt:Event) {
     evt.stopPropagation();
     return false;
   }
@@ -135,7 +135,7 @@ export class HalResourceEditFieldHandler extends EditFieldHandler {
    * In an edit mode, we can't derive from a submit event whether the user pressed enter
    * (and on what field he did that).
    */
-  public async handleUserKeydown(event:JQuery.TriggeredEvent, onlyCancel = false) {
+  public async handleUserKeydown(event:KeyboardEvent, onlyCancel = false) {
     // Only handle submission in edit mode
     if (this.inEditMode && !onlyCancel) {
       if (event.key === 'Enter') {

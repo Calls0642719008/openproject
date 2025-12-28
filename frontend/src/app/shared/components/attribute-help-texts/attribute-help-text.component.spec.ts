@@ -15,7 +15,7 @@ describe('AttributeHelpTextComponent', () => {
 
   const serviceStub = {};
   let modalServiceStub:jasmine.SpyObj<AttributeHelpTextModalService>;
-  const i18nStub = { t: (_scope:string|string[], _options?:{ [key:string]:any }) => 'Show help text' };
+  const i18nStub = { t: (_scope:string|string[], _options?:Record<string, any>) => 'Show help text' };
 
   beforeEach(() => {
     modalServiceStub = jasmine.createSpyObj('AttributeHelpTextModalService', ['show']);

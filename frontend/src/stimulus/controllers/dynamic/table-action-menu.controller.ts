@@ -47,7 +47,7 @@ export default class TableActionMenuController extends Controller {
     }
   }
 
-  filterBy(event:Event) {
+  async filterBy(event:Event) {
     // Sometimes the filterController was not loaded during `connect`, so we try again here:
     if (!this.filterController) { this.findFilterController(); }
 
@@ -57,7 +57,9 @@ export default class TableActionMenuController extends Controller {
 
     if (this.filterController && filterName) {
       this.filterController.showDisplayFilters();
-      this.filterController.addFilterByName(filterName);
+      await this.filterController.filterFormLoaded.then(() => {
+        this.filterController!.addFilterByName(filterName);
+      });
     }
   }
 }

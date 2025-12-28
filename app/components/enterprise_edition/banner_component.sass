@@ -54,7 +54,7 @@ $op-enterprise-banner-fixed-height-large: 320px
   grid-template-areas: "visual content dismiss"
   grid-template-columns: min-content 1fr min-content
   grid-template-rows: min-content
-  border: var(--borderWidth-thin) solid var(--borderColor-severe-muted)
+  border: var(--borderWidth-thin) solid var(--enterprise-upsell-color)
   border-radius: var(--borderRadius-medium)
   background: var(--body-background)
   padding: var(--base-size-8)
@@ -96,7 +96,7 @@ $op-enterprise-banner-fixed-height-large: 320px
   &--image
     @include upsell-image
 
-  &--video-control
+  &--media
     display: block
     margin: 0 auto
     max-width: 50vw
@@ -121,7 +121,7 @@ $op-enterprise-banner-fixed-height-large: 320px
 
   &--close-icon
     .Button-visual
-    color: var(--enterprise-upsell-color)
+      color: var(--enterprise-upsell-color)
 
     &_hovering
       position: absolute

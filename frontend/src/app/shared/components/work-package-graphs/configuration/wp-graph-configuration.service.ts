@@ -26,7 +26,7 @@ export class WpGraphConfigurationService {
 
   private _globalScope = false;
 
-  private _forms:{ [id:string]:QueryFormResource } = {};
+  private _forms:Record<string, QueryFormResource> = {};
 
   private _formsPromise:Promise<unknown>|null;
 
@@ -168,7 +168,7 @@ export class WpGraphConfigurationService {
     ];
 
     const queryTabs = this.configuration.queries.map((query) => ({
-      id: query.id as string,
+      id: query.id!,
       name: this.I18n.t('js.work_packages.query.filters'),
       componentClass: WpGraphConfigurationFiltersTabComponent,
     }));
@@ -184,7 +184,7 @@ export class WpGraphConfigurationService {
         .map(
           (query) => firstValueFrom(this.apiv3Service.queries.form.load(query))
             .then(([form]) => {
-              this._forms[query.id as string] = form;
+              this._forms[query.id!] = form;
             })
             .catch((error) => this.notificationService.handleRawError(error)),
         );

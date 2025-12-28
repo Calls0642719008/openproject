@@ -39,7 +39,7 @@ export class ApiV3VersionPaths extends ApiV3Resource<VersionResource> {
    * @param resource
    * @param payload
    */
-  public patch(payload:Object):Observable<VersionResource> {
+  public patch(payload:object):Observable<VersionResource> {
     return this
       .halResourceService
       .patch<VersionResource>(

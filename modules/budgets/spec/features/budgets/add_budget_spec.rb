@@ -107,13 +107,16 @@ RSpec.describe "adding a new budget", :js do
     end
 
     context "with german locale" do
+      around do |example|
+        I18n.with_locale(:de, &example)
+      end
+
       let(:user) { create(:admin, language: :de) }
 
       it "creates the budget including the given cost items with german locale" do
-        I18n.locale = :de
         new_budget_page.visit!
 
-        fill_in Budget.human_attribute_name(:subject, locale: :de), with: "First Aid"
+        fill_in Budget.human_attribute_name(:subject), with: "First Aid"
 
         new_budget_page.add_unit_costs! "3,50", comment: "RadAway", expected_costs: "175,00 EUR"
         new_budget_page.add_unit_costs! "1.000,50", comment: "Rad-X", expected_costs: "50.025,00 EUR"
@@ -122,7 +125,7 @@ RSpec.describe "adding a new budget", :js do
         new_budget_page.add_labor_costs! "0,5", user_name: user.name, comment: "attendance", expected_costs: "12,50 EUR"
 
         page.find('[data-test-selector="budgets-create-button"]').click
-        expect_and_dismiss_flash(message: I18n.t(:notice_successful_create, locale: :de))
+        expect_and_dismiss_flash(message: I18n.t(:notice_successful_create))
 
         expect(new_budget_page.unit_costs_at(1)).to have_content "175,00 EUR"
         expect(new_budget_page.unit_costs_at(2)).to have_content "50.025,00 EUR"
@@ -132,7 +135,7 @@ RSpec.describe "adding a new budget", :js do
         expect(new_budget_page.labor_costs_at(2)).to have_content "12,50 EUR"
         expect(new_budget_page.overall_labor_costs).to have_content "125.015,00 EUR"
 
-        click_on I18n.t(:button_update, locale: :de)
+        click_on I18n.t(:button_update)
 
         budget_page.expect_planned_costs! type: :material, row: 1, expected: "175,00 EUR"
         budget_page.expect_planned_costs! type: :material, row: 2, expected: "50.025,00 EUR"

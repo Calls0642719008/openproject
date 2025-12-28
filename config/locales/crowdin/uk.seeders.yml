@@ -43,13 +43,6 @@ uk:
           name: PM2 пурпуровий
         item_3:
           name: PM2 зелено-жовтий
-      document_categories:
-        item_0:
-          name: Документація
-        item_1:
-          name: Специфікація
-        item_2:
-          name: Інше
       project_query_roles:
         item_0:
           name: Засіб перегляду запиту проєктів

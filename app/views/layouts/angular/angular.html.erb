@@ -31,6 +31,8 @@ See COPYRIGHT and LICENSE files for more details.
   <% html_title(*local_assigns[:page_title]) if local_assigns[:page_title].present? %>
   <!-- plug-in specific tags -->
   <%= call_hook :view_work_package_overview_attributes %>
+  <!-- disable Turbo cache for Angular pages -->
+  <meta name="turbo-cache-control" content="no-cache">
 <% end -%>
 
 <%= content_for :content_body do %>

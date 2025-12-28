@@ -99,7 +99,10 @@ export class WorkPackageTimelineCell {
   }
 
   public clear() {
-    this.cellElement.html('');
+    if (this.cellElement) {
+      this.cellElement.innerHTML = '';
+    }
+
     this.wpElement = null;
   }
 
@@ -107,15 +110,15 @@ export class WorkPackageTimelineCell {
     return this.workPackageTimeline.timelineBody;
   }
 
-  private get cellElement():JQuery {
-    return this.cellContainer.find(`.${this.classIdentifier}`);
+  private get cellElement() {
+    return this.cellContainer.querySelector<HTMLTableCellElement>(`.${this.classIdentifier}`);
   }
 
   private lazyInit(renderer:TimelineCellRenderer, renderInfo:RenderInfo):Promise<void> {
-    const body = this.workPackageTimeline.timelineBody[0];
+    const body = this.workPackageTimeline.timelineBody;
     const cell = this.cellElement;
 
-    if (!cell.length) {
+    if (!cell) {
       return Promise.reject('uninitialized');
     }
 
@@ -151,7 +154,7 @@ export class WorkPackageTimelineCell {
         this.halEvents,
         this.notificationService,
         this.loadingIndicator,
-        cell[0],
+        cell,
         this.wpElement,
         this.labels,
         renderer,
@@ -180,7 +183,7 @@ export class WorkPackageTimelineCell {
       .then(() => {
         // Render the upgrade from renderInfo
         const shouldBeDisplayed = renderer.update(
-          this.wpElement as HTMLDivElement,
+          this.wpElement!,
           this.labels,
           renderInfo,
         );

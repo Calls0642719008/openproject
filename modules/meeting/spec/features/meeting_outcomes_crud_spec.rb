@@ -60,8 +60,9 @@ RSpec.describe "Meeting Outcomes CRUD", :js do
   let(:current_user) { user }
   let(:state) { :in_progress }
   let(:show_page) { Pages::Meetings::Show.new(meeting) }
-  let(:field) do
-    TextEditorField.new(page, "Outcome", selector: test_selector("meeting-outcome-input"))
+
+  def outcome_field_for(agenda_item)
+    TextEditorField.new(page, "Outcome", selector: test_selector("meeting-outcome-input-for-#{agenda_item.id}"))
   end
 
   context "when a user has the necessary 'manage_outcomes' permission" do
@@ -73,6 +74,7 @@ RSpec.describe "Meeting Outcomes CRUD", :js do
     context "when the meeting is 'in progress'" do
       it "can view outcomes and do all actions" do
         item = MeetingAgendaItem.find(meeting_agenda_item.id)
+        field = outcome_field_for(item)
 
         show_page.visit!
 
@@ -88,14 +90,22 @@ RSpec.describe "Meeting Outcomes CRUD", :js do
           show_page.select_outcome_action "Remove outcome"
 
           show_page.expect_no_outcome "Hakuna Matata"
-          expect(page).to have_css(".op-meeting-outcome--button")
+          expect(page).to have_css("#meeting-agenda-items-outcomes-new-button-component-#{item.id}")
         end
 
         wp_item = MeetingAgendaItem.find(wp_agenda_item.id)
+        field = outcome_field_for(wp_item)
 
         show_page.add_outcome(wp_item) do
           field.expect_active!
           field.set_value "It means no worries"
+        end
+
+        page.within("#meeting-agenda-items-outcomes-new-button-component-#{item.id}") do
+          click_link_or_button "Outcome"
+        end
+
+        show_page.in_outcome_component(wp_item) do
           click_link_or_button "Save"
         end
 
@@ -109,8 +119,28 @@ RSpec.describe "Meeting Outcomes CRUD", :js do
 
           show_page.expect_outcome "Updated outcome"
         end
+      end
 
-        show_page.expect_no_outcome_action(wp_item)
+      it "can add multiple outcomes" do
+        item = MeetingAgendaItem.find(meeting_agenda_item.id)
+        field = outcome_field_for(item)
+
+        show_page.visit!
+
+        show_page.add_outcome_from_menu(item) do
+          field.expect_active!
+          field.set_value "Let it go, let it go"
+          click_link_or_button "Save"
+        end
+
+        show_page.add_outcome_from_menu(item) do
+          field.expect_active!
+          field.set_value "Can't hold it back anymore"
+          click_link_or_button "Save"
+        end
+
+        show_page.expect_outcome "Let it go, let it go"
+        show_page.expect_outcome "Can't hold it back anymore"
       end
     end
 

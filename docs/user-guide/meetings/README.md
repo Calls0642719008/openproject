@@ -85,6 +85,32 @@ You can also use the meetings filters to refine the list of meetings based on th
 
   ![Filter the list of dynamic meetings in OpenProject](openproject_userguide_meetings_filters.png)
 
+### Subscribe to meetings
+
+You can subscribe to all your OpenProject meetings in an external calendar application (such as Outlook, Apple Calendar, or Open-Xchange). This provides a single, read-only calendar that stays up to date automatically, without relying on individual .ics email invites.
+
+#### Create a subscription
+
+You can subscribe to OpenProject meetings either within the *Meetings* module, or from your [Account settings page](../account-settings/#icalendar). 
+
+On the meetings overview page (either global or project specific) click the **More (three dots)** icon and select **Subscribe to calendar**. 
+
+![Button to subscribe to meetings calendar on OpenProject meetings overview page](openproject_userguide_meetings_subscribe_button.png)
+
+You will be guided through creating an iCal subscription token:
+1. Name the token and click **Create subscription**.
+
+![New calendar subscription form opened in OpenProject](openproject_userguide_meetings_subscribtion_form_name.png)
+
+2. Copy the generated iCal meeting subscription URL. This URL is shown only once and allows anyone with it to view your meetings.
+
+![iCal meeting subscription URL shown when subscribing to a meetings calendar in OpenProject](openproject_userguide_meetings_subscription_token.png)
+
+3. Add this URL to your external calendar to subscribe to your OpenProject meetings.
+
+If you are only interested in a specific meeting, you can [download that specific meeting as an iCal event]
+(/one-time-meetings/#download-a-meeting-as-an-icalendar-event/) instead.
+
 > [!TIP]
 > If you are interested in how the Meetings module is used by the OpenProject team, please take a look at [this blog article](https://www.openproject.org/blog/meeting-management-example/). 
 >

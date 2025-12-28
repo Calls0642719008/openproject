@@ -39,7 +39,7 @@ module Meetings
       super
 
       @meeting = meeting
-      @meeting_participants = meeting.participants
+      @meeting_participants = meeting.participants.sort_by(&:status_sorting_value)
     end
   end
 end

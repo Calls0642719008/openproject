@@ -1,4 +1,6 @@
 sv:
   overviews:
-    label: 'Översikt'
+    label_home: "%{workspace_type} hem"
+    label_dashboard: "Översikt"
+    label_overview: 'Översikt'
   permission_manage_overview: 'Hantera översiktssida'

@@ -74,6 +74,12 @@ module BaseServices
       # Return only the unsaved copy
       return call if params[:attributes_only]
 
+      super
+    end
+
+    def after_persist(call)
+      return call unless call.result&.persisted?
+
       super.tap do |super_call|
         copy_instance = super_call.result
         self.class.copy_dependencies.each do |service_cls|

@@ -1,6 +1,15 @@
 # Schema: TypeModel
 ---
 type: object
+required:
+- id
+- name
+- color
+- position
+- isDefault
+- isMilestone
+- createdAt
+- updatedAt
 properties:
   id:
     type: integer

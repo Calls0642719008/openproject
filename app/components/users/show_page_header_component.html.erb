@@ -55,7 +55,7 @@ See COPYRIGHT and LICENSE files for more details.
         mobile_label: t(:label_send_invitation),
         size: :medium,
         href: resend_invitation_user_path(@user),
-        data: { method: :post },
+        data: { turbo_method: :post },
         aria: { label: I18n.t(:label_send_invitation) },
         title: I18n.t(:tooltip_resend_invitation)
       ) do |button|

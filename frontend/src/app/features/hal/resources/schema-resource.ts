@@ -31,11 +31,11 @@ import { InputState } from '@openproject/reactivestates';
 
 export class SchemaResource extends HalResource {
   public get state():InputState<this> {
-    return this.states.schemas.get(this.href as string) as any;
+    return this.states.schemas.get(this.href!) as any;
   }
 
   public get availableAttributes():string[] {
-    return _.keys(this.$source).filter((name) => name.indexOf('_') !== 0);
+    return _.keys(this.$source).filter((name) => !name.startsWith('_'));
   }
 
   // Find the attribute name with a matching (localized) name;

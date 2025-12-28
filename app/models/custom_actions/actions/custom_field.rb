@@ -29,12 +29,65 @@
 #++
 
 class CustomActions::Actions::CustomField < CustomActions::Actions::Base
-  def self.key
-    custom_field.attribute_name.to_sym
-  end
+  class << self
+    def key
+      custom_field.attribute_name.to_sym
+    end
 
-  def self.custom_field
-    raise NotImplementedError
+    def custom_field
+      raise NotImplementedError
+    end
+
+    def all
+      WorkPackageCustomField
+        .usable_as_custom_action
+        .map do |cf|
+          create_subclass(cf)
+        end
+    end
+
+    def for(key)
+      match_result = key.match /custom_field_(\d+)/
+
+      if match_result && (cf = WorkPackageCustomField.find_by(id: match_result[1]))
+        create_subclass(cf)
+      end
+    end
+
+    private
+
+    def create_subclass(custom_field)
+      klass = Class.new(CustomActions::Actions::CustomField)
+      klass.define_singleton_method(:custom_field) do
+        custom_field
+      end
+
+      klass.include(strategy(custom_field))
+      klass
+    end
+
+    def strategy(custom_field)
+      case custom_field.field_format
+      when "string"
+        CustomActions::Actions::Strategies::String
+      when "text"
+        CustomActions::Actions::Strategies::Text
+      when "link"
+        CustomActions::Actions::Strategies::Link
+      when "int"
+        CustomActions::Actions::Strategies::Integer
+      when "float"
+        CustomActions::Actions::Strategies::Float
+      when "date"
+        CustomActions::Actions::Strategies::Date
+      when "bool"
+        CustomActions::Actions::Strategies::Boolean
+      when "user"
+        CustomActions::Actions::Strategies::UserCustomField
+      when "list", "version"
+        CustomActions::Actions::Strategies::AssociatedCustomField
+      end
+    end
   end
 
   def custom_field
@@ -46,58 +99,20 @@ class CustomActions::Actions::CustomField < CustomActions::Actions::Base
   end
 
   def apply(work_package)
-    work_package.send(custom_field.attribute_setter, values) if work_package.respond_to?(custom_field.attribute_setter)
-  end
-
-  def self.all
-    WorkPackageCustomField
-      .usable_as_custom_action
-      .map do |cf|
-        create_subclass(cf)
-      end
-  end
-
-  def self.for(key)
-    match_result = key.match /custom_field_(\d+)/
-
-    if match_result && (cf = WorkPackageCustomField.find_by(id: match_result[1]))
-      create_subclass(cf)
+    if work_package.respond_to?(custom_field.attribute_setter)
+      set_custom_field_value(work_package)
+      validate_custom_field(work_package)
     end
   end
 
-  def self.create_subclass(custom_field)
-    klass = Class.new(CustomActions::Actions::CustomField)
-    klass.define_singleton_method(:custom_field) do
-      custom_field
-    end
+  private
 
-    klass.include(strategy(custom_field))
-    klass
-  end
-  private_class_method :create_subclass
-
-  def self.strategy(custom_field)
-    case custom_field.field_format
-    when "string"
-      CustomActions::Actions::Strategies::String
-    when "text"
-      CustomActions::Actions::Strategies::Text
-    when "link"
-      CustomActions::Actions::Strategies::Link
-    when "int"
-      CustomActions::Actions::Strategies::Integer
-    when "float"
-      CustomActions::Actions::Strategies::Float
-    when "date"
-      CustomActions::Actions::Strategies::Date
-    when "bool"
-      CustomActions::Actions::Strategies::Boolean
-    when "user"
-      CustomActions::Actions::Strategies::UserCustomField
-    when "list", "version"
-      CustomActions::Actions::Strategies::AssociatedCustomField
-    end
+  def set_custom_field_value(work_package)
+    work_package.send(custom_field.attribute_setter, values)
   end
 
-  private_class_method :strategy
+  def validate_custom_field(work_package)
+    # Validate the custom field the custom action is changing.
+    work_package.custom_values_to_validate += Array(work_package.custom_value_for(custom_field))
+  end
 end

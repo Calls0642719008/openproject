@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { TabComponent } from 'core-app/features/work-packages/components/wp-table/configuration-modal/tab-portal-outlet';
 import { WorkPackageViewFiltersService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-filters.service';
@@ -13,7 +13,7 @@ import { WorkPackageFiltersService } from 'core-app/features/work-packages/compo
   templateUrl: './filters-tab-inner.component.html',
   standalone: false,
 })
-export class WpGraphConfigurationFiltersTabInnerComponent extends QuerySpacedTabComponent implements TabComponent {
+export class WpGraphConfigurationFiltersTabInnerComponent extends QuerySpacedTabComponent implements TabComponent, OnInit {
   public filters:QueryFilterInstanceResource[] = [];
 
   public text = {

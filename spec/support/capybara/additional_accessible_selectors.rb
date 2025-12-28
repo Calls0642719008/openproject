@@ -28,6 +28,13 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
+# Workaround to support role filters in component specs. This should be fixed upstream.
+Capybara::Node::Simple.class_eval do
+  def role
+    self[:role]
+  end
+end
+
 Capybara.add_selector(:list) do
   xpath do |*|
     XPath.descendant[[
@@ -44,6 +51,8 @@ Capybara.add_selector(:list) do
       node[:"aria-label"].public_send(method, locator.to_s)
     end
   end
+
+  filter_set(:capybara_accessible_selectors, %i[aria role described_by])
 end
 
 Capybara.add_selector(:list_item) do
@@ -60,6 +69,8 @@ Capybara.add_selector(:list_item) do
   describe_expression_filters do |position: nil, **|
     position ? " at position #{position}" : ""
   end
+
+  filter_set(:capybara_accessible_selectors, %i[aria role described_by])
 end
 
 module Capybara

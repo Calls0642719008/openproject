@@ -10,8 +10,7 @@ keywords: work package, share, share work packages
 
 It is possible to share work packages with users that are not members of a project or are not yet registered on your instance. In the latter case a user will need to register in order to view the work package.
 
-> [!NOTE]
-> Sharing work packages with non-member is an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/) or  [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free community edition is easy and helps support OpenProject.
+[feature: work_package_sharing ]
 
 ## Share a work package
 
@@ -88,9 +87,7 @@ The default view will include the **Shared with** column, which lists all users 
 
 If you want to see all shared work packages within a specific project, navigate to that project first and then select the same filter. You can also [adjust this filter](../work-package-table-configuration/#filter-work-packages) and save it under your private work package filters.
 
-You (with the correct permissions) can always change or remove sharing options.
-
-![Filter for work packages shared with other users in OpenProject](openproject_user_guide_shared_with_users_filter_new.png)
+You (with the correct permissions) can always change or remove sharing options![Filter for work packages shared with other users in OpenProject](openproject_user_guide_shared_with_users_filter_new.png)
 
 ## Configuration
 
@@ -98,10 +95,4 @@ Users with the edit role can update most of the attributes of a shared work pack
 
 ![Message on not configured work package editor workflows](openproject_user_guide_sharing_configuration_message.png)
 
-To do so, an administrator can follow the link in the message to get to the form for copying workflows. In that form, select the source type (e.g. 'Task') and source role (e.g. 'Member') to copy the workflow from. Afterwards, select the target (e.g. 'Task') and lastly the role which will be 'Work package editor' to copy the workflow for:
-
-![Example for copying a workflow](openproject_user_guide_sharing_configuration_example.png)
-
-You can also choose to use the workflows for the source type and role as the blueprint for multiple target types at the same time.
-
-The copy of a workflow can later on be altered to better reflect the desired transitions between statuses for the edit role. You can also create the desired workflows from scratch.
+To do so, an administrator can follow the link in the message to get to the form for [copying workflows](../../../system-admin-guide/manage-work-packages/work-package-workflows/#copy-an-existing-workflow). 

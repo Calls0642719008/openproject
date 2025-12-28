@@ -47,7 +47,7 @@ RSpec.describe "Manage webhooks through UI", :js, :selenium do
       expect(webhook.all_projects).to be_truthy
 
       expect(page).to have_css(".webhooks--outgoing-webhook-row .enabled .icon-yes")
-      expect(page).to have_css(".webhooks--outgoing-webhook-row .selected_projects", text: "(all)")
+      expect(page).to have_css(".webhooks--outgoing-webhook-row .selected_projects", text: "All projects")
       expect(page).to have_css(".webhooks--outgoing-webhook-row .events", text: "Work packages")
       expect(page).to have_css(".webhooks--outgoing-webhook-row .description", text: webhook.description)
 
@@ -74,8 +74,10 @@ RSpec.describe "Manage webhooks through UI", :js, :selenium do
 
       SeleniumHubWaiter.wait
       # Delete webhook
-      find(".webhooks--outgoing-webhook-row-#{webhook.id} .icon-delete").click
-      page.driver.browser.switch_to.alert.accept
+
+      accept_confirm do
+        find(".webhooks--outgoing-webhook-row-#{webhook.id} .icon-delete").click
+      end
 
       expect_flash(message: I18n.t(:notice_successful_delete))
       expect(page).to have_css(".generic-table--empty-row")

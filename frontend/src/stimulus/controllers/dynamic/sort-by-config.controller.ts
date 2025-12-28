@@ -42,7 +42,7 @@ export default class SortByConfigController extends Controller {
   static onlySelectableInIsolation = ['lft'];
 
   // For some fields we must enforce a fixed direction, those can be listed here
-  static fixedDirections:Map<string, string> = new Map([
+  static fixedDirections = new Map<string, string>([
     ['lft', 'asc'],
   ]);
 
@@ -84,7 +84,7 @@ export default class SortByConfigController extends Controller {
     this.parentForm = this.sortByFieldTarget.closest('form');
 
     if (this.parentForm) {
-      this.pageTarget = this.parentForm.querySelector('input[data-sort-by-config-target="page"]') as HTMLInputElement;
+      this.pageTarget = this.parentForm.querySelector('input[data-sort-by-config-target="page"]')!;
 
       if (this.pageTarget) {
         this.parentForm.addEventListener('submit', this.onFormSubmit.bind(this));
@@ -148,7 +148,7 @@ export default class SortByConfigController extends Controller {
 
       // we have selected a field that requires a fixed direction
       if (selectedField && SortByConfigController.fixedDirections.has(selectedField)) {
-        this.setDirection(row, SortByConfigController.fixedDirections.get(selectedField) as string);
+        this.setDirection(row, SortByConfigController.fixedDirections.get(selectedField)!);
         this.toggleDirectionEnabled(row, false);
       } else {
         this.toggleDirectionEnabled(row, true);
@@ -234,7 +234,7 @@ export default class SortByConfigController extends Controller {
     const segmentControls = row.querySelectorAll('li.SegmentedControl-item');
 
     segmentControls.forEach((control) => {
-      const button = control.querySelector('button') as HTMLButtonElement;
+      const button = control.querySelector('button')!;
 
       if (button.getAttribute('data-direction') === direction) {
         control.classList.add('SegmentedControl-item--selected');
@@ -249,7 +249,7 @@ export default class SortByConfigController extends Controller {
   toggleDirectionEnabled(row:HTMLElement, enabled:boolean):void {
     const segmentControls = row.querySelectorAll('li.SegmentedControl-item');
     segmentControls.forEach((control) => {
-      const button = control.querySelector('button') as HTMLButtonElement;
+      const button = control.querySelector('button')!;
       button.disabled = !enabled;
     });
   }
@@ -283,7 +283,7 @@ export default class SortByConfigController extends Controller {
   disableSelectedFieldsForOtherSelects():void {
     this.inputRowTargets.forEach((row) => {
       const selectedFieldsInOtherRows = this.getAllSelectedFields(row);
-      const otherSelect = row.querySelector('select[name="sort_field"]') as HTMLSelectElement;
+      const otherSelect = row.querySelector('select[name="sort_field"]')!;
       otherSelect.querySelectorAll('option').forEach((option) => {
         option.disabled = selectedFieldsInOtherRows.includes(option.value);
       });

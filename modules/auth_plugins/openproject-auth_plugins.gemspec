@@ -11,6 +11,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "omniauth", "~> 1.0"
 
-  s.add_development_dependency "rspec", "~> 2.14"
+  s.add_development_dependency "rspec", "~> 3.13"
   s.metadata["rubygems_mfa_required"] = "true"
 end

@@ -709,23 +709,23 @@ ro:
                 options:
                   name: Noțiuni de bază
                   text: |
-                    We are glad you joined! We suggest to try a few things to get started in OpenProject.
+                    Ne bucurăm că v-ați alăturat! Vă sugerăm să încercați câteva lucruri pentru a începe în OpenProject.
 
-                    This demo project shows BCF management functionalities.
+                    Acest proiect demo prezintă funcționalitățile de gestionare a BCF.
 
-                    _Try the following steps:_
+                    _Tentați următorii pași:_
 
-                    1.  _Invite new members to your project:_ → Go to [Members]({{opSetting:base_url}}/projects/demo-bcf-management-project/members?show_add_members=true) in the project navigation.
-                    2.  _Upload and view 3D-models in IFC format:_ → Go to [BCF]({{opSetting:base_url}}/projects/demo-bim-project/bcf) in the project navigation.
-                    3.  _Create and manage BCF issues linked directly in the IFC model:_ → Go to [BCF]({{opSetting:base_url}}/projects/demo-bim-project/bcf) → Create.
-                    4.  _View the BCF files in your project:_ → Go to [BCF]({{opSetting:base_url}}/projects/demo-bcf-management-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22status%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22id%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22card%22%7D) in the project navigation.
-                    5.  _Load your BCF files:_ → Go to [BCF → Import.]({{opSetting:base_url}}/projects/demo-bcf-management-project/issues/upload)
-                    6.  _Create and update a Gantt chart:_ → Go to [Gantt chart]({{opSetting:base_url}}/projects/demo-bcf-management-project/work_packages?query_props=%7B%22c%22%3A%5B%22id%22%2C%22subject%22%2C%22startDate%22%2C%22dueDate%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22days%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22status%22%2C%22o%22%3A%22o%22%2C%22v%22%3A%5B%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%7D) in the project navigation.
-                    7.  _Activate further modules:_ → Go to [Project settings → Modules.]({{opSetting:base_url}}/projects/demo-bcf-management-project/settings/modules)
-                    8.  _You love the agile approach? Create a board:_ → Go to [Boards]({{opSetting:base_url}}/projects/demo-bcf-management-project/boards).
+                    1.  _Invitați noi membri în proiectul dvs.:_ → Accesați [Members]({{opSetting:base_url}}/projects/demo-bcf-management-project/members?show_add_members=true) în navigarea proiectului.
+                    2.  _Încărcați și vizualizați modele 3D în format IFC:_ → Mergeți la [BCF]({{opSetting:base_url}}/projects/demo-bim-project/bcf) în navigarea proiectului.
+                    3.  _Crearea și gestionarea problemelor BCF legate direct în modelul IFC:_ → Accesați [BCF]({{opSetting:base_url}}/projects/demo-bim-project/bcf) → Creați.
+                    4.  _ Vizualizați fișierele BCF din proiect: _ → Accesați [BCF]({{opSetting:base_url}}/projects/demo-bcf-management-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22status%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22id%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22card%22%7D) în navigarea proiectului.
+                    5.  _Încărcați fișierele BCF:_ → Mergeți la [BCF → Import.]({{opSetting:base_url}}/projects/demo-bcf-management-project/issues/upload)
+                    6.  _Creați și actualizați o diagramă Gantt:_ → Accesați [Gantt chart]({{opSetting:base_url}}/projects/demo-bcf-management-project/work_packages?query_props=%7B%22c%22%3A%5B%22id%22%2C%22subject%22%2C%22startDate%22%2C%22dueDate%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22days%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22status%22%2C%22o%22%3A%22o%22%2C%22v%22%3A%5B%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%7D) în navigarea proiectului.
+                    7.  _Activați alte module:_ → Accesați [Setări proiect → Module.]({{opSetting:base_url}}/projects/demo-bcf-management-project/settings/modules)
+                    8.  _Îți place abordarea agilă? Creați un board:_ → Accesați [Boards]({{opSetting:base_url}}/projects/demo-bcf-management-project/boards).
 
-                    Here you will find our [User Guides](https://www.openproject.org/docs/user-guide/).
-                    Please let us know if you have any questions or need support. Contact us: [support\[at\]openproject.com](mailto:support@openproject.com).
+                    Aici veți găsi [Ghidurile utilizatorului](https://www.openproject.org/docs/user-guide/).
+                    Vă rugăm să ne anunțați dacă aveți întrebări sau aveți nevoie de asistență. Contactați-ne: [support\[at\]openproject.com](mailto:support@openproject.com).
               item_4:
                 options:
                   name: Membri

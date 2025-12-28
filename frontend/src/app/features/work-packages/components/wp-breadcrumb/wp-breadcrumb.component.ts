@@ -37,7 +37,7 @@ import { WorkPackageResource } from 'core-app/features/hal/resources/work-packag
   standalone: false,
 })
 export class WorkPackageBreadcrumbComponent {
-  @Input('workPackage') workPackage:WorkPackageResource;
+  @Input() workPackage:WorkPackageResource;
 
   public text = {
     parent: this.I18n.t('js.relations_hierarchy.parent_headline'),

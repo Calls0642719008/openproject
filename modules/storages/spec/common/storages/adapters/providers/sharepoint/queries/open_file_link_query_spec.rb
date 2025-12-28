@@ -43,7 +43,7 @@ module Storages
             let(:drive_id) { "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw" }
             let(:separator) { SharepointStorage::IDENTIFIER_SEPARATOR }
 
-            it_behaves_like "adapter open_file_link_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "open_file_link"
 
             context "with outbound requests successful" do
               context "with open location flag not set", vcr: "sharepoint/open_file_link_query_success" do
@@ -75,7 +75,7 @@ module Storages
               let(:input_data) { Input::OpenFileLink.build(file_id:).value! }
               let(:error_source) { Internal::DriveItemQuery }
 
-              it_behaves_like "adapter open_file_link_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

@@ -1,26 +1,24 @@
 # Schema: FileLinkCollectionWriteModel
 ---
-allOf:
-  - $ref: './collection_model.yml'
-  - type: object
+type: object
+required:
+  - _embedded
+properties:
+  _embedded:
+    type: object
     required:
-      - _embedded
+      - elements
     properties:
-      _embedded:
-        type: object
-        required:
-          - elements
-        properties:
-          elements:
-            type: array
-            items:
-              $ref: './file_link_write_model.yml'
+      elements:
+        type: array
+        items:
+          $ref: './file_link_write_model.yml'
 
 example:
   _embedded:
     elements:
       - originData:
-          id: 5503
+          id: "5503"
           name: logo.png
           mimeType: image/png
           size: 16042
@@ -31,5 +29,3 @@ example:
         _links:
           storage:
             href: /api/v3/storage/42
-      - _hint: File Link resource shortened for brevity
-        id: 1338

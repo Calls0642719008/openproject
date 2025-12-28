@@ -69,6 +69,7 @@ module API
                     :max_length,
                     :regular_expression,
                     :options,
+                    :formula,
                     :location,
                     :description,
                     :deprecated
@@ -84,6 +85,7 @@ module API
       property :regular_expression, exec_context: :decorator
       property :deprecated, exec_context: :decorator
       property :options, exec_context: :decorator
+      property :formula, exec_context: :decorator, render_nil: false
 
       property :location, exec_context: :decorator
 

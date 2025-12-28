@@ -75,7 +75,7 @@ export class EditableToolbarTitleComponent implements OnInit, OnChanges {
     return this.editable;
   }
 
-  @ViewChild('editableTitleInput') inputField?:ElementRef;
+  @ViewChild('editableTitleInput') inputField?:ElementRef<HTMLInputElement>;
 
   public selectedTitle:string;
 
@@ -101,13 +101,13 @@ export class EditableToolbarTitleComponent implements OnInit, OnChanges {
   ngOnInit():void {
     this.text.input_title = `${this.text.click_to_edit} ${this.text.press_enter_to_save}`;
 
-    jQuery(this.elementRef.nativeElement).on(triggerEditingEvent, (evt:Event, val = '') => {
+    this.elementRef.nativeElement.addEventListener(triggerEditingEvent, (evt:CustomEvent<string|undefined>) => {
       // In case we're not editable, ignore request
       if (!this.inputField) {
         return;
       }
 
-      this.selectedTitle = val;
+      this.selectedTitle = evt.detail ?? '';
       setTimeout(() => {
         const field:HTMLInputElement = this.inputField!.nativeElement;
         field.focus();
@@ -123,7 +123,7 @@ export class EditableToolbarTitleComponent implements OnInit, OnChanges {
     }
 
     if (changes.initialFocus && changes.initialFocus.firstChange && this.inputField!) {
-      const field:HTMLInputElement = this.inputField.nativeElement;
+      const field = this.inputField.nativeElement;
       this.selectInputOnInitalFocus(field);
     }
   }
@@ -175,7 +175,7 @@ export class EditableToolbarTitleComponent implements OnInit, OnChanges {
 
     // Blur this element
     if (this.inputField) {
-      (this.inputField.nativeElement as HTMLInputElement).blur();
+      this.inputField.nativeElement.blur();
     }
 
     // Avoid double saving
@@ -227,6 +227,6 @@ export class EditableToolbarTitleComponent implements OnInit, OnChanges {
   }
 
   private toggleToolbarButtonVisibility(hidden:boolean):void {
-    jQuery('.toolbar-items').toggleClass('hidden-for-mobile', hidden);
+    document.querySelectorAll('.toolbar-items').forEach((toolbarItem) => toolbarItem.classList.toggle('hidden-for-mobile', hidden));
   }
 }

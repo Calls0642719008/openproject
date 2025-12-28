@@ -6,21 +6,21 @@ it:
         identifier: Identificatore
         secret: Segreto
         scope: Ambito
-        assertion_consumer_service_url: URL ACS (Asserzione servizio del consumatore)
+        assertion_consumer_service_url: URL ACS (Assertion consumer service)
         limit_self_registration: Limita registrazione autonoma
         sp_entity_id: ID dell'entità di servizio
-        metadata_url: URL dei meta dati del fornitore d' identità
+        metadata_url: URL dei metadati del fornitore di identità
         name_identifier_format: Formato dell'identificatore del nome
-        idp_sso_service_url: Fine del login del fornitore d' identità
-        idp_slo_service_url: Fine del logout del fornitore d' identità
-        idp_cert: Certificato pubblico del fornitore d' identità
+        idp_sso_service_url: Endpoint di login del fornitore di identità
+        idp_slo_service_url: Endpoint di logout del fornitore di identità
+        idp_cert: Certificato pubblico del fornitore di identità
         authn_requests_signed: Firma le richieste SAML Authn
         want_assertions_signed: Richiedi risposte firmate
         want_assertions_encrypted: Richiedi risposte crittografate
         certificate: Certificato utilizzato da OpenProject per richieste SAML
         private_key: Chiave privata corrispondente per le richieste di OpenProject SAML
         signature_method: Algoritmo di firma
-        digest_method: Algoritmo di Digest
+        digest_method: Algoritmo di digest
         format: "Formato"
         icon: "Icona personalizzata"
     errors:
@@ -56,6 +56,7 @@ it:
       label_mapping: Mappatura
       label_requested_attribute_for: "Attributo richiesto per: %{attribute}"
       no_results_table: Nessun fornitore di identità SAML è stato ancora definito.
+      notice_created: È stato creato con successo un nuovo provider di identità SAML.
       plural: Fornitori di identità SAML
       singular: Fornitore di identità SAML
       requested_attributes: Attributi richiesti
@@ -110,7 +111,7 @@ it:
       idp_sso_service_url: >
         L'URL dell'endpoint di login del fornitore di identità.
       idp_slo_service_url: >
-        L'URL dell'endpoint di login del fornitore di identità.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Inserisca il certificato pubblico in formato X509 PEM del fornitore di identità. Puoi inserire più certificati separandoli su righe diverse.
       name_identifier_format: >

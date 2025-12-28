@@ -135,7 +135,7 @@ export class HalResourceNotificationService {
       errorBody = (response as any).data;
     }
 
-    if (errorBody && errorBody._type === 'Error') {
+    if (errorBody?._type === 'Error') {
       return this.halResourceService.createHalResourceOfClass(ErrorResource, errorBody);
     }
 

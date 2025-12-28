@@ -22,7 +22,7 @@ export class DisplayFieldComponent implements OnInit {
 
   @Input() containerType:'table'|'single-view'|'timeline' = 'table';
 
-  @Input() displayFieldOptions:{ [key:string]:unknown } = {};
+  @Input() displayFieldOptions:Record<string, unknown> = {};
 
   @ViewChild('displayFieldContainer') container:ElementRef<HTMLSpanElement>;
 
@@ -60,7 +60,6 @@ export class DisplayFieldComponent implements OnInit {
 
   private getDisplayFieldInstance(fieldSchema:IFieldSchema) {
     if (this.displayClass) {
-      // eslint-disable-next-line new-cap
       const instance = new this.displayClass(this.fieldName, this.displayFieldContext);
       instance.apply(this.resource, fieldSchema);
       return instance;

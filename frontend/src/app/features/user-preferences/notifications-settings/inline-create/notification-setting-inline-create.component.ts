@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
-import { HalSourceLink } from 'core-app/features/hal/resources/hal-resource';
 import {
   IProjectAutocompleteItem,
 } from 'core-app/shared/components/autocompleter/project-autocompleter/project-autocomplete-item';
 import { IAPIFilter } from 'core-app/shared/components/autocompleter/op-autocompleter/typings';
+import { HalSourceLink } from 'core-app/features/hal/interfaces';
 
 export interface NotificationSettingProjectOption {
   name:string;

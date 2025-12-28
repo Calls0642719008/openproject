@@ -46,13 +46,15 @@ module Queries::ProjectPhaseDefinitions
         LEFT OUTER JOIN (
           SELECT
             ph.id,
+            ppd.position,
             ph.project_id,
-            ph.definition_id AS active_phase_definition_id
+            ph.definition_id AS project_phase_definition_id
           FROM project_phases ph
+          LEFT OUTER JOIN project_phase_definitions ppd ON ppd.id = ph.definition_id
           WHERE ph.project_id IN (#{projects_with_view_phases_permissions.to_sql})
           AND ph.active = true
         ) AS active_phases
-        ON active_phases.active_phase_definition_id = work_packages.project_phase_definition_id
+        ON active_phases.project_phase_definition_id = work_packages.project_phase_definition_id
           AND active_phases.project_id = work_packages.project_id
       SQL
     end

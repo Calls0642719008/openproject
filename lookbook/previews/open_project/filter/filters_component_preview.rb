@@ -34,7 +34,9 @@ module OpenProject
     class FiltersComponentPreview < Lookbook::Preview
       def default
         @query = ProjectQuery.new
-        render(::Projects::ProjectsFiltersComponent.new(query: @query))
+        render(::Projects::ProjectsFiltersComponent.new(query: @query,
+                                                        initially_expanded: true))
+        render_with_template(locals: { query: ProjectQuery.new })
       end
     end
   end

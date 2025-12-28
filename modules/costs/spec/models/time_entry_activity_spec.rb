@@ -28,6 +28,8 @@
 
 require "spec_helper"
 
+require Rails.root.join("spec/models/enumerations/shared_enumeration_examples").to_s
+
 RSpec.describe TimeEntryActivity do
   let(:new_activity) { described_class.new }
   let(:saved_activity) { described_class.create name: "Design" }
@@ -51,5 +53,9 @@ RSpec.describe TimeEntryActivity do
       expect(new_activity.option_name)
         .to eq :enumeration_activities
     end
+  end
+
+  it_behaves_like "enumeration#active handling", false do
+    let(:enumeration) { described_class.new(attributes_for(:time_entry_activity)) }
   end
 end

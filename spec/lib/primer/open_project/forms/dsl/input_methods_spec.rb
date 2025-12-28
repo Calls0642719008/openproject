@@ -113,12 +113,32 @@ RSpec.describe Primer::OpenProject::Forms::Dsl::InputMethods, type: :forms do
       include_examples "input class", Primer::Forms::Dsl::CheckBoxGroupInput
       it_behaves_like "supporting help texts"
     end
+
+    describe "#advanced_radio_button_group" do
+      let(:field_group) { form_dsl.advanced_radio_button_group(name:, label:, **options) }
+
+      include_examples "input class", Primer::OpenProject::Forms::Dsl::AdvancedRadioButtonGroupInput
+      it_behaves_like "supporting help texts"
+    end
+
+    describe "#advanced_check_box_group" do
+      let(:field_group) { form_dsl.advanced_check_box_group(name:, label:, **options) }
+
+      include_examples "input class", Primer::OpenProject::Forms::Dsl::AdvancedCheckBoxGroupInput
+      it_behaves_like "supporting help texts"
+    end
   end
 
   describe "#separator" do
     let(:field_group) { form_dsl.separator }
 
     include_examples "input class", Primer::Forms::Separator
+  end
+
+  describe "#html_content" do
+    let(:field_group) { form_dsl.html_content { "content" } }
+
+    include_examples "input class", Primer::OpenProject::Forms::HtmlContent
   end
 
   describe "text input methods" do
@@ -198,12 +218,6 @@ RSpec.describe Primer::OpenProject::Forms::Dsl::InputMethods, type: :forms do
       it_behaves_like "supporting help texts"
     end
 
-    describe "#html_content" do
-      let(:field_group) { form_dsl.html_content(name:, label:, **options) }
-
-      include_examples "input class", Primer::OpenProject::Forms::Dsl::HtmlContentInput
-    end
-
     describe "#project_autocompleter" do
       let(:field_group) { form_dsl.project_autocompleter(name:, label:, autocomplete_options: {}, **options) }
 
@@ -233,7 +247,11 @@ RSpec.describe Primer::OpenProject::Forms::Dsl::InputMethods, type: :forms do
     end
 
     describe "#block_note_editor" do
-      let(:field_group) { form_dsl.block_note_editor(name:, label:, value: "", suggestions: [], **options) }
+      let(:document_name) { "1234asdzxc" }
+      let(:field_group) do
+        form_dsl.block_note_editor(name:, label:, value: "", document_id: 8, document_name:, attachments_upload_url: "",
+                                   attachments_collection_key: "", **options)
+      end
 
       include_examples "input class", Primer::OpenProject::Forms::Dsl::BlockNoteEditorInput
       it_behaves_like "supporting help texts"

@@ -38,5 +38,5 @@ export function isRelationColumn(column:QueryColumn) {
     queryColumnTypes.RELATION_OF_TYPE,
     queryColumnTypes.RELATION_CHILD,
   ];
-  return relationTypes.indexOf(column._type) >= 0;
+  return relationTypes.includes(column._type);
 }

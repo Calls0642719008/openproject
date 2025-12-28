@@ -93,6 +93,7 @@ module Users
     def register_invited_user
       return unless user.invited?
 
+      user.activate_custom_field_validations!
       user.activate
 
       with_saved_user_result(success_message: I18n.t(:notice_account_registered_and_logged_in)) do

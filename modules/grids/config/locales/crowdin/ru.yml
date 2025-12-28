@@ -1,6 +1,26 @@
 ru:
   grids:
     label_widget_in_grid: "Виджет содержится в Сетке %{grid_name}"
+    widgets:
+      empty: "В настоящее время этот виджет пуст."
+      not_available: "Этот виджет недоступен."
+      subitems:
+        title: "Подпункты"
+        no_results: "Нет видимых потомков."
+        view_all_subitems: "Отобразить все подпункты"
+        button_text: "Подпункт"
+      members:
+        title: "Участники"
+        no_results: "Нет видимых участников."
+        view_all_members: "Просмотреть всех участников"
+        show_members_count: "Показать всех %{count} участников"
+        x_more:
+          one: "и еще один участник."
+          few: "and %{count} more members."
+          many: "and %{count} more members."
+          other: "и еще %{count} участников."
+      news:
+        no_results: "Ничего нового для отчета."
   activerecord:
     attributes:
       grids/grid:

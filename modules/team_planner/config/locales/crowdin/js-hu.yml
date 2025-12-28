@@ -3,7 +3,7 @@ hu:
   js:
     team_planner:
       add_existing: 'Létező tartalom hozzáadása'
-      label_team_planner_plural: 'Team planners'
+      label_team_planner_plural: 'Csoport tervezők'
       add_existing_title: 'Meglévő munkacsomagok hozzáadása'
       create_label: 'Csoport tervező'
       create_title: 'Új csoport tervező létrehozása'
@@ -18,7 +18,7 @@ hu:
       work_week: 'Munkahét'
       today: 'Ma'
       drag_here_to_remove: 'Drag here to remove assignee and start and end dates.'
-      cannot_drag_here: 'Cannot remove the work package due to permissions or editing restrictions.'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'This work package cannot start/finish on a non-working day.'
       quick_add:
         empty_state: 'Use the search field to find work packages and drag them to the planner to assign it to someone and define start and end dates.'

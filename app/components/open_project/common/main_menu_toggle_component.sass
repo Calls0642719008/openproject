@@ -44,13 +44,15 @@
     // Push the breadcrumb to the right when the sidebar is collapsed
     .PageHeader-contextBar,
     .op-breadcrumbs,
-    .wp-show--header-container--breadcrumb
+    .wp-show--header-container--breadcrumb,
+    .PageHeader.PageHeader--noBreadcrumb .PageHeader-titleBar
       margin-left: 30px
 
 
     @media only screen and (max-width: $breakpoint-sm)
       // Reset the margin for mobile, because of the special position the WP breadcrumb has on mobile
-      .wp-show--header-container--breadcrumb
+      .wp-show--header-container--breadcrumb,
+      .PageHeader.PageHeader--noBreadcrumb .PageHeader-titleBar
         margin-left: 0
 
     @media only screen and (max-width: $breakpoint-lg)
@@ -64,3 +66,8 @@
   &:not(.hidden-navigation)
     #menu-toggle--expand-button
       display: none
+  // Hide the PageHeader context bar on small screens when there is no sidebar
+  @media only screen and (max-width: $breakpoint-sm)
+    &.nosidebar
+      .PageHeader.PageHeader--noBreadcrumb .PageHeader-contextBar
+        display: none

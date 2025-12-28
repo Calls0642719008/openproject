@@ -35,6 +35,7 @@
               </div>
             </th>
             </thead>
+            <tbody>
             <% @filter.groups.find_each do |synced_group| %>
               <tr>
                 <td><%= link_to synced_group.group.name,

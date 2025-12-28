@@ -29,47 +29,18 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   component_wrapper do
-    settings_primer_form_with(
-      url: new_project_path,
+    primer_form_with(
+      url: new_workspace_path,
       method: :get,
-      data: {
-        turbo_frame: Projects::NewComponent.wrapper_key,
-        controller: "auto-submit",
-        auto_submit_delay_value: 0
-      }
+      html: { id: "project-create-form" }
     ) do |f|
-      render(
-        Primer::Box.new(
-          border: true,
-          border_radius: 2,
-          bg: :inset,
-          my: 3,
-          p: 3
-        )
-      ) do
-        template_id_value = template_id
-        parent_id_value = parent_id
-        render_inline_form(f) do |form|
-          form.project_autocompleter(
-            name: :template_id,
-            label: I18n.t("create_project.template_label"),
-            autocomplete_options: {
-              focusDirectly: false,
-              dropdownPosition: "bottom",
-              inputValue: template_id_value,
-              placeholder: I18n.t("label_none_parentheses"),
-              filters: [
-                { name: "user_action", operator: "=", values: ["projects/copy"] },
-                { name: "templated", operator: "=", values: ["t"] }
-              ],
-              data: {
-                action: "change->auto-submit#submit",
-                "qa-field-name": "use_template"
-              }
-            }
-          )
+      flex_layout do |container|
+        container.with_row(mb: 3) do
+          render Projects::TemplateSelectForm.new(f, template_id:, parent_id:, workspace_type: project.workspace_type, current_user:)
+        end
 
-          form.hidden name: :parent_id, value: parent_id_value
+        container.with_row do
+          render Projects::StepForm.new(f, step: 2)
         end
       end
     end

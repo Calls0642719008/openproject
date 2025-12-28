@@ -34,8 +34,8 @@ module ProjectCustomFieldProjectMappings
     attribute :custom_field_id
 
     validate :select_project_custom_fields_permission
-    validate :not_required
-    validate :visbile_to_user
+    validate :not_for_all_projects
+    validate :visible_to_user
 
     def select_project_custom_fields_permission
       return if user.allowed_in_project?(:select_project_custom_fields, model.project)
@@ -43,15 +43,15 @@ module ProjectCustomFieldProjectMappings
       errors.add :base, :error_unauthorized
     end
 
-    def not_required
-      # only mappings of custom fields which are not required can be manipulated by the user
-      # enabling a custom field which is required happens in an after_save hook within the custom field model itself
-      return if model.project_custom_field.nil? || !model.project_custom_field.required?
+    def not_for_all_projects
+      # only mappings of custom fields which are not activated for all projects can be manipulated by the user
+      # enabling a custom field which is force-active happens in an after_save hook within the custom field model itself
+      return if model.project_custom_field.nil? || !model.project_custom_field.is_for_all?
 
       errors.add :custom_field_id, :cannot_delete_mapping
     end
 
-    def visbile_to_user
+    def visible_to_user
       # "invisible" custom fields can only be seen and edited by admins
       # using visible scope to check if the custom field is actually visible to the user
       return if model.project_custom_field.nil? ||

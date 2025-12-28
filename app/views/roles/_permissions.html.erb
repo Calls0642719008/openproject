@@ -27,30 +27,31 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 <% permissions.each do |mod, mod_permissions| %>
-  <% global_prefix = show_global_role ? "fieldset--global--" : "fieldset--" %>
-  <% module_name = mod.blank? ? "fieldset--global--" + Project.model_name.human.downcase.tr(" ", "_") : global_prefix + l_or_humanize(mod, prefix: "project_module_").downcase.tr(" ", "_") %>
-  <% module_id = module_name.parameterize %>
-  <fieldset class="form--fieldset -collapsible" id="<%= module_id %>">
-    <legend class="form--fieldset-legend">
-      <% if show_global_role && mod.blank? %>
-        <%= t(:label_global) %>
-      <% else %>
-        <%= permission_header_for_project_module(mod) %>
-      <% end %>
-    </legend>
-    <div class="form--toolbar">
-      <span class="form--toolbar-item">
-        (<%= check_all_links module_id %>)
-      </span>
-    </div>
-    <% unless I18n.t("#{mod}.permission_header_explanation", default: '').empty? %>
-    <div class="-italic">
-      <p>
-        <%= I18n.t("#{mod}.permission_header_explanation").html_safe %>
-      </p>
-    </div>
+  <% module_name = mod.blank? ? Project.model_name.param_key : l_or_humanize(mod, prefix: "project_module_").downcase.tr(" ", "_") %>
+  <% module_title = show_global_role && mod.blank? ? t(:label_global) : permission_header_for_project_module(mod) %>
+  <% section_id = "#{'global-' if show_global_role}#{module_name.parameterize}-section" %>
+
+  <%= render Primer::OpenProject::CollapsibleSection.new(id: section_id, display: :block, mb: 3) do |section| %>
+    <% section.with_title(tag: :h3) do %>
+      <%= module_title %>
     <% end %>
-    <div class="-columns-2">
+
+    <% if I18n.exists?("permission_header_explanation", scope: mod) %>
+      <% section.with_caption do %>
+        <%= I18n.t("permission_header_explanation", scope: mod) %>
+      <% end %>
+    <% end %>
+
+    <% section.with_additional_information do %>
+      <%=
+        check_all_links section_id do |links|
+          links.with_check_all_button.with_tooltip(text: t(".section_check_all_label", module: module_title))
+          links.with_uncheck_all_button.with_tooltip(text: t(".section_uncheck_all_label", module: module_title))
+        end
+      %>
+    <% end %>
+
+    <% section.with_collapsible_content(classes: "-columns-2", data: { controller: "checkable" }) do %>
       <% Array(mod_permissions).each do |permission| %>
         <% next if permission.global? && !show_global_role %>
         <div class="form--field">
@@ -58,7 +59,8 @@ See COPYRIGHT and LICENSE files for more details.
             <label class="form--label-with-check-box">
               <%= styled_check_box_tag "role[permissions][]",
                                        permission.name,
-                                       (role.permissions && role.permissions.include?(permission.name)) %>
+                                       (role.permissions && role.permissions.include?(permission.name)),
+                                       data: { checkable_target: "checkbox" } %>
               <%= t(:"permission_#{permission.name}") %>
             </label>
           </div>
@@ -67,7 +69,7 @@ See COPYRIGHT and LICENSE files for more details.
           </div>
         </div>
       <% end %>
-    </div>
-  </fieldset>
+    <% end %>
+  <% end %>
 <% end %>
 <%= hidden_field_tag "role[permissions][]", "" %>

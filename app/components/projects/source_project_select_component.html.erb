@@ -34,13 +34,7 @@ See COPYRIGHT and LICENSE files for more details.
       method: :get
     ) do |f|
       render(
-        Primer::Box.new(
-          border: true,
-          border_radius: 2,
-          bg: :inset,
-          my: 3,
-          p: 3
-        )
+        OpPrimer::InsetBoxComponent.new(my: 3)
       ) do
         source_project_id_value = source_project_id
         render_inline_form(f) do |form|

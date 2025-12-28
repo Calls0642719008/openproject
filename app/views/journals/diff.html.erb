@@ -29,7 +29,16 @@ See COPYRIGHT and LICENSE files for more details.
 
 <% html_title @journable.to_s %>
 
-<p><%= authoring @journal.created_at, @journal.user, label: :label_updated_time_by %></p>
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { t(:label_view_diff) }
+    header.with_breadcrumbs( [{ href: project_overview_path(@project.id), text: @project.name },
+                              { href: project_work_packages_path(@project), text: t(:label_work_package_plural) },
+                              { href: project_work_package_path(@project, @journable.id), text: @journable.to_s },
+                              t(:label_view_diff) ])
+    header.with_description { authoring @journal.created_at, @journal.user, label: :label_updated_time_by }
+  end
+%>
 
 <%= render partial: "diff",
            locals: { diff: @diff } %>

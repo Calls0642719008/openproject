@@ -1,6 +1,23 @@
 ms:
   grids:
     label_widget_in_grid: "Widget yang terdapat dalam Grid %{grid_name}"
+    widgets:
+      empty: "This widget is currently empty."
+      not_available: "This widget is not available."
+      subitems:
+        title: "Subitems"
+        no_results: "There are no visible children."
+        view_all_subitems: "View all subitems"
+        button_text: "Subitem"
+      members:
+        title: "Members"
+        no_results: "Tiada ahli dipapar."
+        view_all_members: "Lihat semua ahli"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          other: "and %{count} more members."
+      news:
+        no_results: "Tiada perkara baharu untuk dilaporkan."
   activerecord:
     attributes:
       grids/grid:

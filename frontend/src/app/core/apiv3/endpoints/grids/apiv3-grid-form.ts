@@ -40,7 +40,7 @@ export class ApiV3GridForm extends ApiV3FormResource {
    * @param resource
    * @param schema
    */
-  public static extractPayload(resource:HalResource|Object, schema:SchemaResource|null = null):Object {
+  public static extractPayload(resource:HalResource|object, schema:SchemaResource|null = null):object {
     if (resource instanceof HalResource && schema) {
       const grid = resource;
       const payload = HalPayloadHelper.extractPayloadFromSchema(grid, schema);
@@ -71,7 +71,7 @@ export class ApiV3GridForm extends ApiV3FormResource {
    * @param request
    * @param schema
    */
-  public extractPayload(request:HalResource|Object, schema:SchemaResource|null = null) {
+  public extractPayload(request:HalResource|object, schema:SchemaResource|null = null) {
     return ApiV3GridForm.extractPayload(request, schema);
   }
 }

@@ -45,7 +45,7 @@ import { TodayLineElement } from './wp-timeline.today-line';
   standalone: false,
 })
 export class WorkPackageTableTimelineStaticElements implements OnInit {
-  public $element:HTMLElement;
+  public element:HTMLElement;
 
   private container:HTMLElement;
 
@@ -54,7 +54,7 @@ export class WorkPackageTableTimelineStaticElements implements OnInit {
   constructor(elementRef:ElementRef,
     public states:States,
     public workPackageTimelineTableController:WorkPackageTimelineTableController) {
-    this.$element = elementRef.nativeElement;
+    this.element = elementRef.nativeElement;
 
     this.elements = [
       new TodayLineElement(),
@@ -62,7 +62,7 @@ export class WorkPackageTableTimelineStaticElements implements OnInit {
   }
 
   ngOnInit() {
-    this.container = this.$element.querySelector('.wp-table-timeline--static-elements') as HTMLElement;
+    this.container = this.element.querySelector('.wp-table-timeline--static-elements')!;
     this.workPackageTimelineTableController
       .onRefreshRequested('static elements', (vp:TimelineViewParameters) => this.update(vp));
   }
@@ -85,7 +85,7 @@ export class WorkPackageTableTimelineStaticElements implements OnInit {
     }
     const timelineSide = document.querySelector('.work-packages-tabletimeline--timeline-side');
     if (timelineSide !== null && vp.settings.zoomLevel !== 'auto') {
-      const visibleMomentBeforeToday = vp.now.clone().subtract(vp.settings.visibleBeforeTodayInZoomLevel, vp.settings.zoomLevel)
+      const visibleMomentBeforeToday = vp.now.clone().subtract(vp.settings.visibleBeforeTodayInZoomLevel, vp.settings.zoomLevel);
       const visibleDaysBeforeToday = visibleMomentBeforeToday.diff(vp.dateDisplayStart, 'days');
       const visibleDaysBeforeTodayPositionPixels = calculatePositionValueForDayCountingPx(vp, visibleDaysBeforeToday);
       timelineSide.scrollLeft = visibleDaysBeforeTodayPositionPixels;

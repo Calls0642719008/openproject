@@ -95,11 +95,15 @@ RSpec.describe "Split screen in the notification center", :js do
 
       global_html_title.expect_first_segment "Notifications"
 
-      # Html title should be updated with next WP data after making the current one as read
-      second_title = "#{second_work_package.type.name}: #{second_work_package.subject} (##{second_work_package.id})"
+      # Reopen the split screen and mark it as read
       center.click_item notification
-      sleep 0.25 # Wait after the item has been clicked to not be interpreted as a double click
+      # Ensure the split screen is open before marking the notification as read
+      global_html_title.expect_first_segment first_title
       center.mark_notification_as_read notification
+
+      # Having marked the other notification as read, the next notification should open up automatically
+      # and the html title should change accordingly.
+      second_title = "#{second_work_package.type.name}: #{second_work_package.subject} (##{second_work_package.id})"
       global_html_title.expect_first_segment "#{second_title} | Notifications"
 
       # After making all notifications as read, html title should show the base route

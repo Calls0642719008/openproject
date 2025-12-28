@@ -31,6 +31,7 @@ module API
     module WorkPackages
       class WorkPackageRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Decorators::DateProperty
         include API::Decorators::FormattableProperty
         include API::Caching::CachedRepresenter
@@ -270,10 +271,10 @@ module API
 
         link :addChild,
              cache_if: -> { add_work_packages_allowed? } do
-          next if represented.milestone? || represented.new_record?
+          next if represented.milestone? || represented.new_record? || represented.project.nil?
 
           {
-            href: api_v3_paths.work_packages_by_project(represented.project.identifier),
+            href: api_v3_paths.work_packages_by_workspace(represented.project.identifier),
             method: :post,
             title: "Add child of #{represented.subject}"
           }
@@ -488,7 +489,7 @@ module API
 
         associated_resource :priority
 
-        associated_resource :project
+        associated_project
 
         resource :project_phase,
                  link_cache_if: -> { any_phase_active_in_project? && view_project_phase_allowed? },
@@ -580,8 +581,7 @@ module API
                                 }
                               else
                                 {
-                                  href: nil,
-                                  title: nil
+                                  href: nil
                                 }
                               end
                             },
@@ -724,7 +724,7 @@ module API
         end
 
         def any_phase_active_in_project?
-          represented.project.phases.any?(&:active?)
+          represented.project&.phases&.any?(&:active?)
         end
 
         def relations

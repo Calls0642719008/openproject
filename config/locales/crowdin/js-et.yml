@@ -88,6 +88,8 @@ et:
     button_list_view: "Nimekirja vaade"
     button_show_view: "Fullscreen view"
     button_log_time: "Ajakulu"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "Rohkem"
     button_open_details: "Ava üksikasjalik vaade"
     button_close_details: "Close details view"
@@ -232,7 +234,7 @@ et:
       embedded_table_loading: "The embedded view could not be loaded: %{message}"
     enumeration_activities: "Tegevused (ajajälgimine)"
     enumeration_doc_categories: "Dokumentide kategooriad"
-    enumeration_work_package_priorities: "Tööpakettide prioriteedid"
+    enumeration_work_package_priorities: "Teemade prioriteedid"
     filter:
       more_values_not_shown: "There are %{total} more results, search to filter results."
       description:
@@ -288,17 +290,6 @@ et:
         format:
           date: "%{attribute} is no valid date - YYYY-MM-DD expected."
         general: "An error has occurred."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Read about new features and product updates."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -306,12 +297,13 @@ et:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Aktiveerimine"
     label_assignee: "Määratud tegija"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Add column after"
     label_add_column_before: "Add column before"
     label_add_columns: "Lisa veergusid"
@@ -324,9 +316,9 @@ et:
     label_added_time_by: 'Added by <a href="%{authorLink}">%{author}</a> at %{age}'
     label_ago: "päeva tagasi"
     label_all: "kõik"
-    label_all_projects: "All projects"
+    label_all_projects: "Kõik projektid"
     label_all_uppercase: "Kõik"
-    label_all_work_packages: "kõik tööpaketid"
+    label_all_work_packages: "kõik teemad"
     label_and: "ja"
     label_ascending: "Kasvav"
     label_author: "Author: %{user}"
@@ -338,7 +330,7 @@ et:
     label_board_sticky: "Külgejääv"
     label_change: "Muuda"
     label_create: "Loo uus"
-    label_create_work_package: "Lisa uus tööpakett"
+    label_create_work_package: "Lisa uus teema"
     label_created_by: "Autor"
     label_current: "current"
     label_date: "Kuupäev"
@@ -353,6 +345,7 @@ et:
     label_collapse: "Koonda"
     label_collapsed: "koondatud"
     label_collapse_all: "Koonda kõik"
+    label_collapse_text: "Collapse text"
     label_comment: "Kommentaar"
     label_committed_at: "%{committed_revision_link} at %{date}"
     label_committed_link: "committed revision %{revision_identifier}"
@@ -365,6 +358,7 @@ et:
     label_expand: "Laienda"
     label_expanded: "laiendatud"
     label_expand_all: "Laienda kõik"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Expand project menu"
     label_export: "Ekspordi"
     label_export_preparing: "The export is being prepared and will be downloaded shortly."
@@ -444,7 +438,7 @@ et:
     label_sort_lower: "Nihuta alla"
     label_sorting: "Sorteerimine"
     label_spent_time: "Kulutatud aeg"
-    label_star_query: "Favored"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Press enter to save."
     label_public_query: "Avalik"
     label_sum: "Summa"
@@ -464,9 +458,9 @@ et:
     label_value_derived_from_children: "(value derived from children)"
     label_children_derived_duration: "Work package's children derived duration"
     label_warning: "Hoiatus"
-    label_work_package: "Tööpakett"
+    label_work_package: "Teema"
     label_work_package_parent: "Parent work package"
-    label_work_package_plural: "Tööpaketid"
+    label_work_package_plural: "Teemad"
     label_watch: "Vaata"
     label_watch_work_package: "Watch work package"
     label_watcher_added_successfully: "Watcher successfully added!"
@@ -563,7 +557,7 @@ et:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -782,7 +776,7 @@ et:
     autocompleter:
       placeholder: "Type to search"
       notFoundText: "No items found"
-      search: "Search"
+      search: "Otsi"
       project:
         placeholder: "Select project"
     repositories:
@@ -798,7 +792,7 @@ et:
       activate_asc: "activate to apply an ascending sort"
       activate_dsc: "activate to apply a descending sort"
       activate_no: "activate to remove the sort"
-    text_work_packages_destroy_confirmation: "Oled kindel, et soovid valitud tööpaketti(d) kustutada?"
+    text_work_packages_destroy_confirmation: "Oled Sa kindel oma soovis valitud teema(d) kustutada?"
     text_query_destroy_confirmation: "Are you sure you want to delete the selected view?"
     tl_toolbar:
       zooms: "Suumi tase"
@@ -864,13 +858,13 @@ et:
         modification_label: "Modified within the comparison time period"
         column_incompatible: "This column does not show changes in Baseline mode."
       filters:
-        title: "Filtreeri tööpakette"
+        title: "Filtreeri teemasid"
         baseline_incompatible: "This filter attribute is not taken into consideration in Baseline mode."
         baseline_warning: "Baseline mode is on but some of your active filters are not included in the comparison."
       inline_create:
         title: "Click here to add a new work package to this list"
       create:
-        title: "Uus tööpakett"
+        title: "Uus teema"
         header: "New %{type}"
         header_no_type: "New work package (Type not yet set)"
         header_with_parent: "New %{type} (Child of %{parent_type} #%{id})"
@@ -977,7 +971,7 @@ et:
           edit: "Edit reminder"
         subtitle: "You will receive a notification for this work package at the chosen time."
         presets:
-          tomorrow: "Tomorrow"
+          tomorrow: "Homme"
           three_days: "In 3 days"
           week: "In a week"
           month: "In a month"
@@ -1114,6 +1108,7 @@ et:
       child_work_packages:
         one: "one child work package"
         other: "%{count} work package children"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1134,6 +1129,7 @@ et:
       current_project_and_all_descendants: "In this project + subprojects"
       current_project: "In this project"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "all projects"
         project_and_subprojects: "and all subprojects"
@@ -1143,71 +1139,8 @@ et:
       list: "Table"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Tagasi"
       invite: "Invite"
-      title:
-        invite: "Invite user"
-        invite_to_project: "Invite %{type} to %{project}"
-        User: "user"
-        Group: "group"
-        PlaceholderUser: "placeholder user"
-        invite_principal_to_project: "Invite %{principal} to %{project}"
-      project:
-        label: "Projekt"
-        required: "Please select a project"
-        lacking_permission: "Please select a different project since you lack permissions to assign users to the currently selected."
-        lacking_permission_info: "You lack the permission to assign users to the project you are currently in. You need to select a different one."
-        next_button: "Järgmine"
-        no_results: "No projects were found"
-        no_invite_rights: "You are not allowed to invite members to this project"
-      type:
-        required: "Please select the type to be invited"
-        user:
-          title: "Kasutaja"
-          description: "Permissions based on the assigned role in the selected project"
-        group:
-          title: "Grupp"
-          description: "Permissions based on the assigned role in the selected project"
-        placeholder:
-          title: "Placeholder user"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "Has no access to the project and no emails are sent out."
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "Name or email address"
-          name: "Nimi"
-        already_member_message: "Already a member of %{project}"
-        no_results_user: "No users were found"
-        invite_user: "Invite:"
-        no_results_placeholder: "No placeholders were found"
-        create_new_placeholder: "Create new placeholder:"
-        no_results_group: "No groups were found"
-        next_button: "Järgmine"
-        required:
-          user: "Please select a user"
-          placeholder: "Please select a placeholder"
-          group: "Please select a group"
-      role:
-        label: "Role in %{project}"
-        no_roles_found: "No roles were found"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Please select a role"
-        next_button: "Järgmine"
-      message:
-        label: "Invitation message"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "Järgmine"
-      summary:
-        next_button: "Saada kutse"
-      success:
-        title: "%{principal} was invited!"
-        description:
-          user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
-        next_button: "Jätka"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1224,7 +1157,7 @@ et:
       selected_filter:
         all: "Kõik projektid"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:
@@ -1233,6 +1166,11 @@ et:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "Tühjenda"

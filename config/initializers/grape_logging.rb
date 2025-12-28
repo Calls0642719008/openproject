@@ -31,12 +31,17 @@
 Rails.application.configure do
   config.after_initialize do
     ActiveSupport::Notifications.subscribe("openproject_grape_logger") do |_, _, _, _, payload|
-      time = payload[:time]
+      # Have attributes somewhat in the same order as lograge does with
+      # processed controller action to ease later grok parsing.
+      # See `Lograge::LogSubscribers::ActionController#initial_data`
       attributes = {
-        duration: time[:total],
-        db: time[:db],
-        view: time[:view]
-      }.merge(payload.except(:time))
+        method: payload[:method],
+        path: payload[:path],
+        duration: payload[:time][:total],
+        db: payload[:time][:db],
+        view: payload[:time][:view],
+        **payload.except(:method, :path, :time)
+      }
 
       extended = OpenProject::Logging.extend_payload!(attributes, {})
       Rails.logger.info OpenProject::Logging.formatter.call(extended)

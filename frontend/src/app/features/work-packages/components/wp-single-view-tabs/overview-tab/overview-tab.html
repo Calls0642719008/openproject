@@ -1,2 +1,4 @@
-<wp-single-view [workPackage]="workPackage"
-                *ngIf="workPackage"></wp-single-view>
+@if (workPackage) {
+  <wp-single-view [workPackage]="workPackage"
+   />
+}

@@ -1,39 +1,39 @@
 <div
   class="op-tab-content--container op-files-tab"
->
-  <section
-    class="op-tab-content--tab-section"
-    [ngClass]="{ 'op-tab-content--tab-section_no-header': (showAttachmentHeader$ | async) === false }"
-    *ngIf="showAttachments"
-    data-test-selector="op-tab-content--tab-section"
   >
-    <div
-      *ngIf="showAttachmentHeader$ | async"
-      class="op-tab-content--header"
-    >
-      <span class="spot-icon spot-icon_attachment op-tab-content--header-icon op-files-tab--icon_clip"></span>
-      <span class="op-tab-content--header-text" [textContent]="text.attachments.label"></span>
-    </div>
+  @if (showAttachments) {
+    <section
+      class="op-tab-content--tab-section"
+      [ngClass]="{ 'op-tab-content--tab-section_no-header': (showAttachmentHeader$ | async) === false }"
+      data-test-selector="op-tab-content--tab-section"
+      >
+      @if (showAttachmentHeader$ | async) {
+        <div
+          class="op-tab-content--header"
+          >
+          <svg class="op-tab-content--header-icon op-files-tab--icon" paperclip-icon size="small"></svg>
+          <span class="op-tab-content--header-text" [textContent]="text.attachments.label"></span>
+        </div>
+      }
+      <op-attachments [resource]="workPackage"
+        (attachmentRemoved)="attachmentRemoved()"
+        (attachmentAdded)="attachmentAdded()"
+       />
+    </section>
+  }
 
-    <op-attachments
-      [resource]="workPackage"
-      (attachmentRemoved)="attachmentRemoved()"
-      (attachmentAdded)="attachmentAdded()"
-    ></op-attachments>
-  </section>
-
-  <section
-    *ngFor="let storage of projectStorages | async"
-    data-test-selector="op-tab-content--tab-section"
-    class="op-tab-content--tab-section"
-  >
-    <op-storage
-      [resource]="workPackage"
-      [projectStorage]="storage"
-      [allowUploading]="allowManageFileLinks$ | async"
-      [allowLinking]="allowManageFileLinks$ | async"
-      (fileRemoved)="attachmentRemoved()"
-      (fileAdded)="attachmentAdded()"
-    ></op-storage>
-  </section>
+  @for (storage of projectStorages | async; track storage) {
+    <section
+      data-test-selector="op-tab-content--tab-section"
+      class="op-tab-content--tab-section"
+      >
+      <op-storage [resource]="workPackage"
+        [projectStorage]="storage"
+        [allowUploading]="allowManageFileLinks$ | async"
+        [allowLinking]="allowManageFileLinks$ | async"
+        (fileRemoved)="attachmentRemoved()"
+        (fileAdded)="attachmentAdded()"
+       />
+    </section>
+  }
 </div>

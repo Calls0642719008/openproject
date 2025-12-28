@@ -65,6 +65,9 @@ RSpec.describe WorkPackagesController do
              "with having the necessary permissions" do
       before do
         expect(WorkPackage).to receive_message_chain("visible.find_by").and_return(stub_work_package)
+        mock_permissions_for(current_user) do |mock|
+          mock.allow_in_project :view_work_packages, project: stub_work_package.project
+        end
       end
 
       instance_eval(&)
@@ -261,10 +264,10 @@ RSpec.describe WorkPackagesController do
     let(:call_action) { get("show", params: { id: "1337" }) }
 
     requires_permission_in_project do
-      it "renders the show builder template" do
+      it "redirects to the full url" do
         call_action
 
-        expect(response).to render_template("work_packages/show")
+        expect(response).to redirect_to("/projects/test_project/work_packages/1337/activity")
       end
     end
   end

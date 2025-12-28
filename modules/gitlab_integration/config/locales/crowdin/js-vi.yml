@@ -26,7 +26,7 @@ vi:
       work_packages:
         tab_name: "GitLab"
       tab_header_issue:
-        title: "Vấn đề"
+        title: "Các vấn đề"
       tab_header_mr:
         title: "Yêu cầu kéo"
         create_mr:
@@ -47,7 +47,7 @@ vi:
       tab_mrs:
         empty: 'Chưa có yêu cầu kéo nào được liên kết. Liên kết một MR hiện có bằng cách sử dụng mã <code>OP#%{wp_id}</code> (hoặc <code>PP#%{wp_id}</code> cho liên kết riêng) trong tiêu đề/mô tả MR hoặc tạo một MR mới.'
       gitlab_pipelines: Pipelines
-      updated_on: Được cập nhật vào
+      updated_on: Được cập nhật vào lúc
     work_packages:
       tabs:
         gitlab: "GitLab"

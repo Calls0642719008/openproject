@@ -24,7 +24,7 @@ si:
       storages/sharepoint_storage:
         host: Sharepoint Site URL
         library: Library ID
-        name: Name
+        name: නම
         site: Site ID
       storages/storage:
         authentication_method: Authentication Method
@@ -32,6 +32,7 @@ si:
         drive: Drive ID
         host: සත්කාරක
         name: නම
+        password: Application password
         provider_type: Provider type
         tenant: Directory (tenant) ID
     errors:
@@ -62,7 +63,7 @@ si:
               op_application_not_installed: appears to not have the app "OpenProject integration" installed. Please install it first and then try again.
             password:
               invalid_password: is not valid.
-              unknown_error: could not be validated. Please check your storage connection and try again.
+              unknown_error: could not be validated with the file storage provider. Please verify that the connection is functioning properly.
     models:
       file_link: ගොනුව
       storages/storage: Storage
@@ -95,12 +96,6 @@ si:
       manual: Existing folder manually managed
     remove_project:
       deletion_failure_flash: Failed to remove the project from the storage. %{error}
-      dialog:
-        automatically_managed_appendix: Also, in this case this storage has an automatically managed project folder, this and its files will be deleted forever.
-        confirmation_text: Please, confirm you understand and want to remove this file storage from this project
-        heading_text: Remove project from %{storage}
-        text: This action is irreversible and will remove all links from work packages of this project to files and folders of that storage.
-        title: Remove project from storage
       label: Remove project
   services:
     attributes:
@@ -118,9 +113,16 @@ si:
         hide_inactive_folders: 'Hide Inactive Folders Step:'
         remote_folders: 'Read contents of the group folder:'
         rename_project_folder: 'Rename managed project Folder:'
+      sharepoint_sync_service:
+        create_folder: 'Managed Project Folder Creation:'
+        ensure_root_folder_permissions: 'Set Base Folder Permissions:'
+        hide_inactive_folders: 'Hide Inactive Folders Step:'
+        remote_folders: 'Read contents of the group folder:'
+        rename_project_folder: 'Rename managed project Folder:'
     errors:
       messages:
         error: An unexpected error occurred. Please check OpenProject logs for more information or contact an administrator
+        forbidden: OpenProject could not access the requested resource. Please check your permissions configuration on the Storage Provider.
         unauthorized: OpenProject could not authenticate with the Storage Provider. Please ensure that you have access to it.
       models:
         copy_project_folders_service:
@@ -158,6 +160,7 @@ si:
           group_does_not_exist: "%{group} does not exist. Check your Nextcloud instance configuration."
           insufficient_privileges: OpenProject does not have enough privileges to add %{user} to %{group}. Check you group settings in Nextcloud.
           not_allowed: Nextcloud block the request.
+          not_found: OpenProject could not find the file on the Nextcloud Storage Provider. Please check if it wasn't deleted.
           unauthorized: OpenProject could not sync with Nextcloud. Please check your storage and Nextcloud configuration.
           user_does_not_exist: "%{user} does not exist in Nextcloud."
         one_drive_sync_service:
@@ -170,6 +173,23 @@ si:
             remote_folders:
               request_error: OpenProject could not access your drive %{drive_id}. Please check if your storage configuration is correct.
             rename_project_folder:
+              conflict: OpenProject could not rename the folder %{current_path} to %{project_folder_name} as a folder with the same name already exists.
+              forbidden: OpenProject does not have access to %{current_path} in order to rename it.
+              not_found: "%{current_path} wasn't found."
+            set_folders_permissions:
+              permission_not_set: could not set permissions on %{path}.
+          error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information.
+          not_allowed: OpenProject wasn't allowed to access your OneDrive drive. Please check the permissions set on the Azure Application.
+          unauthorized: OpenProject could not sync with OneDrive. Please check your storage and Azure Application configuration.
+          user_does_not_exist: "%{user} does not exist in Nextcloud."
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: The %{folder_name} already exists on %{parent_location}.
+              not_found: "%{parent_location} wasn't found."
+            hide_inactive_folders:
+              permission_not_set: could not set permissions on %{path}.
+            rename_project_folder:
               conflict: OpenProject could not rename the folder %{current_path} to %{project_folder_name} as a folder with the same name already exists
               forbidden: OpenProject does not have access to %{current_path} in order to rename it.
               not_found: "%{current_path} wasn't found."
@@ -177,14 +197,13 @@ si:
               permission_not_set: could not set permissions on %{path}.
           error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information
           not_allowed: OpenProject wasn't allowed to access your OneDrive drive. Please check the permissions set on the Azure Application.
+          not_found: OpenProject could not access your library %{drive_name}. Please check you Sharepoint site document libraries.
           unauthorized: OpenProject could not sync with OneDrive. Please check your storage and Azure Application configuration.
           user_does_not_exist: "%{user} does not exist in Nextcloud."
         upload_link_service:
           not_found: The destination folder %{folder} could not be found on %{storage_name}.
   storages:
     buttons:
-      complete_without_setup: Complete without it
-      done_complete_setup: Done, complete setup
       done_continue: Done, continue
       open_storage: Open file storage
       replace_oauth_application: Replace OpenProject OAuth
@@ -202,15 +221,13 @@ si:
     confirm_replace_oauth_application: This action will reset the current OAuth credentials. After confirming you will have to reenter the credentials at the storage provider and all remote users will have to authorize against OpenProject again. Are you sure you want to proceed?
     confirm_replace_oauth_client: This action will reset the current OAuth credentials. After confirming you will have to enter new credentials from the storage provider and all users will have to authorize against %{provider_type} again. Are you sure you want to proceed?
     delete_warning:
-      input_delete_confirmation: Enter the file storage name %{file_storage} to confirm deletion.
-      irreversible_notice: Deleting a file storage is an irreversible action.
-      project_storage: 'Are you sure you want to delete %{file_storage} from this project? To confirm this action please introduce the storage name in the field below, this will:'
-      project_storage_delete_result_1: Remove all links from work packages of this project to files and folders of that storage.
-      project_storage_delete_result_2: In case this storage has an automatically managed project folder, this and its files will be deleted forever.
-      storage: 'Are you sure you want to delete %{file_storage}? To confirm this action please introduce the storage name in the field below, this will:'
-      storage_delete_result_1: Remove all storage setups for all projects using this storage.
-      storage_delete_result_2: Remove all links from work packages of all projects to files and folders of that storage.
-      storage_delete_result_3: In case this storage has automatically managed project folders, those and their contained files will be deleted forever.
+      project_storage: Are you sure you want to remove %{file_storage} from this project?
+      project_storage_delete_result_1: All links to corresponding files and folders will be removed
+      project_storage_delete_result_2: The automatically-managed project folder and all files in it will be deleted
+      storage: Are you sure you want to delete %{file_storage} as an external file storage?
+      storage_delete_result_1: The storage will be removed from all projects currently using it
+      storage_delete_result_2: All links to corresponding files and folders will be removed
+      storage_delete_result_3: The automatically-managed project folder and all files in it will be deleted
     dependencies:
       nextcloud:
         group_folders_app: Group Folders
@@ -221,25 +238,32 @@ si:
     error_invalid_provider_type: Please select a valid storage provider.
     file_storage_view:
       access_management:
-        automatic_management: Automatically managed access and folders
-        automatic_management_description: Let OpenProject create folders per project automatically and manage its user access. This is recommended as it ensures that every team member has always the correct access permissions.
-        description: Select the type of management of user access and folder creation. We recommend to use the Automatically managed access to have a more organised structure and guarantee access to all relevant users.
-        manual_management: Manually managed access and folders
-        manual_management_description: Create and manage folders per project manually on your own. You will need to manually ensure relevant users have access.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Select the type of management of user access and folder creation.
-        subtitle: Access management
+        subtitle: Folder and access management
       access_management_section: Access and project folders
       automatically_managed_folders: Automatically managed folders
       general_information: General information
       oauth_configuration: OAuth configuration
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: Project folders
       redirect_uri: නැවත හරවා යැවීමේ URI
+      sharepoint_oauth: Azure OAuth
       storage_audience_blank: No audience has been configured.
       storage_audience_description: Exchanging tokens for audience "%{audience}".
       storage_audience_idp: Using access token obtained by identity provider during login, regardless of audience.
-      storage_oauth: Nextcloud OAuth
+      storage_oauth: Storage OAuth
       storage_provider: Storage provider
       token_exchange: Token Exchange
     health:
@@ -252,10 +276,10 @@ si:
         ampf_configuration:
           client_folder_creation: Automatic folder creation
           client_folder_removal: Automatic folder deletion
-          drive_contents: Drive has expected content
+          drive_contents: Drive content
           files_request: Fetching group folder files
           group_folder_app: 'Dependency: Group Folders'
-          group_folder_contents: Group folder has expected content
+          group_folder_contents: Group folder content
           group_folder_presence: Group folder exists
           header: Automatically managed project folders
           userless_access: Server-side request authentication
@@ -278,6 +302,7 @@ si:
           drive_id_exists: Drive exists
           drive_id_format: Drive ID format
           header: Configuration
+          host: Host URL
           host_url_accessible: Host URL accessible
           storage_configured: Configuration complete
           tenant_id: Tenant ID
@@ -325,9 +350,10 @@ si:
         sp_client_write_permission_missing: The client seems to have write permissions missing in SharePoint. Please check the setup documentation for your storage.
         sp_existing_test_folder: The folder %{folder_name} needed for testing already exists in SharePoint. Please delete it and try again.
         sp_oauth_request_error: The user-bound request to SharePoint failed. Please check the server logs for further information.
+        sp_oauth_request_unauthorized: The current user isn't authorized to access the remote file storage. Please check the server logs for further information.
         sp_oauth_token_missing: OpenProject cannot test the user level communication with SharePoint as the user did not yet link their SharePoint account.
         sp_tenant_id_missing: The configured directory (tenant) id is missing for SharePoint. Please check the configuration.
-        sp_unexpected_content: Unexpected content found in the SharePoint drive.
+        sp_unexpected_content: Unexpected content found in the SharePoint Document Library.
         unknown_error: The connection could not be validated. An unknown error occurred. Please check the server logs for further information.
       label_error: දෝෂය
       label_failed: Failed
@@ -472,7 +498,7 @@ si:
         title: We are setting up your permissions on the project folder.
     page_titles:
       file_storages:
-        delete: Delete file storage
+        delete: Delete file storage?
         subtitle: Add an external file storage in order to upload, link and manage files in work packages.
       managed_project_folders:
         subtitle: |-
@@ -481,13 +507,14 @@ si:
         subtitle_short: Let OpenProject create folders per project automatically.
         title: Automatically managed project folders
       project_settings:
-        delete: Delete file storage
         edit: Edit the file storage to this project
         members_connection_status: Members connection status
         new: Add a file storage to this project
       project_storage_members:
         subtitle: Check the connection status for the storage %{storage_name_link} of all project members.
         title: Members connection status
+      project_storages:
+        delete: Remove file storage from project?
     permission_header_explanation: 'File permissions on external storages are applied only to folders and files within automatically managed project folders. Note that not all file permissions are supported by all storage providers. Please check the documentation on <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>file storage permissions</a> for more information.'
     provider_types:
       label: Provider type
@@ -502,6 +529,7 @@ si:
         name: OneDrive
         name_placeholder: e.g. OneDrive
       sharepoint:
+        drive_description: OpenProject access-managed document library
         label_oauth_client_id: Azure OAuth Application (client) ID
         label_oauth_client_secret: Azure OAuth Client Secret Value
         name: SharePoint
@@ -516,13 +544,19 @@ si:
         label: Use access token obtained during user log in
       manual:
         helptext: OpenProject will exchange a token with the identity provider for the given audience.
-        label: Manually specify audience for which to exchange access token
+        label: Manually specify audience for which to exchange access token (Recommended)
     storage_list_blank_slate:
       description: Add a storage to see them here.
       heading: You don't have any storages yet.
     successful_storage_connection: Storage connected successfully! Remember to activate the storage in the Projects tab for each desired project to use it.
     upsell:
-      description: |-
-        Integrate your OneDrive as a file storage with OpenProject. Upload files and link them directly to
-        work packages in a project.
-      title: OneDrive integration
+      one_drive:
+        description: |-
+          Integrate your OneDrive drive as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: OneDrive integration
+      sharepoint:
+        description: |-
+          Integrate your SharePoint site as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: SharePoint integration

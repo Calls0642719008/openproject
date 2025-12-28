@@ -1,4 +1,8 @@
-
+---
+sidebar_navigation:
+  title:  PDF Export Styling
+keywords: pdf export styling
+---
 # PDF Export Styling
 
 These documents describe the style settings format for **PDF Export styling files**.

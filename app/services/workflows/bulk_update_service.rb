@@ -29,9 +29,10 @@
 #++
 
 class Workflows::BulkUpdateService < BaseServices::Update
-  def initialize(role:, type:)
+  def initialize(role:, type:, tab:)
     @role = role
     @type = type
+    @tab = tab
   end
 
   def call(status_transitions)
@@ -64,8 +65,8 @@ class Workflows::BulkUpdateService < BaseServices::Update
                                       role:,
                                       old_status: status_map[status_id.to_i],
                                       new_status: status_map[new_status_id.to_i],
-                                      author: options_include(options, "author"),
-                                      assignee: options_include(options, "assignee"))
+                                      author: author?,
+                                      assignee: assignee?)
       end
     end
 
@@ -73,7 +74,13 @@ class Workflows::BulkUpdateService < BaseServices::Update
   end
 
   def delete_current
-    Workflow.where(role_id: role.id, type_id: type.id).delete_all
+    if author?
+      Workflow.where(role_id: role.id, type_id: type.id, author: true).delete_all
+    elsif assignee?
+      Workflow.where(role_id: role.id, type_id: type.id, assignee: true).delete_all
+    else
+      Workflow.where(role_id: role.id, type_id: type.id, assignee: false, author: false).delete_all
+    end
   end
 
   def bulk_insert(workflows)
@@ -89,7 +96,11 @@ class Workflows::BulkUpdateService < BaseServices::Update
     @status_map ||= Status.all.group_by(&:id).transform_values(&:first)
   end
 
-  def options_include(options, string)
-    options.is_a?(Array) && options.include?(string) && !options.include?("always")
+  def author?
+    @tab == "author"
+  end
+
+  def assignee?
+    @tab == "assignee"
   end
 end

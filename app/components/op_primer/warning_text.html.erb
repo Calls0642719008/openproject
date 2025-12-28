@@ -1,0 +1,7 @@
+<%= render(Primer::Beta::Text.new(**@system_arguments)) do %>
+  <%= render(Primer::Beta::Octicon.new(icon: :"alert-fill", size: :xsmall, mr: 2, aria: { hidden: true })) %>
+  <span>
+    <%= render(Primer::Beta::Text.new(tag: :strong).with_content("#{I18n.t(:warning)}:")) if show_warning_label? %>
+    <%= content %>
+  </span>
+<% end %>

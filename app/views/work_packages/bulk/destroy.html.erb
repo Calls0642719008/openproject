@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,10 +25,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 <%= error_messages_for work_packages.first %>
 
-<%= styled_form_tag work_packages_bulk_path, method: :delete, class: "form danger-zone" do %>
+<%=
+  styled_form_tag(
+    work_packages_bulk_path,
+    method: :delete,
+    class: "form danger-zone",
+    data: {
+      controller: "show-when-value-selected"
+    }
+  ) do
+%>
   <%= back_url_hidden_field_tag unless back_url_is_wp_show? %>
   <% work_packages.each do |work_package| %>
     <%= hidden_field_tag "ids[]", work_package.id %>
@@ -49,13 +58,21 @@ See COPYRIGHT and LICENSE files for more details.
       <div class="form--field -trailing-label">
         <%= styled_label_tag :to_do_action_destroy, t(:text_destroy) %>
         <div class="form--field-container">
-          <%= styled_radio_button_tag "to_do[action]", "destroy" %>
+          <%= styled_radio_button_tag "to_do[action]", "destroy", nil,
+                                      data: {
+                                        show_when_value_selected_target: "cause",
+                                        target_name: "action"
+                                      } %>
         </div>
       </div>
       <div class="form--field -trailing-label">
         <%= styled_label_tag "to_do_action_nullify", t(:text_assign_to_project) %>
         <div class="form--field-container">
-          <%= styled_radio_button_tag "to_do[action]", "nullify" %>
+          <%= styled_radio_button_tag "to_do[action]", "nullify", nil,
+                                      data: {
+                                        show_when_value_selected_target: "cause",
+                                        target_name: "action"
+                                      } %>
         </div>
       </div>
       <div class="grid-block">
@@ -63,11 +80,11 @@ See COPYRIGHT and LICENSE files for more details.
           <div class="form--field -trailing-label">
             <%= styled_label_tag "to_do_action_reassign", t(:text_reassign) %>
             <div class="form--field-container">
-              <%= styled_radio_button_tag "to_do[action]", "reassign" %>
-              <% csp_onclick(
-                   'if(jQuery("#to_do_action_reassign").prop("checked")) { jQuery("#to_do_reassign_to_id").focus(); }',
-                   "#reassign"
-                 ) %>
+              <%= styled_radio_button_tag "to_do[action]", "reassign", nil,
+                                          data: {
+                                            show_when_value_selected_target: "cause",
+                                            target_name: "action"
+                                          } %>
             </div>
           </div>
         </div>
@@ -75,7 +92,15 @@ See COPYRIGHT and LICENSE files for more details.
           <div class="form--field">
             <div class="form--text-field-container -xslim">
               <%= styled_label_tag "to_do_reassign_to_id", t(:text_reassign), class: "form--label sr-only" %>
-              <%= f.text_field "reassign_to_id", placeholder: WorkPackage.human_attribute_name(:id), value: params[:reassign_to_id], size: 6, onfocus: 'jQuery("#to_do_action_reassign").prop("checked", true);' %>
+              <%= f.text_field "reassign_to_id",
+                               placeholder: WorkPackage.human_attribute_name(:id), value: params[:reassign_to_id],
+                               size: 6,
+                               hidden: true,
+                               data: {
+                                 show_when_value_selected_target: "effect",
+                                 target_name: "action",
+                                 value: "reassign"
+                               } %>
             </div>
           </div>
         </div>
@@ -90,6 +115,7 @@ See COPYRIGHT and LICENSE files for more details.
                            "history.back()",
                            title: t(:button_cancel),
                            class: "button -with-icon icon-cancel" %>
+    </div>
   </section>
 
 <% end %>

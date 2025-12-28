@@ -51,6 +51,10 @@ module WorkPackages
       def self.add_comment_wrapper_key = "work-packages-activities-tab-add-comment-component"
       delegate :index_content_wrapper_key, :add_comment_wrapper_key, to: :class
 
+      def list_journals_component
+        WorkPackages::ActivitiesTab::Journals::IndexComponent.new(work_package:, filter:)
+      end
+
       private
 
       attr_reader :work_package, :filter, :last_server_timestamp, :deferred

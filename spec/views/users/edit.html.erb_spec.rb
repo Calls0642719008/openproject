@@ -194,10 +194,8 @@ RSpec.describe "users/edit" do
         it "shows the password and password confirmation fields" do
           render
 
-          within "#password_fields" do
-            expect(rendered).to have_text("Password")
-            expect(rendered).to have_text("Confirmation")
-          end
+          expect(rendered).to have_css("label", text: "Password")
+          expect(rendered).to have_css("label", text: "Confirmation")
         end
       end
 
@@ -209,10 +207,8 @@ RSpec.describe "users/edit" do
         it "doesn't show the password and password confirmation fields" do
           render
 
-          within "#password_fields" do
-            expect(rendered).to have_no_text("Password")
-            expect(rendered).to have_no_text("Password confirmation")
-          end
+          expect(rendered).to have_no_css("label", text: "Password")
+          expect(rendered).to have_no_css("label", text: "Confirmation")
         end
       end
     end

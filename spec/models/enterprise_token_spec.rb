@@ -364,7 +364,7 @@ RSpec.describe EnterpriseToken do
       let!(:active_token) { create_enterprise_token("an_active_token", plan: :basic, expires_at: 1.year.from_now) }
 
       it "returns the features for the plan of the token" do
-        expect(described_class.available_features).to eq(OpenProject::Token::FEATURES_PER_PLAN[:basic])
+        expect(described_class.available_features).to match_array(OpenProject::Token::FEATURES_PER_PLAN[:basic])
       end
     end
 
@@ -372,7 +372,7 @@ RSpec.describe EnterpriseToken do
       let!(:trial_token) { create_enterprise_token("a_trial_token", plan: :basic, trial: true, expires_at: 1.year.from_now) }
 
       it "returns the features for the plan of the token" do
-        expect(described_class.available_features).to eq(OpenProject::Token::FEATURES_PER_PLAN[:basic])
+        expect(described_class.available_features).to match_array(OpenProject::Token::FEATURES_PER_PLAN[:basic])
       end
     end
 

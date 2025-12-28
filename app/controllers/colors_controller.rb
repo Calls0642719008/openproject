@@ -99,7 +99,7 @@ class ColorsController < ApplicationController
     @color.destroy
 
     flash[:notice] = I18n.t(:notice_successful_delete)
-    redirect_to colors_path
+    redirect_to colors_path, status: :see_other
   end
 
   protected

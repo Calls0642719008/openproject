@@ -30,7 +30,7 @@
 
 module My
   module TimeTracking
-    class ListWrapperComponent < OpPrimer::BorderBoxTableComponent
+    class ListWrapperComponent < ApplicationComponent
       include OpTurbo::Streamable
 
       options :time_entries, :date, :mode

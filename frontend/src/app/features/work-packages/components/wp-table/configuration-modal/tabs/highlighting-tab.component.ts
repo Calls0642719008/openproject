@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
-  ViewChild,
+  ViewChild, OnInit,
 } from '@angular/core';
 import { TabComponent } from 'core-app/features/work-packages/components/wp-table/configuration-modal/tab-portal-outlet';
 import { WorkPackageViewHighlightingService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-highlighting.service';
@@ -21,7 +21,7 @@ import { repositionDropdownBugfix } from 'core-app/shared/components/autocomplet
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class WpTableConfigurationHighlightingTabComponent implements TabComponent {
+export class WpTableConfigurationHighlightingTabComponent implements TabComponent, OnInit {
   // Display mode
   public highlightingMode:HighlightingMode = 'inline';
 
@@ -95,7 +95,7 @@ export class WpTableConfigurationHighlightingTabComponent implements TabComponen
       this.highlightingMode = mode;
     }
 
-    if (['status', 'priority'].indexOf(this.highlightingMode) !== -1) {
+    if (['status', 'priority'].includes(this.highlightingMode)) {
       this.lastEntireRowAttribute = this.highlightingMode;
       this.entireRowMode = true;
     } else {

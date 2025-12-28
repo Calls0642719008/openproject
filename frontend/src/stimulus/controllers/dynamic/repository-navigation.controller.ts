@@ -93,16 +93,16 @@ export default class RepositoryNavigationController extends Controller {
   }
 
   toggleDirectory(evt:MouseEvent) {
-    const el = (evt.target as HTMLElement).closest('a') as HTMLAnchorElement;
-    const id = el.dataset.element as string;
-    const content = document.getElementById(id) as HTMLElement;
+    const el = (evt.target as HTMLElement).closest('a')!;
+    const id = el.dataset.element!;
+    const content = document.getElementById(id)!;
 
     if (this.expandDir(content)) {
       content.classList.add('loading');
 
       this
         .http
-        .get(el.dataset.url as string, { responseType: 'text' })
+        .get(el.dataset.url!, { responseType: 'text' })
         .subscribe((response:string) => {
           content.insertAdjacentHTML('afterend', response);
           content.classList.remove('loading');

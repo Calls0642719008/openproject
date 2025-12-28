@@ -66,24 +66,54 @@ RSpec.describe CustomValue::CalculatedValueStrategy do
     subject { instance.formatted_value }
 
     context "when value is a float string" do
-      let(:value) { "3.14" }
+      let(:value) { "32400.14" }
 
-      it "is the float string" do
-        expect(subject).to eql value
+      it "is the float string with delimiters" do
+        expect(subject).to eql "32,400.14"
       end
 
-      it "is localized" do
+      it "is localized with delimiters" do
         I18n.with_locale(:de) do
-          expect(subject).to eql "3,14"
+          expect(subject).to eql "32.400,14"
         end
       end
     end
 
-    context "when value is an int string" do
-      let(:value) { "42" }
+    context "when value is a float string with many zeroed decimals" do
+      let(:value) { "3.0000000000000000000000000000009" }
 
-      it "is the int string" do
-        expect(subject).to eql value
+      it "is formatted as a float with a minimum precision" do
+        expect(subject).to eql "3.0"
+      end
+    end
+
+    context "when value is a float string with some zeroed decimals" do
+      let(:value) { "3.000" }
+
+      it "is formatted as a float with a minimum precision" do
+        expect(subject).to eql "3.0"
+      end
+    end
+
+    context "when value is a float string with digits after the decimal point" do
+      let(:value) { "42.87391" }
+
+      it "is formatted as a float with a precision of 3 while rounding decimal places" do
+        expect(subject).to eql "42.874"
+      end
+    end
+
+    context "when value is an int string" do
+      let(:value) { "42312" }
+
+      it "is the int string with delimiters" do
+        expect(subject).to eql "42,312"
+      end
+
+      it "is localized with delimiters" do
+        I18n.with_locale(:de) do
+          expect(subject).to eql "42.312"
+        end
       end
     end
 

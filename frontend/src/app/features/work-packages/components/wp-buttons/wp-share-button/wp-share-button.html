@@ -3,22 +3,25 @@
   data-test-selector="op-wp-share-button"
   [title]="text.share"
   (click)="openModal()"
->
+  >
   <svg
     share-android-icon
     class="button--icon"
     size="small"
   ></svg>
-  <span class="button--text" *ngIf="(shareCount$ | async) as shareCount">
-    <span class="badge"
-          [textContent]="shareCount"></span>
-  </span>
+  @if ((shareCount$ | async); as shareCount) {
+    <span class="button--text">
+      <span class="badge"
+      [textContent]="shareCount"></span>
+    </span>
+  }
 
-  <svg
-    *ngIf="showEnterpriseIcon"
-    op-enterprise-addons-icon
-    class="button--icon upsell-colored"
-    size="small"
-  ></svg>
+  @if (showEnterpriseIcon) {
+    <svg
+      op-enterprise-addons-icon
+      class="button--icon upsell-colored"
+      size="small"
+    ></svg>
+  }
 
 </button>

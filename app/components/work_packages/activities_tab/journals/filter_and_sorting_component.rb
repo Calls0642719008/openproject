@@ -59,14 +59,6 @@ module WorkPackages
         def show_only_changes?
           filter == :only_changes
         end
-
-        def desc_sorting?
-          journal_sorting == "desc"
-        end
-
-        def asc_sorting?
-          journal_sorting == "asc"
-        end
       end
     end
   end

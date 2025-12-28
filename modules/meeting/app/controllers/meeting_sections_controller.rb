@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -35,7 +36,20 @@ class MeetingSectionsController < ApplicationController
   before_action :set_meeting
   before_action :set_meeting_section,
                 except: %i[create clear_backlog clear_backlog_dialog]
+  before_action :set_collapsed_state, only: %i[create cancel_edit destroy]
+  before_action :set_current_occurrence, only: %i[clear_backlog clear_backlog_dialog]
   before_action :authorize
+
+  def edit
+    if @meeting_section.editable?
+      update_section_header_via_turbo_stream(state: :edit)
+    else
+      update_all_via_turbo_stream
+      render_error_flash_message_via_turbo_stream(message: t("text_meeting_not_editable_anymore"))
+    end
+
+    respond_with_turbo_streams
+  end
 
   def create # rubocop:disable Metrics/AbcSize
     call = ::MeetingSections::CreateService
@@ -54,21 +68,12 @@ class MeetingSectionsController < ApplicationController
       update_section_via_turbo_stream(force_wrapper: true, state: :edit)
       # update the section header of the previously last section in order to ensure the action menu move options are updated
       update_section_header_via_turbo_stream(meeting_section: @meeting.sections.last(2).first) if @meeting.sections.count > 1
+      # update backlog to ensure move actions match meeting content
+      update_backlog_via_turbo_stream(meeting: @meeting, collapsed: @collapsed)
       update_new_button_via_turbo_stream(disabled: true)
       update_header_component_via_turbo_stream
     else
       render_base_error_in_flash_message_via_turbo_stream(call.errors)
-    end
-
-    respond_with_turbo_streams
-  end
-
-  def edit
-    if @meeting_section.editable?
-      update_section_header_via_turbo_stream(state: :edit)
-    else
-      update_all_via_turbo_stream
-      render_error_flash_message_via_turbo_stream(message: t("text_meeting_not_editable_anymore"))
     end
 
     respond_with_turbo_streams
@@ -82,6 +87,9 @@ class MeetingSectionsController < ApplicationController
       update_section_header_via_turbo_stream(state: :show)
       update_new_button_via_turbo_stream(disabled: false)
     end
+
+    # update backlog to ensure move actions match meeting content
+    update_backlog_via_turbo_stream(meeting: @meeting, collapsed: @collapsed)
 
     respond_with_turbo_streams
   end
@@ -119,6 +127,8 @@ class MeetingSectionsController < ApplicationController
       update_new_button_via_turbo_stream(disabled: false)
       # update all section headers in order to ensure the action menu move options are updated
       update_section_headers_via_turbo_stream
+      # update backlog to ensure move actions match meeting content
+      update_backlog_via_turbo_stream(meeting: @meeting, collapsed: @collapsed)
       update_header_component_via_turbo_stream
     else
       generic_call_failure_response(call)
@@ -172,7 +182,6 @@ class MeetingSectionsController < ApplicationController
 
   def clear_backlog
     errors = []
-    meeting_section = @meeting.backlog
     @meeting.backlog.agenda_items.each do |item|
       call = ::MeetingAgendaItems::DeleteService
         .new(user: current_user, model: item)
@@ -181,20 +190,21 @@ class MeetingSectionsController < ApplicationController
       errors << call.errors unless call.success?
     end
 
-    update_section_via_turbo_stream(collapsed: true, meeting_section:)
+    update_backlog_via_turbo_stream(meeting: @current_occurrence, collapsed: true)
     render_error_flash_message_via_turbo_stream(message: t("text_backlog_clear_error")) if errors.any?
 
     respond_with_turbo_streams
   end
 
   def clear_backlog_dialog
-    respond_with_dialog MeetingSections::Backlogs::ClearBacklogDialogComponent.new(@meeting)
+    respond_with_dialog MeetingSections::Backlogs::ClearBacklogDialogComponent.new(@meeting,
+                                                                                   current_occurrence: @current_occurrence)
   end
 
   private
 
   def set_meeting
-    @meeting = Meeting.find(params[:meeting_id])
+    @meeting = Meeting.visible.find(params[:meeting_id])
     @project = @meeting.project # required for authorization via before_action
   end
 
@@ -209,7 +219,18 @@ class MeetingSectionsController < ApplicationController
   end
 
   def set_meeting_section
-    @meeting_section = MeetingSection.find(params[:id])
+    @meeting_section = @meeting.sections.find(params[:id])
+  end
+
+  def set_current_occurrence
+    @current_occurrence = @project
+      .meetings
+      .visible
+      .find_by(id: params[:current_occurrence])
+  end
+
+  def set_collapsed_state
+    @collapsed = ActiveModel::Type::Boolean.new.cast(params[:collapsed])
   end
 
   def meeting_section_params

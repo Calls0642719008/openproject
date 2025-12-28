@@ -258,6 +258,62 @@ RSpec.describe WorkPackages::DatePickerController do
     end
   end
 
+  describe "GET /work_packages/:id/date_picker/preview" do
+    context "when the work package is an automatically scheduled parent with dates inherited from child" do
+      shared_let(:child) do
+        create(:work_package,
+               parent: work_package,
+               subject: "child",
+               start_date: work_package.start_date,
+               due_date: work_package.due_date,
+               duration: work_package.duration)
+      end
+
+      before do
+        work_package.update(schedule_manually: false)
+      end
+
+      context "when the user clears the duration" do
+        let(:params) do
+          {
+            "field" => "work_package[duration]",
+            "date_mode" => "range",
+            "triggering_field" => "combined_date",
+            "work_package" => {
+              "start_date" => "2025-04-01",
+              "due_date" => "2025-04-07",
+              "duration" => "", # <= here is the change: clear the duration
+              "ignore_non_working_days" => "0",
+              "schedule_manually" => "false",
+              "initial" => {
+                "start_date" => "2025-04-01",
+                "due_date" => "2025-04-07",
+                "duration" => "5",
+                "ignore_non_working_days" => "false",
+                "schedule_manually" => "false"
+              },
+              "start_date_touched" => "false",
+              "due_date_touched" => "false",
+              "duration_touched" => "true", # <= here is the change: clear the duration
+              "ignore_non_working_days_touched" => "false",
+              "schedule_manually_touched" => "false"
+            }
+          }
+        end
+
+        it "keeps the dates and duration from the child (Bug #68402)" do
+          get("preview", params: params.merge("work_package_id" => work_package.id))
+
+          expect(assigns(:work_package)).to have_attributes(
+            start_date: child.start_date,
+            due_date: child.due_date,
+            duration: child.duration
+          )
+        end
+      end
+    end
+  end
+
   describe "GET /work_packages/:id/progress" do
     let(:params_from_first_display_of_date_picker) do
       {

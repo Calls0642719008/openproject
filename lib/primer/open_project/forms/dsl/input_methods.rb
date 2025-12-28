@@ -5,6 +5,8 @@ module Primer
     module Forms
       module Dsl
         module InputMethods
+          include AttributeHelpTextsHelper
+
           def multi(**, &)
             super(**decorate_options(**), &)
           end
@@ -21,6 +23,14 @@ module Primer
             super(**decorate_options(**), &)
           end
 
+          def advanced_radio_button_group(**, &)
+            add_input AdvancedRadioButtonGroupInput.new(builder:, form:, **decorate_options(**), &)
+          end
+
+          def advanced_check_box_group(**, &)
+            add_input AdvancedCheckBoxGroupInput.new(builder:, form:, **decorate_options(**), &)
+          end
+
           def autocompleter(**, &)
             add_input AutocompleterInput.new(builder:, form:, **decorate_options(**), &)
           end
@@ -33,8 +43,8 @@ module Primer
             add_input ColorSelectInput.new(builder:, form:, **decorate_options(**), &)
           end
 
-          def html_content(**, &)
-            add_input HtmlContentInput.new(builder:, form:, **, &)
+          def html_content(&)
+            add_input HtmlContent.new(&)
           end
 
           def pattern_input(**, &)
@@ -69,11 +79,17 @@ module Primer
             if include_help_text && supports_help_texts?(form.model)
               attribute_name = help_text_options[:attribute_name] || options[:name]
               options[:label] = form.wrap_attribute_label_with_help_text(options[:label], attribute_name)
+              options[:caption] ||= help_text_caption_for(attribute_name)
             end
             options
           end
 
           private
+
+          def help_text_caption_for(attribute_name)
+            help_text = help_text_for(form.model, attribute_name)
+            help_text&.caption
+          end
 
           def supports_help_texts?(model)
             return @supports_help_texts if defined?(@supports_help_texts)

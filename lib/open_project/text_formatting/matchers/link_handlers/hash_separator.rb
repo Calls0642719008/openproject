@@ -105,7 +105,7 @@ module OpenProject::TextFormatting::Matchers
       end
 
       def render_user
-        user = User.find_by(id: oid)
+        user = User.visible.find_by(id: oid)
         if user
           link_to_user(user,
                        only_path: context[:only_path],
@@ -114,7 +114,7 @@ module OpenProject::TextFormatting::Matchers
       end
 
       def render_group
-        group = Group.find_by(id: oid)
+        group = Group.visible.find_by(id: oid)
 
         if group
           link_to_group(group,

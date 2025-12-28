@@ -34,16 +34,18 @@ RSpec.describe API::V3::Posts::PostRepresenter, "rendering" do
   include API::V3::Utilities::PathHelper
 
   let(:message) do
-    build_stubbed(:message) do |wp|
-      allow(wp)
+    build_stubbed(:message) do |message|
+      # Necessary as project is only a 'has_one through' relation.
+      allow(message)
         .to receive(:project)
-        .and_return(project)
+              .and_return(workspace)
     end
   end
-  let(:project) { build_stubbed(:project) }
-  let(:user) { build_stubbed(:user) }
+  let(:workspace) { build_stubbed(:project) }
+  let(:current_user) { build_stubbed(:user) }
+  let(:embed_links) { true }
   let(:representer) do
-    described_class.create(message, current_user: user, embed_links: true)
+    described_class.create(message, current_user:, embed_links:)
   end
   let(:permissions) { all_permissions }
   let(:all_permissions) { %i(edit_messages) }
@@ -61,10 +63,8 @@ RSpec.describe API::V3::Posts::PostRepresenter, "rendering" do
       let(:href) { api_v3_paths.attachments_by_post message.id }
     end
 
-    it_behaves_like "has a titled link" do
-      let(:link) { :project }
-      let(:title) { project.name }
-      let(:href) { api_v3_paths.project project.id }
+    describe "project" do
+      it_behaves_like "has workspace linked"
     end
 
     it_behaves_like "has an untitled action link" do
@@ -90,10 +90,6 @@ RSpec.describe API::V3::Posts::PostRepresenter, "rendering" do
   end
 
   describe "_embedded" do
-    it "has project embedded" do
-      expect(subject)
-        .to be_json_eql(project.name.to_json)
-        .at_path("_embedded/project/name")
-    end
+    it_behaves_like "has workspace embedded"
   end
 end
