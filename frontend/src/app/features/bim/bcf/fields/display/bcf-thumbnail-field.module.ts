@@ -29,6 +29,7 @@
 import { DisplayField } from 'core-app/shared/components/fields/display/display-field.module';
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
 import { BcfPathHelperService } from 'core-app/features/bim/bcf/helper/bcf-path-helper.service';
+import { HalLink } from 'core-app/features/hal/hal-link/hal-link';
 
 export class BcfThumbnailDisplayField extends DisplayField {
   @InjectField() bcfPathHelper:BcfPathHelperService;
@@ -38,7 +39,7 @@ export class BcfThumbnailDisplayField extends DisplayField {
     if (viewpoints && viewpoints.length > 0) {
       const viewpoint = viewpoints[0];
       element.innerHTML = `
-        <img src="${this.bcfPathHelper.snapshotPath(viewpoint)}" class="thumbnail">
+        <img src="${this.bcfPathHelper.snapshotPath(viewpoint as HalLink)}" class="thumbnail" alt="">
       `;
     } else {
       element.innerHTML = '';

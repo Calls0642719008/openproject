@@ -173,7 +173,7 @@ export class FileLinkListItemComponent implements OnInit, OnChanges, AfterViewIn
         button_continue: this.text.removalButtonLabel,
       },
       icon: {
-        continue: 'remove-link',
+        continue: 'unlink',
       },
     };
     void this.confirmDialogService
@@ -241,7 +241,7 @@ export class FileLinkListItemComponent implements OnInit, OnChanges, AfterViewIn
 
   private downloadAction():FloatingAction {
     return new FloatingAction(
-      'download-arrow',
+      'download',
       this.text.title.downloadFileLink,
       undefined,
       { url: this.fileLink._links.staticOriginDownload.href, target: '_self' },

@@ -65,7 +65,7 @@ module OpenProject
     end
 
     def with_advisory_lock(resource_class, lock_name, options = {})
-      debug_log("Attempting to fetched advisory lock", lock_name)
+      debug_log("Attempting to fetch advisory lock", lock_name)
       result = resource_class.with_advisory_lock(lock_name, options) do
         debug_log("Fetched advisory lock", lock_name)
         yield

@@ -51,7 +51,7 @@ get:
                 count: 1
                 total: 1
           schema:
-            "$ref": "../components/schemas/list_projects_by_version_model.yml"
+            "$ref": "../components/schemas/list_workspaces_by_version_model.yml"
       description: OK
       headers: {}
     '404':
@@ -71,5 +71,7 @@ get:
 
     The projects returned depend on the sharing settings of the given version,
     but are also limited to the projects that the current user is allowed to see.
+
+    This endpoint is deprecated and replaced by [`/api/v3/versions/{id}/workspaces`](https://www.openproject.org/docs/api/endpoints/projects/#list-workspaces-having-version)
   operationId: List_projects_with_version
   summary: List projects having version

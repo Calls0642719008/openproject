@@ -57,7 +57,7 @@ export class UserResource extends HalResource {
   }
 
   public get state():InputState<this> {
-    return this.states.users.get(this.href as string) as any;
+    return this.states.users.get(this.href!) as any;
   }
 
   public get showUserPath() {
@@ -65,6 +65,6 @@ export class UserResource extends HalResource {
   }
 
   public get isActive() {
-    return UserResource.active_user_statuses.indexOf(this.status) >= 0;
+    return UserResource.active_user_statuses.includes(this.status);
   }
 }

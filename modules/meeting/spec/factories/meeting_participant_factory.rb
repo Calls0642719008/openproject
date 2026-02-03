@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -31,6 +32,7 @@ FactoryBot.define do
   factory :meeting_participant do |_mp|
     user
     meeting
+    participation_status { "needs-action" }
 
     trait :invitee do
       invited { true }
@@ -39,5 +41,7 @@ FactoryBot.define do
     trait :attendee do
       attended { true }
     end
+
+    traits_for_enum(:participation_status)
   end
 end

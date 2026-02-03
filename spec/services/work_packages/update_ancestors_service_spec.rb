@@ -53,7 +53,7 @@ RSpec.describe WorkPackages::UpdateAncestorsService,
   end
 
   def call_update_ancestors_service(work_package)
-    changed_attributes = work_package.changes.keys.map(&:to_sym)
+    changed_attributes = work_package.changed_attribute_keys
     described_class.new(user:, work_package:)
                     .call(changed_attributes)
   end
@@ -609,10 +609,10 @@ RSpec.describe WorkPackages::UpdateAncestorsService,
   end
 
   describe "remaining work propagation" do
-    shared_let(:parent) { create(:work_package, subject: "parent") }
-    shared_let(:child) { create(:work_package, subject: "child", parent:) }
-
     context "when setting remaining work of a work package having children without any remaining work value" do
+      shared_let(:parent) { create(:work_package, subject: "parent") }
+      shared_let(:child) { create(:work_package, subject: "child", parent:) }
+
       before do
         parent.remaining_hours = 2.0
       end
@@ -705,8 +705,6 @@ RSpec.describe WorkPackages::UpdateAncestorsService,
   end
 
   describe "% complete propagation" do
-    shared_let(:parent) { create(:work_package, subject: "parent") }
-
     context "given child with work, when remaining work being set on parent" do
       let_work_packages(<<~TABLE)
         hierarchy | work | total work | remaining work | total remaining work
@@ -1189,6 +1187,25 @@ RSpec.describe WorkPackages::UpdateAncestorsService,
       it "keeps the scheduling mode (or it would not be an exact duplicate anymore)" do
         expect(call_result).to be_success
         expect(future_parent.reload.schedule_manually).to be(true)
+      end
+    end
+
+    context "when a manually scheduled parent with two children has one child deleted" do
+      let_work_packages(<<~TABLE)
+        hierarchy | scheduling mode
+        parent    | manual
+          child1  | manual
+          child2  | manual
+      TABLE
+      let(:initiator_work_package) { child1 }
+
+      before do
+        child1.destroy
+      end
+
+      it "keeps the scheduling mode to manual (Bug #68465)" do
+        expect(call_result).to be_success
+        expect(parent.reload).to have_attributes(schedule_manually: true)
       end
     end
   end

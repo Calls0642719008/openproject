@@ -26,7 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-export function isClickedWithModifier(event:MouseEvent|JQuery.TriggeredEvent) {
+export function isClickedWithModifier(event:MouseEvent) {
   const modifier = event.ctrlKey || event.shiftKey || event.metaKey;
   const middleButton = event.button === 1;
 

@@ -6,4 +6,4 @@ nl:
       title: 'Kalender'
       too_many: 'Er zijn in totaal %{count} werkpakketten, maar alleen %{max} kan worden getoond.'
       unsaved_title: 'Naamloze agenda'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'Agenda''s'

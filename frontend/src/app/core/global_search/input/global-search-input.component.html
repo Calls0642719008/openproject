@@ -1,16 +1,16 @@
 <div role="search" class="top-menu-search" [attr.aria-label]="placeholder">
-
-  <button
-    *ngIf="expanded"
-    type="button"
-    (click)="toggleMobileSearch()"
-    class="top-menu-search--back-button"
-    href="#"
-    [attr.title]="text.close_search"
-    [attr.aria-label]="text.close_search"
-  >
-    <i class="icon-arrow-left1" aria-hidden="true"></i>
-  </button>
+  @if (expanded) {
+    <button
+      type="button"
+      (click)="toggleMobileSearch()"
+      class="top-menu-search--back-button"
+      href="#"
+      [attr.title]="text.close_search"
+      [attr.aria-label]="text.close_search"
+      >
+      <i class="icon-arrow-left1" aria-hidden="true"></i>
+    </button>
+  }
   <button
     type="button"
     #btn
@@ -20,8 +20,9 @@
     [attr.aria-label]="text.search"
     [class.-input-focused]="expanded"
     (click)="handleClick($event)"
-  >
-    <op-icon icon-classes="icon5 icon-search ellipsis"></op-icon>
+    tabindex="-1"
+    >
+    <op-icon icon-classes="icon5 icon-search ellipsis" />
   </button>
   <op-autocompleter
     #select
@@ -29,14 +30,17 @@
     [name]="'global-search-input'"
     [id]="'global-search-input'"
     [accesskey]="4"
+    [markFirst]="false"
     class="global-search"
-    [placeholder]="placeholder"
-    [ariaLabel]="placeholder"
+    [placeholder]="effectivePlaceholder"
+    [ariaLabel]="effectivePlaceholder"
+    [appendTo]="'#global-search-input'"
     [dropdownPosition]="'bottom'"
     [classes]="{'top-menu-search--input': true, '-markable': markable, '-expanded': expanded, 'ng-select--primerized': true }"
     [inputAttrs]="{ 'class': 'global-search--input', 'name': 'global-search--input', autocomplete: 'off'}"
     [openOnEnter]="true"
     [labelRequired]="false"
+    [clearAllText]="text.close_search"
     [focusDirectly]="isFocusedDirectly"
     [model]="selectedItem"
     [searchFn]="customSearchFn"
@@ -53,25 +57,28 @@
     [resource]="autocompleterOptions.resource"
     [searchKey]="autocompleterOptions.searchKey"
     [getOptionsFn]="autocompleterOptions.getOptionsFn"
-  >
+    >
     <ng-template op-autocompleter-header-tmp>
-      <div *ngIf="!searchTerm && (hasRecentItems$ | async)">{{text.recently_viewed}}</div>
+      @if (!searchTerm && (hasRecentItems$ | async)) {
+        <div>{{text.recently_viewed}}</div>
+      }
     </ng-template>
     <ng-template op-autocompleter-option-tmp let-item let-index="index" let-search="searchTerm">
-      <div *ngIf="!item.id; else workPackageItemTemplate">
-        <div tabindex="-1" class="global-search--option" (click)="followItem(item)">
-          <div class="global-search--search-term">{{ currentValue }}</div>
-          <div class="global-search--project-scope" title="{{ item.projectScope }}">{{ item.text }} ↵</div>
+      @if (!item.id) {
+        <div>
+          <div tabindex="-1" class="global-search--option" (click)="followItem(item)">
+            <div class="global-search--search-term">{{ currentValue }}</div>
+            <div class="global-search--project-scope" title="{{ item.projectScope }}">{{ item.text }} ↵</div>
+          </div>
         </div>
-      </div>
-      <ng-template #workPackageItemTemplate>
+      } @else {
         <a
           tabindex="-1"
           class="global-search--option"
           [href]="wpPath(item.id)"
           (click)="redirectToWp(item.id, $event)"
           style="line-height: 1"
-        >
+          >
           <div class="global-search--option-meta">
             <div class="global-search--wp-line">
               <span [ngClass]="highlighting('type', item.type.id)">
@@ -85,7 +92,7 @@
               <span
                 class="global-search--wp-project"
                 [attr.title]="item.project.name"
-              >
+                >
                 {{ item.project.name }}
               </span>
             </div>
@@ -94,7 +101,7 @@
             </span>
           </div>
         </a>
-      </ng-template>
+      }
     </ng-template>
   </op-autocompleter>
 </div>

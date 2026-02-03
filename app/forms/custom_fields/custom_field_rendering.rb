@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -36,7 +36,7 @@ module CustomFields::CustomFieldRendering
     "text" => "CustomFields::Inputs::Text",
     "int" => "CustomFields::Inputs::Int",
     "float" => "CustomFields::Inputs::Float",
-    %w[hierarchy list] => "CustomFields::Inputs::SingleSelectList",
+    %w[hierarchy weighted_item_list list] => "CustomFields::Inputs::SingleSelectList",
     "date" => "CustomFields::Inputs::Date",
     "bool" => "CustomFields::Inputs::Bool",
     "user" => "CustomFields::Inputs::SingleUserSelectList",
@@ -45,7 +45,7 @@ module CustomFields::CustomFieldRendering
   ).freeze
 
   MULTI_VALUE_INPUT_CLASS_NAMES = OpenProject::MultiKeyHash.expand(
-    ["hierarchy", "list"] => "CustomFields::Inputs::MultiSelectList",
+    %w[hierarchy weighted_item_list list] => "CustomFields::Inputs::MultiSelectList",
     "user" => "CustomFields::Inputs::MultiUserSelectList",
     "version" => "CustomFields::Inputs::MultiVersionSelectList"
   ).freeze

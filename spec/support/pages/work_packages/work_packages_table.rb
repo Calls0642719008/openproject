@@ -369,7 +369,7 @@ module Pages
     end
 
     def progress_popover(work_package)
-      Components::WorkPackages::ProgressPopover.new(container: work_package_container(work_package))
+      Components::WorkPackages::ProgressPopover.new(container: -> { work_package_container(work_package) })
     end
 
     def expect_no_column_add_option(column_name)
@@ -390,6 +390,8 @@ module Pages
         DateEditField.new container, key, is_milestone: work_package.milestone?, is_table: true
       when :estimatedTime, :remainingTime
         ProgressEditField.new container, key
+      when :project
+        InlineProjectEditField.new container, key
       else
         EditField.new container, key
       end

@@ -61,9 +61,9 @@ de:
         start_time: Startzeit
         end_time: Endzeit
         time: Zeit
-        entity: Gebucht für
-        entity_id: Gebucht für
-        entity_gid: Gebucht für
+        entity: Eintrag für
+        entity_id: Eintrag für
+        entity_gid: Eintrag für
     models:
       time_entry:
         one: "Zeitbuchung"
@@ -101,7 +101,7 @@ de:
   button_log_time: "Buchen"
   button_add_activity: "Aktivität"
   button_add_time_entry: "Zeit buchen"
-  button_stop_timer: "Timer anhalten"
+  button_stop_timer: "Timer stoppen"
   caption_booked_on_project: "Auf das Projekt gebucht"
   caption_default: "Standard"
   caption_default_rate_history_for: "Standardsatz-Historie für %{user}"
@@ -231,4 +231,4 @@ de:
       time_entry_time_restrictions: Genaue Zeiterfassung erforderlich machen
     upsell:
       time_entry_time_restrictions:
-        description: "Verbessern Sie Ihre Zeiterfassung, indem Sie genaue Start- und Endzeiten für jede Zeitbuchung erforderlich machen."
+        description: "Verbessern Sie Ihre Zeiterfassung, indem Sie genaue Start- und Endzeiten für jede Zeitbuchung erfordern."

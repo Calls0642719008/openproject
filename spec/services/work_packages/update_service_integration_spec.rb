@@ -33,7 +33,11 @@ require "spec_helper"
 RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
   shared_let(:type) { create(:type_standard) }
   shared_let(:milestone_type) { create(:type_milestone) }
-  shared_let(:project_types) { [type, milestone_type] }
+  shared_let(:autosubject_type) do
+    create(:type, name: "Autosubject",
+                  patterns: { subject: { blueprint: "\#{{id}} by {{author}} - {{status}}", enabled: true } })
+  end
+  shared_let(:project_types) { [type, milestone_type, autosubject_type] }
   shared_let(:project) do
     create(:project, types: project_types)
   end
@@ -1198,6 +1202,38 @@ RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
         TABLE
       end
     end
+
+    context "with work packages having automatically generated subjects, " \
+            "when the work package is automatically scheduled, has a child and no dates" do
+      before_all do
+        set_factory_default(:type, autosubject_type)
+      end
+
+      let_work_packages(<<~TABLE)
+        hierarchy              | MTWTFSS        | scheduling mode | predecessors
+        new_parent_predecessor | XXXX           | manual          |
+        new_parent             |     XXXX       | automatic       | new_parent_predecessor
+        work_package           |                | automatic       |
+          child                |                | automatic       | child_predecessor
+        child_predecessor      |                | manual          |
+      TABLE
+      let(:attributes) { { parent: new_parent } }
+
+      it "sets child start date to be soonest start (after new grandparent predecessor), " \
+         "and grandparent and work package start and due dates to be same as child start date" do
+        expect(subject).to be_success
+        expect(work_package.reload.parent).to eq new_parent
+        expect(subject.all_results.map(&:id)).to contain_exactly(child.id, work_package.id, new_parent.id)
+
+        expect_work_packages(subject.all_results + [new_parent_predecessor], <<~TABLE)
+          identifier             | MTWTFSS | scheduling mode
+          new_parent_predecessor | XXXX      | manual
+          new_parent             |     X     | automatic
+          work_package           |     X     | automatic
+          child                  |     [     | automatic
+        TABLE
+      end
+    end
   end
 
   context "when updating child dates" do
@@ -1222,6 +1258,33 @@ RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
           |   parent           |  XXXX   | automatic
           |     child          |  XXXX   | automatic
           |       work_package |  XXXX   | manual
+        TABLE
+      end
+    end
+
+    context "with work packages having automatically generated subjects" do
+      before_all do
+        set_factory_default(:type, autosubject_type)
+      end
+
+      let_work_packages(<<~TABLE)
+        | hierarchy      | MTWTFSS | scheduling mode
+        | parent         | XXX     | automatic
+        |   child        | XX      | manual
+        |   work_package |   X     | manual
+      TABLE
+
+      let(:attributes) { { start_date: _table.thursday, due_date: _table.friday } }
+
+      it "updates the dates of the parent" do
+        expect(subject).to be_success
+        expect(subject.all_results.pluck(:id)).to contain_exactly(work_package.id, parent.id)
+
+        expect_work_packages_after_reload([parent, child, work_package], <<~TABLE)
+          | identifier     | MTWTFSS | scheduling mode
+          | parent         | XXXXX   | automatic
+          |   child        | XX      | manual
+          |   work_package |    XX   | manual
         TABLE
       end
     end
@@ -1384,6 +1447,65 @@ RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
           | subject      | MTWTFSS | scheduling mode
           | work_package |         | automatic
           | child        |         | manual
+        TABLE
+      end
+    end
+
+    context "when the work package has working days only and the child has not" do
+      let_work_packages(<<~TABLE)
+        | hierarchy    | scheduling mode | days counting
+        | work_package | manual          | working days only
+        |   child      | manual          | all days
+      TABLE
+
+      it "unsets working days only for the parent" do
+        expect(subject).to be_success
+        expect(subject.all_results.pluck(:subject)).to contain_exactly("work_package")
+
+        expect_work_packages_after_reload([work_package, child], <<~TABLE)
+          | hierarchy    | scheduling mode | days counting
+          | work_package | automatic       | all days
+          |   child      | manual          | all days
+        TABLE
+      end
+    end
+
+    context "when the work package has not working days only and the child has" do
+      let_work_packages(<<~TABLE)
+        | hierarchy    | scheduling mode | days counting
+        | work_package | manual          | all days
+        |   child      | manual          | working days only
+      TABLE
+
+      it "sets working days only for the parent" do
+        expect(subject).to be_success
+        expect(subject.all_results.pluck(:subject)).to contain_exactly("work_package")
+
+        expect_work_packages_after_reload([work_package, child], <<~TABLE)
+          | hierarchy    | scheduling mode | days counting
+          | work_package | automatic       | working days only
+          |   child      | manual          | working days only
+        TABLE
+      end
+    end
+
+    context "when the work package has working days only and one of the children has not" do
+      let_work_packages(<<~TABLE)
+        | hierarchy    | scheduling mode | days counting
+        | work_package | manual          | working days only
+        |   child1     | manual          | working days only
+        |   child2     | manual          | all days
+      TABLE
+
+      it "unsets working days only for the parent" do
+        expect(subject).to be_success
+        expect(subject.all_results.pluck(:subject)).to contain_exactly("work_package")
+
+        expect_work_packages_after_reload([work_package, child1, child2], <<~TABLE)
+          | hierarchy    | scheduling mode | days counting
+          | work_package | automatic       | all days
+          |   child1     | manual          | working days only
+          |   child2     | manual          | all days
         TABLE
       end
     end
@@ -1619,6 +1741,25 @@ RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
     end
   end
 
+  context "with work packages having automatically generated subjects" do
+    before_all do
+      set_factory_default(:type, autosubject_type)
+    end
+
+    shared_let(:work_package, reload: true) { create(:work_package, type: autosubject_type) }
+    let(:attributes) { { description: "new description" } }
+
+    it "updates the subject along with the requested updates" do
+      expect(subject).to be_success
+      expect(subject.result).to eq(work_package)
+
+      expect(work_package.reload).to have_attributes(
+        description: "new description",
+        subject: "##{work_package.id} by #{user.name} - #{default_status.name}"
+      )
+    end
+  end
+
   describe "replacing the attachments" do
     let!(:old_attachment) do
       create(:attachment, container: work_package)
@@ -1802,6 +1943,9 @@ RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
 
       work_package.association(:self_and_ancestors).reset
 
+      # ensure the parent missing custom field is validated
+      parent.custom_values_to_validate = parent.custom_field_values
+
       expect(parent.valid?(:saving_custom_fields)).to be(false)
 
       expect(subject).to be_success
@@ -1837,11 +1981,22 @@ RSpec.describe WorkPackages::UpdateService, "integration", type: :model do
       mandatory_custom_field
     end
 
-    it "is a failure and does not save the change" do
-      expect(subject).to be_failure
+    it "ignores the mandatory custom field because no value is provided" do
+      expect(subject).to be_success
 
       expect(work_package.reload.subject)
-        .to eq "The old subject"
+        .to eq "A new subject"
+    end
+
+    context "when the mandatory custom field is provided but invalid" do
+      let(:attributes) { { subject: "A new subject", "custom_field_#{mandatory_custom_field.id}" => "" } }
+
+      it "is a failure and does not save the change" do
+        expect(subject).to be_failure
+
+        expect(work_package.reload.subject)
+          .to eq "The old subject"
+      end
     end
   end
 

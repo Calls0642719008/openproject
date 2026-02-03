@@ -41,7 +41,7 @@ module Storages
             let(:storage) { create(:one_drive_sandbox_storage, oauth_client_token_user: user) }
             let(:auth_strategy) { Registry.resolve("one_drive.authentication.user_bound").call(user, storage) }
 
-            it_behaves_like "adapter open_file_link_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "open_file_link"
 
             context "with outbound requests successful" do
               context "with open location flag not set", vcr: "one_drive/open_file_link_query_success" do
@@ -70,7 +70,7 @@ module Storages
               let(:input_data) { Input::OpenFileLink.build(file_id:).value! }
               let(:error_source) { Internal::DriveItemQuery }
 
-              it_behaves_like "adapter open_file_link_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

@@ -3,13 +3,5 @@
       component.with_heading(tag: :h2).with_content(
         blankslate_config[:heading_text]
       )
-      component.with_description do
-        flex_layout do |flex|
-          flex.with_row(mb: 2) do
-            render(Primer::Beta::Text.new(color: :subtle)) do
-              blankslate_config[:description_text]
-            end
-          end
-        end
-      end
+      component.with_description_content(blankslate_config[:description_text])
     end %>

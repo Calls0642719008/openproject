@@ -34,7 +34,7 @@ module Admin::Settings
 
     def settings_params
       super.tap do |settings|
-        settings["apiv3_cors_origins"] = settings["apiv3_cors_origins"].split(/\r?\n/)
+        settings["apiv3_cors_origins"] = settings["apiv3_cors_origins"]&.split(/\r?\n/) || []
       end
     end
 

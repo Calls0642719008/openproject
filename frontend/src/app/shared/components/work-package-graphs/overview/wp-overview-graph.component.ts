@@ -69,9 +69,20 @@ export class WorkPackageOverviewGraphComponent implements OnInit {
 
   ngOnInit() {
     const element = this.elementRef.nativeElement;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.initialFilters = JSON.parse(element.getAttribute('initial-filters') || 'null');
-    this.globalScope = element.getAttribute('global-scope') === 'true';
+
+    const initialFiltersAttr =
+      element.getAttribute('initial-filters') ??
+      element.getAttribute('data-initial-filters');
+
+    this.initialFilters = initialFiltersAttr
+      ? (JSON.parse(initialFiltersAttr) as [])
+      : null;
+
+    const globalScopeAttr =
+      element.getAttribute('global-scope') ??
+      element.getAttribute('data-global-scope');
+
+    this.globalScope = globalScopeAttr === 'true';
 
     this.setQueryProps();
   }

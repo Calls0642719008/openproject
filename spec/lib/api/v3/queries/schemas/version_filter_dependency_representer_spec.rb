@@ -67,7 +67,7 @@ RSpec.describe API::V3::Queries::Schemas::VersionFilterDependencyRepresenter do
 
         context "within project" do
           let(:href) do
-            "#{api_v3_paths.versions_by_project(project.id)}?#{order}"
+            "#{api_v3_paths.versions_by_workspace(project.id)}?#{order}"
           end
 
           context "for operator 'Queries::Operators::Equals'" do

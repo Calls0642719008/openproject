@@ -58,11 +58,11 @@ module AvatarHelper
     elsif avatar_manager.gravatar_enabled?
       build_gravatar_image_url user, options
     else
-      "".html_safe
+      nil
     end
   rescue StandardError => e
     Rails.logger.error "Failed to create avatar url for #{user}: #{e}"
-    "".html_safe
+    nil
   end
 
   def local_avatar?(user)
@@ -91,23 +91,7 @@ module AvatarHelper
 
   def build_principal_avatar_tag(user, **)
     tag_options = merge_default_avatar_options(user, **)
-
-    principal_type = API::V3::Principals::PrincipalType.for(user)
-    principal = {
-      href: API::V3::Utilities::PathHelper::ApiV3Path.send(principal_type, user.id),
-      name: user.name,
-      id: user.id
-    }
-
-    inputs = {
-      principal:,
-      link: tag_options[:link],
-      size: tag_options[:size],
-      hideName: tag_options[:hide_name],
-      nameClasses: tag_options[:name_classes],
-      title: tag_options.fetch(:title, "")
-    }
-
+    inputs = principal_avatar_inputs(user, tag_options)
     inputs = hover_card_options(user, inputs, tag_options)
 
     angular_component_tag "opce-principal",
@@ -157,5 +141,30 @@ module AvatarHelper
     end
 
     inputs
+  end
+
+  def principal_avatar_inputs(user, tag_options)
+    {
+      principal: principal_hash(user),
+      link: tag_options[:link],
+      size: tag_options[:size],
+      hideName: tag_options[:hide_name],
+      nameClasses: tag_options[:name_classes],
+      title: tag_options.fetch(:title, "")
+    }.tap do |inputs|
+      if tag_options.key?(:avatar_image_alt_text)
+        inputs[:avatarImageAltText] = tag_options[:avatar_image_alt_text]
+      end
+    end
+  end
+
+  def principal_hash(user)
+    principal_type = API::V3::Principals::PrincipalType.for(user)
+
+    {
+      href: API::V3::Utilities::PathHelper::ApiV3Path.send(principal_type, user.id),
+      name: user.name,
+      id: user.id
+    }
   end
 end

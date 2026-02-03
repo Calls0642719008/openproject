@@ -29,9 +29,9 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   render(Primer::OpenProject::PageHeader.new(test_selector: "custom-fields--page-header")) do |header|
-    header.with_title { @custom_field.attribute_in_database("name") }
+    header.with_title { page_title }
 
-    header.with_breadcrumbs(breadcrumbs_items)
+    header.with_breadcrumbs(breadcrumbs_items, selected_item_font_weight: :normal)
 
     helpers.render_tab_header_nav(header, tabs, test_selector: :custom_field_detail_header)
   end

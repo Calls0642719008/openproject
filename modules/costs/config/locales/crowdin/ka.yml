@@ -31,9 +31,9 @@ ka:
         spent: "დახარჯული"
         spent_on: "თარიღი"
         logged_by: "ჩანაწერის ავტორი"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: რეგისტრაციის მიზეზი
+        entity_id: რეგისტრაციის მიზეზი
+        entity_gid: რეგისტრაციის მიზეზი
       cost_type:
         unit: "ერთეულის სახელი"
         unit_plural: "ერთეულის სახელი მრავლობითში"
@@ -61,9 +61,9 @@ ka:
         start_time: Start time
         end_time: Finish time
         time: დრო
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: რეგისტრაციის მიზეზი
+        entity_id: რეგისტრაციის მიზეზი
+        entity_gid: რეგისტრაციის მიზეზი
     models:
       time_entry:
         one: "დროს ჩანაწერი"

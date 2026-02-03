@@ -5,7 +5,6 @@ import {
 
 export const formControlBinding = {
   provide: NgControl,
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   useExisting: forwardRef(() => SpotFormBindingDirective),
 };
 

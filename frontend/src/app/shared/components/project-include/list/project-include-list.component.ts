@@ -43,6 +43,7 @@ import { PathHelperService } from 'core-app/core/path-helper/path-helper.service
 import {
   SearchableProjectListService,
 } from 'core-app/shared/components/searchable-project-list/searchable-project-list.service';
+import { getMetaContent } from 'core-app/core/setup/globals/global-helpers';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -123,13 +124,13 @@ export class OpProjectIncludeListComponent {
   }
 
   extendedProjectUrl(projectId:string):string {
-    const currentMenuItem = document.querySelector('meta[name="current_menu_item"]') as HTMLMetaElement;
+    const currentMenuItem = getMetaContent('current_menu_item');
     const url = this.pathHelper.projectPath(projectId);
 
     if (!currentMenuItem) {
       return url;
     }
 
-    return `${url}?jump=${encodeURIComponent(currentMenuItem.content)}`;
+    return `${url}?jump=${encodeURIComponent(currentMenuItem)}`;
   }
 }

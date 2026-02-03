@@ -1,4 +1,5 @@
 uk:
   overviews:
-    label: 'Огляд'
-  permission_manage_overview: 'Керування сторінкою огляду'
+    label_home: "Головна робочого простору «%{workspace_type}»"
+    label_dashboard: "Панель керування"
+    label_overview: "Огляд"

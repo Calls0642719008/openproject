@@ -2,7 +2,7 @@
   component_wrapper do
     primer_form_with(
       model: MeetingParticipant.new(meeting: @meeting),
-      url: meeting_participants_path(@meeting)
+      url: project_meeting_participants_path(@meeting.project, @meeting)
     ) do |form|
       grid_layout("meeting-participant-form", tag: :div) do |grid|
         grid.with_area(:participant) do

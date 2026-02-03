@@ -46,6 +46,12 @@ VCR.configure do |config|
   config.filter_sensitive_data("<ACCESS_TOKEN>") do
     ENV.fetch("NEXTCLOUD_LOCAL_OAUTH_CLIENT_ACCESS_TOKEN", "MISSING_NEXTCLOUD_LOCAL_OAUTH_CLIENT_ACCESS_TOKEN")
   end
+  config.filter_sensitive_data("<SHAREPOINT_CLIENT_SECRET>") do
+    ENV.fetch("SHAREPOINT_TEST_OAUTH_CLIENT_SECRET", "MISSING_SHARE_POINT_TEST_OAUTH_CLIENT_SECRET")
+  end
+  config.filter_sensitive_data("<SHAREPOINT_CLIENT_ID>") do
+    ENV.fetch("SHAREPOINT_TEST_OAUTH_CLIENT_ID", "MISSING_SHARE_POINT_TEST_OAUTH_CLIENT_ID")
+  end
 end
 
 def use_storages_vcr_cassette(name, options = {}, &)

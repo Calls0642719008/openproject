@@ -35,17 +35,24 @@
       header.with_breadcrumbs(breadcrumb_items)
       header.with_description(underlined_links: false) { render(Meetings::HeaderInfolineComponent.new(@meeting)) }
       if finish_setup_enabled?
+        header.with_action_button(**action_button_params) do |button|
+          button.with_leading_visual_icon(icon: :check)
+          action_button_label
+        end
+      end
+
+      if can_start_presentation?
         header.with_action_button(
           tag: :a,
-          scheme: :primary,
-          mobile_label: I18n.t("recurring_meeting.template.button_finalize"),
-          mobile_icon: :check,
+          scheme: :secondary,
+          mobile_label: I18n.t("meeting.presentation_mode.button_present"),
+          mobile_icon: :play,
           size: :medium,
-          data: { "turbo-method": :post },
-          href: template_completed_project_recurring_meeting_path(@project, @meeting.recurring_meeting)
+          data: { turbo_method: :post },
+          href: start_project_meeting_presentation_path(@project, @meeting)
         ) do |button|
-          button.with_leading_visual_icon(icon: :check)
-          I18n.t("recurring_meeting.template.button_finalize")
+          button.with_leading_visual_icon(icon: :play)
+          I18n.t("meeting.presentation_mode.button_present")
         end
       end
 
@@ -76,7 +83,7 @@
               data: { turbo_stream: true }
             }
           ) do |item|
-            item.with_leading_visual_icon(icon: :copy)
+            item.with_leading_visual_icon(icon: :duplicate)
           end
 
           menu.with_item(

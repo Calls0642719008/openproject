@@ -34,13 +34,13 @@ require_relative "../shared_custom_field_expectations"
 RSpec.describe "List custom fields edit", :js do
   shared_let(:admin) { create(:admin) }
 
-  let(:index_cf_page) { Pages::CustomFields::IndexPage.new }
-  let(:new_cf_page) { Pages::CustomFields::NewPage.new }
+  let(:index_cf_page) { Pages::CustomFields::Index.new }
+  let(:new_cf_page) { Pages::CustomFields::New.new }
 
   current_user { admin }
 
   before do
-    index_cf_page.visit_tab("Spent time")
+    index_cf_page.visit_page("Spent time")
   end
 
   it "can create and edit list custom fields (#37654)" do

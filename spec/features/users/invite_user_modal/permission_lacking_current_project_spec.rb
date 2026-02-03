@@ -53,7 +53,7 @@ RSpec.describe "Inviting user in project the current user is lacking permission 
   let!(:invite_project) { create(:project, members: { current_user => invite_role }) }
 
   current_user do
-    create(:user)
+    create(:user, global_permissions: %i[view_all_principals])
   end
 
   specify "user cannot invite in current project but for different one" do
@@ -67,31 +67,19 @@ RSpec.describe "Inviting user in project the current user is lacking permission 
 
     wait_for_network_idle
 
-    modal.expect_help_displayed I18n.t("js.invite_user_modal.project.lacking_permission_info")
+    modal.expect_help_displayed I18n.t("users.invite_user_modal.project.no_invite_rights")
 
     # Attempting to proceed without having a different project selected
 
-    modal.select_type "User"
+    modal.click_continue
 
-    modal.click_next
+    modal.expect_error_displayed "Project can't be blank."
 
-    modal.expect_error_displayed I18n.t("js.invite_user_modal.project.lacking_permission")
-
-    # Proceeding with a different project
-    modal.autocomplete(".ng-select-container", invite_project.name)
-    modal.click_next
-
-    # Remaining steps
-    modal.principal_step
-
-    modal.expect_text "Invite user"
-    modal.confirmation_step
-
-    modal.click_modal_button "Send invitation"
-    modal.expect_text "#{other_user.name} was invited!"
+    # Proceeding with the invite project
+    modal.run_all_steps
 
     # Expect to be added to project
-    expect(invite_project.users)
+    expect(invite_project.users.reload)
       .to include(other_user)
   end
 end

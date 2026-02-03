@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { AttributeHelpTextComponent } from 'core-app/shared/components/attribute-help-texts/attribute-help-text.component';
 import { By } from '@angular/platform-browser';
@@ -15,10 +15,11 @@ describe('AttributeHelpTextComponent', () => {
 
   const serviceStub = {};
   let modalServiceStub:jasmine.SpyObj<AttributeHelpTextModalService>;
-  const i18nStub = { t: (_scope:string|string[], _options?:{ [key:string]:any }) => 'Show help text' };
+  const i18nStub = { t: (_scope:string|string[], _options?:Record<string, any>) => 'Show help text' };
 
   beforeEach(() => {
     modalServiceStub = jasmine.createSpyObj('AttributeHelpTextModalService', ['show']);
+    modalServiceStub.show.and.resolveTo();
 
     void TestBed
       .configureTestingModule({
@@ -96,7 +97,7 @@ describe('AttributeHelpTextComponent', () => {
     expect(button.nativeElement.dataset.qaHelpTextFor).toEqual('subject');
   });
 
-  it('should call modalService on click', () => {
+  it('should call modalService on click', fakeAsync(() => {
     const button = element.query(By.css("[role='button']"));
     button.nativeElement.click();
 
@@ -104,13 +105,14 @@ describe('AttributeHelpTextComponent', () => {
 
     expect(button.nativeElement.ariaDisabled).toEqual('true');
 
-    void fixture.whenStable().then(() => {
-      expect(modalServiceStub.show).toHaveBeenCalledOnceWith('1');
-      expect(button.nativeElement.ariaDisabled).toEqual('false');
-    });
-  });
+    flush();
+    fixture.detectChanges();
 
-  it('should call modalService only once', () => {
+    expect(modalServiceStub.show).toHaveBeenCalledOnceWith('1');
+    expect(button.nativeElement.ariaDisabled).toEqual('false');
+  }));
+
+  it('should call modalService only once', fakeAsync(() => {
     const button = element.query(By.css("[role='button']"));
     button.nativeElement.click();
 
@@ -123,9 +125,10 @@ describe('AttributeHelpTextComponent', () => {
     button.triggerEventHandler('keydown.space');
 
     fixture.detectChanges();
-    void fixture.whenStable().then(() => {
-      expect(modalServiceStub.show).toHaveBeenCalledOnceWith('1');
-      expect(button.nativeElement.ariaDisabled).toEqual('false');
-    });
-  });
+    flush();
+    fixture.detectChanges();
+
+    expect(modalServiceStub.show).toHaveBeenCalledOnceWith('1');
+    expect(button.nativeElement.ariaDisabled).toEqual('false');
+  }));
 });

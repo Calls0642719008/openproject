@@ -47,6 +47,7 @@ RSpec.describe "Work package copy", :js, :selenium do
     create(:project_role,
            permissions: %i[view_work_packages
                            add_work_packages
+                           copy_work_packages
                            manage_work_package_relations
                            edit_work_packages
                            assign_versions])
@@ -101,7 +102,7 @@ RSpec.describe "Work package copy", :js, :selenium do
     to_copy_work_package_page.expect_current_path
     to_copy_work_package_page.expect_fully_loaded
 
-    to_copy_work_package_page.update_attributes Description: "Copied WP Description"
+    to_copy_work_package_page.fill_in_attributes Description: "Copied WP Description"
     to_copy_work_package_page.save!
 
     expect(page).to have_css(".op-toast--content",
@@ -140,59 +141,33 @@ RSpec.describe "Work package copy", :js, :selenium do
       wp_page.visit!
       wp_page.ensure_page_loaded
 
-      # Go to add cost entry page
-      find("#action-show-more-dropdown-menu .button").click
-      find(".menu-item", text: "Duplicate", exact_text: true).click
+      wp_page.select_from_context_menu("Duplicate")
 
       to_copy_work_package_page = Pages::FullWorkPackageCreate.new(original_work_package:)
       to_copy_work_package_page.update_attributes Description: "Copied WP Description"
       to_copy_work_package_page.save!
 
-      to_copy_work_package_page.expect_and_dismiss_toaster message: I18n.t("js.notice_successful_create")
+      wp_page.expect_and_dismiss_toaster message: I18n.t("js.notice_successful_create")
     end
   end
 
-  it "on split screen page" do
-    original_work_package_page = Pages::SplitWorkPackage.new(original_work_package, project)
-    activity_tab = Components::WorkPackages::Activities.new(original_work_package)
-    to_copy_work_package_page = original_work_package_page.visit_copy!
+  describe "when source work package is an automatically scheduled parent" do
+    before do
+      create(:work_package, project:, parent: original_work_package, subject: "Child")
+      original_work_package.update!(schedule_manually: false)
+    end
 
-    to_copy_work_package_page.expect_current_path
-    to_copy_work_package_page.expect_fully_loaded
+    it "still allows copying through menu (Bug #69309)" do
+      wp_page = Pages::FullWorkPackage.new(original_work_package, project)
+      wp_page.visit!
+      wp_page.ensure_page_loaded
 
-    to_copy_work_package_page.update_attributes Description: "Copied WP Description"
+      wp_page.select_from_context_menu("Duplicate")
 
-    to_copy_work_package_page.save!
-    find(".op-toast--content", text: I18n.t("js.notice_successful_create"), wait: 20)
+      to_copy_work_package_page = Pages::FullWorkPackageCreate.new(original_work_package:)
+      to_copy_work_package_page.save!
 
-    copied_work_package = WorkPackage.order(created_at: "desc").first
-
-    expect(copied_work_package).not_to eql original_work_package
-
-    work_package_page = Pages::SplitWorkPackage.new(copied_work_package, project)
-
-    work_package_page.ensure_page_loaded
-
-    work_package_page.expect_attributes Subject: original_work_package.subject,
-                                        Description: "Copied WP Description",
-                                        Version: original_work_package.version,
-                                        Priority: original_work_package.priority,
-                                        Assignee: original_work_package.assigned_to,
-                                        Responsible: original_work_package.responsible
-
-    work_package_page.switch_to_tab(tab: :activity)
-    activity_tab.expect_journal_details_header(text: user.name)
-
-    work_package_page.switch_to_tab(tab: :overview)
-
-    work_package_page.expect_current_path
-
-    work_package_page.visit_tab!("relations")
-    expect_angular_frontend_initialized
-    work_package_page.expect_subject
-    loading_indicator_saveguard
-
-    relations_tab.expect_relation_group(:relates)
-    relations_tab.expect_relation_by_text(original_work_package.subject)
+      wp_page.expect_and_dismiss_toaster message: I18n.t("js.notice_successful_create")
+    end
   end
 end

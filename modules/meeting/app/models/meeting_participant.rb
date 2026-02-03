@@ -37,6 +37,15 @@ class MeetingParticipant < ApplicationRecord
   scope :invited, -> { where(invited: true) }
   scope :attended, -> { where(attended: true) }
 
+  enum :participation_status, {
+    needs_action: "needs-action",
+    accepted: "accepted",
+    declined: "declined",
+    tentative: "tentative",
+    # delegated: "delegated", # We currently do not support delegation
+    unknown: "unknown" # this status is used for existing participants when introducing the field
+  }, prefix: :participation
+
   def name
     user.present? ? user.name : I18n.t("user.deleted")
   end
@@ -49,10 +58,20 @@ class MeetingParticipant < ApplicationRecord
     to_s.downcase <=> other.to_s.downcase
   end
 
+  def status_sorting_value
+    case participation_status
+    when "accepted" then 1
+    when "tentative" then 2
+    when "declined" then 3
+    else # needs-action and unknown
+      4
+    end
+  end
+
   alias :to_s :name
 
   def copy_attributes
     # create a clean attribute set allowing to attach participants to different meetings
-    attributes.reject { |k, _v| ["id", "meeting_id", "attended", "created_at", "updated_at"].include?(k) }
+    attributes.except("id", "meeting_id", "attended", "created_at", "updated_at", "comment")
   end
 end

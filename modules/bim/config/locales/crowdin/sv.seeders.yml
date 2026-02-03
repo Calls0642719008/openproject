@@ -13,7 +13,7 @@ sv:
         item_2:
           name: Hög
         item_3:
-          name: Critical
+          name: Kritisk
       statuses:
         item_0:
           name: Ny
@@ -40,14 +40,14 @@ sv:
         item_3:
           name: Ärende
         item_4:
-          name: Remark
+          name: Anmärkning
         item_5:
-          name: Request
+          name: Begäran
         item_6:
-          name: Clash
+          name: Sammandrabbning
       global_queries:
         item_0:
-          name: 'Embedded table: Children'
+          name: 'Inbäddad tabell: Barn'
       type_configuration:
         item_0:
           form_configuration:
@@ -55,90 +55,90 @@ sv:
               group_name: Barn
       groups:
         item_0:
-          name: Architects
+          name: Arkitekter
         item_1:
-          name: BIM Coordinators
+          name: BIM-samordnare
         item_2:
-          name: BIM Managers
+          name: BIM-chefer
         item_3:
-          name: BIM Modellers
+          name: BIM-modellerare
         item_4:
-          name: Lead BIM Coordinators
+          name: Ledande BIM-samordnare
         item_5:
-          name: MEP Engineers
+          name: MEP-ingenjörer
         item_6:
-          name: Planners
+          name: Planerare
         item_7:
-          name: Structural Engineers
+          name: Konstruktionsingenjörer
       welcome:
-        title: Welcome to OpenProject BIM edition!
+        title: Välkommen till OpenProjects BIM-utgåva!
         text: |
-          Checkout the demo projects to get started with some examples.
+          Kolla in demoprojekten för att komma igång med några exempel.
 
-          * [(Demo) Construction project]({{opSetting:base_url}}/projects/demo-construction-project): Planning, BIM process, BCF management, and constructing, all at a glance.
-              * [(Demo) Planning & constructing]({{opSetting:base_url}}/projects/demo-planning-constructing-project): Classical planning and construction management.
-              * [(Demo) Bim project]({{opSetting:base_url}}/projects/demo-bim-project): BIM process and coordination.
-                  * [(Demo) BCF management]({{opSetting:base_url}}/projects/demo-bcf-management-project): BCF management.
+          * [(Demo) Byggprojekt]({{opSetting:base_url}}/projekt/demo-byggprojekt): Planering, BIM-process, BCF-hantering och byggande, allt i en överblick.
+              * [(Demo) Planering och konstruktion]({{opSetting:base_url}}/projects/demo-planering-konstruktion-projekt): Klassisk planering och byggledning.
+              * [(Demo) Bim-projekt]({{opSetting:base_url}}/projekt/demo-bim-projekt): BIM-process och samordning.
+                  * [(Demo) BCF-förvaltning]({{opSetting:base_url}}/projekt/demo-bcf-management-projekt): BCF-förvaltning.
 
-          Also, you can create a blank [new project]({{opSetting:base_url}}/projects/new).
+          Du kan också skapa ett tomt [nytt projekt]({{opSetting:base_url}}/projects/new).
 
-          Never stop collaborating. With open source and open mind.
+          Sluta aldrig att samarbeta. Med öppen källkod och öppet sinne.
 
-          You can change this welcome text [here]({{opSetting:base_url}}/admin/settings/general).
+          Du kan ändra denna välkomsttext [här]({{opSetting:base_url}}/admin/settings/general).
       projects:
         demo-construction-project:
-          name: "(Demo) Construction project"
-          status_explanation: All tasks and the sub-projects are on schedule. The people involved know their tasks. The system is completely set up.
-          description: This is a short summary of the goals of this demo construction project.
+          name: "(Demo) Byggprojekt"
+          status_explanation: Alla uppgifter och delprojekt är enligt tidtabell. De inblandade känner till sina uppgifter. Systemet är helt uppsatt.
+          description: Detta är en kort sammanfattning av målen för detta demobyggprojekt.
           news:
             item_0:
-              title: Welcome to your demo project
+              title: Välkommen till ditt demoprojekt
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
-              description: The actual news
+                Vi är glada att du anslöt dig.
+                I den här modulen kan du kommunicera projektnyheter till dina teammedlemmar.
+              description: De faktiska nyheterna
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategori 1 (ändras i Projektinställningar)
           queries:
             item_0:
-              name: Project plan
+              name: Projektplan
             item_1:
               name: Milstolpar
             item_2:
-              name: Tasks
+              name: Uppgifter
             item_3:
               name: Team planerare
           boards:
             bcf:
-              name: Simple drag'n drop workflow
+              name: Enkelt arbetsflöde med drag'n drop
           project-overview:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Välkommen
               item_1:
                 options:
                   name: Komma igång
                   text: |
-                    We are glad you joined! We suggest to try a few things to get started in OpenProject.
+                    Vi är glada att du gick med! Vi föreslår att du provar några saker för att komma igång med OpenProject.
 
-                    But before you jump right into it, you should know that this exemplary project is split up into two different projects:
+                    Men innan du hoppar rakt in i det, bör du veta att detta exemplariska projekt är uppdelat i två olika projekt:
 
-                    1.  [Construction project]({{opSetting:base_url}}/projects/demo-planning-constructing-project): Here you will find the classical roles, some workflows and work packages for your construction project.
-                    2.  [Creating BIM Model]({{opSetting:base_url}}/projects/demo-bim-project): This project also offers roles, workflows and work packages but especially in the BIM context.
+                    1.  [Konstruktionsprojekt]({{opSetting:base_url}}/projects/demo-planering-konstruktionsprojekt): Här hittar du de klassiska rollerna, vissa arbetsflöden och arbetspaket för ditt byggprojekt.
+                    2.  [Skapa BIM-modell]({{opSetting:base_url}}/projects/demo-bim-project): Detta projekt erbjuder också roller, arbetsflöden och arbetspaket, men särskilt i BIM-sammanhang.
 
-                    _Try the following steps:_
+                    _Testa följande steg:_
 
-                    1.  _Invite new members to your project_: → Go to [Members]({{opSetting:base_url}}/projects/demo-construction-project/members) in the project navigation.
-                    2.  _View the work in your projects_: → Go to [Work packages]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) in the project navigation.
-                    3.  _Create a new work package_: → Go to [Work packages → Create]({{opSetting:base_url}}/projects/demo-construction-project/work_packages/new?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D&type=11).
-                    4.  _Create and update a Gantt chart_: → Go to [Gantt chart]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22assignee%22%2C%22responsible%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) in the project navigation.
-                    5.  _Activate further modules_: → Go to [Project settings → Modules]({{opSetting:base_url}}/projects/demo-construction-project/settings/modules).
-                    6.  _Check out the tile view to get an overview of your BCF issues:_ → Go to [Work packages]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22id%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22card%22%7D)
-                    7.  _Agile working? Check out our brand new boards:_ → Go to [Boards]({{opSetting:base_url}}/projects/demo-construction-project/boards)
+                    1.  _Inbjud nya medlemmar till ditt projekt_: → Gå till [Medlemmar]({{opSetting:base_url}}/projects/demo-construction-project/members) i projektnavigeringen.
+                    2.  _Visa arbetet i dina projekt_: → Gå till [Arbetspaket]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) i projektnavigeringen.
+                    3.  _Create a new work package_: → Gå till [Work packages → Create]({{opSetting:base_url}}/projects/demo-construction-project/work_packages/new?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D&type=11).
+                    4.  _Create and update a Gantt chart_: → Gå till [Gantt chart]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22assignee%22%2C%22responsible%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) i projektnavigeringen.
+                    5.  _Aktivera ytterligare moduler_: → Gå till [Projektinställningar → Moduler]({{opSetting:base_url}}/projects/demo-construction-project/settings/modules).
+                    6.  _Check out the tile view to get an overview of your BCF issues:_ → Gå till [Work packages]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22id%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22card%22%7D)
+                    7.  _Agilt arbetssätt? Kolla in våra helt nya tavlor:_ → Gå till [Tavlor]({{opSetting:base_url}}/projects/demo-construction-project/boards)
 
-                    Here you will find our [User Guides](https://www.openproject.org/docs/user-guide/).
-                    Please let us know if you have any questions or need support. Contact us: [support\[at\]openproject.com](mailto:support@openproject.com).
+                    Här hittar du våra [Användarguider](https://www.openproject.org/docs/user-guide/).
+                    Hör gärna av dig om du har några frågor eller behöver support. Kontakta oss gärna: [support\[at\]openproject.com](mailto:support@openproject.com).
               item_4:
                 options:
                   name: Medlemmar
@@ -149,51 +149,51 @@ sv:
                 options:
                   name: Milstolpar
         demo-planning-constructing-project:
-          name: "(Demo) Planning & constructing"
-          status_explanation: All tasks are on schedule. The people involved know their tasks. The system is completely set up.
-          description: This is a short summary of the goals of this demo planning and constructing project.
+          name: "(Demo) Planering & konstruktion"
+          status_explanation: Alla arbetsuppgifter följer tidsplanen. De inblandade känner till sina uppgifter. Systemet är helt klart.
+          description: Detta är en kort sammanfattning av målen för detta projekt för planering och byggande av en demo.
           news:
             item_0:
-              title: Welcome to your demo project
+              title: Välkommen till ditt demoprojekt
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
-              description: The actual news
+                Vi är glada att du anslöt dig.
+                I den här modulen kan du kommunicera projektnyheter till dina teammedlemmar.
+              description: De faktiska nyheterna
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategori 1 (ändras i Projektinställningar)
           queries:
             item_0:
-              name: Project plan
+              name: Projektplan
             item_1:
               name: Milstolpar
             item_2:
-              name: Tasks
+              name: Uppgifter
             item_3:
               name: Team planerare
           project-overview:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Välkommen
               item_1:
                 options:
                   name: Komma igång
                   text: |
-                    We are glad you joined! We suggest to try a few things to get started in OpenProject.
+                    Vi är glada att du gick med! Vi föreslår att du provar några saker för att komma igång i OpenProject.
 
-                    Here you will find the classical roles, some workflows and work packages for your construction project.
+                    Här hittar du de klassiska rollerna, några arbetsflöden och arbetspaket för ditt byggprojekt.
 
-                    _Try the following steps:_
+                    _Testa följande steg:_
 
-                    1.  _Invite new members to your project:_ → Go to [Members]({{opSetting:base_url}}/projects/demo-planning-constructing-project/members) in the project navigation.
-                    2.  _View the work in your projects:_ → Go to [Work packages]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) in the project navigation.
-                    3.  _Create a new work package:_ → Go to [Work packages → Create]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages/new?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D&type=11).
-                    4.  _Create and update a Gantt chart:_ → Go to [Gantt chart]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22assignee%22%2C%22responsible%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) in the project navigation.
-                    5.  _Activate further modules:_ → Go to [Project settings → Modules]({{opSetting:base_url}}/projects/demo-planning-constructing-project/settings/modules).
-                    6.  _Working agile? Create a new board:_ → Go to [Boards]({{opSetting:base_url}}/projects/demo-planning-constructing-project/boards)
+                    1.  _Inbjuda nya medlemmar till ditt projekt:_ → Gå till [Medlemmar]({{opSetting:base_url}}/projects/demo-planning-byggprojekt/members) i projektnavigeringen.
+                    2.  _Visa arbetet i dina projekt:_ → Gå till [Arbetspaket]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) i projektnavigeringen.
+                    3.  _Create a new work package:_ → Gå till [Work packages → Create]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages/new?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22status%22%2C%22assignee%22%2C%22priority%22%5D%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22bcfIssueAssociated%22%2C%22o%22%3A%22%3D%22%2C%22v%22%3A%5B%22f%22%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D&type=11).
+                    4.  _Create and update a Gantt chart:_ → Go to [Gantt chart]({{opSetting:base_url}}/projects/demo-planning-constructing-project/work_packages?query_props=%7B%22c%22%3A%5B%22type%22%2C%22id%22%2C%22subject%22%2C%22assignee%22%2C%22responsible%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hl%22%3A%22priority%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%2C%22dr%22%3A%22list%22%7D) i projektnavigeringen.
+                    5.  _Aktivera ytterligare moduler:_ → Gå till [Projektinställningar → Moduler]({{opSetting:base_url}}/projects/demo-planning-constructing-project/settings/modules).
+                    6.  _Arbetar du agilt? Skapa en ny tavla:_ → Gå till [Tavlor]({{opSetting:base_url}}/projects/demo-planning-constructing-project/boards)
 
-                    Here you will find our [User Guides](https://www.openproject.org/docs/user-guide/).
-                    Please let us know if you have any questions or need support. Contact us: [support\[at\]openproject.com](mailto:support@openproject.com).
+                    Här hittar du våra [Användarhandböcker](https://www.openproject.org/docs/user-guide/).
+                    Hör gärna av dig om du har några frågor eller behöver support. Kontakta oss gärna: [support\[at\]openproject.com](mailto:support@openproject.com).
               item_4:
                 options:
                   name: Medlemmar
@@ -205,151 +205,151 @@ sv:
                   name: Milstolpar
           work_packages:
             item_0:
-              subject: Project kick off construction project
+              subject: Projekt kick off byggprojekt
               description: |-
-                The project kick off initializes the start of the project in your company. Everybody being part of this project should be invited to the kick off for a first briefing.
+                Projektets kick off initierar starten av projektet i ditt företag. Alla som är delaktiga i projektet bör bjudas in till kick off för en första genomgång.
 
-                The next step could be checking out the timetable and adjusting the appointments, by looking at the [Gantt chart]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22id%22%2C%22subject%22%2C%22startDate%22%2C%22dueDate%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22status%22%2C%22o%22%3A%22o%22%2C%22v%22%3A%5B%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%7D).
+                Nästa steg kan vara att kontrollera tidsplanen och justera mötena genom att titta på [Gantt-diagrammet]({{opSetting:base_url}}/projects/demo-construction-project/work_packages?query_props=%7B%22c%22%3A%5B%22id%22%2C%22subject%22%2C%22startDate%22%2C%22dueDate%22%5D%2C%22tv%22%3Atrue%2C%22tzl%22%3A%22weeks%22%2C%22hi%22%3Atrue%2C%22g%22%3A%22%22%2C%22t%22%3A%22startDate%3Aasc%22%2C%22f%22%3A%5B%7B%22n%22%3A%22status%22%2C%22o%22%3A%22o%22%2C%22v%22%3A%5B%5D%7D%5D%2C%22pa%22%3A1%2C%22pp%22%3A100%7D).
             item_1:
-              subject: Basic evaluation
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: Grundläggande utvärdering
+              description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
               children:
                 item_0:
-                  subject: Gathering first project information
+                  subject: Samla in första projektinformationen
                   description: |-
-                    ## Goal
+                    ## Mål
 
-                    *   Define tasks based on the customer needs
-                    *   Time frame and cost estimation shall be defined
+                    * Definiera uppgifter baserat på kundens behov
+                    * Tidsram och kostnadsberäkning ska definieras
 
-                    ## Description
+                    ## Beskrivning
 
-                    *   Identify the customer needs by having a workshop with him/ her
-                    *   Each need shall represent a task with its corresponding work packages
-                    *   Derive the cost estimation and time frame
+                    * Identifiera kundens behov genom att ha en workshop med honom/henne
+                    * Varje behov ska representera en uppgift med motsvarande arbetspaket
+                    * Härled kostnadsberäkningen och tidsramen
                 item_1:
-                  subject: Summarize the results
+                  subject: Sammanfatta resultaten
                   description: |-
-                    ## Goal
+                    ## Mål
 
-                    *   Create a useful overview of the results
-                    *   Check what has been done and summarize the results
-                    *   Communicate all the relevant results with the customer
-                    *   Identify the fundamental boundary conditions of the project
+                    * Skapa en användbar översikt över resultaten
+                    * Kontrollera vad som har gjorts och sammanfatta resultaten
+                    * Kommunicera alla relevanta resultat med kunden
+                    * Identifiera de grundläggande gränsvillkoren för projektet
 
-                    ## Description
+                    ## Beskrivning
 
-                    *   Each topic gets its own overview which will be used as a catalogue of results
-                    *   This overview informs all participants about the decisions made
-                    *   ...
+                    * Varje ämne får sin egen översikt som kommer att användas som en resultatkatalog
+                    * Denna översikt informerar alla deltagare om de beslut som fattats
+                    * ...
                 item_2:
-                  subject: End of basic evaluation
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  subject: Slut på grundläggande utvärdering
+                  description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
             item_2:
-              subject: Preliminary planning
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: Preliminär planering
+              description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
               children:
                 item_0:
-                  subject: Developing first draft
+                  subject: Utarbeta ett första utkast
                   description: |-
-                    ## Goal
+                    ## Mål
 
-                    *   Create a useful overview of the results
-                    *   Check what has been done and summarize the results
-                    *   Communicate all the relevant results with the customer
-                    *   Identify the fundamental boundary conditions of the project
+                    * Skapa en användbar översikt över resultaten
+                    * Kontrollera vad som har gjorts och sammanfatta resultaten
+                    * Kommunicera alla relevanta resultat med kunden
+                    * Identifiera de grundläggande gränsvillkoren för projektet
 
-                    ## Description
+                    ## Beskrivning
 
-                    *   Each topic gets its own overview which will be used as a catalogue of results
-                    *   This overview informs all participants about the decisions made
-                    *   ...
+                    * Varje ämne får sin egen översikt som kommer att användas som en resultatkatalog
+                    * Denna översikt informerar alla deltagare om de beslut som fattats
+                    * ...
                 item_1:
-                  subject: Summarize results
+                  subject: Sammanfatta resultaten
                   description: |-
-                    ## Goal
+                    ## Mål
 
-                    *   Create a useful overview of the results
-                    *   Check what has been done and summarize the results
-                    *   Communicate all the relevant results with the customer
-                    *   Identify the fundamental boundary conditions of the project
+                    * Skapa en användbar översikt över resultaten
+                    * Kontrollera vad som har gjorts och sammanfatta resultaten
+                    * Kommunicera alla relevanta resultat med kunden
+                    * Identifiera de grundläggande gränsvillkoren för projektet
 
-                    ## Description
+                    ## Beskrivning
 
-                    *   Each topic gets its own overview which will be used as a catalogue of results
-                    *   This overview informs all participants about the decisions made
-                    *   ...
+                    * Varje ämne får sin egen översikt som kommer att användas som en resultatkatalog
+                    * Denna översikt informerar alla deltagare om de beslut som fattats
+                    * ...
             item_3:
-              subject: Passing of preliminary planning
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: Godkännande av preliminär planering
+              description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
             item_4:
-              subject: Design planning
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: Planering av design
+              description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
               children:
                 item_0:
-                  subject: Finishing design
+                  subject: Avslutande design
                   description: |-
-                    ## Goal
+                    ## Mål
 
-                    *   Design is done
-                    *   All parties are happy with the results of the design planning phase
+                    * Designen är klar
+                    * Alla parter är nöjda med resultatet av designplaneringsfasen
 
-                    ## Description
+                    ## Beskrivning
 
-                    *   The design of the project will be finished
-                    *   All parties agree on the design
-                    *   The owner is happy with the results
-                    *   ...
+                    * Designen av projektet kommer att slutföras
+                    * Alla parter är överens om designen
+                    * Ägaren är nöjd med resultatet
+                    * ...
                 item_1:
-                  subject: Design freeze
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  subject: Frysning av design
+                  description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
             item_5:
-              subject: Construction phase
+              subject: Konstruktion fas
               children:
                 item_0:
-                  subject: Start constructing
+                  subject: Börja konstruera
                   description: |-
                     ## Goal
 
-                    *   Ground breaking ceremony
-                    *   Setting up the construction site
-                    *   ...
+                    * Första spadtaget tas
+                    * Byggarbetsplatsen ställs i ordning
+                    * ...
 
                     ## Description
 
-                    *   Preparing the site for the project
-                    *   Get the team together
-                    *   ...
+                    * Förbereda platsen för projektet
+                    * Samla ihop teamet
+                    * ...
                 item_1:
-                  subject: Foundation
+                  subject: Fundament
                   description: |-
                     ## Goal
 
-                    *   Laying of the foundation stone
-                    *   ...
+                    * Läggning av grundstenen
+                    * ...
 
-                    ## Description
+                    ## Beskrivning
 
-                    *   Setting up the concrete mixer
-                    *   Setting up the supply chain for the concrete
-                    *   ...
+                    * Ställa in betongblandaren
+                    * Ställa in leveranskedjan för betongen
+                    * ...
                 item_2:
-                  subject: Building construction
+                  subject: Byggnadskonstruktion
                   description: |-
                     ## Goal
 
-                    *   Topping out ceremony
-                    *   Walls and ceilings are done
-                    *   ...
+                    * Invigningsceremoni
+                    * Väggar och tak är klara
+                    * ...
 
                     ## Description
 
-                    *   Creating all structural levels of the building
-                    *   Installing doors and windows
-                    *   Finishing the roof structure
-                    *   ...
+                    * Skapar alla strukturella nivåer i byggnaden
+                    * Installerar dörrar och fönster
+                    * Färdigställer takkonstruktionen
+                    * ...
                 item_3:
-                  subject: Finishing the facade
+                  subject: Färdigställande av fasaden
                   description: |-
                     ## Goal
 
@@ -417,18 +417,18 @@ sv:
             item_0: Category 1 (to be changed in Project settings)
           queries:
             item_0:
-              name: Project plan
+              name: Projektplan
             item_1:
               name: Milstolpar
             item_2:
-              name: Tasks
+              name: Uppgifter
             item_3:
               name: Team planerare
           project-overview:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Välkommen
               item_1:
                 options:
                   name: Komma igång
@@ -599,19 +599,19 @@ sv:
                 item_1:
                   subject: Issue management, first cycle
                 item_2:
-                  subject: Finishing coordination, first cycle
-                  description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+                  subject: Koordinering av slutbearbetning, första cykeln
+                  description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
             item_6:
-              subject: Modelling & coordinating, second cycle
-              description: "## Goal\r\n\r\n*   ...\r\n\r\n## Description\r\n\r\n* \\  ..."
+              subject: Modellering och samordning, andra cykeln
+              description: "## Mål\r\n\r\n* ...\r\n\r\n## Beskrivning\r\n\r\n* \\ ..."
             item_7:
-              subject: Modelling & coordinating, ... cycle
-              description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
+              subject: Modellering och samordning, ... cykel
+              description: Denna typ är hierarkiskt överordnad typerna &quot;Clash&quot; och &quot;Request&quot;, och utgör således en allmän anmärkning.
             item_8:
-              subject: Modelling & coordinating, (n-th minus 1) cycle
-              description: "## Goal\r\n\r\n*   ...\r\n\r\n## Description\r\n\r\n* \\  ..."
+              subject: Modellering och samordning, (n-te minus 1) cykel
+              description: "## Mål\r\n\r\n* ...\r\n\r\n## Beskrivning\r\n\r\n* \\ ..."
             item_9:
-              subject: Modelling & coordinating n-th cycle
+              subject: Modellering & koordinering av n-te cykel
               description: This type is hierarchically a parent of the types &quot;Clash&quot; and &quot;Request&quot;, thus represents a general note.
             item_10:
               subject: Finishing modelling & coordinating, n-th cycle
@@ -690,11 +690,11 @@ sv:
             item_3:
               name: Remarks
             item_4:
-              name: Project plan
+              name: Projektplan
             item_5:
               name: Milstolpar
             item_6:
-              name: Tasks
+              name: Uppgifter
             item_7:
               name: Team planerare
           boards:
@@ -704,7 +704,7 @@ sv:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Välkommen
               item_1:
                 options:
                   name: Komma igång

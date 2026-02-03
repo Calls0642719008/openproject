@@ -43,13 +43,6 @@ zh-TW:
           name: PM2 紅紫色
         item_3:
           name: PM2 黃綠色
-      document_categories:
-        item_0:
-          name: 說明文件
-        item_1:
-          name: 規範
-        item_2:
-          name: 其他
       project_query_roles:
         item_0:
           name: 專案查詢檢視器

@@ -62,7 +62,7 @@ export class ApiV3VersionsPaths extends ApiV3ResourceCollection<VersionResource,
    * @param payload
    * @return {Promise<WorkPackageResource>}
    */
-  public post(payload:Object):Observable<VersionResource> {
+  public post(payload:object):Observable<VersionResource> {
     return this
       .halResourceService
       .post<VersionResource>(this.path, payload);

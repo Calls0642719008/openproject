@@ -162,6 +162,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
 
       it_behaves_like "api v3 path", "/projects/42/categories"
     end
+
+    describe "#categories_by_workspace" do
+      subject { helper.categories_by_workspace 42 }
+
+      it_behaves_like "api v3 path", "/workspaces/42/categories"
+    end
   end
 
   context "capabilities paths" do
@@ -274,6 +280,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
     it_behaves_like "show", :placeholder_user
   end
 
+  describe "portfolios paths" do
+    it_behaves_like "index", :portfolio
+    it_behaves_like "show", :portfolio
+    it_behaves_like "update form", :portfolio
+  end
+
   describe "posts paths" do
     it_behaves_like "index", :post
     it_behaves_like "show", :post
@@ -288,6 +300,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
     it_behaves_like "show", :priority
   end
 
+  describe "programs paths" do
+    it_behaves_like "index", :program
+    it_behaves_like "show", :program
+    it_behaves_like "update form", :program
+  end
+
   describe "projects paths" do
     it_behaves_like "resource", :project
 
@@ -295,6 +313,18 @@ RSpec.describe API::V3::Utilities::PathHelper do
       subject { helper.projects_available_parents }
 
       it_behaves_like "api v3 path", "/projects/available_parent_projects"
+    end
+
+    describe "#projects_available_parents with of parameter" do
+      subject { helper.projects_available_parents(of: 42) }
+
+      it_behaves_like "api v3 path", "/projects/available_parent_projects?of=42"
+    end
+
+    describe "#projects_available_parents with workspace_type parameter" do
+      subject { helper.projects_available_parents(workspace_type: :special) }
+
+      it_behaves_like "api v3 path", "/projects/available_parent_projects?workspace_type=special"
     end
   end
 
@@ -324,6 +354,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
       subject { helper.query_project_default(42) }
 
       it_behaves_like "api v3 path", "/projects/42/queries/default"
+    end
+
+    describe "#query_workspace_default" do
+      subject { helper.query_workspace_default(42) }
+
+      it_behaves_like "api v3 path", "/workspaces/42/queries/default"
     end
 
     describe "#query_star" do
@@ -386,6 +422,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
       it_behaves_like "api v3 path", "/projects/42/queries/filter_instance_schemas"
     end
 
+    describe "#query_workspace_filter_instance_schemas" do
+      subject { helper.query_workspace_filter_instance_schemas(42) }
+
+      it_behaves_like "api v3 path", "/workspaces/42/queries/filter_instance_schemas"
+    end
+
     describe "#query_operator" do
       subject { helper.query_operator "=" }
 
@@ -396,6 +438,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
       subject { helper.query_project_schema("42") }
 
       it_behaves_like "api v3 path", "/projects/42/queries/schema"
+    end
+
+    describe "#query_workspace_schema" do
+      subject { helper.query_workspace_schema("42") }
+
+      it_behaves_like "api v3 path", "/workspaces/42/queries/schema"
     end
 
     describe "#query_available_projects" do
@@ -476,6 +524,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
 
       it_behaves_like "api v3 path", "/projects/12/types"
     end
+
+    describe "#types_by_workspace" do
+      subject { helper.types_by_workspace 12 }
+
+      it_behaves_like "api v3 path", "/workspaces/12/types"
+    end
   end
 
   describe "users paths" do
@@ -517,10 +571,22 @@ RSpec.describe API::V3::Utilities::PathHelper do
       it_behaves_like "api v3 path", "/projects/42/versions"
     end
 
+    describe "#versions_by_workspace" do
+      subject { helper.versions_by_workspace 42 }
+
+      it_behaves_like "api v3 path", "/workspaces/42/versions"
+    end
+
     describe "#projects_by_version" do
       subject { helper.projects_by_version 42 }
 
       it_behaves_like "api v3 path", "/versions/42/projects"
+    end
+
+    describe "#workspaces_by_version" do
+      subject { helper.workspaces_by_version 42 }
+
+      it_behaves_like "api v3 path", "/versions/42/workspaces"
     end
   end
 
@@ -591,10 +657,22 @@ RSpec.describe API::V3::Utilities::PathHelper do
       it_behaves_like "api v3 path", "/projects/42/work_packages"
     end
 
+    describe "#work_packages_by_workspace" do
+      subject { helper.work_packages_by_workspace 42 }
+
+      it_behaves_like "api v3 path", "/workspaces/42/work_packages"
+    end
+
     describe "#create_project_work_package_form" do
       subject { helper.create_project_work_package_form 42 }
 
       it_behaves_like "api v3 path", "/projects/42/work_packages/form"
+    end
+
+    describe "#create_workspace_work_package_form" do
+      subject { helper.create_workspace_work_package_form 42 }
+
+      it_behaves_like "api v3 path", "/workspaces/42/work_packages/form"
     end
 
     describe "#watcher" do
@@ -608,6 +686,12 @@ RSpec.describe API::V3::Utilities::PathHelper do
         subject { helper.available_assignees_in_project 42 }
 
         it_behaves_like "api v3 path", "/projects/42/available_assignees"
+      end
+
+      describe "#available_assignees_in_workspace" do
+        subject { helper.available_assignees_in_workspace 42 }
+
+        it_behaves_like "api v3 path", "/workspaces/42/available_assignees"
       end
 
       describe "#available_assignees_in_work_package" do
@@ -664,6 +748,16 @@ RSpec.describe API::V3::Utilities::PathHelper do
 
         it_behaves_like "api v3 path", "/work_packages/schemas/sums"
       end
+    end
+  end
+
+  describe "workspace paths" do
+    it_behaves_like "resource", :workspace, except: %i[create_form show]
+
+    describe "#favor_workspace" do
+      subject { helper.favor_workspace 42 }
+
+      it_behaves_like "api v3 path", "/workspaces/42/favorite"
     end
   end
 

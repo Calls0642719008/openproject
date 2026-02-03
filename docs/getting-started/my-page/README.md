@@ -50,7 +50,7 @@ Press the plus icon and choose from a number of different widgets that can be in
 
 ![A list of available widgets in a popover form on My page in OpenProject](openproject_getting_started_my_page_widget_list.png)
 
-For a **detailed explanation of the widgets**, visit the section in the [project overview](../../user-guide/project-overview/#available-project-overview-widgets).
+For a **detailed explanation of the widgets**, visit ths page on [project widgets](../../user-guide/project-home/project-widgets/).
 
 ### Change position of the widgets
 

@@ -44,11 +44,8 @@ RSpec.describe CustomFields::Hierarchy::UpdateListItemContract do
       it "is valid" do
         [
           { item: luke, label: "Luke Skywalker", short: "LS" },
-          { item: luke, label: "Luke Skywalker" },
-          { item: luke, label: "luke", short: "lu" },
-          { item: luke, short: "LS" },
-          { item: luke, short: "ls" },
-          { item: luke }
+          { item: luke, label: "Luke Skywalker", short: nil },
+          { item: luke, label: "luke", short: "lu" }
         ].each { |params| expect(subject.call(params)).to be_success }
       end
     end
@@ -70,7 +67,7 @@ RSpec.describe CustomFields::Hierarchy::UpdateListItemContract do
       it("is invalid") do
         result = subject.call(params)
         expect(result).to be_failure
-        expect(result.errors.to_h).to include(item: ["must be CustomField::Hierarchy::Item"])
+        expect(result.errors.to_h).to include(item: ["must be CustomField::Hierarchy::Item."])
       end
     end
 
@@ -113,10 +110,12 @@ RSpec.describe CustomFields::Hierarchy::UpdateListItemContract do
         [
           {},
           { item: nil },
-          { item: luke, label: nil },
-          { item: luke, label: 42 },
+          { item: luke, label: nil, short: "lu" },
+          { item: luke, label: 42, short: "lu" },
+          { item: luke, label: "LUKE", short: 42 },
           { item: luke, short: nil },
-          { item: luke, short: 42 }
+          { item: luke, label: "LUKE" },
+          { item: luke, short: "lu" }
         ].each { |params| expect(subject.call(params)).to be_failure }
       end
     end

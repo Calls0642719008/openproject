@@ -50,7 +50,7 @@ export class WidgetProjectFavoritesComponent extends AbstractWidgetComponent imp
 
   ngOnInit() {
     const filters = new ApiV3FilterBuilder();
-    filters.add('favored', '=', true);
+    filters.add('favorited', '=', true);
     filters.add('active', '=', true);
 
     this.projects$ = this

@@ -13,7 +13,7 @@ export class TableActionRenderer {
   constructor(public readonly injector:Injector) {
   }
 
-  public build(workPackage:WorkPackageResource):HTMLElement {
+  public build(workPackage:WorkPackageResource):HTMLTableCellElement{
     // Append details button
     const td = document.createElement('td');
     td.classList.add(tdClassName, contextMenuTdClassName, internalContextMenuColumn.id, 'hide-when-print');

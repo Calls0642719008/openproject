@@ -41,7 +41,7 @@ export class BoardService {
         this
           .apiV3Service
           .boards
-          .allInScope(projectIdentifier as string),
+          .allInScope(projectIdentifier!),
       );
     }
 

@@ -71,26 +71,27 @@ module Storages
 
             context "if both apps are installed", vcr: "nextcloud/capabilities_success" do
               let(:app_enabled?) { true }
-              let(:app_version) { SemanticVersion.parse("2.6.3") }
+              let(:app_version) { SemanticVersion.parse("2.11.0") }
               let(:group_folder_enabled?) { true }
-              let(:group_folder_version) { SemanticVersion.parse("16.0.7") }
+              let(:group_folder_version) { SemanticVersion.parse("20.1.7") }
 
               it_behaves_like "a successful Nextcloud capabilities response"
             end
 
-            context "if group folder app is installed but disabled",
-                    vcr: "nextcloud/capabilities_success_group_folder_disabled" do
+            context "if team folder app is installed but disabled",
+                    vcr: "nextcloud/capabilities_success_team_folders_disabled" do
               let(:app_enabled?) { true }
-              let(:app_version) { SemanticVersion.parse("2.6.3") }
+              let(:app_version) { SemanticVersion.parse("2.11.0") }
               let(:group_folder_enabled?) { false }
-              let(:group_folder_version) { SemanticVersion.parse("16.0.7") }
+              let(:group_folder_version) { SemanticVersion.parse("20.1.7") }
 
               it_behaves_like "a successful Nextcloud capabilities response"
             end
 
-            context "if group folder app is not installed", vcr: "nextcloud/capabilities_success_group_folder_not_installed" do
+            context "if team folder app is not installed",
+                    vcr: "nextcloud/capabilities_success_team_folders_not_installed" do
               let(:app_enabled?) { true }
-              let(:app_version) { SemanticVersion.parse("2.6.3") }
+              let(:app_version) { SemanticVersion.parse("2.11.0") }
               let(:group_folder_enabled?) { false }
               let(:group_folder_version) { nil }
 

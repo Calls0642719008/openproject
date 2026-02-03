@@ -74,9 +74,17 @@ class WorkPackages::UpdateAncestorsService < BaseServices::BaseCallable
       end
   end
 
+  def changes?(work_package)
+    changes_before = work_package.changes
+    yield
+    changes_after = work_package.changes
+    changes_before != changes_after
+  end
+
   def save_updated_work_packages(updated_work_packages)
     updated_initiators, updated_ancestors = updated_work_packages.partition { initiator?(it) }
 
+    # TODO: Can we do better and not save if not changed?
     # Send notifications for initiator updates
     success = updated_initiators.all? { |wp| wp.save(validate: false) }
     # Do not send notifications for parent updates
@@ -168,10 +176,13 @@ class WorkPackages::UpdateAncestorsService < BaseServices::BaseCallable
   #
   # This method is called only when parent or parent_id attribute of the
   # initiator work package has been changed
-  def switch_to_automatic_mode(work_package, loader)
+  def switch_to_automatic_mode(work_package, loader) # rubocop:disable Metrics/AbcSize
     # it only applies to the initiator's direct parent
     return if initiator_work_package.parent_id.nil?
     return if initiator_work_package.parent_id != work_package.id
+
+    # it does not apply if the child was deleted
+    return if initiator_work_package.destroyed?
 
     # it only applies if there is no bulk duplicate in progress: if it's a copy, the copy must stay exact
     return if state.bulk_duplicate_in_progress

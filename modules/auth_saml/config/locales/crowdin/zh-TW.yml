@@ -56,6 +56,7 @@ zh-TW:
       label_mapping: 對應
       label_requested_attribute_for: "要求的屬性為： %{attribute}"
       no_results_table: 目前尚未定義 SAML 身分提供者。
+      notice_created: 新的 SAML 身分提供者已成功建立。
       plural: SAML 身分提供商
       singular: SAML 身分提供商
       requested_attributes: 要求的屬性
@@ -110,7 +111,7 @@ zh-TW:
       idp_sso_service_url: >
         身分提供商登入端點的 URL。
       idp_slo_service_url: >
-        身分提供商登入端點的 URL。
+        身份提供者登出端點的 URL。
       idp_cert: >
         輸入身分提供者的 X509 PEM 格式公開憑證。您可以輸入多個憑證，並以換行分隔。
       name_identifier_format: >

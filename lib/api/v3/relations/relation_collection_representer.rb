@@ -32,7 +32,6 @@ module API
       # TODO: Usage of this is to be replaced by its paginated equivalent once the front end
       # handles paginated responses.
       class RelationCollectionRepresenter < ::API::Decorators::UnpaginatedCollection
-        self.to_eager_load = ::API::V3::Relations::RelationRepresenter.to_eager_load
       end
     end
   end

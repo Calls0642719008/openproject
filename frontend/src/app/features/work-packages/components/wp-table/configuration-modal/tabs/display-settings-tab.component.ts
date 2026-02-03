@@ -3,7 +3,7 @@ import { TabComponent } from 'core-app/features/work-packages/components/wp-tabl
 import { WorkPackageViewGroupByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-group-by.service';
 import { WorkPackageViewHierarchiesService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-hierarchy.service';
 import { WorkPackageViewSumService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sum.service';
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { QueryGroupByResource } from 'core-app/features/hal/resources/query-group-by-resource';
 
 @Component({
@@ -11,7 +11,7 @@ import { QueryGroupByResource } from 'core-app/features/hal/resources/query-grou
   templateUrl: './display-settings-tab.component.html',
   standalone: false,
 })
-export class WpTableConfigurationDisplaySettingsTabComponent implements TabComponent {
+export class WpTableConfigurationDisplaySettingsTabComponent implements TabComponent, OnInit {
   // Display mode
   public displayMode:'hierarchy'|'grouped'|'default' = 'default';
 

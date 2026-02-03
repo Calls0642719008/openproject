@@ -1,24 +1,26 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  constraints(project_id: Regexp.new("(?!(#{Project::RESERVED_IDENTIFIERS.join('|')})$)(\\w|-)+"), format: :html) do
-    get "projects/:project_id",
-        to: "overviews/overviews#show",
-        as: :project_overview
-    get "projects/:project_id/project_custom_fields_sidebar", to: "overviews/overviews#project_custom_fields_sidebar",
-                                                              as: :project_custom_fields_sidebar
-    get "projects/:project_id/project_custom_field_section_dialog/:section_id", to: "overviews/overviews#project_custom_field_section_dialog",
-                                                                                as: :project_custom_field_section_dialog
-    put "projects/:project_id/update_project_custom_values/:section_id", to: "overviews/overviews#update_project_custom_values",
-                                                                         as: :update_project_custom_values
+  constraints(Constraints::ProjectIdentifier) do
+    scope "projects/:project_id", as: "project" do
+      scope module: "overviews" do
+        resource :overview, path: "/", only: [:show] do
+          constraints(Constraints::FeatureDecision.new(:new_project_overview)) do
+            get :dashboard, on: :member
+          end
+        end
 
-    get "projects/:project_id/project_life_cycle_sidebar",
-        to: "overviews/overviews#project_life_cycle_sidebar", as: :project_life_cycle_sidebar
+        controller :overviews do
+          get "project_custom_fields_sidebar" => :project_custom_fields_sidebar, as: :custom_fields_sidebar
+          get "project_life_cycle_sidebar" => :project_life_cycle_sidebar, as: :life_cycle_sidebar
+        end
+
+        resources :project_custom_fields, only: %i[edit update], as: :custom_fields
+      end
+    end
   end
 
   resources :project_phases, controller: "overviews/project_phases", only: %i[edit update] do
-    member do
-      put :preview
-    end
+    put :preview, on: :member
   end
 end

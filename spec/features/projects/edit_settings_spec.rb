@@ -34,9 +34,10 @@ RSpec.describe "Projects", "editing settings", :js do
   include_context "ng-select-autocomplete helpers"
 
   let(:permissions) { %i(edit_project view_project_attributes edit_project_attributes) }
+  let(:project_memberships) { { project => permissions } }
 
   current_user do
-    create(:user, member_with_permissions: { project => permissions })
+    create(:user, member_with_permissions: project_memberships)
   end
 
   shared_let(:project) do
@@ -116,14 +117,14 @@ RSpec.describe "Projects", "editing settings", :js do
     end
   end
 
-  describe "editing project status" do
+  describe "editing status" do
     before do
       Pages::Projects::Settings::General.new(project).visit!
     end
 
     it "sets the project status" do
-      within_section "Project status" do
-        click_on "Edit project status"
+      within_section "Status" do
+        click_on "Edit status"
 
         within :menu, "Not set" do
           find(:menuitem, "Not started").click
@@ -132,8 +133,8 @@ RSpec.describe "Projects", "editing settings", :js do
 
       expect_and_dismiss_flash type: :success, message: "Successful update."
 
-      within_section "Project status" do
-        button = find_button("Edit project status")
+      within_section "Status" do
+        button = find_button("Edit status")
         expect(button).to have_text "Not started"
         button.click
 
@@ -142,8 +143,8 @@ RSpec.describe "Projects", "editing settings", :js do
     end
 
     it "unsets the project status" do
-      within_section "Project status" do
-        click_on "Edit project status"
+      within_section "Status" do
+        click_on "Edit status"
 
         within :menu, "Not set" do
           find(:menuitem, "Finished").click
@@ -152,8 +153,8 @@ RSpec.describe "Projects", "editing settings", :js do
 
       expect_and_dismiss_flash type: :success, message: "Successful update."
 
-      within_section "Project status" do
-        click_on "Edit project status"
+      within_section "Status" do
+        click_on "Edit status"
 
         within :menu, "Finished" do
           find(:menuitem, "Not set").click
@@ -162,8 +163,8 @@ RSpec.describe "Projects", "editing settings", :js do
 
       expect_and_dismiss_flash type: :success, message: "Successful update."
 
-      within_section "Project status" do
-        button = find_button("Edit project status")
+      within_section "Status" do
+        button = find_button("Edit status")
         expect(button).to have_text "Not set"
         button.click
 
@@ -172,16 +173,16 @@ RSpec.describe "Projects", "editing settings", :js do
     end
 
     it "updates the project status description" do
-      within_section "Project status" do
-        fill_in_rich_text "Project status description", with: "Light-years behind 🥺"
+      within_section "Status" do
+        fill_in_rich_text "Status description", with: "Light-years behind 🥺"
 
         click_on "Update status description"
       end
 
       expect_and_dismiss_flash type: :success, message: "Successful update."
 
-      within_section "Project status" do
-        expect(page).to have_selector :rich_text, "Project status description", text: "Light-years behind 🥺"
+      within_section "Status" do
+        expect(page).to have_selector :rich_text, "Status description", text: "Light-years behind 🥺"
       end
     end
   end
@@ -230,7 +231,7 @@ RSpec.describe "Projects", "editing settings", :js do
     end
   end
 
-  describe "attribute help texts", :selenium do
+  describe "attribute help texts" do
     let(:general_page) { Pages::Projects::Settings::General.new(project) }
 
     context "without attribute help texts defined" do
@@ -241,13 +242,13 @@ RSpec.describe "Projects", "editing settings", :js do
       it "shows field labels without help text link" do
         general_page.expect_field_label_without_help_text "Name"
         general_page.expect_field_label_without_help_text "Description"
-        general_page.expect_field_label_without_help_text "Project status description"
+        general_page.expect_field_label_without_help_text "Status description"
         general_page.expect_field_label_without_help_text "Subproject of"
       end
 
       it "does not show help text link next to status button" do
-        within_section "Project status" do
-          button = find_button("Edit project status")
+        within_section "Status" do
+          button = find_button("Edit status")
           expect(page).to have_no_link accessible_name: "Show help text", right_of: button
         end
       end
@@ -267,13 +268,13 @@ RSpec.describe "Projects", "editing settings", :js do
       it "shows field labels with help text link" do
         general_page.expect_field_label_with_help_text "Name"
         general_page.expect_field_label_with_help_text "Description"
-        general_page.expect_field_label_with_help_text "Project status description"
+        general_page.expect_field_label_with_help_text "Status description"
         general_page.expect_field_label_with_help_text "Subproject of"
       end
 
-      it "shows help text link next to status button" do
-        within_section "Project status" do
-          button = find_button("Edit project status")
+      it "shows help text link next to status button", :selenium do
+        within_section "Status" do
+          button = find_button("Edit status")
           expect(page).to have_link accessible_name: "Show help text", right_of: button
         end
       end
@@ -289,6 +290,32 @@ RSpec.describe "Projects", "editing settings", :js do
         end
         expect(page).to have_no_modal "Description"
       end
+    end
+  end
+
+  describe "workspace type badges in Subproject of field", with_flag: { portfolio_models: true } do
+    shared_let(:portfolio) { create(:portfolio, name: "Parent Portfolio") }
+    shared_let(:program) { create(:program, name: "Parent Program") }
+    shared_let(:regular_project) { create(:project, name: "Regular Project") }
+    let(:parent_permissions) { %i[add_subprojects] }
+
+    let(:project_memberships) do
+      { project => permissions,
+        portfolio => parent_permissions,
+        program => parent_permissions,
+        regular_project => parent_permissions }
+    end
+
+    it "displays workspace type badges for portfolios and programs" do
+      general_page = Pages::Projects::Settings::General.new(project)
+      general_page.visit!
+
+      parent_field = general_page.parent_project_field
+
+      # Verify badges for different project types
+      parent_field.expect_option("Parent Portfolio", workspace_badge: "Portfolio")
+      parent_field.expect_option("Parent Program", workspace_badge: "Program")
+      parent_field.expect_option("Regular Project")
     end
   end
 end

@@ -79,7 +79,7 @@ See COPYRIGHT and LICENSE files for more details.
       </thead>
       <tbody>
         <% projects_types_id = project.types.pluck(:id) %>
-        <% Type.includes(:color).find_each do |type| %>
+        <% Type.includes(:color).reorder('lower(name)').each do |type| # rubocop:disable Rails/FindEach %>
           <tr>
             <td>
               <%= icon_for_type(type) %>

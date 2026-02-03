@@ -64,7 +64,7 @@ module Storages
 
     # rubocop:disable Metrics/AbcSize
     def prepare_remote_folders
-      info "Preparing the remote group folder #{group_folder}"
+      info "Preparing the remote team folder #{group_folder}"
 
       remote_root_folder_map.bind do |remote_folders|
         info "Found #{remote_folders.count} remote folders"
@@ -160,7 +160,7 @@ module Storages
     end
 
     def ensure_root_folder_permissions(root_folder_id)
-      info "Setting needed permissions for user #{username} and group #{group} on the root group folder."
+      info "Setting needed permissions for user #{username} and group #{group} on the root team folder."
       permissions = [
         { user_id: username, permissions: FILE_PERMISSIONS },
         { group_id: group, permissions: [:read_files] }

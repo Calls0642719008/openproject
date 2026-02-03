@@ -46,6 +46,14 @@ module WorkPackages
           @grouped_emoji_reactions = grouped_emoji_reactions
         end
 
+        def menu_id
+          ItemComponent::AddReactions.menu_id(journal)
+        end
+
+        def reactable?
+          ItemComponent::AddReactions.new(journal:, grouped_emoji_reactions: {}).render?
+        end
+
         private
 
         attr_reader :journal, :filter, :grouped_emoji_reactions

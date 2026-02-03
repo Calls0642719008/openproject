@@ -32,10 +32,18 @@ See COPYRIGHT and LICENSE files for more details.
   <fieldset class="simple-filters--container <%= collapsed_class %>" data-members-form-target="filterContainer">
     <legend><%= t(:label_filter_plural) %></legend>
     <% if has_close_icon? %>
-      <a title="<%= t("js.close_form_title") %>"
-         data-action="members-form#toggleMemberFilter"
-         class="toggle-member-filter-link simple-filters--close icon-context icon-close">
-      </a>
+      <%=
+        render(
+          Primer::Beta::IconButton.new(
+            icon: :x,
+            scheme: :invisible,
+            classes: "simple-filters--close",
+            tooltip_direction: :se,
+            aria: { label: t("js.close_form_title") },
+            data: { action: "members-form#toggleMemberFilter" }
+          )
+        )
+      %>
     <% end %>
     <ul class="simple-filters--filters">
       <% if has_statuses? %>

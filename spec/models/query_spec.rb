@@ -31,7 +31,7 @@
 require "spec_helper"
 
 RSpec.describe Query,
-               with_ee: %i[baseline_comparison conditional_highlighting work_package_query_relation_columns] do
+               with_ee: %i[baseline_comparison work_package_query_relation_columns] do
   let(:query) { build(:query) }
   let(:project) { create(:project) }
   let(:project_member) { create(:user, member_with_permissions: { project => [:view_project] }) }
@@ -231,73 +231,58 @@ RSpec.describe Query,
   end
 
   describe "highlighting" do
-    context "with EE" do
-      it "#highlighted_attributes accepts valid values" do
-        query.highlighted_attributes = %w(status priority due_date)
-        expect(query).to be_valid
-      end
-
-      it "#highlighted_attributes rejects invalid values" do
-        query.highlighted_attributes = %w(status bogus)
-        expect(query).not_to be_valid
-      end
-
-      it "#hightlighting_mode accepts non-present values" do
-        query.highlighting_mode = nil
-        expect(query).to be_valid
-
-        query.highlighting_mode = ""
-        expect(query).to be_valid
-      end
-
-      it "#hightlighting_mode rejects invalid values" do
-        query.highlighting_mode = "bogus"
-        expect(query).not_to be_valid
-      end
-
-      it "#available_highlighting_columns returns highlightable columns" do
-        available_columns = {
-          highlightable1: {
-            highlightable: true
-          },
-          highlightable2: {
-            highlightable: true
-          },
-          no_highlight: {}
-        }
-
-        allow(Queries::WorkPackages::Selects::PropertySelect).to receive(:property_selects)
-                                                                   .and_return(available_columns)
-
-        expect(query.available_highlighting_columns.map(&:name)).to eq(%i{highlightable1 highlightable2})
-      end
-
-      describe "#highlighted_columns returns a valid subset of Columns" do
-        let(:highlighted_attributes) { %i{status priority due_date foo} }
-
-        before do
-          query.highlighted_attributes = highlighted_attributes
-        end
-
-        it "removes the offending values" do
-          query.valid_subset!
-
-          expect(query.highlighted_columns.map(&:name))
-            .to match_array %i{status priority due_date}
-        end
-      end
+    it "#highlighted_attributes accepts valid values" do
+      query.highlighted_attributes = %w(status priority due_date)
+      expect(query).to be_valid
     end
 
-    context "without EE", with_ee: false do
-      it "always returns :none as highlighting_mode" do
-        query.highlighting_mode = "status"
-        expect(query.highlighting_mode).to eq(:none)
+    it "#highlighted_attributes rejects invalid values" do
+      query.highlighted_attributes = %w(status bogus)
+      expect(query).not_to be_valid
+    end
+
+    it "#hightlighting_mode accepts non-present values" do
+      query.highlighting_mode = nil
+      expect(query).to be_valid
+
+      query.highlighting_mode = ""
+      expect(query).to be_valid
+    end
+
+    it "#hightlighting_mode rejects invalid values" do
+      query.highlighting_mode = "bogus"
+      expect(query).not_to be_valid
+    end
+
+    it "#available_highlighting_columns returns highlightable columns" do
+      available_columns = {
+        highlightable1: {
+          highlightable: true
+        },
+        highlightable2: {
+          highlightable: true
+        },
+        no_highlight: {}
+      }
+
+      allow(Queries::WorkPackages::Selects::PropertySelect).to receive(:property_selects)
+                                                                 .and_return(available_columns)
+
+      expect(query.available_highlighting_columns.map(&:name)).to eq(%i{highlightable1 highlightable2})
+    end
+
+    describe "#highlighted_columns returns a valid subset of Columns" do
+      let(:highlighted_attributes) { %i{status priority due_date foo} }
+
+      before do
+        query.highlighted_attributes = highlighted_attributes
       end
 
-      it "always returns nil as highlighted_attributes" do
-        query.highlighting_mode = "inline"
-        query.highlighted_attributes = ["status"]
-        expect(query.highlighted_attributes).to be_empty
+      it "removes the offending values" do
+        query.valid_subset!
+
+        expect(query.highlighted_columns.map(&:name))
+          .to match_array %i{status priority due_date}
       end
     end
   end
@@ -370,11 +355,11 @@ RSpec.describe Query,
         # its own expectation again. Hence, we must set up a double.
         allow(WorkPackageCustomField)
           .to receive(:all)
-          .and_return empty_wp_relation
+                .and_return empty_wp_relation
 
         allow(Type)
           .to receive(:all)
-          .and_return []
+                .and_return []
 
         query.displayable_columns
 
@@ -777,7 +762,7 @@ RSpec.describe Query,
       context "without EE", with_ee: false do
         it "removes the forbidden values" do
           expect(query.timestamps)
-          .to match_array %w{oneDayAgo@12:00+00:00 PT0S}
+            .to match_array %w{oneDayAgo@12:00+00:00 PT0S}
         end
       end
 

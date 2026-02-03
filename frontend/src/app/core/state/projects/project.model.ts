@@ -28,5 +28,6 @@ export interface IProject {
   createdAt:string;
   updatedAt:string;
 
+  _type:string;
   _links:IProjectHalResourceLinks;
 }

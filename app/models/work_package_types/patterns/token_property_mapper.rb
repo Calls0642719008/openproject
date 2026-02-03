@@ -31,41 +31,51 @@
 module WorkPackageTypes
   module Patterns
     class TokenPropertyMapper
+      STRING_OR_NIL = ->(v) { v&.to_s }
+      ARRAY = ->(v) { v.compact.presence&.join(", ") }
+      DATE = ->(v) { v&.strftime(Setting.date_format || "%Y-%m-%d") }
+      DURATION = ->(v) { DurationConverter.output(v) }
+
+      class << self
+        def attribute(key, label_fn, value_fn, formatter = STRING_OR_NIL)
+          AttributeToken.new(key, label_fn, value_fn, formatter)
+        end
+      end
       # rubocop:disable Layout/LineLength
       BASE_ATTRIBUTE_TOKENS = [
-        AttributeToken.new(:id, -> { WorkPackage.human_attribute_name(:id) }, ->(wp) { wp.id }),
-        AttributeToken.new(:accountable, -> { WorkPackage.human_attribute_name(:responsible) }, ->(wp) { wp.responsible&.name }),
-        AttributeToken.new(:assignee, -> { WorkPackage.human_attribute_name(:assigned_to) }, ->(wp) { wp.assigned_to&.name }),
-        AttributeToken.new(:author, -> { WorkPackage.human_attribute_name(:author) }, ->(wp) { wp.author&.name }),
-        AttributeToken.new(:category, -> { WorkPackage.human_attribute_name(:category) }, ->(wp) { wp.category&.name }),
-        AttributeToken.new(:creation_date, -> { WorkPackage.human_attribute_name(:created_at) }, ->(wp) { wp.created_at }),
-        AttributeToken.new(:estimated_time, -> { WorkPackage.human_attribute_name(:estimated_hours) }, ->(wp) { wp.estimated_hours }),
-        AttributeToken.new(:remaining_time, -> { WorkPackage.human_attribute_name(:remaining_hours) }, ->(wp) { wp.remaining_hours }),
-        AttributeToken.new(:finish_date, -> { WorkPackage.human_attribute_name(:due_date) }, ->(wp) { wp.due_date }),
-        AttributeToken.new(:parent_id, -> { WorkPackage.human_attribute_name(:id) }, ->(parent) { parent.id }),
-        AttributeToken.new(:parent_assignee, -> { WorkPackage.human_attribute_name(:assigned_to) }, ->(parent) { parent.assigned_to&.name }),
-        AttributeToken.new(:parent_author, -> { WorkPackage.human_attribute_name(:author) }, ->(parent) { parent.author&.name }),
-        AttributeToken.new(:parent_category, -> { WorkPackage.human_attribute_name(:category) }, ->(parent) { parent.category&.name }),
-        AttributeToken.new(:parent_creation_date, -> { WorkPackage.human_attribute_name(:created_at) }, ->(parent) { parent.created_at }),
-        AttributeToken.new(:parent_estimated_time, -> { WorkPackage.human_attribute_name(:estimated_hours) }, ->(parent) { parent.estimated_hours }),
-        AttributeToken.new(:parent_remaining_time, -> { WorkPackage.human_attribute_name(:remaining_hours) }, ->(parent) { parent.remaining_hours }),
-        AttributeToken.new(:parent_finish_date, -> { WorkPackage.human_attribute_name(:due_date) }, ->(parent) { parent.due_date }),
-        AttributeToken.new(:parent_priority, -> { WorkPackage.human_attribute_name(:priority) }, ->(parent) { parent.priority }),
-        AttributeToken.new(:parent_subject, -> { WorkPackage.human_attribute_name(:subject) }, ->(parent) { parent.subject }),
-        AttributeToken.new(:parent_status, -> { WorkPackage.human_attribute_name(:status) }, ->(parent) { parent.status&.name }),
-        AttributeToken.new(:parent_type, -> { WorkPackage.human_attribute_name(:type) }, ->(parent) { parent.type&.name }),
-        AttributeToken.new(:parent_version, -> { WorkPackage.human_attribute_name(:version) }, ->(parent) { parent.version&.name }),
-        AttributeToken.new(:priority, -> { WorkPackage.human_attribute_name(:priority) }, ->(wp) { wp.priority }),
-        AttributeToken.new(:project_id, -> { Project.human_attribute_name(:id) }, ->(project) { project.id }),
-        AttributeToken.new(:project_active, -> { Project.human_attribute_name(:active) }, ->(project) { project.active? }),
-        AttributeToken.new(:project_name, -> { Project.human_attribute_name(:name) }, ->(project) { project.name }),
-        AttributeToken.new(:project_status, -> { Project.human_attribute_name(:status_code) }, ->(project) { project.status_code && I18n.t("activerecord.attributes.project.status_codes.#{project.status_code}") }),
-        AttributeToken.new(:project_parent, -> { Project.human_attribute_name(:parent) }, ->(project) { project.parent_id }),
-        AttributeToken.new(:project_public, -> { Project.human_attribute_name(:public) }, ->(project) { project.public? }),
-        AttributeToken.new(:start_date, -> { WorkPackage.human_attribute_name(:start_date) }, ->(wp) { wp.start_date }),
-        AttributeToken.new(:status, -> { WorkPackage.human_attribute_name(:status) }, ->(wp) { wp.status&.name }),
-        AttributeToken.new(:type, -> { WorkPackage.human_attribute_name(:type) }, ->(wp) { wp.type&.name }),
-        AttributeToken.new(:version, -> { WorkPackage.human_attribute_name(:version) }, ->(wp) { wp.version&.name })
+        attribute(:id, -> { WorkPackage.human_attribute_name(:id) }, ->(wp) { wp.id }),
+        attribute(:accountable, -> { WorkPackage.human_attribute_name(:responsible) }, ->(wp) { wp.responsible }),
+        attribute(:assignee, -> { WorkPackage.human_attribute_name(:assigned_to) }, ->(wp) { wp.assigned_to }),
+        attribute(:author, -> { WorkPackage.human_attribute_name(:author) }, ->(wp) { wp.author }),
+        attribute(:category, -> { WorkPackage.human_attribute_name(:category) }, ->(wp) { wp.category }),
+        attribute(:creation_date, -> { WorkPackage.human_attribute_name(:created_at) }, ->(wp) { wp.created_at }, DATE),
+        attribute(:estimated_time, -> { WorkPackage.human_attribute_name(:estimated_hours) }, ->(wp) { wp.estimated_hours }, DURATION),
+        attribute(:remaining_time, -> { WorkPackage.human_attribute_name(:remaining_hours) }, ->(wp) { wp.remaining_hours }, DURATION),
+        attribute(:finish_date, -> { WorkPackage.human_attribute_name(:due_date) }, ->(wp) { wp.due_date }, DATE),
+        attribute(:parent_id, -> { WorkPackage.human_attribute_name(:id) }, ->(parent) { parent.id }),
+        attribute(:parent_assignee, -> { WorkPackage.human_attribute_name(:assigned_to) }, ->(parent) { parent.assigned_to }),
+        attribute(:parent_author, -> { WorkPackage.human_attribute_name(:author) }, ->(parent) { parent.author }),
+        attribute(:parent_category, -> { WorkPackage.human_attribute_name(:category) }, ->(parent) { parent.category }),
+        attribute(:parent_creation_date, -> { WorkPackage.human_attribute_name(:created_at) }, ->(parent) { parent.created_at }, DATE),
+        attribute(:parent_estimated_time, -> { WorkPackage.human_attribute_name(:estimated_hours) }, ->(parent) { parent.estimated_hours }, DURATION),
+        attribute(:parent_remaining_time, -> { WorkPackage.human_attribute_name(:remaining_hours) }, ->(parent) { parent.remaining_hours }, DURATION),
+        attribute(:parent_finish_date, -> { WorkPackage.human_attribute_name(:due_date) }, ->(parent) { parent.due_date }, DATE),
+        attribute(:parent_priority, -> { WorkPackage.human_attribute_name(:priority) }, ->(parent) { parent.priority }),
+        attribute(:parent_subject, -> { WorkPackage.human_attribute_name(:subject) }, ->(parent) { parent.subject }),
+        attribute(:parent_status, -> { WorkPackage.human_attribute_name(:status) }, ->(parent) { parent.status }),
+        attribute(:parent_type, -> { WorkPackage.human_attribute_name(:type) }, ->(parent) { parent.type }),
+        attribute(:parent_version, -> { WorkPackage.human_attribute_name(:version) }, ->(parent) { parent.version }),
+        attribute(:priority, -> { WorkPackage.human_attribute_name(:priority) }, ->(wp) { wp.priority }),
+        attribute(:project_id, -> { Project.human_attribute_name(:id) }, ->(project) { project.id }),
+        attribute(:project_active, -> { Project.human_attribute_name(:active) }, ->(project) { project.active? }),
+        attribute(:project_name, -> { Project.human_attribute_name(:name) }, ->(project) { project }),
+        attribute(:project_status, -> { Project.human_attribute_name(:status_code) }, ->(project) { project.status_code && I18n.t("activerecord.attributes.project.status_codes.#{project.status_code}") }),
+        attribute(:project_parent, -> { Project.human_attribute_name(:parent) }, ->(project) { project.parent_id }),
+        attribute(:project_public, -> { Project.human_attribute_name(:public) }, ->(project) { project.public? }),
+        attribute(:start_date, -> { WorkPackage.human_attribute_name(:start_date) }, ->(wp) { wp.start_date }, DATE),
+        attribute(:status, -> { WorkPackage.human_attribute_name(:status) }, ->(wp) { wp.status }),
+        attribute(:type, -> { WorkPackage.human_attribute_name(:type) }, ->(wp) { wp.type }),
+        attribute(:version, -> { WorkPackage.human_attribute_name(:version) }, ->(wp) { wp.version })
       ].freeze
       # rubocop:enable Layout/LineLength
 
@@ -110,7 +120,14 @@ module WorkPackageTypes
       end
 
       def tokenize(custom_field_scope, prefix = nil)
-        custom_field_scope.pluck(:name, :id).map do |name, id|
+        custom_field_scope.pluck(:name, :id, :field_format, :multi_value).map do |name, id, format, multiple|
+          formatter = if multiple
+                        ARRAY
+                      elsif format == "date"
+                        DATE
+                      else
+                        ->(v) { v.is_a?(Symbol) ? v : STRING_OR_NIL.call(v) }
+                      end
           AttributeToken.new(
             :"#{prefix}custom_field_#{id}",
             -> { name },
@@ -119,7 +136,8 @@ module WorkPackageTypes
               return :attribute_not_available unless context.respond_to?(key)
 
               context.public_send(key)
-            end
+            end,
+            formatter
           )
         end
       end

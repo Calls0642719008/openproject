@@ -95,7 +95,7 @@ export default class CustomFieldsController extends Controller {
   }
 
   moveRowUp(event:{ target:HTMLElement }) {
-    const row = event.target.closest('tr') as HTMLTableRowElement;
+    const row = event.target.closest('tr')!;
     const idx = this.customOptionRowTargets.indexOf(row);
     if (idx > 0) {
       this.customOptionRowTargets[idx - 1].before(row);
@@ -105,7 +105,7 @@ export default class CustomFieldsController extends Controller {
   }
 
   moveRowDown(event:{ target:HTMLElement }) {
-    const row = event.target.closest('tr') as HTMLTableRowElement;
+    const row = event.target.closest('tr')!;
     const idx = this.customOptionRowTargets.indexOf(row);
     if (idx < this.customOptionRowTargets.length - 1) {
       this.customOptionRowTargets[idx + 1].after(row);
@@ -115,7 +115,7 @@ export default class CustomFieldsController extends Controller {
   }
 
   moveRowToTheTop(event:{ target:HTMLElement }) {
-    const row = event.target.closest('tr') as HTMLTableRowElement;
+    const row = event.target.closest('tr')!;
     const first = this.customOptionRowTargets[0];
 
     if (first && first !== row) {
@@ -126,7 +126,7 @@ export default class CustomFieldsController extends Controller {
   }
 
   moveRowToTheBottom(event:{ target:HTMLElement }) {
-    const row = event.target.closest('tr') as HTMLTableRowElement;
+    const row = event.target.closest('tr')!;
     const last = this.customOptionRowTargets[this.customOptionRowTargets.length - 1];
 
     if (last && last !== row) {
@@ -222,10 +222,9 @@ export default class CustomFieldsController extends Controller {
 
     // Setup autoscroll
     void window.OpenProject.getPluginContext().then((pluginContext) => {
-      // eslint-disable-next-line no-new
       new pluginContext.classes.DomAutoscrollService(
         [
-          document.getElementById('content-body') as HTMLElement,
+          document.getElementById('content-body')!,
         ],
         {
           margin: 25,

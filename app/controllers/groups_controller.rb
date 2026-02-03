@@ -30,6 +30,7 @@
 
 class GroupsController < ApplicationController
   include GroupsHelper
+
   layout "admin"
 
   before_action :require_admin, except: %i[show]
@@ -77,7 +78,7 @@ class GroupsController < ApplicationController
 
     if service_call.success?
       flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to(groups_path)
+      redirect_to(groups_path, status: :see_other)
     else
       render action: :edit, status: :unprocessable_entity
     end
@@ -89,7 +90,7 @@ class GroupsController < ApplicationController
       .call
 
     flash[:info] = I18n.t(:notice_deletion_scheduled)
-    redirect_to(action: :index)
+    redirect_to(action: :index, status: :see_other)
   end
 
   def add_users
@@ -139,7 +140,11 @@ class GroupsController < ApplicationController
       .call
 
     flash[:notice] = I18n.t :notice_successful_delete
-    redirect_to controller: "/groups", action: "edit", id: @group, tab: redirected_to_tab(member)
+    redirect_to controller: "/groups",
+                action: "edit",
+                id: @group,
+                tab: redirected_to_tab(member),
+                status: :see_other
   end
 
   protected
@@ -159,7 +164,7 @@ class GroupsController < ApplicationController
   def visible_group_members?
     current_user.admin? ||
       current_user.allowed_in_any_project?(:manage_members) ||
-      Group.in_project(Project.allowed_to(current_user, :view_members)).exists?
+      @group.projects.exists?(id: Project.allowed_to(current_user, :view_members))
   end
 
   def respond_membership_altered(service_call)
@@ -187,6 +192,10 @@ class GroupsController < ApplicationController
       service_call.apply_flash_message!(flash)
     end
 
-    redirect_to controller: "/groups", action: "edit", id: @group, tab: "users"
+    redirect_to controller: "/groups",
+                action: "edit",
+                id: @group,
+                tab: "users",
+                status: :see_other
   end
 end

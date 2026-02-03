@@ -31,6 +31,14 @@ module API
     module Projects
       class UpdateFormRepresenter < FormRepresenter
         include API::Decorators::UpdateForm
+
+        def resource_url
+          api_v3_paths.send(represented.workspace_type, represented.id)
+        end
+
+        def form_url
+          api_v3_paths.send(:"#{represented.workspace_type}_form", represented.id)
+        end
       end
     end
   end

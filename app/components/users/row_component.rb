@@ -79,13 +79,23 @@ module Users
     end
 
     def status_link
-      # Don't show for current user
-      return if user.id == table.current_user.id
-
-      # Don't show if non-admin
-      return unless table.current_user.admin?
+      return if user_is_current_user?
+      return unless current_user_allowed_to_manage_users?
+      return if user_is_admin_and_current_user_is_no_admin?
 
       helpers.change_user_status_links user
+    end
+
+    def user_is_current_user?
+      user.id == table.current_user.id
+    end
+
+    def current_user_allowed_to_manage_users?
+      table.current_user.allowed_globally?(:manage_user)
+    end
+
+    def user_is_admin_and_current_user_is_no_admin?
+      user.admin? && !table.current_user.admin?
     end
 
     def column_css_class(column)

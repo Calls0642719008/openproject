@@ -4,6 +4,7 @@ import { rowGroupClassName } from 'core-app/features/work-packages/components/wp
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
 import { WorkPackageViewCollapsedGroupsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-collapsed-groups.service';
 import { TableEventComponent, TableEventHandler } from '../table-handler-registry';
+import { EventType } from 'core-app/features/work-packages/routing/wp-view-base/event-handling/event-handler-registry';
 
 export class GroupRowHandler implements TableEventHandler {
   // Injections
@@ -14,8 +15,8 @@ export class GroupRowHandler implements TableEventHandler {
   constructor(public readonly injector:Injector) {
   }
 
-  public get EVENT() {
-    return 'click.table.groupheader';
+  public get EVENT():EventType {
+    return 'click';
   }
 
   public get SELECTOR() {
@@ -23,15 +24,15 @@ export class GroupRowHandler implements TableEventHandler {
   }
 
   public eventScope(view:TableEventComponent) {
-    return jQuery(view.workPackageTable.tbody);
+    return view.workPackageTable.tbody;
   }
 
-  public handleEvent(view:TableEventComponent, evt:JQuery.TriggeredEvent) {
+  public handleEvent(view:TableEventComponent, evt:Event) {
     evt.preventDefault();
     evt.stopPropagation();
 
-    const groupHeader = jQuery(evt.target).parents(`.${rowGroupClassName}`);
-    const groupIdentifier = groupHeader.data('groupIdentifier');
+    const groupHeader = (evt.target as HTMLElement).closest<HTMLElement>(`.${rowGroupClassName}`);
+    const groupIdentifier = groupHeader?.dataset.groupIdentifier ?? '';
 
     this.workPackageViewCollapsedGroupsService.toggleGroupCollapseState(groupIdentifier);
   }

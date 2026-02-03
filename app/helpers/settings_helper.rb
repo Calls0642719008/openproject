@@ -80,6 +80,14 @@ module SettingsHelper
     end
   end
 
+  def setting_url_field(setting, options = {})
+    setting_field_wrapper(setting, options) do
+      styled_url_field_tag("settings[#{setting}]",
+                           Setting.send(setting),
+                           disabled_setting_option(setting).merge(options))
+    end
+  end
+
   def setting_number_field(setting, options = {})
     setting_field_wrapper(setting, options) do
       styled_number_field_tag("settings[#{setting}]",
@@ -167,6 +175,10 @@ module SettingsHelper
     setting_label(setting, options) + wrap_field_outer(options, &)
   end
 
+  def writable_setting?(setting)
+    Setting.send(:"#{setting}_writable?")
+  end
+
   private
 
   def wrap_field_outer(options, &)
@@ -245,9 +257,5 @@ module SettingsHelper
     else
       "".html_safe
     end
-  end
-
-  def writable_setting?(setting)
-    Setting.send(:"#{setting}_writable?")
   end
 end

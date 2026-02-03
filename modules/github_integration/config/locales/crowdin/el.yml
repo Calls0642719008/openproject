@@ -31,7 +31,7 @@ el:
     github_avatar_url: "Avatar URL"
     github_updated_at: "Updated at"
     github_login: "GitHub login"
-    host: "Host"
+    host: "Διακομιστής"
     labels: "Labels"
     repository: "Αποθετήριο"
     changed_files_count: "Changed files"

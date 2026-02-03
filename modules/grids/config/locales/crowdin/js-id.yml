@@ -5,7 +5,7 @@ id:
       remove: 'Hapus widget'
       configure: 'Konfigurasi Widget'
       widgets:
-        missing_permission: "You don't have the necessary permissions to view this widget."
+        missing_permission: "Anda tidak memiliki izin yang diperlukan untuk melihat widget ini."
         custom_text:
           title: 'Teks bebas'
         documents:
@@ -13,19 +13,13 @@ id:
           no_results: 'Belum ada dokumen.'
         members:
           title: 'Member'
-          no_results: 'Tidak ada anggota yang terlihat.'
-          view_all_members: 'View all members'
-          add: 'Member'
-          too_many: 'Menampilkan %{count} dari %{total} anggota.'
         news:
           title: 'News'
-          at: 'di'
-          no_results: 'Nothing new to report.'
         project_description:
-          title: 'Deskripsi Proyek'
+          title: 'Deskripsi'
           no_results: "Belum ada deskripsi yang ditulis. Deskripsi dapat disediakan dalam 'Pengaturan proyek'."
         project_status:
-          title: 'Project status'
+          title: 'Status'
           not_started: 'Belum mulai'
           on_track: 'Di jalur'
           off_track: 'Keluar dari jalur'
@@ -33,32 +27,34 @@ id:
           not_set: 'Belum diatur'
           finished: 'Selesai'
           discontinued: 'Dihentikan'
+        project_status_beta:
+          title: 'Status (BETA)'
         subprojects:
-          title: 'Sub Project'
-          no_results: 'Tidak ada subproyek.'
+          title: 'Subitem'
         project_favorites:
-          title: 'Favorite projects'
-          no_results: 'You currently have no favorite projects. Click on the star icon in the project dashboard to add one to your favorites.'
+          title: 'Proyek favorit'
+          no_results: 'Saat ini, Anda tidak memiliki proyek favorit. Klik ikon bintang di dasbor proyek untuk menambahkan proyek ke daftar favorit Anda.'
         time_entries_current_user:
           title: 'Waktu yang saya habiskan'
           displayed_days: 'Hari yang ditampilkan di widget:'
         time_entries_list:
           title: 'Waktu yang dihabiskan (7 hari terakhir)'
-          no_results: 'No time entries for the last 7 days.'
+          no_results: 'Tidak ada entri waktu untuk 7 hari terakhir.'
         work_packages_accountable:
-          title: "Work packages I am accountable for"
+          title: "Paket kerja yang menjadi tanggung jawab saya"
         work_packages_assigned:
           title: 'Paket-Penugasan yang saya kerjakan'
         work_packages_created:
-          title: 'Work packages created by me'
+          title: 'Paket kerja yang saya buat'
         work_packages_watched:
-          title: 'Work packages watched by me'
+          title: 'Paket kerja yang saya awasi'
         work_packages_table:
-          title: 'Work packages table'
+          title: 'Tabel paket kerja'
         work_packages_graph:
-          title: 'Work packages graph'
+          title: 'Grafik paket kerja'
+          summary: "Bagan %{chartType} menampilkan paket kerja yang %{description}."
         work_packages_calendar:
           title: 'Kalender'
         work_packages_overview:
-          title: 'Work packages overview'
-          placeholder: 'Click to edit ...'
+          title: 'Ikhtisar paket kerja'
+          placeholder: 'Klik untk menyunting ...'

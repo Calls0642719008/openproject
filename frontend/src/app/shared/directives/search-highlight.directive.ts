@@ -51,9 +51,7 @@ export class OpSearchHighlightDirective implements AfterViewChecked {
   private cleanUpOldHighlighting(el:HTMLElement):HTMLElement {
     if (el.children.length > 0) {
       const unifiedLabelText = Array.from(el.children, ({ textContent }) => textContent?.trim()).join('');
-      // eslint-disable-next-line no-param-reassign
       el.innerHTML = '';
-      // eslint-disable-next-line no-param-reassign
       el.innerText = unifiedLabelText;
     }
 

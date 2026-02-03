@@ -11,7 +11,6 @@ $search-input-height-mobile: 36px
         width: unset
         min-width: unset
         flex-basis: 100%
-        position: unset
         flex-grow: 1
 
         .scroll-host
@@ -22,7 +21,8 @@ $search-input-height-mobile: 36px
           right: 0
 
         .ng-select-bottom
-          height: calc(100vh - #{var(--header-height)})
+          height: auto
+          max-height: calc(100vh - #{var(--header-height)})
           overflow-y: auto
           margin: 0
 
@@ -30,11 +30,17 @@ $search-input-height-mobile: 36px
           height: $search-input-height-mobile !important
           border-radius: 4px
 
-        .ng-input input
+        .ng-value-container
+          width: 0 !important
+          padding-left: 0.75rem !important
+
+        .ng-input
           height: 36px
+          top: 0 !important
 
         .ng-dropdown-panel
           width: 100% !important
+          min-width: unset !important
 
     .top-menu-search--back-button
       @include unset-button-styles

@@ -179,7 +179,7 @@ RSpec.describe Setting do
 
     it "raises an error for a non writable setting" do
       expect { described_class.smtp_openssl_verify_mode = "none" }
-        .to raise_error NoMethodError
+        .to raise_error Setting::NotWritableError
     end
 
     context "for a setting with an environment specific default value", :settings_reset do
@@ -316,16 +316,8 @@ RSpec.describe Setting do
 
   # Check that when reading certain setting values that they get overwritten if needed.
   describe "filter saved settings" do
-    describe "with EE token", with_ee: %i[conditional_highlighting] do
-      it "returns the value for 'work_package_list_default_highlighting_mode' without changing it" do
-        expect(described_class.work_package_list_default_highlighting_mode).to eq("inline")
-      end
-    end
-
-    describe "without EE" do
-      it "return 'none' as 'work_package_list_default_highlighting_mode'" do
-        expect(described_class.work_package_list_default_highlighting_mode).to eq("none")
-      end
+    it "returns the value for 'work_package_list_default_highlighting_mode' without changing it" do
+      expect(described_class.work_package_list_default_highlighting_mode).to eq("inline")
     end
   end
 
@@ -501,7 +493,7 @@ RSpec.describe Setting do
            smtp_timeout: 1234
          } do
         described_class.reload_mailer_settings!
-        expect(ActionMailer::Base).to have_received(:perform_deliveries=).with(true)
+        expect(ActionMailer::Base).not_to have_received(:perform_deliveries=).with(true)
         expect(ActionMailer::Base).to have_received(:delivery_method=).with(:smtp)
         expect(ActionMailer::Base.smtp_settings[:smtp_authentication]).to be_nil
         expect(ActionMailer::Base.smtp_settings).to eq(address: "smtp.example.com",
@@ -529,7 +521,7 @@ RSpec.describe Setting do
            smtp_ssl: 1
          } do
         described_class.reload_mailer_settings!
-        expect(ActionMailer::Base).to have_received(:perform_deliveries=).with(true)
+        expect(ActionMailer::Base).not_to have_received(:perform_deliveries=).with(true)
         expect(ActionMailer::Base).to have_received(:delivery_method=).with(:smtp)
         expect(ActionMailer::Base.smtp_settings[:smtp_authentication]).to be_nil
         expect(ActionMailer::Base.smtp_settings).to eq(address: "smtp.example.com",
@@ -556,7 +548,7 @@ RSpec.describe Setting do
            smtp_ssl: 0
          } do
         described_class.reload_mailer_settings!
-        expect(ActionMailer::Base).to have_received(:perform_deliveries=).with(true)
+        expect(ActionMailer::Base).not_to have_received(:perform_deliveries=).with(true)
         expect(ActionMailer::Base).to have_received(:delivery_method=).with(:smtp)
         expect(ActionMailer::Base.smtp_settings[:smtp_authentication]).to be_nil
         expect(ActionMailer::Base.smtp_settings).to eq(address: "smtp.example.com",
@@ -586,7 +578,7 @@ RSpec.describe Setting do
            smtp_ssl: 1
          } do
         described_class.reload_mailer_settings!
-        expect(ActionMailer::Base).to have_received(:perform_deliveries=).with(true)
+        expect(ActionMailer::Base).not_to have_received(:perform_deliveries=).with(true)
         expect(ActionMailer::Base).to have_received(:delivery_method=).with(:smtp)
         expect(ActionMailer::Base.smtp_settings[:smtp_authentication]).to be_nil
         expect(ActionMailer::Base.smtp_settings).to eq(address: "smtp.example.com",
@@ -601,6 +593,33 @@ RSpec.describe Setting do
                                                        read_timeout: 5,
                                                        ssl: true)
       end
+    end
+  end
+
+  describe "default_projects_modules conditional default" do
+    shared_examples "base modules unchanged" do
+      it "includes the base modules" do
+        base_modules = %w[calendar board_view work_package_tracking gantt news costs wiki]
+        expect(Settings::Definition[:default_projects_modules].default).to include(*base_modules)
+      end
+    end
+
+    context "when real_time_text_collaboration is enabled",
+            with_settings: { real_time_text_collaboration_enabled: true } do
+      it "includes documents in the default modules" do
+        expect(Settings::Definition[:default_projects_modules].default).to include("documents")
+      end
+
+      it_behaves_like "base modules unchanged"
+    end
+
+    context "when real_time_text_collaboration is disabled",
+            with_settings: { real_time_text_collaboration_enabled: false } do
+      it "does not include documents in the default modules" do
+        expect(Settings::Definition[:default_projects_modules].default).not_to include("documents")
+      end
+
+      it_behaves_like "base modules unchanged"
     end
   end
 end

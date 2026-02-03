@@ -26,6 +26,15 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+%autocomplete-description
+  display: flex
+  align-items: center
+  flex-shrink: 0
+  gap: var(--base-size-4, 4px)
+  color: var(--fgColor-muted)
+  font-size: var(--text-body-size-small, .75rem)
+  font-weight: var(--base-text-weight-normal, 400)
+
 /***** Auto-complete ****/
 
 div.autocomplete
@@ -140,8 +149,14 @@ div.autocomplete
   height: initial !important
   min-height: initial !important
 
-  .ng-value-label
+  .ng-value-label:not(:has(span))
     display: initial !important
+
+  .ng-value-label:has(span)
+    min-width: 0
+
+    .description
+      @extend %autocomplete-description
 
   .ng-placeholder
     // Fix overflow by providing a max width to the input
@@ -161,6 +176,9 @@ div.autocomplete
 
 .ng-option-label
   vertical-align: top
+
+  .description
+    @extend %autocomplete-description
 
 .ng-option, .ng-optgroup
   line-height: 22px

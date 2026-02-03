@@ -49,11 +49,9 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { OpenprojectCalendarModule } from 'core-app/features/calendar/openproject-calendar.module';
 import { OpenprojectGlobalSearchModule } from 'core-app/core/global_search/openproject-global-search.module';
-import { OpenprojectDashboardsModule } from 'core-app/features/dashboards/openproject-dashboards.module';
 import {
   OpenprojectWorkPackageGraphsModule,
 } from 'core-app/shared/components/work-package-graphs/openproject-work-package-graphs.module';
-import { OpenprojectOverviewModule } from 'core-app/features/overview/openproject-overview.module';
 import { OpenprojectMyPageModule } from 'core-app/features/my-page/openproject-my-page.module';
 import { KeyboardShortcutService } from 'core-app/shared/directives/a11y/keyboard-shortcut.service';
 import { CopyToClipboardService } from 'core-app/shared/components/copy-to-clipboard/copy-to-clipboard.service';
@@ -61,7 +59,6 @@ import {
   OpenprojectMembersModule,
 } from 'core-app/shared/components/autocompleter/members-autocompleter/members.module';
 import { OpenprojectAugmentingModule } from 'core-app/core/augmenting/openproject-augmenting.module';
-import { OpenprojectInviteUserModalModule } from 'core-app/features/invite-user-modal/invite-user-modal.module';
 import { OpenprojectModalModule } from 'core-app/shared/components/modal/modal.module';
 import {
   RevitAddInSettingsButtonService,
@@ -70,9 +67,6 @@ import { OpenprojectEnterpriseModule } from 'core-app/features/enterprise/openpr
 import { ConfirmDialogService } from 'core-app/shared/components/modals/confirm-dialog/confirm-dialog.service';
 import { ConfirmDialogModalComponent } from 'core-app/shared/components/modals/confirm-dialog/confirm-dialog.modal';
 import { DynamicContentModalComponent } from 'core-app/shared/components/modals/modal-wrapper/dynamic-content.modal';
-import {
-  PasswordConfirmationModalComponent,
-} from 'core-app/shared/components/modals/request-for-confirmation/password-confirmation.modal';
 import {
   OpHeaderProjectSelectComponent,
 } from 'core-app/shared/components/header-project-select/header-project-select.component';
@@ -125,6 +119,9 @@ import {
 import {
   UserAutocompleterComponent,
 } from 'core-app/shared/components/autocompleter/user-autocompleter/user-autocompleter.component';
+import {
+  MeetingAutocompleterComponent,
+} from 'core-app/shared/components/autocompleter/meeting-autocompleter/meeting-autocompleter.component';
 import { AttributeValueMacroComponent } from 'core-app/shared/components/fields/macros/attribute-value-macro.component';
 import { AttributeLabelMacroComponent } from 'core-app/shared/components/fields/macros/attribute-label-macro.component';
 import {
@@ -186,7 +183,6 @@ import { GlobalSearchWorkPackagesComponent } from 'core-app/core/global_search/g
 import {
   CustomDateActionAdminComponent,
 } from 'core-app/features/work-packages/components/wp-custom-actions/date-action/custom-date-action-admin.component';
-import { HomescreenNewFeaturesBlockComponent } from 'core-app/features/homescreen/blocks/new-features.component';
 import {
   ZenModeButtonComponent,
 } from 'core-app/features/work-packages/components/wp-buttons/zen-mode-toggle-button/zen-mode-toggle-button.component';
@@ -204,8 +200,12 @@ import {
 import {
   OpWpDatePickerInstanceComponent,
 } from 'core-app/shared/components/datepicker/wp-date-picker-modal/wp-date-picker-instance.component';
-import { OpInviteUserModalAugmentService } from 'core-app/features/invite-user-modal/invite-user-modal-augment.service';
 import { TimeEntryTimerService } from 'core-app/shared/components/time_entries/services/time-entry-timer.service';
+import { WorkPackageFullCopyEntryComponent } from 'core-app/features/work-packages/routing/wp-full-copy/wp-full-copy-entry.component';
+import { WorkPackageFullCreateEntryComponent } from 'core-app/features/work-packages/routing/wp-full-create/wp-full-create-entry.component';
+import { WorkPackageFullViewEntryComponent } from 'core-app/features/work-packages/routing/wp-full-view/wp-full-view-entry.component';
+import { MyPageComponent } from './features/my-page/my-page.component';
+import { DashboardComponent } from './features/overview/dashboard.component';
 
 export function initializeServices(injector:Injector) {
   return () => {
@@ -213,7 +213,6 @@ export function initializeServices(injector:Injector) {
     const keyboardShortcuts = injector.get(KeyboardShortcutService);
     const contextMenu = injector.get(OPContextMenuService);
     const currentProject = injector.get(CurrentProjectService);
-    const inviteUserAugmentService = injector.get(OpInviteUserModalAugmentService);
     const timeEntryTimerService = injector.get(TimeEntryTimerService);
 
     // Conditionally add the Revit Add-In settings button
@@ -222,17 +221,14 @@ export function initializeServices(injector:Injector) {
     const runOnRenderAndLoad = () => {
       topMenuService.register();
       contextMenu.register();
-      inviteUserAugmentService.setupListener();
       timeEntryTimerService.initialize();
+      currentProject.detect();
     };
     runOnRenderAndLoad();
 
     // Register on turbo:render, turbo:load
     document.addEventListener('turbo:render', runOnRenderAndLoad);
-    document.addEventListener('turbo:load', () => {
-      runOnRenderAndLoad();
-      currentProject.detect();
-    });
+    document.addEventListener('turbo:load', runOnRenderAndLoad);
 
     keyboardShortcuts.register();
 
@@ -257,7 +253,6 @@ export function runBootstrap(appRef:ApplicationRef) {
     // Modals
     ConfirmDialogModalComponent,
     DynamicContentModalComponent,
-    PasswordConfirmationModalComponent,
 
     // Main menu
     MainMenuResizerComponent,
@@ -302,12 +297,6 @@ export function runBootstrap(appRef:ApplicationRef) {
     // Calendar module
     OpenprojectCalendarModule,
 
-    // Dashboards
-    OpenprojectDashboardsModule,
-
-    // Overview
-    OpenprojectOverviewModule,
-
     // MyPage
     OpenprojectMyPageModule,
 
@@ -334,9 +323,6 @@ export function runBootstrap(appRef:ApplicationRef) {
 
     // Modals
     OpenprojectModalModule,
-
-    // Invite user modal
-    OpenprojectInviteUserModalModule,
 
     // Tabs
     OpenprojectTabsModule,
@@ -387,6 +373,7 @@ export class OpenProjectModule implements DoBootstrap {
     registerCustomElement('opce-project-autocompleter', ProjectAutocompleterComponent, { injector });
     registerCustomElement('opce-members-autocompleter', MembersAutocompleterComponent, { injector });
     registerCustomElement('opce-user-autocompleter', UserAutocompleterComponent, { injector });
+    registerCustomElement('opce-meeting-autocompleter', MeetingAutocompleterComponent, { injector });
     registerCustomElement('opce-time-entries-work-package-autocompleter', TimeEntriesWorkPackageAutocompleterComponent, { injector });
     registerCustomElement('opce-macro-attribute-value', AttributeValueMacroComponent, { injector });
     registerCustomElement('opce-macro-attribute-label', AttributeLabelMacroComponent, { injector });
@@ -404,6 +391,9 @@ export class OpenProjectModule implements DoBootstrap {
     registerCustomElement('opce-reminder-settings', ReminderSettingsPageComponent, { injector });
     registerCustomElement('opce-notification-center', InAppNotificationCenterComponent, { injector });
     registerCustomElement('opce-wp-split-view', WorkPackageSplitViewEntryComponent, { injector });
+    registerCustomElement('opce-wp-full-view', WorkPackageFullViewEntryComponent, { injector });
+    registerCustomElement('opce-wp-full-create', WorkPackageFullCreateEntryComponent, { injector });
+    registerCustomElement('opce-wp-full-copy', WorkPackageFullCopyEntryComponent, { injector });
     registerCustomElement('opce-timer-account-menu', TimerAccountMenuComponent, { injector });
     registerCustomElement('opce-remote-field-updater', RemoteFieldUpdaterComponent, { injector });
     registerCustomElement('opce-wp-date-picker-instance', OpWpDatePickerInstanceComponent, { injector });
@@ -424,8 +414,10 @@ export class OpenProjectModule implements DoBootstrap {
     registerCustomElement('opce-toasts-container', ToastsContainerComponent, { injector });
     registerCustomElement('opce-global-search-work-packages', GlobalSearchWorkPackagesComponent, { injector });
     registerCustomElement('opce-custom-date-action-admin', CustomDateActionAdminComponent, { injector });
-    registerCustomElement('opce-homescreen-new-features-block', HomescreenNewFeaturesBlockComponent, { injector });
     registerCustomElement('opce-zen-mode-toggle-button', ZenModeButtonComponent, { injector });
     registerCustomElement('opce-colors-autocompleter', ColorsAutocompleterComponent, { injector });
+
+    registerCustomElement('opce-my-page', MyPageComponent, { injector });
+    registerCustomElement('opce-dashboard', DashboardComponent, { injector });
   }
 }

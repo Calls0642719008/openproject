@@ -2,7 +2,7 @@
   component_wrapper do
     render(
       Primer::Alpha::Dialog.new(
-        id: "manage-participants-dialog",
+        id: DIALOG_ID,
         size: :xlarge,
         title: I18n.t("meeting.participants.label.manage_participants"),
         data: { "keep-open-on-submit": true }

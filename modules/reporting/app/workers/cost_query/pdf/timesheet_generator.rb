@@ -118,8 +118,7 @@ class CostQuery::PDF::TimesheetGenerator
     render_doc_again_with_total_page_nrs! if wants_total_page_nrs?
     pdf.render
   rescue StandardError => e
-    Rails.logger.error "Failed to generate PDF export:  #{e.message}:\n#{e.backtrace.join("\n")}"
-    error(I18n.t(:error_pdf_failed_to_export, error: e.message))
+    error(e)
   end
 
   def render_doc

@@ -58,7 +58,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { AttachmentCollectionResource } from 'core-app/features/hal/resources/attachment-collection-resource';
 import { populateInputsFromDataset } from 'core-app/shared/components/dataset-inputs';
 import { navigator } from '@hotwired/turbo';
-import { uniqueId } from 'lodash';
+import { attributeTokenList, ensureId } from 'core-app/shared/helpers/dom-helpers';
 
 @Component({
   templateUrl: './ckeditor-augmented-textarea.html',
@@ -85,6 +85,8 @@ export class CkeditorAugmentedTextareaComponent extends UntilDestroyedMixin impl
   @Input() public editorType:ICKEditorType = 'full';
 
   @Input() public showAttachments = true;
+
+  @Input() public primerized = false;
 
   @Input() public storageKey?:string;
 
@@ -214,11 +216,8 @@ export class CkeditorAugmentedTextareaComponent extends UntilDestroyedMixin impl
         (evt.submitter as HTMLInputElement).disabled = false;
       }
 
-      if (this.turboMode) {
-        // If the form has a stimulus action defined, we ONLY want to submit it via stimulus
-        if (!this.formElement.dataset.action) {
-          navigator.submitForm(this.formElement, evt?.submitter || undefined);
-        }
+      if (this.turboMode && !this.formElement.dataset.action) {
+        navigator.submitForm(this.formElement, evt?.submitter ?? undefined);
       } else {
         this.formElement.requestSubmit(evt?.submitter);
       }
@@ -332,16 +331,8 @@ export class CkeditorAugmentedTextareaComponent extends UntilDestroyedMixin impl
 
     const ckContent = this.element.querySelector<HTMLElement>('.ck-content')!;
 
-    let labelId;
-    if (label.hasAttribute('id')) {
-      labelId = label.getAttribute('id')!;
-    } else {
-      labelId = uniqueId('label-');
-      label.setAttribute('id', labelId);
-    }
-
     ckContent.removeAttribute('aria-label');
-    ckContent.setAttribute('aria-labelledby', labelId);
+    attributeTokenList(ckContent, 'aria-labelledby').add(ensureId(label, 'label'));
 
     if (!this.labelClickSubscription) {
       this.labelClickSubscription = fromEvent(label, 'click')

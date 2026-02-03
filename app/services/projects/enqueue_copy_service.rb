@@ -53,9 +53,9 @@ module Projects
     # Tests whether the copy can be performed
     def test_copy(params)
       test_params = params.merge(attributes_only: true)
-
+      contract_options = { skip_custom_field_validation: params[:skip_custom_field_validation] }
       Projects::CopyService
-        .new(user:, source:)
+        .new(user:, source:, contract_options:)
         .call(test_params)
     end
 
@@ -65,7 +65,9 @@ module Projects
       job = nil
       GoodJob::Batch.enqueue(on_finish: SendCopyProjectStatusEmailJob, user:, source_project: source) do
         job = CopyProjectJob.perform_later(target_project_params: params[:target_project_params],
+                                           copy_from_template: params.dig(:target_project_params, :template).present?,
                                            associations_to_copy: params[:only].to_a,
+                                           skip_custom_field_validation: params[:skip_custom_field_validation],
                                            send_mails: ActiveRecord::Type::Boolean.new.cast(params[:send_notifications]))
       end
       job

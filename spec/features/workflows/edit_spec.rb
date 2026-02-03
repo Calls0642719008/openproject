@@ -56,7 +56,7 @@ RSpec.describe "Workflow edit" do
     click_button "Edit"
 
     within "#workflow_form_always" do
-      check "status_#{statuses[1].id}_#{statuses[2].id}_"
+      check "status_#{statuses[1].id}_#{statuses[2].id}"
     end
 
     click_button "Save"
@@ -65,18 +65,128 @@ RSpec.describe "Workflow edit" do
 
     within "#workflow_form_always" do
       expect(page)
-        .to have_field "status_#{statuses[0].id}_#{statuses[1].id}_", checked: true
+        .to have_field "status_#{statuses[0].id}_#{statuses[1].id}", checked: true
       expect(page)
-        .to have_field "status_#{statuses[1].id}_#{statuses[2].id}_", checked: true
+        .to have_field "status_#{statuses[1].id}_#{statuses[2].id}", checked: true
 
       expect(page)
-        .to have_field "status_#{statuses[0].id}_#{statuses[2].id}_", checked: false
+        .to have_field "status_#{statuses[0].id}_#{statuses[2].id}", checked: false
       expect(page)
-        .to have_field "status_#{statuses[1].id}_#{statuses[0].id}_", checked: false
+        .to have_field "status_#{statuses[1].id}_#{statuses[0].id}", checked: false
       expect(page)
-        .to have_field "status_#{statuses[2].id}_#{statuses[0].id}_", checked: false
+        .to have_field "status_#{statuses[2].id}_#{statuses[0].id}", checked: false
       expect(page)
-        .to have_field "status_#{statuses[2].id}_#{statuses[1].id}_", checked: false
+        .to have_field "status_#{statuses[2].id}_#{statuses[1].id}", checked: false
+
+      expect(Workflow.where(type_id: type.id, role_id: role.id).count).to be 2
+
+      w = Workflow.where(role_id: role.id, type_id: type.id, old_status_id: statuses[0].id, new_status_id: statuses[1].id).first
+      assert !w.author
+      assert !w.assignee
+
+      w = Workflow.where(role_id: role.id, type_id: type.id, old_status_id: statuses[1].id, new_status_id: statuses[2].id).first
+      assert !w.author
+      assert !w.assignee
     end
+  end
+
+  it "allows editing the workflow when the user is author" do
+    click_link "User is author"
+    click_button "Edit"
+
+    within "#workflow_form_author" do
+      check "status_#{statuses[2].id}_#{statuses[1].id}"
+    end
+
+    click_button "Save"
+
+    expect_flash(message: "Successful update.")
+
+    within "#workflow_form_author" do
+      expect(page)
+        .to have_field "status_#{statuses[2].id}_#{statuses[1].id}", checked: true
+
+      expect(page)
+        .to have_field "status_#{statuses[0].id}_#{statuses[1].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[1].id}_#{statuses[2].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[0].id}_#{statuses[2].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[1].id}_#{statuses[0].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[2].id}_#{statuses[0].id}", checked: false
+
+      expect(Workflow.where(type_id: type.id, role_id: role.id).count).to be 2
+
+      # the newly added Workflow
+      w = Workflow.where(role_id: role.id, type_id: type.id, old_status_id: statuses[2].id, new_status_id: statuses[1].id).first
+      assert w.author
+      assert !w.assignee
+
+      # The already existing Workflow
+      w = Workflow.where(role_id: role.id, type_id: type.id, old_status_id: statuses[0].id, new_status_id: statuses[1].id).first
+      assert !w.author
+      assert !w.assignee
+    end
+  end
+
+  it "allows editing the workflow when the user is assignee" do
+    click_link "User is assignee"
+    click_button "Edit"
+
+    within "#workflow_form_assignee" do
+      check "status_#{statuses[2].id}_#{statuses[0].id}"
+    end
+
+    click_button "Save"
+
+    expect_flash(message: "Successful update.")
+
+    within "#workflow_form_assignee" do
+      expect(page)
+        .to have_field "status_#{statuses[2].id}_#{statuses[0].id}", checked: true
+
+      expect(page)
+        .to have_field "status_#{statuses[0].id}_#{statuses[1].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[1].id}_#{statuses[2].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[0].id}_#{statuses[2].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[1].id}_#{statuses[0].id}", checked: false
+      expect(page)
+        .to have_field "status_#{statuses[2].id}_#{statuses[1].id}", checked: false
+
+      expect(Workflow.where(type_id: type.id, role_id: role.id).count).to be 2
+
+      # the newly added Workflow
+      w = Workflow.where(role_id: role.id, type_id: type.id, old_status_id: statuses[2].id, new_status_id: statuses[0].id).first
+      assert !w.author
+      assert w.assignee
+
+      # The already existing Workflow
+      w = Workflow.where(role_id: role.id, type_id: type.id, old_status_id: statuses[0].id, new_status_id: statuses[1].id).first
+      assert !w.author
+      assert !w.assignee
+    end
+  end
+
+  it "allows navigating to Workflow summary page" do
+    within ".PageHeader-actions" do
+      click_on "Summary"
+    end
+
+    expect(page).to have_heading "Summary"
+    expect(page).to have_current_path(workflows_path)
+  end
+
+  it "allows navigating to Workflow copy page" do
+    within ".PageHeader-actions" do
+      click_on "Copy"
+    end
+
+    expect(page).to have_heading "Copy workflow"
+    expect(page).to have_current_path(copy_workflows_path)
   end
 end

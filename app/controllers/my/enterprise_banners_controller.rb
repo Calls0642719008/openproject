@@ -63,10 +63,8 @@ class My::EnterpriseBannersController < ApplicationController
   private
 
   def get_feature_key
-    raw_key = params[:feature_key]
-
-    @dismiss_key = raw_key
-    @feature_key = raw_key.gsub(/_trial$/, "").to_sym
+    @feature_key = params[:feature_key].to_sym
+    @dismiss_key = params[:dismiss_key].presence&.to_sym || @feature_key
 
     render_400 unless OpenProject::Token.lowest_plan_for(@feature_key)
   end

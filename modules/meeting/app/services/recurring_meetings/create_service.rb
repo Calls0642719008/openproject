@@ -38,7 +38,14 @@ module RecurringMeetings
       return call unless call.success?
 
       recurring_meeting = call.result
-      call.merge! create_meeting_template(recurring_meeting) if call.success?
+      if call.success?
+        create_template_call = create_meeting_template(recurring_meeting)
+
+        # make sure that the template is correctly loaded in the association
+        call.result.reload_template if create_template_call.success?
+
+        call.merge! create_template_call
+      end
 
       call
     end

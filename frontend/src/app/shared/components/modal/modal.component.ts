@@ -38,7 +38,7 @@ export abstract class OpModalComponent extends UntilDestroyedMixin implements On
   /* Reference to service */
   protected service:OpModalService = this.locals.service;
 
-  public $element:HTMLElement;
+  public element:HTMLElement;
 
   /** Closing event called from the service when closing this modal */
   public closingEvent = new EventEmitter<this>();
@@ -60,7 +60,7 @@ export abstract class OpModalComponent extends UntilDestroyedMixin implements On
   }
 
   ngOnInit():void {
-    this.$element = this.elementRef.nativeElement as HTMLElement;
+    this.element = this.elementRef.nativeElement as HTMLElement;
   }
 
   ngOnDestroy():void {
@@ -100,7 +100,7 @@ export abstract class OpModalComponent extends UntilDestroyedMixin implements On
   }
 
   protected get afterFocusOn():HTMLElement {
-    return this.$element;
+    return this.element;
   }
 
   private onResize = debounce(() => this.updateAppHeight(), 10);

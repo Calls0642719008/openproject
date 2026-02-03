@@ -39,33 +39,27 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<%= styled_form_tag(admin_settings_experimental_path, method: :patch) do %>
-  <section class="form--section">
-    <fieldset class="form--fieldset">
-      <legend class="form--fieldset-legend"><%= t("settings.experimental.feature_flags") %></legend>
-
-      <div class="op-toast -warning -with-bottom-spacing">
-        <div class="op-toast--content">
-          <p>
-            <%= t("settings.experimental.warning_toast") %>
-
-          </p>
-        </div>
-      </div>
-
-      <% OpenProject::FeatureDecisions.all.each do |feature| %>
-        <div class="form--field">
-          <%= setting_check_box "feature_#{feature}_active", not_translated_label: feature.to_s.humanize %>
-          <div class="form--field-instructions">
-            <p><%= Settings::Definition["feature_#{feature}_active"].description %></p>
-          </div>
-        </div>
-      <% end %>
-    </fieldset>
-  </section>
-  <%= styled_button_tag t(:button_save),
-                        class: "-primary -with-icon icon-checkmark",
-                        data: {
-                          confirm: t("settings.experimental.save_confirmation")
-                        } %>
+<%=
+  settings_primer_form_with(
+    url: admin_settings_experimental_path,
+    scope: :settings,
+    method: :patch
+  ) do |f|
+%>
+  <%=
+    render(Primer::Beta::Subhead.new) do |component|
+      component.with_heading(tag: :h3, size: :medium) { t("settings.experimental.feature_flags") }
+    end
+  %>
+  <%=
+    render(Primer::Alpha::Banner.new(scheme: :warning, mb: 2)) { t("settings.experimental.warning_toast") }
+  %>
+  <%=
+    render(
+      Primer::Forms::FormList.new(
+        Admin::Settings::ExperimentalSettingsForm.new(f),
+        Admin::Settings::Save.new(f, data: { turbo_confirm: t("settings.experimental.save_confirmation") })
+      )
+    )
+  %>
 <% end %>

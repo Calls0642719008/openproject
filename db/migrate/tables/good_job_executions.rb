@@ -42,9 +42,14 @@ class Tables::GoodJobExecutions < Tables::Base
       t.datetime :finished_at
       t.text :error
       t.integer :error_event, limit: 2
+      t.text :error_backtrace, array: true
+      t.uuid :process_id
+      t.interval :duration
 
       t.index %i[active_job_id created_at],
               name: :index_good_job_executions_on_active_job_id_and_created_at
+      t.index %i[process_id created_at],
+              name: :index_good_job_executions_on_process_id_and_created_at
     end
   end
 end

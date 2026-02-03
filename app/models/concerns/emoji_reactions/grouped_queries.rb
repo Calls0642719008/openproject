@@ -58,7 +58,7 @@ module EmojiReactions
           .includes(:reactable)
           .where(reactable_id:, reactable_type:)
           .group("emoji_reactions.reactable_type, emoji_reactions.reactable_id, emoji_reactions.reaction")
-          .order("first_created_at ASC")
+          .order(first_created_at: :asc)
       end
 
       private

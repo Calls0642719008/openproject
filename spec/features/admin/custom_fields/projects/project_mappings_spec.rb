@@ -42,7 +42,7 @@ RSpec.describe "Project Custom Field Mappings", :js do
     create(:project_custom_field_project_mapping, project_custom_field:, project: archived_project)
   end
 
-  let(:project_custom_field_mappings_page) { Pages::Admin::CustomFields::CustomFieldsProjects::ProjectMappings.new }
+  let(:project_custom_field_mappings_page) { Pages::Admin::Settings::ProjectCustomFields::ProjectMappings.new }
 
   context "with insufficient permissions" do
     it "is not accessible" do
@@ -143,11 +143,11 @@ RSpec.describe "Project Custom Field Mappings", :js do
       end
     end
 
-    context "and the project custom field is required" do
-      shared_let(:project_custom_field) { create(:project_custom_field, is_required: true) }
+    context "and the project custom field is for_all projects" do
+      shared_let(:project_custom_field) { create(:project_custom_field, is_for_all: true) }
 
       it "renders a blank slate" do
-        expect(page).to have_text("Required in all projects")
+        expect(page).to have_text("For all projects")
         expect(page).not_to have_test_selector("add-projects-sub-header")
       end
     end

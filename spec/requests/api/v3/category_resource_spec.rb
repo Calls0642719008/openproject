@@ -35,45 +35,41 @@ RSpec.describe "API v3 Category resource" do
   include Rack::Test::Methods
   include API::V3::Utilities::PathHelper
 
-  let(:role) { create(:project_role, permissions: []) }
-  let(:private_project) { create(:project, public: false) }
-  let(:public_project) { create(:project, public: true) }
-  let(:anonymous_user) { create(:user) }
-  let(:privileged_user) do
+  shared_let(:non_member_user) { create(:user) }
+  shared_let(:role) { create(:project_role, permissions: []) }
+  shared_let(:private_project) { create(:project, public: false) }
+  shared_let(:public_project) { create(:project, public: true) }
+  shared_let(:privileged_user) do
     create(:user,
            member_with_roles: { private_project => role })
   end
 
-  let!(:categories) { create_list(:category, 3, project: private_project) }
-  let!(:other_categories) { create_list(:category, 2, project: public_project) }
-  let!(:user_categories) do
+  shared_let(:categories) { create_list(:category, 3, project: private_project) }
+  shared_let(:other_categories) { create_list(:category, 2, project: public_project) }
+  shared_let(:user_categories) do
     create_list(:category,
                 2,
                 project: private_project,
                 assigned_to: privileged_user)
   end
 
-  describe "categories by project" do
+  shared_context "with categories by" do
     subject(:response) { last_response }
 
-    context "logged in user" do
-      let(:get_path) { api_v3_paths.categories_by_project private_project.id }
+    context "for a logged in user" do
+      current_user { privileged_user }
 
       before do
-        allow(User).to receive(:current).and_return privileged_user
-
         get get_path
       end
 
       it_behaves_like "API V3 collection response", 5, 5, "Category"
     end
 
-    context "not logged in user" do
-      let(:get_path) { api_v3_paths.categories_by_project private_project.id }
+    context "for a user without permissions" do
+      current_user { non_member_user }
 
       before do
-        allow(User).to receive(:current).and_return anonymous_user
-
         get get_path
       end
 
@@ -81,36 +77,50 @@ RSpec.describe "API v3 Category resource" do
     end
   end
 
-  describe "categories/:id" do
+  describe "GET projects/:id/categories" do
+    include_context "with categories by" do
+      let(:get_path) { api_v3_paths.categories_by_project private_project.id }
+    end
+  end
+
+  describe "GET workspace/:id/categories" do
+    include_context "with categories by" do
+      let(:get_path) { api_v3_paths.categories_by_workspace private_project.id }
+    end
+  end
+
+  describe "GET categories/:id" do
     subject(:response) { last_response }
 
-    context "logged in user" do
+    context "for a logged in user" do
       let(:get_path) { api_v3_paths.category categories.first.id }
 
-      before do
-        allow(User).to receive(:current).and_return privileged_user
+      current_user { privileged_user }
 
+      before do
         get get_path
       end
 
-      context "valid priority id" do
+      context "for a valid priority id" do
         it "returns HTTP 200" do
-          expect(response.status).to be(200)
+          expect(response).to have_http_status(200)
         end
       end
 
-      context "invalid priority id" do
+      context "with an invalid priority id" do
         let(:get_path) { api_v3_paths.category "bogus" }
 
         it_behaves_like "not found"
       end
     end
 
-    context "not logged in user" do
+    context "for a user without permissions" do
       let(:get_path) { api_v3_paths.category "bogus" }
 
+      current_user { non_member_user }
+
       before do
-        allow(User).to receive(:current).and_return anonymous_user
+        allow(User).to receive(:current).and_return non_member_user
 
         get get_path
       end

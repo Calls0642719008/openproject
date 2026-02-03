@@ -127,8 +127,8 @@ RSpec.describe AvatarHelper, with_settings: { protocol: "http" } do
       let(:enable_gravatars) { false }
       let(:enable_local_avatars) { false }
 
-      it "returns blank" do
-        expect(helper.avatar_url(user)).to eq ""
+      it "returns nil" do
+        expect(helper.avatar_url(user)).to be_nil
       end
     end
   end
@@ -185,12 +185,12 @@ RSpec.describe AvatarHelper, with_settings: { protocol: "http" } do
       expect(helper.avatar(mail)).to eq("")
     end
 
-    it "returns an empty string if a non parsable (e-mail) string url is provided" do
-      expect(helper.avatar_url("just the name")).to eq("")
+    it "returns nil if a non parsable (e-mail) string url is provided" do
+      expect(helper.avatar_url("just the name")).to be_nil
     end
 
-    it "returns an empty string if nil url is provided" do
-      expect(helper.avatar_url(nil)).to eq("")
+    it "returns nil if nil url is provided" do
+      expect(helper.avatar_url(nil)).to be_nil
     end
   end
 
@@ -199,11 +199,12 @@ RSpec.describe AvatarHelper, with_settings: { protocol: "http" } do
     let(:enable_local_avatars) { false }
 
     it "returns an empty string for avatar if gravatar is disabled" do
+      # ??? Expectation and title deviate... why do we expect an avatar tag when everything is disabled?
       expect(helper.avatar(user)).to be_html_eql(expected_user_avatar_tag(user))
     end
 
-    it "returns an empty string for avatar_url if gravatar is disabled" do
-      expect(helper.avatar_url(user)).to eq("")
+    it "returns nil for avatar_url" do
+      expect(helper.avatar_url(user)).to be_nil
     end
   end
 

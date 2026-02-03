@@ -48,7 +48,7 @@ RSpec.describe API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter, "rend
   subject(:generated) { representer.to_json }
 
   context "if item is root" do
-    let(:item) { root }
+    let(:item) { build_aggregate(item: root, depth: 0) }
 
     describe "_links" do
       it_behaves_like "has an untitled link" do
@@ -105,7 +105,7 @@ RSpec.describe API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter, "rend
     end
 
     context "and depth is negative" do
-      let(:item) { API::V3::CustomFields::Hierarchy::HierarchicalItemAggregate.new(item: root, depth: -1) }
+      let(:item) { build_aggregate(item: root, depth: -1) }
 
       describe "properties" do
         it_behaves_like "property", :depth do
@@ -116,7 +116,7 @@ RSpec.describe API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter, "rend
   end
 
   context "if item is leave" do
-    let(:item) { mouse }
+    let(:item) { build_aggregate(item: mouse, depth: mouse.depth) }
 
     describe "_links" do
       it_behaves_like "has a titled link" do
@@ -166,7 +166,7 @@ RSpec.describe API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter, "rend
   end
 
   context "if item is intermediate" do
-    let(:item) { r2d2 }
+    let(:item) { build_aggregate(item: r2d2, depth: r2d2.depth) }
 
     describe "_links" do
       it_behaves_like "has a titled link" do
@@ -220,5 +220,11 @@ RSpec.describe API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter, "rend
         let(:value) { item.depth }
       end
     end
+  end
+
+  private
+
+  def build_aggregate(item:, depth:)
+    API::V3::CustomFields::Hierarchy::HierarchicalItemAggregate.new(item:, depth:)
   end
 end

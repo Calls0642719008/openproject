@@ -1,3 +1,1 @@
-interface IGroupCellsMap {
-  [key:string]:WorkPackageTimelineCell[];
-}
+type IGroupCellsMap = Record<string, WorkPackageTimelineCell[]>;

@@ -106,13 +106,15 @@ module Pages
     end
 
     def add_unit_costs_row!
-      find("#material_budget_items_fieldset .wp-inline-create--add-link").click
+      find(:region, Budget.human_attribute_name(:material_budget))
+        .click_on accessible_name: I18n.t(:button_add_budget_item)
 
       @unit_rows = unit_rows + 1
     end
 
     def add_labor_costs_row!
-      find("#labor_budget_items_fieldset .wp-inline-create--add-link").click
+      find(:region, Budget.human_attribute_name(:labor_budget))
+        .click_on accessible_name: I18n.t(:button_add_budget_item)
 
       @labor_rows = labor_rows + 1
     end
@@ -120,10 +122,10 @@ module Pages
     def expect_planned_costs!(type:, row:, expected:)
       raise "Unknown type: #{type}, allowed: labor, material" unless %i[labor material].include? type.to_sym
 
-      retry_block(args: { tries: 3, base_interval: 5 }) do
-        container = page.all("##{type}_budget_items_fieldset td.currency.budget-table--fields")[row - 1]
-        actual = container.text
-        raise "Expected planned costs #{expected}, got #{actual}" unless expected == actual
+      within(:region, Budget.human_attribute_name(:"#{type}_budget")) do
+        container = find("tbody tr:nth-of-type(#{row}) td.currency.budget-table--fields")
+        expect(container).to have_text(expected, exact: true),
+                             "Expected planned costs to be #{expected.inspect}, was #{container.text.inspect}"
       end
     end
 

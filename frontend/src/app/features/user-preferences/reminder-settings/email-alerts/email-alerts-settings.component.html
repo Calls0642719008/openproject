@@ -4,15 +4,16 @@
     <p [textContent]="text.explanation"></p>
   </div>
 
-  <spot-selector-field
-    [label]="text[setting]"
-    [control]="form.get(setting)"
-    *ngFor="let setting of alerts"
-  >
-    <input
-      slot="input"
-      type="checkbox"
-      [formControlName]="setting"
-    />
-  </spot-selector-field>
+  @for (setting of alerts; track setting) {
+    <spot-selector-field
+      [label]="text[setting]"
+      [control]="form.get(setting)"
+      >
+      <input
+        slot="input"
+        type="checkbox"
+        [formControlName]="setting"
+        />
+    </spot-selector-field>
+  }
 </ng-container>

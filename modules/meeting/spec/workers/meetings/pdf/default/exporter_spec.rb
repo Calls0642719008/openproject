@@ -137,7 +137,9 @@ RSpec.describe Meetings::PDF::Default::Exporter do
              duration_in_minutes: 10,
              notes: "*bar*")
     end
-    let(:outcome) { create(:meeting_outcome, meeting_agenda_item:, notes: "An outcome") }
+    let(:outcome1) { create(:meeting_outcome, meeting_agenda_item:, notes: "An outcome") }
+    let(:outcome2) { create(:meeting_outcome, meeting_agenda_item:, notes: "A second outcome") }
+    let(:outcome3) { create(:meeting_outcome, meeting_agenda_item: wp_agenda_item, notes: "A single outcome") }
     let(:attachment) { create(:attachment, container: meeting) }
     let(:meeting_backlog_item) do
       create(:meeting_agenda_item, meeting_section: meeting.backlog,
@@ -151,7 +153,9 @@ RSpec.describe Meetings::PDF::Default::Exporter do
       User.current = user
       meeting_agenda_item # create the agenda item
       wp_agenda_item # create the wp agenda item
-      outcome # create the outcome
+      outcome1 # create the outcome for first agenda item
+      outcome2 # create the outcome for first agenda item
+      outcome3 # create the outcome for wp agenda item
       attachment # create the attachment
       meeting_backlog_item # create the backlog item
       attended # create the attended participant
@@ -169,9 +173,8 @@ RSpec.describe Meetings::PDF::Default::Exporter do
           footer_text: "Custom Footer Text"
         }
       end
-
-      it "renders the expected document" do
-        expected_document = [
+      let(:expected_document) do
+        [
           *expected_cover_page,
           *meeting_head,
           "Participants (2)",
@@ -181,13 +184,17 @@ RSpec.describe Meetings::PDF::Default::Exporter do
           "Untitled section", "  ", "15 mins",
           "Agenda Item TOP 1", "  ", "15 mins", "  ", "Export User",
           "foo",
-          "✓   Outcome",
+          "✓   Outcome 1",
           "An outcome",
+          "✓   Outcome 2",
+          "A second outcome",
 
           "Second section", "  ", "10 mins",
 
           "Task", "##{work_package.id}", "Important task", " (Workin' on it)", "  ", "10 mins",
           "bar",
+          "✓   Outcome",
+          "A single outcome",
 
           "Attachments",
           attachment.filename,
@@ -200,7 +207,9 @@ RSpec.describe Meetings::PDF::Default::Exporter do
           export_time_formatted,
           "Custom Footer Text"
         ].join(" ")
+      end
 
+      it "renders the expected document" do
         expect(subject).to eq expected_document
       end
     end
@@ -289,6 +298,126 @@ RSpec.describe Meetings::PDF::Default::Exporter do
 
           "Deleted work package reference", "  ", "10 mins",
           "title of the work package should not be visible",
+
+          "1", # Page number
+          export_time_formatted,
+          project.name
+        ].join(" ")
+
+        expect(subject).to eq expected_document
+      end
+    end
+  end
+
+  context "with a meeting with work package outcomes" do
+    let(:meeting) do
+      create(:meeting, author: user, project:, title: "Meeting with WP outcomes", location: "Somewhere", state: :closed)
+    end
+    let(:type_task) { create(:type_task) }
+    let(:status) { create(:status, is_default: true, name: "In Progress") }
+    let(:outcome_work_package) { create(:work_package, project:, status:, subject: "Outcome WP", type: type_task) }
+    let(:meeting_section) { create(:meeting_section, meeting:, title: "Section with outcomes") }
+    let(:meeting_agenda_item) do
+      create(:meeting_agenda_item, meeting_section:, duration_in_minutes: 15, title: "Agenda Item", presenter: user,
+                                   notes: "Agenda item notes")
+    end
+
+    before do
+      User.current = user
+      meeting_agenda_item
+    end
+
+    context "with a visible work package outcome" do
+      let(:wp_outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, kind: :work_package, work_package: outcome_work_package, notes: nil)
+      end
+      let(:options) do
+        { participants: "0", outcomes: "1" }
+      end
+
+      before do
+        wp_outcome
+      end
+
+      it "renders the work package outcome with type, id, subject and status" do
+        expected_document = [
+          *expected_cover_page,
+          *meeting_head,
+
+          "Section with outcomes", "  ", "15 mins",
+          "Agenda Item", "  ", "15 mins", "  ", "Export User",
+          "Agenda item notes",
+          "✓   Outcome",
+          "Task", "##{outcome_work_package.id}", "Outcome WP", " (In Progress)",
+
+          "1", # Page number
+          export_time_formatted,
+          project.name
+        ].join(" ")
+
+        expect(subject).to eq expected_document
+      end
+    end
+
+    context "with a hidden work package outcome" do
+      let!(:secret_project) { create(:project, members: [other_user]) }
+      let(:secret_work_package) { create(:work_package, project: secret_project) }
+      let(:wp_outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, kind: :work_package, work_package: secret_work_package, notes: nil)
+      end
+      let(:options) do
+        { participants: "0", outcomes: "1" }
+      end
+
+      before do
+        secret_work_package
+        wp_outcome
+      end
+
+      it "renders the undisclosed work package message" do
+        expected_document = [
+          *expected_cover_page,
+          *meeting_head,
+
+          "Section with outcomes", "  ", "15 mins",
+          "Agenda Item", "  ", "15 mins", "  ", "Export User",
+          "Agenda item notes",
+          "✓   Outcome",
+          "Work package ##{secret_work_package.id} not visible",
+
+          "1", # Page number
+          export_time_formatted,
+          project.name
+        ].join(" ")
+
+        expect(subject).to eq expected_document
+      end
+    end
+
+    context "with a deleted work package outcome" do
+      let!(:deleted_wp) { create(:work_package, project:) }
+      let(:wp_outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, kind: :work_package, work_package: deleted_wp, notes: nil)
+      end
+      let(:options) do
+        { participants: "0", outcomes: "1" }
+      end
+
+      before do
+        wp_outcome
+        deleted_wp.destroy!
+      end
+
+      it "renders the deleted work package message" do
+        expected_document = [
+          *expected_cover_page,
+          *meeting_head,
+
+          "Section with outcomes", "  ", "15 mins",
+          "Agenda Item", "  ", "15 mins", "  ", "Export User",
+          "Agenda item notes",
+          "✓   Outcome",
+          "Deleted work package reference",
 
           "1", # Page number
           export_time_formatted,

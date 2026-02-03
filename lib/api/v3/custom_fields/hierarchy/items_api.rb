@@ -107,8 +107,8 @@ module API
 
           resource :items do
             after_validation do
-              unless @custom_field.field_format_hierarchy?
-                message = "Hierarchy items do only exists for custom fields of type hierarchy."
+              unless @custom_field.hierarchical_list?
+                message = "Hierarchy items not available for custom fields of type #{@custom_field.field_format}."
                 raise ::API::Errors::UnprocessableContent.new(message)
               end
             end

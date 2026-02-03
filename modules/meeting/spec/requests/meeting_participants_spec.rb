@@ -51,6 +51,7 @@ RSpec.describe "MeetingParticipants requests",
     let(:base_params) do
       {
         meeting_id: meeting.id,
+        project_id: project.id,
         meeting_participant: {
           user_id: []
         }
@@ -62,7 +63,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "creates a single participant" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.to change { meeting.participants.count }.by(1)
 
         expect(response).to have_http_status(:ok)
@@ -75,7 +76,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "sends notification email" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
           perform_enqueued_jobs
         end.to change { ActionMailer::Base.deliveries.size }.by(1)
       end
@@ -92,7 +93,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "creates multiple participants" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.to change { meeting.participants.count }.by(2)
 
         expect(response).to have_http_status(:ok)
@@ -114,7 +115,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "creates participants for users with meeting permissions" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.to change { meeting.participants.count }.by(1)
 
         expect(response).to have_http_status(:ok)
@@ -124,7 +125,7 @@ RSpec.describe "MeetingParticipants requests",
       end
 
       it "adds errors for users without meeting permissions" do
-        post meeting_participants_path(meeting), params: params, as: :turbo_stream
+        post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include "User #{user_without_meeting_permissions.name} is not a valid participant."
@@ -146,14 +147,14 @@ RSpec.describe "MeetingParticipants requests",
 
       it "does not create participants for users not in project" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.not_to change { meeting.participants.count }
 
         expect(response).to have_http_status(:ok)
       end
 
       it "adds appropriate errors" do
-        post meeting_participants_path(meeting), params: params, as: :turbo_stream
+        post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
 
         expect(response.body).to include "User #{user_not_in_project.name} is not a valid participant."
 
@@ -167,7 +168,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "does not create any participants" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.not_to change { meeting.participants.count }
 
         expect(response).to have_http_status(:ok)
@@ -179,7 +180,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "handles nil gracefully" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.not_to change { meeting.participants.count }
 
         expect(response).to have_http_status(:ok)
@@ -197,7 +198,7 @@ RSpec.describe "MeetingParticipants requests",
 
       it "creates participants for valid users only" do
         expect do
-          post meeting_participants_path(meeting), params: params, as: :turbo_stream
+          post project_meeting_participants_path(project, meeting), params: params, as: :turbo_stream
         end.to change { meeting.participants.count }.by(1)
 
         expect(response).to have_http_status(:ok)
@@ -214,7 +215,7 @@ RSpec.describe "MeetingParticipants requests",
     let!(:participant2) { create(:meeting_participant, meeting:, user: user_with_meeting_permissions2, attended: false) }
 
     it "marks all participants as attended" do
-      post mark_all_attended_meeting_participants_path(meeting), as: :turbo_stream
+      post mark_all_attended_project_meeting_participants_path(project, meeting), as: :turbo_stream
 
       expect(response).to have_http_status(:ok)
       expect(participant1.reload.attended).to be true
@@ -227,7 +228,7 @@ RSpec.describe "MeetingParticipants requests",
 
     it "toggles attendance status" do
       expect do
-        post toggle_attendance_meeting_participant_path(meeting, participant), as: :turbo_stream
+        post toggle_attendance_project_meeting_participant_path(project, meeting, participant), as: :turbo_stream
       end.to change { participant.reload.attended }.from(false).to(true)
 
       expect(response).to have_http_status(:ok)
@@ -239,7 +240,7 @@ RSpec.describe "MeetingParticipants requests",
 
     it "removes the participant" do
       expect do
-        delete meeting_participant_path(meeting, participant), as: :turbo_stream
+        delete project_meeting_participant_path(project, meeting, participant), as: :turbo_stream
       end.to change { meeting.participants.count }.by(-1)
 
       expect(response).to have_http_status(:ok)
@@ -248,7 +249,7 @@ RSpec.describe "MeetingParticipants requests",
 
   describe "GET /meetings/:meeting_id/participants/manage_participants_dialog" do
     it "responds with the manage participants dialog" do
-      get manage_participants_dialog_meeting_participants_path(meeting), as: :turbo_stream
+      get manage_participants_dialog_project_meeting_participants_path(project, meeting), as: :turbo_stream
 
       expect(response).to have_http_status(:ok)
     end

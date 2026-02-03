@@ -28,21 +28,6 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-RSpec.shared_examples_for "adapter files_query: basic query setup" do
-  it "is registered as queries.files" do
-    expect(Storages::Adapters::Registry.resolve("#{storage}.queries.files")).to eq(described_class)
-  end
-
-  it "responds to #call with correct parameters" do
-    expect(described_class).to respond_to(:call)
-
-    method = described_class.method(:call)
-    expect(method.parameters).to contain_exactly(%i[keyreq storage],
-                                                 %i[keyreq auth_strategy],
-                                                 %i[keyreq input_data])
-  end
-end
-
 RSpec.shared_examples_for "adapter files_query: successful files response" do
   it "returns a storage file collection object" do
     result = described_class.call(storage:, auth_strategy:, input_data:)
@@ -52,29 +37,5 @@ RSpec.shared_examples_for "adapter files_query: successful files response" do
     response = result.value!
     expect(response).to be_a(Storages::Adapters::Results::StorageFileCollection)
     expect(response).to eq(files_result)
-  end
-end
-
-RSpec.shared_examples_for "adapter files_query: not found" do |error_source = described_class|
-  it "returns a failure" do
-    result = described_class.call(storage:, auth_strategy:, input_data:)
-
-    expect(result).to be_failure
-
-    error = result.failure
-    expect(error.code).to eq(:not_found)
-    expect(error.source).to eq(error_source)
-  end
-end
-
-RSpec.shared_examples_for "adapter files_query: error" do |error_source = described_class|
-  it "returns a failure" do
-    result = described_class.call(storage:, auth_strategy:, input_data:)
-
-    expect(result).to be_failure
-
-    error = result.failure
-    expect(error.code).to eq(:error)
-    expect(error.source).to eq(error_source)
   end
 end

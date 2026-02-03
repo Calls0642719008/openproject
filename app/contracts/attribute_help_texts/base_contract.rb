@@ -38,6 +38,7 @@ module AttributeHelpTexts
 
     attribute :type
     attribute :attribute_name
+    attribute :caption
     attribute :help_text
 
     validate :user_allowed

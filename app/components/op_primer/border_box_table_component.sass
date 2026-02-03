@@ -3,19 +3,19 @@
 .op-border-box-grid
   display: grid
 
-  &--row-item
-    word-break: break-word
-
-  &--heading
+  &__header
     align-self: center
 
-  &--row-action,
-  &--heading-action
+  &__row-item
+    word-break: break-word
+
+  &__header-action,
+  &__row-action
     display: flex
     align-items: flex-start
     justify-content: flex-end
 
-  &--row-action
+  &__row-action
     margin-top: -6px // Moving the button slightly to the top, so that the icon aligns visually with the other columns
 
 @media screen and (min-width: $breakpoint-md)
@@ -26,33 +26,41 @@
     justify-content: flex-start
     align-items: flex-start
 
-    &--heading,
-    &--row-item
+    &--has-mobile-header
+      display: none
+
+    &__header,
+    &__row-item
       &:not(:first-child)
         padding-left: 6px
 
       &:not(:last-child)
         padding-right: 6px
 
-    &--mobile-heading,
-    &--row-label
-      display: none
+      &--main-column
+        grid-column: span 2
 
-    &--main-column
-      grid-column: span 2
+    &__mobile-header,
+    &__row-label
+      display: none
 
 @media screen and (max-width: $breakpoint-md)
   .op-border-box-grid
     grid-template-columns: 1fr auto
     grid-auto-flow: row
 
-    &--heading,
-    &--no-mobile
+    &--has-headers
       display: none
 
-    &--row-item
+    &__header
+      display: none
+
+    &__row-item
       grid-column: 1
 
-    &--row-action
+      &--no-mobile
+        display: none
+
+    &__row-action
       grid-column: 2
       grid-row: 1

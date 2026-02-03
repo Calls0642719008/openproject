@@ -144,7 +144,7 @@ class BudgetsController < ApplicationController
   def destroy
     @budgets.each(&:destroy)
     flash[:notice] = t(:notice_successful_delete)
-    redirect_to action: "index", project_id: @project
+    redirect_to action: "index", project_id: @project, status: :see_other
   end
 
   def destroy_info
@@ -221,10 +221,6 @@ class BudgetsController < ApplicationController
     end
   end
 
-  def find_optional_project
-    @project = Project.find(params[:project_id]) if params[:project_id].present?
-  end
-
   def render_item_as_json(element_id, costs, unit, project, permission)
     response = {
       "#{element_id}_unit_name" => ActionController::Base.helpers.sanitize(unit),
@@ -264,7 +260,7 @@ class BudgetsController < ApplicationController
 
     budget = Budget.find(params[:id])
     if budget.work_packages.any?
-      redirect_to destroy_info_budget_path(budget)
+      redirect_to destroy_info_budget_path(budget), status: :see_other
     end
   end
 

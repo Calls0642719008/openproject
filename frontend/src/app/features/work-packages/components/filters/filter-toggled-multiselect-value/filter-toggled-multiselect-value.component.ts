@@ -85,7 +85,6 @@ export class FilterToggledMultiselectValueComponent implements OnInit, AfterView
   }
 
   ngOnInit():void {
-    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     const values = (this.filter.currentSchema!.values!.allowedValues as HalResource[]);
     this.availableOptions = this.halSorting.sort(values);
   }

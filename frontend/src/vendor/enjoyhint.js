@@ -4165,7 +4165,8 @@
           for (d = void 0; Math.abs(f - g) / f > .01 && 25 > j;) {
             j++;
             for (var k = g; void 0 === e;) e = i(), e && k + e.pathLength < f && (k += e.pathLength, e = void 0);
-            if (e === {} || void 0 === c) return void 0;
+            // Fix for comparison always false - taken from https://github.com/konvajs/konva/commit/6f9c3fcbf9f9fb84a8fd5e9665e9063d2ff81ae5
+            if (Object.keys(e).length === 0 || void 0 === c) return void 0;
             var l = !1;
             switch (e.command) {
               case"L":

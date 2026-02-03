@@ -41,6 +41,10 @@ module Settings
         @project_custom_field_sections = project_custom_field_sections
       end
 
+      def row_component_class
+        Settings::ProjectCustomFieldSections::ShowComponent
+      end
+
       def first_and_last
         [@project_custom_field_sections.first, @project_custom_field_sections.last]
       end
@@ -55,7 +59,7 @@ module Settings
 
       def drop_target_config
         {
-          "is-drag-and-drop-target": true,
+          generic_drag_and_drop_target: "container",
           "target-allowed-drag-type": "section" # the type of dragged items which are allowed to be dropped in this target
         }
       end

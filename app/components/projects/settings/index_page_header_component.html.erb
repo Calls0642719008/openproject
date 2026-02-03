@@ -79,10 +79,12 @@
         menu.with_item(
           tag: :a,
           label: t(:button_archive),
-          href: project_archive_path(@project, status: "", name: @project.name),
+          href: helpers.dialog_project_archive_path(project),
           content_arguments: {
-            data: { confirm: t("project.archive.are_you_sure", name: @project.name), method: :post },
-            test_selector: "project-settings--archive"
+            data: {
+              turbo_stream: true,
+              test_selector: "project-settings--archive"
+            }
           }
         ) do |item|
           item.with_leading_visual_icon(icon: "lock")
@@ -96,7 +98,7 @@
           label: t("project.template.#{label}"),
           href: project_templated_path(@project),
           content_arguments: {
-            data: { method: @project.templated ? :delete : :post },
+            data: { turbo_method: @project.templated ? :delete : :post },
             test_selector: "project-settings--mark-template"
           }
         ) do |item|
@@ -109,7 +111,7 @@
           label: t(:button_delete),
           href: confirm_destroy_project_path(@project),
           content_arguments: {
-            data: { turbo: false },
+            data: { turbo_stream: true },
             test_selector: "project-settings--delete"
           }
         ) do |item|

@@ -29,7 +29,15 @@ See COPYRIGHT and LICENSE files for more details.
 <%= render(Primer::Beta::Heading.new(tag: :h3, font_size: 4, mb: 2)) { @custom_field.name } %>
 
 <%=
-  render(Primer::OpenProject::TreeView.new(node_variant: :anchor)) do |tree_view|
-    add_sub_tree(tree_view, hierarchy_items)
+  render(Primer::Alpha::TreeView.new(node_variant: :anchor)) do |tree_view|
+    item_formatter = standard_tree_view_item_formatter
+    item_options = {
+      href_fn: lambda { |item| href_for(item) },
+      expanded: [@active_item, @active_item.parent],
+      current: @active_item,
+      label_fn: lambda { |item| item_formatter.format(item:) }
+    }
+
+    populate_tree_view(tree_view, @custom_field, item_options:)
   end
 %>

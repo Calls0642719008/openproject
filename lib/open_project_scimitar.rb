@@ -31,19 +31,10 @@
 module OpenProjectScimitar
   AUTHENTICATION_SCHEMES = [
     Scimitar::AuthenticationScheme.new(
-      type: "oauth2",
-      name: "OAuth2",
-      description: OpenProject::Static::Links.url_for(:sysadmin_docs, :scim_static_access_token_authentication_method)
-    ),
-    Scimitar::AuthenticationScheme.new(
       type: "oauthbearertoken",
       name: "OAuth Bearer Token",
-      description: OpenProject::Static::Links.url_for(:sysadmin_docs, :scim_oauth2_client_credentials_authentication_method)
-    ),
-    Scimitar::AuthenticationScheme.new(
-      type: "oidcjwt",
-      name: "OpenID Provider JWT",
-      description: OpenProject::Static::Links.url_for(:sysadmin_docs, :scim_jwt_authetication_method)
+      description: "Bearer Token can be obtained in 3 different ways" \
+                   "(#{OpenProject::Static::Links.url_for(:sysadmin_docs, :scim_authentication, localize_url: false)})"
     )
   ].freeze
 end

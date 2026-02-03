@@ -37,9 +37,11 @@ tr:
               can_only_contain_work_packages_of_current_sprint: "yalnızca geçerli sprintteki iş paketlerinin kimliklerini içerebilir."
               must_block_at_least_one_work_package: "en az bir biletin kimliğini içermelidir."
             version_id:
-              task_version_must_be_the_same_as_story_version: "üst hikaye sürümüyle aynı olmalıdır."
+              task_version_must_be_the_same_as_story_version: "ana hikaye sürümüyle aynı olmalıdır."
         sprint:
           cannot_end_before_it_starts: "Sprint başlamadan önce bitemez."
+  attributes:
+    task_type: "Görev türü"
   backlogs:
     add_new_story: "Yeni Hikaye"
     any: "herhangi bir"
@@ -56,7 +58,7 @@ tr:
     impediment: "Engel"
     label_versions_default_fold_state: "Katlanmış sürümleri göster"
     caption_versions_default_fold_state: "Birikmiş işler görüntülenirken sürümler öntanımlı olarak genişletilmeyecektir. Her birinin ayrı ayrı genişletilmesi gerekir."
-    work_package_is_closed: "İş paketi şu durumlarda tamamlanır"
+    work_package_is_closed: "İş paketi, ne zaman"
     label_is_done_status: "Durum %{status_name} tamamlandı anlamına geliyor"
     no_burndown_data: "Burndown verileri mevcut değil. Sprint başlangıç ve bitiş tarihlerinin ayarlanması gereklidir."
     points: "Puanlar / Noktalar"
@@ -100,7 +102,10 @@ tr:
   backlogs_empty_title: "Beklentilerde kullanılacak hiçbir sürüm tanımlanmadı"
   backlogs_empty_action_text: "Birikmiş işler ile çalışmaya başlamak için yeni bir sürüm oluşturun ve bunu bir birikmiş işler sütununa atayın."
   button_edit_wiki: "Wiki sayfalarını düzenlemek"
-  error_backlogs_task_cannot_be_story: "Ayarlar geçersiz. Seçilen görev türü aynı zamanda bir hikaye türü olamaz."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "aynı zamanda bir hikaye türü olamaz"
   error_intro_plural: "Aşağıdaki hatalar algılandı:"
   error_intro_singular: "Aşağıdaki hatalar algılandı:"
   error_outro: "Lütfen yukarıdaki hataları tekrar göndermeden önce düzeltin."
@@ -124,6 +129,10 @@ tr:
   label_points_burn_up: "Yukarı"
   label_product_backlog: "ürün bekleme süresi"
   label_select_all: "Hepsini seç"
+  label_select_type: "Bir tür seçin"
+  label_select_types: "Türleri seçin"
+  label_selected_type: "Seçili tür"
+  label_selected_types: "Seçilen türler"
   label_sprint_backlog: "sprint biriktirme listesi"
   label_sprint_cards: "Kartları dışa çıkart"
   label_sprint_impediments: "Sprint Engelleri"
@@ -156,7 +165,11 @@ tr:
   required_burn_rate_points: "gerekli yanma oranı (puan)"
   todo_work_package_description: "%{summary}:%{url}\n%{description}"
   todo_work_package_summary: "%{type}:%{summary}"
-  version_settings_display_label: "İş listesindeki sütunlar"
+  version_settings_display_label: "Sütununda birikim var"
   version_settings_display_option_left: "sol"
   version_settings_display_option_none: "hiçbiri"
   version_settings_display_option_right: "sağ"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

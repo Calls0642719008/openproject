@@ -38,6 +38,7 @@ class MeetingAgendaItem::Duration < ApplicationForm
       visually_hide_label: true,
       max: 1440,
       type: :number,
+      autocomplete: "off",
       disabled: @disabled
     )
   end

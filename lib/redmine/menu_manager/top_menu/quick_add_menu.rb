@@ -30,6 +30,7 @@
 
 module Redmine::MenuManager::TopMenu::QuickAddMenu
   include OpenProject::StaticRouting::UrlHelpers
+  include OpPrimer::ComponentHelpers
 
   def render_quick_add_menu
     return unless show_quick_add_menu?
@@ -52,15 +53,12 @@ module Redmine::MenuManager::TopMenu::QuickAddMenu
         render(Primer::Beta::Octicon.new(icon: "triangle-down", aria: { label: I18n.t("menus.quick_add.label") }))
       end
 
-      add_first_level_items(menu)
-      if first_level_menu_items_for(:quick_add_menu, @project).present? && work_package_quick_add_items.present?
-        menu.with_divider
-      end
-      add_second_level_items(menu)
+      with_item_group(menu) { add_first_level_items(menu) }
+      with_item_group(menu) { add_second_level_items(menu) }
     end
   end
 
-  def add_first_level_items(menu)
+  def add_first_level_items(menu) # rubocop:disable Metrics/AbcSize
     first_level_menu_items_for(:quick_add_menu, @project).each do |item|
       html_options = item.html_options
       html_options[:aria] = { labelledby: id_for_name(item.caption) } if html_options[:aria].blank?
@@ -68,7 +66,7 @@ module Redmine::MenuManager::TopMenu::QuickAddMenu
       menu.with_item(
         href: item.url.present? ? allowed_node_url(item, @project) : "#",
         content_arguments: {
-          target: "_top",
+          target: html_options.fetch(:target, "_top"),
           **html_options,
           test_selector: "quick-add-menu-item"
         },
@@ -131,7 +129,7 @@ module Redmine::MenuManager::TopMenu::QuickAddMenu
         classes: "__hl_inline_type_#{type_id}" }
     else
       { caption: type_name,
-        href: new_work_packages_path(type: type_id),
+        href: new_work_package_path(type: type_id),
         classes: "__hl_inline_type_#{type_id}" }
     end
   end

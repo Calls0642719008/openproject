@@ -7,18 +7,21 @@ value:
   columnCount: 5
   widgets:
     - _type: GridWidget
+      id: 1
       identifier: tasks
       startRow: 1
       endRow: 8
       startColumn: 1
       endColumn: 3
     - _type: GridWidget
+      id: 2
       identifier: news
       startRow: 3
       endRow: 8
       startColumn: 4
       endColumn: 5
     - _type: GridWidget
+      id: 3
       identifier: documents
       startRow: 1
       endRow: 3

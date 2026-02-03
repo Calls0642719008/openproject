@@ -12,7 +12,7 @@ import { WorkPackageWatchersService } from 'core-app/features/work-packages/comp
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkPackageWatchersCountComponent extends UntilDestroyedMixin implements OnInit {
-  @Input('wpId') wpId:string;
+  @Input() wpId:string;
 
   public count = 0;
 

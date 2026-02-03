@@ -73,7 +73,7 @@ export class DragAndDropTransformer {
           return false;
         }
 
-        const wpId:string = el.dataset.workPackageId!;
+        const wpId:string = el.dataset.workPackageId;
         const workPackage = this.states.workPackages.get(wpId).value;
         return !!workPackage && this.actionService.canPickup(workPackage);
       },

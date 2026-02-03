@@ -61,7 +61,7 @@ export class States extends StatesGroup {
   };
 
   // Additional state map that can be dynamically registered.
-  additional:{ [id:string]:MultiInputState<unknown> } = {};
+  additional:Record<string, MultiInputState<unknown>> = {};
 
   forType<T>(stateName:string):MultiInputState<T> {
     let state = (this as any)[stateName] || this.additional[stateName];

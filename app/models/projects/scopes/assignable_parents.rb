@@ -34,12 +34,13 @@ module Projects::Scopes
 
     class_methods do
       def assignable_parents(user, project)
-        if project.portfolio? || project.program?
-          Project.none
-        else
+        if (allowed_parent_workspace_types = project.allowed_parent_workspace_types)
           Project
             .allowed_to(user, :add_subprojects)
             .where.not(id: project.self_and_descendants)
+            .where(workspace_type: allowed_parent_workspace_types)
+        else
+          Project.none
         end
       end
     end

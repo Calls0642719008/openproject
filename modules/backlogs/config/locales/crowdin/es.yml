@@ -40,6 +40,8 @@ es:
               task_version_must_be_the_same_as_story_version: "debe coincidir con la versión de la historia principal."
         sprint:
           cannot_end_before_it_starts: "El sprint no puede terminar antes del inicio."
+  attributes:
+    task_type: "Tipo de tarea"
   backlogs:
     add_new_story: "Nueva historia"
     any: "cualquiera"
@@ -100,7 +102,10 @@ es:
   backlogs_empty_title: "No se especificó ninguna versión en los backlogs"
   backlogs_empty_action_text: "Para empezar con los trabajos pendientes, cree una nueva versión y asígnela a la columna de backlogs."
   button_edit_wiki: "Editar página wiki"
-  error_backlogs_task_cannot_be_story: "La configuración no es válida. El tipo de tarea seleccionada no puede ser también un tipo de historia."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "no puede ser también un tipo de historia"
   error_intro_plural: "Se encontraron los siguientes errores:"
   error_intro_singular: "Se ha encontrado el siguiente error:"
   error_outro: "Por favor, corrija los errores anteriores antes de volver a enviarlo."
@@ -124,6 +129,10 @@ es:
   label_points_burn_up: "Arriba"
   label_product_backlog: "backlog de producto"
   label_select_all: "Seleccionar todos"
+  label_select_type: "Selecciona un tipo"
+  label_select_types: "Selecciona tipos"
+  label_selected_type: "Tipo seleccionado"
+  label_selected_types: "Tipos seleccionados"
   label_sprint_backlog: "backlog de sprint"
   label_sprint_cards: "Exportar tarjetas"
   label_sprint_impediments: "Impedimentos de sprint"
@@ -160,3 +169,7 @@ es:
   version_settings_display_option_left: "izquierda"
   version_settings_display_option_none: "ninguno"
   version_settings_display_option_right: "derecha"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Tipos tratados como historias pendientes (por ejemplo: función, historia de usuario). Deben diferir del tipo de tarea.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Tipo utilizado para tareas de historia. Debe diferir de los tipos de historia.

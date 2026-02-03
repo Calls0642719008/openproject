@@ -3,13 +3,14 @@ import { OPContextMenuService } from 'core-app/shared/components/op-context-menu
 import { OpContextMenuHandler } from 'core-app/shared/components/op-context-menu/op-context-menu-handler';
 import { OpContextMenuItem } from 'core-app/shared/components/op-context-menu/op-context-menu.types';
 import Mousetrap from 'mousetrap';
+import { computePosition, ComputePositionReturn, flip, shift } from '@floating-ui/dom';
 
 @Directive({
   selector: '[opContextMenuTrigger]',
   standalone: false,
 })
 export class OpContextMenuTrigger extends OpContextMenuHandler implements AfterViewInit {
-  protected $element:JQuery;
+  protected element:HTMLElement;
 
   protected items:OpContextMenuItem[] = [];
 
@@ -21,10 +22,10 @@ export class OpContextMenuTrigger extends OpContextMenuHandler implements AfterV
   }
 
   ngAfterViewInit():void {
-    this.$element = jQuery(this.elementRef.nativeElement);
+    this.element = this.elementRef.nativeElement;
 
     // Open by clicking the element
-    this.$element.on('click', (evt:JQuery.TriggeredEvent) => {
+    this.element.addEventListener('click', (evt) => {
       evt.preventDefault();
 
       // When clicking the same trigger twice, close the element instead.
@@ -36,22 +37,18 @@ export class OpContextMenuTrigger extends OpContextMenuHandler implements AfterV
     });
 
     // Open with keyboard combination as well
-    Mousetrap(this.$element[0]).bind('shift+alt+f10', (evt:any) => {
+    Mousetrap(this.element).bind('shift+alt+f10', (evt:any) => {
       this.open(evt);
     });
   }
 
-  /**
-   * Positioning args for jquery-ui position.
-   *
-   * @param {Event} openerEvent
-   */
-  public positionArgs(openerEvent:JQuery.TriggeredEvent) {
-    return {
-      my: 'left top',
-      at: 'left bottom',
-      of: this.$element,
-      collision: 'flipfit',
-    };
+  public computePosition(floating:HTMLElement, openerEvent:Event):Promise<ComputePositionReturn> {
+    return computePosition(this.element, floating, {
+      placement: this.placement,
+      middleware: [
+        flip(),
+        shift({ padding: 10 }),
+      ],
+    });
   }
 }

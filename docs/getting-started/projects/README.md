@@ -49,46 +49,77 @@ Projects and subprojects are displayed according to their hierarchy in the drop-
 
 Alternatively, you can open the list of all existing projects using the [**Global modules**](../../user-guide/home/global-modules/#projects) menu.
 
-Also, you will see your newest and favored projects on the application landing page in the **Projects** section. Here you can simply click on one of the projects to open it. Alternatively, select favorite projects from the **All projects** dropdown menu by using the respective switch.
+Also, you will see your newest and favorited projects on the application landing page in the **Projects** section. Here you can simply click on one of the projects to open it. Alternatively, select favorite projects from the **All projects** dropdown menu by using the respective switch.
 
 ![Favorite projects displayed on OpenProject overview page](openproject_getting_started_favorite_projects.png)
 
 ## Create a new project
 
-There are several ways to create a new project in OpenProject. 
+There are several ways to create a new project in OpenProject. Keep in mind that the ability to create a new project is tied to correct [permissions](../../system-admin-guide/users-permissions/roles-permissions/).
 
 1. Click the green button **+ Project** directly on the system's home screen in the **Project** section.
 
    ![Button to create a new project on the OpenProject homepage](openproject_getting_started_project_new_project_button.png)
 
-2. You can use the **+ Project** button at the bottom of *All projects* dropdown menu in the header navigation to create a new project.
+2. You can also use the **+ (Plus)** button in the top right corner of the header navigation. 
 
-![+Project button to create a new project on the OpenProject overview page](openproject_getting_started_project_new_project_button_projects_dropdown.png)
+![+ Button in the top right corner of the OpenProject head navigation, opened, showing an option to add a new project](openproject_getting_started_project_plust_button_add_project.png)
 
-3. You can also use the **+ (Plus)** button in the top right corner of the header navigation. 
+![+ Button in the top right corner of the OpenProject head navigation, opened, showing an option to add a new project](openproject_getting_started_project_plust_button_add_project.png)
 
-   ![+ Button in the top right corner of the OpenProject head navigation, opened, showing an option to add a new project](openproject_getting_started_project_plust_button_add_project.png)
+3. In addition, you can also create a new project on the [project lists](../../user-guide/projects/project-lists/) overview page. 
 
-4. In addition, you can also create a new project on the [project lists](../../user-guide/projects/project-lists/) overview page. 
+4. If the project you are creating is subproject, navigate to the [project settings](../../user-guide/projects/project-settings/) and use the *+ Subproject* button.
 
-- You can either create a completely new project, a subproject of an existing project or a (sub)project from a template. For the latter option, choose a [template](../../user-guide/projects/project-templates/#create-a-project-template) using the drop-down menu.
-- Enter a **name** for your project and click the **Create** button.
-- Integrate the project into the existing project hierarchy by defining it as a subproject of an existing project.
-- The **Advanced settings** allow for further configuration, e.g. description, URL, etc.
+### Choose how to create your project
+You can create either:
 
-![Name and create a new project in OpenProject](openproject_getting_started_new_project_form.png)
+- a **blank project** (a completely new and empty project), or 
+- a project **based on a template**.
 
-By default, creating a new project will set you as project admin, regardless of whether you copied a project, used a template or created a project from scratch. Now, you can get started working on your project.
+The **Blank project** option is selected by default.
 
-To configure further project information, see the documentation for [project settings](../../user-guide/projects/project-settings/project-information/).
+>  [!TIP]
+> If you do not see any template options, this may be because no projects have been set as [project templates](../../user-guide/projects/project-templates/#create-a-project-template) yet, or because you do not have access to any template projects. Only templates that are public or where you are a project member are shown, allowing different user groups to see only the templates relevant to them.
 
-### View all projects
+Click **Continue** to proceed.
 
-To view all your projects in which you are a member, click on the **Project lists** button at the bottom of the action bar after opening the **Select a project** drop-down menu.
+![Select a template for creating a new project in OpenProject](openproject_getting_started_create_new_project_select_template.png)
 
-!["Project lists" button at the bottom of "All projects" dropdown list in OpenProject header navigation to open a list of all projects](openproject_getting_started_project_lists_button.png)
+### Define project details
 
-Alternatively you can use the [**Global modules menu**](../../user-guide/home/global-modules/#projects) on the left or select *Projects* using the grid icon in the top left corner.
+Next, enter the **name** and an optional **description** for your project.  You can also integrate the project into your existing project hierarchy by selecting a **parent project**, which will make the new project a **subproject**.
+
+Click **Complete** to finish the setup.
+
+![Name and create a new project in OpenProject](openproject_getting_started_create_new_project_name.png)
+
+> [!TIP]
+> If you started creating a new project (project B) from within any other project (project A), project B is considered a subproject of project A. 
+> In this case, the **Subproject of** field is not shown, but the parent project appears in the breadcrumb navigation.
+> If this was not your intention, you can change or remove the parent project later in the project settings of project B.
+
+
+![Name and create a new subproject in OpenProject](openproject_getting_started_create_new_sub_project_name.png)
+
+> [!TIP]
+> If there are project attributes configured as **required**, an additional step will appear during project creation. You must fill in these attributes before you can complete the setup.
+
+![Fill out a required project attribute during new project creation in OpenProject](openproject_getting_started_create_new_project_attributes.png)
+
+### Project members
+
+The project members of a newly created project depend on how the project was created:
+
+- **Blank project**: The user creating the project will be added automatically as a member, project role is based on the [corresponding setting in administration](../../system-admin-guide/projects/new-project/). 
+- **From a template**: The project inherits the same members and roles as defined in the template.
+- **Copied from another project**: The project inherits the members and roles from the original project. See here [how to copy a project](../../user-guide/projects/project-settings/project-information/#copy-a-project).
+
+To continue configuring your project, see the documentation on [project settings](../../user-guide/projects/project-settings/project-information/).
+
+## View all projects
+
+To view all your projects in which you are a member, use the [**Global modules menu**](../../user-guide/home/global-modules/#projects) on the left or select *Projects* using the grid icon in the top left corner.
 
 ![*Global modules* grid icon in OpenProject header navigation, opened, Projects module selected](openproject_getting_started_global_modules_icon_projects.png)
 

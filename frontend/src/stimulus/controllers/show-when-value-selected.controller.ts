@@ -1,3 +1,4 @@
+import { toggleElement, toggleElementByVisibility } from 'core-app/shared/helpers/dom-helpers';
 import { ApplicationController } from 'stimulus-use';
 
 export default class OpShowWhenValueSelectedController extends ApplicationController {
@@ -27,9 +28,9 @@ export default class OpShowWhenValueSelectedController extends ApplicationContro
         el.disabled = disabled;
 
         if (el.dataset.setVisibility === 'true') {
-          el.style.setProperty('visibility', disabled ? 'hidden' : 'visible');
+          toggleElementByVisibility(el, !disabled);
         } else {
-          el.hidden = disabled;
+          toggleElement(el, !disabled);
         }
     });
   }

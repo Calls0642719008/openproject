@@ -24,7 +24,7 @@ ms:
       storages/sharepoint_storage:
         host: Sharepoint Site URL
         library: Library ID
-        name: Name
+        name: Nama
         site: Site ID
       storages/storage:
         authentication_method: Kaedah Pengesahan
@@ -32,6 +32,7 @@ ms:
         drive: ID Pemacu
         host: Hos
         name: Nama
+        password: Kata laluan aplikasi
         provider_type: Jenis penyedia
         tenant: ID Direktori (penyewa) 
     errors:
@@ -62,7 +63,7 @@ ms:
               op_application_not_installed: kelihatan tidak mempunyai aplikasi "Integrasi OpenProject" yang terpasang. Sila pasangkannya terlebih dahulu dan cuba sekali lagi.
             password:
               invalid_password: tidak sah.
-              unknown_error: tidak dapat disahkan. Sila periksa sambungan storan anda dan cuba lagi.
+              unknown_error: could not be validated with the file storage provider. Please verify that the connection is functioning properly.
     models:
       file_link: Fail
       storages/storage: Penyimpanan
@@ -95,12 +96,6 @@ ms:
       manual: Folder yang tersedia dikendalikan secara manual
     remove_project:
       deletion_failure_flash: Gagal mengalih keluar projek daripada storan. %{error}
-      dialog:
-        automatically_managed_appendix: Dalam kes ini juga, storan ini mempunyai folder projek yang diuruskan secara automatik, dan fail yang termasuk akan dipadam selamanya.
-        confirmation_text: Sila sahkan bahawa anda faham dan ingin memadam storan fail ini daripada projek ini
-        heading_text: Alih keluar projek daripada %{storage}
-        text: Aksi ini tidak dapat dipulihkan dan akan padamkan semua pautan daripada pakej kerja projek ini ke fail dan folder storan itu.
-        title: Remove project from storage
       label: Keluarkan projek
   services:
     attributes:
@@ -109,18 +104,25 @@ ms:
         create_folder: 'Penciptaan Folder Projek Terurus:'
         ensure_root_folder_permissions: 'Tetapkan Kebenaran Folder Pangkalan:'
         hide_inactive_folders: 'Langkah Sembunyikan Folder Tidak Aktif:'
-        remote_folders: 'Baca kandungan folder kumpulan:'
+        remote_folders: 'Read contents of the team folder:'
         remove_user_from_group: 'Keluarkan Pengguna daripada Kumpulan:'
         rename_project_folder: 'Namakan semula Folder projek yang telah diuruskan:'
       one_drive_sync_service:
         create_folder: 'Penciptaan Folder Projek Terurus:'
         ensure_root_folder_permissions: 'Tetapkan Kebenaran Folder Pangkalan:'
         hide_inactive_folders: 'Langkah Sembunyikan Folder Tidak Aktif:'
-        remote_folders: 'Baca kandungan folder kumpulan:'
+        remote_folders: 'Read contents of the drive root folder:'
+        rename_project_folder: 'Namakan semula Folder projek yang telah diuruskan:'
+      sharepoint_sync_service:
+        create_folder: 'Penciptaan Folder Projek Terurus:'
+        ensure_root_folder_permissions: 'Tetapkan Kebenaran Folder Pangkalan:'
+        hide_inactive_folders: 'Langkah Sembunyikan Folder Tidak Aktif:'
+        remote_folders: 'Read contents of the drive root folder:'
         rename_project_folder: 'Namakan semula Folder projek yang telah diuruskan:'
     errors:
       messages:
         error: Ralat yang tidak dijangka berlaku. Sila semak log OpenProject untuk mendapatkan maklumat lanjut atau hubungi pentadbir
+        forbidden: OpenProject could not access the requested resource. Please check your permissions configuration on the Storage Provider.
         unauthorized: OpenProject tidak dapat mengesahkan dengan Pembekal Storan. Sila pastikan anda mempunyai akses kepadanya.
       models:
         copy_project_folders_service:
@@ -138,7 +140,7 @@ ms:
               conflict: The folder %{folder_name} already exists on %{parent_location}.
               not_found: "%{parent_location} tidak ditemui."
             ensure_root_folder_permissions:
-              not_found: "%{group_folder} tidak ditemui. Sila semak persediaan Folder Kumpulan Nextcloud anda."
+              not_found: "%{group_folder} wasn't found. Please check your Nextcloud Team Folder setup."
               permission_not_set: tidak dapat menetapkan kebenaran pada %{group_folder}.
             hide_inactive_folders:
               permission_not_set: tidak dapat menetapkan kebenaran pada %{path}.
@@ -158,6 +160,7 @@ ms:
           group_does_not_exist: "%{group} tidak wujud. Semak konfigurasi contoh Nextcloud anda."
           insufficient_privileges: OpenProject tidak mempunyai keistimewaan yang mencukupi untuk menambah %{user} kepada %{group}. Semak tetapan kumpulan anda dalam Nextcloud.
           not_allowed: Nextcloud menyekat permintaan itu.
+          not_found: OpenProject could not find the file on the Nextcloud Storage Provider. Please check if it wasn't deleted.
           unauthorized: OpenProject tidak dapat disegerakkan dengan Nextcloud. Sila semak storan dan konfigurasi Nextcloud anda.
           user_does_not_exist: "%{user} tidak wujud dalam Nextcloud."
         one_drive_sync_service:
@@ -170,6 +173,23 @@ ms:
             remote_folders:
               request_error: OpenProject tidak dapat mengakses pemacu anda %{drive_id}. Sila semak sama ada konfigurasi storan anda betul.
             rename_project_folder:
+              conflict: OpenProject could not rename the folder %{current_path} to %{project_folder_name} as a folder with the same name already exists.
+              forbidden: OpenProject tidak mempunyai akses kepada %{current_path} untuk menamakan semula.
+              not_found: "%{current_path} tidak ditemui."
+            set_folders_permissions:
+              permission_not_set: tidak dapat menetapkan kebenaran pada %{path}.
+          error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information.
+          not_allowed: OpenProject tidak dibenarkan mengakses pemacu OneDrive anda. Sila semak kebenaran yang ditetapkan pada Aplikasi Azure.
+          unauthorized: OpenProject tidak dapat disegerakkan dengan OneDrive. Sila semak storan dan konfigurasi Aplikasi Azure anda.
+          user_does_not_exist: "%{user} tidak wujud dalam Nextcloud."
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: '%{folder_name} sudah wujud di %{parent_location}.'
+              not_found: "%{parent_location} tidak ditemui."
+            hide_inactive_folders:
+              permission_not_set: tidak dapat menetapkan kebenaran pada %{path}.
+            rename_project_folder:
               conflict: OpenProject tidak dapat menamakan semula folder %{current_path} kepada %{project_folder_name} kerana folder dengan nama yang sama sudah wujud
               forbidden: OpenProject tidak mempunyai akses kepada %{current_path} untuk menamakan semula.
               not_found: "%{current_path} tidak ditemui."
@@ -177,14 +197,13 @@ ms:
               permission_not_set: tidak dapat menetapkan kebenaran pada %{path}.
           error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information
           not_allowed: OpenProject tidak dibenarkan mengakses pemacu OneDrive anda. Sila semak kebenaran yang ditetapkan pada Aplikasi Azure.
+          not_found: OpenProject could not access your library %{drive_name}. Please check you Sharepoint site document libraries.
           unauthorized: OpenProject tidak dapat disegerakkan dengan OneDrive. Sila semak storan dan konfigurasi Aplikasi Azure anda.
           user_does_not_exist: "%{user} tidak wujud dalam Nextcloud."
         upload_link_service:
           not_found: Folder destinasi %{folder} tidak dapat ditemui pada %{storage_name}.
   storages:
     buttons:
-      complete_without_setup: Lengkap tanpanya
-      done_complete_setup: Selesai, penyediaan lengkap
       done_continue: Selesai, teruskan
       open_storage: Buka storan fail
       replace_oauth_application: Ganti OpenProject OAuth
@@ -198,22 +217,20 @@ ms:
         sharepoint: Allow OpenProject to access SharePoint data using OAuth.
       redirect_uri_incomplete:
         one_drive: Lengkapkan penyediaan dengan pengubah hala URI yang betul.
-        sharepoint: Complete the setup with the correct URI redirection.
+        sharepoint: Lengkapkan penyediaan dengan pengubah hala URI yang betul.
     confirm_replace_oauth_application: Tindakan ini akan menetapkan semula kelayakan OAuth semasa. Selepas pengesahan, anda perlu masukkan semula kelayakan di penyedia storan dan semua pengguna jauh perlu membenarkan OpenProject sekali lagi. Adakah anda pasti anda mahu teruskan?
     confirm_replace_oauth_client: Tindakan ini akan menetapkan semula kelayakan OAuth semasa. Selepas pengesahan, anda perlu masukkan semula kelayakan di penyedia storan dan semua pengguna jauh perlu membenarkan %{provider_type} sekali lagi. Adakah anda pasti anda mahu teruskan?
     delete_warning:
-      input_delete_confirmation: Masukkan nama fail storan %{file_storage} untuk mengesahkan pembuangan.
-      irreversible_notice: Memadam fail storan ialah tindakan yang tidak dapat dipulihkan.
-      project_storage: 'Adakah anda pasti anda ingin memadamkan %{file_storage} daripada projek ini? Untuk mengesahkan tindakan ini sila perkenalkan nama storan di dalam ruangan di bawah, ini akan:'
-      project_storage_delete_result_1: Padam semua pautan dari pakej kerja projek ini ke fail dan folder storan tersebut.
-      project_storage_delete_result_2: Sekiranya storan ini mempunyai folder projek yang dikendalikan secara automatik, folder ini serta failnya akan dipadamkan selamanya.
-      storage: 'Adakah anda pasti anda ingin memadam %{file_storage}? Untuk mengesahkan tindakan ini sila perkenalkan nama storan di dalam ruangan di bawah, ini akan:'
-      storage_delete_result_1: Padam semua penyediaan storan untuk semua projek yang menggunakan storan ini.
-      storage_delete_result_2: Padam semua pautan daripada pakej kerja semua projek ke fail dan folder storan tersebut.
-      storage_delete_result_3: Sekiranya storan ini mempunyai folder projek yang dikendalikan secara automatik, folder tersebut serta fail yang terkandung akan dipadamkan selamanya.
+      project_storage: Are you sure you want to remove %{file_storage} from this project?
+      project_storage_delete_result_1: All links to corresponding files and folders will be removed
+      project_storage_delete_result_2: The automatically-managed project folder and all files in it will be deleted
+      storage: Are you sure you want to delete %{file_storage} as an external file storage?
+      storage_delete_result_1: The storage will be removed from all projects currently using it
+      storage_delete_result_2: All links to corresponding files and folders will be removed
+      storage_delete_result_3: The automatically-managed project folder and all files in it will be deleted
     dependencies:
       nextcloud:
-        group_folders_app: Group Folders
+        group_folders_app: Team Folders
         integration_app: Integrasi OpenProject
     enabled_in_projects:
       setup_incomplete_description: Storan ini mempunyai persediaan yang tidak lengkap. Sila lengkapkan persediaan sebelum mendayakannya dalam berbilang projek.
@@ -221,25 +238,32 @@ ms:
     error_invalid_provider_type: Sila pilih penyedia storan yang sah.
     file_storage_view:
       access_management:
-        automatic_management: Akses dan folder yang dikendalikan secara automatik
-        automatic_management_description: Benarkan OpenProject ciptakan folder mengikut projek secara automatik dan menguruskan akses pengguna. Ini disarankan kerana ia memastikan setiap ahli pasukan mempunyai akses kebenaran yang betul.
-        description: Pilih jenis pengurusan akses pengguna dan ciptaan folder. Kami sarankan menggunakan akses yang dikendalikan secara automatik untuk mengadakan struktur yang lebih tersusun, dan menjaminkan akses kepada semua pengguna yang berkaitan.
-        manual_management: Akses dan folder yang dikendalikan secara manual
-        manual_management_description: Ciptakan dan uruskan folder mengikut projek sendiri secara manual. Anda perlu memastikan pengguna-pengguna berkaitan mempunyai akses secara manual.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Pilih jenis pengurusan akses pengguna dan penciptaan folder.
-        subtitle: Pengurusan akses 
+        subtitle: Folder and access management
       access_management_section: Akses dan folder projek
       automatically_managed_folders: Folder yang dikendalikan secara automatik
       general_information: Maklumat umum
       oauth_configuration: OAuth configuration
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: OAuth Azure
       openproject_oauth: OAuth OpenProject
       project_folders: Folder projek
-      redirect_uri: ' Pengubah hala URI'
+      redirect_uri: Ubah hala URI
+      sharepoint_oauth: OAuth Azure
       storage_audience_blank: No audience has been configured.
       storage_audience_description: Exchanging tokens for audience "%{audience}".
       storage_audience_idp: Using access token obtained by identity provider during login, regardless of audience.
-      storage_oauth: Nextcloud OAuth
+      storage_oauth: Storage OAuth
       storage_provider: Penyedia storan
       token_exchange: Token Exchange
     health:
@@ -252,12 +276,12 @@ ms:
         ampf_configuration:
           client_folder_creation: Automatic folder creation
           client_folder_removal: Automatic folder deletion
-          drive_contents: Drive has expected content
-          files_request: Fetching group folder files
-          group_folder_app: 'Dependency: Group Folders'
-          group_folder_contents: Group folder has expected content
-          group_folder_presence: Group folder exists
-          header: Automatically managed project folders
+          drive_contents: Drive content
+          files_request: Fetching team folder files
+          header: Folder projek yang dikendalikan secara automatik
+          team_folder_app: 'Dependency: Team Folders'
+          team_folder_contents: Team folder content
+          team_folder_presence: Team folder exists
           userless_access: Server-side request authentication
         authentication:
           existing_token: User token
@@ -278,6 +302,7 @@ ms:
           drive_id_exists: Drive exists
           drive_id_format: Drive ID format
           header: Configuration
+          host: URL Hos
           host_url_accessible: Host URL accessible
           storage_configured: Configuration complete
           tenant_id: Tenant ID
@@ -291,12 +316,12 @@ ms:
         client_secret_invalid: Rahsia pelanggan OAuth 2 yang dikonfigurasikan adalah tidak sah. Sila semak konfigurasi.
         nc_dependency_missing: 'Kebergantungan yang diperlukan tiada pada storan fail. Sila tambahkan kebergantungan berikut: %{dependency}.'
         nc_dependency_version_mismatch: The %{dependency} app version is not supported. Please update your Nextcloud server.
-        nc_group_folder_not_found: Folder kumpulan tidak ditemui.
         nc_host_not_found: Tiada pelayan Nextcloud ditemui pada url hos yang dikonfigurasikan. Sila semak konfigurasi.
         nc_oauth_request_not_found: The endpoint to fetch the currently connected user was not found. Please check the server logs for further information.
         nc_oauth_request_unauthorized: The current user isn't authorized to access the remote file storage. Please check the server logs for further information.
         nc_oauth_token_missing: OpenProject cannot test the user level communication with Nextcloud as the user did not yet link their Nextcloud account.
-        nc_unexpected_content: Kandungan yang tidak dijangka ditemui dalam folder kumpulan terurus.
+        nc_team_folder_not_found: The team folder could not be found.
+        nc_unexpected_content: Unexpected content found in the managed team folder.
         nc_userless_access_denied: Kata laluan apl yang dikonfigurasikan adalah tidak sah.
         not_configured: Sambungan tidak dapat disahkan. Sila selesaikan konfigurasi dahulu.
         od_client_cant_delete_folder: The client is having trouble deleting folders. Please check the setup documentation for your storage.
@@ -323,9 +348,10 @@ ms:
         sp_client_write_permission_missing: The client seems to have write permissions missing in SharePoint. Please check the setup documentation for your storage.
         sp_existing_test_folder: The folder %{folder_name} needed for testing already exists in SharePoint. Please delete it and try again.
         sp_oauth_request_error: The user-bound request to SharePoint failed. Please check the server logs for further information.
+        sp_oauth_request_unauthorized: The current user isn't authorized to access the remote file storage. Please check the server logs for further information.
         sp_oauth_token_missing: OpenProject cannot test the user level communication with SharePoint as the user did not yet link their SharePoint account.
         sp_tenant_id_missing: The configured directory (tenant) id is missing for SharePoint. Please check the configuration.
-        sp_unexpected_content: Unexpected content found in the SharePoint drive.
+        sp_unexpected_content: Unexpected content found in the SharePoint Document Library.
         unknown_error: Sambungan tidak dapat disahkan. Ralat tidak diketahui berlaku. Sila semak log pelayan untuk maklumat lanjut.
       label_error: Ralat
       label_failed: Failed
@@ -396,8 +422,8 @@ ms:
       sharepoint:
         application_link_text: SharePoint site
         integration: SharePoint Administration / OpenProject
-        oauth_configuration: Copy these values from the desired application in the %{application_link_text}.
-        provider_configuration: Please make sure you have administration privileges in the %{application_link_text} or contact your Microsoft administrator before doing the setup. In the portal, you also need to register an Azure application or use an existing one for authentication.
+        oauth_configuration: Salin nilai-nilai ini dari aplikasi yang diingini di %{application_link_text}.
+        provider_configuration: Sila pastikan anda mempunyai hak pentadbiran dalam %{application_link_text} atau hubungi pentadbir Microsoft anda sebelum membuat penyediaan. Anda juga perlu mendaftar aplikasi Azure atau menggunakan yang sedia ada untuk pengesahan di portal.
       type: 'Sila pastikan anda mempunyai hak keistimewaan pentadbir di, contohnya, Nextcloud, dan mempunyai aplikasi berikut dipasangkan sebelum membuat penyediaan:'
       type_link_text: "\"Integrasi OpenProject\""
     label_active: Aktif
@@ -430,7 +456,7 @@ ms:
     label_redirect_uri: ' Pengubah hala URI'
     label_show_storage_redirect_uri: Paparkan ubah hala URI
     label_status: Status
-    label_storage: Storan
+    label_storage: Penyimpanan
     label_uri: URI
     member_connection_status:
       connected: Disambungkan
@@ -470,7 +496,7 @@ ms:
         title: Kami sedang menyediakan kebenaran anda di folder projek.
     page_titles:
       file_storages:
-        delete: Padamkan storan fail
+        delete: Delete file storage?
         subtitle: Tambah storan fail luaran untuk memuat naik, pautkan dan uruskan fail di pakej kerja.
       managed_project_folders:
         subtitle: |-
@@ -479,13 +505,14 @@ ms:
         subtitle_short: Benarkan OpenProject ciptakan folder mengikut projek secara automatik.
         title: Folder projek yang dikendalikan secara automatik
       project_settings:
-        delete: Padamkan storan fail
         edit: Edit storan fail ke projek ini
         members_connection_status: Status sambungan ahli
         new: Tambah storan fail ke projek ini
       project_storage_members:
         subtitle: Semak status sambungan untuk storan %{storage_name_link} bagi semua ahli projek.
         title: Status sambungan ahli
+      project_storages:
+        delete: Remove file storage from project?
     permission_header_explanation: 'Kebenaran fail di storan luaran hanya digunakan pada folder dan fail dalam folder projek yang dikendalikan secara automatik. Perhatikan bahawa bukan semua kebenaran fail disokong oleh semua penyedia storan. Sila semak dokumentasi di <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>kebenaran storan fail</a>untuk maklumat lanjut.'
     provider_types:
       label: Jenis penyedia
@@ -500,8 +527,9 @@ ms:
         name: OneDrive
         name_placeholder: cth. OneDrive
       sharepoint:
-        label_oauth_client_id: Azure OAuth Application (client) ID
-        label_oauth_client_secret: Azure OAuth Client Secret Value
+        drive_description: OpenProject access-managed document library
+        label_oauth_client_id: ID Aplikasi (pelanggan) OAuth Azure 
+        label_oauth_client_secret: Nilai Pelanggan Rahsia OAuth Azure
         name: SharePoint
         name_placeholder: e.g. SharePoint
     show_attachments_toggle:
@@ -514,13 +542,19 @@ ms:
         label: Use access token obtained during user log in
       manual:
         helptext: OpenProject will exchange a token with the identity provider for the given audience.
-        label: Manually specify audience for which to exchange access token
+        label: Manually specify audience for which to exchange access token (Recommended)
     storage_list_blank_slate:
       description: Tambah storan untuk melihatnya di sini.
       heading: Anda masih belum ada sebarang storan.
     successful_storage_connection: Storan berjaya disambungkan! Ingat untuk mengaktifkan storan dalam tab Projek untuk setiap projek yang diingini untuk menggunakannya.
     upsell:
-      description: |-
-        Integrate your OneDrive as a file storage with OpenProject. Upload files and link them directly to
-        work packages in a project.
-      title: OneDrive integration
+      one_drive:
+        description: |-
+          Integrate your OneDrive drive as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: OneDrive integration
+      sharepoint:
+        description: |-
+          Integrate your SharePoint site as a file storage with OpenProject. Upload files and link them directly to
+          work packages in a project.
+        title: SharePoint integration

@@ -32,25 +32,23 @@ module My
   class SessionsController < ::ApplicationController
     before_action :require_login
     no_authorization_required! :index,
-                               :show,
                                :destroy
 
-    self._model_object = ::Sessions::UserSession
-
-    before_action :find_model_object, only: %i(show destroy)
+    before_action :load_session, only: %i(destroy)
     before_action :prevent_current_session_deletion, only: %i(destroy)
 
     layout "my"
     menu_item :sessions
 
     def index
-      @sessions = ::Sessions::UserSession
-        .for_user(current_user)
-        .order(updated_at: :desc)
-
       @autologin_tokens = ::Token::AutoLogin
         .for_user(current_user)
         .order(expires_on: :asc)
+
+      @unmapped_sessions = ::Sessions::UserSession
+        .for_user(current_user)
+        .not_autologged
+        .order(updated_at: :desc)
 
       token = cookies[OpenProject::Configuration["autologin_cookie_name"]]
       if token
@@ -58,16 +56,18 @@ module My
       end
     end
 
-    def show; end
-
     def destroy
       @session.delete
 
       flash[:notice] = I18n.t(:notice_successful_delete)
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     private
+
+    def load_session
+      @session = ::Sessions::UserSession.for_user(current_user).find(params[:id])
+    end
 
     def prevent_current_session_deletion
       if @session.current?(session)

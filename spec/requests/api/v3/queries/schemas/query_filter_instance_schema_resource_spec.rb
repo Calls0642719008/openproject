@@ -45,8 +45,6 @@ RSpec.describe "API v3 Query Filter Schema resource" do
   end
   let(:role) { create(:project_role, permissions:) }
   let(:permissions) { [:view_work_packages] }
-  let(:global_path) { api_v3_paths.query_filter_instance_schemas }
-  let(:project_path) { api_v3_paths.query_project_filter_instance_schemas(project.id) }
 
   current_user do
     create(:user, member_with_roles: { project => role })
@@ -61,45 +59,17 @@ RSpec.describe "API v3 Query Filter Schema resource" do
   end
 
   describe "#GET /api/v3/queries/filter_instance_schemas" do
-    %i[global
-       project].each do |current_path|
-      context current_path do
-        let(:path) { send :"#{current_path}_path" }
-
-        it "succeeds" do
-          expect(subject.status)
-            .to eq(200)
-        end
-
-        it "returns a collection of schemas" do
-          expect(subject.body)
-            .to be_json_eql("Collection".to_json)
-            .at_path("_type")
-          expect(subject.body)
-            .to be_json_eql(path.to_json)
-            .at_path("_links/self/href")
-
-          expected_type = "QueryFilterInstanceSchema"
-
-          expect(subject.body)
-            .to be_json_eql(expected_type.to_json)
-            .at_path("_embedded/elements/0/_type")
-        end
-
-        context "when the user is not allowed" do
-          let(:permissions) { [] }
-
-          it_behaves_like "unauthorized access"
-        end
-      end
-    end
-
     context "when in a global context" do
-      let(:path) { global_path }
+      let(:path) { api_v3_paths.query_filter_instance_schemas }
 
       before do
         visible_child
         get path
+      end
+
+      it "succeeds" do
+        expect(subject.status)
+          .to eq(200)
       end
 
       it "includes only global specific filter" do
@@ -114,14 +84,38 @@ RSpec.describe "API v3 Query Filter Schema resource" do
         expect(instance_paths)
           .not_to include(api_v3_paths.query_filter_instance_schema("subprojectId"))
       end
+
+      it "returns a collection of schemas" do
+        expect(subject.body)
+          .to be_json_eql("Collection".to_json)
+                .at_path("_type")
+        expect(subject.body)
+          .to be_json_eql(path.to_json)
+                .at_path("_links/self/href")
+
+        expected_type = "QueryFilterInstanceSchema"
+
+        expect(subject.body)
+          .to be_json_eql(expected_type.to_json)
+                .at_path("_embedded/elements/0/_type")
+      end
+
+      context "when the user is not allowed" do
+        let(:permissions) { [] }
+
+        it_behaves_like "unauthorized access"
+      end
     end
 
-    context "when in a project context" do
-      let(:path) { project_path }
-
+    shared_context "when in a workspace context" do
       before do
         visible_child
         get path
+      end
+
+      it "succeeds" do
+        expect(subject.status)
+          .to eq(200)
       end
 
       it "includes project specific filter" do
@@ -136,6 +130,39 @@ RSpec.describe "API v3 Query Filter Schema resource" do
         expect(instance_paths)
           .to include(api_v3_paths.query_filter_instance_schema("subprojectId"))
       end
+
+      it "returns a collection of schemas" do
+        expect(subject.body)
+          .to be_json_eql("Collection".to_json)
+                .at_path("_type")
+        expect(subject.body)
+          .to be_json_eql(api_v3_paths.query_workspace_filter_instance_schemas(project.id).to_json)
+                .at_path("_links/self/href")
+
+        expected_type = "QueryFilterInstanceSchema"
+
+        expect(subject.body)
+          .to be_json_eql(expected_type.to_json)
+                .at_path("_embedded/elements/0/_type")
+      end
+
+      context "when the user is not allowed" do
+        let(:permissions) { [] }
+
+        it_behaves_like "unauthorized access"
+      end
+    end
+
+    context "for a project" do
+      let(:path) { api_v3_paths.query_project_filter_instance_schemas(project.id) }
+
+      include_context "when in a workspace context"
+    end
+
+    context "for a workspace" do
+      let(:path) { api_v3_paths.query_workspace_filter_instance_schemas(project.id) }
+
+      include_context "when in a workspace context"
     end
   end
 

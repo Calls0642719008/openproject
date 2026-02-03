@@ -40,13 +40,13 @@ module Storages
 
             def validate
               register_checks(
-                :group_folder_app, :files_request, :userless_access, :group_folder_presence, :group_folder_contents
+                :team_folder_app, :files_request, :userless_access, :team_folder_presence, :team_folder_contents
               )
 
-              group_folder_app_checks
+              team_folder_app_checks
               files_request_failed_with_unknown_error
               userless_access_denied
-              group_folder_not_found
+              team_folder_not_found
               with_unexpected_content
             end
 
@@ -55,26 +55,26 @@ module Storages
               pass_check(:userless_access)
             end
 
-            def group_folder_app_checks
+            def team_folder_app_checks
               required_version = SemanticVersion.parse(
-                nextcloud_dependencies.dig("dependencies", "group_folders_app", "min_version")
+                nextcloud_dependencies.dig("dependencies", "team_folders_app", "min_version")
               )
 
               capabilities = Registry["nextcloud.queries.capabilities"].call(storage: @storage, auth_strategy: noop).value!
               dependency = I18n.t("storages.dependencies.nextcloud.group_folders_app")
 
               if capabilities.group_folder_disabled?
-                fail_check(:group_folder_app, :nc_dependency_missing, context: { dependency: })
+                fail_check(:team_folder_app, :nc_dependency_missing, context: { dependency: })
               elsif capabilities.group_folder_version < required_version
-                fail_check(:group_folder_app, :nc_dependency_version_mismatch, context: { dependency: })
+                fail_check(:team_folder_app, :nc_dependency_version_mismatch, context: { dependency: })
               else
-                pass_check(:group_folder_app)
+                pass_check(:team_folder_app)
               end
             end
 
-            def group_folder_not_found
-              files.or { it.code == :not_found and fail_check(:group_folder_presence, :nc_group_folder_not_found) }
-              pass_check(:group_folder_presence)
+            def team_folder_not_found
+              files.or { it.code == :not_found and fail_check(:team_folder_presence, :nc_team_folder_not_found) }
+              pass_check(:team_folder_presence)
             end
 
             def files_request_failed_with_unknown_error
@@ -82,7 +82,7 @@ module Storages
                 if failure.code == :error
                   error "Connection validation failed with unknown error:\n" \
                         "\tstorage: ##{@storage.id} #{@storage.name}\n" \
-                        "\trequest: Group folder content\n" \
+                        "\trequest: Team folder content\n" \
                         "\tstatus: #{failure}\n" \
                         "\tresponse: #{failure.payload}"
 
@@ -94,10 +94,10 @@ module Storages
 
             def with_unexpected_content
               unexpected_files = files.value!.reject { managed_project_folder_ids.include?(it.id) }
-              return pass_check(:group_folder_contents) if unexpected_files.empty?
+              return pass_check(:team_folder_contents) if unexpected_files.empty?
 
               log_extraneous_files(unexpected_files)
-              warn_check(:group_folder_contents, :nc_unexpected_content)
+              warn_check(:team_folder_contents, :nc_unexpected_content)
             end
 
             def log_extraneous_files(unexpected_files)
@@ -105,7 +105,7 @@ module Storages
                 "Name: #{file.name}, ID: #{file.id}, Location: #{file.location}"
               end
 
-              warn "Unexpected files/folder found in group folder:\n\t#{file_representation.join("\n\t")}"
+              warn "Unexpected files/folder found in team folder:\n\t#{file_representation.join("\n\t")}"
             end
 
             def auth_strategy = Registry["nextcloud.authentication.userless"].call

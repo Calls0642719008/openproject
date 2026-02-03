@@ -49,7 +49,7 @@ import {
   WorkPackageNotificationService
 } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
 import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
-import { HalError } from "core-app/features/hal/services/hal-error";
+import { HalError } from 'core-app/features/hal/services/hal-error';
 
 @Directive({
   selector: '[wpStatusDropdown]',
@@ -69,7 +69,7 @@ export class WorkPackageStatusDropdownDirective extends OpContextMenuTrigger {
     super(elementRef, opContextMenu);
   }
 
-  protected open(evt:JQuery.TriggeredEvent) {
+  protected open(evt:Event) {
     const change = this.halEditing.changeFor(this.workPackage);
 
     change.getForm().then((form:any) => {

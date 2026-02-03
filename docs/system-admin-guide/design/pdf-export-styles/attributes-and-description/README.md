@@ -1,3 +1,7 @@
+---
+sidebar_navigation:
+  title: Work package PDF Styling
+---
 
 # Attributes and description PDF
 

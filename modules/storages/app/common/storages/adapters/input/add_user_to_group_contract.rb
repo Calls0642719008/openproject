@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class AddUserToGroupContract < Dry::Validation::Contract
+      class AddUserToGroupContract < DryApplicationContract
         params do
           required(:user).filled(:string)
           required(:group).filled(:string)

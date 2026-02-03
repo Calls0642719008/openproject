@@ -9,7 +9,7 @@ export class ApiV3FormResource<T extends FormResource = FormResource> extends Ap
    * POST to the form resource identified by this path
    * @param request The request payload
    */
-  public post(request:Object = {}, schema:SchemaResource|null = null):Observable<T> {
+  public post(request:object = {}, schema:SchemaResource|null = null):Observable<T> {
     return this
       .halResourceService
       .post<T>(
@@ -24,7 +24,7 @@ export class ApiV3FormResource<T extends FormResource = FormResource> extends Ap
    * @param request
    * @param schema
    */
-  public extractPayload(request:T|Object, schema:SchemaResource|null = null) {
+  public extractPayload(request:T|object, schema:SchemaResource|null = null) {
     return HalPayloadHelper.extractPayload(request, schema);
   }
 }

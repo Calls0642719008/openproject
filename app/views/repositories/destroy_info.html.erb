@@ -60,7 +60,9 @@ See COPYRIGHT and LICENSE files for more details.
       <div class="danger-zone--verification">
         <input type="text">
         <%= styled_button_tag project_repository_path(@project),
-                              method: :delete,
+                              data: {
+                                turbo_method: :delete,
+                              },
                               title: t(:button_delete),
                               disabled: true,
                               class: "-primary" do %>
@@ -93,8 +95,10 @@ See COPYRIGHT and LICENSE files for more details.
       <p>
         <%= link_to project_repository_path(@project),
                     title: t(:button_delete),
-                    method: :delete,
-                    data: { "test-selector": "remove-repository-button" },
+                    data: {
+                      turbo_method: :delete,
+                      "test-selector": "remove-repository-button"
+                    },
                     class: "button" do %>
           <%= op_icon("button--icon icon-remove") %>
           <span class="button--text"><%= t(:button_remove) %></span>

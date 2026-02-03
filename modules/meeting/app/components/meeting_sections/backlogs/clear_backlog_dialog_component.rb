@@ -33,10 +33,11 @@ module MeetingSections
     include ApplicationHelper
     include OpTurbo::Streamable
 
-    def initialize(meeting)
+    def initialize(meeting, current_occurrence:)
       super
 
       @meeting = meeting
+      @current_occurrence = current_occurrence
     end
 
     private

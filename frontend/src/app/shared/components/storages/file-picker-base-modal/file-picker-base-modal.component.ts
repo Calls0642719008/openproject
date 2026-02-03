@@ -85,7 +85,7 @@ export abstract class FilePickerBaseModalComponent extends OpModalComponent impl
     navigate: () => {},
   }]);
 
-  public showAlert:BehaviorSubject<Alert> = new BehaviorSubject('none');
+  public showAlert = new BehaviorSubject<Alert>('none');
 
   public listItems$:Observable<StorageFileListItem[]> = this.storageFiles$
     .pipe(

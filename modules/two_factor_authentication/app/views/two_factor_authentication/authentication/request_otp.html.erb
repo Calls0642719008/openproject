@@ -8,7 +8,9 @@
   <%= styled_form_tag(
         { action: :confirm_otp },
         id: "submit_otp",
-        autocomplete: "off", data: {
+        autocomplete: "off",
+        data: {
+          turbo: false,
           challenge_url: url_for(action: :webauthn_challenge, format: :json),
           device_type: @used_device.class.device_type,
           action: "submit->two-factor-authentication#onVerifyDevice"
@@ -66,7 +68,13 @@
     data-two-factor-authentication-target="resendOptions"
     hidden>
     <% if resend_supported %>
-      <%= styled_form_tag({ action: :retry }, autocomplete: "off", id: "resend_otp") do %>
+      <%= styled_form_tag(
+            { action: :retry },
+            autocomplete: "off",
+            id: "resend_otp",
+            data: {
+              turbo: false
+            }) do %>
         <%= hidden_field_tag "use_device", @service.device.id %>
         <hr>
         <div class="resend-header"><%= t(:text_send_otp_again) %></div>
@@ -89,7 +97,11 @@
         <% @active_devices.each do |device| %>
           <% next if device.id == @used_device.id %>
           <li>
-            <%= form_tag({ action: :retry }, method: :post, data: { turbo: false }) do %>
+            <%= form_tag(
+                  { action: :retry },
+                  method: :post,
+                  data: { turbo: false }
+                ) do %>
               <%= hidden_field_tag "use_device", device.id %>
               <%= submit_tag device.redacted_identifier, class: "button--link" %>
             <% end %>

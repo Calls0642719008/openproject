@@ -31,13 +31,13 @@
 class DocumentForm < ApplicationForm
   form do |f|
     f.select_list(
-      name: :category_id,
-      label: I18n.t("label_document_category"),
+      name: :type_id,
+      label: I18n.t("label_document_type"),
       input_width: :medium,
       required: true
     ) do |select|
-      DocumentCategory.find_each do |category|
-        select.option(value: category.id, label: category.name)
+      DocumentType.find_each do |type|
+        select.option(value: type.id, label: type.name)
       end
     end
 
@@ -47,25 +47,18 @@ class DocumentForm < ApplicationForm
       required: true
     )
 
-    if OpenProject::FeatureDecisions.block_note_editor_active? && model.category&.name == "Experimental"
-      f.block_note_editor(
-        name: :description,
-        label: I18n.t("label_document_description"),
-        classes: "document-form--long-description",
-        value: model.description
-      )
-    else
-      f.rich_text_area(
-        name: :description,
-        label: I18n.t("label_document_description"),
-        classes: "document-form--long-description",
-        rich_text_options: {
-          with_text_formatting: true,
-          resource:,
-          turboMode: false
-        }
-      )
-    end
+    f.rich_text_area(
+      name: :description,
+      label: I18n.t("label_document_description"),
+      classes: "document-form--long-description",
+      rich_text_options: {
+        with_text_formatting: true,
+        resource:,
+        turboMode: false
+      }
+    )
+
+    f.hidden(name: :kind, value: "classic")
 
     f.submit(
       name: :save,

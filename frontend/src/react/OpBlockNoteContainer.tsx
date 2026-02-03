@@ -1,7 +1,7 @@
 /*
  * -- copyright
  * OpenProject is an open source project management software.
- * Copyright (C) 2023 the OpenProject GmbH
+ * Copyright (C) the OpenProject GmbH
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3.
@@ -28,68 +28,88 @@
  * ++
  */
 
-import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
-import { BlockNoteView } from "@blocknote/mantine";
-import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
-import { dummyBlockSpec, getDefaultOpenProjectSlashMenuItems, openProjectWorkPackageBlockSpec } from "op-blocknote-extensions";
-import { useEffect, useState } from "react";
-import { OpColorMode } from "core-app/core/setup/globals/theme-utils";
+import { User } from '@blocknote/core/comments';
+import { HocuspocusProvider } from '@hocuspocus/provider';
+import { useEffect, useRef } from 'react';
+import * as Y from 'yjs';
+import { DocumentLoadingSkeleton } from './components/DocumentLoadingSkeleton';
+import { OpBlockNoteEditor } from './components/OpBlockNoteEditor';
+import { fetchConnectionTemplate } from './helpers/connection-template-fetcher';
+import { useCollaboration } from './hooks/useCollaboration';
 
 export interface OpBlockNoteContainerProps {
-  inputField: HTMLInputElement;
-  inputText?: string;
+  inputField:HTMLInputElement;
+  inputText?:string;
+  activeUser:User;
+  readOnly:boolean;
+  openProjectUrl:string;
+  attachmentsUploadUrl:string;
+  attachmentsCollectionKey:string;
+  hocuspocusProvider?:HocuspocusProvider;
+  errorContainer?:HTMLElement;
 }
 
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-    openProjectWorkPackage: openProjectWorkPackageBlockSpec,
-    dummy: dummyBlockSpec,
-  },
-});
+export default function OpBlockNoteContainer({ inputField,
+                                               inputText,
+                                               activeUser,
+                                               readOnly,
+                                               openProjectUrl,
+                                               attachmentsUploadUrl,
+                                               attachmentsCollectionKey,
+                                               hocuspocusProvider,
+                                               errorContainer }:OpBlockNoteContainerProps) {
+  const doc:Y.Doc = hocuspocusProvider
+    ? hocuspocusProvider.document
+    : (() => {
+      // NOTE: This should only be used in TEST environments where there is no provider.
+      const newDoc = new Y.Doc();
+      if (inputText) {
+        try {
+          const update = Uint8Array.from(atob(inputText), c => c.charCodeAt(0));
+          Y.applyUpdate(newDoc, update);
+        } catch (e) {
+          console.error('Failed to load document binary', e);
+          return new Y.Doc();
+        }
+      }
+      return newDoc;
+    })();
 
-const detectTheme = ():OpColorMode => { return window.OpenProject.theme.detectOpColorMode(); };
+  const { isLoading, connectionError } = useCollaboration(hocuspocusProvider, doc, inputField);
+  const hadErrorRef = useRef(false);
 
-export default function OpBlockNoteContainer({ inputField, inputText }: OpBlockNoteContainerProps) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const editor = useCreateBlockNote({ schema });
-  type EditorType = typeof editor;
-
-  const getCustomSlashMenuItems = (editor: EditorType) => {
-    return [
-      ...getDefaultReactSlashMenuItems(editor),
-      ...getDefaultOpenProjectSlashMenuItems(editor),
-    ];
-  };
-
+  // Fetch error/recovery template based on connection state
   useEffect(() => {
-    async function loadInitialContent() {
-      const blocks = await editor.tryParseMarkdownToBlocks(inputText || "");
-      editor.replaceBlocks(editor.document, blocks);
-      setIsLoading(false);
+    if (!errorContainer) return;
+
+    if (connectionError) {
+      hadErrorRef.current = true;
+      void fetchConnectionTemplate('error', errorContainer);
+    } else if (hadErrorRef.current) {
+      // Only fetch recovery if we previously had an error (avoid fetching on initial render)
+      void fetchConnectionTemplate('recovery', errorContainer);
     }
-    loadInitialContent();
-  }, [editor]);
+  }, [connectionError, errorContainer]);
+
+  if (isLoading) {
+    return <DocumentLoadingSkeleton />;
+  }
+
+  if (connectionError) {
+    // Error UI is rendered in errorContainer via fetchConnectionTemplate (outside React tree)
+    return null;
+  }
 
   return (
-    <>
-      {isLoading ? <div>Loading...</div>
-        :
-        <BlockNoteView
-          editor={editor}
-          theme={detectTheme()}
-          onChange={async (editor) => {
-            const content = await editor.blocksToMarkdownLossy();
-            inputField.value = content;
-          }}
-        >
-          <SuggestionMenuController
-            triggerCharacter="/"
-            getItems={async (query: string) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)}
-          />
-        </BlockNoteView>
-      }
-    </>
+    <OpBlockNoteEditor
+      activeUser={activeUser}
+      readOnly={readOnly}
+      openProjectUrl={openProjectUrl}
+      attachmentsUploadUrl={attachmentsUploadUrl}
+      attachmentsCollectionKey={attachmentsCollectionKey}
+      hocuspocusProvider={hocuspocusProvider}
+      doc={doc}
+    />
   );
 }
+

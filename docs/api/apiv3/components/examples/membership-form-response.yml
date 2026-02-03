@@ -1,4 +1,4 @@
-description: |- 
+description: |-
   A simple form response example.
 value:
   _type: Form
@@ -19,19 +19,19 @@ value:
         roles: [ ]
     schema:
       _type: Schema
-      _hint: Schema resource shortened for brevity
+      _abbreviated: Schema resource shortened for brevity
     validationErrors:
       roles:
         _type: Error
         errorIdentifier: urn:openproject-org:api:v3:errors:PropertyConstraintViolation
         message: Roles need to be assigned.
-        _embedded: 
-          details: 
+        _embedded:
+          details:
             attribute: roles
   _links:
-    self: 
+    self:
       href: '/api/v3/memberships/form'
       method: post
-    validate: 
+    validate:
       href: '/api/v3/memberships/form'
       method: post

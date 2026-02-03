@@ -2,9 +2,9 @@
 ---
 type: object
 required:
-  - title
   - fileName
   - description
+  - status
   - contentType
   - digest
   - createdAt
@@ -13,9 +13,6 @@ properties:
     type: integer
     description: Attachment's id
     minimum: 1
-  title:
-    type: string
-    description: The name of the file
   fileName:
     type: string
     description: The name of the uploaded file
@@ -27,12 +24,30 @@ properties:
     allOf:
     - $ref: "./formattable.yml"
     - description: A user provided description of the file
+  status:
+    type: string
+    enum:
+      - uploaded
+      - prepared
+      - scanned
+      - quarantined
+      - rescan
   contentType:
     type: string
     description: The files MIME-Type as determined by the server
   digest:
-    type: string
+    type: object
     description: A checksum for the files content
+    required:
+      - algorithm
+      - hash
+    properties:
+      algorithm:
+        type: string
+        description: "The algorithm used to generate the digest."
+      hash:
+        type: string
+        description: "The hexadecimal representation of the digested hash value."
   createdAt:
     type: string
     format: date-time
@@ -98,6 +113,7 @@ example:
   id: 1
   fileName: cat.png
   filesize: 24
+  status: uploaded
   description:
     format: plain
     raw: A picture of a cute cat

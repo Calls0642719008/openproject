@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class CreateFolderContract < Dry::Validation::Contract
+      class CreateFolderContract < DryApplicationContract
         params do
           required(:folder_name).filled(:string)
           required(:parent_location).filter(:filled?, :str?).value(AdapterTypes::Location)

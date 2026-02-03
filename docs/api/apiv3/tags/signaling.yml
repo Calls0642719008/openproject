@@ -13,7 +13,7 @@ description: |-
   ```json
     {
       "_type": "Collection"
-      "count": 20,
+      "count": 2,
       "total": 554,
       "_embedded": {
         "elements": [
@@ -78,6 +78,6 @@ description: |-
   Link properties are considered to be a single value that cannot be split up further. Every property within a link will be returned
   if the link is signaled to be selected.
 
-  The `select` signaling flag has been introduced for performance reasons. Not every end point supports it and those that do oftentimes only
-  allow a subset of their resource's properties to be selected. End points supporting the `select` query prop are documented accordingly.
+  The `select` signaling flag has been introduced for performance reasons. Not every endpoint supports it and those that do oftentimes only
+  allow a subset of their resource's properties to be selected. Endpoints supporting the `select` query prop are documented accordingly.
 name: Signaling

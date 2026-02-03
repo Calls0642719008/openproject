@@ -7,15 +7,15 @@ vi:
     common:
       colors:
         item_0:
-          name: Lam (tối)
+          name: Xanh dương (tối)
         item_1:
-          name: Lam
+          name: Xanh dương
         item_2:
-          name: Lam (sáng)
+          name: Xanh dương (sáng)
         item_3:
-          name: Lục (sáng)
+          name: Xanh lá cây (sáng)
         item_4:
-          name: Lục (tối)
+          name: Xanh lá cây (tối)
         item_5:
           name: Vàng
         item_6:
@@ -23,7 +23,7 @@ vi:
         item_7:
           name: Đỏ
         item_8:
-          name: Tía
+          name: Đỏ tươi
         item_9:
           name: Trắng
         item_10:
@@ -31,7 +31,7 @@ vi:
         item_11:
           name: Xám
         item_12:
-          name: Xám (tối)
+          name: Màu xám (tối)
         item_13:
           name: Đen
       project_phase_colors:
@@ -43,13 +43,6 @@ vi:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Tài liệu
-        item_1:
-          name: Đặc tả
-        item_2:
-          name: Khác
       project_query_roles:
         item_0:
           name: Người xem truy vấn dự án
@@ -64,9 +57,9 @@ vi:
           name: Người xem gói công việc
       project_roles:
         item_0:
-          name: Không phải thành viên
+          name: Không là thành viên
         item_1:
-          name: Vô danh
+          name: Ẩn danh
         item_2:
           name: Thành viên
         item_3:
@@ -75,7 +68,7 @@ vi:
           name: Quản trị dự án
       global_roles:
         item_0:
-          name: Quản lý nhân sự và dự án
+          name: Nhân viên và quản lý dự án
         item_1:
           name: Standard global role
     standard:
@@ -95,7 +88,7 @@ vi:
         item_0:
           name: Thấp
         item_1:
-          name: Bình thường
+          name: Bình Thường
         item_2:
           name: Cao
         item_3:
@@ -165,7 +158,7 @@ vi:
                     Hãy cho chúng tôi biết nếu bạn có bất kỳ câu hỏi nào hoặc cần hỗ trợ. Liên hệ với chúng tôi: [support[at]openproject.com](mailto:support@openproject.com).
               item_5:
                 options:
-                  name: Nhiệm vụ
+                  name: Work Packages
               item_6:
                 options:
                   name: Các mốc thời gian
@@ -292,7 +285,7 @@ vi:
             item_0:
               name: Kế hoạch dự án
             item_1:
-              name: Danh sách sản phẩm
+              name: Product backlog
             item_2:
               name: Sprint 1
             item_3:
@@ -336,7 +329,7 @@ vi:
                     Hãy cho chúng tôi biết nếu bạn có bất kỳ câu hỏi nào hoặc cần hỗ trợ. Liên hệ với chúng tôi: [support[at]openproject.com](mailto:support@openproject.com).
               item_5:
                 options:
-                  name: Nhiệm vụ
+                  name: Work Packages
               item_6:
                 options:
                   name: Kế hoạch dự án
@@ -441,40 +434,40 @@ vi:
         item_0:
           name: Mới
         item_1:
-          name: Đang chỉ định
+          name: Trong quá trình đặc tả
         item_2:
-          name: Đã chỉ định
+          name: được chỉ định
         item_3:
           name: Đã xác nhận
         item_4:
-          name: Cần lên lịch
+          name: Sẽ được xếp lịch
         item_5:
-          name: Đã lên lịch
+          name: Đã xếp lịch
         item_6:
-          name: Đang tiến hành
+          name: Đang xử lý
         item_7:
           name: Đã phát triển
         item_8:
-          name: Đang kiểm thử
+          name: Trong quá trình thử nghiệm
         item_9:
-          name: Đã kiểm thử
+          name: Đã kiểm tra
         item_10:
-          name: Kiểm thử thất bại
+          name: Kiểm tra thất bại
         item_11:
           name: Đã đóng
         item_12:
-          name: Tạm dừng
+          name: Đang chờ
         item_13:
-          name: Bị từ chối
+          name: Đã từ chối
       time_entry_activities:
         item_0:
           name: Quản lý
         item_1:
-          name: Chỉ định
+          name: Đặc điểm kỹ thuật
         item_2:
           name: Phát triển
         item_3:
-          name: Kiểm thử
+          name: Thử nghiệm
         item_4:
           name: Hỗ trợ
         item_5:
@@ -483,13 +476,13 @@ vi:
         item_0:
           name: Nhiệm vụ
         item_1:
-          name: Cột mốc
+          name: Milestone
         item_2:
           name: Summary task
         item_3:
           name: Tính năng
         item_4:
-          name: Epic
+          name: Sử thi
         item_5:
           name: Câu chuyện người dùng
         item_6:

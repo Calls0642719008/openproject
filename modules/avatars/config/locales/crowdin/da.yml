@@ -36,5 +36,5 @@ da:
       Den aktuelle gravatar er som følger:
     settings:
       enable_gravatars: 'Aktivér bruger-gravatarer'
-      gravatar_default: "Standard gravatar-billede"
+      gravatar_default: "Forhåndsvalgt Gravatar billede"
       enable_local_avatars: 'Aktivér brugerdefinerede avatarer'

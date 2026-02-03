@@ -44,6 +44,7 @@ class Tables::GoodJobBatches < Tables::Base
       t.datetime :enqueued_at
       t.datetime :discarded_at
       t.datetime :finished_at
+      t.datetime :jobs_finished_at
     end
   end
 end

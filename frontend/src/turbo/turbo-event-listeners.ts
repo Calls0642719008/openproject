@@ -14,7 +14,7 @@ export function addTurboEventListeners() {
     const { detail: { success }, target } = event as { detail:{ success:boolean }; target:EventTarget };
 
     if (success && target instanceof HTMLFormElement) {
-      const dialog = target.closest('dialog') as HTMLDialogElement;
+      const dialog = target.closest('dialog')!;
 
       if (dialog) {
         if (dialog.dataset.keepOpenOnSubmit !== 'true') {

@@ -49,6 +49,10 @@ RSpec.describe BacklogsSettingsController do
   end
 
   describe "PUT update" do
+    before do
+      allow(Setting).to receive(:plugin_openproject_backlogs=)
+    end
+
     subject do
       put :update,
           params: {
@@ -64,14 +68,12 @@ RSpec.describe BacklogsSettingsController do
       let(:story_types) { ["1234"] }
 
       it "does not update the settings" do
-        expect(Setting)
-          .not_to(receive(:[]=))
-          .with("plugin_openproject_backlogs", any_args)
-
         subject
 
-        expect(response).to redirect_to action: :show
-        expect(flash[:error]).to include I18n.t(:error_backlogs_task_cannot_be_story)
+        expect(response).to render_template "show"
+        expect(flash[:error]).to start_with I18n.t(:notice_unsuccessful_update_with_reason, reason: "")
+
+        expect(Setting).not_to have_received(:plugin_openproject_backlogs=).with(any_args)
       end
     end
 
@@ -80,29 +82,30 @@ RSpec.describe BacklogsSettingsController do
       let(:story_types) { ["5555"] }
 
       it "does update the settings" do
-        expect(Setting)
-          .to(receive(:[]=))
-          .with("plugin_openproject_backlogs", { story_types: ["5555"], task_type: "1234" })
-
         subject
 
         expect(response).to redirect_to action: :show
         expect(flash[:notice]).to include I18n.t(:notice_successful_update)
         expect(flash[:error]).to be_nil
+
+        expect(Setting).to have_received(:plugin_openproject_backlogs=).with(
+          points_burn_direction: nil,
+          story_types: [5555],
+          task_type: 1234,
+          wiki_template: nil
+        )
       end
 
       context "with a non-admin" do
         current_user { build_stubbed(:user) }
 
         it "does not update the settings" do
-          expect(Setting)
-            .not_to(receive(:[]=))
-            .with("plugin_openproject_backlogs", any_args)
-
           subject
 
           expect(response).not_to be_successful
           expect(response).to have_http_status :forbidden
+
+          expect(Setting).not_to have_received(:plugin_openproject_backlogs=).with(any_args)
         end
       end
     end

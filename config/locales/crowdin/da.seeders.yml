@@ -43,13 +43,6 @@ da:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Documentation
-        item_1:
-          name: Specifikation
-        item_2:
-          name: Andet
       project_query_roles:
         item_0:
           name: Project query viewer

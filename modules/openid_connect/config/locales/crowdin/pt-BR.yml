@@ -43,6 +43,10 @@ pt-BR:
               response_is_not_successful: " respondeu com %{status}."
               response_is_not_json: " não retornou o conteúdo em formato JSON."
               response_misses_required_attributes: " não retornou os atributos obrigatórios. Os atributos ausentes são: %{missing_attributes}."
+          invalid_claims_essential: "não define um booleano em %{attribute}."
+          invalid_claims_location: "contém locais não suportados: %{invalid}. Os locais suportados são: %{supported}."
+          invalid_claims_values: "não define uma matriz em %{attribute}."
+          non_object_attribute: "não define um objeto JSON em %{attribute}."
   provider:
     delete_warning:
       input_delete_confirmation: Digite o nome do provedor %{name} para confirmar a exclusão.
@@ -58,15 +62,26 @@ pt-BR:
     menu_title: Provedores OpenID
     delete_title: "Excluir o provedor OpenID Connect"
     group_links_heading: Links de grupos OpenID Connect
+    groups:
+      match_preview_component:
+        title: Nomes dos grupos extraídos
+        placeholder_none: Nenhum grupo corresponde ao padrão no momento.
+      match_preview_dialog_component:
+        description: Isso permite testar seu padrão de expressão regular com dados de exemplo para verificar se os nomes dos grupos que você deseja extrair estão sendo corretamente identificados. Você pode modificar seu padrão aqui, mas a string de teste e os próprios resultados não serão salvos na configuração.
+        group_names_label: Testar nomes de grupos
+        group_names_description: Digite um nome de grupo por linha, conforme aparece na declaração OIDC, para ver como seus padrões de expressão regular os afetam.
+        show_button: Testar padrão
+        title: Testar expressões regulares
     instructions:
       endpoint_url: O URL de endpoint fornecido pelo seu provedor OpenID Connect
       group_regexes: Um padrão de expressão regular por linha. Leia [a documentação](docs_url) para obter mais informações sobre como fazer isso.
       group_regexes_detail: Opcionalmente, defina padrões usando expressões regulares para corresponder aos nomes de grupos da reivindicação de grupos. Por exemplo, o padrão <code>^Level1/Level2/([\w/]+)$</code> extrairá o grupo “GroupName/SubGroup” de uma resposta que inclua “Level1/Level2/GroupName/SubGroup”. Se nenhum padrão corresponder, o grupo será ignorado. Deixe o campo vazio para sincronizar todos os grupos usando seus nomes completos.
+      group_regexes_testing: "Clique em “Testar padrão” para testar seu padrão de expressão regular com dados de exemplo do OIDC userinfo."
       group_sync: Extraia e sincronize automaticamente as informações de associação a grupos fornecidas pelo provedor de identidade.
       groups_claim: Informe o nome da declaração que indica os grupos dos quais o usuário é membro.
       metadata_none: Não tenho esta informação
       metadata_url: Tenho um URL de endpoint de descoberta
-      oidc_information: These values are needed to configure the OpenID Connect provider.
+      oidc_information: Esses valores são necessários para configurar o provedor OpenID Connect.
       client_id: Este é o ID do cliente fornecido pelo seu provedor OpenID Connect
       client_secret: Este é o segredo do cliente fornecido pelo seu provedor OpenID Connect
       limit_self_registration: Se ativado, os usuários só poderão se registrar usando este provedor se a configuração no lado do provedor permitir.
@@ -116,6 +131,7 @@ pt-BR:
       label_configuration_details: Metadados
       label_client_details: Detalhes do cliente
       label_attribute_mapping: Mapeamento de atributos
+      notice_created: Um novo provedor OpenID foi criado com sucesso.
       client_details_description: Detalhes de configuração do OpenProject como cliente OIDC
       no_results_table: Nenhum provedor foi definido.
       plural: Provedores OpenID

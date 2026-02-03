@@ -43,5 +43,5 @@ RSpec.describe "placeholder user memberships through placeholder user page", :js
     it_behaves_like "principal membership management flows"
   end
 
-  it_behaves_like "global user principal membership management flows", :manage_placeholder_user
+  it_behaves_like "global user principal membership management flows", %i[manage_placeholder_user view_all_principals]
 end

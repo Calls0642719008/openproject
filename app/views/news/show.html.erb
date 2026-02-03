@@ -47,7 +47,6 @@ See COPYRIGHT and LICENSE files for more details.
         aria: { label: I18n.t(:button_edit) },
         title: I18n.t(:button_edit)
       ) do |button|
-        csp_onclick('jQuery("#edit-news").show()', ".edit-news-button")
         button.with_leading_visual_icon(icon: :pencil)
         t(:button_edit)
       end
@@ -62,7 +61,7 @@ See COPYRIGHT and LICENSE files for more details.
         href: news_path(@news),
         mobile_icon: :trash,
         mobile_label: I18n.t("button_delete"),
-        data: { confirm: t(:text_are_you_sure), method: :delete },
+        data: { turbo_confirm: t(:text_are_you_sure), turbo_method: :delete },
         aria: { label: I18n.t("button_delete") }
       ) do |button|
         button.with_leading_visual_icon(icon: :trash)
@@ -72,15 +71,6 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<% if authorize_for('news', 'edit') %>
-  <div id="edit-news" style="display:none;">
-    <%= labelled_tabular_form_for @news, html: { id: "news-form" } do |f| %>
-      <%= render partial: "form", locals: { f: f } %>
-      <%= styled_button_tag t(:button_save), class: "-primary -with-icon icon-checkmark" %>
-      <%= link_to_function t(:button_cancel), 'jQuery("#edit-news").hide()', class: "button -with-icon icon-cancel" %>
-    <% end %>
-  </div>
-<% end %>
 <% if @news.summary.present? %>
   <div class="summary">
     <%= format_text(@news, :summary) %>
@@ -99,8 +89,7 @@ See COPYRIGHT and LICENSE files for more details.
         <div class="contextual">
           <%= link_to_if_authorized icon_wrapper("icon-context icon-delete", t(:button_delete)),
                                     { controller: "/news/comments", action: "destroy", id: comment },
-                                    data: { confirm: t(:text_are_you_sure) },
-                                    method: :delete,
+                                    data: { turbo_method: :delete, turbo_confirm: t(:text_are_you_sure) },
                                     class: "no-decoration-on-hover",
                                     title: t(:button_delete),
                                     alt: t(:button_delete) %>

@@ -2,14 +2,14 @@
   primer_form_with(
     model: provider,
     id: "saml-providers-edit-form",
-    url: import_metadata_saml_provider_path(provider, edit_mode:),
+    url: import_metadata_saml_provider_path(provider, new_mode:),
     data: {
       controller: "show-when-value-selected"
     },
     method: :post
   ) do |form|
     flex_layout do |flex|
-      if edit_mode
+      if new_mode
         flex.with_row do
           render(Primer::Beta::Text.new(tag: :p, mb: 4, font_size: :small)) do
             t("saml.providers.section_texts.metadata_form")
@@ -49,7 +49,7 @@
             form,
             provider:,
             submit_button_options: { label: button_label },
-            cancel_button_options: { hidden: edit_mode },
+            cancel_button_options: { hidden: new_mode },
             state: :metadata
           )
         )

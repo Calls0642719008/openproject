@@ -66,12 +66,14 @@ describe('TimezoneService', () => {
     describe('#parseDatetime', () => {
       it('is UTC', () => {
         const time = timezoneService.parseDatetime(TIME);
+
         expect(time.utcOffset()).toEqual(0);
         expect(time.format('HH:mm')).toEqual('09:30');
       });
 
       it('has no time information', () => {
         const time = timezoneService.parseDate(DATE);
+
         expect(time.format('HH:mm')).toEqual('00:00');
       });
     });
@@ -85,6 +87,7 @@ describe('TimezoneService', () => {
     describe('Non-UTC timezone', () => {
       it('is in the given timezone', () => {
         const date = timezoneService.parseDatetime(TIME);
+
         expect(date.format('HH:mm')).toEqual('01:30');
       });
 

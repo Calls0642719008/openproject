@@ -36,9 +36,7 @@ These four stages, based on the [PM² framework](https://www.openproject.org/pm2
 
 ## Manage project phases (Enterprise add-on)
 
-> [!NOTE]
-> Defining project phases for the project life cycle is an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/)
-> or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easy and helps support OpenProject.
+[feature: customize_life_cycle ]
 
 To manage project phases and gates, navigate to:  *Administration → Projects → Project life cycle*.
 

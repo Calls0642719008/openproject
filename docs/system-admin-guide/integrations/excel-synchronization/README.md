@@ -1,7 +1,7 @@
 ---
 sidebar_navigation:
   title: Excel synchronization
-  priority: 599
+  priority: 400
 description: Excel synchronization with OpenProject
 keywords: Excel
 ---

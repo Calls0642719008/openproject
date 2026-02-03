@@ -34,8 +34,10 @@ class Journals::CreateService
       journable.customizable?
     end
 
-    def cleanup_predecessor(predecessor)
+    def cleanup_predecessor(predecessor, notes, cause)
       cleanup_predecessor_for(predecessor,
+                              notes,
+                              cause,
                               "customizable_journals",
                               :journal_id,
                               :id)
@@ -66,24 +68,36 @@ class Journals::CreateService
     def changes_sql
       sanitize(<<~SQL.squish, journable_id:, customized_type: journable_class_name)
         SELECT
-          max_journals.journable_id
+          :journable_id AS JOURNABLE_ID
         FROM
-          max_journals
-        LEFT OUTER JOIN
-          customizable_journals
-        ON
-          customizable_journals.journal_id = max_journals.id
+          (
+            SELECT
+               custom_field_id,
+               ARRAY_AGG(#{normalize_newlines_sql('custom_values.value')} ORDER BY value) AS value
+            FROM
+             custom_values
+            WHERE
+              custom_values.customized_id = :journable_id
+              AND custom_values.customized_type = :customized_type
+              AND custom_values.value != ''
+            GROUP BY
+              custom_field_id
+          ) current_values
         FULL JOIN
-          (SELECT *
-           FROM custom_values
-           WHERE custom_values.customized_id = :journable_id AND custom_values.customized_type = :customized_type) custom_values
-        ON
-          custom_values.custom_field_id = customizable_journals.custom_field_id
+          (
+            SELECT
+              custom_field_id,
+              ARRAY_AGG(#{normalize_newlines_sql('customizable_journals.value')} ORDER BY value) AS value
+            FROM
+              customizable_journals
+            WHERE
+              journal_id IN (SELECT id FROM max_journals)
+            GROUP BY
+              custom_field_id
+          ) journal_values
+        ON current_values.custom_field_id = journal_values.custom_field_id
         WHERE
-          (custom_values.value IS NULL AND customizable_journals.value IS NOT NULL)
-          OR (customizable_journals.value IS NULL AND custom_values.value IS NOT NULL AND custom_values.value != '')
-          OR (#{normalize_newlines_sql('customizable_journals.value')} !=
-              #{normalize_newlines_sql('custom_values.value')})
+          current_values.value IS DISTINCT FROM journal_values.value
       SQL
     end
   end

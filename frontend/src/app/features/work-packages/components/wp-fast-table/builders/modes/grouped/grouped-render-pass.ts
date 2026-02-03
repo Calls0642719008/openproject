@@ -85,7 +85,7 @@ export class GroupedRenderPass extends PlainRenderPass {
 
       /// / If it's a linked resource, compare the href,
       /// / which is an array of links the resource offers
-      if (property && property.href) {
+      if (property?.href) {
         return !!_.find(group._links.valueLink, (l:any):any => property.href === l.href);
       }
 
@@ -99,9 +99,8 @@ export class GroupedRenderPass extends PlainRenderPass {
 
       // Values provided by the API are always string
       // so avoid triple equal here
-      // tslint:disable-next-line
-      return value == property;
-    }) as GroupObject;
+           return value == property;
+    })!;
   }
 
   private matchesMultiValue(property:HalResource[], group:GroupObject) {

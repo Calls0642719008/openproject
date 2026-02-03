@@ -39,17 +39,15 @@ module WorkPackages::Scopes
       def allowed_to(user, permission) # rubocop:disable Metrics/PerceivedComplexity
         permissions = Authorization.contextual_permissions(permission, :work_package, raise_on_unknown: true)
 
-        return none if user.locked?
+        return none if user.locked? || user.deleted?
         return none if permissions.empty?
 
         if user.admin? && permissions.all?(&:grant_to_admin?)
           admin_allowed_to(permissions)
         elsif user.anonymous?
           anonymous_allowed_to(user, permissions)
-        elsif Setting.large_instance_wp_allowed_to_sql?
-          logged_in_non_admin_allowed_to_large_instances(user, permissions)
         else
-          logged_in_non_admin_allowed_to_small_instances(user, permissions)
+          logged_in_non_admin_allowed_to(user, permissions)
         end
       end
 
@@ -63,15 +61,7 @@ module WorkPackages::Scopes
         where(project_id: Project.allowed_to(user, permissions))
       end
 
-      def logged_in_non_admin_allowed_to_small_instances(user, permissions)
-        allowed_via_wp_membership = allowed_to_member_relation(user, permissions)
-        allowed_via_project_membership = Project.unscoped.allowed_to(user, permissions)
-
-        where(project_id: allowed_via_project_membership.select(:id))
-          .or(where(id: allowed_via_wp_membership.select(arel_table[:id])))
-      end
-
-      def logged_in_non_admin_allowed_to_large_instances(user, permissions)
+      def logged_in_non_admin_allowed_to(user, permissions)
         # Get all projects a user has the permissions in.
         # Permissions can come from project memberships as well as entity/work_package memberships, in addition
         # to (UNION) potentially the non-member permissions.
@@ -98,51 +88,50 @@ module WorkPackages::Scopes
           WHERE entity_id IS NULL
         SQL
 
-        # Remove those entries from before that are
-        # * entity (WorkPackage) specific AND
-        # * have the same project as a non-entity specific entry.
-        # That is the case if a work package is shared with a user
-        # while the user is already a member in the project.
-        # Since the allowed_to filtering is already specific to the permissions, that removal is safe.
-        entity_member_projects_without_duplicates = Arel.sql(<<~SQL.squish)
-          SELECT * FROM entity_member_projects
-          WHERE NOT EXISTS (
-            SELECT 1 FROM project_member_projects
-            WHERE project_member_projects.id = entity_member_projects.id
-          )
-        SQL
-
         # Take all work packages allowed by either project-wide or entity-specific membership.
-        # But now remove all those that are in a project for which an entity-specific membership exists that is not
-        # for that entity (work package).
-        # An alternative way of formulating this would be by comparing
-        # * That the project_id matches AND
-        # * the entity_id matches OR the entity_id is null
-        #  ```
-        #   SELECT * from work_packages
-        # 	WHERE EXISTS (
-        # 	  SELECT 1 FROM allowed_projects projects
-        #     WHERE projects.id = work_packages.project_id
-        #     AND (projects.entity_id = work_packages.id OR projects.entity_id IS NULL)
-        # 	)
-        # ```
-        # Postgresql however sometimes turns to a sequential scan with the query above.
+        # PostgreSQL however sometimes turns to a sequential scan with the query above.
+        #
+        # It is currently unclear if index scans can still happen in the combination of the CTE with the check
+        # outside of the CTEs for the existence of any record.
+        # This happened in the past, before changing this CTE to a UNION, in case AR.exists? is used which adds a LIMIT 1
+        # to the query. In this case, there is a known shortcoming that PostgreSQL's query planner
+        # will make poor choices
+        # (https://www.postgresql.org/message-id/flat/CA%2BU5nMLbXfUT9cWDHJ3tpxjC3bTWqizBKqTwDgzebCB5bAGCgg%40mail.gmail.com).
+        #
+        # Once AR supports adding materialization hints (https://github.com/rails/rails/pull/54322), the inner
+        # `allowed` CTE can be abandoned as it is only used for being able to provide such a hint.
+        # Having the inner materialized CTE has no known negative side effects which is why it is kept.
         allowed_by_projects_and_work_packages = Arel.sql(<<~SQL.squish)
-          SELECT * from work_packages
-          WHERE project_id in (SELECT id FROM member_projects)
-          AND NOT EXISTS (
-            SELECT 1 FROM entity_member_projects_without_duplicates
-            WHERE entity_member_projects_without_duplicates.id = work_packages.project_id
-            AND entity_member_projects_without_duplicates.entity_id != work_packages.id
+          WITH allowed AS MATERIALIZED (
+            SELECT
+              work_packages.id
+            FROM
+              work_packages
+            JOIN project_member_projects ON project_member_projects.id	= work_packages.project_id
+
+            UNION
+
+            SELECT
+              work_packages.id
+            FROM
+              work_packages
+            JOIN entity_member_projects ON entity_member_projects.entity_id = work_packages.id
           )
+
+          SELECT * from allowed
         SQL
 
         with(member_projects: Arel.sql(allowed_via_project_or_work_package_membership.to_sql),
              entity_member_projects:,
              project_member_projects:,
-             entity_member_projects_without_duplicates:,
              allowed_by_projects_and_work_packages:)
-          .from("allowed_by_projects_and_work_packages work_packages")
+          .where(<<~SQL.squish)
+            EXISTS (
+              SELECT 1
+              FROM allowed_by_projects_and_work_packages
+              WHERE work_packages.id = allowed_by_projects_and_work_packages.id
+            )
+          SQL
       end
 
       def allowed_to_admin_relation(permissions)
@@ -150,16 +139,6 @@ module WorkPackages::Scopes
         .joins(:project)
         .joins(allowed_to_enabled_module_join(permissions))
           .where(Project.arel_table[:active].eq(true))
-      end
-
-      def allowed_to_member_relation(user, permissions)
-        Member
-          .joins(allowed_to_member_in_work_package_join)
-          .joins(active_project_join)
-          .joins(allowed_to_enabled_module_join(permissions))
-          .joins(member_roles: :role)
-          .joins(allowed_to_role_permission_join(permissions))
-          .where(member_conditions(user))
       end
 
       def allowed_to_enabled_module_join(permissions) # rubocop:disable Metrics/AbcSize
@@ -174,51 +153,6 @@ module WorkPackages::Scopes
                           .and(projects_table[:active].eq(true)))
                     .join_sources
         end
-      end
-
-      def allowed_to_role_permission_join(permissions) # rubocop:disable Metrics/AbcSize
-        return if permissions.all?(&:public?)
-
-        role_permissions_table = RolePermission.arel_table
-        enabled_modules_table = EnabledModule.arel_table
-        roles_table = Role.arel_table
-
-        condition = permissions.inject(Arel::Nodes::False.new) do |or_condition, permission|
-          permission_condition = role_permissions_table[:permission].eq(permission.name)
-
-          if permission.project_module.present?
-            permission_condition = permission_condition.and(enabled_modules_table[:name].eq(permission.project_module))
-          end
-
-          or_condition.or(permission_condition)
-        end
-
-        arel_table
-          .join(role_permissions_table, Arel::Nodes::InnerJoin)
-          .on(roles_table[:id].eq(role_permissions_table[:role_id])
-                              .and(condition))
-          .join_sources
-      end
-
-      def active_project_join
-        projects_table = Project.arel_table
-        arel_table
-          .join(projects_table)
-                  .on(projects_table[:active].eq(true)
-                   .and(projects_table[:id].eq(arel_table[:project_id])))
-                  .join_sources
-      end
-
-      def allowed_to_member_in_work_package_join
-        members_table = Member.arel_table
-        arel_table.join(arel_table)
-        .on(members_table[:entity_id].eq(arel_table[:id]))
-        .join_sources
-      end
-
-      def member_conditions(user)
-        Member.arel_table[:user_id].eq(user.id)
-        .and(Member.arel_table[:entity_type].eq(model_name.name))
       end
     end
   end

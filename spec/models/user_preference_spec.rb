@@ -253,7 +253,7 @@ RSpec.describe UserPreference do
       it "defaults to light" do
         expect(subject.theme).to eq("light")
         expect(subject).to be_a_light_theme
-        expect(subject).to be_a_base_theme_light
+        expect(subject).to be_a_light_color_mode
       end
     end
 
@@ -263,27 +263,55 @@ RSpec.describe UserPreference do
       it "returns the dark theme" do
         expect(subject.theme).to eq("dark")
         expect(subject).to be_a_dark_theme
-        expect(subject).to be_a_base_theme_dark
+        expect(subject).to be_a_dark_color_mode
       end
     end
 
-    context "with a light high contrast theme specified" do
-      let(:settings) { { "theme" => "light_high_contrast" } }
+    context "with a light theme and contrast enabled" do
+      let(:settings) { { "theme" => "light", "increase_theme_contrast" => true } }
 
-      it "returns the light high contrast theme" do
-        expect(subject.theme).to eq("light_high_contrast")
+      it "returns light theme with high contrast detection" do
+        expect(subject.theme).to eq("light")
+        expect(subject).to be_a_light_theme
         expect(subject).to be_a_light_high_contrast_theme
-        expect(subject).to be_a_base_theme_light
+        expect(subject).to be_a_light_color_mode
+        expect(subject.increase_theme_contrast?).to be true
       end
     end
 
-    context "with a dark high contrast theme specified" do
-      let(:settings) { { "theme" => "dark_high_contrast" } }
+    context "with a dark theme and contrast enabled" do
+      let(:settings) { { "theme" => "dark", "increase_theme_contrast" => true } }
 
-      it "returns the dark high contrast theme" do
-        expect(subject.theme).to eq("dark_high_contrast")
+      it "returns dark theme with high contrast detection" do
+        expect(subject.theme).to eq("dark")
+        expect(subject).to be_a_dark_theme
         expect(subject).to be_a_dark_high_contrast_theme
-        expect(subject).to be_a_base_theme_dark
+        expect(subject).to be_a_dark_color_mode
+        expect(subject.increase_theme_contrast?).to be true
+      end
+    end
+
+    context "with light theme and contrast disabled" do
+      let(:settings) { { "theme" => "light", "increase_theme_contrast" => false } }
+
+      it "returns light theme without high contrast" do
+        expect(subject.theme).to eq("light")
+        expect(subject).to be_a_light_theme
+        expect(subject).not_to be_a_light_high_contrast_theme
+        expect(subject).to be_a_light_color_mode
+        expect(subject.increase_theme_contrast?).to be false
+      end
+    end
+
+    context "with dark theme and contrast disabled" do
+      let(:settings) { { "theme" => "dark", "increase_theme_contrast" => false } }
+
+      it "returns dark theme without high contrast" do
+        expect(subject.theme).to eq("dark")
+        expect(subject).to be_a_dark_theme
+        expect(subject).not_to be_a_dark_high_contrast_theme
+        expect(subject).to be_a_dark_color_mode
+        expect(subject.increase_theme_contrast?).to be false
       end
     end
 
@@ -295,5 +323,31 @@ RSpec.describe UserPreference do
         expect(subject).to be_a_sync_with_os_theme
       end
     end
+
+    context "with unset contrast settings" do
+      let(:settings) { { "theme" => "light" } }
+
+      it "defaults contrast settings to false" do
+        expect(subject).not_to be_increase_theme_contrast
+        expect(subject).not_to be_force_light_theme_contrast
+        expect(subject).not_to be_force_dark_theme_contrast
+        expect(subject).not_to be_a_light_high_contrast_theme
+        expect(subject).not_to be_a_dark_high_contrast_theme
+      end
+    end
+  end
+
+  describe "contrast settings" do
+    it_behaves_like "accepts real and false booleans",
+                    :increase_theme_contrast=,
+                    :increase_theme_contrast?
+
+    it_behaves_like "accepts real and false booleans",
+                    :force_light_theme_contrast=,
+                    :force_light_theme_contrast?
+
+    it_behaves_like "accepts real and false booleans",
+                    :force_dark_theme_contrast=,
+                    :force_dark_theme_contrast?
   end
 end

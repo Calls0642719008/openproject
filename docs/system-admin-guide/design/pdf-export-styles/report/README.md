@@ -1,3 +1,7 @@
+---
+sidebar_navigation:
+  title:  Report, Gantt and Table PDF Styling
+---
 
 # Report, Gantt and Table PDF
 

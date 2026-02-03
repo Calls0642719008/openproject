@@ -34,7 +34,7 @@
                   email: @trial_key.data[:email]
                 ) %>
           <% else %>
-            <%= t("ee.upsell.homescreen_description") %>
+            <%= link_translate("ee.upsell.homescreen_description", links: { enterprise_url: }) %>
           <% end %>
         </p>
         <p>

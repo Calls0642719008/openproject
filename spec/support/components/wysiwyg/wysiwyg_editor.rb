@@ -35,7 +35,7 @@ module Components
 
       textarea = container.find(".op-ckeditor-source-element", visible: :all)
       page.execute_script(
-        'jQuery(arguments[0]).trigger("op:ckeditor:setData", arguments[1])',
+        'arguments[0].dispatchEvent(new CustomEvent("op:ckeditor:setData", { detail: arguments[1] }))',
         textarea.native,
         text
       )
@@ -44,7 +44,7 @@ module Components
     def clear
       textarea = container.find(".op-ckeditor-source-element", visible: :all)
       page.execute_script(
-        'jQuery(arguments[0]).trigger("op:ckeditor:clear")',
+        'arguments[0].dispatchEvent(new Event("op:ckeditor:clear"))',
         textarea.native
       )
     end
@@ -52,7 +52,7 @@ module Components
     def trigger_autosave
       textarea = container.find(".op-ckeditor-source-element", visible: :all)
       page.execute_script(
-        'jQuery(arguments[0]).trigger("op:ckeditor:autosave")',
+        'arguments[0].dispatchEvent(new Event("op:ckeditor:autosave"))',
         textarea.native
       )
     end

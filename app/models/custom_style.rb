@@ -32,6 +32,7 @@ require "ttfunk"
 
 class CustomStyle < ApplicationRecord
   mount_uploader :logo, OpenProject::Configuration.file_uploader
+  mount_uploader :logo_mobile, OpenProject::Configuration.file_uploader
   mount_uploader :export_logo, OpenProject::Configuration.file_uploader
   mount_uploader :export_cover, OpenProject::Configuration.file_uploader
   mount_uploader :export_footer, OpenProject::Configuration.file_uploader
@@ -41,9 +42,6 @@ class CustomStyle < ApplicationRecord
   mount_uploader :export_font_bold, OpenProject::Configuration.file_uploader
   mount_uploader :export_font_italic, OpenProject::Configuration.file_uploader
   mount_uploader :export_font_bold_italic, OpenProject::Configuration.file_uploader
-
-  MAX_FONT_UPLOAD_SIZE = 30.megabytes
-  validate :validate_font_files
 
   class << self
     def current
@@ -62,7 +60,7 @@ class CustomStyle < ApplicationRecord
     updated_at.to_i
   end
 
-  %i(favicon touch_icon export_logo export_cover export_footer logo
+  %i(favicon touch_icon export_logo export_cover export_footer logo logo_mobile
      export_font_regular export_font_bold export_font_italic export_font_bold_italic).each do |name|
     define_method :"#{name}_path" do
       attachment = send(name)
@@ -82,41 +80,5 @@ class CustomStyle < ApplicationRecord
         update_columns(name => nil, updated_at: Time.zone.now)
       end
     end
-  end
-
-  def validate_font_files
-    %i(export_font_regular export_font_bold export_font_italic export_font_bold_italic).each do |name|
-      attachment = send(name)
-      validate_font_file(name, attachment)
-    end
-  end
-
-  private
-
-  def validate_font_file(name, attachment)
-    validate_font_file_size(name, attachment) if attachment&.file
-    validate_font_file_format(name, attachment) if attachment&.file
-  end
-
-  def validate_font_file_format(name, attachment)
-    unless valid_ttf?(attachment.file.path)
-      errors.add(name, I18n.t("admin.custom_styles.fonts.file_is_invalid"))
-      attachment.remove!
-    end
-  end
-
-  def validate_font_file_size(name, attachment)
-    size = attachment.file.size.to_i
-    if size >= MAX_FONT_UPLOAD_SIZE
-      errors.add(name, I18n.t("admin.custom_styles.fonts.file_too_large", count: (MAX_FONT_UPLOAD_SIZE / 1.megabyte).to_i))
-      attachment.remove!
-    end
-  end
-
-  def valid_ttf?(filename)
-    file = TTFunk::File.open(filename)
-    file.name.font_name.present?
-  rescue StandardError
-    false
   end
 end

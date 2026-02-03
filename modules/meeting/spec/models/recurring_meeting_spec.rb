@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 require_module_spec_helper
 
@@ -15,15 +16,6 @@ RSpec.describe RecurringMeeting,
       it "is invalid" do
         expect(subject).not_to be_valid
         expect(subject.errors[:end_date]).to include("must be after #{subject.start_date}.")
-      end
-    end
-
-    context "with end_date in the past" do
-      let(:end_date) { Date.yesterday }
-
-      it "is invalid" do
-        expect(subject).not_to be_valid
-        expect(subject.errors[:end_date]).to include("must be in the future.")
       end
     end
   end
@@ -236,7 +228,81 @@ RSpec.describe RecurringMeeting,
     end
   end
 
-  describe "uid" do
+  describe "#ical_schedule / #schedule" do
+    context "with a schedule with number of iterations" do
+      let(:recurring_meeting) do
+        build(:recurring_meeting,
+              start_time: DateTime.parse("2024-10-01T12:00Z"),
+              frequency: "weekly",
+              end_after: "iterations",
+              iterations: 5,
+              current_schedule_start: DateTime.parse("2024-10-15T12:00Z"))
+
+        # Occurrences on 2024-10-01, 2024-10-08, 2024-10-15, 2024-10-22, 2024-10-29
+      end
+
+      it "builds an IceCube schedule for iCal based on current_schedule_start" do
+        schedule = recurring_meeting.ical_schedule
+
+        expect(schedule.start_time).to eq(recurring_meeting.current_schedule_start)
+        expect(schedule.rrules.count).to eq 1
+
+        rrule = schedule.rrules.first
+
+        expect(rrule).to be_a(IceCube::WeeklyRule)
+        expect(rrule.occurrence_count).to eq(3) # 15th is the 3rd occurrence, so with it 3 remaining
+      end
+
+      it "builds an IceCube schedule for based on start_time" do
+        schedule = recurring_meeting.schedule
+
+        expect(schedule.start_time).to eq(recurring_meeting.start_time)
+        expect(schedule.rrules.count).to eq 1
+
+        rrule = schedule.rrules.first
+
+        expect(rrule).to be_a(IceCube::WeeklyRule)
+        expect(rrule.occurrence_count).to eq(5)
+      end
+    end
+
+    context "with a schedule until a specific date" do
+      let(:recurring_meeting) do
+        build(:recurring_meeting,
+              start_time: DateTime.parse("2024-10-01T12:00Z"),
+              frequency: "weekly",
+              end_after: "specific_date",
+              end_date: Date.parse("2024-11-05"),
+              current_schedule_start: DateTime.parse("2024-10-15T12:00Z"))
+      end
+
+      it "builds an IceCube schedule for iCal based on current_schedule_start" do
+        schedule = recurring_meeting.ical_schedule
+
+        expect(schedule.start_time).to eq(recurring_meeting.current_schedule_start)
+        expect(schedule.rrules.count).to eq 1
+
+        rrule = schedule.rrules.first
+
+        expect(rrule).to be_a(IceCube::WeeklyRule)
+        expect(rrule.until_time).to eq(recurring_meeting.end_date + 1.day)
+      end
+
+      it "builds an IceCube schedule for based on start_time" do
+        schedule = recurring_meeting.schedule
+
+        expect(schedule.start_time).to eq(recurring_meeting.start_time)
+        expect(schedule.rrules.count).to eq 1
+
+        rrule = schedule.rrules.first
+
+        expect(rrule).to be_a(IceCube::WeeklyRule)
+        expect(rrule.until_time).to eq(recurring_meeting.end_date + 1.day)
+      end
+    end
+  end
+
+  describe "#uid" do
     it "assigns a uid on create" do
       series = build(:recurring_meeting)
       expect(series.uid).to be_present

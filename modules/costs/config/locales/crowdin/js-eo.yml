@@ -26,7 +26,7 @@ eo:
       noSpecificTime: "No specific time"
     work_packages:
       property_groups:
-        costs: "Costs"
+        costs: "Kostoj"
       properties:
         overallCosts: "Overall costs"
         spentUnits: "Spent units"

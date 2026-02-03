@@ -4,9 +4,7 @@ import { TableDragActionService } from 'core-app/features/work-packages/componen
 import { HierarchyDragActionService } from 'core-app/features/work-packages/components/wp-table/drag-and-drop/actions/hierarchy-drag-action.service';
 import { GroupByDragActionService } from 'core-app/features/work-packages/components/wp-table/drag-and-drop/actions/group-by-drag-action.service';
 
-interface ITableDragActionService {
-  new(querySpace:IsolatedQuerySpace, injector:Injector):TableDragActionService;
-}
+type ITableDragActionService = new(querySpace:IsolatedQuerySpace, injector:Injector) => TableDragActionService;
 
 @Injectable()
 export class TableDragActionsRegistryService {

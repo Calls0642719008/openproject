@@ -135,7 +135,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
   end
 
   describe "#type" do
-    context "integer" do
+    describe "integer" do
       let(:cf_accessor) { int_project_custom_field.column_name }
 
       it "is integer for an integer" do
@@ -144,7 +144,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "float" do
+    describe "float" do
       let(:cf_accessor) { float_project_custom_field.column_name }
 
       it "is integer for a float" do
@@ -153,7 +153,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "text" do
+    describe "text" do
       let(:cf_accessor) { text_project_custom_field.column_name }
 
       it "is text for a text" do
@@ -162,7 +162,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "list optional" do
+    describe "list optional" do
       let(:cf_accessor) { list_project_custom_field.column_name }
 
       it "is list_optional for a list" do
@@ -171,7 +171,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "user" do
+    describe "user" do
       let(:cf_accessor) { user_project_custom_field.column_name }
 
       it "is list_optional for a user" do
@@ -180,7 +180,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "version" do
+    describe "version" do
       let(:cf_accessor) { version_project_custom_field.column_name }
 
       it "is list_optional for a version" do
@@ -189,7 +189,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "version" do
+    describe "date" do
       let(:cf_accessor) { date_project_custom_field.column_name }
 
       it "is date for a date" do
@@ -198,7 +198,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "bool" do
+    describe "bool" do
       let(:cf_accessor) { bool_project_custom_field.column_name }
 
       it "is list for a bool" do
@@ -207,7 +207,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "string" do
+    describe "string" do
       let(:cf_accessor) { string_project_custom_field.column_name }
 
       it "is string for a string" do
@@ -225,7 +225,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
   end
 
   describe "#allowed_values" do
-    context "integer" do
+    describe "integer" do
       let(:cf_accessor) { int_project_custom_field.column_name }
 
       it "is nil for an integer" do
@@ -234,7 +234,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "float" do
+    describe "float" do
       let(:cf_accessor) { float_project_custom_field.column_name }
 
       it "is integer for a float" do
@@ -243,7 +243,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "text" do
+    describe "text" do
       let(:cf_accessor) { text_project_custom_field.column_name }
 
       it "is text for a text" do
@@ -252,7 +252,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "list" do
+    describe "list" do
       let(:cf_accessor) { list_project_custom_field.column_name }
 
       it "is list_optional for a list" do
@@ -261,11 +261,11 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "user" do
+    describe "user" do
       let(:cf_accessor) { user_project_custom_field.column_name }
 
       it "is list_optional for a user" do
-        bogus_return_value = ["user1", "user2"]
+        bogus_return_value = %w[user1 user2]
         allow(user_project_custom_field)
           .to receive(:possible_values_options)
           .and_return(bogus_return_value)
@@ -275,11 +275,11 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "version" do
+    describe "version" do
       let(:cf_accessor) { version_project_custom_field.column_name }
 
       it "is list_optional for a version" do
-        bogus_return_value = ["version1", "version2"]
+        bogus_return_value = %w[version1 version2]
         allow(version_project_custom_field)
           .to receive(:possible_values_options)
           .and_return(bogus_return_value)
@@ -289,7 +289,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "date" do
+    describe "date" do
       let(:cf_accessor) { date_project_custom_field.column_name }
 
       it "is nil for a date" do
@@ -298,7 +298,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "bool" do
+    describe "bool" do
       let(:cf_accessor) { bool_project_custom_field.column_name }
 
       it "is list for a bool" do
@@ -308,7 +308,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "string" do
+    describe "string" do
       let(:cf_accessor) { string_project_custom_field.column_name }
 
       it "is nil for a string" do
@@ -321,6 +321,7 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
   describe "#apply_to" do
     describe "permissions" do
       let(:user) { build_stubbed(:user) }
+
       current_user { user }
 
       it "includes the check for view_project_attributes permission" do
@@ -399,31 +400,31 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "bool cf" do
+    describe "bool cf" do
       let(:custom_field) { bool_project_custom_field }
 
       it_behaves_like "non ar filter"
     end
 
-    context "int cf" do
+    describe "int cf" do
       let(:custom_field) { int_project_custom_field }
 
       it_behaves_like "non ar filter"
     end
 
-    context "float cf" do
+    describe "float cf" do
       let(:custom_field) { float_project_custom_field }
 
       it_behaves_like "non ar filter"
     end
 
-    context "text cf" do
+    describe "text cf" do
       let(:custom_field) { text_project_custom_field }
 
       it_behaves_like "non ar filter"
     end
 
-    context "user cf" do
+    describe "user cf" do
       let(:custom_field) { user_project_custom_field }
 
       describe "#ar_object_filter?" do
@@ -436,23 +437,25 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       describe "#value_objects" do
         let(:user1) { build_stubbed(:user) }
         let(:user2) { build_stubbed(:user) }
+        let(:group) { build_stubbed(:group) }
+        let(:placeholder_user) { build_stubbed(:placeholder_user) }
 
         before do
           allow(Principal)
             .to receive(:where)
-            .and_return([user1, user2])
+            .and_return([user1, user2, group, placeholder_user])
 
-          instance.values = [user1.id.to_s, user2.id.to_s]
+          instance.values = [user1.id.to_s, user2.id.to_s, group.id.to_s, placeholder_user.id.to_s]
         end
 
         it "returns an array with users" do
           expect(instance.value_objects)
-            .to contain_exactly(user1, user2)
+            .to contain_exactly(user1, user2, group, placeholder_user)
         end
       end
     end
 
-    context "version cf" do
+    describe "version cf" do
       let(:custom_field) { version_project_custom_field }
 
       describe "#ar_object_filter?" do
@@ -482,13 +485,13 @@ RSpec.describe Queries::Projects::Filters::CustomFieldFilter do
       end
     end
 
-    context "date cf" do
+    describe "date cf" do
       let(:custom_field) { date_project_custom_field }
 
       it_behaves_like "non ar filter"
     end
 
-    context "string cf" do
+    describe "string cf" do
       let(:custom_field) { string_project_custom_field }
 
       it_behaves_like "non ar filter"

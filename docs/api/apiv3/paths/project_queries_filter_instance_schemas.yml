@@ -107,7 +107,7 @@ get:
                 count: 2
                 total: 2
           schema:
-            "$ref": "../components/schemas/query_filter_instance_schemas_for_project_model.yml"
+            "$ref": "../components/schemas/query_filter_instance_schemas_for_workspace_model.yml"
       description: OK
       headers: {}
     '403':
@@ -128,7 +128,10 @@ get:
       headers: {}
   tags:
   - Query Filter Instance Schema
-  description: Returns the list of QueryFilterInstanceSchemas defined for a query
+  description: |-
+    Returns the list of QueryFilterInstanceSchemas defined for a query
     of the specified project.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/queries/filter_instance_schemas`](https://www.openproject.org/docs/api/endpoints/query-filter-instance-schema/#list-query-filter-instance-schemas-for-workspace)
   operationId: List_Query_Filter_Instance_Schemas_for_Project
   summary: List Query Filter Instance Schemas for Project

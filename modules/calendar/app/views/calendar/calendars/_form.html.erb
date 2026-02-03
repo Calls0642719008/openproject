@@ -46,8 +46,7 @@ See COPYRIGHT and LICENSE files for more details.
                                 inputs: {
                                   filters: [{ name: :user_action, operator: "=", values: ["calendars/create"] }],
                                   inputName: "project_id",
-                                  inputValue: @project&.id,
-                                  appendTo: "body"
+                                  inputValue: @project&.id
                                 },
                                 id: "project_id",
                                 class: "form--select-container -wide remote-field--input",

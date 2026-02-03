@@ -129,7 +129,7 @@ Doorkeeper.configure do
   #
   default_scopes :api_v3
 
-  optional_scopes :scim_v2
+  optional_scopes :scim_v2, :mcp
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then

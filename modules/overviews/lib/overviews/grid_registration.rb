@@ -4,7 +4,7 @@ module Overviews
     to_scope :project_overview_path
 
     view_permission :view_project
-    edit_permission :manage_overview
+    edit_permission :manage_dashboards
     in_project_scope_path nil
 
     defaults -> {
@@ -63,7 +63,7 @@ module Overviews
     }
 
     validations :create, ->(*_args) {
-      next if user.allowed_in_project?(:manage_overview, model.project)
+      next if user.allowed_in_project?(:manage_dashboards, model.project)
 
       defaults = Overviews::GridRegistration.defaults
 

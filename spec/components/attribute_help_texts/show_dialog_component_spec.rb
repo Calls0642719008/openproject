@@ -60,7 +60,7 @@ RSpec.describe AttributeHelpTexts::ShowDialogComponent, type: :component do
 
   describe "dialog heading" do
     it "renders the heading" do
-      expect(subject).to have_heading attribute_help_text.attribute_caption
+      expect(subject).to have_heading attribute_help_text.attribute_field_name
     end
   end
 

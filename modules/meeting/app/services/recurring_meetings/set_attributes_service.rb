@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -38,6 +39,8 @@ module RecurringMeetings
         if model.frequency_working_days?
           model.interval = 1
         end
+
+        model.current_schedule_start = model.next_occurrence(from_time: Time.current) || model.start_time
       end
     end
 

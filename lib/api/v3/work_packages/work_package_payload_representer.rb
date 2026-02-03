@@ -31,9 +31,14 @@ module API
     module WorkPackages
       class WorkPackagePayloadRepresenter < WorkPackageRepresenter
         include ::API::Utilities::PayloadRepresenter
+        include ::API::Utilities::MetaProperty
         include ::API::V3::Attachments::AttachablePayloadRepresenterMixin
 
         cached_representer disabled: true
+
+        def meta_representer_class
+          WorkPackageMetaRepresenter
+        end
 
         property :file_links,
                  exec_context: :decorator,

@@ -35,7 +35,7 @@ import {
 
 export function mobileGuardActivated(state:StateObject):boolean {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
-  return state.data && state.data.mobileAlternative && (new DeviceService()).isMobile;
+  return state.data?.mobileAlternative && (new DeviceService()).isMobile;
 }
 
 export function redirectToMobileAlternative(transition:Transition):TargetState {

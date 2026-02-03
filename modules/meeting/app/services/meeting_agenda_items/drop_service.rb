@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -36,6 +37,7 @@ module MeetingAgendaItems
       @user = user
       @meeting_agenda_item = meeting_agenda_item
       @meeting = meeting_agenda_item.meeting
+      @old_section = meeting_agenda_item.meeting_section
     end
 
     def perform
@@ -105,14 +107,31 @@ module MeetingAgendaItems
     end
 
     def update_section(new_section_id)
-      current_section = MeetingSection.find(new_section_id)
-      @meeting_agenda_item.remove_from_list
-      @meeting_agenda_item.update(meeting_section: current_section)
-      current_section
+      target_section(new_section_id).tap do |new_section|
+        @meeting_agenda_item.remove_from_list
+        @meeting_agenda_item.update(meeting_section: new_section)
+      end
     end
 
     def update_position(new_position)
       @meeting_agenda_item.insert_at(new_position)
+    end
+
+    def target_section(new_section_id)
+      # allows from backlog to current meeting
+      target_section = if @old_section.backlog? && @meeting.backlog == @old_section
+                         MeetingSection
+                         .joins(:meeting)
+                         .where(meetings: { recurring_meeting_id: @meeting.recurring_meeting_id })
+                         .find_by(id: new_section_id)
+                       end
+
+      # allows from current meeting to backlog
+      if @meeting.backlog.id == new_section_id.to_i
+        target_section ||= @meeting.backlog
+      end
+
+      target_section || @meeting.sections.find(new_section_id)
     end
   end
 end

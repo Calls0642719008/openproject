@@ -20,7 +20,7 @@ keywords: development setup
 Please have a look at [our development guidelines](../code-review-guidelines/) for tips and guides on how to start
 coding. We have advice on how to get your changes back into the OpenProject core as smooth as possible.
 Also, take a look at the `docs` directory in our sources, especially
-the [how to run tests](../running-tests) documentation (we like to have automated tests for every new developed feature).
+the [how to run tests](../testing) documentation (we like to have automated tests for every new developed feature).
 
 ## Troubleshooting
 

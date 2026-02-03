@@ -46,7 +46,7 @@ Alternatively, you could use OpenProject [as cloud version](https://www.openproj
 
 ### Why don't you support Windows?
 
-Ruby support on Windows is notoriously difficult, however you might be able to run the Docker image, or use the unofficial Windows stack provided by [Bitnami](https://bitnami.com/stack/openproject/installer). We would welcome feedback and reported experiences on running OpenProject on Windows, please reach out to us if you can contribute some information.
+Ruby support on Windows is notoriously difficult, however you might be able to run the Docker image. We would welcome feedback and reported experiences on running OpenProject on Windows, please reach out to us if you can contribute some information.
 
 ### Can I install OpenProject on my Mac?
 
@@ -82,7 +82,7 @@ Older installations of OpenProject are likely installed with a MySQL installatio
 Please follow these steps:
 
 1. Make a dump of your Bitnami database to export your data. You can refer to the [Bitnami documentation](https://docs.bitnami.com/general/infrastructure/mysql/administration/backup-restore-mysql-mariadb/).
-1. Make a dump of files you might have uploaded. You can refer to the [Bitnami documentation](https://docs.bitnami.com/general/apps/openproject/) to perform a full dump.
+1. Make a dump of files you might have uploaded.
 1. Copy both dumps to the server you want to install OpenProject on.
 1. Install OpenProject using the packaged installation.
 1. By default, this will allow you to install a PostgreSQL database, which we recommend. You can migrate your data from MySQL using [pgloader](https://pgloader.io)

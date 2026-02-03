@@ -51,6 +51,7 @@ description: |-
   | minLength         | The value of the property must at least contain the specified amount of characters | Integer      | 0       |
   | maxLength         | The value of the property must at most contain the specified amount of characters  | Integer      | ∞       |
   | regularExpression | The value of the property must match the given regular expression (if not null)    | String       | null    |
+  | formula           | If present, contains a formula that is used to calculate the value of the property | String       | null    |
   | location          | If present, contains a reference to the location of the property in the JSON       | String       | null    |
   | description       | If present, contains a formattable, human readable description                     | Formattable  | null    |
   | deprecated        | If present, the client should consider the existence of the property deprecated    | Boolean      | false   |

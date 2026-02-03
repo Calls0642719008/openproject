@@ -11,7 +11,7 @@ import { RelationResource } from 'core-app/features/hal/resources/relation-resou
 import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
 import { ApiV3Filter } from 'core-app/shared/helpers/api-v3/api-v3-filter-builder';
 
-export type RelationsStateValue = { [relationId:string]:RelationResource };
+export type RelationsStateValue = Record<string, RelationResource>;
 
 export class RelationStateGroup extends StatesGroup {
   name = 'WP-Relations';
@@ -146,7 +146,7 @@ export class WorkPackageRelationsService extends StateCacheService<RelationsStat
     return this.updateRelation(relation, params);
   }
 
-  public updateRelation(relation:RelationResource, params:{ [key:string]:any }) {
+  public updateRelation(relation:RelationResource, params:Record<string, any>) {
     return relation.updateImmediately(params)
       .then((savedRelation:RelationResource) => {
         this.insertIntoStates(savedRelation);

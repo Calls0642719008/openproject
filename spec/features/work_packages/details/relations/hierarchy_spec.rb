@@ -63,7 +63,7 @@ RSpec.shared_examples "work package relations tab", :js, :with_cuprite do
 
     it "allows to manage hierarchy" do
       # Add parent
-      relations.add_parent(parent.id, parent)
+      relations.add_parent(parent)
       wp_page.expect_and_dismiss_toaster(message: "Successful update.")
       relations.expect_parent(parent)
       tabs.expect_counter(relations_tab, 1)
@@ -150,7 +150,7 @@ RSpec.shared_examples "work package relations tab", :js, :with_cuprite do
 
         it "is able to link parent and children" do
           # Add parent
-          relations.add_parent(parent.id, parent)
+          relations.add_parent(parent)
           wp_page.expect_and_dismiss_toaster(message: "Successful update.")
           relations.expect_parent(parent)
           tabs.expect_counter(relations_tab, 3)

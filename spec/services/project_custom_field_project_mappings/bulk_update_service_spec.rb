@@ -31,117 +31,201 @@
 require "spec_helper"
 
 RSpec.describe ProjectCustomFieldProjectMappings::BulkUpdateService do
-  let!(:project) { create(:project) }
-  let!(:section_with_invisible_fields) { create(:project_custom_field_section, name: "Section with invisible fields") }
+  shared_let(:project) { create(:project) }
+  shared_let(:project_custom_field_section) { create(:project_custom_field_section) }
 
-  let!(:visible_project_custom_field) do
-    create(:project_custom_field,
-           name: "Visible field",
-           admin_only: false,
-           project_custom_field_section: section_with_invisible_fields)
+  let(:instance) { described_class.new(user:, project:, project_custom_field_section:) }
+
+  describe "permissions" do
+    shared_let(:visible_project_custom_field) do
+      create(:project_custom_field,
+             name: "Visible field",
+             admin_only: false,
+             project_custom_field_section:)
+    end
+
+    shared_let(:visible_required_project_custom_field) do
+      create(:project_custom_field,
+             name: "Visible required field",
+             admin_only: false,
+             is_required: true,
+             project_custom_field_section:)
+    end
+
+    shared_let(:visible_activated_project_custom_field) do
+      create(:project_custom_field,
+             name: "Visible activated field",
+             admin_only: false,
+             is_for_all: true,
+             project_custom_field_section:)
+    end
+
+    shared_let(:invisible_project_custom_field) do
+      create(:project_custom_field,
+             name: "Admin only field",
+             admin_only: true,
+             project_custom_field_section:)
+    end
+
+    context "with admin permissions" do
+      let(:user) { create(:admin) }
+
+      it "bulk enables/disables all (non-for_all) fields of the section, including invisible ones" do
+        expect(project.project_custom_fields).to contain_exactly(visible_activated_project_custom_field)
+
+        expect(instance.call(action: :enable)).to be_success
+
+        expected = [
+          visible_activated_project_custom_field,
+          visible_required_project_custom_field,
+          visible_project_custom_field,
+          invisible_project_custom_field
+        ]
+        expect(project.reload.project_custom_fields).to match_array(expected)
+
+        expect(instance.call(action: :disable)).to be_success
+
+        # for_all fields cannot be disabled, even not by admins
+        expect(project.reload.project_custom_fields).to contain_exactly(visible_activated_project_custom_field)
+      end
+    end
+
+    context "with non-admin but sufficient permissions" do
+      let(:user) do
+        create(:user,
+               firstname: "Project",
+               lastname: "Admin",
+               member_with_permissions: {
+                 project => %w[
+                   view_work_packages
+                   edit_project
+                   select_project_custom_fields
+                 ]
+               })
+      end
+
+      it "bulk enables/disables all fields of the section, excluding invisible ones" do
+        expect(project.project_custom_fields).to contain_exactly(visible_activated_project_custom_field)
+
+        expect(instance.call(action: :enable)).to be_success
+
+        expected = [
+          visible_activated_project_custom_field,
+          visible_required_project_custom_field,
+          visible_project_custom_field
+        ]
+        expect(project.reload.project_custom_fields).to match_array(expected)
+
+        project.project_custom_fields << invisible_project_custom_field
+
+        expect(instance.call(action: :disable)).to be_success
+
+        # force-activated fields cannot be disabled, invisible fields are not affected by non-admins
+        expected = [
+          visible_activated_project_custom_field,
+          invisible_project_custom_field
+        ]
+        expect(project.reload.project_custom_fields).to match_array(expected)
+      end
+    end
+
+    context "with insufficient permissions" do
+      let(:user) do
+        create(:user,
+               firstname: "Project",
+               lastname: "Editor",
+               member_with_permissions: {
+                 project => %w[
+                   view_work_packages
+                   edit_project
+                 ]
+               })
+      end
+
+      it "cannot bulk enable/disable project custom fields" do
+        expect(project.project_custom_fields).to contain_exactly(visible_activated_project_custom_field)
+
+        expect(instance.call(action: :enable)).to be_failure
+
+        expect(project.reload.project_custom_fields).to contain_exactly(visible_activated_project_custom_field)
+
+        expect(instance.call(action: :disable)).to be_failure
+      end
+    end
   end
 
-  let!(:visible_required_project_custom_field) do
-    create(:project_custom_field,
-           name: "Visible required field",
-           admin_only: false,
-           is_required: true,
-           project_custom_field_section: section_with_invisible_fields)
-  end
+  describe "calculated values",
+           with_ee: %i[calculated_values],
+           with_flag: { calculated_value_project_attribute: true } do
+    using CustomFieldFormulaReferencing
 
-  let!(:invisible_project_custom_field) do
-    create(:project_custom_field,
-           name: "Admin only field",
-           admin_only: true,
-           project_custom_field_section: section_with_invisible_fields)
-  end
+    shared_let(:user) { create(:admin) }
 
-  let(:instance) { described_class.new(user:, project:, project_custom_field_section: section_with_invisible_fields) }
+    shared_let(:other_section) { create(:project_custom_field_section) }
 
-  context "with admin permissions" do
-    let(:user) { create(:admin) }
+    shared_let(:static) { create(:integer_project_custom_field, project_custom_field_section:) }
+    shared_let(:other_static) { create(:integer_project_custom_field, project_custom_field_section: other_section) }
 
-    it "bulk enables/disables all (non-required) fields of the section, including invisible ones" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
+    shared_let(:calculated1) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "#{static} * 7",
+                                                                        project_custom_field_section:)
+    end
+    shared_let(:calculated2) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "#{other_static} * 11",
+                                                                        project_custom_field_section:)
+    end
+    shared_let(:other_calculated) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "#{static} * 13",
+                                                                        project_custom_field_section: other_section)
+    end
+    shared_let(:other_enabled) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "11",
+                                                                        project_custom_field_section: other_section)
+    end
+    shared_let(:other_disabled) do
+      create(:calculated_value_project_custom_field, :skip_validations, formula: "13",
+                                                                        project_custom_field_section: other_section)
+    end
 
+    before do
+      # this will auto enable custom fields for the project
+      {
+        static => 2,
+        other_static => 3,
+        other_enabled => 11
+      }.each { |custom_field, value| create(:custom_value, custom_field:, value:, customized: project) }
+
+      project.project_custom_fields = [other_static, other_calculated]
+    end
+
+    it "recalculates values" do
       expect(instance.call(action: :enable)).to be_success
 
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field, visible_project_custom_field, invisible_project_custom_field
-      )
+      project.reload
+      expect(project.project_custom_fields).to contain_exactly(static, other_static, calculated1, calculated2, other_calculated)
+      expect(project.custom_value_attributes(all: true)).to eq({
+                                                                 static.id => "2",
+                                                                 other_static.id => "3",
+                                                                 calculated1.id => "14",
+                                                                 calculated2.id => "33",
+                                                                 other_calculated.id => "26",
+                                                                 other_enabled.id => "11",
+                                                                 other_disabled.id => nil
+                                                               })
 
       expect(instance.call(action: :disable)).to be_success
 
-      # required fields cannot be disabled, even not by admins
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-    end
-  end
-
-  context "with non-admin but sufficient permissions" do
-    let(:user) do
-      create(:user,
-             firstname: "Project",
-             lastname: "Admin",
-             member_with_permissions: {
-               project => %w[
-                 view_work_packages
-                 edit_project
-                 select_project_custom_fields
-               ]
-             })
-    end
-
-    it "bulk enables/disables all fields of the section, excluding invisible ones" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-
-      expect(instance.call(action: :enable)).to be_success
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field, visible_project_custom_field
-      )
-
-      project.project_custom_fields << invisible_project_custom_field
-
-      expect(instance.call(action: :disable)).to be_success
-
-      # required fields cannot be disabled, invisible fields are not affected by non-admins
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field, invisible_project_custom_field
-      )
-    end
-  end
-
-  context "with insufficient permissions" do
-    let(:user) do
-      create(:user,
-             firstname: "Project",
-             lastname: "Editor",
-             member_with_permissions: {
-               project => %w[
-                 view_work_packages
-                 edit_project
-               ]
-             })
-    end
-
-    it "cannot bulk enable/disable project custom fields" do
-      expect(project.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-
-      expect(instance.call(action: :enable)).to be_failure
-
-      expect(project.reload.project_custom_fields).to contain_exactly(
-        visible_required_project_custom_field
-      )
-
-      expect(instance.call(action: :disable)).to be_failure
+      project.reload
+      expect(project.project_custom_fields).to contain_exactly(other_static, other_calculated)
+      expect(project.custom_value_attributes(all: true)).to eq({
+                                                                 static.id => "2",
+                                                                 other_static.id => "3",
+                                                                 calculated1.id => nil,
+                                                                 calculated2.id => nil,
+                                                                 other_calculated.id => nil,
+                                                                 other_enabled.id => "11",
+                                                                 other_disabled.id => nil
+                                                               })
     end
   end
 end

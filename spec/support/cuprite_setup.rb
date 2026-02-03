@@ -63,7 +63,10 @@ def register_better_cuprite(language, name: :"better_cuprite_#{language}")
       inspector: true,
       headless: headless_mode?,
       save_path: DownloadList::SHARED_PATH.to_s,
-      window_size: [1920, 1080]
+      window_size: [1920, 1080],
+      # workaround for compatibility issues with browserless docker image and ferrum
+      # see https://github.com/rubycdp/ferrum/issues/540
+      flatten: false
     }
 
     if headful_mode? && ENV["CAPYBARA_WINDOW_RESOLUTION"]
@@ -75,9 +78,7 @@ def register_better_cuprite(language, name: :"better_cuprite_#{language}")
       options = options.merge(slowmo: ENV["OPENPROJECT_TESTING_SLOWDOWN_FACTOR"])
     end
 
-    if ENV["CHROME_URL"].present?
-      options = options.merge(url: ENV["CHROME_URL"])
-    end
+    options = configure_remote_chrome(options)
 
     browser_options = {
       "disable-dev-shm-usage": nil,
@@ -96,7 +97,15 @@ def register_better_cuprite(language, name: :"better_cuprite_#{language}")
       "disable-backgrounding-occluded-windows": nil,
       # This disables non-foreground tabs from getting a lower process priority.
       # Useful for parallel test runs.
-      "disable-renderer-backgrounding": nil
+      "disable-renderer-backgrounding": nil,
+      # Software GPU to avoid the dreaded "[ERROR] [Canvas '__0']: Failed to get a
+      # WebGL context" error for tests using xeokit. The automatic fallback to SwiftShader
+      # was disabled in January 2026, so that we now have to enable the fallback manually in
+      # the test environment.
+      # See https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/gpu/swiftshader.md
+      "use-gl": "angle",
+      "use-angle": "swiftshader-webgl",
+      "enable-unsafe-swiftshader": true
     }
 
     if ENV["OPENPROJECT_TESTING_AUTO_DEVTOOLS"].present?
@@ -111,6 +120,17 @@ def register_better_cuprite(language, name: :"better_cuprite_#{language}")
   Capybara::Screenshot.register_driver(name) do |driver, path|
     driver.save_screenshot(path)
   end
+end
+
+def configure_remote_chrome(options)
+  if ENV["CHROME_URL"].present? && ENV["CHROME_WS_URL"].present?
+    raise "Both CHROME_URL and CHROME_WS_URL were passed. Only one can be accepted at a time."
+  end
+
+  return options.merge(url: ENV["CHROME_URL"]) if ENV["CHROME_URL"].present?
+  return options.merge(ws_url: ENV["CHROME_WS_URL"]) if ENV["CHROME_WS_URL"].present?
+
+  options
 end
 
 register_better_cuprite "en"

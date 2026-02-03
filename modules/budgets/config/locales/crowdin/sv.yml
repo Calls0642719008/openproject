@@ -21,7 +21,7 @@
 #++
 sv:
   plugin_budgets_engine:
-    name: "Budget"
+    name: "Budgetar"
   activerecord:
     attributes:
       budget:
@@ -36,7 +36,7 @@ sv:
         type: "Kostnadstyp"
         labor_budget: "Planerade arbetskostnader"
         material_budget: "Planerade enhetskostnader"
-        base_amount: "Base amount"
+        base_amount: "Basbelopp"
       work_package:
         budget_subject: "Budgettitel"
     models:
@@ -62,20 +62,20 @@ sv:
   help_currency_format: "Format på visade valutavärden. %n ersätts med valutavärdet, %u ersätts med valutaenheten."
   help_override_rate: "Ange ett värde här om du vill åsidosätta standardtimpriset."
   label_budget: "Budget"
-  label_budget_available: "Budget available"
+  label_budget_available: "Budget tillgänglig"
   label_budget_id: "Budget #%{id}"
   label_budget_new: "Ny budget"
-  label_budget_planned: "Budget planned"
+  label_budget_planned: "Budget planerad"
   label_budget_plural: "Budget"
-  label_budget_spent: "Budget spent"
-  label_budget_spent_ratio: "Budget spent ratio"
+  label_budget_spent: "Budget spenderad"
+  label_budget_spent_ratio: "Förhållande mellan budget och utgifter"
   label_deliverable: "Budget"
   label_example_placeholder: "t.ex., %{decimal}"
   label_view_all_budgets: "Visa alla budgetar"
   label_yes: "Ja"
-  label_budget_totals: "Totals"
-  label_budget_details: "Budget details"
-  notice_budget_conflict: "Work packages must be of the same project."
+  label_budget_totals: "Totalsummor"
+  label_budget_details: "Detaljer om budgeten"
+  notice_budget_conflict: "Arbetspaketen måste vara av samma projekt."
   notice_no_budgets_available: "Inga budgetar tillgängliga."
   permission_edit_budgets: "Redigera budgetar"
   permission_view_budgets: "Visa budgetar"

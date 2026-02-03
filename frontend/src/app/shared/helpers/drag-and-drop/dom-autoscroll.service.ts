@@ -27,10 +27,11 @@ export class DomAutoscrollService {
 
   public pointCB:any;
 
+  private abortController:AbortController;
+
   constructor(elements:Element[],
     params:any) {
     this.elements = elements;
-    this.scrollWhenOutside = params.scrollWhenOutside || false;
     this.maxSpeed = params.maxSpeed || 5;
     this.margin = params.margin || 10;
     this.scrollWhenOutside = params.scrollWhenOutside || false;
@@ -42,20 +43,29 @@ export class DomAutoscrollService {
   }
 
   public init() {
-    jQuery(window).on('mousemove.domautoscroll touchmove.domautoscroll', (evt:any) => {
+    this.abortController = new AbortController();
+    const { signal } = this.abortController;
+    const moveHandler = (evt:Event) => {
       if (this.down) {
         this.pointCB(evt);
         this.onMove(evt);
       }
-    });
-    jQuery(window).on('mousedown.domautoscroll touchstart.domautoscroll', () => { this.down = true; });
-    jQuery(window).on('mouseup.domautoscroll touchend.domautoscroll', () => this.onUp());
-    jQuery(window).on('scroll.domautoscroll', (evt:any) => this.setScroll(evt));
+    };
+    const downHandler = () => { this.down = true; };
+    const upHandler = () => { this.onUp(); };
+    const scrollHandler = (evt:Event) => { this.setScroll(evt); };
+
+    window.addEventListener('mousemove', moveHandler, { signal });
+    window.addEventListener('touchmove', moveHandler, { signal });
+    window.addEventListener('mousedown', downHandler, { signal });
+    window.addEventListener('touchstart', downHandler, { signal });
+    window.addEventListener('mouseup', upHandler, { signal });
+    window.addEventListener('touchend', upHandler, { signal });
+    window.addEventListener('scroll', scrollHandler, { signal });
   }
 
   public destroy() {
-    jQuery(window).off('.domautoscroll');
-
+    this.abortController.abort();
     this.elements = [];
     this.cleanAnimation();
   }
@@ -209,7 +219,6 @@ export class DomAutoscrollService {
     if (el === window) {
       window.scrollTo(el.pageXOffset, el.pageYOffset + amount);
     } else {
-      // eslint-disable-next-line no-param-reassign
       (el as Element).scrollTop += amount;
     }
   }
@@ -218,7 +227,6 @@ export class DomAutoscrollService {
     if (el === window) {
       window.scrollTo(el.pageXOffset + amount, el.pageYOffset);
     } else {
-      // eslint-disable-next-line no-param-reassign
       (el as Element).scrollLeft += amount;
     }
   }

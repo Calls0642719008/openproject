@@ -24,24 +24,24 @@ id:
         locked: 'Locked'
         closed: 'Closed'
       new_board: 'Papan baru'
-      add_list: 'Add list to board'
+      add_list: 'Tambahkan daftar ke papan'
       add_card: 'Tambah kartu'
       error_attribute_not_writable: "Tidak bisa memindahkan paket kerja, %{attribute} tidak bisa ditulis."
       error_loading_the_list: "Gagal memuat daftar: %{error_message}"
       error_permission_missing: "Izin untuk membuat queri publik hilang"
-      error_cannot_move_into_self: "You can not move a work package into its own column."
-      text_hidden_list_warning: "Not all lists are displayed because you lack the permission. Contact your admin for more information."
+      error_cannot_move_into_self: "Anda tidak dapat memindahkan paket kerja ke kolomnya sendiri."
+      text_hidden_list_warning: "Tidak semua daftar ditampilkan karena Anda tidak memiliki izin. Hubungi admin Anda untuk informasi lebih lanjut."
       click_to_remove_list: "Klik untuk menghapus daftar ini"
       board_type:
         text: 'Tipe papan'
-        free: 'basic'
-        select_board_type: 'Please choose the type of board you need.'
+        free: 'standar'
+        select_board_type: 'Silakan pilih jenis papan yang Anda butuhkan.'
         free_text: >
           Mulai dari awal dengan papan kosong. Tambahkan kartu dan kolom secara manual ke papan ini.
         action: 'Papan aksi'
         action_by_attribute: 'Papan aksi (%{attribute}'
         action_text: >
-          A board with filtered lists on %{attribute} attribute. Moving work packages to other lists will update their attribute.
+          Papan dengan daftar yang difilter berdasarkan atribut %{attribute}. Pemindahan paket kerja ke daftar lain akan memperbarui atributnya.
         action_text_subprojects: >
           Papan dengan kolom otomatis untuk subproyek. Menyeret paket pekerjaan ke daftar lain akan memperbarui (sub) proyek yang sesuai.
         action_text_subtasks: >
@@ -53,10 +53,10 @@ id:
         action_text_version: >
           Papan dengan kolom otomatis berdasarkan atribut versi. Ideal untuk merencanakan pengembangan produk.
         action_type:
-          assignee: assignee
+          assignee: penanggung jawab
           status: status
-          version: version
-          subproject: subproject
+          version: versi
+          subproject: subproyek
           subtasks: parent-child
         board_type_title:
           assignee: Pelimpahan
@@ -68,18 +68,18 @@ id:
         select_attribute: "Aksi atribut"
       add_list_modal:
         labels:
-          assignee: Select user to add as a new assignee list
-          status: Select status to add as a new list
-          version: Select version to add as a new list
-          subproject: Select subproject to add as a new list
-          subtasks: Select work package to add as a new list
+          assignee: Pilih pengguna untuk ditambahkan ke daftar penanggung jawab baru
+          status: Pilih status untuk ditambahkan sebagai daftar baru
+          version: Pilih versi untuk ditambahkan sebagai daftar baru
+          subproject: Pilih subproyek untuk ditambahkan sebagai daftar baru
+          subtasks: Pilih paket kerja untuk ditambahkan sebagai daftar baru
         warning:
           status: |
-            There is currently no status available. <br>
-            Either there are none or they have all already been added to the board.
-          assignee: There isn't any member matched with your filter value.  <br>
-          no_member: This project currently does not have any members that can be added.  <br>
-          add_members: <a href="%{link}">Add a new member to this project</a> to select users again.
+            Tidak ada status yang tersedia untuk saat ini. <br>
+            Mungkin tidak ada sama sekali atau semuanya sudah ditambahkan ke papan.
+          assignee: Tidak ada anggota yang sesuai dengan nilai filter Anda.  <br>
+          no_member: Saat ini, proyek ini tidak memiliki anggota yang dapat ditambahkan.  <br>
+          add_members: <a href="%{link}">Tambahkan anggota baru ke proyek ini</a> untuk memilih pengguna lagi.
       configuration_modal:
         title: 'Atur papan ini'
         display_settings:

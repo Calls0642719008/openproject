@@ -8,6 +8,7 @@ import { WorkPackageCardViewService } from 'core-app/features/work-packages/comp
 import { OPContextMenuService } from 'core-app/shared/components/op-context-menu/op-context-menu.service';
 import { WorkPackageViewContextMenu } from 'core-app/shared/components/op-context-menu/wp-context-menu/wp-view-context-menu.directive';
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
+import { EventType } from 'core-app/features/work-packages/routing/wp-view-base/event-handling/event-handler-registry';
 
 export class CardRightClickHandler implements CardEventHandler {
   // Injections
@@ -21,24 +22,24 @@ export class CardRightClickHandler implements CardEventHandler {
     card:WorkPackageCardViewComponent) {
   }
 
-  public get EVENT() {
-    return 'contextmenu.cardView.rightclick';
+  public get EVENT():EventType {
+    return 'contextmenu'; // N.B.: contextmenu is not supported by Safari on iOS.
   }
 
   public get SELECTOR() {
-    return `[data-test-selector="op-wp-single-card"]`;
+    return '[data-test-selector="op-wp-single-card"]';
   }
 
   public eventScope(card:WorkPackageCardViewComponent) {
-    return jQuery(card.container.nativeElement);
+    return card.container.nativeElement;
   }
 
-  public handleEvent(card:WorkPackageCardViewComponent, evt:JQuery.TriggeredEvent) {
-    const target = jQuery(evt.target);
+  public handleEvent(card:WorkPackageCardViewComponent, evt:Event) {
+    const target = evt.target as HTMLElement;
 
     // We want to keep the original context menu on hrefs
     // (currently, this is only the id)
-    if (target.closest(`.${uiStateLinkClass}`).length) {
+    if (target.closest(`.${uiStateLinkClass}`)) {
       debugLog('Allowing original context menu on state link');
       return true;
     }
@@ -47,20 +48,20 @@ export class CardRightClickHandler implements CardEventHandler {
     evt.stopPropagation();
 
     // Locate the card from event
-    const element = target.closest('wp-single-card');
-    const wpId = element.data('workPackageId');
+    const element = target.closest<HTMLElement>('wp-single-card')!;
+    const wpId = element.dataset.workPackageId;
 
     if (!wpId) {
       return true;
     }
-    const classIdentifier = element.data('classIdentifier');
+    const classIdentifier = element.dataset.classIdentifier!;
     const index = this.wpCardView.findRenderedCard(classIdentifier);
 
     if (!this.wpTableSelection.isSelected(wpId)) {
       this.wpTableSelection.setSelection(wpId, index);
     }
 
-    const handler = new WorkPackageViewContextMenu(this.injector, wpId, jQuery(evt.target) as JQuery, {}, card.showInfoButton);
+    const handler = new WorkPackageViewContextMenu(this.injector, wpId, evt.target as HTMLElement, {}, card.showInfoButton);
     this.opContextMenu.show(handler, evt);
 
     return false;

@@ -37,7 +37,7 @@ export class ApiV3MembershipsForm extends ApiV3FormResource {
    * @param resource
    * @param schema
    */
-  public static extractPayload(resource:MembershipResourceEmbedded):Object {
+  public static extractPayload(resource:MembershipResourceEmbedded):object {
     return {
       _links: {
         project: { href: resource.project.href },

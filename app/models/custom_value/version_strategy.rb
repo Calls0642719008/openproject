@@ -34,8 +34,4 @@ class CustomValue::VersionStrategy < CustomValue::ARObjectStrategy
   def ar_class
     Version
   end
-
-  def ar_object(value)
-    Version.find_by(id: value)
-  end
 end

@@ -99,12 +99,20 @@ module Components
         page.find autocompleter_selector, wait: 10
       end
 
-      def expect_result(name, disabled: false)
+      def expect_result(name, disabled: false, workspace_badge: nil)
         within search_results do
-          if disabled
-            page.find(autocompleter_item_disabled_title_selector, text: name)
+          selector = disabled ? autocompleter_item_disabled_title_selector : autocompleter_item_title_selector
+          item = page.find(selector, text: name)
+
+          # Skip badge verification when workspace badge is not set
+          next if workspace_badge.nil?
+
+          if workspace_badge
+            expect(item).to have_octicon
+            expect(item).to have_primer_text(workspace_badge, class: "description")
           else
-            page.find(autocompleter_item_title_selector, text: name)
+            expect(item).to have_no_octicon
+            expect(item).to have_no_primer_text(class: "description")
           end
         end
       end
@@ -125,6 +133,22 @@ module Components
           expect(page)
             .to have_css("#{hierarchy_selector} #{autocompleter_item_title_selector}", text: item_name)
         end
+      end
+
+      def expect_project_create_button
+        expect(page).to have_css(".spot-action-bar--action.-primary", text: "Project")
+      end
+
+      def expect_no_project_create_button
+        expect(page).to have_no_css(".spot-action-bar--action.-primary", text: "Project")
+      end
+
+      def expect_project_list_button
+        expect(page).to have_css(".spot-action-bar--action", text: "Project lists")
+      end
+
+      def expect_no_project_list_button
+        expect(page).to have_no_css(".spot-action-bar--action.-primary", text: "Project lists")
       end
 
       def autocompleter_item_selector

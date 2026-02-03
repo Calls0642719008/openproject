@@ -2,18 +2,16 @@
   class="op-modal-banner"
   ngClass="op-modal-banner_{{ type }}"
   attr.data-test-selector="op-modal-banner-{{ type }}"
->
-  <span
-    *ngIf="type === 'info'"
-    class="spot-icon spot-icon_info1 hidden-for-mobile"
-  ></span>
-  <span
-    *ngIf="type === 'warning'"
-    class="spot-icon spot-icon_warning hidden-for-mobile"
-  ></span>
+  >
+  @if (type === 'info') {
+    <svg info-icon size="small" class="hidden-for-mobile" />
+  }
+  @if (type === 'warning') {
+    <svg alert-icon size="small" class="hidden-for-mobile" />
+  }
   <p
     class="op-modal-banner--text spot-caption"
-  >
+    >
     <span
       class="op-modal-banner--title spot-caption spot-caption_bold"
       [textContent]="title"
@@ -25,13 +23,14 @@
     ></span>
   </p>
 
-  <button
-    *ngIf="!!actionButton"
-    class="op-modal-banner--button button"
-    type="button"
-    (click)="buttonClicked.emit($event)"
-  >
-    <op-icon icon-classes="button--icon {{ actionButtonClasses }}"></op-icon>
-    <span class="button--text" [textContent]="actionButton"></span>
-  </button>
+  @if (!!actionButton) {
+    <button
+      class="op-modal-banner--button button"
+      type="button"
+      (click)="buttonClicked.emit($event)"
+      >
+      <op-icon icon-classes="button--icon {{ actionButtonClasses }}" />
+      <span class="button--text" [textContent]="actionButton"></span>
+    </button>
+  }
 </div>

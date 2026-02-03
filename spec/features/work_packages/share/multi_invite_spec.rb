@@ -36,7 +36,12 @@ RSpec.describe "Work package sharing",
   shared_let(:comment_work_package_role) { create(:comment_work_package_role) }
   shared_let(:edit_work_package_role) { create(:edit_work_package_role) }
 
-  shared_let(:not_shared_yet_with_user) { create(:user, firstname: "Not shared Yet", lastname: "User") }
+  shared_let(:not_shared_yet_with_user) do
+    create(:user,
+           mail: "notsharedyet@example.com",
+           firstname: "Not shared Yet",
+           lastname: "User")
+  end
   shared_let(:another_not_shared_yet_with_user) { create(:user, firstname: "Another not yet shared", lastname: "User") }
   shared_let(:richard) { create(:user, firstname: "Richard", lastname: "Hendricks") }
 
@@ -73,7 +78,61 @@ RSpec.describe "Work package sharing",
     MemberRole.where(inherited_from: MemberRole.where(member_id: group.memberships))
   end
 
+  context "when having share permission, but no global view permission" do
+    it "does not find any global users" do
+      work_package_page.visit!
+
+      work_package_page.click_share_button
+      share_modal.expect_shared_count_of(1)
+
+      # Does not find "not shared yet"
+      target_dropdown = share_modal.search_user(not_shared_yet_with_user.name)
+      expect(target_dropdown).to have_no_css(".ng-option", text: not_shared_yet_with_user.name)
+    end
+
+    context "when sharing a group membership with some user" do
+      let!(:group) { create(:group, members: [current_user, not_shared_yet_with_user]) }
+
+      it "does find my group member" do
+        work_package_page.visit!
+
+        work_package_page.click_share_button
+        share_modal.expect_shared_count_of(1)
+
+        share_modal.invite_users([not_shared_yet_with_user], "View")
+
+        share_modal.expect_shared_count_of(2)
+        share_modal.expect_shared_with(not_shared_yet_with_user, "View", position: 1)
+      end
+    end
+  end
+
+  context "when having share permission and invite_members_by_email" do
+    let(:sharer_role) do
+      create(:project_role,
+             permissions: %i(view_work_packages
+                             view_shared_work_packages
+                             invite_members_by_email
+                             share_work_packages))
+    end
+
+    it "allows finding a user through email" do
+      work_package_page.visit!
+
+      work_package_page.click_share_button
+      share_modal.expect_shared_count_of(1)
+
+      share_modal.invite_users([not_shared_yet_with_user.mail], "View")
+
+      share_modal.expect_shared_count_of(2)
+      share_modal.expect_shared_with(not_shared_yet_with_user, "View", position: 1)
+    end
+  end
+
   context "when having share permission" do
+    let(:global_manager_user) { create(:user, global_permissions: %i[view_all_principals]) }
+    let(:current_user) { global_manager_user }
+
     it "allows seeing and administrating sharing" do
       work_package_page.visit!
 
@@ -154,7 +213,7 @@ RSpec.describe "Work package sharing",
 
   context "when starting with no shares yet" do
     let(:work_package) { create(:work_package, project:) }
-    let(:global_manager_user) { create(:user, global_permissions: %i[manage_user create_user]) }
+    let(:global_manager_user) { create(:user, global_permissions: %i[view_all_principals manage_user create_user]) }
     let(:current_user) { global_manager_user }
 
     before do
@@ -186,8 +245,15 @@ RSpec.describe "Work package sharing",
   end
 
   context "when having global invite permission" do
-    let(:global_manager_user) { create(:user, global_permissions: %i[manage_user create_user]) }
+    let(:global_manager_user) { create(:user, global_permissions: %i[view_all_principals manage_user create_user]) }
     let(:current_user) { global_manager_user }
+    let(:sharer_role) do
+      create(:project_role,
+             permissions: %i(view_work_packages
+                             view_shared_work_packages
+                             invite_members_by_email
+                             share_work_packages))
+    end
 
     it "allows creating multiple users at once" do
       work_package_page.visit!
@@ -257,10 +323,8 @@ RSpec.describe "Work package sharing",
 
     context "and an instance user limit" do
       before do
-        allow(OpenProject::Enterprise).to receive_messages(
-          user_limit: 10,
-          open_seats_count: 1
-        )
+        allow(OpenProject::Enterprise)
+          .to receive_messages(user_limit: 10, open_seats_count: 1)
       end
 
       it "shows a warning as soon as you reach the user limit" do

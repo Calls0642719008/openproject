@@ -1,4 +1,5 @@
 id:
   overviews:
-    label: 'Tinjauan'
-  permission_manage_overview: 'Kelola halaman tinjauan'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Dasbor"
+    label_overview: "Tinjauan"

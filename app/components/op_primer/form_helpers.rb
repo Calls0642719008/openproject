@@ -30,51 +30,23 @@
 
 module OpPrimer
   module FormHelpers
-    # Renders an inline form without needing a dedicated form class.
-    #
-    # This method dynamically creates a form class based on the provided block
-    # and renders it. The form is instantiated with the provided form builder
-    # which comes from a `primer_form_with` call.
-    #
-    # It is meant to avoid boilerplate classes for simple forms.
-    #
-    # @example
-    #   primer_form_with(action: :update) do |form_builder|
-    #     render_inline_form(form_builder) do |form|
-    #       form.text_field(
-    #         name: :ultimate_answer,
-    #         label: "Ultimate answer",
-    #         required: true,
-    #         caption: "The answer to life, the universe, and everything"
-    #       )
-    #       form.submit(name: :submit, label: "Submit")
-    #     end
-    #   end
-    #
-    # @param form_builder [Object] The form builder object to be used for the form.
-    # @param blk [Proc] A block that defines the form structure.
-    def render_inline_form(form_builder, &blk)
-      form_class = Class.new(ApplicationForm) do
-        # This is a workaround to make the form class aware of the template path
-        # of the block that is passed to it.
-        #
-        # This avoids an annoying warning "Could not identify the template" from
-        # original `base_template_path` method.
-        define_singleton_method(:base_template_path) do
-          blk.source_location.first
-        end
-
-        form(&blk)
-      end
-      render(form_class.new(form_builder))
-    end
-
     # Renders an inline settings form without needing a dedicated form class.
     #
     # This method dynamically creates a form class based on the provided block
     # and renders it. The form is instantiated with the provided form builder
     # which comes from a `primer_form_with` call, and decorated with the
     # `settings_form` method.
+    #
+    # @see inline_settings_form
+    def render_inline_settings_form(*, &)
+      render(inline_settings_form(*, &))
+    end
+
+    # Creates an inline settings form without needing a dedicated form class.
+    #
+    # This method dynamically creates a form class based on the provided block.
+    # The form is instantiated with the provided form builder which comes from a
+    # `primer_form_with` call, and decorated with the `settings_form` method.
     #
     # The settings form is providing helpers to render settings in a standard
     # way by reading their value, rendering labels from their name, and checking
@@ -96,7 +68,7 @@ module OpPrimer
     #
     # @param form_builder [Object] The form builder object to be used for the form.
     # @param blk [Proc] A block that defines the form structure.
-    def render_inline_settings_form(form_builder, &blk)
+    def inline_settings_form(form_builder, &blk)
       form_class = Class.new(ApplicationForm) do
         # This is a workaround to make the form class aware of the template path
         # of the block that is passed to it.
@@ -107,9 +79,11 @@ module OpPrimer
           blk.source_location.first
         end
 
-        settings_form(&blk)
+        form do |f|
+          yield Settings::FormObjectDecorator.new(f)
+        end
       end
-      render(form_class.new(form_builder))
+      form_class.new(form_builder)
     end
 
     # An extension of primers default `primer_form_with`

@@ -39,7 +39,7 @@ class Journals::CreateService
 
     def journable_class_name = journable.class.base_class.name
 
-    def cleanup_predecessor_for(predecessor, table_name, column, referenced_id)
+    def cleanup_predecessor_for(predecessor, notes, cause, table_name, column, referenced_id)
       return "SELECT 1" unless predecessor
 
       sanitize(<<~SQL.squish, column => predecessor.send(referenced_id))
@@ -48,7 +48,16 @@ class Journals::CreateService
          #{table_name}
         WHERE
          #{column} = :#{column}
+         #{only_on_changed_or_forced_condition_sql(notes, cause)}
       SQL
+    end
+
+    def only_on_changed_or_forced_condition_sql(notes, cause)
+      if notes.blank? && cause.blank?
+        "AND EXISTS (SELECT * FROM changes)"
+      else
+        ""
+      end
     end
 
     def normalize_newlines_sql(column)

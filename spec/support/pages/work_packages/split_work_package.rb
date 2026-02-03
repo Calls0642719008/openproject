@@ -59,6 +59,10 @@ module Pages
       find(".work-packages--details-close-icon").click
     end
 
+    def go_back
+      find(".work-packages-back-button").click
+    end
+
     def container
       find(@selector)
     end

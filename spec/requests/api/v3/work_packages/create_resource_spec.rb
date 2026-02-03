@@ -38,6 +38,8 @@ RSpec.describe "API v3 Work package resource",
   shared_let(:project) do
     create(:project, identifier: "test_project", public: false)
   end
+  shared_let(:type) { project.types.first }
+
   let(:role) { create(:project_role, permissions:) }
   let(:permissions) { %i[add_work_packages view_project view_work_packages] + extra_permissions }
   let(:extra_permissions) { [] }
@@ -51,7 +53,6 @@ RSpec.describe "API v3 Work package resource",
     let(:other_user) { nil }
     let(:status) { build(:status, is_default: true) }
     let(:priority) { build(:priority, is_default: true) }
-    let(:type) { project.types.first }
     let(:parameters) do
       {
         subject: "new work packages",
@@ -291,6 +292,105 @@ RSpec.describe "API v3 Work package resource",
 
       it "does not create a work package" do
         expect(WorkPackage.count).to eq(0)
+      end
+    end
+
+    describe "custom fields" do
+      context "when the custom field is required" do
+        shared_let(:required_custom_field) do
+          create(:work_package_custom_field,
+                 field_format: "string",
+                 name: "Department",
+                 is_required: true,
+                 projects: [project],
+                 types: [type])
+        end
+
+        context "when no custom field value is provided" do
+          let(:parameters) do
+            {
+              subject: "new work package with CF",
+              _links: {
+                type: {
+                  href: api_v3_paths.type(type.id)
+                },
+                project: {
+                  href: api_v3_paths.project(project.id)
+                }
+              }
+            }
+          end
+
+          it "responds with 422 and explains the custom field error" do
+            expect(last_response).to have_http_status(:unprocessable_entity)
+
+            expect(last_response.body)
+              .to be_json_eql("Department can't be blank.".to_json)
+              .at_path("message")
+          end
+        end
+
+        context "when the custom field is provided but empty" do
+          let(:parameters) do
+            {
+              subject: "new work package with CF",
+              "customField#{required_custom_field.id}" => "",
+              _links: {
+                type: {
+                  href: api_v3_paths.type(type.id)
+                },
+                project: {
+                  href: api_v3_paths.project(project.id)
+                }
+              }
+            }
+          end
+
+          it "responds with 422 and explains the custom field error" do
+            expect(last_response).to have_http_status(:unprocessable_entity)
+
+            expect(last_response.body)
+              .to be_json_eql("Department can't be blank.".to_json)
+              .at_path("message")
+          end
+        end
+
+        context "when the custom field value is provided and valid" do
+          let(:parameters) do
+            {
+              subject: "new work package with CF",
+              "customField#{required_custom_field.id}" => "Engineering",
+              _links: {
+                type: {
+                  href: api_v3_paths.type(type.id)
+                },
+                project: {
+                  href: api_v3_paths.project(project.id)
+                }
+              }
+            }
+          end
+
+          it "responds with 201" do
+            expect(last_response).to have_http_status(:created)
+          end
+
+          it "returns the newly created work package" do
+            expect(last_response.body)
+              .to be_json_eql("WorkPackage".to_json)
+              .at_path("_type")
+
+            expect(last_response.body)
+              .to be_json_eql("new work package with CF".to_json)
+              .at_path("subject")
+          end
+
+          it "creates a work package with the custom field value" do
+            work_package = WorkPackage.last
+            expect(work_package.typed_custom_value_for(required_custom_field))
+              .to eq("Engineering")
+          end
+        end
       end
     end
 

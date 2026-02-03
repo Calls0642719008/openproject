@@ -30,32 +30,25 @@ module OpenProject
   module JobStatus
     class EventListener
       class << self
-        def register!
+        def register! # rubocop:disable Metrics/AbcSize
           # Listen to enqueues
-          ActiveSupport::Notifications.subscribe(/enqueue(_at)?\.active_job/) do |_name, _started, _call, _id, payload|
-            job = payload[:job]
-            next unless job
-
+          subscribe(/enqueue(_at)?\.active_job/) do |job, _payload|
             Rails.logger.debug { "Enqueuing background job #{job.inspect}" }
             for_statused_jobs(job) { create_job_status(job) }
           end
 
           # Start of process
-          ActiveSupport::Notifications.subscribe("perform_start.active_job") do |_name, _started, _call, _id, payload|
-            job = payload[:job]
-            next unless job
-
+          subscribe("perform_start.active_job") do |job, _payload|
             Rails.logger.debug { "Background job #{job.inspect} is being started" }
             for_statused_jobs(job) { on_start(job) }
           end
 
           # Complete, or failure
-          ActiveSupport::Notifications.subscribe("perform.active_job") do |_name, _started, _call, _id, payload|
-            job = payload[:job]
+          subscribe("perform.active_job") do |job, payload|
             exception_object = payload[:exception_object]
 
             Rails.logger.debug do
-              successful = exception_object ? "with error #{exception_object}" : "successful"
+              successful = exception_object ? "with error #{exception_object}" : "successfully"
               "Background job #{job.inspect} was performed #{successful}."
             end
 
@@ -63,8 +56,7 @@ module OpenProject
           end
 
           # Retry stopped -> failure
-          ActiveSupport::Notifications.subscribe("retry_stopped.active_job") do |_name, _started, _call, _id, payload|
-            job = payload[:job]
+          subscribe("retry_stopped.active_job") do |job, payload|
             error = payload[:error]
 
             Rails.logger.debug { "Background job #{job.inspect} no longer retrying due to: #{error}" }
@@ -72,8 +64,7 @@ module OpenProject
           end
 
           # Retry enqueued
-          ActiveSupport::Notifications.subscribe("enqueue_retry.active_job") do |_name, _started, _call, _id, payload|
-            job = payload[:job]
+          subscribe("enqueue_retry.active_job") do |job, payload|
             error = payload[:error]
 
             Rails.logger.debug { "Background job #{job.inspect} is being retried after error: #{error}" }
@@ -81,8 +72,7 @@ module OpenProject
           end
 
           # Discarded job
-          ActiveSupport::Notifications.subscribe("discard.active_job") do |_name, _started, _call, _id, payload|
-            job = payload[:job]
+          subscribe("discard.active_job") do |job, payload|
             error = payload[:error]
 
             Rails.logger.debug { "Background job #{job.inspect} is being discarded after error: #{error}" }
@@ -90,7 +80,26 @@ module OpenProject
           end
         end
 
+        # Unsubscribe all existing subscribers to prevent duplicate
+        # subscriptions on reload in development env.
+        def unsubscribe_all_to_prevent_duplicates_on_reload!
+          return unless @subscribers
+
+          @subscribers.each { |subscriber| ActiveSupport::Notifications.unsubscribe(subscriber) }
+          @subscribers.clear
+        end
+
         private
+
+        def subscribe(pattern, &)
+          @subscribers ||= []
+          @subscribers << ActiveSupport::Notifications.subscribe(pattern) do |_name, _started, _call, _id, payload|
+            job = payload[:job]
+            next unless job
+
+            yield job, payload
+          end
+        end
 
         ##
         # Yiels the block if the job

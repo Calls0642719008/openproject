@@ -26,12 +26,15 @@
     cursor: default
     color: var(--muted-color)
 
-  .spot-icon
+  .octicon
     &:first-child:not(:last-child)
       margin-right: $spot-spacing-0_25
 
     &:last-child:not(:first-child)
       margin-left: $spot-spacing-0_25
+
+  &_octicon
+    display: inline-block
 
   // Ensure op-icon within a link gets inline-block
   // to avoid it receiving any text-decoration on hover

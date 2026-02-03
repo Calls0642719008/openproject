@@ -40,6 +40,8 @@ ru:
               task_version_must_be_the_same_as_story_version: "должен совпадать с версией родительской истории."
         sprint:
           cannot_end_before_it_starts: "Спринт не может заканчиваться до того, как начнется."
+  attributes:
+    task_type: "Тип задачи"
   backlogs:
     add_new_story: "Новая история"
     any: "любой"
@@ -100,7 +102,10 @@ ru:
   backlogs_empty_title: "Для бэклога работ не задано ни одного этапа"
   backlogs_empty_action_text: "Чтобы пользоваться модулем Бэклоги, создайте этап и назначьте его столбцу бэклога."
   button_edit_wiki: "Редактировать wiki-страницу"
-  error_backlogs_task_cannot_be_story: "Недопустимые настройки. Выбранный тип задачи не может быть типом истории."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "не может также быть типом истории"
   error_intro_plural: "Найдены следующие ошибки:"
   error_intro_singular: "Найдена следующая ошибка:"
   error_outro: "Исправьте вышеуказанные ошибки перед повторной отправкой."
@@ -124,6 +129,10 @@ ru:
   label_points_burn_up: "Вверх"
   label_product_backlog: "бэклог продукта"
   label_select_all: "Выбрать все"
+  label_select_type: "Выберите тип"
+  label_select_types: "Выберите типы"
+  label_selected_type: "Выбранный тип"
+  label_selected_types: "Выбранные типы"
   label_sprint_backlog: "список невыполненных работ спринта"
   label_sprint_cards: "Экспортировать карточки"
   label_sprint_impediments: "Препятствия спринта"
@@ -160,3 +169,7 @@ ru:
   version_settings_display_option_left: "влево"
   version_settings_display_option_none: "нет"
   version_settings_display_option_right: "вправо"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Типы рассматриваются как истории бэклога (например, Feature, User story). Должен отличаться от типа задачи.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Тип, используемый для задач историй. Должен отличаться от типов историй.

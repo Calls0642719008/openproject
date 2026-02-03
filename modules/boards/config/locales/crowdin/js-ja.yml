@@ -26,7 +26,7 @@ ja:
       new_board: '新しいボード'
       add_list: 'ボードにリストを追加'
       add_card: 'カードを追加'
-      error_attribute_not_writable: "作業項目を移動できません。 %{attribute} は書き込みできません。"
+      error_attribute_not_writable: "ワークパッケージを移動できません。 %{attribute} は書き込みできません。"
       error_loading_the_list: "リストの読み込み中にエラーが発生しました: %{error_message}"
       error_permission_missing: "公開クエリを作成するアクセス許可が見つかりません。"
       error_cannot_move_into_self: "ワークパッケージを自身の列に移動することはできません。"
@@ -43,7 +43,7 @@ ja:
         action_text: >
           %{attribute} 属性のリストをフィルタリングしたボード。ワークパッケージを他のリストに移動すると、それらの属性が更新されます。
         action_text_subprojects: >
-          サブプロジェクトの列が自動化されたボード。ワークパッケージを他のリストにドラッグすると、それに応じて(サブ)プロジェクトが更新されます。
+          子プロジェクトの列が自動化されたボード。ワークパッケージを他のリストにドラッグすると、それに応じて(サブ)プロジェクトが更新されます。
         action_text_subtasks: >
           子要素の列が自動化されたボード。ワークパッケージを他のリストにドラッグすると、それに応じて親要素が更新されます。
         action_text_status: >
@@ -56,7 +56,7 @@ ja:
           assignee: 担当者
           status: ステータス
           version: バージョン
-          subproject: サブプロジェクト
+          subproject: 子プロジェクト
           subtasks: 親子
         board_type_title:
           assignee: 担当者
@@ -71,7 +71,7 @@ ja:
           assignee: 新しい担当者リストとして追加するユーザーを選択します
           status: 新しいリストとして追加するステータスを選択
           version: 新しいリストとして追加するバージョンを選択してください
-          subproject: 新しいリストとして追加するサブプロジェクトを選択します
+          subproject: 新しいリストとして追加する子プロジェクトを選択します
           subtasks: 新しいリストとして追加するワークパッケージを選択
         warning:
           status: |

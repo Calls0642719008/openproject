@@ -33,10 +33,10 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= strip_tags t(
       :mail_body_register_links_html,
-      webinar_link: OpenProject::Static::Links.links[:webinar_videos][:href],
+      webinar_link: OpenProject::Static::Links.url_for(:webinar_videos),
       youtube_link: OpenProject::Configuration.youtube_channel,
-      get_started_link: OpenProject::Static::Links.links[:get_started_videos][:href],
-      documentation_link: OpenProject::Static::Links.links[:openproject_docs][:href]
+      get_started_link: OpenProject::Static::Links.url_for(:get_started_videos),
+      documentation_link: OpenProject::Static::Links.url_for(:openproject_docs)
     )
 %>
 

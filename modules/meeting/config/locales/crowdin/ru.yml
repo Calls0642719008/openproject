@@ -62,12 +62,13 @@ ru:
         end_date: "Дате окончания"
         iterations: "События"
       meeting_participant:
-        invited: "Invited"
-        attended: "Attended"
+        invited: "Приглашённые"
+        attended: "Участвовал"
+        participation_status: "Статус участия"
     errors:
       models:
         meeting_participant:
-          invalid_user: "%{name} is not a valid participant."
+          invalid_user: "%{name} не является допустимым участником."
         recurring_meeting:
           must_cover_existing_meetings:
             one: "В серии есть одно открытое совещание, которое не включено в новый график. Измените график, чтобы включить все существующие совещания."
@@ -82,10 +83,10 @@ ru:
       meeting_agenda: "Повестка дня"
       meeting_section: "Раздел"
       token/ical_meeting:
-        one: "iCal Meeting subscription"
-        few: "iCal Meeting subscription"
-        many: "iCal Meeting subscription"
-        other: "iCal Meeting subscription"
+        one: " iCal подписка на совещание"
+        few: " iCal подписки на совещание"
+        many: " iCal подписок на совещание"
+        other: " iCal подписок на совещание"
   activity:
     filter:
       meeting: "Совещания"
@@ -118,7 +119,7 @@ ru:
   label_meeting_new_dynamic: "Новое однократное совещание"
   label_meeting_new_recurring: "Новое повторяющееся совещание"
   label_meeting_create: "Создать совещание"
-  label_meeting_copy: "Копировать совещание"
+  label_meeting_duplicate: "Дублировать совещание"
   label_meeting_edit: "Измененить совещание"
   label_meeting_agenda: "Повестка дня"
   label_meeting_minutes: "Протокол(-ы)"
@@ -130,7 +131,8 @@ ru:
   label_meeting_date_time: "Дата/Время"
   label_meeting_date_and_time: "Дата и время"
   label_meeting_diff: "Различия"
-  label_meeting_send_updates: "Отправлять обновления календаря"
+  label_meeting_send_updates: "Отправить приглашение и обновление календаря по электронной почте"
+  label_meeting_send_updates_caption: "Отправить приглашения по электронной почте всем участникам этого совещания"
   label_recurring_meeting: "Повторяющееся совещание"
   label_recurring_meeting_part_of: "Часть серии совещаний"
   label_recurring_meeting_new: "Новое повторяющееся совещание"
@@ -138,7 +140,7 @@ ru:
   label_template: "Шаблон"
   label_recurring_meeting_view: "Посмотреть серию совещаний"
   label_recurring_meeting_create: "Открыть"
-  label_recurring_meeting_copy: "Копировать как одноразовое"
+  label_recurring_meeting_duplicate: "Дублировать как одноразовое совещание"
   label_recurring_meeting_cancel: "Отменить это событие"
   label_recurring_meeting_delete: "Удалить событие"
   label_recurring_meeting_restore: "Восстановить это событие"
@@ -187,25 +189,25 @@ ru:
   label_version: "Версия"
   label_time_zone: "Часовой пояс"
   label_start_date: "Дата начала"
-  label_subscribe_icalendar: "Subscribe to calendar"
+  label_subscribe_icalendar: "Подписаться на календарь"
   meeting:
     participants:
       label:
-        participants: "Participants"
-        attended: "Attended"
-        mark_as_attended: "Mark as attended"
-        mark_all_as_attended: "Mark all as attended"
-        remove_participant: "Remove participant"
-        manage_participants: "Manage participants"
-        no_participants: "No participants"
-        show_all: "Show all"
+        participants: "Участники"
+        attended: "Участвовал"
+        mark_as_attended: "Пометить как посещённое"
+        mark_all_as_attended: "Пометить все как посещённые"
+        remove_participant: "Исключить участника"
+        manage_participants: "Управление участниками"
+        no_participants: "Нет участников"
+        show_all: "Показывать всё"
       text:
-        template: "These participants will be invited automatically to all future meetings as they are created."
-        manage_participants: "Search for and add project members as participants to this meeting."
-        search_for_members: "Search for project members"
+        template: "Эти участники будут автоматически приглашаться на все будущие совещания по мере их создания."
+        manage_participants: "Найдите и добавьте членов проекта в качестве участников совещания."
+        search_for_members: "Поиск участников проекта"
       blankslate:
-        heading: "No participants"
-        description: "There are no participants yet."
+        heading: "Нет участников"
+        description: "Пока нет участников."
     attachments:
       template: "Эти прикрепленные файлы будут включены во все последующие совещания этой серии."
       text: "Прикрепленные файлы доступны всем участникам совещания. Вы также можете перенести их в примечания к пунктам повестки дня."
@@ -217,7 +219,7 @@ ru:
       agenda_items: "Копировать пункты повестки дня"
       agenda_text: "Копировать повестку старого совещания"
       participants: "Копировать список участников"
-      to_clipboard: "Копировать в буфер обмена"
+      to_clipboard: "Копировать ссылку в буфер обмена"
     email:
       send_emails: "Отправить email участникам"
       send_invitation_emails: >
@@ -227,12 +229,12 @@ ru:
       open_my_meetings_link: "Перейти к списку моих совещаний"
       series:
         title: "[%{project_name}] Серия совещаний '%{title}'"
-        summary: "%{actor} создал новую серию совещаний '%{title}'"
+        summary: "%{actor} приглашает вас на новую серию совещаний '%{title}'"
       series_updated:
-        title: "[%{project_name}] Meeting series '%{title}' has been updated"
-        summary: "Meeting series '%{title}' has been updated by %{actor}"
-        old_schedule: "Old schedule"
-        new_schedule: "New schedule"
+        title: "[%{project_name}] Серия встреч '%{title}' была обновлена"
+        summary: "Серия совещаний '%{title}' была обновлена пользователем %{actor}"
+        old_schedule: "Старое расписание"
+        new_schedule: "Новое расписание"
       invited:
         summary: "%{actor} отправил вам приглашение на совещание '%{title}'"
       cancelled:
@@ -243,15 +245,30 @@ ru:
         summary_series: "Серия совещаний '%{title}' была отменена %{actor}."
         summary: "'%{title}' было отменено %{actor}."
         date_time: "Запланированная дата/время"
+      participant_added:
+        header: "Совещание '%{title}' - участник добавлен"
+        header_series: "Серия совещаний '%{title}' - участник добавлен"
+        summary: "%{actor} добавил %{participant} в совещание '%{title}'"
+        summary_series: "%{actor} добавил %{participant} в серию совещаний '%{title}'"
+      participant_removed:
+        header: "Совещание '%{title}' - участник удален"
+        header_series: "Серия совещаний '%{title}' - участник удален"
+        summary: "%{actor} удалил %{participant} из совещания '%{title}'"
+        summary_series: "%{actor} удалил %{participant} из серии совещаний '%{title}'"
+      ended:
+        header_series: "Завершено: Серия совещаний '%{title}'"
+        summary_series: "Серия совещаний '%{title}' была завершена %{actor}."
       updated:
-        header: "Meeting '%{title}' has been updated"
-        summary: "Meeting '%{title}' has been updated by %{actor}"
-        body: "The meeting '%{title}' has been updated by %{actor}."
-        old_date_time: "Old date/time"
-        new_date_time: "New date/time"
-        old_location: "Old location"
-        new_location: "New location"
-    label_mail_all_participants: "Send email invite to participants"
+        header: "Встреча '%{title}' была обновлена"
+        summary: "Совещание '%{title}' было обновлено пользователем %{actor}"
+        body: "Совещание '%{title}' было обновлено пользователем %{actor}."
+        old_title: "Старый заголовок"
+        new_title: "Новый заголовок"
+        old_date_time: "Старые дата/время"
+        new_date_time: "Новые дата/время"
+        old_location: "Старое расположение"
+        new_location: "Новое расположение"
+    label_mail_all_participants: "Отправить письмо всем участникам"
     types:
       one_time: "Однократная"
       recurring: "Периодичность"
@@ -273,23 +290,23 @@ ru:
         confirm_button: "Отменить событие"
     blankslate:
       title: "Нет совещаний для отображения"
-      desc: "Нет совещаний, удовлетворяющих критериям активного фильтра."
+      desc: "Вы можете создать новое совещание или изменить критерии фильтра"
     label_export_pdf: "Экспорт в PDF"
     export:
       your_meeting_export: "Совещание экспортируется"
       minutes:
-        footer_page_numbers: "P. %{current_page} of %{total_pages}"
+        footer_page_numbers: "Стр. %{current_page} из %{total_pages}"
         author: "Автор"
         date: "Дата"
         time: "Время"
-        location: "Местоположение"
+        location: "Расположение"
         title: "Протокол"
     export_pdf_dialog:
       title: Экспорт в PDF
       description: Создать печатный PDF-файл этого совещания в текущем состоянии.
       templates:
         default:
-          label: По-умолчанию
+          label: по умолчанию
           caption: Шаблон по умолчанию подходит для большинства встреч и представляет текущее состояние.
         minutes:
           label: Протокол
@@ -329,7 +346,7 @@ ru:
           disable: "Отключить обновления календаря по электронной почте?"
         message:
           enable: >
-            All participants will receive updated calendar invites via email every time there is a change to the meeting date, time, location or participants. Once enabled, an email will be sent out immediately to all participants.
+            Все участники будут получать обновленные календарные приглашения по электронной почте каждый раз, когда изменяется дата, время, место или участники встречи. Как только эта функция включена, всем участникам будет немедленно отправлено электронное письмо.
           disable: >
             Участники больше не будут получать по электронной почте обновленные приглашения календаря, если изменились дата, время, место проведения или участники собрания. Если у них уже было приглашение на эту встречу, оно может перестать быть точным.
         confirm_label:
@@ -338,14 +355,14 @@ ru:
       banner:
         participants:
           enabled: >
-            All participants will receive updated calendar invites via email when you add or remove participants.
+            Все участники будут получать обновления приглашений в календарь по электронной почте при добавлении или удалении участников.
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them when you add or remove participants.
+            Обновления календаря отключены. Участники не получат письмо, информирующее их при добавлении или удалении участников.
         onetime:
           enabled: >
-            Все участники получат по электронной почте обновленные приглашения календаря, информирующие их о Ваших изменениях.
+            Все участники будут получать обновления приглашений в календарь по электронной почте при добавлении или удалении участников.
           disabled: >
-            Обновления календаря по электронной почте отключены. Участники не получат электронное письмо с уведомлением о Ваших изменениях.
+            Участники не получат электронное письмо с уведомлением об изменении даты, времени или участников совещания.
         occurrence:
           enabled: >
             Для этой серии встреч включено обновление календаря по электронной почте. Все участники получат обновленные приглашения календаря, информирующие их о Ваших изменениях в этом событии.
@@ -356,11 +373,31 @@ ru:
             Для серии встреч включено обновление календаря по электронной почте. Все участники будут получать обновленные приглашения календаря, информирующие их о Ваших изменениях в этом шаблоне или отдельных событиях.
           disabled: >
             Обновления календаря по электронной почте отключены для серии встреч. Участники не будут получать электронные письма, информирующие их о Ваших изменениях в этом шаблоне или отдельных событиях.
+    presentation_mode:
+      title: "Режим презентации"
+      button_present: "Текущий"
+      exit: "Выйти из презентации"
+      current_item: "Текущий элемент"
+      total_items: "%{current} из %{total}"
+      previous: "Предыдущий"
+      next: "Следующий"
+      no_items: "Нет пунктов повестки дня"
+      no_items_flash: "На повестке дня нет никаких вопросов."
+    ical_response:
+      update_failed: "Не удалось обновить статус участия."
+      meeting_not_found: "Совещание для данного UID не найдено."
   meeting_section:
     untitled_title: "Раздел без названия"
     delete_confirmation: "Удаление раздела также удалит все пункты его повестки дня. Вы уверены, что хотите это сделать?"
     placeholder_title: "Новый раздел"
     empty_text: "Перенесите элементы сюда или создайте новые"
+  meeting_participant:
+    participation_status:
+      needs_action: "Нет ответа"
+      accepted: "Принято"
+      declined: "Отклонено"
+      tentative: "Возможно"
+      unknown: "Неизвестно"
   recurring_meeting:
     time_zone_difference_banner:
       title: "Разница часового пояса"
@@ -381,12 +418,12 @@ ru:
       blank_title: "Ваш шаблон серии совещаний пуст"
       description: >
         Этот шаблон будет использоваться каждый раз, когда будут создаваться новые совещания в серии. Вы можете добавить в этот шаблон пункты повестки дня, участников и вложения.
-      blankslate_finalize: >
-        По завершении подготовки шаблона нажмите кнопку '%{button_title}', чтобы завершить установку и запланировать первое совещание этой серии.
       label_view_template: "Посмотреть шаблон"
       label_edit_template: "Изменить шаблон"
       banner_html: >
         В настоящее время вы редактируете шаблон серии совещаний: %{link}. Каждое новое совещание в этой серии будет использовать этот шаблон. Изменения не повлияют на прошлые или уже созданные совещания.
+      draft_banner_html: >
+        В данный момент Вы редактируете шаблон серии совещаний: %{link}. Каждое новое совещание в серии будет использовать этот шаблон. Изменения не повлияют на прошлые или уже созданные совещания. Никакие приглашения по электронной почте не будут отправлены в текущем режиме черновика, пока Вы не откроете первое совещание.
     frequency:
       x_daily:
         one: "Каждый день"
@@ -447,7 +484,7 @@ ru:
       confirm_button: "Отменить событие"
     end_series_dialog:
       title: "Завершить серию совещаний"
-  notice_successful_notification: "Email calendar update sent to all participants"
+  notice_successful_notification: "Обновление календаря отправлено всем участникам по электронной почте"
   notice_timezone_missing: Не установлен часовой пояс и применена %{zone}. Чтобы выбрать часовой пояс, пожалуйста, нажмите сюда.
   notice_meeting_updated: "Эта страница была обновлена кем-то другим. Перезагрузите страницу, чтобы просмотреть изменения."
   permission_create_meetings: "Создание совещания"
@@ -456,8 +493,8 @@ ru:
   permission_view_meetings: "Просмотреть совещания"
   permission_manage_agendas: "Управление повестками"
   permission_manage_agendas_explanation: "Позволяет создавать, редактировать и удалять пункты повестки дня"
-  permission_manage_outcomes: "Управление результатами"
-  permission_send_meeting_invites_and_outcomes: "Рассылать приглашения на собрания и результаты их проведения участникам"
+  permission_manage_outcomes: "Управление итогами"
+  permission_send_meeting_invites_and_outcomes: "Рассылать приглашения и итоги проведения совещаний участникам"
   project_module_meetings: "Совещания"
   text_duration_in_hours: "Длительность в часах"
   text_in_hours: "в часах"
@@ -468,6 +505,12 @@ ru:
   text_meeting_agenda_open_are_you_sure: "Все изменения в протоколах будут перезаписаны! Продолжить?"
   text_meeting_minutes_for_meeting: 'Протокол совещания «%{meeting}»'
   text_notificiation_invited: "Это сообщение содержит запись ics для совещания ниже:"
+  text_meeting_ics_description: >-
+    Ссылка на совещание: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Ссылка на серию совещаний: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Ссылка на совещание: %{url} Ссылка на серию совещаний: %{series_url}
   text_meeting_empty_heading: "Совещание пусто"
   text_meeting_empty_description1: "Начните с добавления пунктов повестки ниже. Каждый пункт может быть простым, как заголовок, но вы также можете добавить дополнительные сведения, такие как продолжительность и примечания."
   text_meeting_empty_description2: 'Вы также можете добавить ссылки на существующие пакеты работ. Когда вы это сделаете, соответствующие заметки будут автоматически отображаться на вкладке «Совещания» пакета работ.'
@@ -485,7 +528,7 @@ ru:
   label_agenda_items: "Пункты повестки"
   label_agenda_items_reordered: "переупорядочено"
   label_agenda_item_add: "Добавить пункт повестки"
-  label_agenda_item_remove_from_agenda: "Исключить из повестки"
+  label_agenda_item_remove_from_agenda: "Удалить из повестки"
   label_agenda_item_remove_from_backlog: "Удалить из бэклога"
   label_agenda_item_undisclosed_wp: "Пакет работ #%{id} невидим"
   label_agenda_item_deleted_wp: "Ссылка на удалённый пакет работ"
@@ -495,21 +538,29 @@ ru:
   label_agenda_item_move_to_next: "Переместить на следующее совещание"
   label_agenda_item_move_to_backlog: "Переместить в бэклог"
   label_agenda_item_move_to_current_meeting: "Переместить на текущую встречу"
+  label_agenda_item_move_to_section: "Переместить в раздел"
   label_agenda_item_move_to_top: "В начало"
   label_agenda_item_move_to_bottom: "В конец"
   label_agenda_item_move_up: "Вверх"
   label_agenda_item_move_down: "Вниз"
+  label_agenda_item_duplicate: "Дубликат"
+  label_agenda_item_duplicate_in_next: "Дублировать при следующем совещании"
+  label_agenda_item_duplicate_in_next_title: "Дублировать при следующем совещании?"
   label_agenda_item_add_notes: "Добавить заметки"
-  label_agenda_item_add_outcome: "Добавить расход"
+  label_agenda_item_add_outcome: "Добавить итог"
   label_agenda_item_work_package_add: "Добавить пакет работ"
   label_agenda_item_work_package: "Пакет работ по пунктам повестки"
   label_section_rename: "Переименовать раздел"
-  label_agenda_outcome: "Расход"
-  label_agenda_outcome_actions: "Действия по расходам"
-  label_agenda_outcome_edit: "Редактировать результат"
-  label_agenda_outcome_delete: "Удалить результат"
-  text_outcome_not_editable_anymore: "Этот результат больше не редактируется."
-  text_outcome_cannot_be_added: "Результат больше нельзя добавить."
+  label_agenda_outcome: "Итог"
+  label_agenda_new_outcome: "Новый результат"
+  label_agenda_outcome_actions: "Действия по итогам"
+  label_agenda_outcome_edit: "Редактировать итог"
+  label_agenda_outcome_delete: "Удалить итог"
+  label_added_as_outcome: "Добавлено как итог"
+  label_write_outcome: "Зафиксировать итог"
+  label_existing_work_package: "Существующий пакет работ"
+  text_outcome_not_editable_anymore: "Этот итог недоступен для редактирования."
+  text_outcome_cannot_be_added: "Итог больше нельзя добавить."
   label_backlog_clear: "Очистить бэклог"
   label_backlog_clear_button: "Очистить все"
   text_backlog_clear_error: "При попытке очистить бэклог произошла одна или несколько ошибок."
@@ -519,9 +570,9 @@ ru:
   label_agenda_backlog_clear_title: "Очистить бэклог по повестке дня?"
   text_agenda_backlog_clear_description: >
     Вы уверены, что хотите удалить все пункты повестки дня? Это действие необратимо.
-  label_series_backlog: "Журнал серий"
+  label_series_backlog: "Бэклог серий"
   text_series_backlog: >
-    Бэклог используется для всех вхождений этой серии. Вы можете перетащить элементы из и обратно для их добавления или удаления с конкретной встречи.
+    Общий бэклог для всех совещаний серии. Вы можете добавлять и удалять элементы в конкретное совещание при помощи перетаскивания.
   label_series_backlog_clear_title: "Очистить бэклог серии?"
   text_series_backlog_clear_description: >
     Это приведет к удалению всех элементов в бэклоге серии, который разделен со всеми встречами в этой серии. Вы уверены, что хотите продолжить? Это действие необратимо.
@@ -533,6 +584,7 @@ ru:
   label_meeting_series_details: "Подробности серии совещаний"
   label_meeting_details_edit: "Изменить сведения о совещании"
   label_meeting_state: "Статус совещания"
+  label_meeting_state_draft: "Черновик"
   label_meeting_state_open: "Открыть"
   label_meeting_state_closed: "Закрыть"
   label_meeting_state_agenda_created: "Повестка дня создана"
@@ -543,51 +595,65 @@ ru:
   label_meeting_reopen_action: "Открыть совещание заново"
   label_meeting_close_action: "Закрыть совещание"
   label_meeting_in_progress_action: "Начать совещание"
-  text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
+  label_meeting_open_action: "Открыть совещание"
+  text_meeting_draft_description: "Подготовьте повестку дня в режиме черновика. Это совещание не будет рассылать никаких обновлений календаря или приглашений, даже если Вы измените детали совещания или добавите/удалите участников."
+  text_meeting_open_description: "Можно добавлять и удалять пункты повестки и участников. Когда повестка готова, переведите её в статус «В процессе», чтобы фиксировать результаты."
   text_meeting_closed_description: "Это совещание является закрытым. Вы не можете добавлять/удалять пункты повестки."
-  text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
+  text_meeting_in_progress_description: "Можно редактировать повестку, фиксировать результаты по каждому пункту и отмечать присутствие участников. По завершении встречи пометьте её как «Закрыта», чтобы заблокировать изменения."
   text_meeting_open_dropdown_description: "Любые существующие результаты останутся, но пользователи не смогут добавлять новые результаты."
   text_meeting_in_progress_dropdown_description: "Итоги совещания, такие как информация или решения, принятые в ходе совещания."
   text_meeting_closed_dropdown_description: "Совещание закрыто. Вы больше не можете изменять пункты повестки дня или его результаты."
+  text_meeting_draft_banner: "В настоящее время Вы находитесь в режиме черновика. Это совещание не будет рассылать никаких обновлений календаря или приглашений, даже если Вы измените детали совещания или добавите/удалите участников."
+  text_exit_draft_mode_dialog_title: "Открыть это совещание и разослать приглашения?"
+  text_exit_draft_mode_dialog_subtitle: "Вы не можете вернуться в режим черновика после того, как запланировали совещание."
+  text_exit_draft_mode_dialog_template_title: "Открыть первое совещание из этой серии?"
+  text_exit_draft_mode_dialog_template_subtitle: "После этого Вы не сможете вернуться в режим черновика."
   text_meeting_not_editable_anymore: "Это совещание больше нельзя редактировать."
   text_meeting_not_present_anymore: "Это совещание было удалено. Пожалуйста, выберите другое."
-  label_add_work_package_to_meeting_dialog_title: "Добавить пакет работ в совещание"
+  label_add_work_package_to_meeting_dialog_title: "Выберите совещание"
+  label_add_work_package_to_meeting_section_label: "Раздел"
   label_add_work_package_to_meeting_dialog_button: "Добавить в совещание"
-  label_meeting_selection_caption: "Этот пакет работ можно добавить только к открытым предстоящим встречам."
+  label_meeting_selection_caption: "Можно только добавить этот пакет работ на предстоящее или текущее совещание."
+  label_section_selection_caption: "Выберите конкретный раздел повестки дня или добавьте его в бэклог."
+  placeholder_section_select_meeting_first: "Сначала необходимо выбрать совещание"
+  text_add_work_package_to_meeting_form: "Рабочий пакет будет добавлен в выбранное совещание или бэклог в качестве пункта повестки дня."
   text_add_work_package_to_meeting_description: "Пакет работ может быть добавлен к одному или нескольким совещаниям для обсуждения. Любые заметки об этом также видны здесь."
   text_agenda_item_no_notes: "Примечания отсутствуют"
   text_agenda_item_not_editable_anymore: "Этот пункт повестки больше не редактируется."
   text_agenda_item_move_next_meeting: "Этот элемент будет перемещен на следующую встречу на %{date} в %{time}."
   text_agenda_item_moved_to_next_meeting: "Пункт повестки дня перенесен на следующее совещание на %{date}"
+  text_agenda_item_duplicate_in_next_meeting: "Вы уверены, что хотите добавить копию этого пункта повестки дня к следующему совещанию на %{date} в %{time}? Результаты не будут дублироваться."
+  text_agenda_item_duplicated_in_next_meeting: "Пункт повестки дня дублируется на следующем совещании %{date}"
   text_work_package_has_no_upcoming_meeting_agenda_items: "Этот пакет работ пока не включен в повестку предстоящего совещания."
   text_agenda_item_move_next_meeting_cancelled: "Не удалось переместить на следующее совещание, так как оно было отменено."
   text_work_package_add_to_meeting_hint: 'Используйте кнопку "Добавить к совещанию", чтобы добавить этот пакет работ к предстоящему совещанию.'
-  text_work_package_has_no_past_meeting_agenda_items: "Этот пакет работ не упоминался на прошлом совещании."
+  text_work_package_has_no_past_meeting_agenda_items: "Этот рабочий пакет не был добавлен в качестве пункта повестки дня на прошлом совещании."
   text_email_updates_muted: "Обновления календаря по электронной почте отключены. Участники не будут получать обновленные приглашения по электронной почте, когда Вы вносите изменения."
   text_email_updates_enabled: "Обновления календаря по электронной почте включены. Все участники получат обновленные приглашения по электронной почте, когда Вы внесете изменения."
   my_account:
     access_tokens:
       token/ical_meeting:
-        title: "iCalendar for meetings"
-        text_hint: "iCalendar meeting tokens allow users to subscribe to all their meetings and view up-to-date meeting information in external clients."
-        disabled_text: "iCalendar meeting subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
-        empty_text_hint: 'To add an iCalendar meeting token, go to the <a href="%{path}">meetings section</a> and subscribe from there.'
-        add_button: "Subscribe to calendar"
+        blank_description: "Вы можете создать его, воспользовавшись кнопкой ниже."
+        blank_title: "Нет токена совещания для iCalendar"
+        title: "iCalendar для совещаний"
+        table_title: "Токен совещания для iCalendar"
+        text_hint: "Токены iCalendar позволяют пользователям подписываться на все свои совещания и просматривать актуальную информацию о них во внешних клиентах."
+        disabled_text: "Подписки на совещания iCalendar не включены администратором. Пожалуйста, свяжитесь с администратором для использования этой функции."
+        add_button: "Подписаться на календарь"
   my:
     access_token:
       dialog:
         token/ical_meeting:
-          dialog_title: "New iCal subscription token for meetings"
-          dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
-          create_button: "Create subscription"
-          name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          dialog_title: "Новый токен подписки iCal для совещаний"
+          dialog_body: "Этот токен генерирует URL-адрес подписки iCal, который позволяет просматривать все ваши встречи во внешнем  приложении календаря."
+          create_button: "Создать подписку"
+          name_label: "Название токена"
+          name_caption: 'Вы можете назвать его в соответствии с местом, где будете его использовать, например, "Мой телефон" или "Рабочий компьютер".'
       created_dialog:
         token/ical_meeting:
-          title: "An iCal meeting subscription token has been generated"
-          body: "Treat the following URL as you would a password. Anyone who has access to it can view all your meetings."
-          warning: "This is the only time you will see this token. Make sure to copy it now."
+          title: "Сгенерирован токен подписки на совещание iCal"
+          body: "Относитесь к следующему URL-адресу так же, как к паролю. Любой, кто имеет к нему доступ, может просматривать все Ваши совещания."
       revocation:
         token/ical_meeting:
-          notice_success: "The iCalendar meeting subscription has been revoked successfully."
-          notice_failure: "Failed to revoke iCalendar meeting subscription: %{error}"
+          notice_success: "Подписка на совещания iCalendar была успешно отменена."
+          notice_failure: "Не удалось отменить подписку на совещания iCalendar: %{error}"

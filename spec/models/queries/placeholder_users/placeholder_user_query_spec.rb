@@ -154,8 +154,9 @@ RSpec.describe Queries::PlaceholderUsers::PlaceholderUserQuery do
 
     describe "#results" do
       it "is the same as handwriting the query" do
-        expected = "SELECT \"users\".\"id\", \"users\".\"login\", \"users\".\"firstname\", \"users\".\"lastname\", \"users\".\"mail\", \"users\".\"admin\", \"users\".\"status\", \"users\".\"last_login_on\", \"users\".\"language\", \"users\".\"ldap_auth_source_id\", \"users\".\"created_at\", \"users\".\"updated_at\", \"users\".\"type\", \"users\".\"first_login\", \"users\".\"force_password_change\", \"users\".\"failed_login_count\", \"users\".\"last_failed_login_on\", \"users\".\"consented_at\", \"users\".\"webauthn_id\" FROM \"users\" WHERE \"users\".\"type\" = 'PlaceholderUser' ORDER BY \"users\".\"lastname\" DESC, \"users\".\"id\" DESC"
-
+        # rubocop:disable Layout/LineLength
+        expected = "SELECT \"users\".\"id\", \"users\".\"login\", \"users\".\"firstname\", \"users\".\"lastname\", \"users\".\"mail\", \"users\".\"admin\", \"users\".\"status\", \"users\".\"last_login_on\", \"users\".\"language\", \"users\".\"ldap_auth_source_id\", \"users\".\"created_at\", \"users\".\"updated_at\", \"users\".\"type\", \"users\".\"first_login\", \"users\".\"force_password_change\", \"users\".\"failed_login_count\", \"users\".\"last_failed_login_on\", \"users\".\"consented_at\", \"users\".\"webauthn_id\" FROM \"users\" WHERE \"users\".\"type\" = 'PlaceholderUser' AND \"users\".\"status\" != 5 ORDER BY \"users\".\"lastname\" DESC, \"users\".\"id\" DESC"
+        # rubocop:enable Layout/LineLength
         expect(instance.results.to_sql).to eql expected
       end
     end

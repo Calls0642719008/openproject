@@ -245,30 +245,13 @@ hr
 fieldset.form--fieldset
   @extend %form--fieldset-or-section
 
-  &.-collapsible.collapsed
-    .-hide-when-collapsed
-      display: none
-
 .form--fieldset-legend
   @extend %form--fieldset-legend-or-section-title
   width: 100%
 
-  .form--fieldset.-collapsible > &
-    @include without-link-styling
-    cursor: pointer
-
   &:before
     @include icon-common
     font-size: 0.75rem
-
-    .form--fieldset.-collapsible > &
-      @include icon-mixin-arrow-up1
-      padding: 0.625rem 0.25rem 0 0.25rem
-
-    .form--fieldset.-collapsible.-collapsed > &,
-    .form--fieldset.-collapsible.collapsed > &
-      @include icon-mixin-arrow-down1
-      padding: 0.625rem 0.25rem 0 0.25rem
 
 #main-menu .form--fieldset-legend
   color: var(--main-menu-font-color)

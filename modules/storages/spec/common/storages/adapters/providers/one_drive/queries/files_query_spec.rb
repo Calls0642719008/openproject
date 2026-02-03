@@ -42,7 +42,7 @@ module Storages
             let(:auth_strategy) { Registry["one_drive.authentication.user_bound"].call(user, storage) }
             let(:input_data) { Input::Files.build(folder:).value! }
 
-            it_behaves_like "adapter files_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "files"
 
             context "with parent folder being root", vcr: "one_drive/files_query_root" do
               let(:folder) { "/" }
@@ -186,7 +186,7 @@ module Storages
               let(:folder) { "/I/just/made/that/up" }
               let(:error_source) { described_class }
 
-              it_behaves_like "adapter files_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

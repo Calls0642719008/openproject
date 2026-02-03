@@ -31,6 +31,7 @@ module API
     module TimeEntries
       class TimeEntryRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Decorators::FormattableProperty
         include API::Decorators::DateProperty
         extend ::API::V3::Utilities::CustomFieldInjector::RepresenterClass
@@ -91,7 +92,7 @@ module API
         date_time_property :created_at
         date_time_property :updated_at
 
-        associated_resource :project
+        associated_project
 
         associated_resource :entity,
                             getter: ::API::V3::TimeEntries::EntityRepresenterFactory.create_getter_lambda(:entity),
@@ -101,6 +102,8 @@ module API
         # TODO: DEPRECATED!
         associated_resource :work_package,
                             skip_render: ->(*) { represented.entity_type != "WorkPackage" },
+                            link_property_name: :entity, # to avoid deprecation warnings with time_entry.work_package
+                            link_getter: :entity_id, # to avoid deprecation warnings with time_entry.work_package_id
                             getter: ->(*) { represented.entity if represented.entity_type == "WorkPackage" },
                             setter: ::API::V3::TimeEntries::EntityRepresenterFactory.create_setter_lambda(:entity)
 
@@ -180,7 +183,10 @@ module API
           end
         end
 
-        self.to_eager_load = [:user, :activity, { project: :enabled_modules }]
+        self.to_eager_load = [:user, :activity, { project: :enabled_modules }, { custom_values: :custom_field }]
+
+        # entity is a polymorphic association and thus can't be eager-loaded, but it can be preloaded
+        self.to_preload = [:entity]
       end
     end
   end

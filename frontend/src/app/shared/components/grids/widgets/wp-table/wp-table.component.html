@@ -1,15 +1,14 @@
 <widget-header
   [name]="widgetName"
   (onRenamed)="renameWidget($event)">
-  <widget-wp-table-menu
-    slot="menu"
-    [resource]="resource">
-  </widget-wp-table-menu>
+  <widget-wp-table-menu slot="menu"
+    [resource]="resource" />
 </widget-header>
 
 <div class="op-widget-box--body">
-  <wp-embedded-table [queryId]="queryId"
-                     [configuration]="configuration"
-                     *ngIf="queryId">
-  </wp-embedded-table>
+  @if (queryId) {
+    <wp-embedded-table [queryId]="queryId"
+      [configuration]="configuration"
+       />
+  }
 </div>

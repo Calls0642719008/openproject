@@ -142,7 +142,10 @@ class Projects::QueriesController < ApplicationController
     if service_call.success?
       flash[:notice] = I18n.t(success_i18n_key)
 
-      redirect_to modified_query.visible? ? projects_path(query_id: modified_query.id) : projects_path
+      redirect_to(
+        modified_query.visible? ? projects_path(query_id: modified_query.id) : projects_path,
+        status: :see_other
+      )
     else
       flash[:error] = I18n.t(error_i18n_key, errors: service_call.errors.full_messages.join("\n"))
 

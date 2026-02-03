@@ -38,11 +38,16 @@ module API
         private
 
         def parse_attributes(request_body)
-          ::API::V3::WorkPackages::WorkPackagePayloadRepresenter
+          attributes = ::API::V3::WorkPackages::WorkPackagePayloadRepresenter
             .create(struct, current_user:)
             .from_hash(Hash(request_body))
             .to_h
             .reverse_merge(lock_version: nil)
+
+          meta = attributes.delete(:meta) || {}
+          attributes[:validate_custom_fields] = meta[:validate_custom_fields] if meta[:validate_custom_fields]
+
+          attributes
         end
 
         def struct

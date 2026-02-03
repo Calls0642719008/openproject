@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -34,8 +36,8 @@ module OpenProject
   # syntax differences.
 
   module Database
-    DB_VALUE_FALSE = "f".freeze
-    DB_VALUE_TRUE = "t".freeze
+    DB_VALUE_FALSE = "f"
+    DB_VALUE_TRUE = "t"
 
     class InsufficientVersionError < StandardError; end
 

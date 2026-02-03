@@ -43,13 +43,6 @@ pl:
           name: PM2 amarantowy
         item_3:
           name: PM2 żółtozielony
-      document_categories:
-        item_0:
-          name: Dokumentacja
-        item_1:
-          name: Specyfikacja
-        item_2:
-          name: Inne
       project_query_roles:
         item_0:
           name: Przeglądarka zapytań dotyczących projektu

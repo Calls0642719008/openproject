@@ -88,7 +88,7 @@ export default class HierarchyItemController extends Controller {
       const originElement = document.querySelector(`[data-hierarchy-item-id='${origin}']`) as HTMLElement;
       originElement.style.opacity = '1';
 
-      if (targetElement.dataset.hierarchyItemId === originElement.dataset.hierarchyItemId) {
+      if (targetElement.dataset.hierarchyItemId === (originElement as HTMLElement).dataset.hierarchyItemId) {
         return;
       }
 

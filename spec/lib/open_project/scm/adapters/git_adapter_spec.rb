@@ -29,6 +29,8 @@
 #++
 
 require "spec_helper"
+require "fileutils"
+require "tmpdir"
 
 RSpec.describe OpenProject::SCM::Adapters::Git do
   shared_examples "git adapter specs" do
@@ -529,6 +531,19 @@ RSpec.describe OpenProject::SCM::Adapters::Git do
               +Mercurial is a distributed version control system. Mercurial is dedicated to speed and efficiency with a sane user interface.
               +It is written in Python.
             DIFF
+          end
+
+          it "does not parse options from rev" do
+            tmpdir = Dir.mktmpdir("op-git-diff-")
+            outfile = File.join(tmpdir, "openproject-options.txt")
+            branch = "--output=#{outfile}"
+
+            begin
+              adapter.diff("", branch)
+              expect(File.exist?(outfile)).to be(false)
+            ensure
+              FileUtils.remove_entry(tmpdir) if File.directory?(tmpdir)
+            end
           end
         end
       end

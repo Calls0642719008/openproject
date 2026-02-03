@@ -89,8 +89,10 @@ See COPYRIGHT and LICENSE files for more details.
                                             title: t(:button_edit) %>
                   <%= link_to_if_authorized "",
                                             { controller: "/categories", action: "destroy", id: category },
-                                            data: { confirm: t(:text_are_you_sure) },
-                                            method: :delete,
+                                            data: {
+                                              turbo_method: :delete,
+                                              turbo_confirm: t(:text_are_you_sure)
+                                            },
                                             class: "icon icon-delete",
                                             title: t(:button_delete) %>
                 </td>

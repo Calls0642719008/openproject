@@ -32,14 +32,14 @@ export class WpTableHoverSync {
   private lastHoveredElement:Element | null = null;
 
   private eventListener = (evt:MouseEvent) => {
-    const target = evt.target as Element|null;
+    const target = evt.target as HTMLElement|null;
     if (target && target !== this.lastHoveredElement) {
       this.handleHover(target);
     }
     this.lastHoveredElement = target;
   };
 
-  constructor(private tableAndTimeline:JQuery) {
+  constructor(private tableAndTimeline:HTMLElement) {
   }
 
   activate() {
@@ -51,26 +51,17 @@ export class WpTableHoverSync {
     this.removeAllHoverClasses();
   }
 
-  private locateHoveredTableRow(child:JQuery):Element | null {
-    const parent = child.closest('tr');
-    if (parent.length === 0) {
-      return null;
-    }
-    return parent[0];
+  private locateHoveredTableRow(child:HTMLElement):HTMLTableRowElement | null {
+    return child.closest('tr');
   }
 
-  private locateHoveredTimelineRow(child:JQuery):Element | null {
-    const parent = child.closest('div.wp-timeline-cell');
-    if (parent.length === 0) {
-      return null;
-    }
-    return parent[0];
+  private locateHoveredTimelineRow(child:HTMLElement):HTMLElement | null {
+    return child.closest('div.wp-timeline-cell');
   }
 
-  private handleHover(element:Element) {
-    const $element = jQuery(element) as JQuery;
-    const parentTableRow = this.locateHoveredTableRow($element);
-    const parentTimelineRow = this.locateHoveredTimelineRow($element);
+  private handleHover(element:HTMLElement) {
+    const parentTableRow = this.locateHoveredTableRow(element);
+    const parentTimelineRow = this.locateHoveredTimelineRow(element);
 
     // remove all hover classes if cursor does not hover a row
     if (parentTableRow === null && parentTimelineRow === null) {
@@ -89,21 +80,21 @@ export class WpTableHoverSync {
     const hovered = parentTableRow !== null ? parentTableRow : parentTimelineRow;
     const wpId = this.extractWorkPackageId(hovered!);
 
-    const tableRow:JQuery = this.tableAndTimeline.find(`tr.wp-row-${wpId}`).first();
-    const timelineRow:JQuery = this.tableAndTimeline.find(`div.wp-row-${wpId}`).length
-      ? this.tableAndTimeline.find(`div.wp-row-${wpId}`).first()
-      : this.tableAndTimeline.find(`div.wp-ancestor-row-${wpId}`).first();
+    const tableRow = this.tableAndTimeline.querySelector(`tr.wp-row-${wpId}`);
+    const timelineRow = this.tableAndTimeline.querySelector(`div.wp-row-${wpId}`)
+      ? this.tableAndTimeline.querySelector(`div.wp-row-${wpId}`)
+      : this.tableAndTimeline.querySelector(`div.wp-ancestor-row-${wpId}`);
 
     requestAnimationFrame(() => {
       this.removeAllHoverClasses();
-      timelineRow.addClass(cssClassRowHovered);
-      tableRow.addClass(cssClassRowHovered);
+      timelineRow?.classList.add(cssClassRowHovered);
+      tableRow?.classList.add(cssClassRowHovered);
     });
   }
 
   private removeAllHoverClasses() {
     this.tableAndTimeline
-      .find(`.${cssClassRowHovered}`)
-      .removeClass(cssClassRowHovered);
+      .querySelectorAll(`.${cssClassRowHovered}`)
+      .forEach((elem) => elem.classList.remove(cssClassRowHovered));
   }
 }

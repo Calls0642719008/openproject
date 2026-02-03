@@ -83,7 +83,7 @@ export class CurrentUserService {
           const filters:ApiV3ListFilter[] = _.compact([userFilter]);
 
           if (projectContext) {
-            filters.push(['context', '=', [projectContext === 'global' || projectContext === 'projects' ? 'g' : `p${projectContext}`]]);
+            filters.push(['context', '=', [projectContext === 'global' || projectContext === 'projects' ? 'g' : `w${projectContext}`]]);
           }
 
           if (actions.length > 0) {

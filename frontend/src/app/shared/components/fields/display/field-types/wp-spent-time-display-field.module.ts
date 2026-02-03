@@ -117,7 +117,7 @@ export class WorkPackageSpentTimeDisplayField extends WorkDisplayField {
     this.workPackageForHandler = wp;
 
     void this.TurboRequests.request(
-      `${this.PathHelper.timeEntryWorkPackageDialog(wp.id as string)}?date=${moment().format('YYYY-MM-DD')}`,
+      `${this.PathHelper.timeEntryWorkPackageDialog(wp.id!)}?date=${moment().format('YYYY-MM-DD')}`,
       { method: 'GET' },
     );
   }

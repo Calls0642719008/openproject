@@ -48,7 +48,7 @@ module Components
             expect(page).to have_css(".danger-zone--warning",
                                      text: "Are you sure you want to delete the following work packages?")
             wps.each do |wp|
-              expect(page).to have_css("li", text: "##{wp.id} #{wp.subject}")
+              expect(page).to have_css("li", text: "##{wp.id}#{wp.subject}")
             end
           end
         end

@@ -29,35 +29,49 @@ See COPYRIGHT and LICENSE files for more details.
 
 <style type="text/css">
   <%
-  isRu = I18n.locale == :ru
+  is_ru = I18n.locale == :ru
+  cs = apply_custom_styles? ? CustomStyle.current : nil
 
-  logo_url = if isRu
+  logo_url = if is_ru
                asset_path("logo-white-bg-ua.png")
              else
                asset_path("logo_openproject_white_big.png")
              end
 
-  logo_icon_url = asset_path("icon_logo.svg")
-
-  logo_icon_white_url = asset_path("icon_logo_white.svg")
-
-  high_contrast_logo_url = if isRu
+  high_contrast_logo_url = if is_ru
                              asset_path("logo-black-bg-ua.png")
                            else
                              asset_path("logo_openproject.png")
                            end
+  logo_icon_url = asset_path("icon_logo.svg")
+  logo_icon_white_url = asset_path("icon_logo_white.svg")
 
   high_contrast_bim_logo_url = asset_path("bim/logo_openproject_bim_big_coloured.png")
 
-  if apply_custom_styles?
-    if CustomStyle.current.logo.present?
-      logo_url = custom_style_logo_path(digest: CustomStyle.current.digest, filename: CustomStyle.current.logo_identifier)
-    elsif CustomStyle.current.theme_logo.present?
-      logo_url = asset_path(CustomStyle.current.theme_logo)
+  if cs
+    has_logo = cs.logo.present?
+    has_logo_mobile = cs.logo_mobile.present?
+
+    if has_logo
+      logo_url = high_contrast_logo_url = custom_style_logo_path(digest: cs.digest, filename: cs.logo_identifier)
+    elsif has_logo_mobile
+      logo_url = high_contrast_logo_url = custom_style_logo_mobile_path(digest: cs.digest, filename: cs.logo_mobile_identifier)
+    elsif cs.theme_logo.present?
+      logo_url = asset_path(cs.theme_logo)
     end
 
-    if isRu && logo_url == asset_path("logo_openproject.png")
+    if is_ru && logo_url == asset_path("logo_openproject.png")
       logo_url = asset_path("logo-black-bg-ua.png")
+    end
+
+    if has_logo_mobile
+      mobile_logo_url = custom_style_logo_mobile_path(
+        digest: cs.digest,
+        filename: cs.logo_mobile_identifier
+      )
+
+      logo_icon_url = mobile_logo_url
+      logo_icon_white_url = mobile_logo_url
     end
   end
   %>

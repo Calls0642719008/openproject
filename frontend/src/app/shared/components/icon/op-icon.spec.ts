@@ -68,7 +68,7 @@ describe('opIcon Directive', () => {
 
   describe('with a title', () => {
     beforeEach(() => {
-      app.iconTitle = 'blabla';
+      fixture.componentRef.setInput('icon-title', 'blabla');
       fixture.detectChanges();
     });
 

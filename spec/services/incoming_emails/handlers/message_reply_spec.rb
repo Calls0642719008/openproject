@@ -34,6 +34,7 @@ RSpec.describe IncomingEmails::Handlers::MessageReply do
   let(:email) { instance_double(Mail::Message, attachments: [], subject: "Email subject") }
   let(:user) { build_stubbed(:user) }
   let(:reference) { {} }
+  let(:automated_email) { false }
   let(:options) { {} }
   let(:plain_text_body) { "Test body" }
 
@@ -46,7 +47,7 @@ RSpec.describe IncomingEmails::Handlers::MessageReply do
       let(:reference) { { klass: "message", id: 123 } }
 
       it "returns true" do
-        expect(described_class).to be_handles(email, reference:)
+        expect(described_class).to be_handles(email, reference:, automated_email:)
       end
     end
 
@@ -54,7 +55,7 @@ RSpec.describe IncomingEmails::Handlers::MessageReply do
       let(:reference) { {} }
 
       it "returns false" do
-        expect(described_class).not_to be_handles(email, reference:)
+        expect(described_class).not_to be_handles(email, reference:, automated_email:)
       end
     end
 
@@ -62,7 +63,7 @@ RSpec.describe IncomingEmails::Handlers::MessageReply do
       let(:reference) { { klass: "work_packages", id: 123 } }
 
       it "returns false" do
-        expect(described_class).not_to be_handles(email, reference:)
+        expect(described_class).not_to be_handles(email, reference:, automated_email:)
       end
     end
   end

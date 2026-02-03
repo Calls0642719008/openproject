@@ -45,11 +45,11 @@ import { I18nService } from 'core-app/core/i18n/i18n.service';
 export class CustomDateActionAdminComponent implements OnInit {
   public valueVisible = false;
 
-  public fieldName:string = '';
+  public fieldName = '';
 
-  public fieldValue:string = '';
+  public fieldValue = '';
 
-  public visibleValue:string = '';
+  public visibleValue = '';
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   public selectedOperator:any;

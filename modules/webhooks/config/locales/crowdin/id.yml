@@ -8,7 +8,7 @@ id:
         url: 'URL muatan'
         secret: 'Rahasia tanda tangan'
         events: 'Acara'
-        enabled: 'Enabled'
+        enabled: 'Aktifkan'
         projects: 'Proyek-proyek yang diaktifkan'
       webhooks/log:
         event_name: 'Nama acara'
@@ -27,12 +27,15 @@ id:
       no_results_table: Belum ada webhook yang ditentukan.
       label_add_new: Tambahkan webhook baru
       label_edit: Ubah webhook
-      label_event_resources: Sumber acara
+      label_x_events:
+        one: "1 acara"
+        other: "%{count} acara"
+        zero: "Tidak ada acara"
       events:
         created: "Dibuat"
         updated: "Diperbarui"
-        comment: "Comment"
-        internal_comment: "Internal comment"
+        comment: "Komentar"
+        internal_comment: "Komentar internal"
       explanation:
         text: >
           Setelah kejadian seperti pembuatan paket kerja atau pembaruan proyek, OpenProject akan mengirimkan permintaan POST ke titik akhir web yang dikonfigurasi.  Sering kali, acara dikirim setelah %{link} lewat.

@@ -30,7 +30,7 @@
 # But we have references to symbols_for still in the code base.
 module OpenProject::ActiveModelErrorsPatch
   def symbols_for(attribute)
-    details[attribute].pluck(:error)
+    details[attribute.to_sym].pluck(:error)
   end
 end
 

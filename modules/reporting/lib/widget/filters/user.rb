@@ -39,6 +39,7 @@ class Widget::Filters::User < Widget::Filters::Base
 
       box = angular_component_tag "opce-user-autocompleter",
                                   inputs: {
+                                    appendTo: "body",
                                     InputName: "values[#{filter_class.underscore_name}]",
                                     hiddenFieldAction: "change->reporting--page#selectValueChanged",
                                     multiple: true,

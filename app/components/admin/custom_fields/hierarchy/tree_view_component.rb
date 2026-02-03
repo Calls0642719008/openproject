@@ -32,43 +32,21 @@ module Admin
   module CustomFields
     module Hierarchy
       class TreeViewComponent < ApplicationComponent
+        include CustomFieldHierarchyTreeViewHelper
+
         def initialize(custom_field:, active_item:)
           super
 
           @custom_field = custom_field
           @active_item = active_item
-          @hierarchy_service = ::CustomFields::Hierarchy::HierarchicalItemService.new
         end
 
-        def hierarchy_items
-          hashed_hierarchy = @custom_field.hierarchy_root.hash_tree
-          hashed_hierarchy.nil? ? {} : hashed_hierarchy.first[1]
-        end
-
-        def add_sub_tree(tree, hierarchy_hash)
-          hierarchy_hash.each do |item, child_hash|
-            if child_hash.empty?
-              tree.with_leaf(**item_options(item))
-            else
-              expanded = current?(item) || child_hash.any? { |child, _| current?(child) }
-
-              tree.with_sub_tree(expanded: expanded, **item_options(item)) do |sub_tree|
-                add_sub_tree(sub_tree, child_hash)
-              end
-            end
+        def href_for(item)
+          if @custom_field.is_a?(ProjectCustomField)
+            admin_settings_project_custom_field_item_path(@custom_field.id, item)
+          else
+            custom_field_item_path(@custom_field.id, item)
           end
-        end
-
-        def item_options(item)
-          {
-            label: item.label,
-            current: current?(item),
-            href: custom_field_item_path(@custom_field, item)
-          }
-        end
-
-        def current?(item)
-          item.id == @active_item.id
         end
       end
     end

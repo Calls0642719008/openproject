@@ -114,7 +114,7 @@ ru:
   caption_default: "По умолчанию"
   caption_default_rate_history_for: "История тарифов по умолчанию для %{user}"
   caption_locked_on: "Закрывается на"
-  caption_materials: "Модули"
+  caption_materials: "Ресурсы"
   caption_rate_history: "История тарифов"
   caption_rate_history_for: "История тарифов для %{user}"
   caption_rate_history_for_project: "История тарифов для %{user} в проекте %{project}"

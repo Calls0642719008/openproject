@@ -9,7 +9,7 @@
           render(
             Primer::Beta::Button.new(
               tag: :a,
-              href: dialog_work_package_meeting_agenda_items_path(@work_package),
+              href: dialog_project_work_package_meeting_agenda_items_path(@work_package.project, @work_package),
               data: { controller: "async-dialog" },
               test_selector: "op-add-work-package-to-meeting-dialog-trigger"
             )

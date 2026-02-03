@@ -40,16 +40,20 @@ RSpec.shared_context "ModelContract shared context" do # rubocop:disable RSpec/C
 
     expected_errors = errors.transform_values do |error_symbols|
       case error_symbols
+      when [], nil
+        []
       when Array
         an_array_matching(error_symbols)
-      when nil
-        []
       else
         [error_symbols]
       end
     end
     contract_errors = errors.keys.index_with { |key| contract.errors.symbols_for(key) }
     expect(contract_errors).to match(expected_errors)
+    if RSpec.current_example.metadata[:check_errors_i18n]
+      # ensure no I18n::MissingTranslationData is raised because of missing attributes and/or errors translations
+      expect { contract.errors.full_messages }.not_to raise_error
+    end
   end
 
   shared_examples "contract is valid" do

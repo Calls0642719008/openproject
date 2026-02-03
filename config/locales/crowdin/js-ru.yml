@@ -88,6 +88,8 @@ ru:
     button_list_view: "В виде списка"
     button_show_view: "Полноэкранный просмотр"
     button_log_time: "Журналировать время"
+    button_start_timer: "Запустить таймер"
+    button_stop_timer: "Остановить таймер"
     button_more: "Ещё"
     button_open_details: "Открыть детальный просмотр"
     button_close_details: "Закрыть детальный просмотр"
@@ -145,7 +147,7 @@ ru:
       error_saving_failed: "Не удалось сохранить документ по следующей причине: %{error}"
       ckeditor_error: "Произошла ошибка в CKEditor"
       mode:
-        manual: "Перейти на Markdown"
+        manual: "Перейти к источнику уценок"
         wysiwyg: "Перейти к WYSIWYG-редактору"
       macro:
         error: "Невозможно развернуть макрос: %{message}"
@@ -161,7 +163,7 @@ ru:
           page: "Wiki страница"
           this_page: "эта страница"
           hint: |
-            Оставьте это поле пустым, чтобы перечислить все дочерние страницы текущей страницы. Если вы хотите описать другую страницу, укажите ее заголовок или идентифицирующую строку.
+            Оставьте это поле пустым, чтобы перечислить все дочерние страницы текущей страницы. Если вы хотите описать другую страницу, предоставьте ее заголовок или иденцифицирующую строку.
         code_block:
           button: "Вставить фрагмент кода"
           title: "Вставить / Редактировать фрагмент кода"
@@ -193,13 +195,15 @@ ru:
           text: "[Placeholder] Встроенный календарь"
     admin:
       type_form:
-        custom_field: "Пользовательское поле"
+        custom_field: "Настраиваемое поле"
         inactive: "Неактивен"
         drag_to_activate: "Чтобы включить поля, перетащите их отсюда"
         add_group: "Добавить группу атрибутов"
         add_table: "Добавить таблицу связанных пакетов работ"
         edit_query: "Редактировать запрос"
         new_group: "Новая группа"
+        delete_group: "Удалить группу"
+        remove_attribute: "Удалить из группы"
         reset_to_defaults: "Восстановить значения по умолчанию"
       working_days:
         calendar:
@@ -283,21 +287,10 @@ ru:
     hal:
       error:
         update_conflict_refresh: "Нажмите здесь, чтобы обновить ресурс до последней версии."
-        edit_prohibited: "Редактирование атрибута «%{attribute}» запрещено ресурсом. Либо этот атрибут является производным (например, выходящим из родительского пакета работ), либо просто не настраиваемый."
+        edit_prohibited: "Редактирование атрибута «%{attribute}» запрещено ресурсом. Либо этот атрибут является производным (например, выходящим из родительского объекта), либо просто не настраиваемый."
         format:
           date: "%{attribute} не соответствует дате - ожидается гггг-мм-дд."
         general: "Произошла ошибка."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Читайте о новых возможностях и обновлениях продуктов."
-          learn_about: "Узнайте больше о всех новых функциях"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Подписаться на календарь"
       inital_setup_error_message: "Произошла ошибка при получении данных."
@@ -305,17 +298,18 @@ ru:
       warning: "Пожалуйста, не передайте этот URL другим пользователям. Любой пользователь с этой ссылкой сможет просматривать детали пакета работ без учетной записи или пароля."
       token_name_label: "Где вы будете использовать это?"
       token_name_placeholder: 'Введите имя, например «Телефон»'
-      token_name_description_text: 'Если вы подписаны на этот календарь с нескольких устройств, это имя поможет вам различать их в вашем списке <a href="my/access_token", target="_blank"> токенов доступа</a>.'
+      token_name_description_text: 'Если Вы подписаны на этот календарь с нескольких устройств, это имя поможет Вам различать их в списке <a href="%{myAccessTokensUrl}" target="_blank">токенов доступа</a>.'
       copy_url_label: "Копировать URL"
       ical_generation_error_text: "Произошла ошибка при генерации URL-адреса календаря."
       success_message: 'URL-адрес "%{name}" был успешно скопирован в ваш буфер обмена. Вставьте его в свой клиент календаря, чтобы завершить подписку.'
     label_activate: "Активировать"
-    label_assignee: "Назначенный"
+    label_assignee: "Исполнитель"
+    label_assignee_alt_text: "Этот пакет работ назначен %{name}"
     label_add_column_after: "Добавить столбец после"
     label_add_column_before: "Добавить столбец перед"
     label_add_columns: "Добавить столбец"
     label_add_comment: "Добавить комментарий"
-    label_add_comment_title: "Прокомментируйте или используйте @ для уведомления других людей"
+    label_add_comment_title: "Комментарий и тип @ для уведомления других людей"
     label_add_row_after: "Добавить строку после"
     label_add_row_before: "Добавить строку перед"
     label_add_selected_columns: "Добавить выбранные столбцы"
@@ -332,7 +326,7 @@ ru:
     label_avatar: "Аватар\n"
     label_between: "между"
     label_board: "Доска"
-    label_board_locked: "Заблокировано"
+    label_board_locked: "Заперто"
     label_board_plural: "Доски"
     label_board_sticky: "Стикер"
     label_change: "Изменить"
@@ -348,15 +342,16 @@ ru:
     label_details: "Детали"
     label_display: "Отображение"
     label_cancel_comment: "Отменить комментарий"
-    label_closed_work_packages: "закрыто"
+    label_closed_work_packages: "закрыт"
     label_collapse: "свернуть"
     label_collapsed: "свернуто"
     label_collapse_all: "Свернуть все"
+    label_collapse_text: "Свернуть текст"
     label_comment: "Комментарий"
     label_committed_at: "%{committed_revision_link} в %{date}"
-    label_committed_link: "зафиксированная ревизия %{revision_identifier}"
+    label_committed_link: "завершенная версия %{revision_identifier}"
     label_contains: "содержит"
-    label_created_on: "создано"
+    label_created_on: "создано на"
     label_edit_comment: "Редактировать этот комментарий"
     label_edit_status: "Изменить статус пакета работ"
     label_email: "Эл. почта"
@@ -364,6 +359,7 @@ ru:
     label_expand: "Развернуть"
     label_expanded: "развернуто"
     label_expand_all: "Развернуть все"
+    label_expand_text: "Показать полный текст"
     label_expand_project_menu: "Развернуть меню проекта"
     label_export: "Экспортировать"
     label_export_preparing: "Экспорт готовится и будет загружен в ближайшее время."
@@ -389,15 +385,13 @@ ru:
     label_last_updated_on: "Последний раз обновлено"
     label_learn_more_link: "Узнать больше"
     label_less_or_equal: "<="
-    label_less_than_ago: "меньше чем дней назад"
+    label_less_than_ago: "менее нескольких дней назад"
     label_loading: "Загрузка..."
     label_mail_notification: "Уведомления по email"
     label_manage_columns: "Управляйте колонками и изменяйте их порядок"
     label_me: "я"
     label_meeting_agenda: "Повестка совещания"
     label_meeting_minutes: "Протокол(-ы)"
-    label_menu_collapse: "свернуть"
-    label_menu_expand: "развернуть"
     label_more_than_ago: "более нескольких дней назад"
     label_moderate_comment: "Модерировать комментарий"
     label_next: "Следующий"
@@ -431,6 +425,7 @@ ru:
     label_remove_row: "Удалить строку"
     label_report: "Отчет"
     label_repository_plural: "Репозитории"
+    label_resize_project_menu: "Изменить размер меню проекта"
     label_save_as: "Сохранить как"
     label_search_columns: "Поиск столбца"
     label_select_watcher: "Выберите наблюдателя..."
@@ -443,7 +438,7 @@ ru:
     label_sort_lower: "Переместить вниз"
     label_sorting: "Сортировка"
     label_spent_time: "Затраченное время"
-    label_star_query: "Добавлено в избранное"
+    label_star_query: "Избранное"
     label_press_enter_to_save: "Нажмите ввод для сохранения."
     label_public_query: "Общий"
     label_sum: "Сумма"
@@ -460,8 +455,8 @@ ru:
     label_total_progress: "%{percent}% общего прогресса"
     label_total_amount: "Всего: %{amount}"
     label_updated_on: "обновлено"
-    label_value_derived_from_children: "(значение, полученное от дочерних пакетов работ)"
-    label_children_derived_duration: "Продолжительность дочернего пакета работ"
+    label_value_derived_from_children: "(значение, полученное от дочерних элементов)"
+    label_children_derived_duration: "Продолжительность производимого пакета работ"
     label_warning: "Предупреждение"
     label_work_package: "Пакет работ"
     label_work_package_parent: "Родительский пакет работ"
@@ -526,7 +521,7 @@ ru:
           lists_kanban: "Здесь вы можете создать несколько списков (столбцов) на доске. Эта функция позволяет создать <b>доску Канбана</b>, например."
           lists_basic: "Здесь вы можете создать несколько списков (столбцов) внутри вашей agile-панели."
           add: "Нажмите на значок плюс (+) для <b>создания новой карты</b> или <b>добавить существующую карту</b> в список на доске."
-          drag: "Перетащите карточки в заданный список, чтобы упорядочить их или переместить в другой список. <br> Вы можете щелкнуть по иконке info (i) в верхнем правом углу или дважды щелкнуть по карте, чтобы открыть ее данные."
+          drag: "Перетащите карты в заданный список, чтобы упорядочить их или переместить в другой список. <br> Вы можете щелкнуть по иконке info (i) в верхнем правом углу или дважды щелкнуть по карте, чтобы открыть ее данные."
         wp:
           toggler: "Теперь давайте посмотрим на раздел <b>рабочего пакета</b> , который дает вам более подробное представление о вашей работе."
           list: "Этот обзор пакета <b>работ</b> содержит список всех работ вашего проекта, таких как задачи, вехи, фазы и т. l. <br> Пакеты работ можно создавать и редактировать прямо в этом окне. Для получения сведений о конкретном рабочем пакете, просто дважды щелкните по нему. "
@@ -547,7 +542,7 @@ ru:
       reasons:
         mentioned: "Упомянутый"
         watched: "Наблюдатель"
-        assigned: "Назначенный"
+        assigned: "Исполнитель"
         #The enum value is named 'responsible' in the database and that is what is transported through the API
         #up to the frontend.
         responsible: "Ответственный"
@@ -562,7 +557,7 @@ ru:
       date_alerts:
         milestone_date: "Дата вехи"
         overdue: "Просрочено"
-        overdue_since: "с %{difference_in_days}."
+        overdue_since: "для %{difference_in_days}."
         property_today: "сегодня."
         property_is: "в %{difference_in_days}."
         property_was: "было %{difference_in_days} назад."
@@ -587,7 +582,7 @@ ru:
           no_notification_with_current_project_filter: "Похоже, в выбранном проекте вы все сделали."
           no_notification_with_current_filter: "Похоже, в отфильтрованном вы все сделали %{filter}."
           no_notification_for_filter: "Похоже, что для этого фильтра у Вас уже все готово."
-          no_selection: "Нажмите на уведомление, чтобы просмотреть все детали."
+          no_selection: "Нажмите на уведомление, чтобы просмотреть все детали активности."
         new_notifications:
           message: "Есть новые уведомления."
           link_text: "Нажмите здесь, чтобы загрузить их."
@@ -598,7 +593,7 @@ ru:
         title: "Настройки уведомлений"
         notify_me: "Уведомлять меня"
         reminders:
-          no_notification: Нет уведомлений
+          no_notification: Нет уведомления
           timeframes:
             normal:
               PT0S: тот же день
@@ -612,7 +607,7 @@ ru:
         reasons:
           mentioned:
             title: "Упомянутый"
-            description: "Получать уведомления каждый раз, когда кто-то упоминает меня"
+            description: "Получать уведомления каждый раз, когда кто-то упоминает меня в любом месте"
           assignee: "Назначенный"
           responsible: "Ответственный"
           shared: "Общий доступ"
@@ -631,17 +626,14 @@ ru:
             description: "Дополнительные уведомления для деятельности во всех проектах."
           date_alerts:
             title: "Дата оповещения"
-            description: "Автоматическое уведомление, когда приближаются важные даты открытия пакетов работ, в которых вы участвуете (назначенный, ответственный или наблюдатель)."
+            description: "Автоматическое уведомление, когда приближаются важные даты открытия пакетов работ, в которых вы участвуете (исполнитель, ответственный или наблюдатель)."
           overdue: Когда просрочено
         project_specific:
-          title: "Настройки уведомлений для конкретного проекта"
-          description: "Эти настройки для конкретного проекта переопределяют параметры по умолчанию."
+          title: "Конкретные настройки уведомлений проекта"
+          description: "Эти настройки специфического проекта переопределяют параметры по умолчанию выше."
           add: "Добавить настройку для проекта"
           already_selected: "Этот проект уже выбран"
           remove: "Удалить настройки проекта"
-    password_confirmation:
-      field_description: "Чтобы подтвердить изменения, введите пароль учетной записи."
-      title: "Для продолжения введите свой пароль"
     pagination:
       no_other_page: "Вы находитесь на единственной странице."
       pages_skipped: "Страницы пропущены."
@@ -672,7 +664,7 @@ ru:
           explanation: "Вы будете получать эти напоминания только для непрочитанных уведомлений и только в указанные вами часы. %{no_time_zone}"
           no_time_zone: "До уточнения часового пояса для вашего аккаунта время будет в UTC."
           time_label: "Время %{counter}:"
-          title: "Посылать мне ежедневные напоминания с непрочитанными уведомлениями по электронной почте"
+          title: "Посылать мне ежедневные напоминания по электронной почте для непрочитанных уведомлений"
         workdays:
           title: "Получать напоминания по электронной почте в эти дни"
         immediate:
@@ -707,7 +699,7 @@ ru:
         error_no_table_configured: "Пожалуйста, настройте таблицу для %{group}."
         reset_title: "Сбросить настройки формы"
         confirm_reset: >
-          Предупреждение: хотите сбросить форму? Это сбросит атрибуты к первоначальным значениям группы и запретит правку пользовательских полей.
+          Предупреждение: хотите сбросить форму? Это сбросит атрибуты к первоначальным значениям группы и запретит правку настраиваемых полей.
         upgrade_to_ee: "Обновление до корпоративной версии"
         upgrade_to_ee_text: "Уууууууууу! Если вам нужен этот дополнение, то вы бы хотели поддержать нас разработчиков OpenSource, став клиентом корпоративной версии?"
         more_information: "Больше информации"
@@ -735,23 +727,23 @@ ru:
     relation_labels:
       parent: "Родитель"
       child: "Дочерний пакет работ"
-      children: "Дочерние пакеты работ"
-      relates: "Связан с"
-      duplicates: "Дублирует"
+      children: "Дочерние элементы"
+      relates: "Связанно с"
+      duplicates: "Дубликаты"
       duplicated: "Дублируется"
       blocks: "Блокирует"
-      blocked: "Блокируется"
+      blocked: "Заблокировано"
       precedes: "Предшествует"
       follows: "Следует"
-      includes: "Включает в себя"
-      partof: "Является частью"
-      requires: "Требует выполнения"
-      required: "Требуется для выполнения"
+      includes: "Включения"
+      partof: "Часть"
+      requires: "Требуется"
+      required: "Требуется для"
       relation_type: "тип связи"
     relations_hierarchy:
       parent_headline: "Родитель"
       hierarchy_headline: "Иерархия"
-      children_headline: "Дочерние пакеты работ"
+      children_headline: "Дочерние элементы"
     relation_buttons:
       set_parent: "Установить родителя"
       change_parent: "Изменить родителя"
@@ -761,12 +753,12 @@ ru:
       group_by_wp_type: "Группировать по типу пакета работ"
       group_by_relation_type: "Группировать по типу связи"
       add_parent: "Добавить существующего родителя"
-      add_new_child: "Создать новый дочерний пакет работ"
+      add_new_child: "Создать новый дочерний элемент"
       create_new: "Создать новый"
       add_existing: "Добавить существующий"
       add_existing_child: "Добавить дочерний элемент"
       remove_child: "Удалить дочерний элемент"
-      add_new_relation: "Создать новую связь"
+      add_new_relation: "Создать новое отношение"
       add_existing_relation: "Добавить существующее отношение"
       update_description: "Установить или обновить описание этого отношения"
       toggle_description: "Переключить описание отношения"
@@ -831,7 +823,7 @@ ru:
       bulk_actions:
         edit: "Массовое изменение"
         delete: "Массовое удаление"
-        duplicate: "Групповое дублирование"
+        duplicate: "Массовое дублирование"
         move: "Массовое изменение проекта"
       button_clear: "Очистить"
       comment_added: "Комментарий успешно добавлен."
@@ -871,10 +863,10 @@ ru:
       inline_create:
         title: "Кликните здесь, чтобы добавить новый пакет работ в этот список"
       create:
-        title: "Новый пакет работ"
+        title: "Новый комплекс работ"
         header: "Новый %{type}"
         header_no_type: "Новый пакет работ (Тип еще не установлен)"
-        header_with_parent: "Новый %{type} (дочерний пакет работ %{parent_type} № %{id})"
+        header_with_parent: "Новый %{type} (дочерний элемент %{parent_type} № %{id})"
         button: "Создать"
       duplicate:
         title: "Дублировать пакет работ"
@@ -883,8 +875,8 @@ ru:
         hide: "Скрыть режим иерархии"
         toggle_button: "Кликните для перехода в иерархический режим."
         leaf: "Лист пакета работ уровня %{level}."
-        children_collapsed: "Уровень иерархии %{level}, свернут. Кликните, чтобы показать отфильтрованные дочерние пакеты работ"
-        children_expanded: "Уровень иерархии %{level}, развернут. Кликните, чтобы свернуть отфильтрованные дочерние пакеты работ"
+        children_collapsed: "Уровень иерархии %{level}, свернут. Кликните, чтобы показать отфильтрованные дочерние элементы"
+        children_expanded: "Уровень иерархии %{level}, развернут. Кликните, чтобы свернуть отфильтрованные дочерние элементы"
       faulty_query:
         title: Не удалось загрузить рабочие пакеты.
         description: Ваше представление ошибочно и не может быть обработано.
@@ -908,7 +900,7 @@ ru:
         dueDate: "Дата окончания"
         duration: "Продолжительность"
         spentTime: "Затраченное время"
-        category: "Категории документов"
+        category: "Категория"
         percentageDone: "Сделано в процентах"
         priority: "Приоритет"
         projectName: "Проект"
@@ -931,7 +923,7 @@ ru:
         manually_sorted: "Новый запрос с ручной сортировкой"
         latest_activity: "Последние действия"
         created_by_me: "Создано мной"
-        assigned_to_me: "Назначены мне"
+        assigned_to_me: "Я исполнитель"
         recently_created: "Недавно созданное"
         all_open: "Все открытые"
         overdue: "Просрочено"
@@ -984,7 +976,7 @@ ru:
           month: "Через месяц"
           custom: "На определенную дату/время"
       scheduling:
-        is_parent: "Даты этого пакета работ выводятся автоматически из дочерних пакетов работ. Используйте «Ручной планировщик», чтобы установить даты."
+        is_parent: "Даты этого пакета работ выводятся автоматически из дочерних узлов. Используйте «Ручной планировщик», чтобы установить даты."
         is_switched_from_manual_to_automatic: "Даты этого пакета работ могут быть пересчитаны после переключения с ручного на автоматическое планирование из-за связей с другими пакетами работ."
       sharing:
         title: "Поделиться пакетом работ"
@@ -1021,8 +1013,8 @@ ru:
           description: "Выберите режим упорядочивания пакетов работ:"
           automatic: "Автоматическое"
           manually: "Ручное"
-          warning: "При активации режима автоматического упорядования вы потеряете свою предыдущую сортировку."
-        columns_help_text: "С помощью поля ввода выше можно добавлять столбцы в табличное представление. Для изменения порядка столбцов перетащите их мышью."
+          warning: "При активации режима автоматической сортировки вы потеряете свою предыдущую сортировку."
+        columns_help_text: "Используйте поле ввода выше, чтобы добавить столбцы в вид таблицы. Вы можете перетаскивать колонки для их сортировки."
         relation_filters:
           filter_work_packages_by_relation_type: "Фильтр пакета работ по типу отношения"
       tabs:
@@ -1033,7 +1025,7 @@ ru:
         files: Файлы
       time_relative:
         days: "дней"
-        weeks: "недели"
+        weeks: "недель"
         months: "месяцев"
     toolbar:
       settings:
@@ -1050,7 +1042,7 @@ ru:
         export: "Экспорт"
         visibility_settings: "Параметры видимости"
         share_calendar: "Подписаться на календарь"
-        page_settings: "Переименовать представление"
+        page_settings: "Переименовать представления"
         delete: "Удалить"
       filter: "Фильтр"
       unselected_title: "Пакет работ"
@@ -1081,8 +1073,8 @@ ru:
     notice_successful_delete: "Удаление завершено."
     notice_successful_update: "Обновление завершено"
     notice_job_started: "задание начато."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "Идентификатор задания не был получен с сервера."
+    invalid_job_response: "Недопустимый ответ сервера."
     notice_bad_request: "Неверный запрос."
     relations:
       empty: Отношений не существует
@@ -1119,6 +1111,7 @@ ru:
         few: "пакетов работ с %{count} дочерними"
         many: "пакет работ с %{count} дочерними"
         other: "пакет работ с %{count} дочерними"
+      hour_string: "%{hours} ч"
       hour:
         one: "1 ч"
         other: "%{count} ч"
@@ -1133,14 +1126,17 @@ ru:
         many: "%{count} слов"
         other: "%{count} слов"
     zen_mode:
-      button_activate: "Включить полноэкранный режим"
-      button_deactivate: "Отключить полноэкранный режим"
+      button_activate: "Включить дзен-режим"
+      button_deactivate: "Отключить дзен-режим"
     global_search:
       all_projects: "Во всех проектах"
       close_search: "Закрыть поиск"
+      items_available: "%{count} доступных элементов"
+      direct_hit_available: "Пакет работ с точным идентификатором найден. Нажмите Enter для его открытия."
       current_project_and_all_descendants: "В этом проекте + подпроектах"
       current_project: "В этом проекте"
       recently_viewed: "Недавно просмотренные"
+      search_placeholder_expanded: "Поиск пакетов работ по темам, проекту, типу, статусу или идентификатору"
       title:
         all_projects: "все проекты"
         project_and_subprojects: "и все подпроекты"
@@ -1150,71 +1146,8 @@ ru:
       list: "Таблица"
       timeline: "Гант"
     invite_user_modal:
-      back: "Назад"
       invite: "Пригласить"
-      title:
-        invite: "Пригласить пользователя"
-        invite_to_project: "Пригласить %{type} в %{project}"
-        User: "пользователь"
-        Group: "группа"
-        PlaceholderUser: "пользователь плейсхолдера"
-        invite_principal_to_project: "Пригласить %{principal} в %{project}"
-      project:
-        label: "Проект"
-        required: "Пожалуйста, выберите проект"
-        lacking_permission: "Пожалуйста, выберите другой проект, так у вас нет прав для назначения пользователей к выбранному в данный момент проекту."
-        lacking_permission_info: "У вас недостаточно прав для назначения пользователей в текущий проект. Вам нужно выбрать другой проект."
-        next_button: "Следующие"
-        no_results: "Проекты не найдены"
-        no_invite_rights: "Вы не можете пригласить участников в этот проект"
-      type:
-        required: "Пожалуйста, выберите тип для приглашения"
-        user:
-          title: "Пользователь"
-          description: "Права доступа, основанные роли исполнителя в выбранном проекте"
-        group:
-          title: "Группа"
-          description: "Права доступа, основанные роли исполнителя в выбранном проекте"
-        placeholder:
-          title: "Пользователь-заполнитель"
-          title_no_ee: "Пользователь-заполнитель (только для корпоративной версии)"
-          description: "Нет доступа к проекту и письма не отправляются."
-          description_no_ee: 'Нет доступа к проекту и письма не отправляются. <br>Попробуйте <a href="%{eeHref}" target="_blank">корпоративную версию</a>'
-      principal:
-        label:
-          name_or_email: "Имя или email адрес"
-          name: "Имя"
-        already_member_message: "Уже член %{project}"
-        no_results_user: "Пользователи не найдены."
-        invite_user: "Приглашение:"
-        no_results_placeholder: "Заполнители не найдены"
-        create_new_placeholder: "Создать новый плейсхолдер:"
-        no_results_group: "Группы не найдены"
-        next_button: "Следующие"
-        required:
-          user: "Пожалуйста, выберите пользователя"
-          placeholder: "Пожалуйста, выберите заполнитель"
-          group: "Пожалуйста, выберите группу"
-      role:
-        label: "Роль в %{project}"
-        no_roles_found: "Роли не найдены"
-        description: >-
-          Это роль, которую пользователь получит при присоединении к вашему проекту. Роль определяет, какие действия им разрешено принимать и какую информацию они могут видеть. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Узнайте больше о ролях и разрешениях. </a>
-        required: "Пожалуйста, выберите роль"
-        next_button: "Следующие"
-      message:
-        label: "Сообщение о приглашении"
-        description: "Мы отправим пользователю электронное письмо, к которому вы можете что-нибудь добавить. Приглашение облегчит им начало работы, если у них будет немного информации о проекте."
-        next_button: "Следующие"
-      summary:
-        next_button: "Отправить приглашение"
-      success:
-        title: "%{principal} был приглашен!"
-        description:
-          user: "Теперь пользователь может войти в систему и получить доступ к %{project}. Тем временем вы уже можете планировать работу с этим пользователем и назначать пакеты работ."
-          placeholder: "Теперь плейсхолдер может быть использован в %{project}. Тем временем вы уже можете планировать с этим пользователем и назначать рабочие пакеты."
-          group: "Теперь группа является частью %{project}. Тем временем вы уже можете спланировать работу с этой группой и назначить пакеты работ."
-        next_button: "Продолжить"
+      placeholder_add_tag: "Создать пользователя-заполнителя"
     exclusion_info:
       modal:
         title: "Статус исключён из иерархии итогов"
@@ -1231,15 +1164,20 @@ ru:
       selected_filter:
         all: "Все проекты"
         selected: "Только выбранные"
-      search_placeholder: "Поиск проекта..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Поиск проектов..."
+      search_placeholder_favorites: "Поиск в избранном..."
       include_subprojects: "Включить все подпроекты"
       tooltip:
         include_all_selected: "Проект уже включен, поскольку разрешено включение всех подпроектов."
         current_project: "Это текущий проект, в котором вы находитесь."
         does_not_match_search: "Ни один проект не соответствует критериям поиска."
       no_results: "Ни один проект не соответствует критериям поиска."
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Ни один избранный проект не соответствует критериям поиска."
+    include_workspaces:
+      search_placeholder: "Поиск..."
+      types:
+        program: "Программа"
+        portfolio: "Портфолио"
     baseline:
       toggle_title: "Базовый уровень"
       clear: "Очистить"

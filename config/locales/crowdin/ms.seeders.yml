@@ -43,13 +43,6 @@ ms:
           name: PM2 Magenta
         item_3:
           name: PM2 Hijau Kuning
-      document_categories:
-        item_0:
-          name: Dokumentasi
-        item_1:
-          name: Spesifikasi
-        item_2:
-          name: Lain-lain
       project_query_roles:
         item_0:
           name: Pemerhati pertanyaan projek
@@ -165,7 +158,7 @@ ms:
                     Sila beritahu kami jika anda mempunyai sebarang soalan atau memerlukan bantuan. Hubungi kami: [support[at]openproject.com](mel ke:support@openproject.com).
               item_5:
                 options:
-                  name: Pakej kerja
+                  name: Pakej pekerjaan
               item_6:
                 options:
                   name: Pencapaian
@@ -337,7 +330,7 @@ ms:
                     Sila beritahu kami jika anda mempunyai sebarang soalan atau memerlukan bantuan. Hubungi kami: [support[at]openproject.com](mel ke:support@openproject.com).
               item_5:
                 options:
-                  name: Pakej kerja
+                  name: Pakej pekerjaan
               item_6:
                 options:
                   name: Pelan projek

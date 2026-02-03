@@ -120,6 +120,87 @@ RSpec.describe MyController do
         assert User.try_to_login(user.login, "adminADMIN!New")
       end
     end
+
+    describe "with brute force protection",
+             with_settings: { brute_force_block_minutes: 30, brute_force_block_after_failed_logins: 20 } do
+      describe "blocks password change attempts after too many failures" do
+        before do
+          user.update_columns(
+            failed_login_count: 20,
+            last_failed_login_on: 1.minute.ago
+          )
+
+          post :change_password,
+               params: {
+                 password: "adminADMIN!",
+                 new_password: "adminADMIN!New",
+                 new_password_confirmation: "adminADMIN!New"
+               }
+        end
+
+        it "blocks the attempt even with correct password" do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it "does not change the password" do
+          user.reload
+          expect(user.check_password?("adminADMIN!")).to be true
+          expect(user.check_password?("adminADMIN!New")).to be false
+        end
+      end
+
+      describe "logs failed password attempts" do
+        before do
+          user.update_columns(
+            failed_login_count: 0,
+            last_failed_login_on: nil
+          )
+
+          post :change_password,
+               params: {
+                 password: "WrongPassword!",
+                 new_password: "adminADMIN!New",
+                 new_password_confirmation: "adminADMIN!New"
+               }
+        end
+
+        it "increments failed login count" do
+          user.reload
+          expect(user.failed_login_count).to eq(1)
+        end
+
+        it "updates last failed login timestamp" do
+          user.reload
+          expect(user.last_failed_login_on).to be_within(1.second).of(Time.zone.now)
+        end
+      end
+
+      describe "resets failed login count on successful password change" do
+        before do
+          user.update_columns(
+            failed_login_count: 5,
+            last_failed_login_on: 1.minute.ago
+          )
+
+          post :change_password,
+               params: {
+                 password: "adminADMIN!",
+                 new_password: "adminADMIN!New",
+                 new_password_confirmation: "adminADMIN!New"
+               }
+        end
+
+        it "resets the failed login count to zero" do
+          user.reload
+          expect(user.failed_login_count).to eq(0)
+        end
+
+        it "changes the password successfully" do
+          user.reload
+          expect(user.check_password?("adminADMIN!New")).to be true
+        end
+      end
+    end
   end
 
   describe "account" do
@@ -153,6 +234,17 @@ RSpec.describe MyController do
       it "renders the 'Change password' menu entry" do
         expect(response.body).to have_css("#menu-sidebar li a", text: "Change password")
       end
+    end
+  end
+
+  describe "locale" do
+    it "renders the locale template" do
+      as_logged_in_user user do
+        get :locale
+      end
+
+      expect(response).to be_successful
+      expect(response).to render_template "locale"
     end
   end
 

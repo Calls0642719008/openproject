@@ -1,0 +1,90 @@
+<%= widget_wrapper do %>
+  <ul class="widget-box--arrow-links">
+    <li>
+      <%= static_link_to :user_guides %>
+    </li>
+    <li>
+      <%= static_link_to :shortcuts %>
+    </li>
+    <li>
+      <%= static_link_to :forums %></li>
+    <li>
+      <%= static_link_to(EnterpriseToken.active? ? :enterprise_support : :enterprise_support_as_community) %>
+    </li>
+    <li>
+      <%= link_to(
+            t("label_openproject_website"),
+            OpenProject::Static::Links.url_for(
+              :website,
+              url_params: {
+                utm_source: "unknown",
+                utm_medium: "op-instance",
+                utm_campaign: "website-home-screen"
+              }
+            ),
+            {
+              aria: { label: t("label_openproject_website") },
+              target: "_blank",
+              title: t("label_openproject_website"),
+              rel: "noopener"
+            }
+          ) %>
+    </li>
+    <li>
+      <%= link_to(
+            t("homescreen.links.security_alerts"),
+            OpenProject::Static::Links.url_for(
+              :security_alerts,
+              url_params: {
+                utm_source: "unknown",
+                utm_medium: "op-instance",
+                utm_campaign: "security-alerts-home-screen"
+              }
+            ),
+            {
+              aria: { label: t("homescreen.links.security_alerts") },
+              target: "_blank",
+              title: t("homescreen.links.security_alerts"),
+              rel: "noopener"
+            }
+          ) %>
+    </li>
+    <li>
+      <%= link_to(
+            t("homescreen.links.newsletter"),
+            OpenProject::Static::Links.url_for(
+              :newsletter,
+              url_params: {
+                utm_source: "unknown",
+                utm_medium: "op-instance",
+                utm_campaign: "newsletter-home-screen"
+              }
+            ),
+            {
+              aria: { label: t("homescreen.links.newsletter") },
+              target: "_blank",
+              title: t("homescreen.links.newsletter"),
+              rel: "noopener"
+            }
+          ) %>
+    </li>
+    <li>
+      <%= static_link_to :blog %>
+    </li>
+    <li>
+      <%= static_link_to :release_notes %>
+    </li>
+    <li>
+      <%= static_link_to :report_bug %>
+    </li>
+    <li>
+      <%= static_link_to :roadmap %>
+    </li>
+    <li>
+      <%= static_link_to :crowdin %>
+    </li>
+    <li>
+      <%= static_link_to :api_docs %>
+    </li>
+  </ul>
+<% end %>

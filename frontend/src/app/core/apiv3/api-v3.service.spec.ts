@@ -80,6 +80,7 @@ describe('APIv3Service', () => {
         offset: '1',
         pageSize: '10',
       };
+
       expect(
         service.work_packages.filterByTypeaheadOrId('1234', true).path,
       ).toEqual(`/api/v3/work_packages?${encodeParams(params)}`);

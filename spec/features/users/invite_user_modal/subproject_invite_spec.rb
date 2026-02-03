@@ -38,7 +38,7 @@ RSpec.describe "Invite user modal subprojects", :js do
   shared_let(:invitable_user) { create(:user, firstname: "Invitable", lastname: "User") }
 
   let(:permissions) { %i[view_work_packages edit_work_packages manage_members work_package_assigned] }
-  let(:global_permissions) { %i[] }
+  let(:global_permissions) { %i[view_all_principals] }
   let(:modal) do
     Components::Users::InviteUserModal.new project: subproject,
                                            principal: invitable_user,

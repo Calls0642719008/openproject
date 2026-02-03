@@ -2,7 +2,7 @@
   class="spot-modal spot-modal_autoheight loading-indicator--location"
   (submit)="applyAndClose($event)"
   data-indicator-name="modal"
->
+  >
   <div id="spotModalTitle" class="spot-modal--header">{{text.title}}</div>
 
   <div class="spot-divider"></div>
@@ -26,12 +26,14 @@
               (change)="selectedType = $event.target.value"
               class="form--select">
               <option [textContent]="text.none"
-                      [selected]="!selectedType"
-                      [value]=""></option>
-              <option *ngFor="let type of availableTypes"
-                      [textContent]="type.name"
-                      [selected]="selectedType === type.name"
-                      [value]="type.name"></option>
+                [selected]="!selectedType"
+              [value]=""></option>
+              @for (type of availableTypes; track type) {
+                <option
+                  [textContent]="type.name"
+                  [selected]="selectedType === type.name"
+                [value]="type.name"></option>
+              }
             </select>
           </div>
         </div>
@@ -49,7 +51,7 @@
               (change)="buttonStyle = $event.target.checked"
               [checked]="buttonStyle"
               name="button_style"
-            />
+              />
           </div>
           {{ text.button_style }}
         </label>

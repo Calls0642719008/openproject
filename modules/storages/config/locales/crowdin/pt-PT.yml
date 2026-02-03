@@ -22,16 +22,17 @@ pt-PT:
         storage: Armazenamento
         storage_url: URL do armazenamento
       storages/sharepoint_storage:
-        host: Sharepoint Site URL
-        library: Library ID
-        name: Name
-        site: Site ID
+        host: URL do site SharePoint
+        library: ID da biblioteca
+        name: Nome
+        site: ID do site
       storages/storage:
         authentication_method: Método de autenticação
         creator: Criador
         drive: ID da unidade
         host: Hospedeiro
         name: Nome
+        password: Palavra-passe da aplicação
         provider_type: Tipo de fornecedor
         tenant: ID do Diretório (inquilino)
     errors:
@@ -62,7 +63,7 @@ pt-PT:
               op_application_not_installed: parece não ter a app "OpenProject integration" instalada. Instale-a primeiro e tente novamente.
             password:
               invalid_password: não é válido.
-              unknown_error: não foi possível validar. Verifique a sua ligação de armazenamento e tente novamente.
+              unknown_error: não foi possível validar com o fornecedor de armazenamento de ficheiros. Verifique se a ligação está a funcionar corretamente.
     models:
       file_link: Ficheiro
       storages/storage: Armazenamento
@@ -95,12 +96,6 @@ pt-PT:
       manual: Pasta existente gerida manualmente
     remove_project:
       deletion_failure_flash: Erro ao remover o projeto do armazenamento. %{error}
-      dialog:
-        automatically_managed_appendix: Além disso, no caso de este armazenamento ter uma pasta de projeto gerida automaticamente, esta e os seus ficheiros serão eliminados para sempre.
-        confirmation_text: Confirme que compreende e pretende remover este armazenamento de ficheiros deste projeto
-        heading_text: Remover projeto de %{storage}
-        text: Esta ação é irreversível e irá remover todas as ligações dos pacotes de trabalho deste projeto aos ficheiros e pastas desse armazenamento.
-        title: Remover projeto do armazenamento
       label: Remover projeto
   services:
     attributes:
@@ -109,18 +104,25 @@ pt-PT:
         create_folder: 'Criação de pastas de projeto geridas:'
         ensure_root_folder_permissions: 'Definir permissões da pasta base:'
         hide_inactive_folders: 'Passo "Ocultar pastas inativas":'
-        remote_folders: 'Ler conteúdo da pasta de grupo:'
+        remote_folders: 'Read contents of the team folder:'
         remove_user_from_group: 'Remover utilizador do grupo:'
         rename_project_folder: 'Renomear pasta do projeto gerido:'
       one_drive_sync_service:
         create_folder: 'Criação de pastas de projeto geridas:'
         ensure_root_folder_permissions: 'Definir permissões da pasta base:'
         hide_inactive_folders: 'Passo "Ocultar pastas inativas":'
-        remote_folders: 'Ler conteúdo da pasta de grupo:'
+        remote_folders: 'Read contents of the drive root folder:'
+        rename_project_folder: 'Renomear pasta do projeto gerido:'
+      sharepoint_sync_service:
+        create_folder: 'Criação de pastas de projeto geridas:'
+        ensure_root_folder_permissions: 'Definir permissões da pasta base:'
+        hide_inactive_folders: 'Passo "Ocultar pastas inativas":'
+        remote_folders: 'Read contents of the drive root folder:'
         rename_project_folder: 'Renomear pasta do projeto gerido:'
     errors:
       messages:
         error: Ocorreu um erro inesperado. Verifique os registos do OpenProject para obter mais informações ou contacte um administrador
+        forbidden: O OpenProject não conseguiu aceder ao recurso solicitado. Verifique a sua configuração de permissões no fornecedor de armazenamento.
         unauthorized: Não foi possível autenticar o OpenProject com o fornecedor de armazenamento. Certifique-se de que tem acesso ao mesmo.
       models:
         copy_project_folders_service:
@@ -138,7 +140,7 @@ pt-PT:
               conflict: A pasta %{folder_name} já existe em %{parent_location}.
               not_found: "%{parent_location} não foi encontrado."
             ensure_root_folder_permissions:
-              not_found: "%{group_folder} não foi encontrado. Verifique a configuração da pasta de grupo do Nextcloud."
+              not_found: "%{group_folder} wasn't found. Please check your Nextcloud Team Folder setup."
               permission_not_set: não foi possível definir permissões em %{group_folder}.
             hide_inactive_folders:
               permission_not_set: não foi possível definir permissões em %{path}.
@@ -158,6 +160,7 @@ pt-PT:
           group_does_not_exist: "%{group} não existe. Verifique a configuração da sua instância do Nextcloud."
           insufficient_privileges: O OpenProject não tem privilégios suficientes para adicionar %{user} a %{group}. Verifique as definições de grupo no Nextcloud.
           not_allowed: O Nextcloud bloqueia o pedido.
+          not_found: O OpenProject não conseguiu encontrar o ficheiro no Nextcloud Storage Provider. Verifique se o ficheiro não foi eliminado.
           unauthorized: Não foi possível sincronizar o OpenProject com o Nextcloud. Verifique o seu armazenamento e a configuração do Nextcloud.
           user_does_not_exist: "%{user} não existe no Nextcloud."
         one_drive_sync_service:
@@ -170,6 +173,23 @@ pt-PT:
             remote_folders:
               request_error: O OpenProject não conseguiu aceder à sua unidade %{drive_id}. Verifique se a sua configuração de armazenamento está correta.
             rename_project_folder:
+              conflict: O OpenProject não conseguiu mudar o nome da pasta %{current_path} para %{project_folder_name} porque já existe uma pasta com o mesmo nome.
+              forbidden: "O OpenProject não tem acesso a %{current_path} para poder renomeá-lo.\n"
+              not_found: "%{current_path} não foi encontrado."
+            set_folders_permissions:
+              permission_not_set: não foi possível definir permissões em %{path}.
+          error: Ocorreu um erro inesperado. Confirme se o seu OneDrive está acessível e verifique os registos de trabalho do OpenProject para mais informações.
+          not_allowed: O OpenProject não tinha permissão para aceder à sua unidade do OneDrive. Verifique as permissões definidas na aplicação do Azure.
+          unauthorized: Não foi possível sincronizar o OpenProject com o OneDrive. Verifique o seu armazenamento e a configuração da aplicação do Azure.
+          user_does_not_exist: "%{user} não existe no Nextcloud."
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: A pasta %{folder_name} já existe em %{parent_location}.
+              not_found: "%{parent_location} não foi encontrado."
+            hide_inactive_folders:
+              permission_not_set: não foi possível definir permissões em %{path}.
+            rename_project_folder:
               conflict: O OpenProject não conseguiu renomear a pasta %{current_path} para %{project_folder_name} porque já existe uma pasta com o mesmo nome
               forbidden: "O OpenProject não tem acesso a %{current_path} para poder renomeá-lo.\n"
               not_found: "%{current_path} não foi encontrado."
@@ -177,14 +197,13 @@ pt-PT:
               permission_not_set: não foi possível definir permissões em %{path}.
           error: Ocorreu um erro inesperado. Confirme se o seu OneDrive está acessível e verifique os registos de trabalho do OpenProject para mais informações
           not_allowed: O OpenProject não tinha permissão para aceder à sua unidade do OneDrive. Verifique as permissões definidas na aplicação do Azure.
+          not_found: O OpenProject não conseguiu aceder à sua biblioteca %{drive_name}. Verifique as bibliotecas de documentos do seu site Sharepoint.
           unauthorized: Não foi possível sincronizar o OpenProject com o OneDrive. Verifique o seu armazenamento e a configuração da aplicação do Azure.
           user_does_not_exist: "%{user} não existe no Nextcloud."
         upload_link_service:
           not_found: Não foi possível encontrar a pasta de destino %{folder} em %{storage_name}.
   storages:
     buttons:
-      complete_without_setup: Concluir sem isso
-      done_complete_setup: Concluído, terminar configuração
       done_continue: Concluído, continuar
       open_storage: Abrir armazenamentos de ficheiros
       replace_oauth_application: Substituir OpenProject OAuth
@@ -195,25 +214,23 @@ pt-PT:
       oauth_client_incomplete:
         nextcloud: Permitir que o OpenProject aceda os dados da Nextcloud através do OAuth.
         one_drive: Permitir que o OpenProject aceda aos dados do Azure com o OAuth para ligar OneDrive.
-        sharepoint: Allow OpenProject to access SharePoint data using OAuth.
+        sharepoint: Permitir que o OpenProject aceda aos dados do SharePoint com o OAuth.
       redirect_uri_incomplete:
         one_drive: Conclua a configuração com o redirecionamento correto da URI.
-        sharepoint: Complete the setup with the correct URI redirection.
+        sharepoint: Conclua a configuração com o redirecionamento correto da URI.
     confirm_replace_oauth_application: Esta ação irá repor as credenciais OAuth atuais. Após a confirmação, terá de voltar a introduzir as credenciais no fornecedor de armazenamento e todos os utilizadores remotos terão de autorizar novamente o OpenProject. Tem a certeza de que pretende continuar?
     confirm_replace_oauth_client: Esta ação irá repor as credenciais OAuth atuais. Depois de confirmar, terá de introduzir novas credenciais do fornecedor de armazenamento e todos os utilizadores terão de autorizar novamente em %{provider_type}. Tem a certeza de que pretende continuar?
     delete_warning:
-      input_delete_confirmation: Introduza o nome do ficheiro de armazenamento %{file_storage} para confirmar a eliminação.
-      irreversible_notice: A eliminação de um ficheiro de armazenamento é uma ação irreversível.
-      project_storage: 'Tem a certeza de que pretende eliminar %{file_storage} deste projeto? Para confirmar esta ação, introduza o nome do armazenamento no campo abaixo, isto irá:'
-      project_storage_delete_result_1: Remover todos os links de pacotes de trabalho deste projeto para ficheiros e pastas desse armazenamento.
-      project_storage_delete_result_2: No caso de este armazenamento ter uma pasta de projeto gerida automaticamente, esta e os seus ficheiros serão eliminados para sempre.
-      storage: 'Tem a certeza de que pretende eliminar %{file_storage}? Para confirmar esta ação, introduza o nome do armazenamento no campo abaixo, isto irá:'
-      storage_delete_result_1: Remover todas as configurações de armazenamento para todos os projetos que utilizam este armazenamento.
-      storage_delete_result_2: Remover todos os links de pacotes de trabalho de todos os projetos para ficheiros e pastas desse armazenamento.
-      storage_delete_result_3: No caso de este armazenamento ter pastas de projeto geridas automaticamente, estas e os seus ficheiros serão eliminados para sempre.
+      project_storage: Tem a certeza de que quer remover %{file_storage} deste projeto?
+      project_storage_delete_result_1: Todas as ligações para ficheiros e pastas correspondentes serão removidas
+      project_storage_delete_result_2: A pasta do projeto gerida automaticamente e todos os ficheiros nela contidos serão eliminados
+      storage: Tem a certeza de que quer eliminar %{file_storage} como armazenamento de ficheiros externo?
+      storage_delete_result_1: O armazenamento será removido de todos os projetos que o utilizam atualmente
+      storage_delete_result_2: Todas as ligações para ficheiros e pastas correspondentes serão removidas
+      storage_delete_result_3: A pasta do projeto gerida automaticamente e todos os ficheiros nela contidos serão eliminados
     dependencies:
       nextcloud:
-        group_folders_app: Pastas de grupo
+        group_folders_app: Team Folders
         integration_app: Integração do OpenProject
     enabled_in_projects:
       setup_incomplete_description: Este armazenamento tem uma configuração incompleta. Conclua a configuração antes de o ativar em vários projetos.
@@ -221,25 +238,32 @@ pt-PT:
     error_invalid_provider_type: Selecione um fornecedor de armazenamento válido.
     file_storage_view:
       access_management:
-        automatic_management: Acesso e pastas geridas automaticamente
-        automatic_management_description: Deixe o OpenProject criar pastas por projeto automaticamente e gerir o acesso dos utilizadores. Isto é recomendado porque garante que cada membro da equipa tem sempre as permissões de acesso corretas.
-        description: Selecione o tipo de gestão do acesso dos utilizadores e da criação de pastas. Recomendamos que utilize o acesso gerido automaticamente para ter uma estrutura mais organizada e garantir o acesso a todos os utilizadores relevantes.
-        manual_management: Acesso e pastas geridas manualmente
-        manual_management_description: Crie e gira manualmente as pastas por projeto por conta própria. Terá de garantir manualmente que os utilizadores relevantes têm acesso.
+        automatic_management: Ativar acessos e pastas geridos automaticamente
+        automatic_management_description: Cada projeto poderá decidir, ao adicionar um armazenamento, se pretende adotar a gestão automática ou a gestão manual de pastas e acessos.
+        description: O OpenProject pode criar e gerir automaticamente pastas de projeto quando um armazenamento de ficheiros é adicionado. Isto permite uma estrutura de pastas mais organizada e uma gestão de acessos simplificada, garantindo que todos os utilizadores relevantes têm acesso.
+        manual_management: Permitir apenas acesso e pastas geridas manualmente
+        manual_management_description: Os projetos que utilizem este armazenamento não terão a opção de gestão automática. As pastas e os acessos deverão ser geridos manualmente.
         setup_incomplete: Selecione o tipo de gestão do acesso dos utilizadores e da criação de pastas.
-        subtitle: Gestão de acesso
+        subtitle: Gestão de pastas e acessos
       access_management_section: Pastas de acesso e de projeto
       automatically_managed_folders: Pastas geridas automaticamente
       general_information: Informação geral
       oauth_configuration: Configuração OAuth
+      one_drive:
+        access_management:
+          automatic_management: Ativar acessos e pastas geridos automaticamente
+          automatic_management_description: Cada projeto que utilize este armazenamento de ficheiros deverá obrigatoriamente recorrer à gestão automática de pastas e acessos, não sendo possível a gestão manual.
+          manual_management: Permitir apenas acesso e pastas geridas manualmente
+          manual_management_description: Os projetos que utilizem este armazenamento não terão a opção de gestão automática. As pastas e os acessos deverão ser geridos manualmente.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OAuth do OpenProject
       project_folders: Pastas do projeto
       redirect_uri: Redirecionar URI
+      sharepoint_oauth: Azure OAuth
       storage_audience_blank: Não foi configurado nenhum público.
       storage_audience_description: Intercâmbio de tokens para audiência "%{audience}".
       storage_audience_idp: Utilizar o token de acesso obtido pelo fornecedor de identidade durante o início de sessão, independentemente da audiência.
-      storage_oauth: Nextcloud OAuth
+      storage_oauth: Armazenamento OAuth
       storage_provider: Fornecedor de armazenamento
       token_exchange: Intercâmbio de Tokens
     health:
@@ -252,12 +276,12 @@ pt-PT:
         ampf_configuration:
           client_folder_creation: Criação automática de pasta
           client_folder_removal: Eliminação automática de pasta
-          drive_contents: A unidade tem conteúdo esperado
-          files_request: A obter ficheiros da pasta de grupo
-          group_folder_app: 'Dependência: Pastas de Grupo'
-          group_folder_contents: A pasta de grupo tem conteúdo esperado
-          group_folder_presence: A pasta de grupo existe
+          drive_contents: Conteúdo da unidade
+          files_request: Fetching team folder files
           header: Pastas do projeto geridas automaticamente
+          team_folder_app: 'Dependency: Team Folders'
+          team_folder_contents: Team folder content
+          team_folder_presence: Team folder exists
           userless_access: Autenticação da solicitação do lado do servidor
         authentication:
           existing_token: Ficha do utilizador
@@ -278,6 +302,7 @@ pt-PT:
           drive_id_exists: A unidade existe
           drive_id_format: Formato da ID da unidade
           header: Configuração
+          host: URL do anfitrião
           host_url_accessible: URL do anfitrião acessível
           storage_configured: Configuração concluída
           tenant_id: ID do Inquilino
@@ -293,12 +318,12 @@ pt-PT:
         client_secret_invalid: O segredo do cliente OAuth 2 configurado é inválido. Verifique a configuração.
         nc_dependency_missing: 'Está em falta uma dependência necessária no armazenamento de ficheiros. Adicione a seguinte dependência: %{dependency}.'
         nc_dependency_version_mismatch: A versão da aplicação %{dependency} não é suportada. Atualize o seu servidor do Nextcloud.
-        nc_group_folder_not_found: Não foi possível encontrar a pasta do grupo.
         nc_host_not_found: Não foi encontrado nenhum servidor do Nextcloud no URL do anfitrião configurado. Verifique a configuração.
         nc_oauth_request_not_found: O terminal para o utilizador com sessão iniciada não foi encontrado. Consulte os registos do servidor para mais informações.
         nc_oauth_request_unauthorized: O utilizador atual não está autorizado a aceder ao armazenamento de ficheiros remoto. Verifique os registos do servidor para mais informações.
         nc_oauth_token_missing: O OpenProject não pode testar a comunicação de nível de utilizador com o Nextcloud uma vez que o utilizador ainda não associou a sua conta Nextcloud.
-        nc_unexpected_content: Conteúdo inesperado encontrado na pasta do grupo gerido.
+        nc_team_folder_not_found: The team folder could not be found.
+        nc_unexpected_content: Unexpected content found in the managed team folder.
         nc_userless_access_denied: A palavra-passe da aplicação configurada é inválida.
         not_configured: Não foi possível validar a ligação.Termine, primeiro, a configuração.
         od_client_cant_delete_folder: O cliente está a ter problemas a eliminar pastas. Consulte a documentação de configuração para o seu armazenamento.
@@ -319,15 +344,16 @@ pt-PT:
         oidc_token_acquisition_failed: A sua configuração do OpenID Connect não fornece a audiência necessária, nem fornece capacidades de intercâmbio de tokens. Consulte a nossa documentação para mais informações.
         oidc_token_exchange_failed: Parece haver um problema com a configuração do Token Exchange no seu fornecedor OpenID Connect. Verifique a sua configuração e tente novamente.
         oidc_token_refresh_failed: Ocorreu um erro ao tentar verificar o seu acesso ao armazenamento. Consulte os registos do servidor para mais informações.
-        sp_client_cant_delete_folder: The client is having trouble deleting folders in SharePoint. Please check the setup documentation for your storage.
-        sp_client_id_missing: The configured OAuth 2 client id is missing for SharePoint. Please check the configuration.
-        sp_client_secret_missing: The configured OAuth 2 client secret is missing for SharePoint. Please check the configuration.
-        sp_client_write_permission_missing: The client seems to have write permissions missing in SharePoint. Please check the setup documentation for your storage.
-        sp_existing_test_folder: The folder %{folder_name} needed for testing already exists in SharePoint. Please delete it and try again.
-        sp_oauth_request_error: The user-bound request to SharePoint failed. Please check the server logs for further information.
-        sp_oauth_token_missing: OpenProject cannot test the user level communication with SharePoint as the user did not yet link their SharePoint account.
-        sp_tenant_id_missing: The configured directory (tenant) id is missing for SharePoint. Please check the configuration.
-        sp_unexpected_content: Unexpected content found in the SharePoint drive.
+        sp_client_cant_delete_folder: O cliente está a ter problemas a eliminar pastas no SharePoint. Consulte a documentação de configuração para o seu armazenamento.
+        sp_client_id_missing: O ID de cliente OAuth 2 configurado está em falta no SharePoint. Verifique a configuração.
+        sp_client_secret_missing: O segredo de cliente OAuth 2 configurado está em falta no SharePoint. Verifique a configuração.
+        sp_client_write_permission_missing: O cliente parece ter permissões de escrita em falta no SharePoint. Verifique a documentação de configuração do seu armazenamento.
+        sp_existing_test_folder: A pasta %{folder_name} necessária para os testes já existe no SharePoint. Elimine-a e tente novamente.
+        sp_oauth_request_error: O pedido de ligação do utilizador ao SharePoint falhou. Verifique os registos do servidor para mais informações.
+        sp_oauth_request_unauthorized: O utilizador atual não está autorizado a aceder ao armazenamento remoto de ficheiros. Verifique os registos do servidor para mais informações.
+        sp_oauth_token_missing: O OpenProject não consegue testar a comunicação ao nível do utilizador com o SharePoint, visto que o utilizador ainda não associou a sua conta SharePoint.
+        sp_tenant_id_missing: O ID do diretório (inquilino) configurado está em falta no SharePoint. Verifique a configuração.
+        sp_unexpected_content: Conteúdo inesperado encontrado na biblioteca de documentos do SharePoint.
         unknown_error: Não foi possível validar a ligação. Ocorreu um erro desconhecido. Consulte os registos do servidor para obter mais informações.
       label_error: Erro
       label_failed: Não aprovado
@@ -396,10 +422,10 @@ pt-PT:
       setting_up_storages: Para configurar armazenamentos de ficheiros, visite
       setting_up_storages_non_admin: Os administradores podem configurar o armazenamento de ficheiros em Administração / Armazenamento de ficheiros.
       sharepoint:
-        application_link_text: SharePoint site
-        integration: SharePoint Administration / OpenProject
-        oauth_configuration: Copy these values from the desired application in the %{application_link_text}.
-        provider_configuration: Please make sure you have administration privileges in the %{application_link_text} or contact your Microsoft administrator before doing the setup. In the portal, you also need to register an Azure application or use an existing one for authentication.
+        application_link_text: Site do SharePoint
+        integration: Administração de SharePoint / OpenProject
+        oauth_configuration: Copie estes valores da aplicação pretendida no %{application_link_text}.
+        provider_configuration: Confirme se tem privilégios de administração em %{application_link_text} ou contacte o seu administrador da Microsoft antes de fazer a configuração. No portal, também é necessário registar uma aplicação do Azure ou utilizar uma aplicação existente para autenticação.
       type: 'Garanta que tem privilégios administrativos na sua instância de Nextcloud e tenha a seguinte aplicação instalada antes de fazer a configuração:'
       type_link_text: "“Integração OpenProject”"
     label_active: Ativo
@@ -472,7 +498,7 @@ pt-PT:
         title: Estamos a definir as suas permissões na pasta do projeto.
     page_titles:
       file_storages:
-        delete: Eliminar armazenamento de ficheiros
+        delete: Eliminar armazenamento de ficheiros?
         subtitle: Adicione um armazenamento de ficheiros externo para carregar, ligar e gerir ficheiros em pacotes de trabalho.
       managed_project_folders:
         subtitle: |-
@@ -480,13 +506,14 @@ pt-PT:
         subtitle_short: Deixe o OpenProject criar pastas por projeto automaticamente.
         title: Pastas do projeto geridas automaticamente
       project_settings:
-        delete: Eliminar armazenamento de ficheiros
         edit: Edite o armazenamento de ficheiros para este projeto
         members_connection_status: Estado da ligação dos membros
         new: Adicionar um armazenamento de ficheiros a este projeto
       project_storage_members:
         subtitle: Verifique o estado da ligação para o armazenamento %{storage_name_link} de todos os membros do projeto.
         title: Estado da ligação dos membros
+      project_storages:
+        delete: Remover o armazenamento de ficheiros do projeto?
     permission_header_explanation: 'As permissões de ficheiros em armazenamentos externos são aplicadas apenas a pastas e ficheiros dentro de pastas de projetos geridas automaticamente. Tenha em conta que nem todas as permissões de ficheiros são suportadas por todos os fornecedores de armazenamento. Para mais informações, consulte a documentação sobre <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>permissões de armazenamento de ficheiros</a>.'
     provider_types:
       label: Tipo de fornecedor
@@ -501,10 +528,11 @@ pt-PT:
         name: OneDrive
         name_placeholder: p. ex., OneDrive
       sharepoint:
-        label_oauth_client_id: Azure OAuth Application (client) ID
-        label_oauth_client_secret: Azure OAuth Client Secret Value
+        drive_description: Biblioteca de documentos gerida pelo acesso ao OpenProject
+        label_oauth_client_id: ID da aplicação Azure OAuth (cliente)
+        label_oauth_client_secret: Valor Secreto do Cliente Azure OAuth
         name: SharePoint
-        name_placeholder: e.g. SharePoint
+        name_placeholder: 'ex: SharePoint'
     show_attachments_toggle:
       description: Se desativar esta opção, irá ocultar a lista de anexos no separador de ficheiros dos pacotes de trabalho. Os ficheiros anexados na descrição de um pacote de trabalho irão continuar a ser carregados no armazenamento interno de anexos.
       label: Mostrar anexos no separador dos ficheiros dos pacotes de trabalho
@@ -515,12 +543,19 @@ pt-PT:
         label: Utilizar o token de acesso obtido durante o início de sessão do utilizador
       manual:
         helptext: O OpenProject trocará um token com o fornecedor de identidade para a audiência em causa.
-        label: Especificar manualmente a audiência com que fazer intercâmbio do token de acesso
+        label: Especifique manualmente o público com quem partilhar o token de acesso (recomendado)
     storage_list_blank_slate:
       description: Adicione um armazenamento para vê-lo aqui.
       heading: Ainda não tem nenhum armazenamento.
     successful_storage_connection: Armazenamento ligado com sucesso! Lembre-se de ativar o armazenamento no separador Projetos de cada projeto pretendido para o utilizar.
     upsell:
-      description: |-
-        Integre o seu OneDrive como um armazenamento de ficheiros com o OpenProject. Carregue ficheiros e ligue-os diretamente aos pacotes de trabalho de um projeto.
-      title: Integração com o OneDrive
+      one_drive:
+        description: |-
+          Integre a sua unidade OneDrive como armazenamento de ficheiros com o OpenProject. Carregue ficheiros e vincule-os diretamente a
+          pacotes de trabalho num projeto.
+        title: Integração com o OneDrive
+      sharepoint:
+        description: |-
+          Integre o seu site SharePoint como armazenamento de ficheiros com o OpenProject. Carregue ficheiros e ligue-os diretamente a pacotes de trabalho
+          num projeto.
+        title: Integração com SharePoint

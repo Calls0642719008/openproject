@@ -40,6 +40,8 @@ af:
               task_version_must_be_the_same_as_story_version: "moet dieselfde wees as die ouer storie se weergawe"
         sprint:
           cannot_end_before_it_starts: "sprint kan nie uinding voor dit begin het nie"
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Nuwe storie"
     any: "eenige"
@@ -100,7 +102,10 @@ af:
   backlogs_empty_title: "Geen weergawes is gedefinieer vir gebruik in die agterstande nie"
   backlogs_empty_action_text: "Om met agterstande te begin, skep 'n nuwe weergawe en ken dit toe aan 'n agterstandkolom."
   button_edit_wiki: "Wysig wiki-bladsy"
-  error_backlogs_task_cannot_be_story: "Die instellings is ongeldig. Die gekose taaktipe kan nie ook 'n storietipe wees nie."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Die volgende foute was teegekom:"
   error_intro_singular: "Die volgende fout was teegekom:"
   error_outro: "Korrigeer asseblief die bogenoemde foute voordat u weer indien."
@@ -124,6 +129,10 @@ af:
   label_points_burn_up: "Op"
   label_product_backlog: "Produk agterstand"
   label_select_all: "Kies almal"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "sprint agterstand"
   label_sprint_cards: "Voer kaarte uit"
   label_sprint_impediments: "Sprint belemmerings"
@@ -160,3 +169,7 @@ af:
   version_settings_display_option_left: "links"
   version_settings_display_option_none: "geen"
   version_settings_display_option_right: "regs"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

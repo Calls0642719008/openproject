@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 
 <p>
     <% mail_link = "<a href=\"mailto:#{@email}\">#{@email}</a>" %>
@@ -34,14 +34,12 @@ See COPYRIGHT and LICENSE files for more details.
     <%= t("mail_user_activation_limit_reached.message", email: mail_link, host: host_link).html_safe %>
 </p>
 
-<p>
-    <span><%= t("mail_user_activation_limit_reached.steps.label") %></span>
-    <ul>
-        <li>
-            <%= link_translate("mail_user_activation_limit_reached.steps.a", links: { upgrade_url: OpenProject::Enterprise.upgrade_url }) %>
-        </li>
-        <li>
-            <%= link_translate("mail_user_activation_limit_reached.steps.b", links: { users_url: users_url }) %>
-        </li>
-    </ul>
-</p>
+<span><%= t("mail_user_activation_limit_reached.steps.label") %></span>
+<ul>
+    <li>
+        <%= link_translate("mail_user_activation_limit_reached.steps.a", links: { upgrade_url: OpenProject::Enterprise.upgrade_url }) %>
+    </li>
+    <li>
+        <%= link_translate("mail_user_activation_limit_reached.steps.b", links: { users_url: users_url }) %>
+    </li>
+</ul>

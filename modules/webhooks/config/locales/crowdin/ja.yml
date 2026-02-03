@@ -27,15 +27,18 @@ ja:
       no_results_table: Webhookが定義されていません。
       label_add_new: 新しいWebhookを追加
       label_edit: Webhookを編集
-      label_event_resources: イベントリソース
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "作成日時"
         updated: "更新しました"
-        comment: "Comment"
-        internal_comment: "Internal comment"
+        comment: "コメント"
+        internal_comment: "内部コメント"
       explanation:
         text: >
-          作業項目の作成やプロジェクトの更新などのイベントが発生するとします。 OpenProjectは設定されたWebエンドポイントにPOSTリクエストを送信します。 多くの場合、イベントは %{link} が過ぎた後に送信されます。
+          ワークパッケージの作成やプロジェクトの更新などのイベントが発生するとします。 OpenProjectは設定されたWebエンドポイントにPOSTリクエストを送信します。 多くの場合、イベントは %{link} が過ぎた後に送信されます。
         link: 集計期間を設定する
       status:
         enabled: 'Webhookは有効です'

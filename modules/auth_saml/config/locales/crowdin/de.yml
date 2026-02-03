@@ -56,6 +56,7 @@ de:
       label_mapping: Zuordnung
       label_requested_attribute_for: "Angefordertes Attribut für: %{attribute}"
       no_results_table: Es wurden noch keine SAML-Identitätsanbieter definiert.
+      notice_created: Ein neuer SAML-Identitätsanbieter wurde erfolgreich erstellt.
       plural: SAML-Identitätsanbieter
       singular: SAML-Identitätsanbieter
       requested_attributes: Angeforderte Attribute
@@ -110,7 +111,7 @@ de:
       idp_sso_service_url: >
         Die URL des Endpunkts für die Anmeldung beim Identitätsanbieter.
       idp_slo_service_url: >
-        Die URL des Endpunkts für die Anmeldung beim Identitätsanbieter.
+        Die URL des Endpunkts für die Abmeldung beim Identitätsanbieter.
       idp_cert: >
         Geben Sie das öffentliche X509 PEM formatierte Zertifikat des Identitätsanbieters ein. Sie können mehrere Zertifikate eingeben, indem Sie sie durch einen Zeilenumbruch trennen.
       name_identifier_format: >

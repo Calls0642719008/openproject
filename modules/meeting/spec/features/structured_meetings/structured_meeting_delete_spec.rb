@@ -67,7 +67,7 @@ RSpec.describe "Meetings deletion",
     expect(page).to have_current_path(meetings_page.path)
     expect(page).to have_text meeting.title
 
-    within("li", text: meeting.title) do
+    within_row(meeting.title) do
       click_on "more-button"
       click_on "Delete meeting"
     end

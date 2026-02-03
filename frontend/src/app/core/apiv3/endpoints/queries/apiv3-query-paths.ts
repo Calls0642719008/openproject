@@ -50,7 +50,7 @@ export class ApiV3QueryPaths extends ApiV3GettableResource<QueryResource> {
    * Stream the response for the given query request
    * @param queryData
    */
-  public parameterised(params:Object):Observable<QueryResource> {
+  public parameterised(params:object):Observable<QueryResource> {
     return this.halResourceService
       .get<QueryResource>(this.path, params);
   }
@@ -60,7 +60,7 @@ export class ApiV3QueryPaths extends ApiV3GettableResource<QueryResource> {
    * @param query
    * @param form
    */
-  public patch(payload:QueryResource|Object, form?:QueryFormResource):Observable<QueryResource> {
+  public patch(payload:QueryResource|object, form?:QueryFormResource):Observable<QueryResource> {
     if (payload instanceof QueryResource && form) {
       // Extracting requires having the filter schemas loaded as the dependencies
       this.queryFilters.mapSchemasIntoFilters(payload, form);

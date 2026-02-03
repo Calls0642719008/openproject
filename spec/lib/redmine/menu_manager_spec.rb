@@ -66,7 +66,6 @@ RSpec.describe Redmine::MenuManager do
                       :gantt,
                       :team_planner_view,
                       :boards,
-                      :dashboards,
                       :backlogs,
                       :news,
                       :costs,
@@ -107,7 +106,7 @@ RSpec.describe Redmine::MenuManager do
     context "for the my_menu" do
       it "includes the expected items" do
         expect(described_class.items(:my_menu).map(&:name))
-          .to include(:account, :settings, :password, :access_tokens, :notifications, :reminders, :delete_account)
+          .to include(:account, :locale, :password, :access_tokens, :notifications, :reminders)
       end
     end
 

@@ -38,7 +38,7 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
     let(:parent) { create(:hierarchy_item) }
 
     context "when all required fields are valid" do
-      let(:params) { { parent:, label: "Valid Label" } }
+      let(:params) { { parent:, label: "Valid Label", short: nil } }
 
       it "is valid" do
         result = subject.call(params)
@@ -48,12 +48,12 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
 
     context "when parent is not of type 'Item'" do
       let(:invalid_parent) { create(:custom_field) }
-      let(:params) { { parent: invalid_parent, label: "Valid Label" } }
+      let(:params) { { parent: invalid_parent, label: "Valid Label", short: nil } }
 
       it "is invalid" do
         result = subject.call(params)
         expect(result).to be_failure
-        expect(result.errors.to_h).to include(parent: ["must be CustomField::Hierarchy::Item"])
+        expect(result.errors.to_h).to include(parent: ["must be CustomField::Hierarchy::Item."])
       end
     end
 
@@ -62,12 +62,12 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
         create(:hierarchy_item, parent:, label: "Duplicate Label")
       end
 
-      let(:params) { { parent:, label: "Duplicate Label" } }
+      let(:params) { { parent:, label: "Duplicate Label", short: nil } }
 
       it "is invalid" do
         result = subject.call(params)
         expect(result).to be_failure
-        expect(result.errors.to_h).to include(label: [I18n.t("dry_validation.errors.rules.label.not_unique")])
+        expect(result.errors.to_h).to include(label: ["must be unique within the same hierarchy level."])
       end
 
       context "if another locale is set" do
@@ -77,7 +77,7 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
           I18n.config.enforce_available_locales = false
           I18n.backend.store_translations(
             :mo,
-            { dry_validation: {
+            { op_dry_validation: {
               errors: { rules: { label: { not_unique: mordor } } }
             } }
           )
@@ -105,7 +105,7 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
       it "is invalid with localized validation errors" do
         result = subject.call(params)
         expect(result).to be_failure
-        expect(result.errors.to_h).to include(short: [I18n.t("dry_validation.errors.rules.short.not_unique")])
+        expect(result.errors.to_h).to include(short: ["must be unique within the same hierarchy level."])
       end
     end
 
@@ -124,7 +124,7 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
       it "is invalid" do
         result = subject.call(params)
         expect(result).to be_failure
-        expect(result.errors.to_h).to include(short: [I18n.t("dry_validation.errors.str?")])
+        expect(result.errors.to_h).to include(short: ["must be a string."])
       end
     end
 
@@ -132,7 +132,7 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
       it "creates a success result" do
         [
           { parent:, label: "A label", short: "A shorthand" },
-          { parent:, label: "A label" }
+          { parent:, label: "A label", short: nil }
         ].each { |params| expect(subject.call(params)).to be_success }
       end
     end
@@ -140,15 +140,14 @@ RSpec.describe CustomFields::Hierarchy::InsertListItemContract do
     context "when inputs are invalid" do
       it "creates a failure result" do
         [
-          { parent:, label: "A label", short: "" },
-          { parent:, label: "A label", short: nil },
-          { parent:, label: "" },
-          { parent:, label: nil },
           { parent: },
-          { parent: nil },
-          { parent: nil, label: "A label" },
-          { parent: "parent", label: "A label" },
-          { parent: 42, label: "A label" }
+          { parent:, label: "A label" },
+          { parent:, short: "AL" },
+          { parent: nil, label: "A label", short: nil },
+          { parent: 42, label: "A label", short: nil },
+          { parent:, label: nil, short: nil },
+          { parent:, label: 42, short: nil },
+          { parent:, label: "A label", short: 42 }
         ].each { |params| expect(subject.call(params)).to be_failure }
       end
     end

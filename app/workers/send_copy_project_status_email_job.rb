@@ -57,6 +57,8 @@ class SendCopyProjectStatusEmailJob < ApplicationJob
   end
 
   def send_success_email(batch)
+    return if Setting.new_project_send_confirmation_email?
+
     ProjectMailer.copy_project_succeeded(
       batch.properties[:user],
       batch.properties[:source_project],

@@ -132,6 +132,8 @@ a work package with ID12: #12
 a work package with ID234: view#12
 the default work package view: view:default
 
+a meeting by ID/name: meeting#12, meeting:"meetingname"
+
 a version by ID or name: version#3, version:"Release 1.0.0"
 a project by ID/name: project#12 , project:"My project name"
 an attachment by filename: attachment:filename.zip

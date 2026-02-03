@@ -88,7 +88,7 @@ export abstract class WorkPackageLinkedResourceCache<T> {
       .state
       .values$()
       .pipe(
-        filter((cached) => cached && cached.id === id),
+        filter((cached) => cached?.id === id),
         map((cached) => cached.value),
       );
   }

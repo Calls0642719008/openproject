@@ -94,9 +94,9 @@ class OpenProject::JournalFormatter::Cause < JournalFormatter::Base
       case feature
       when "progress_calculation_adjusted_from_disabled_mode",
            "progress_calculation_adjusted"
-        { href: OpenProject::Static::Links.links[:blog_article_progress_changes][:href] }
+        { href: OpenProject::Static::Links.url_for(:blog_article_progress_changes) }
       when "totals_removed_from_childless_work_packages"
-        { href: OpenProject::Static::Links.links[:release_notes_14_0_1][:href] }
+        { href: OpenProject::Static::Links.url_for(:release_notes_14_0_1) }
       else
         {}
       end
@@ -161,7 +161,7 @@ class OpenProject::JournalFormatter::Cause < JournalFormatter::Base
     if related_work_package
       I18n.t(
         "journals.cause_descriptions.#{cause['type']}",
-        link: html? ? link_to_work_package(related_work_package, all_link: true) : "##{related_work_package.id}"
+        link: html? ? link_to_work_package(related_work_package, link_subject: true) : "##{related_work_package.id}"
       )
 
     else

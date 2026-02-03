@@ -48,14 +48,4 @@ class Queries::Projects::Filters::TypeFilter < Queries::Projects::Filters::Base
   def self.key
     :type_id
   end
-
-  private
-
-  def type_strategy
-    # Instead of getting the IDs of all the projects a user is allowed
-    # to see we only check that the value is an integer. Non valid ids
-    # will then simply create an empty result but will not cause any
-    # harm.
-    @type_strategy ||= ::Queries::Filters::Strategies::IntegerList.new(self)
-  end
 end

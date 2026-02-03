@@ -74,8 +74,6 @@ export class QueryFilterComponent implements OnInit {
 
   public baselineIncompatibleFilter = false;
 
-  public trackByHref = halHref;
-
   public compareByHref = compareByHref;
 
   public text = {

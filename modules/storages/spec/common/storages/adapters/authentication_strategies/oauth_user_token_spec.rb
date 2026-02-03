@@ -118,7 +118,7 @@ module Storages
                   "Accept" => "*/*",
                   "Accept-Encoding" => "gzip, deflate",
                   "Authorization" => "Bearer #{token.access_token}",
-                  "User-Agent" => "httpx.rb/1.3.4"
+                  "User-Agent" => /OpenProject \d+\.\d+\.\d+ HTTPX Client/
                 }
               )
               .to_return(status: 401, body: <<~XML, headers: {})
@@ -140,7 +140,7 @@ module Storages
                   "Accept" => "*/*",
                   "Accept-Encoding" => "gzip, deflate",
                   "Authorization" => "Bearer NEW_ACCESS_TOKEN",
-                  "User-Agent" => "httpx.rb/1.3.4"
+                  "User-Agent" => /OpenProject \d+\.\d+\.\d+ HTTPX Client/
                 }
               )
               .to_return(status: 200, body: <<~JSON, headers: { "Content-Type" => "application/json; charset=utf-8" })
@@ -157,7 +157,7 @@ module Storages
                   "Accept" => "*/*",
                   "Accept-Encoding" => "gzip, deflate",
                   "Content-Type" => "application/x-www-form-urlencoded",
-                  "User-Agent" => "httpx.rb/1.3.4"
+                  "User-Agent" => /OpenProject \d+\.\d+\.\d+ HTTPX Client/
                 }
               )
               .to_return(status: 200, body: <<~JSON, headers: { "Content-Type" => "application/json; charset=utf-8" })

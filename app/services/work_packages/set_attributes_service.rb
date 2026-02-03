@@ -34,6 +34,7 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
   private
 
   def set_attributes(attributes)
+    validate_custom_fields = attributes.delete(:validate_custom_fields)
     file_links_ids = attributes.delete(:file_links_ids)
     model.file_links = Storages::FileLink.where(id: file_links_ids) if file_links_ids
 
@@ -45,12 +46,24 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     end
 
     set_custom_attributes(attributes)
+    set_custom_values_to_validate(attributes, validate_custom_fields)
+
     mark_templated_subject
   end
 
   def mark_templated_subject
     if work_package.type&.replacement_pattern_defined_for?(:subject)
       work_package.subject = I18n.t("work_packages.templated_subject_hint", type: work_package.type.name)
+    end
+  end
+
+  def set_custom_values_to_validate(attributes, validate_custom_fields = nil)
+    if validate_custom_fields
+      # When validate_custom_fields is explicitly set to true from frontend,
+      # activate validation for all custom fields regardless of whether they're in params
+      model.activate_custom_field_validations!
+    else
+      super(attributes)
     end
   end
 
@@ -68,6 +81,7 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
       unify_milestone_dates
     else
       update_dates
+      update_ignore_non_working_days
     end
     shift_dates_to_soonest_working_days
     update_duration_to_one_day_for_milestones
@@ -245,8 +259,6 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     end
 
     work_package.attributes = assignable_attributes
-
-    initialize_unset_custom_values
   end
 
   def custom_field_context_changed?
@@ -287,9 +299,16 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     # Better return and keep dates unified to have only one meaningful error.
     return if work_package_now_milestone?
 
-    # do a reschedule call to get the work package dates from the rescheduled children
+    # do a reschedule call to get the work package dates from the (potentially)
+    # rescheduled children.
+    #
+    # This happens for instance when a work package with a child gets a new
+    # parent having a predecessor. If the child is in automatic mode, it could
+    # be forced to move to a date after the grandparent's predecessor, forcing
+    # the parent to also move to the same dates. These dates are known only
+    # after the child is properly rescheduled.
     service = WorkPackages::SetScheduleService.new(user: User.current, work_package:, switching_to_automatic_mode: [work_package])
-    service.call(work_package.changes.keys.map(&:to_sym)).result
+    service.call(work_package.changed_attribute_keys).result
   end
 
   def update_dates_from_self
@@ -300,6 +319,12 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
 
     work_package.due_date = new_due_date(min_start)
     work_package.start_date = min_start
+  end
+
+  def update_ignore_non_working_days
+    if work_package.schedule_automatically? && work_package.children.any?
+      work_package.ignore_non_working_days = work_package.children.any?(&:ignore_non_working_days)
+    end
   end
 
   def unify_milestone_dates
@@ -382,12 +407,6 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     end
   end
 
-  # Take over any default custom values
-  # for new custom fields
-  def initialize_unset_custom_values
-    work_package.set_default_values! if custom_field_context_changed?
-  end
-
   def new_start_date
     # this method is only called by #update_dates_from_self when there are no children
     if work_package.schedule_manually?
@@ -444,28 +463,8 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     instantiate_contract(work_package, user).assignable_statuses(include_default: true)
   end
 
-  def min_child_date
-    children_dates.min
-  end
-
-  def children_duration
-    max = max_child_date
-
-    return unless max
-
-    days.duration(min_child_date, max_child_date)
-  end
-
   def days
     WorkPackages::Shared::Days.for(work_package)
-  end
-
-  def max_child_date
-    children_dates.max
-  end
-
-  def children_dates
-    @children_dates ||= work_package.children.pluck(:start_date, :due_date).flatten.compact
   end
 
   def parent_start_earlier_than_due?

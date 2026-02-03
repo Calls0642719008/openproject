@@ -88,6 +88,8 @@ zh-CN:
     button_list_view: "列表视图"
     button_show_view: "全屏视图"
     button_log_time: "记录时间"
+    button_start_timer: "启动计时器"
+    button_stop_timer: "停止计时器"
     button_more: "更多"
     button_open_details: "打开详情视图"
     button_close_details: "关闭详情视图"
@@ -201,6 +203,8 @@ zh-CN:
         add_table: "添加相关工作包表"
         edit_query: "编辑查询"
         new_group: "新建组"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "重置为默认值"
       working_days:
         calendar:
@@ -288,17 +292,6 @@ zh-CN:
         format:
           date: "%{attribute} 不是有效日期 - 需要 YYYY-MM-DD。"
         general: "发生错误。"
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "了解新功能和产品更新。"
-          learn_about: "详细了解所有新功能"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                该版本包含多种新功能和改进，例如<br> <ul class="%{list_styling_class}"> <li>UX/UI 改进，外观更加现代。</li> <li>会议：可选择静音电子邮件通知和 ICS。</li> <li>“我的工时记录”模块中显示正在进行的计时器。</li> <li>进度报告：基于状态的模式中还会显示完成百分比总和。</li> <li>Nextcloud 健康检查：指示缺少令牌交换功能（企业附加组件）。</li> </ul>
     ical_sharing_modal:
       title: "订阅日历"
       inital_setup_error_message: "获取数据时发生错误。"
@@ -306,12 +299,13 @@ zh-CN:
       warning: "请不要与其他用户共享此 URL 。拥有这个链接的任何人都可以在没有帐户或密码的情况下查看工作包的详细信息。"
       token_name_label: "您将在哪里使用它？"
       token_name_placeholder: '输入名称，例如“Phone”'
-      token_name_description_text: '如果您从多个设备订阅此日历，此名称将有助于在<a href="my/access_token", target="_blank">访问令牌</a>列表中区分它们。'
+      token_name_description_text: '如果您从多个设备订阅此日历，此名称将有助于在<a href="%{myAccessTokensUrl}" target="_blank">访问令牌</a>列表中区分它们。'
       copy_url_label: "复制链接"
       ical_generation_error_text: "生成日历 URL 时出错。"
       success_message: 'URL“%{name}”已成功复制到剪贴板。请将其粘贴到日历客户端中以完成订阅。'
     label_activate: "激活"
     label_assignee: "指定"
+    label_assignee_alt_text: "此工作包被指定至 %{name}"
     label_add_column_after: "之后添加列"
     label_add_column_before: "在之前添加列"
     label_add_columns: "添加列"
@@ -353,6 +347,7 @@ zh-CN:
     label_collapse: "折叠"
     label_collapsed: "折叠"
     label_collapse_all: "全部折叠"
+    label_collapse_text: "收起文本"
     label_comment: "评论"
     label_committed_at: "在 %{date} %{committed_revision_link}"
     label_committed_link: "上传的修订 %{revision_identifier}"
@@ -365,6 +360,7 @@ zh-CN:
     label_expand: "展开"
     label_expanded: "展开"
     label_expand_all: "全部展开"
+    label_expand_text: "显示完整文本"
     label_expand_project_menu: "展开项目菜单"
     label_export: "导出"
     label_export_preparing: "导出文件已开始准备并将很快被下载。"
@@ -397,8 +393,6 @@ zh-CN:
     label_me: "我"
     label_meeting_agenda: "议程"
     label_meeting_minutes: "会议记录"
-    label_menu_collapse: "折叠"
-    label_menu_expand: "展开"
     label_more_than_ago: "更多天前"
     label_moderate_comment: "审核评论"
     label_next: "下一个"
@@ -432,6 +426,7 @@ zh-CN:
     label_remove_row: "移除行"
     label_report: "报告"
     label_repository_plural: "存储库"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "另存为"
     label_search_columns: "搜索列"
     label_select_watcher: "选择一个关注者..."
@@ -444,7 +439,7 @@ zh-CN:
     label_sort_lower: "向下移动"
     label_sorting: "排序"
     label_spent_time: "已耗工时"
-    label_star_query: "收藏夹"
+    label_star_query: "已收藏"
     label_press_enter_to_save: "按回车键可以保存。"
     label_public_query: "公开"
     label_sum: "总计"
@@ -563,7 +558,7 @@ zh-CN:
       date_alerts:
         milestone_date: "里程碑日期"
         overdue: "逾期"
-        overdue_since: "自 %{difference_in_days}起。"
+        overdue_since: "%{difference_in_days}。"
         property_today: "今天。"
         property_is: "%{difference_in_days}后。"
         property_was: "%{difference_in_days}前。"
@@ -637,9 +632,6 @@ zh-CN:
           add: "为项目添加设置"
           already_selected: "此项目已经选定"
           remove: "移除项目设置"
-    password_confirmation:
-      field_description: "输入密码以确认更改"
-      title: "输入密码以继续"
     pagination:
       no_other_page: "您位于唯一页面上。"
       pages_skipped: "跳过的页面。"
@@ -1079,8 +1071,8 @@ zh-CN:
     notice_successful_delete: "成功删除。"
     notice_successful_update: "成功更新。"
     notice_job_started: "作业已开始。"
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "服务器未返回作业 ID。"
+    invalid_job_response: "服务器发出的响应无效。"
     notice_bad_request: "错误的请求。"
     relations:
       empty: 不存在关联
@@ -1111,6 +1103,7 @@ zh-CN:
         other: "工作包"
       child_work_packages:
         other: "%{count} 子工作包"
+      hour_string: "%{hours} 小时"
       hour:
         one: "1 小时"
         other: "%{count} 小时"
@@ -1127,9 +1120,12 @@ zh-CN:
     global_search:
       all_projects: "在所有项目中"
       close_search: "关闭搜索"
+      items_available: "%{count} 个可用条目"
+      direct_hit_available: "找到与 ID 完全匹配的工作包。按 Enter 可打开。"
       current_project_and_all_descendants: "在当前项目和子项目中"
       current_project: "在当前项目中"
       recently_viewed: "最近浏览"
+      search_placeholder_expanded: "按主题、项目、类型、状态或 ID 搜索工作包"
       title:
         all_projects: "所有项目"
         project_and_subprojects: "和所有子项目"
@@ -1139,71 +1135,8 @@ zh-CN:
       list: "表"
       timeline: "甘特图"
     invite_user_modal:
-      back: "返回"
       invite: "邀请"
-      title:
-        invite: "邀请用户"
-        invite_to_project: "邀请%{type}加入 %{project}"
-        User: "用户"
-        Group: "组"
-        PlaceholderUser: "占位符用户"
-        invite_principal_to_project: "邀请 %{principal} 加入 %{project}"
-      project:
-        label: "项目"
-        required: "请选择一个项目"
-        lacking_permission: "请选择其他项目，因为您缺少将用户分配至当前所选项目的权限。"
-        lacking_permission_info: "您缺少将用户分配至您当前所在项目的权限。您需要选择其他项目。"
-        next_button: "下一个"
-        no_results: "没有找到项目"
-        no_invite_rights: "您无权邀请成员加入此项目"
-      type:
-        required: "请选择要邀请的类型"
-        user:
-          title: "用户"
-          description: "基于所选项目中所分配角色的权限"
-        group:
-          title: "组"
-          description: "基于所选项目中所分配角色的权限"
-        placeholder:
-          title: "占位符用户"
-          title_no_ee: "占位符用户（Enterprise edition 特定功能）"
-          description: "无法访问该项目并且未发送电子邮件。"
-          description_no_ee: '无法访问该项目并且未发送电子邮件。<br>请参见 <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "用户名或电子邮件地址"
-          name: "名称"
-        already_member_message: "已经是 %{project} 的成员"
-        no_results_user: "没有找到用户"
-        invite_user: "邀请："
-        no_results_placeholder: "没有找到占位符"
-        create_new_placeholder: "创建新的占位符："
-        no_results_group: "没有找到组"
-        next_button: "下一个"
-        required:
-          user: "请选择一个用户"
-          placeholder: "请选择一个占位符"
-          group: "请选择一个组"
-      role:
-        label: "%{project} 中的角色"
-        no_roles_found: "没有找到角色"
-        description: >-
-          这是用户在加入您的项目时将获得的角色。角色定义了允许其执行哪些操作以及允许其查看哪些信息。<a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank">详细了解角色和权限</a>。
-        required: "请选择一个角色"
-        next_button: "下一个"
-      message:
-        label: "邀请消息"
-        description: "我们将向用户发送一封电子邮件，您可以在此处添加要向其发送的个人消息。提供邀请说明可能会很有用，您也可以添加一些有关该项目的信息以帮助他们开始。"
-        next_button: "下一个"
-      summary:
-        next_button: "发送邀请"
-      success:
-        title: "%{principal} 已被邀请！"
-        description:
-          user: "该用户现在可以登录以访问 %{project}。同时，您已经可以与该用户一起制定计划并分配工作包等。"
-          placeholder: "现在可以在 %{project} 中使用占位符。同时，您已经可以与该用户一起制定计划并分配工作包等。"
-          group: "该组现已加入 %{project}。同时，您已经可以与该组一起制定计划并分配工作包等。"
-        next_button: "继续"
+      placeholder_add_tag: "创建占位符用户"
     exclusion_info:
       modal:
         title: "从层次结构总计中排除的状态"
@@ -1221,14 +1154,19 @@ zh-CN:
         all: "所有项目"
         selected: "仅限所选"
       search_placeholder: "搜索项目…"
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder_favorites: "搜索收藏夹…"
       include_subprojects: "包含所有子项目"
       tooltip:
         include_all_selected: "自启用“包含所有子项目”后已包含的项目。"
         current_project: "这是您当前所在的项目。"
         does_not_match_search: "项目不符合搜索条件。"
       no_results: "没有项目符合您的搜索条件。"
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "没有收藏的项目符合您的搜索条件。"
+    include_workspaces:
+      search_placeholder: "搜索…"
+      types:
+        program: "项目群"
+        portfolio: "项目组合"
     baseline:
       toggle_title: "基线"
       clear: "清除"

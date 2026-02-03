@@ -33,15 +33,15 @@ require "spec_helper"
 RSpec.describe API::V3::Queries::QueryRepresenter do
   include API::V3::Utilities::PathHelper
 
-  let(:query) { build_stubbed(:query, project:, views:) }
-  let(:unpersisted_query) { build(:query, project:, user: other_user, views:) }
+  let(:query) { build_stubbed(:query, project: workspace, views:) }
+  let(:unpersisted_query) { build(:query, project: workspace, user: other_user, views:) }
   let(:views) { [build_stubbed(:view)] }
-  let(:project) { build_stubbed(:project) }
-  let(:user) { build_stubbed(:admin) }
+  let(:workspace) { build_stubbed(:project) }
+  let(:current_user) { build_stubbed(:admin) }
   let(:other_user) { build_stubbed(:user) }
   let(:embed_links) { true }
   let(:representer) do
-    described_class.new(query, current_user: user, embed_links:)
+    described_class.new(query, current_user:, embed_links:)
   end
 
   let(:permissions) { [] }
@@ -51,18 +51,18 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
     allow(QueryPolicy)
       .to receive(:new)
-      .with(user)
-      .and_return(policy_stub)
+            .with(current_user)
+            .and_return(policy_stub)
 
     allow(policy_stub)
       .to receive(:allowed?)
-      .and_return(false)
+            .and_return(false)
 
     permissions.each do |permission|
       allow(policy_stub)
         .to receive(:allowed?)
-        .with(query, permission)
-        .and_return(true)
+              .with(query, permission)
+              .and_return(true)
     end
   end
 
@@ -92,7 +92,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
       context "with params" do
         let(:representer) do
-          described_class.new(query, current_user: user, embed_links:,
+          described_class.new(query, current_user:, embed_links:,
                                      params: { "filters" => "something", "id" => "234" })
         end
 
@@ -110,11 +110,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       let(:title) { query.user.name }
     end
 
-    it_behaves_like "has a titled link" do
-      let(:link) { "project" }
-      let(:href) { api_v3_paths.project query.project_id }
-      let(:title) { query.project.name }
-    end
+    it_behaves_like "has workspace linked"
 
     it_behaves_like "has an untitled link" do
       let(:link) { "results" }
@@ -127,13 +123,13 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
           pageSize: Setting.per_page_options_array.first,
           filters: []
         }
-        "#{api_v3_paths.work_packages_by_project(project.id)}?#{non_empty_to_query(params)}"
+        "#{api_v3_paths.work_packages_by_workspace(workspace.id)}?#{non_empty_to_query(params)}"
       end
     end
 
     it_behaves_like "has an untitled link" do
       let(:link) { "schema" }
-      let(:href) { api_v3_paths.query_project_schema(project.identifier) }
+      let(:href) { api_v3_paths.query_workspace_schema(workspace.identifier) }
     end
 
     context "when the query has no project" do
@@ -224,7 +220,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       end
 
       context "when no user is provided" do
-        let(:user) { nil }
+        let(:current_user) { nil }
         let(:embed_links) { false }
 
         it_behaves_like "has no link" do
@@ -269,7 +265,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       end
 
       context "when no user is provided" do
-        let(:user) { nil }
+        let(:current_user) { nil }
         let(:embed_links) { false }
 
         it_behaves_like "has no link" do
@@ -314,7 +310,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       end
 
       context "when no user is provided" do
-        let(:user) { nil }
+        let(:current_user) { nil }
         let(:embed_links) { false }
 
         it_behaves_like "has no link" do
@@ -326,11 +322,11 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
     context "with filter, sort, group by and pageSize" do
       let(:representer) do
         described_class.new(query,
-                            current_user: user)
+                            current_user:)
       end
 
       let(:query) do
-        query = build_stubbed(:query, project:)
+        query = build_stubbed(:query, project: workspace)
         query.add_filter("subject", "~", ["bogus"])
         query.group_by = "author"
         query.sort_criteria = [%w[assigned_to asc], %w[type desc]]
@@ -350,7 +346,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
           sortBy: JSON::dump([%w[assignee asc], %w[type desc]])
         }
 
-        api_v3_paths.work_packages_by_project(project.id) + "?#{params.to_query}"
+        api_v3_paths.work_packages_by_workspace(workspace.id) + "?#{params.to_query}"
       end
 
       it_behaves_like "has an untitled link" do
@@ -362,7 +358,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
     context "with offset and page size" do
       let(:representer) do
         described_class.new(query,
-                            current_user: user,
+                            current_user:,
                             params: { offset: 2, pageSize: 25 })
       end
 
@@ -376,7 +372,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
           filters: []
         }
 
-        api_v3_paths.work_packages_by_project(project.id) + "?#{non_empty_to_query(params)}"
+        api_v3_paths.work_packages_by_workspace(workspace.id) + "?#{non_empty_to_query(params)}"
       end
 
       it_behaves_like "has an untitled link" do
@@ -387,7 +383,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
     context "without columns" do
       let(:query) do
-        query = build_stubbed(:query, project:)
+        query = build_stubbed(:query, project: workspace)
 
         # need to write bogus here because the query
         # will otherwise sport the default columns
@@ -399,13 +395,13 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       it "has an empty columns array" do
         expect(subject)
           .to be_json_eql([].to_json)
-          .at_path("_links/columns")
+                .at_path("_links/columns")
       end
     end
 
     context "with columns" do
       let(:query) do
-        query = build_stubbed(:query, project:)
+        query = build_stubbed(:query, project: workspace)
 
         query.column_names = %w[status assigned_to updated_at]
 
@@ -430,7 +426,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
         expect(subject)
           .to be_json_eql(expected.to_json)
-          .at_path("_links/columns")
+                .at_path("_links/columns")
       end
     end
 
@@ -444,7 +440,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
     context "with group_by" do
       let(:query) do
-        query = build_stubbed(:query, project:)
+        query = build_stubbed(:query, project: workspace)
 
         query.group_by = "status"
 
@@ -462,7 +458,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       it "has an empty sortBy array" do
         expect(subject)
           .to be_json_eql([].to_json)
-          .at_path("_links/sortBy")
+                .at_path("_links/sortBy")
       end
     end
 
@@ -486,7 +482,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
         expect(subject)
           .to be_json_eql(expected.to_json)
-          .at_path("_links/sortBy")
+                .at_path("_links/sortBy")
       end
     end
 
@@ -496,7 +492,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       before do
         allow(query)
           .to receive(:starred)
-          .and_return(false)
+                .and_return(false)
       end
 
       it_behaves_like "has an untitled link" do
@@ -525,7 +521,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       before do
         allow(query)
           .to receive(:starred)
-          .and_return(true)
+                .and_return(true)
       end
 
       it_behaves_like "has an untitled link" do
@@ -642,85 +638,69 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
     end
 
     describe "highlighting" do
-      context "with EE", with_ee: %i[conditional_highlighting] do
-        let :status do
-          {
-            href: "/api/v3/queries/columns/status",
-            title: "Status"
-          }
-        end
-
-        let :type do
-          {
-            href: "/api/v3/queries/columns/type",
-            title: "Type"
-          }
-        end
-
-        let :priority do
-          {
-            href: "/api/v3/queries/columns/priority",
-            title: "Priority"
-          }
-        end
-
-        let :due_date do
-          {
-            href: "/api/v3/queries/columns/dueDate",
-            title: "Finish date"
-          }
-        end
-
-        let(:query) do
-          query = build_stubbed(:query, project:)
-
-          query.highlighted_attributes = %w[status type priority due_date]
-
-          query
-        end
-
-        let(:highlighted_attributes) do
-          [status, priority, due_date]
-        end
-
-        it "renders when the value is set" do
-          query.highlighting_mode = "status"
-
-          expect(subject).to be_json_eql("status".to_json).at_path("highlightingMode")
-        end
-
-        it "renders the default" do
-          query.highlighting_mode = nil
-          query.highlighted_attributes = nil
-          expect(subject).to be_json_eql("inline".to_json).at_path("highlightingMode")
-          expect(subject).not_to have_json_path("highlightedAttributes")
-        end
-
-        it "links an array of highlighted attributes" do
-          expect(subject)
-            .to be_json_eql(highlighted_attributes.to_json).at_path("_links/highlightedAttributes")
-        end
-
-        it "embeds selected inline attributes" do
-          query.highlighted_attributes[0..0].each_with_index do |attr, index|
-            expect(subject)
-              .to be_json_eql("/api/v3/queries/columns/#{attr}".to_json)
-              .at_path("_embedded/highlightedAttributes/#{index}/_links/self/href")
-          end
-        end
+      let :status do
+        {
+          href: "/api/v3/queries/columns/status",
+          title: "Status"
+        }
       end
 
-      context "without EE" do
-        it "renders when the value is set" do
-          query.highlighting_mode = "status"
+      let :type do
+        {
+          href: "/api/v3/queries/columns/type",
+          title: "Type"
+        }
+      end
 
-          expect(subject).to be_json_eql("none".to_json).at_path("highlightingMode")
-        end
+      let :priority do
+        {
+          href: "/api/v3/queries/columns/priority",
+          title: "Priority"
+        }
+      end
 
-        it "renders none when not set" do
-          query.highlighting_mode = nil
+      let :due_date do
+        {
+          href: "/api/v3/queries/columns/dueDate",
+          title: "Finish date"
+        }
+      end
 
-          expect(subject).to be_json_eql("none".to_json).at_path("highlightingMode")
+      let(:query) do
+        query = build_stubbed(:query, project: workspace)
+
+        query.highlighted_attributes = %w[status type priority due_date]
+
+        query
+      end
+
+      let(:highlighted_attributes) do
+        [status, priority, due_date]
+      end
+
+      it "renders when the value is set" do
+        query.highlighting_mode = "status"
+
+        expect(subject).to be_json_eql("status".to_json).at_path("highlightingMode")
+      end
+
+      it "renders the default" do
+        query.highlighting_mode = nil
+        query.highlighted_attributes = nil
+        expect(subject).to be_json_eql("inline".to_json).at_path("highlightingMode")
+        expect(subject).not_to have_json_path("highlightedAttributes")
+      end
+
+      it "links an array of highlighted attributes" do
+        expect(subject)
+          .to be_json_eql(highlighted_attributes.to_json).at_path("_links/highlightedAttributes")
+      end
+
+      it "embeds selected inline attributes" do
+        query.highlighted_attributes[0..0].each_with_index do |attr, index|
+          expect(subject)
+            .to be_json_eql("/api/v3/queries/columns/#{attr}".to_json)
+                  .at_path("_embedded/highlightedAttributes/#{index}/_links/self/href")
         end
       end
     end
@@ -745,11 +725,11 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
         query.add_filter("status_id", "=", [filter_status.id.to_s])
         allow(query.filters.last)
           .to receive(:value_objects)
-          .and_return([filter_status])
+                .and_return([filter_status])
         query.add_filter("assigned_to_id", "!", [filter_user.id.to_s])
         allow(query.filters.last)
           .to receive(:value_objects)
-          .and_return([filter_user])
+                .and_return([filter_user])
         query
       end
 
@@ -813,80 +793,9 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
       end
     end
 
-    describe "with sort criteria" do
-      let(:query) do
-        build_stubbed(:query,
-                      sort_criteria: [%w[subject asc], %w[assigned_to desc]])
-      end
-
-      it "has the sort criteria embedded" do
-        expect(subject)
-          .to be_json_eql("/api/v3/queries/sort_bys/subject-asc".to_json)
-          .at_path("_embedded/sortBy/0/_links/self/href")
-
-        expect(subject)
-          .to be_json_eql("/api/v3/queries/sort_bys/assignee-desc".to_json)
-          .at_path("_embedded/sortBy/1/_links/self/href")
-      end
-    end
-
-    describe "with columns" do
-      let(:query) do
-        query = build_stubbed(:query, project:)
-
-        query.column_names = %w[status assigned_to updated_at]
-
-        query
-      end
-
-      it "has the columns embedded" do
-        expect(subject)
-          .to be_json_eql("/api/v3/queries/columns/status".to_json)
-          .at_path("_embedded/columns/0/_links/self/href")
-      end
-
-      context "when not embedding" do
-        let(:representer) do
-          described_class.new(query, current_user: user, embed_links: false)
-        end
-
-        it "has no columns embedded" do
-          expect(subject)
-            .not_to have_json_path("_embedded/columns")
-        end
-      end
-    end
-
-    describe "with group by" do
-      let(:query) do
-        query = build_stubbed(:query, project:)
-
-        query.group_by = "status"
-
-        query
-      end
-
-      it "has the group by embedded" do
-        expect(subject)
-          .to be_json_eql("/api/v3/queries/group_bys/status".to_json)
-          .at_path("_embedded/groupBy/_links/self/href")
-      end
-
-      context "when not embedding" do
-        let(:representer) do
-          described_class.new(query, current_user: user, embed_links: false)
-        end
-
-        it "has no group bys embedded" do
-          expect(subject)
-            .not_to have_json_path("_embedded/groupBy")
-        end
-      end
-    end
-
     describe "when timeline is visible" do
       let(:query) do
-        build_stubbed(:query_with_view_gantt, project:).tap do |query|
+        build_stubbed(:query_with_view_gantt, project: workspace).tap do |query|
           query.timeline_visible = true
         end
       end
@@ -898,7 +807,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
     describe "when labels are overridden" do
       let(:query) do
-        build_stubbed(:query, project:).tap do |query|
+        build_stubbed(:query, project: workspace).tap do |query|
           query.timeline_labels = expected
         end
       end
@@ -913,7 +822,7 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
 
     describe "when timeline zoom level is changed" do
       let(:query) do
-        build_stubbed(:query, project:).tap do |query|
+        build_stubbed(:query, project: workspace).tap do |query|
           query.timeline_zoom_level = :weeks
         end
       end
@@ -924,35 +833,110 @@ RSpec.describe API::V3::Queries::QueryRepresenter do
     end
   end
 
-  describe "embedded results" do
-    let(:query) { build_stubbed(:query) }
-    let(:representer) do
-      described_class.new(query,
-                          current_user: user,
-                          results: results_representer)
-    end
+  describe "_embedded" do
+    describe "with group by" do
+      let(:query) do
+        query = build_stubbed(:query, project: workspace)
 
-    context "when results are provided" do
-      let(:results_representer) do
-        {
-          _type: "BogusResultType"
-        }
+        query.group_by = "status"
+
+        query
       end
 
-      it "embeds the results" do
+      it "has the group by embedded" do
         expect(subject)
-          .to be_json_eql("BogusResultType".to_json)
-          .at_path("_embedded/results/_type")
+          .to be_json_eql("/api/v3/queries/group_bys/status".to_json)
+                .at_path("_embedded/groupBy/_links/self/href")
+      end
+
+      context "when not embedding" do
+        let(:representer) do
+          described_class.new(query, current_user:, embed_links: false)
+        end
+
+        it "has no group bys embedded" do
+          expect(subject)
+            .not_to have_json_path("_embedded/groupBy")
+        end
       end
     end
 
-    context "when no results are provided" do
-      let(:results_representer) { nil }
+    describe "results" do
+      let(:query) { build_stubbed(:query) }
+      let(:representer) do
+        described_class.new(query,
+                            current_user:,
+                            results: results_representer)
+      end
 
-      it "does not embed the results" do
+      context "when results are provided" do
+        let(:results_representer) do
+          {
+            _type: "BogusResultType"
+          }
+        end
+
+        it "embeds the results" do
+          expect(subject)
+            .to be_json_eql("BogusResultType".to_json)
+                  .at_path("_embedded/results/_type")
+        end
+      end
+
+      context "when no results are provided" do
+        let(:results_representer) { nil }
+
+        it "does not embed the results" do
+          expect(subject)
+            .not_to have_json_path("_embedded/results")
+        end
+      end
+    end
+
+    describe "with columns" do
+      let(:query) do
+        query = build_stubbed(:query, project: workspace)
+
+        query.column_names = %w[status assigned_to updated_at]
+
+        query
+      end
+
+      it "has the columns embedded" do
         expect(subject)
-          .not_to have_json_path("_embedded/results")
+          .to be_json_eql("/api/v3/queries/columns/status".to_json)
+                .at_path("_embedded/columns/0/_links/self/href")
+      end
+
+      context "when not embedding" do
+        let(:representer) do
+          described_class.new(query, current_user:, embed_links: false)
+        end
+
+        it "has no columns embedded" do
+          expect(subject)
+            .not_to have_json_path("_embedded/columns")
+        end
       end
     end
+
+    describe "with sort criteria" do
+      let(:query) do
+        build_stubbed(:query,
+                      sort_criteria: [%w[subject asc], %w[assigned_to desc]])
+      end
+
+      it "has the sort criteria embedded" do
+        expect(subject)
+          .to be_json_eql("/api/v3/queries/sort_bys/subject-asc".to_json)
+                .at_path("_embedded/sortBy/0/_links/self/href")
+
+        expect(subject)
+          .to be_json_eql("/api/v3/queries/sort_bys/assignee-desc".to_json)
+                .at_path("_embedded/sortBy/1/_links/self/href")
+      end
+    end
+
+    it_behaves_like "has workspace embedded"
   end
 end

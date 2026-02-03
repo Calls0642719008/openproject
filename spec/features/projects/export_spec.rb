@@ -35,6 +35,18 @@ RSpec.describe "project export", :js do
   shared_let(:party_project) { create(:project, name: "Christmas party", description: "Christmas description") }
   shared_let(:user) do
     create(:user, member_with_permissions: {
+             important_project => %i[view_project edit_project view_work_packages export_projects],
+             party_project => %i[view_project edit_project view_work_packages export_projects]
+           })
+  end
+  shared_let(:restricted_user) do
+    create(:user, member_with_permissions: {
+             important_project => %i[view_project edit_project view_work_packages],
+             party_project => %i[view_project edit_project view_work_packages export_projects]
+           })
+  end
+  shared_let(:disallow_user) do
+    create(:user, member_with_permissions: {
              important_project => %i[view_project edit_project view_work_packages],
              party_project => %i[view_project edit_project view_work_packages]
            })
@@ -85,7 +97,9 @@ RSpec.describe "project export", :js do
 
       export!
 
-      expect(subject).to have_text(important_project.name)
+      result = expect(subject)
+      result.to have_text(important_project.name)
+      result.to have_text(party_project.name)
     end
 
     context "with a filter set to match only one project" do
@@ -142,6 +156,30 @@ RSpec.describe "project export", :js do
         expect(subject).to have_text(important_project.description)
         expect(subject).to have_no_text(party_project.name)
         expect(subject).to have_no_text(party_project.description)
+      end
+    end
+
+    context "with a restricted user" do
+      let(:current_user) { restricted_user }
+
+      it "exports the visible projects" do
+        index_page.expect_projects_listed(important_project)
+
+        export!
+
+        result = expect(subject)
+        result.to have_no_text(important_project.name)
+        result.to have_text(party_project.name)
+      end
+    end
+
+    context "with a disallowed user" do
+      let(:current_user) { disallow_user }
+
+      it "does not offer exports" do
+        index_page.expect_projects_listed(important_project)
+
+        index_page.expect_no_more_menu_item "Export"
       end
     end
   end

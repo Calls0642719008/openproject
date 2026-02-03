@@ -43,7 +43,7 @@ Please see our [Use Cases section](./use-cases/) for detailed how-to guides and 
 * [Full development environment for developers](./development/development-environment)
 * [Developing plugins](./development/create-openproject-plugin)
 * [Developing OmniAuth Plugins](./development/create-omniauth-plugin)
-* [Running tests](./development/running-tests)
+* [Running tests](./development/testing)
 * [Code review guidelines](./development/code-review-guidelines)
 * [API documentation](./api)
 

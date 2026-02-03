@@ -97,8 +97,7 @@ You can copy a direct link to a specific work package comment in OpenProject. To
 
 ### Internal comments (Enterprise add-on)
 
-> [!NOTE]
-> Internal comments are an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/) or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easily possible.
+[feature: internal_comments ]
 
 It is possible to add comments that are only visible to a select group of people. These are referred to as internal comments.
 

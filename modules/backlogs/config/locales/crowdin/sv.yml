@@ -21,8 +21,8 @@
 #++
 sv:
   plugin_openproject_backlogs:
-    name: "OpenProject Backlogs"
-    description: "This module adds features enabling agile teams to work with OpenProject in Scrum projects."
+    name: "Backloggar för OpenProject"
+    description: "Modulen lägger till funktioner som gör det möjligt för agila team att arbeta med OpenProject i Scrum-projekt."
   activerecord:
     attributes:
       work_package:
@@ -40,6 +40,8 @@ sv:
               task_version_must_be_the_same_as_story_version: "måste vara samma som föräldraberättelsens version."
         sprint:
           cannot_end_before_it_starts: "En sprint kan inte avslutas innan den startar."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Ny berättelse"
     any: "någon"
@@ -55,7 +57,7 @@ sv:
     hours: "Timmar"
     impediment: "Hinder"
     label_versions_default_fold_state: "Visa ihopfällda versioner"
-    caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."
+    caption_versions_default_fold_state: "Versioner kommer inte att utökas som standard när du visar backloggar. Var och en måste utökas manuellt."
     work_package_is_closed: "Arbetspaket är klart, när"
     label_is_done_status: "Status %{status_name} innebär klart"
     no_burndown_data: "Ingen Burndown data tillgänglig. Start- och slutdatum för sprint måste definieras."
@@ -65,8 +67,8 @@ sv:
     properties: "Egenskaper"
     rebuild: "Rekonstruera"
     rebuild_positions: "Rekonstruera positioner"
-    remaining_hours: "Remaining work"
-    remaining_hours_ideal: "Remaining work (ideal)"
+    remaining_hours: "Återstående arbete"
+    remaining_hours_ideal: "Planerat återstående arbete"
     show_burndown_chart: "Burndown-diagram"
     story: "Berättelse"
     story_points: "Berättelsepoäng"
@@ -75,8 +77,8 @@ sv:
     task_color: "Aktivitetsfärg"
     unassigned: "Ej tilldelad"
     user_preference:
-      header_backlogs: "Backlogs module"
-      button_update_backlogs: "Update backlogs module"
+      header_backlogs: "Backlogmodul"
+      button_update_backlogs: "Uppdatera backlogmodul"
     x_more: "%{count} mer..."
   backlogs_active: "aktiv"
   backlogs_any: "någon"
@@ -100,7 +102,10 @@ sv:
   backlogs_empty_title: "Inga versioner är definierade för att användas i backlog"
   backlogs_empty_action_text: "För att komma igång med backlogs, skapa en ny version och tilldela den till en kolumn för backlogs."
   button_edit_wiki: "Redigera wiki-sidor"
-  error_backlogs_task_cannot_be_story: "Inställningarna är ogiltiga. Den valda uppgiftstypen kan inte heller vara av typen story."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Följande fel uppstod:"
   error_intro_singular: "Följande fel uppstod:"
   error_outro: "Vänligen korrigera ovanstående fel innan du skickar in igen."
@@ -124,6 +129,10 @@ sv:
   label_points_burn_up: "Upp"
   label_product_backlog: "produkt backlog"
   label_select_all: "Markera alla"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "sprint backlogg"
   label_sprint_cards: "Exportera kort"
   label_sprint_impediments: "Sprint hinder"
@@ -151,7 +160,7 @@ sv:
   rb_label_copy_tasks_none: "Inga"
   rb_label_copy_tasks_open: "Öppna"
   rb_label_link_to_original: "Inkludera länk till originalberättelsen"
-  remaining_hours: "remaining work"
+  remaining_hours: "återstående arbete"
   required_burn_rate_hours: "tempo som krävs (timmar)"
   required_burn_rate_points: "tempo som krävs (poäng)"
   todo_work_package_description: "%{summary}: %{url}\n%{description}"
@@ -160,3 +169,7 @@ sv:
   version_settings_display_option_left: "vänster"
   version_settings_display_option_none: "inga"
   version_settings_display_option_right: "höger"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

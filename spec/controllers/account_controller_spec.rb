@@ -462,7 +462,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
       before do
         post "change_password",
              flash: {
-               _password_change_user_id: nil
+               _password_change_user: nil
              },
              params: {
                username: admin.login,
@@ -481,8 +481,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
       before do
         post "change_password",
              params: {
-               password_change_user_id: admin.id,
-               username: admin.login,
+               password_change_user: admin.login,
                password: "adminADMIN!",
                new_password: "adminADMIN!New",
                new_password_confirmation: "adminADMIN!New"
@@ -514,6 +513,171 @@ RSpec.describe AccountController, :skip_2fa_stage do
 
       it "is not found" do
         expect(response).to have_http_status :not_found
+      end
+    end
+
+    context "with brute force protection",
+            with_settings: { brute_force_block_minutes: 30, brute_force_block_after_failed_logins: 20 } do
+      shared_let(:user) { create(:user, login: "testuser", password: "ValidPass123!", password_confirmation: "ValidPass123!") }
+
+      describe "blocks password change attempts after too many failures" do
+        before do
+          user.update_columns(
+            failed_login_count: 20,
+            last_failed_login_on: 1.minute.ago
+          )
+
+          post :change_password,
+               params: {
+                 password_change_user: user.login,
+                 password: "ValidPass123!",
+                 new_password: "NewPass123!",
+                 new_password_confirmation: "NewPass123!"
+               }
+        end
+
+        it "blocks the attempt even with correct password" do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it "does not change the password" do
+          user.reload
+          expect(user.check_password?("ValidPass123!")).to be true
+          expect(user.check_password?("NewPass123!")).to be false
+        end
+
+        it "shows an error message" do
+          if Setting.brute_force_block_after_failed_logins.to_i > 0
+            expected_message = I18n.t(:notice_account_invalid_credentials_or_blocked)
+          else
+            expected_message = I18n.t(:notice_account_invalid_credentials)
+          end
+          expect(flash[:error]).to eq(expected_message)
+        end
+      end
+
+      describe "logs failed password attempts" do
+        before do
+          user.update_columns(
+            failed_login_count: 0,
+            last_failed_login_on: nil
+          )
+
+          post :change_password,
+               params: {
+                 password_change_user: user.login,
+                 password: "WrongPassword!",
+                 new_password: "NewPass123!",
+                 new_password_confirmation: "NewPass123!"
+               }
+        end
+
+        it "increments failed login count" do
+          user.reload
+          expect(user.failed_login_count).to eq(1)
+        end
+
+        it "updates last failed login timestamp" do
+          user.reload
+          expect(user.last_failed_login_on).to be_within(1.second).of(Time.zone.now)
+        end
+
+        it "does not change the password" do
+          user.reload
+          expect(user.check_password?("ValidPass123!")).to be true
+          expect(user.check_password?("NewPass123!")).to be false
+        end
+      end
+
+      describe "accumulates multiple failed attempts" do
+        it "blocks after reaching the threshold" do
+          user.update_columns(
+            failed_login_count: 0,
+            last_failed_login_on: nil
+          )
+
+          # Make 20 failed attempts
+          20.times do
+            post :change_password,
+                 params: {
+                   password_change_user: user.login,
+                   password: "WrongPassword!",
+                   new_password: "NewPass123!",
+                   new_password_confirmation: "NewPass123!"
+                 }
+          end
+
+          user.reload
+          expect(user.failed_login_count).to eq(20)
+
+          # Next attempt should be blocked even with correct password
+          post :change_password,
+               params: {
+                 password_change_user: user.login,
+                 password: "ValidPass123!",
+                 new_password: "NewPass123!",
+                 new_password_confirmation: "NewPass123!"
+               }
+
+          user.reload
+          expect(user.check_password?("ValidPass123!")).to be true
+          expect(user.check_password?("NewPass123!")).to be false
+        end
+      end
+
+      describe "resets failed login count on successful password change" do
+        before do
+          user.update_columns(
+            failed_login_count: 5,
+            last_failed_login_on: 1.minute.ago
+          )
+
+          post :change_password,
+               params: {
+                 password_change_user: user.login,
+                 password: "ValidPass123!",
+                 new_password: "NewPass123!",
+                 new_password_confirmation: "NewPass123!"
+               }
+        end
+
+        it "resets the failed login count to zero" do
+          user.reload
+          expect(user.failed_login_count).to eq(0)
+        end
+
+        it "changes the password successfully" do
+          user.reload
+          expect(user.check_password?("NewPass123!")).to be true
+          expect(user.check_password?("ValidPass123!")).to be false
+        end
+      end
+
+      describe "allows password change after block time expires" do
+        before do
+          user.update_columns(
+            failed_login_count: 20,
+            last_failed_login_on: 31.minutes.ago
+          )
+
+          post :change_password,
+               params: {
+                 password_change_user: user.login,
+                 password: "ValidPass123!",
+                 new_password: "NewPass123!",
+                 new_password_confirmation: "NewPass123!"
+               }
+        end
+
+        it "allows the password change" do
+          user.reload
+          expect(user.check_password?("NewPass123!")).to be true
+        end
+
+        it "resets the failed login count" do
+          user.reload
+          expect(user.failed_login_count).to eq(0)
+        end
       end
     end
   end

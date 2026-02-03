@@ -91,7 +91,7 @@ export class SaveQueryModalComponent extends OpModalComponent {
   }
 
   public get afterFocusOn():HTMLElement {
-    return document.getElementById('work-packages-settings-button') as HTMLElement;
+    return document.getElementById('work-packages-settings-button')!;
   }
 
   public saveQueryAs($event:Event):void {

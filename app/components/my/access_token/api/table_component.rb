@@ -31,25 +31,54 @@
 module My
   module AccessToken
     module API
-      class TableComponent < ::TableComponent
-        def initial_sort
-          %i[id asc]
-        end
+      class TableComponent < OpPrimer::BorderBoxTableComponent
+        columns :token_name, :created_at, :expires_on
+        main_column :token_name
+        mobile_labels :created_at, :expires_on
 
-        def sortable?
-          false
+        def initialize(title:, token_type:, **)
+          super(**)
+
+          @title = title
+          @token_type = token_type
         end
 
         def headers
           [
-            ["token_name", { caption: I18n.t("attributes.name") }],
-            ["created_at", { caption: User.human_attribute_name(:created_at) }],
-            ["expires_on", { caption: I18n.t("my_account.access_tokens.headers.expiration") }]
+            [:token_name, { caption: I18n.t("attributes.name") }],
+            [:created_at, { caption: User.human_attribute_name(:created_at) }],
+            [:expires_on, { caption: I18n.t("my_account.access_tokens.headers.expiration") }]
           ]
         end
 
-        def columns
-          headers.map(&:first)
+        def mobile_title
+          @title
+        end
+
+        def row_class
+          RowComponent
+        end
+
+        def has_actions?
+          true
+        end
+
+        def blank_title
+          I18n.t(:blank_title, scope: i18n_token_scope)
+        end
+
+        def blank_description
+          I18n.t(:blank_description, scope: i18n_token_scope)
+        end
+
+        def blank_icon
+          nil
+        end
+
+        private
+
+        def i18n_token_scope
+          [:my_account, :access_tokens, @token_type.model_name.i18n_key]
         end
       end
     end

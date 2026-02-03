@@ -170,6 +170,42 @@ RSpec.describe Attachment do
     end
   end
 
+  describe "content type detection" do
+    context "with an SVG file uploaded with .png extension" do
+      let(:svg_content) do
+        <<~SVG
+          <?xml version="1.0" encoding="UTF-8"?>
+          <svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+          <image href="text:/etc/passwd" width="600" height="600" />
+          </svg>
+        SVG
+      end
+      let(:svg_file) { FileHelpers.mock_uploaded_file(name: "test.png", content: svg_content, binary: false) }
+      let(:svg_attachment) do
+        build(
+          :attachment,
+          author:,
+          container:,
+          content_type: "image/png", # This should be overridden by actual file content detection
+          file: svg_file
+        )
+      end
+
+      it "correctly detects the content type as SVG based on file content, not filename" do
+        expect(svg_attachment.content_type).to eq "image/svg+xml"
+      end
+
+      it "does not allow SVG content type to be misidentified as image/png" do
+        expect(svg_attachment.content_type).not_to eq "image/png"
+      end
+
+      it "relies on file content detection, not filename-based narrowing" do
+        detected_type = described_class.content_type_for(svg_file.path)
+        expect(detected_type).to eq "image/svg+xml"
+      end
+    end
+  end
+
   describe "two attachments with same file name" do
     let(:second_file) { create(:uploaded_jpg, name: file.original_filename) }
 
@@ -227,12 +263,12 @@ RSpec.describe Attachment do
       let(:url_options) { {} }
       let(:query) { attachment.external_url(**url_options).to_s.split("?").last }
 
-      it "has a default expiry time" do
+      it "has a default expiration time" do
         expect(query).to include "X-Amz-Expires="
         expect(query).not_to include "X-Amz-Expires=3600"
       end
 
-      context "with a custom expiry time" do
+      context "with a custom expiration time" do
         let(:url_options) { { expires_in: 1.hour } }
 
         it "uses that time" do
@@ -240,7 +276,7 @@ RSpec.describe Attachment do
         end
       end
 
-      context "with expiry time exceeding maximum" do
+      context "with expiration time exceeding maximum" do
         let(:url_options) { { expires_in: 1.year } }
 
         it "uses the allowed max" do

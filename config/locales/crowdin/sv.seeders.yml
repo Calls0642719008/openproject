@@ -43,13 +43,6 @@ sv:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Dokumentation
-        item_1:
-          name: Specifikation
-        item_2:
-          name: Andra
       project_query_roles:
         item_0:
           name: Project query viewer
@@ -116,11 +109,11 @@ sv:
             item_0: Category 1 (to be changed in Project settings)
           queries:
             item_0:
-              name: Project plan
+              name: Projektplan
             item_1:
               name: Milstolpar
             item_2:
-              name: Tasks
+              name: Uppgifter
             item_3:
               name: Team planerare
           boards:
@@ -130,9 +123,9 @@ sv:
               name: Grundläggande tavla
               lists:
                 item_0:
-                  name: Wish list
+                  name: Önskelista
                 item_1:
-                  name: Short list
+                  name: Kort lista
                 item_2:
                   name: Priority list for today
                 item_3:
@@ -143,7 +136,7 @@ sv:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Välkommen
               item_1:
                 options:
                   name: Komma igång
@@ -189,7 +182,7 @@ sv:
                 item_2:
                   subject: Setup conference website
             item_2:
-              subject: Conference
+              subject: Konferens
             item_3:
               subject: Follow-up tasks
               children:
@@ -220,7 +213,7 @@ sv:
 
             More information: [https://www.openproject.org/docs/user-guide/wiki/](https://www.openproject.org/docs/user-guide/wiki/)
         scrum-project:
-          name: Scrum project
+          name: Scrum-projekt
           status_explanation: All tasks are on schedule. The people involved know their tasks. The system is completely set up.
           description: This is a short summary of the goals of this demo Scrum project.
           news:
@@ -290,13 +283,13 @@ sv:
             item_0: Category 1 (to be changed in Project settings)
           queries:
             item_0:
-              name: Project plan
+              name: Projektplan
             item_1:
               name: Produktbacklog
             item_2:
               name: Sprint 1
             item_3:
-              name: Tasks
+              name: Uppgifter
           boards:
             kanban:
               name: Kanban board
@@ -304,9 +297,9 @@ sv:
               name: Aktivitetstavla
               lists:
                 item_0:
-                  name: Wish list
+                  name: Önskelista
                 item_1:
-                  name: Short list
+                  name: Kort lista
                 item_2:
                   name: Priority list for today
                 item_3:
@@ -315,7 +308,7 @@ sv:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Välkommen
               item_1:
                 options:
                   name: Komma igång
@@ -339,26 +332,26 @@ sv:
                   name: Arbetspaket
               item_6:
                 options:
-                  name: Project plan
+                  name: Projektplan
           work_packages:
             item_0:
-              subject: New login screen
+              subject: Ny inloggningsskärm
             item_1:
               subject: Password reset does not send email
             item_2:
-              subject: New website
+              subject: Ny webbplats
               children:
                 item_0:
                   subject: Newsletter registration form
                 item_1:
                   subject: Implement product tour
                 item_2:
-                  subject: New landing page
+                  subject: Ny landningssida
                   children:
                     item_0:
                       subject: Create wireframes for new landing page
             item_3:
-              subject: Contact form
+              subject: Kontaktformulär
             item_4:
               subject: Feature carousel
               children:
@@ -367,7 +360,7 @@ sv:
             item_5:
               subject: Wrong hover color
             item_6:
-              subject: SSL certificate
+              subject: SSL-certifikat
             item_7:
               subject: Set-up Staging environment
             item_8:

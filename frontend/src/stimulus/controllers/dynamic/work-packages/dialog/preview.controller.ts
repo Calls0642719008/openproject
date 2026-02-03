@@ -29,7 +29,7 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
-import Idiomorph from 'idiomorph/dist/idiomorph.cjs';
+import { Idiomorph } from 'idiomorph';
 
 interface TurboBeforeFrameRenderEventDetail {
   render:(currentElement:HTMLElement, newElement:HTMLElement) => void;

@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class UploadLinkContract < Dry::Validation::Contract
+      class UploadLinkContract < DryApplicationContract
         params do
           required(:folder_id).filled(:string)
           required(:file_name).filled(:string)

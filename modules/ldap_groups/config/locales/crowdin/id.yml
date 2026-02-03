@@ -5,8 +5,8 @@ id:
         title: 'Sinkronisasi grup LDAP'
         description: 'Sinkronisasi grup LDAP dengan grup OpenProject untuk mengatur pengguna, mengubah hak akses, dan memberikan fasilitas manajemen antar grup.'
   plugin_openproject_ldap_groups:
-    name: "OpenProject LDAP groups"
-    description: "Synchronization of LDAP group memberships."
+    name: "Grup LDAP OpenProject"
+    description: "Sinkronisasi keanggotaan grup LDAP."
   activerecord:
     attributes:
       ldap_groups/synchronized_group:

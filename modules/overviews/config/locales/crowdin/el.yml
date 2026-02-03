@@ -1,4 +1,5 @@
 el:
   overviews:
-    label: 'Επισκόπηση'
-  permission_manage_overview: 'Διαχείριση της σελίδας επισκόπησης'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Πίνακας Ελέγχου"
+    label_overview: "Επισκόπηση"

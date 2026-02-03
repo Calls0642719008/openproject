@@ -31,9 +31,9 @@ ca:
         spent: "Gastat"
         spent_on: "Data"
         logged_by: "Registrat per"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Registrat per
+        entity_id: Registrat per
+        entity_gid: Registrat per
       cost_type:
         unit: "Nom d'unitat"
         unit_plural: "Noms d'unitat pluralitzats"
@@ -61,9 +61,9 @@ ca:
         start_time: Hora d'inici
         end_time: Finish time
         time: Hora
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Registrat per
+        entity_id: Registrat per
+        entity_gid: Registrat per
     models:
       time_entry:
         one: "Entrada de temps"

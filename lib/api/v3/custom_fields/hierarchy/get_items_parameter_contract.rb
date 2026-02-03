@@ -32,12 +32,7 @@ module API
   module V3
     module CustomFields
       module Hierarchy
-        class GetItemsParameterContract < Dry::Validation::Contract
-          config.messages.backend = :i18n
-
-          # ToDo: https://community.openproject.org/projects/openproject/work_packages/59238/activity
-          config.messages.load_paths << "config/locales/en.yml"
-
+        class GetItemsParameterContract < DryApplicationContract
           option :hierarchy_root
 
           params do

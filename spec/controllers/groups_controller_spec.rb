@@ -190,6 +190,37 @@ RSpec.describe GroupsController do
       expect(response).to render_template "show"
     end
 
+    context "when having view_members permission in a project the group belongs to" do
+      let(:project) { create(:project) }
+      let(:user) { create(:user, member_with_permissions: { project => [:view_members] }) }
+      let(:group_members) { create_list(:user, 2) }
+
+      before do
+        create(:member, project:, principal: group, roles: [create(:project_role)])
+      end
+
+      it "shows members" do
+        get :show, params: { id: group.id }
+        expect(assigns(:group_users)).to match_array(group_members)
+      end
+    end
+
+    context "when having view_members permission in a project the group does not belong to" do
+      let(:project) { create(:project) }
+      let(:other_project) { create(:project) }
+      let(:user) { create(:user, member_with_permissions: { other_project => [:view_members] }) }
+      let(:group_members) { create_list(:user, 2) }
+
+      before do
+        create(:member, project:, principal: group, roles: [create(:project_role)])
+      end
+
+      it "does not show members" do
+        get :show, params: { id: group.id }
+        expect(assigns(:group_users)).to be_empty
+      end
+    end
+
     it "forbids new" do
       get :new
       expect(response).not_to be_successful

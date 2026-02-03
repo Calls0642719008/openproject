@@ -5,7 +5,7 @@
         flex.with_row(mt: 3) do
           render(
             WorkPackageMeetingsTab::MeetingComponent.new(
-              meeting:, meeting_agenda_items:
+              work_package: @work_package, meeting:, meeting_agenda_items:
             )
           )
         end

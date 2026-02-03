@@ -68,9 +68,8 @@ module Bim
         link_to "",
                 bcf_project_ifc_model_path(model.project, model),
                 class: "icon icon-delete",
-                data: { confirm: I18n.t(:text_are_you_sure) },
-                title: I18n.t(:button_delete),
-                method: :delete
+                data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) },
+                title: I18n.t(:button_delete)
       end
 
       def download_link

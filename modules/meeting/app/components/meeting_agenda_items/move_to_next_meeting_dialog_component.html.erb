@@ -34,10 +34,12 @@ See COPYRIGHT and LICENSE files for more details.
       confirm_button_text: I18n.t(:label_agenda_item_move),
       title:,
       form_arguments: {
-        action: move_to_next_meeting_agenda_item_path(
+        action: move_to_next_project_meeting_agenda_item_path(
+          @agenda_item.meeting.project,
           @agenda_item.meeting,
           @agenda_item,
-          datetime: @datetime
+          datetime: @datetime,
+          current_occurrence: @current_occurrence
         ),
         method: :post
       }
@@ -45,7 +47,7 @@ See COPYRIGHT and LICENSE files for more details.
   ) do |dialog|
     dialog.with_confirmation_message do |message|
       message.with_heading(tag: :h2) { title }
-      message.with_description_content(confirmation_message)
+      message.with_description_content(simple_format(confirmation_message))
     end
   end
 %>

@@ -17,7 +17,7 @@ allOf:
               - $ref: "./link.yml"
               - description: |-
                   This file links collection
-                  
+
                   **Resource**: ProjectPhaseDefinitionCollectionModel
       _embedded:
         type: object
@@ -40,8 +40,8 @@ example:
       - id: 14
         name: "Initiating"
         _type: ProjectPhaseDefinition
-        _hint: project phase definition resource shortened for brevity
+        _abbreviated: project phase definition resource shortened for brevity
       - id: 15
         name: "Executing"
         _type: ProjectPhaseDefinition
-        _hint: project phase definition resource shortened for brevity
+        _abbreviated: project phase definition resource shortened for brevity

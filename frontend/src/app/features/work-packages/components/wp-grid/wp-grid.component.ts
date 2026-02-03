@@ -27,7 +27,7 @@
 //++
 
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output,
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, OnInit,
 } from '@angular/core';
 import { WorkPackageViewHighlightingService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-highlighting.service';
 import { CardViewOrientation } from 'core-app/features/work-packages/components/wp-card-view/wp-card-view.component';
@@ -45,26 +45,27 @@ import { WorkPackageViewOutputs } from 'core-app/features/work-packages/routing/
   selector: 'wp-grid',
   template: `
     <wp-card-view [dragOutOfHandler]="canDragOutOf"
-                  [dragInto]="dragInto"
-                  [cardsRemovable]="false"
-                  [highlightingMode]="highlightingMode"
-                  [showStatusButton]="true"
-                  [orientation]="gridOrientation"
-                  (onMoved)="switchToManualSorting()"
-                  (selectionChanged)="selectionChanged.emit($event)"
-                  (itemClicked)="itemClicked.emit($event)"
-                  (stateLinkClicked)="stateLinkClicked.emit($event)"
-                  [showEmptyResultsBox]="true"
-                  [showInfoButton]="true"
-                  [shrinkOnMobile]="true">
-    </wp-card-view>
+      [dragInto]="dragInto"
+      [cardsRemovable]="false"
+      [highlightingMode]="highlightingMode"
+      [showStatusButton]="true"
+      [orientation]="gridOrientation"
+      (onMoved)="switchToManualSorting()"
+      (selectionChanged)="selectionChanged.emit($event)"
+      (itemClicked)="itemClicked.emit($event)"
+      (stateLinkClicked)="stateLinkClicked.emit($event)"
+      [showEmptyResultsBox]="true"
+      [showInfoButton]="true"
+      [shrinkOnMobile]="true" />
 
-    <div *ngIf="showResizer"
-         class="hidden-for-mobile hide-when-print">
-      <wp-resizer [elementClass]="resizerClass"
-                  [localStorageKey]="resizerStorageKey"></wp-resizer>
-    </div>
-  `,
+    @if (showResizer) {
+      <div
+        class="hidden-for-mobile hide-when-print">
+        <wp-resizer [elementClass]="resizerClass"
+        [localStorageKey]="resizerStorageKey" />
+      </div>
+    }
+    `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     DragAndDropService,
@@ -72,7 +73,7 @@ import { WorkPackageViewOutputs } from 'core-app/features/work-packages/routing/
   ],
   standalone: false,
 })
-export class WorkPackagesGridComponent implements WorkPackageViewOutputs {
+export class WorkPackagesGridComponent implements WorkPackageViewOutputs, OnInit {
   @Input() public configuration:WorkPackageTableConfiguration;
 
   @Input() public showResizer = false;

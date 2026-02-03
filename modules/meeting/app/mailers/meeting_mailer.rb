@@ -89,6 +89,21 @@ class MeetingMailer < UserMailer
     end
   end
 
+  def ended_series(series, user, actor)
+    @actor = actor
+    @user = user
+    @series = series
+
+    open_project_headers "Project" => @series.project.identifier,
+                         "Meeting-Id" => @series.id
+
+    with_attached_ics(@series, user) do
+      subject = I18n.t("meeting.email.ended.header_series", title: @series.title)
+
+      mail(to: user, subject: "[#{@series.project.name}] #{subject}")
+    end
+  end
+
   def icalendar_notification(meeting, user, _actor, **)
     @meeting = meeting
 
@@ -97,6 +112,36 @@ class MeetingMailer < UserMailer
     with_attached_ics(meeting, user) do
       subject = "[#{@meeting.project.name}] #{@meeting.title}"
       mail(to: user, subject:)
+    end
+  end
+
+  def participant_added(meeting, user, actor, added_participant:)
+    @actor = actor
+    @meeting = meeting
+    @user = user
+    @added_participant = added_participant
+
+    open_project_headers "Project" => @meeting.project.identifier,
+                         "Meeting-Id" => @meeting.id
+
+    with_attached_ics(meeting, user) do
+      subject = I18n.t("meeting.email.participant_added.header", title: @meeting.title)
+      mail(to: user, subject: "[#{@meeting.project.name}] #{subject}")
+    end
+  end
+
+  def participant_removed(meeting, user, actor, removed_participant:)
+    @actor = actor
+    @meeting = meeting
+    @user = user
+    @removed_participant = removed_participant
+
+    open_project_headers "Project" => @meeting.project.identifier,
+                         "Meeting-Id" => @meeting.id
+
+    with_attached_ics(meeting, user) do
+      subject = I18n.t("meeting.email.participant_removed.header", title: @meeting.title)
+      mail(to: user, subject: "[#{@meeting.project.name}] #{subject}")
     end
   end
 

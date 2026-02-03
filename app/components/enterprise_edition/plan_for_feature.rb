@@ -81,7 +81,7 @@ module EnterpriseEdition
     end
 
     def plan_text
-      plan_name = render(Primer::Beta::Text.new(font_weight: :bold, classes: "upsell-colored")) do
+      plan_name = render(Primer::Beta::Text.new(font_weight: :bold, classes: "upsell-colored-text")) do
         I18n.t("ee.upsell.plan_name", plan: plan.capitalize)
       end
 

@@ -39,7 +39,6 @@ module WorkPackageTypes
     attribute :project_ids
     attribute :attribute_groups
 
-    validates :name, presence: true, length: { maximum: 255 }
     validates :is_default, :is_milestone, :is_in_roadmap, inclusion: { in: [true, false] }
   end
 end

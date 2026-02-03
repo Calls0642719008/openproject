@@ -29,33 +29,33 @@
 #++
 
 class FavoritesController < ApplicationController
-  before_action :find_favored_by_object
+  before_action :find_favorited_by_object
   before_action :require_login
   no_authorization_required! :favorite, :unfavorite
 
   def favorite
-    if @favored.visible?(User.current)
-      set_favored(User.current, true)
+    if @favorited.visible?(User.current)
+      set_favorited(User.current, true)
     else
       render_403
     end
   end
 
   def unfavorite
-    set_favored(User.current, false)
+    set_favorited(User.current, false)
   end
 
   private
 
-  def find_favored_by_object
+  def find_favorited_by_object
     model_name = params[:object_type]
-    klass = ::OpenProject::Acts::Favorable::Registry.instance(model_name)
-    @favored = klass&.find(params[:object_id])
-    render_404 unless @favored
+    klass = ::OpenProject::Acts::Favoritable::Registry.instance(model_name)
+    @favorited = klass&.find(params[:object_id])
+    render_404 unless @favorited
   end
 
-  def set_favored(user, favored)
-    @favored.set_favored(user, favored:)
+  def set_favorited(user, favorited)
+    @favorited.set_favorited(user, favorited:)
 
     respond_to do |format|
       format.html { redirect_back(fallback_location: home_url, status: 303) }

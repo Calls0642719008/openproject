@@ -40,6 +40,8 @@ uk:
               task_version_must_be_the_same_as_story_version: "має збігатись із версією батьківської історії."
         sprint:
           cannot_end_before_it_starts: "Спринт не може закінчитися, перш ніж він почне працювати."
+  attributes:
+    task_type: "Тип завдання"
   backlogs:
     add_new_story: "Новий сюжет"
     any: "будь-який"
@@ -100,7 +102,10 @@ uk:
   backlogs_empty_title: "Не визначено жодних версій для використання у backlogs"
   backlogs_empty_action_text: "Щоб розпочати роботу з backlogs, створіть нову версію та призначте її у стовпці backlogs."
   button_edit_wiki: "Редагувати wiki-сторінку"
-  error_backlogs_task_cannot_be_story: "Налаштування недійсні. Вибраний тип завдання не може також бути історією."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "не може також бути типом історії"
   error_intro_plural: "Сталися такі помилки:"
   error_intro_singular: "Сталася така помилка:"
   error_outro: "Виправте наведені вище помилки перед повторним поданням."
@@ -124,6 +129,10 @@ uk:
   label_points_burn_up: "Вгору"
   label_product_backlog: "backlog продукту"
   label_select_all: "Вибрати все"
+  label_select_type: "Виберіть тип"
+  label_select_types: "Виберіть типи"
+  label_selected_type: "Вибраний тип"
+  label_selected_types: "Вибрані типи"
   label_sprint_backlog: "backlog спринта"
   label_sprint_cards: "Експортувати картки"
   label_sprint_impediments: "Перешкоди спринту"
@@ -160,3 +169,7 @@ uk:
   version_settings_display_option_left: "зліва"
   version_settings_display_option_none: "нічого"
   version_settings_display_option_right: "праворуч"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Типи, що вважаються історіями беклогу (такі як функція, історія користувача). Мають відрізнятися від типу завдання.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Тип, що використовується для завдань історії. Має відрізнятися від типів історії.

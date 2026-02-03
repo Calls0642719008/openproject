@@ -35,5 +35,6 @@ module ProjectCustomFieldSections
     attribute :name
     attribute :position
     attribute :type
+    attribute :display_representation
   end
 end

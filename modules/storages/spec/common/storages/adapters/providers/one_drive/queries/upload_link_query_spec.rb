@@ -40,7 +40,7 @@ module Storages
             let(:storage) { create(:one_drive_sandbox_storage) }
             let(:auth_strategy) { Registry["one_drive.authentication.userless"].call }
 
-            it_behaves_like "adapter upload_link_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "upload_link"
 
             context "when requesting an upload link for an existing file", vcr: "one_drive/upload_link_success" do
               let(:input_data) do
@@ -76,8 +76,9 @@ module Storages
                 Input::UploadLink
                   .build(folder_id: "04AZJL5PN6Y2GOVW7725BZO354PWSELRRZ", file_name: "DeathStart_blueprints.tiff").value!
               end
+              let(:error_source) { described_class }
 
-              it_behaves_like "adapter upload_link_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

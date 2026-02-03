@@ -29,7 +29,8 @@ On the very top of the table, sprint impediments are documented and assigned to 
 
 ![User-guide-sprint-impediments](User-guide-sprint-impediments.png)
 
-> **Note**: If you add an impediment and type the work package number into the field Blocked (ID), the respective work package will be linked to the impediment. As long as the impediment remains, the work package cannot be closed.
+> [!NOTE]
+> If you add an impediment and type the work package number into the field Blocked (ID), the respective work package will be linked to the impediment. As long as the impediment remains, the work package cannot be closed.
 
 ![sprint impediments](User-guide-add-impediment.png)
 

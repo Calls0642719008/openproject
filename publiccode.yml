@@ -7,8 +7,8 @@ name: OpenProject
 applicationSuite: openDesk
 url: 'https://github.com/opf/openproject'
 roadmap: 'https://www.openproject.org/roadmap'
-releaseDate: '2025-08-25'
-softwareVersion: '16.3.2'
+releaseDate: '2026-01-27'
+softwareVersion: '17.0.2'
 developmentStatus: stable
 softwareType: standalone/web
 logo: 'publiccode_logo.svg'
@@ -141,7 +141,7 @@ description:
 
       OpenProject complies with the requirements of the [BSI IT-Grundschutz](https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/IT-Grundschutz/it-grundschutz_node.html) and is continuously tested against the WCAG 2.1 guidelines, as demonstrated in the [audit report](https://gitlab.opencode.de/bmi/opendesk/info/-/blob/main/24.03/Barrierefreiheit/Barrierefreiheitsbericht%20-%20Komponente%20Projekte.pdf).
 
-      OpenProject is fully compatible with the [German Administrative Cloud Strategy (DVS)](https://www.cio.bund.de/Webs/CIO/EN/digital-solutions/digital-sovereignty/german-administrative-cloud-strategy/german-administrative-cloud-strategy-node.html).
+      OpenProject is fully compatible with the [German Administrative Cloud Strategy (DVS)](https://www.cio.bund.de/Webs/CIO/DE/digitale-loesungen/digitale-souveraenitaet/deutsche-verwaltungscloud-strategie/deutsche-verwaltungscloud-strategie-node.html).
 
       OpenProject is part of the open-source office and collaboration suite
       [openDesk](https://www.opendesk.eu).

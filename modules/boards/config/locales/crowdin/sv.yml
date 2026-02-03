@@ -1,15 +1,15 @@
 #English strings go here
 sv:
   plugin_openproject_boards:
-    name: "OpenProject Boards"
-    description: "Provides board views."
+    name: "OpenProject Tavlor"
+    description: "Tillhandahåller kalendervyer."
   permission_show_board_views: "Visa tavlor"
   permission_manage_board_views: "Hantera tavlor"
   project_module_board_view: "Tavlor"
   ee:
     upsell:
       board_view:
-        description: 'Would you like to automate your workflows with Boards? Advanced boards are an Enterprise add-on. Please upgrade to a paid plan.'
+        description: 'Vill du automatisera dina arbetsflöden med Tavlor? Avancerade tavlor är ett Enterprise tillägg. Vänligen uppgradera till en betald plan.'
   boards:
     label_board: "Tavla"
     label_boards: "Tavlor"
@@ -27,14 +27,14 @@ sv:
       basic: Enkel
     board_type_descriptions:
       basic: >
-        Start from scratch with a blank board. Manually add cards and columns to this board.
+        Börja från början med en tom tavla. Lägg till kort och kolumner manuellt till tavlan.
       status: >
-        Basic kanban style board with columns for status such as To Do, In Progress, Done.
+        Grundläggande kanban-tavla med kolumner för status, t. ex. Att göra, Pågående, Klar.
       assignee: >
-        Board with automated columns based on assigned users. Ideal for dispatching work packages.
+        Tavla med automatiserade kolumner baserat på tilldelade användare. Perfekt för att skicka ut arbetspaket.
       version: >
-        Board with automated columns based on the version attribute. Ideal for planning product development.
+        Tavla med automatiserade kolumner baserade på versionsattributet. Idealisk för planering av produktutveckling.
       subproject: >
-        Board with automated columns for subprojects. Dragging work packages to other lists updates the (sub-)project accordingly.
+        Tavla med automatiserade kolumner för delprojekt. Genom att dra arbetspaket till andra listor uppdateras (under)projektet i enlighet med detta.
       subtasks: >
-        Board with automated columns for sub-elements. Dragging work packages to other lists updates the parent accordingly.
+        Tavla med automatiserade kolumner för underelement. Om du drar arbetspaket till andra listor uppdateras den överordnade listan i enlighet med detta.

@@ -31,12 +31,11 @@
 require "spec_helper"
 require_relative "../shared_context"
 
-RSpec.describe "Edit project custom fields on project overview page", "attribute help texts", :js, :selenium do
+RSpec.describe "Edit project custom fields on project overview page", "attribute help texts", :js do
   include_context "with seeded projects, members and project custom fields"
   include API::V3::Utilities::PathHelper
 
   let(:overview_page) { Pages::Projects::Show.new(project) }
-  let(:edit_dialog) { Components::Projects::ProjectCustomFields::EditDialog.new(project, section) }
 
   before do
     login_as member_with_project_attributes_edit_permissions
@@ -44,23 +43,14 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
   end
 
   context "for input fields section" do
-    let(:section) { section_for_input_fields }
-
     context "without attribute help texts defined" do
-      before do
-        overview_page.open_edit_dialog_for_section(section)
-      end
-
       it "shows field labels without help text link" do
-        edit_dialog.expect_title section.name
-
-        edit_dialog.expect_field_label_without_help_text "Boolean field"
-        edit_dialog.expect_field_label_without_help_text "Date field"
-        edit_dialog.expect_field_label_without_help_text "Float field"
-        edit_dialog.expect_field_label_without_help_text "Integer field"
-        edit_dialog.expect_field_label_without_help_text "Link field"
-        edit_dialog.expect_field_label_without_help_text "String field"
-        edit_dialog.expect_field_label_without_help_text "Text field"
+        input_fields.each do |custom_field|
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(custom_field)
+          edit_dialog.expect_title "Edit attribute"
+          edit_dialog.expect_field_label_without_help_text custom_field.name
+          edit_dialog.close
+        end
       end
     end
 
@@ -73,25 +63,19 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
       let!(:string_help_text)  { create(:project_help_text, attribute_name: string_project_custom_field.attribute_name) }
       let!(:text_help_text)    { create(:project_help_text, attribute_name: text_project_custom_field.attribute_name) }
 
-      before do
-        overview_page.open_edit_dialog_for_section(section)
-      end
-
       it "shows field labels with help text link" do
-        edit_dialog.expect_title section.name
-
-        edit_dialog.expect_field_label_with_help_text "Boolean field"
-        edit_dialog.expect_field_label_with_help_text "Date field"
-        edit_dialog.expect_field_label_with_help_text "Float field"
-        edit_dialog.expect_field_label_with_help_text "Integer field"
-        edit_dialog.expect_field_label_with_help_text "Link field"
-        edit_dialog.expect_field_label_with_help_text "String field"
-        edit_dialog.expect_field_label_with_help_text "Text field"
+        input_fields.each do |custom_field|
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(custom_field)
+          edit_dialog.expect_title "Edit attribute"
+          edit_dialog.expect_field_label_with_help_text custom_field.name
+          edit_dialog.close
+        end
       end
 
       context "without attachments" do
         it "shows help text modal on clicking help text link" do
-          edit_dialog.expect_title section.name
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(date_project_custom_field)
+          edit_dialog.expect_title "Edit attribute"
 
           edit_dialog.click_help_text_link_for_label "Date field"
 
@@ -110,7 +94,8 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
         let!(:attachments) { create_list(:attachment, 2, container: integer_help_text) }
 
         it "shows help text modal, including attachments, on clicking help text link" do
-          edit_dialog.expect_title section.name
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(integer_project_custom_field)
+          edit_dialog.expect_title "Edit attribute"
 
           edit_dialog.click_help_text_link_for_label "Integer field"
           expect(page).to have_modal "Integer field"
@@ -140,19 +125,14 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
   end
 
   context "for select fields section" do
-    let(:section) { section_for_select_fields }
-
     context "without attribute help texts defined" do
-      before do
-        overview_page.open_edit_dialog_for_section(section)
-      end
-
       it "shows field labels without help text link" do
-        edit_dialog.expect_title section.name
-
-        edit_dialog.expect_field_label_without_help_text "List field"
-        edit_dialog.expect_field_label_without_help_text "Version field"
-        edit_dialog.expect_field_label_without_help_text "User field"
+        select_fields.each do |custom_field|
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(custom_field)
+          edit_dialog.expect_title "Edit attribute"
+          edit_dialog.expect_field_label_without_help_text custom_field.name
+          edit_dialog.close
+        end
       end
     end
 
@@ -161,20 +141,18 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
       let!(:version_help_text) { create(:project_help_text, attribute_name: version_project_custom_field.attribute_name) }
       let!(:user_help_text)    { create(:project_help_text, attribute_name: user_project_custom_field.attribute_name) }
 
-      before do
-        overview_page.open_edit_dialog_for_section(section)
-      end
-
       it "shows field labels with help text link" do
-        edit_dialog.expect_title section.name
-
-        edit_dialog.expect_field_label_with_help_text "List field"
-        edit_dialog.expect_field_label_with_help_text "Version field"
-        edit_dialog.expect_field_label_with_help_text "User field"
+        select_fields.each do |custom_field|
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(custom_field)
+          edit_dialog.expect_title "Edit attribute"
+          edit_dialog.expect_field_label_with_help_text custom_field.name
+          edit_dialog.close
+        end
       end
 
       it "shows help text modal on clicking help text link" do
-        edit_dialog.expect_title section.name
+        edit_dialog = overview_page.open_edit_dialog_for_custom_field(user_project_custom_field)
+        edit_dialog.expect_title "Edit attribute"
 
         edit_dialog.click_help_text_link_for_label "User field"
 
@@ -189,20 +167,15 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
     end
   end
 
-  context "for multi select fields section" do
-    let(:section) { section_for_multi_select_fields }
-
+  context "for multi select fields" do
     context "without attribute help texts defined" do
-      before do
-        overview_page.open_edit_dialog_for_section(section)
-      end
-
       it "shows field labels without help text link" do
-        edit_dialog.expect_title section.name
-
-        edit_dialog.expect_field_label_without_help_text "Multi list field"
-        edit_dialog.expect_field_label_without_help_text "Multi version field"
-        edit_dialog.expect_field_label_without_help_text "Multi user field"
+        multi_select_fields.each do |custom_field|
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(custom_field)
+          edit_dialog.expect_title "Edit attribute"
+          edit_dialog.expect_field_label_without_help_text custom_field.name
+          edit_dialog.close
+        end
       end
     end
 
@@ -217,20 +190,18 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
         create(:project_help_text, attribute_name: multi_user_project_custom_field.attribute_name)
       end
 
-      before do
-        overview_page.open_edit_dialog_for_section(section)
-      end
-
       it "shows field labels with help text link" do
-        edit_dialog.expect_title section.name
-
-        edit_dialog.expect_field_label_with_help_text "Multi list field"
-        edit_dialog.expect_field_label_with_help_text "Multi version field"
-        edit_dialog.expect_field_label_with_help_text "Multi user field"
+        multi_select_fields.each do |custom_field|
+          edit_dialog = overview_page.open_edit_dialog_for_custom_field(custom_field)
+          edit_dialog.expect_title "Edit attribute"
+          edit_dialog.expect_field_label_with_help_text custom_field.name
+          edit_dialog.close
+        end
       end
 
       it "shows help text modal on clicking help text link" do
-        edit_dialog.expect_title section.name
+        edit_dialog = overview_page.open_edit_dialog_for_custom_field(multi_list_project_custom_field)
+        edit_dialog.expect_title "Edit attribute"
 
         edit_dialog.click_help_text_link_for_label "Multi list field"
 

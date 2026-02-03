@@ -224,6 +224,15 @@ example:
         project:
           href: "/api/v3/projects/918"
           title: "RVC Test"
+        schema:
+          href: "/api/v3/work_packages/schemas/11-2"
+        author:
+          href: "/api/v3/users/1"
+          title: OpenProject Admin - admin
+        priority:
+          href: "/api/v3/priorities/2"
+          title: Normal
+        ancestors: []
   _links:
     self:
       href: "/api/v3/activity/1"

@@ -67,7 +67,7 @@ export class DateDisplayField extends HighlightableDisplayField {
   }
 
   public get canOverdue():boolean {
-    return ['dueDate', 'date'].indexOf(this.name) !== -1;
+    return ['dueDate', 'date'].includes(this.name);
   }
 
   public get valueString() {

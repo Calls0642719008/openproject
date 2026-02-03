@@ -40,6 +40,8 @@ zh-CN:
               task_version_must_be_the_same_as_story_version: "必须与父级故事的版本相同。"
         sprint:
           cannot_end_before_it_starts: "比赛不可以在开始前结束。"
+  attributes:
+    task_type: "任务类型"
   backlogs:
     add_new_story: "新故事"
     any: "任一"
@@ -100,7 +102,10 @@ zh-CN:
   backlogs_empty_title: "未定义要用于待办清单的版本"
   backlogs_empty_action_text: "要开始使用待办清单，请创建一个新版本并将其分配到待办清单列。"
   button_edit_wiki: "编辑维基页面"
-  error_backlogs_task_cannot_be_story: "设置无效。所选任务类型也不能是故事类型。"
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "不能同时为故事类型"
   error_intro_plural: "发生以下错误："
   error_intro_singular: "发生以下错误："
   error_outro: "请在再次提交前更正上面的错误。"
@@ -124,6 +129,10 @@ zh-CN:
   label_points_burn_up: "增加"
   label_product_backlog: "产品待办清单"
   label_select_all: "全选"
+  label_select_type: "选择类型"
+  label_select_types: "选择类型"
+  label_selected_type: "所选类型"
+  label_selected_types: "所选类型"
   label_sprint_backlog: "冲刺 (sprint) 待办清单"
   label_sprint_cards: "导出卡片"
   label_sprint_impediments: "冲刺 (sprint) 障碍"
@@ -160,3 +169,7 @@ zh-CN:
   version_settings_display_option_left: "左"
   version_settings_display_option_none: "无"
   version_settings_display_option_right: "右"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    被视为积压工作故事的类型（例如，功能、用户故事）。必须与任务类型不同。
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    用于故事任务的类型。必须与故事类型不同。

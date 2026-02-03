@@ -36,7 +36,7 @@ RSpec.describe Queries::Capabilities::Filters::IdFilter do
     let(:type) { :string }
     let(:model) { Capability }
     let(:attribute) { :id }
-    let(:values) { ["memberships/create/p3-5"] }
+    let(:values) { ["memberships/create/w3-5"] }
 
     describe "#available_operators" do
       it "supports = and !" do
@@ -50,8 +50,7 @@ RSpec.describe Queries::Capabilities::Filters::IdFilter do
         let(:values) { [] }
 
         it "is invalid" do
-          expect(instance)
-            .to be_invalid
+          expect(instance).not_to be_valid
         end
       end
 
@@ -63,7 +62,16 @@ RSpec.describe Queries::Capabilities::Filters::IdFilter do
       end
 
       context "with multiple valid values" do
-        let(:values) { ["memberships/create/p3-5", "users/create/g-5"] }
+        let(:values) { %w[memberships/create/w3-5 users/create/g-5] }
+
+        it "is valid" do
+          expect(instance)
+            .to be_valid
+        end
+      end
+
+      context "with deprecated but still supported values" do
+        let(:values) { ["memberships/create/p3-5"] }
 
         it "is valid" do
           expect(instance)
@@ -75,8 +83,7 @@ RSpec.describe Queries::Capabilities::Filters::IdFilter do
         let(:values) { ["foo/bar/baz-5"] }
 
         it "is invalid" do
-          expect(instance)
-            .to be_invalid
+          expect(instance).not_to be_valid
         end
       end
     end

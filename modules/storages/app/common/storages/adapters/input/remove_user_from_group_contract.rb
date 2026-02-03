@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class RemoveUserFromGroupContract < Dry::Validation::Contract
+      class RemoveUserFromGroupContract < DryApplicationContract
         params do
           required(:user).filled(:string)
           required(:group).filled(:string)

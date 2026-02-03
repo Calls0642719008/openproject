@@ -33,7 +33,14 @@
 module Accounts::Authorization
   extend ActiveSupport::Concern
 
-  METHODS_ENFORCING_AUTHORIZATION = %i[require_admin authorize authorize_global load_and_authorize_in_optional_project].freeze
+  METHODS_ENFORCING_AUTHORIZATION = %i[
+    require_admin
+    authorize
+    authorize_global
+    authorize_with_global_permission
+    load_and_authorize_in_optional_project
+    load_and_authorize_with_permission_in_project
+  ].freeze
 
   included do
     class_attribute :authorization_ensured,
@@ -86,13 +93,14 @@ module Accounts::Authorization
   # * a parameter-like Hash (eg. { controller: '/projects', action: 'edit' })
   # * a permission Symbol (eg. :edit_project)
   def do_authorize(action, global: false) # rubocop:disable Metrics/PerceivedComplexity
-    is_authorized = if global
-                      User.current.allowed_based_on_permission_context?(action)
-                    else
-                      User.current.allowed_based_on_permission_context?(action,
-                                                                        project: @project || @projects,
-                                                                        entity: @work_package || @work_packages)
-                    end
+    is_authorized =
+      if global
+        User.current.allowed_based_on_permission_context?(action)
+      else
+        User.current.allowed_based_on_permission_context?(action,
+                                                          project: @project || @projects,
+                                                          entity: @work_package || @work_packages)
+      end
 
     unless is_authorized
       if @project&.archived?
@@ -206,14 +214,16 @@ module Accounts::Authorization
       end
     end
 
-    # Find a project based on params[:project_id]
-    # and authorize on a given permission
-    def load_and_authorize_with_permission_in_optional_project(permission, **args)
+    def authorize_with_global_permission(permission, **args)
+      authorize_with_permission(permission, global: true, **args)
+    end
+
+    def load_and_authorize_with_permission_in_project(permission, **args)
       authorization_checked_by_default_action(**args.slice(:only, :except))
 
       before_action(**args) do
-        @project = Project.find(params[:project_id]) if params[:project_id].present?
-        do_authorize(permission, global: params[:project_id].blank?)
+        @project = Project.find(params[:project_id])
+        do_authorize(permission, global: false)
       end
     end
   end

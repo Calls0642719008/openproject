@@ -29,6 +29,11 @@
 # ++
 
 class ProjectRole < Role
+  has_many :custom_fields_roles,
+           foreign_key: "role_id",
+           dependent: :restrict_with_error,
+           inverse_of: :role
+
   def self.givable
     super
       .where(type: "ProjectRole")

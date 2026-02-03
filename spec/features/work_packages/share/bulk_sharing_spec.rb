@@ -39,6 +39,7 @@ RSpec.describe "Work Packages", "Bulk Sharing",
   shared_let(:sharer_role) do
     create(:project_role, permissions: %i[view_work_packages
                                           view_shared_work_packages
+                                          invite_members_by_email
                                           share_work_packages])
   end
 
@@ -47,7 +48,13 @@ RSpec.describe "Work Packages", "Bulk Sharing",
                                           view_shared_work_packages])
   end
 
-  shared_let(:sharer) { create(:user, firstname: "Sharer", lastname: "User") }
+  shared_let(:sharer) do
+    create(:user,
+           firstname: "Sharer",
+           lastname: "User",
+           global_permissions: %i[view_all_principals])
+  end
+
   shared_let(:viewer) { create(:user, firstname: "Viewer", lastname: "User") }
 
   shared_let(:project) do

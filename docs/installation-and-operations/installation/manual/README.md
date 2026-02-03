@@ -63,11 +63,7 @@ sudo passwd openproject #(enter desired password)
 
 ## Install and setup the database server (PostgreSQL)
 
-OpenProject requires PostgreSQL v9.5+. If you system package is too old, you can check [postgresql.org](https://www.postgresql.org/download/) to get a newer version installed. In our case, Ubuntu 18.04 comes with a recent-enough version so we can use the system packages:
-
-```shell
-[root@host] apt-get install postgresql postgresql-contrib libpq-dev
-```
+OpenProject requires PostgreSQL 16 or newer. If you system package is too old, you can check [postgresql.org](https://www.postgresql.org/download/) to get a newer version installed. Please use their installation documentation to install the appropriate version for your system.
 
 Once installed, switch to the PostgreSQL system user.
 
@@ -110,19 +106,19 @@ Please be aware that the actual installation of a specific Ruby version takes so
 ```
 
 We suggest you install the version we require in [.ruby-version](https://github.com/opf/openproject/blob/dev/.ruby-version).
-Read the first line e.g. `3.4.5` and install that version.
+Read the first line e.g. `3.4.7` and install that version.
 
 ```shell
-[openproject@host] rbenv install 3.4.5
+[openproject@host] rbenv install 3.4.7
 [openproject@host] rbenv rehash
-[openproject@host] rbenv global 3.4.5
+[openproject@host] rbenv global 3.4.7
 ```
 
 To check our Ruby installation we run `ruby --version`. It should output
 something very similar to:
 
 ```text
-ruby 3.4.5 (2025-07-16 revision 20cda200d3) +PRISM [arm64-darwin24]
+ruby 3.4.7 (2025-10-08 revision 7a5688e2a2) +PRISM [arm64-darwin25]
 ```
 
 ## Installation of Node
@@ -149,7 +145,7 @@ time to finish.
 To check our Node installation we run `node --version`. It should output something very similar to:
 
 ```text
-v22.15.0
+v22.21.0
 ```
 
 ## Installation of OpenProject
@@ -159,7 +155,7 @@ with OpenProject. For more information, see [github.com/opf/openproject](https:/
 
 ```shell
 [openproject@host] cd ~
-[openproject@host] git clone https://github.com/opf/openproject.git --branch stable/16 --depth 1
+[openproject@host] git clone https://github.com/opf/openproject.git --branch stable/17 --depth 1
 [openproject@host] cd openproject
 # Ensure rubygems is up-to-date for bundler 2
 [openproject@host] gem update --system

@@ -34,8 +34,10 @@ class Journals::CreateService
       journable.respond_to?(:file_links)
     end
 
-    def cleanup_predecessor(predecessor)
+    def cleanup_predecessor(predecessor, notes, cause)
       cleanup_predecessor_for(predecessor,
+                              notes,
+                              cause,
                               "storages_file_links_journals",
                               :journal_id,
                               :id)

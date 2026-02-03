@@ -31,8 +31,8 @@ import { input } from '@openproject/reactivestates';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-export type ModelLinks = { [action:string]:any };
-export type ModelLinksHash = { [model:string]:ModelLinks };
+export type ModelLinks = Record<string, any>;
+export type ModelLinksHash = Record<string, ModelLinks>;
 
 @Injectable({ providedIn: 'root' })
 export class AuthorisationService {

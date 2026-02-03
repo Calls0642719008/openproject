@@ -86,4 +86,40 @@ RSpec.describe "Projects navigation", :js do
       expect(page).to have_current_path(home_path(jump: "calendar_view"))
     end
   end
+
+  context "with workspace type badges in project dropdown", with_flag: { portfolio_models: true } do
+    shared_let(:portfolio_project) { create(:portfolio, name: "Test Portfolio") }
+    shared_let(:program_project) { create(:program, name: "Test Program") }
+    shared_let(:regular_project) { project }
+
+    before do
+      login_as admin
+      visit home_path
+      page.find_test_selector("op-projects-menu").click
+      wait_for_network_idle
+    end
+
+    it "displays badges for portfolio and program workspaces but not for regular projects" do
+      # Check portfolio has badge with icon and "Portfolio" text
+      portfolio_item = page.find('[data-test-selector="op-header-project-select--item"]', text: portfolio_project.name)
+      within portfolio_item do
+        expect(page).to have_css("svg.octicon")
+        expect(page).to have_text("Portfolio")
+      end
+
+      # Check program has badge with icon and "Program" text
+      program_item = page.find('[data-test-selector="op-header-project-select--item"]', text: program_project.name)
+      within program_item do
+        expect(page).to have_css("svg.octicon")
+        expect(page).to have_text("Program")
+      end
+
+      # Check regular project does NOT have workspace badge
+      regular_item = page.find('[data-test-selector="op-header-project-select--item"]', text: regular_project.name)
+      within regular_item do
+        expect(page).to have_no_text("Portfolio")
+        expect(page).to have_no_text("Program")
+      end
+    end
+  end
 end

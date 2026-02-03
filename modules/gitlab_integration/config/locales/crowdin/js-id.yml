@@ -28,25 +28,25 @@ id:
       tab_header_issue:
         title: "Masalah"
       tab_header_mr:
-        title: "Merge requests"
+        title: "Permintaan penggabungan"
         create_mr:
-          label: Create MR
-          description: Create a Merge Request
+          label: Buat MR
+          description: Buat Permintaan Penggabungan
         copy_menu:
-          label: Git snippets
-          description: Copy git snippets to clipboard
+          label: Cuplikan Git
+          description: Salin cuplikan git ke papan klip
         git_actions:
-          branch_name: Branch name
-          commit_message: Commit message
-          cmd: Create branch with empty commit
-          title: Quick snippets for Git
-          copy_success: '✅ Copied!'
-          copy_error: '❌ Copy failed!'
+          branch_name: Nama cabang
+          commit_message: Pesan commit
+          cmd: Buat cabang dengan komit kosong
+          title: Cuplikan cepat untuk Git
+          copy_success: '✅ Tersalin!'
+          copy_error: '❌ Gagal tersalin!'
       tab_issue:
-        empty: 'There are no issues linked yet. Link an existing issue by using the code <code>OP#%{wp_id}</code> (or <code>PP#%{wp_id}</code> for private links) in the issue title/description or create a new issue.'
+        empty: 'Belum ada masalah yang terhubung. Hubungkan masalah yang sudah ada dengan menggunakan kode <code>OP#%{wp_id}</code> (atau <code>PP#%{wp_id}</code> untuk tautan pribadi) di judul/deskripsi masalah atau buat masalah baru.'
       tab_mrs:
-        empty: 'There are no merge requests linked yet. Link an existing MR by using the code <code>OP#%{wp_id}</code> (or <code>PP#%{wp_id}</code> for private links) in the MR title/description or create a new MR.'
-      gitlab_pipelines: Pipelines
+        empty: 'Belum ada permintaan penggabungan yang terhubung. Hubungkan masalah yang sudah ada dengan menggunakan kode <code>OP#%{wp_id}</code> (atau <code>PP#%{wp_id}</code> untuk tautan pribadi) di judul/deskripsi MR atau buat MR baru.'
+      gitlab_pipelines: Rantai Elemen
       updated_on: Diperbarui
     work_packages:
       tabs:

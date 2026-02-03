@@ -53,10 +53,6 @@ module Projects
       validate_templated_set_by_admin
     end
 
-    attribute :_limit_custom_fields_validation_to_section_id
-    # `_limit_custom_fields_validation_to_section_id` used in Projects::ActsAsCustomizablePatches in order to
-    # only validate custom fields of the touched section
-
     validate :validate_user_allowed_to_manage
 
     def valid?(context = :saving_custom_fields) = super
@@ -99,7 +95,7 @@ module Projects
       if model.parent &&
          model.parent_id_changed? &&
          !assignable_parents.exists?(id: parent.id)
-        errors.add(:parent, :does_not_exist)
+        errors.add(:parent, :invalid)
       end
     end
 

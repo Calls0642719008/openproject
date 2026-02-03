@@ -181,4 +181,15 @@ RSpec.describe Exports::PDF::Common::View do
       expect(doc.font_families["TestFamily"][:bold][:font]).to eq("TestFamily-Bold")
     end
   end
+
+  describe "handle broken custom font storage" do
+    it "falls back to default font without raising" do
+      broken = instance_double(CustomStyle)
+      allow(broken).to receive(:export_font_regular).and_raise("An error occurred while accessing the font file")
+      allow(CustomStyle).to receive(:current).and_return(broken)
+
+      expect { view.document }.not_to raise_error
+      expect(view.document.font.family).to eq described_class.default_font
+    end
+  end
 end

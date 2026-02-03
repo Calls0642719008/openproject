@@ -145,14 +145,13 @@ Rails.application.config.action_controller.raise_on_open_redirects = true
 
 # https://guides.rubyonrails.org/configuring.html#config-action-dispatch-default-headers
 # Change the default headers to disable browsers' flawed legacy XSS protection.
-# Rails.application.config.action_dispatch.default_headers = {
-#   "X-Frame-Options" => "SAMEORIGIN",
-#   "X-XSS-Protection" => "0",
-#   "X-Content-Type-Options" => "nosniff",
-#   "X-Download-Options" => "noopen",
-#   "X-Permitted-Cross-Domain-Policies" => "none",
-#   "Referrer-Policy" => "strict-origin-when-cross-origin"
-# }
+Rails.application.config.action_dispatch.default_headers = {
+  "X-Frame-Options" => "SAMEORIGIN",
+  "X-Content-Type-Options" => "nosniff",
+  "X-Download-Options" => "noopen",
+  "X-Permitted-Cross-Domain-Policies" => "none",
+  "Referrer-Policy" => "strict-origin-when-cross-origin"
+}
 
 # https://guides.rubyonrails.org/configuring.html#config-active-support-cache-format-version
 # ** Please read carefully, this must be configured in config/application.rb **

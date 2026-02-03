@@ -33,9 +33,6 @@
 // Lodash
 import lodash from 'lodash';
 
-// jQuery
-import 'jquery-ujs';
-
 // Jquery UI
 // import 'jquery-ui/ui/position';
 // import 'jquery-ui/ui/disable-selection';

@@ -42,7 +42,7 @@ RSpec.describe Grids::CreateContract, "for Grids::Overview" do
     Grids::Factory.build(scope, current_user)
   end
   let(:instance) { described_class.new(grid, current_user) }
-  let(:permissions) { %i[manage_overview] }
+  let(:permissions) { %i[manage_dashboards] }
   let(:current_user) { build_stubbed(:user) }
 
   before do
@@ -83,7 +83,7 @@ RSpec.describe Grids::CreateContract, "for Grids::Overview" do
     end
   end
 
-  context "if the user lacks :manage_overview permission" do
+  context "if the user lacks :manage_dashboards permission" do
     # View project is a public permission so every member will have it but as we stub...
     let(:permissions) { [:view_project] }
 

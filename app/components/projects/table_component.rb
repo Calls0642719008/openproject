@@ -191,8 +191,8 @@ module Projects
       end
     end
 
-    def favored_project_ids
-      @favored_project_ids ||= Favorite.where(user: current_user, favored_type: "Project").pluck(:favored_id)
+    def favorited_project_ids
+      @favorited_project_ids ||= Favorite.where(user: current_user, favorited_type: "Project").pluck(:favorited_id)
     end
 
     def project_phase_by_definition(definition, project)

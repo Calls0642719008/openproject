@@ -1,4 +1,5 @@
 mn:
   overviews:
-    label: 'Overview'
-  permission_manage_overview: 'Manage overview page'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Хянах самбар"
+    label_overview: "Overview"

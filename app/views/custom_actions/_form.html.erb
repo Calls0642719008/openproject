@@ -26,7 +26,6 @@
                                         filters: [{ name: "active", operator: "=", values: ["t"] }],
                                         resource: "projects",
                                         inputName: input_name,
-                                        appendTo: "body",
                                         labelForId: "custom_action_actions_#{condition.key}",
                                         inputValue: condition.values
                                       } %>
@@ -39,8 +38,7 @@
                                         model: condition.value_objects.map { |v| { id: v[:value], name: v[:label] } },
                                         inputName: input_name,
                                         bindLabel: "name",
-                                        labelForId: "custom_action_conditions_#{condition.key}",
-                                        appendTo: "body"
+                                        labelForId: "custom_action_conditions_#{condition.key}"
                                       } %>
           <% end %>
         </div>
@@ -96,7 +94,6 @@
                                               filters: [
                                                 { name: "status", operator: "!", values: [Principal.statuses["locked"].to_s] }
                                               ],
-                                              appendTo: "body",
                                               additionalOptions: [
                                                 { id: nil, name: I18n.t("placeholders.default") },
                                                 { id: action.current_user_value_key, name: action.current_user_name }
@@ -116,8 +113,7 @@
                                               model: action.multi_value? ? selected : selected.first,
                                               inputName: input_name,
                                               bindLabel: "name",
-                                              labelForId: "custom_action_actions_#{action.key}",
-                                              appendTo: "body"
+                                              labelForId: "custom_action_actions_#{action.key}"
                                             } %>
                 <% end %>
               </div>

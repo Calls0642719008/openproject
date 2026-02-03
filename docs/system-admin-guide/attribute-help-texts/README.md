@@ -67,7 +67,7 @@ The Attribute help texts for work packages will be displayed in the [details vie
 
 ## Projects
 
-The Attribute help texts for projects will be displayed in the [Project overview](../../user-guide/project-overview/) (as in the first screenshot below) and in the [Project settings](../../user-guide/projects/project-settings/project-information/) (as in the second screenshot below).
+The Attribute help texts for projects will be displayed on the [Project home page](../../user-guide/project-home/) (as in the first screenshot below) and in the [Project settings](../../user-guide/projects/project-settings/project-information/) (as in the second screenshot below).
 
 They will help the users (e.g. the project managers) understand what kind of information to put in which fields.
 

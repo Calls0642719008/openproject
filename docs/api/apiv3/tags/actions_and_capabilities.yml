@@ -56,12 +56,12 @@ description: |-
 
   ### Linked Properties
 
-  |  Link               | Description                                                                                           | Type             | Constraints     | Supported operations |
-  |-------------------- |-----------------------------------------                                                              | -------------    | --------------- | -------------------- |
-  | self                | The capability                                                                                        |                  |                 |                      |
-  | action              | The action the principal is granted                                                                   | Action           | not null        | READ                 |
-  | context             | The context the principal has this the action in. This is typically a project or the global context.  | Project or null  |                 | READ                 |
-  | principal           | The principal being allowed the action.                                                               | Action           | not null        | READ                 |
+  |  Link               | Description                                                                                            | Type               | Constraints     | Supported operations |
+  |-------------------- |-----------------------------------------                                                               | -------------      | --------------- | -------------------- |
+  | self                | The capability                                                                                         |                    |                 |                      |
+  | action              | The action the principal is granted                                                                    | Action             | not null        | READ                 |
+  | context             | The context the principal has this the action in. This is typically a workspace or the global context. | Workspace or null  |                 | READ                 |
+  | principal           | The principal being allowed the action.                                                                | Action             | not null        | READ                 |
 
   ### Local Properties
 

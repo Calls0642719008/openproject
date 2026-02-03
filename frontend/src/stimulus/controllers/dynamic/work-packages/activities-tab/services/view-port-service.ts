@@ -44,10 +44,10 @@ export class ViewPortService implements ViewPortServiceInterface {
   private mobileBreakpointInNotificationCenter:number;
 
   constructor(
-    notificationCenterPathName:string = 'notifications',
-    splitScreenPathName:string = 'work_packages/details',
-    mobileBreakpoint:number = 1279,
-    mobileBreakpointInNotificationCenter:number = 1013,
+    notificationCenterPathName = 'notifications',
+    splitScreenPathName = 'work_packages/details',
+    mobileBreakpoint = 1279,
+    mobileBreakpointInNotificationCenter = 1013,
   ) {
     this.notificationCenterPathName = notificationCenterPathName;
     this.splitScreenPathName = splitScreenPathName;
@@ -85,13 +85,13 @@ export class ViewPortService implements ViewPortServiceInterface {
   get scrollableContainer():HTMLElement | null {
     if (this.isWithinNotificationCenter() || this.isWithinSplitScreen()) {
       // valid for both mobile and desktop
-      return document.querySelector('.work-package-details-tab') as HTMLElement;
+      return document.querySelector('.work-package-details-tab')!;
     }
     if (this.isMobile()) {
-      return document.querySelector('#content-body') as HTMLElement;
+      return document.querySelector('#content-body')!;
     }
 
     // valid for desktop
-    return document.querySelector('.tabcontent') as HTMLElement;
+    return document.querySelector('.tabcontent')!;
   }
 }

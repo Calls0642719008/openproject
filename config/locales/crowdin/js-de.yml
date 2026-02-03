@@ -88,6 +88,8 @@ de:
     button_list_view: "Listenansicht"
     button_show_view: "Vollbildansicht"
     button_log_time: "Zeit buchen"
+    button_start_timer: "Timer starten"
+    button_stop_timer: "Timer anhalten"
     button_more: "Mehr"
     button_open_details: "Detailansicht öffnen"
     button_close_details: "Detailansicht schließen"
@@ -200,6 +202,8 @@ de:
         add_table: "Tabelle mit zugehörigen Arbeitspaketen hinzufügen"
         edit_query: "Abfrage bearbeiten"
         new_group: "Neue Gruppe"
+        delete_group: "Gruppe löschen"
+        remove_attribute: "Aus Gruppe entfernen"
         reset_to_defaults: "Auf Standardwerte zurücksetzen"
       working_days:
         calendar:
@@ -287,17 +291,6 @@ de:
         format:
           date: "%{attribute} ist kein gültiges Datum - Erwartetes Format: YYY-MM-DD."
         general: "Ein Fehler ist aufgetreten."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Lesen Sie über neue Funktionen und Updates."
-          learn_about: "Erfahren Sie mehr über die neuen Funktionen"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                Die Version enthält verschiedene neue Funktionen und Verbesserungen, wie z.B. <br> <ul class="%{list_styling_class}"> <li>UX/UI-Verbesserungen für ein moderneres Aussehen.</li> <li>Besprechungen: Option zum Stummschalten von E-Mail-Benachrichtigungen und ICS.</li> <li>Laufende Timer werden im Modul Meine Zeiterfassung angezeigt.</li> <li>Fortschrittsberichte: Summe in % abgeschlossen wird auch im statusbasierten Modus angezeigt.</li> <li>Nextcloud Gesundheitscheck: Anzeige der fehlenden Fähigkeit zum Austausch von Token (Enterprise Add-on).</li> </ul>
     ical_sharing_modal:
       title: "Kalender abonnieren"
       inital_setup_error_message: "Beim Abrufen der Daten ist ein Fehler aufgetreten."
@@ -305,12 +298,13 @@ de:
       warning: "Bitte teilen Sie diese URL nicht mit anderen Benutzern. Jeder mit diesem Link kann die Arbeitspaket-Details ohne Konto oder Passwort anzeigen."
       token_name_label: "Wo werden Sie diesen Kalender nutzen?"
       token_name_placeholder: 'Geben sie einen Namen ein (z.B. "Telefon")'
-      token_name_description_text: 'Wenn Sie diesen Kalender auf mehreren Geräten abonnieren, wird Ihnen dieser Name helfen, zwischen diesen in der Liste der  <a href="my/access_token", target="_blank">Zugriffstoken</a> zu unterscheiden.'
+      token_name_description_text: 'Wenn Sie diesen Kalender auf mehreren Geräten abonnieren, wird Ihnen dieser Name helfen, zwischen diesen in der Liste der <a href="%{myAccessTokensUrl}", target="_blank">Zugriffstoken</a> zu unterscheiden.'
       copy_url_label: "URL kopieren"
       ical_generation_error_text: "Beim Generieren der Kalender-URL ist ein Fehler aufgetreten."
       success_message: 'Die URL "%{name}" wurde erfolgreich in Ihre Zwischenablage kopiert. Fügen Sie sie in Ihren Kalender-Client ein, um das Abonnement abzuschließen.'
     label_activate: "Aktiviere"
     label_assignee: "Zugewiesen an"
+    label_assignee_alt_text: "Dieses Arbeitspaket wird %{name} zugewiesen"
     label_add_column_after: "Spalte danach hinzufügen"
     label_add_column_before: "Spalte davor hinzufügen"
     label_add_columns: "Spalte hinzufügen"
@@ -352,6 +346,7 @@ de:
     label_collapse: "Zuklappen"
     label_collapsed: "zugeklappt"
     label_collapse_all: "Alle zuklappen"
+    label_collapse_text: "Text einklappen"
     label_comment: "Kommentar"
     label_committed_at: "%{committed_revision_link} am %{date}"
     label_committed_link: "Revisionsnummer %{revision_identifier}"
@@ -364,6 +359,7 @@ de:
     label_expand: "Aufklappen"
     label_expanded: "aufgeklappt"
     label_expand_all: "Alle aufklappen"
+    label_expand_text: "Vollständigen Text anzeigen"
     label_expand_project_menu: "Projektmenü aufklappen"
     label_export: "Exportieren"
     label_export_preparing: "Der Export wird vorbereitet und wird in Kürze heruntergeladen."
@@ -396,8 +392,6 @@ de:
     label_me: "ich"
     label_meeting_agenda: "Agenda"
     label_meeting_minutes: "Protokoll"
-    label_menu_collapse: "zusammenklappen"
-    label_menu_expand: "aufklappen"
     label_more_than_ago: "vor mehr Tagen als"
     label_moderate_comment: "Kommentar moderieren"
     label_next: "Weiter"
@@ -431,6 +425,7 @@ de:
     label_remove_row: "Zeile entfernen"
     label_report: "Auswertung"
     label_repository_plural: "Projektarchive"
+    label_resize_project_menu: "Größe des Projektmenüs ändern"
     label_save_as: "Speichern unter"
     label_search_columns: "Spalte suchen"
     label_select_watcher: "Beobachter auswählen ..."
@@ -637,9 +632,6 @@ de:
           add: "Einstellung für Projekt hinzufügen"
           already_selected: "Dieses Projekt ist bereits ausgewählt"
           remove: "Projektspezifische Einstellungen entfernen"
-    password_confirmation:
-      field_description: "Sie müssen Ihr Kennwort eingeben, um diese Änderungen zu speichern."
-      title: "Geben Sie Ihr Kennwort ein, um fortzufahren"
     pagination:
       no_other_page: "Sie befinden sich auf der einzigen Seite."
       pages_skipped: "Seiten übersprungen."
@@ -1079,8 +1071,8 @@ de:
     notice_successful_delete: "Erfolgreich gelöscht."
     notice_successful_update: "Erfolgreich aktualisiert."
     notice_job_started: "Vorgang gestartet."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "Keine Job-ID vom Server zurückgegeben."
+    invalid_job_response: "Ungültige Antwort vom Server."
     notice_bad_request: "Fehlerhafte Anfrage."
     relations:
       empty: Keine bestehenden Beziehungen
@@ -1113,6 +1105,7 @@ de:
       child_work_packages:
         one: "eine Unteraufgabe"
         other: "%{count} untergeordnete Arbeitspakete"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1130,9 +1123,12 @@ de:
     global_search:
       all_projects: "In allen Projekten"
       close_search: "Suche schließen"
+      items_available: "%{count} Verfügbare Artikel"
+      direct_hit_available: "Arbeitspaket mit exakter ID gefunden. Drücken Sie Enter um es zu öffnen."
       current_project_and_all_descendants: "In diesem Projekt + Unterprojekten"
       current_project: "In diesem Projekt"
       recently_viewed: "Vor Kurzem angesehen"
+      search_placeholder_expanded: "Suchen Sie Arbeitspakete nach Thema, Projekt, Typ, Status oder ID"
       title:
         all_projects: "alle Projekte"
         project_and_subprojects: "und alle Unterprojekte"
@@ -1142,71 +1138,8 @@ de:
       list: "Tabelle"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Zurück"
       invite: "Einladen"
-      title:
-        invite: "Nutzer einladen"
-        invite_to_project: "%{type} zu %{project} einladen"
-        User: "Benutzer"
-        Group: "Gruppe"
-        PlaceholderUser: "Platzhalter-Benutzer"
-        invite_principal_to_project: "%{principal} zu %{project} einladen"
-      project:
-        label: "Projekt"
-        required: "Bitte wählen Sie ein Projekt"
-        lacking_permission: "Bitte wählen Sie ein anderes Projekt, da Ihnen die Berechtigungen fehlen, Nutzer dem aktuell ausgewählten Projekt zuzuweisen."
-        lacking_permission_info: "Ihnen fehlt die Berechtigung, Benutzer dem Projekt zuzuweisen, in dem Sie sich gerade befinden. Sie müssen ein anderes auswählen."
-        next_button: "Weiter"
-        no_results: "Keine Projekte gefunden"
-        no_invite_rights: "Sie dürfen keine Mitglieder zu diesem Projekt hinzufügen"
-      type:
-        required: "Bitte wählen Sie die Benutzer-Typen aus, die eingeladen werden sollen"
-        user:
-          title: "Benutzer"
-          description: "Berechtigungen basierend auf der zugewiesenen Rolle im ausgewählten Projekt"
-        group:
-          title: "Gruppe"
-          description: "Berechtigungen basierend auf der zugewiesenen Rolle im ausgewählten Projekt"
-        placeholder:
-          title: "Platzhalter-Benutzer"
-          title_no_ee: "Platzhalter-Benutzer (Enterprise Edition Add-on)"
-          description: "Hat keinen Zugriff auf das Projekt und es werden keine E-Mails verschickt."
-          description_no_ee: 'Hat keinen Zugriff auf das Projekt und es werden keine E-Mails versendet. <br>Schau dir die <a href="%{eeHref}" target="_blank">Enterprise edition an</a>'
-      principal:
-        label:
-          name_or_email: "Name oder E-Mail-Adresse"
-          name: "Name"
-        already_member_message: "Bereits ein Mitglied von %{project}"
-        no_results_user: "Keine Benutzer gefunden"
-        invite_user: "Einladen:"
-        no_results_placeholder: "Keine Platzhalter-Benutzer gefunden."
-        create_new_placeholder: "Erstelle neuen Platzhalter:"
-        no_results_group: "Es wurden keine Gruppen gefunden."
-        next_button: "Weiter"
-        required:
-          user: "Bitte einen Benutzer auswählen"
-          placeholder: "Bitte einen Platzhalter auswählen"
-          group: "Bitte eine Gruppe auswählen"
-      role:
-        label: "Rolle in %{project}"
-        no_roles_found: "Keine Rollen gefunden"
-        description: >-
-          Dies ist die Rolle, die der Benutzer erhält, wenn er Ihrem Projekt beitritt. Die Rolle legt fest, welche Aktionen sie ergreifen dürfen und welche Informationen ihnen zugänglich sind. <a href="https://www.openproject.org/de/docs/system-admin-guide/users-permissions/roles-permissions/" target="_blank"> Erfahren Sie mehr über Rollen und Berechtigungen. </a>
-        required: "Bitte eine Rolle auswählen"
-        next_button: "Weiter"
-      message:
-        label: "Einladungsnachricht"
-        description: "Wir senden dem Benutzer eine E-Mail, der Sie hier eine persönliche Nachricht ergänzen können. Eine Erklärung für die Einladung oder nützliche Informationen zum eingeladenen Projekt könnten nützlich sein, dem Benutzer bei der Mitarbeit zu unterstützen."
-        next_button: "Weiter"
-      summary:
-        next_button: "Einladung senden"
-      success:
-        title: "%{principal} wurde eingeladen!"
-        description:
-          user: "Der Benutzer kann sich jetzt anmelden, um auf %{project} zuzugreifen. In der Zwischenzeit können Sie bereits mit diesem Benutzer planen und beispielsweise Arbeitspakete zuweisen."
-          placeholder: "Der Platzhalter kann jetzt in %{project} verwendet werden. In der Zwischenzeit können Sie bereits mit diesem Benutzer planen und beispielsweise Arbeitspakete zuweisen."
-          group: "Die Gruppe ist nun %{project} zugewiesen. In der Zwischenzeit können Sie bereits mit dieser Gruppe planen und ihr zum Beispiel Arbeitspakete zuweisen."
-        next_button: "Fortfahren"
+      placeholder_add_tag: "Als neuen Platzhalter-Benutzer anlegen"
     exclusion_info:
       modal:
         title: "Status von Hierarchie-Summe ausgeschlossen"
@@ -1223,15 +1156,20 @@ de:
       selected_filter:
         all: "Alle Projekte"
         selected: "Nur ausgewählte"
-      search_placeholder: "Projekt durchsuchen..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Projekte durchsuchen..."
+      search_placeholder_favorites: "Favoriten durchsuchen..."
       include_subprojects: "Alle Unterprojekte einbeziehen"
       tooltip:
         include_all_selected: "Das Projekt ist bereits enthalten, da alle Unterprojekte einbezogen sind."
         current_project: "Dies ist das aktuelle Projekt, in dem Sie sich befinden."
         does_not_match_search: "Projekt entspricht nicht den Suchkriterien."
       no_results: "Kein Projekt entspricht Ihren Suchkriterien."
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Kein favorisiertes Projekt entspricht Ihren Suchkriterien."
+    include_workspaces:
+      search_placeholder: "Suchen..."
+      types:
+        program: "Programm"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Grundlinie"
       clear: "Zurücksetzen"

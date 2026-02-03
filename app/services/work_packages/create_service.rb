@@ -32,12 +32,13 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
   include ::WorkPackages::Shared::UpdateAncestors
   include ::Shared::ServiceContext
 
-  attr_reader :user, :contract_class
+  attr_reader :user, :contract_class, :contract_options
 
-  def initialize(user:, contract_class: WorkPackages::CreateContract)
+  def initialize(user:, contract_class: WorkPackages::CreateContract, contract_options: {})
     super()
     @user = user
     @contract_class = contract_class
+    @contract_options = contract_options
   end
 
   def perform
@@ -54,17 +55,16 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
   def create(attributes, work_package)
     result = set_attributes(attributes, work_package)
 
-    result.success =
-      if result.success
-        work_package.attachments = work_package.attachments_replacements if work_package.attachments_replacements
-        work_package.save
-
-        set_templated_subject(work_package)
-      end
-
     if result.success?
+      # Set attributes service passed, meaning the contract is fullfilled.
+      # Avoid running validations again as we might be in a project copy scenario.
+      work_package.attachments = work_package.attachments_replacements if work_package.attachments_replacements
+      work_package.save(validate: false)
+
+      update_subject_if_automatically_generated(work_package)
+
       # update ancestors before rescheduling, as the parent might switch to automatic mode
-      update_ancestors_all_attributes(result.all_results).each do |ancestor_result|
+      multi_update_ancestors(result.all_results).each do |ancestor_result|
         result.merge!(ancestor_result)
       end
 
@@ -76,15 +76,17 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
     result
   end
 
-  def set_templated_subject(work_package)
-    return true unless work_package.type&.replacement_pattern_defined_for?(:subject)
-
-    work_package.subject = work_package.type.enabled_patterns[:subject].resolve(work_package)
-    work_package.save
+  def update_subject_if_automatically_generated(work_package)
+    if work_package.type&.replacement_pattern_defined_for?(:subject)
+      Journal::NotificationConfiguration.with(false) do
+        work_package.subject = work_package.type.enabled_patterns[:subject].resolve(work_package)
+        work_package.save(validate: false)
+      end
+    end
   end
 
   def set_attributes(attributes, work_package)
-    attributes_service_class.new(user:, model: work_package, contract_class:).call(attributes)
+    attributes_service_class.new(user:, model: work_package, contract_class:, contract_options:).call(attributes)
   end
 
   def reschedule_related(work_package)
@@ -92,16 +94,22 @@ class WorkPackages::CreateService < BaseServices::BaseCallable
     # This is necessary in bulk duplicate scenarios.
     switching_to_automatic_mode = []
     switching_to_automatic_mode << work_package if work_package.schedule_automatically?
-    result = WorkPackages::SetScheduleService.new(user:, work_package:, switching_to_automatic_mode:).call
+    rescheduling_result = WorkPackages::SetScheduleService.new(user:, work_package:, switching_to_automatic_mode:).call
 
-    result.self_and_dependent.each do |r|
+    persist_reschedule_changes(rescheduling_result)
+
+    rescheduling_result
+  end
+
+  def persist_reschedule_changes(rescheduling_result)
+    rescheduling_result.self_and_dependent
+          .filter { it.result.changed? }
+          .each do |r|
       unless r.result.save
-        result.success = false
+        rescheduling_result.success = false
         r.errors = r.result.errors
       end
     end
-
-    result
   end
 
   def set_user_as_watcher(work_package)

@@ -44,7 +44,7 @@ See COPYRIGHT and LICENSE files for more details.
     render(Primer::Beta::Blankslate.new(border: true)) do |blankslate|
       blankslate.with_heading(tag: :h2) { t(".blankslate.title") }
       blankslate.with_description { t(".blankslate.description") }
-      blankslate.with_primary_action(tag: :a, href: admin_settings_authentication_path) { t(".blankslate.action") }
+      blankslate.with_primary_action(href: admin_settings_authentication_path) { t(".blankslate.action") }
     end
   %>
 <% end %>

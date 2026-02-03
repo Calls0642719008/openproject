@@ -59,8 +59,8 @@ See COPYRIGHT and LICENSE files for more details.
 
     <% dialog.with_footer do %>
       <%= cancel_button %>
-      <%= button(scheme: :danger, tag: :a, href: delete_url(work_package_shares_role_id: "all"), data: { method: :delete }) { t(:button_revoke_all) } %>
-      <%= button(scheme: :danger, tag: :a, href: delete_url(work_package_shares_role_id: shared_role_id), data: { method: :delete }) { t(:button_revoke_only, shared_role_name:) } %>
+      <%= button(scheme: :danger, tag: :a, href: delete_url(work_package_shares_role_id: "all"), data: { turbo_method: :delete }) { t(:button_revoke_all) } %>
+      <%= button(scheme: :danger, tag: :a, href: delete_url(work_package_shares_role_id: shared_role_id), data: { turbo_method: :delete }) { t(:button_revoke_only, shared_role_name:) } %>
     <% end %>
   <% when direct_shared_work_packages_count? %>
     <% dialog.with_body do %>
@@ -84,7 +84,7 @@ See COPYRIGHT and LICENSE files for more details.
 
     <% dialog.with_footer do %>
       <%= cancel_button %>
-      <%= button(scheme: :danger, tag: :a, href: delete_url(work_package_shares_role_id: "all"), data: { method: :delete }) { t(:button_revoke_access) } %>
+      <%= button(scheme: :danger, tag: :a, href: delete_url(work_package_shares_role_id: "all"), data: { turbo_method: :delete }) { t(:button_revoke_access) } %>
     <% end %>
   <% else %>
     <% dialog.with_body do %>

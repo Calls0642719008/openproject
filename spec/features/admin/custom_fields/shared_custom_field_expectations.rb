@@ -29,13 +29,13 @@
 # ++
 
 RSpec.shared_examples_for "list custom fields" do |type|
-  let(:cf_page) { Pages::CustomFields::IndexPage.new }
+  let(:cf_page) { Pages::CustomFields::Index.new }
   let(:user) { create(:admin) }
 
   current_user { user }
 
   before do
-    cf_page.visit_tab type
+    cf_page.visit_page type
   end
 
   it "has the options in the right order" do
@@ -80,9 +80,6 @@ RSpec.shared_examples_for "list custom fields" do |type|
 
     expect(page).to have_text("Successful creation")
 
-    click_on "Operating System"
-    wait_for_reload
-
     expect(page).to have_field("custom_field_multi_value", checked: true)
 
     expect(page).to have_css(".custom-option-row", count: 3)
@@ -97,13 +94,13 @@ RSpec.shared_examples_for "list custom fields" do |type|
 end
 
 RSpec.shared_examples_for "hierarchy custom fields on index page" do |type|
-  let(:cf_page) { Pages::CustomFields::IndexPage.new }
+  let(:cf_page) { Pages::CustomFields::Index.new }
   let(:user) { create(:admin) }
 
   current_user { user }
 
   before do
-    cf_page.visit_tab type
+    cf_page.visit_page type
   end
 
   context "with an active enterprise token with custom_field_hierarchies feature", with_ee: [:custom_field_hierarchies] do
@@ -128,186 +125,157 @@ RSpec.shared_examples_for "hierarchy custom fields on index page" do |type|
   end
 end
 
-RSpec.shared_examples_for "expected fields for the custom field's format" do |type, format|
-  let(:cf_page) { Pages::CustomFields::IndexPage.new }
+RSpec.shared_examples_for "expected fields for the custom field's format", :aggregate_failures do |type_plural, format|
+  let(:type) { type_plural.singularize }
+  let(:cf_page) { Pages::CustomFields::Index.new }
   let(:user) { create(:admin) }
 
   current_user { user }
 
   before do
-    cf_page.visit_tab type
+    cf_page.visit_page type_plural
   end
 
-  def expect_page_to_have_texts(*text)
-    text.each do |t|
-      expect(page).to have_text(t)
-    end
-  end
-
-  def expect_page_not_to_have_texts(*text)
-    text.each do |t|
-      expect(page).to have_no_text(t)
+  def expect_page_to_have(selectors)
+    selectors.each do |selector, locators|
+      Array(locators).each do |locator|
+        expect(page).to send("have_#{selector}".singularize, locator)
+      end
     end
   end
 
   # Form element labels, default English translation in the trailing comment:
+  let(:label_name) { I18n.t("attributes.name") } # Name
+  let(:label_section) { I18n.t("activerecord.attributes.project_custom_field.custom_field_section") } # Section
+  let(:label_is_for_all) { I18n.t("attributes.is_for_all") } # For all projects
+  let(:label_admin_only) { I18n.t("activerecord.attributes.custom_field.admin_only") } # Admin-only
+  let(:label_searchable) { I18n.t("activerecord.attributes.custom_field.searchable") } # Searchable
+  let(:label_is_filter) { I18n.t("activerecord.attributes.custom_field.is_filter") } # Used as a filter
+  let(:label_content_right_to_left) do # Right-to-Left content
+    I18n.t("activerecord.attributes.custom_field.content_right_to_left")
+  end
+  let(:label_editable) { I18n.t("activerecord.attributes.custom_field.editable") } # Editable
   let(:label_min_length) { I18n.t("activerecord.attributes.custom_field.min_length") } # Minimum length
   let(:label_max_length) { I18n.t("activerecord.attributes.custom_field.max_length") } # Maximum length
   let(:label_regexp) { I18n.t("activerecord.attributes.custom_field.regexp") } # Regular expression
   let(:label_multi_value) { I18n.t("activerecord.attributes.custom_field.multi_value") } # Allow multi-select
-  # Allow non-open versions
-  let(:label_allow_non_open_versions) do
+  let(:label_allow_non_open_versions) do # Allow non-open versions
     I18n.t("activerecord.attributes.custom_field.allow_non_open_versions")
   end
-  # Possible values, capitalized on UI
-  let(:label_possible_values) do
-    I18n.t("activerecord.attributes.custom_field.possible_values").upcase
+  let(:label_possible_values) do # Possible values
+    I18n.t("activerecord.attributes.custom_field.possible_values")
   end
   let(:label_default_value) { I18n.t("activerecord.attributes.custom_field.default_value") } # Default value
   let(:label_is_required) { I18n.t("activerecord.attributes.custom_field.is_required") } # Required
-  let(:label_ee_banner_hierarchy) { I18n.t("ee.upsell.custom_field_hierarchies.description") } # Hierarchy Enterprise banner
-  # Spent time SFs don't show "Searchable". Not tested here.
-  # Project CFs don't show "For all projects" and "Used as a filter". Not tested here.
-  # Content right to left is not shown for Project CFs Long text. Strange. Not tested.
+  let(:label_formula) { I18n.t("activerecord.attributes.custom_field.formula") } # Formula
 
-  case format
-  when "Text"
-    it "shows the right options for the text custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Text"
-      end
-
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
-      )
+  it "shows the right options for the #{format} custom field type" do
+    retry_block do
+      cf_page.click_to_create_new_custom_field format
     end
-  when "Long text"
-    it "shows the right options for the long text custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Long text"
-      end
 
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
-      )
+    expect(page).to have_field(label_name)
+
+    if type == "Project"
+      expect(page).to have_field(label_section)
+    else
+      expect(page).to have_no_label(label_section)
     end
-  when "Integer"
-    it "shows the right options for the list custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Integer"
-      end
 
-      # Integer has min/max_len and regex as well which seems strange.
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
-      )
+    if type == "Work package"
+      expect(page).to have_field(label_is_filter)
+    else
+      expect(page).to have_no_label(label_is_filter)
     end
-  when "Float"
-    it "shows the right options for the float custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Float"
-      end
 
-      # Float has min/max_len and regex as well which seems strange.
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
-      )
+    if type == "Work package" && format != "Hierarchy"
+      expect(page).to have_field(label_content_right_to_left)
+    else
+      expect(page).to have_no_label(label_content_right_to_left)
     end
-  when "List"
-    it "shows the right options for the list custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "List"
-      end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_possible_values, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_allow_non_open_versions,
-        label_default_value, label_ee_banner_hierarchy
-      )
+    if type == "User"
+      expect(page).to have_field(label_editable)
+    else
+      expect(page).to have_no_label(label_editable)
     end
-  when "Date"
-    it "shows the right options for the date custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Date"
-      end
 
-      expect_page_to_have_texts(label_is_required)
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_multi_value,
-        label_allow_non_open_versions, label_possible_values, label_default_value,
-        label_ee_banner_hierarchy
-      )
+    if type in "Work package" | "Project"
+      expect(page).to have_field(label_is_for_all)
+    else
+      expect(page).to have_no_label(label_is_for_all)
     end
-  when "Boolean"
-    it "shows the right options for the boolean custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Boolean"
-      end
 
-      expect_page_to_have_texts(
-        label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_multi_value,
-        label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
-      )
+    if (type in "Work package" | "Project") && (format in "Text" | "Long text" | "Link" | "List")
+      expect(page).to have_field(label_searchable)
+    else
+      expect(page).to have_no_label(label_searchable)
     end
-  when "User"
-    it "shows the right options for the user custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "User"
-      end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_allow_non_open_versions,
-        label_possible_values, label_default_value, label_ee_banner_hierarchy
-      )
+    if type in "User" | "Project"
+      expect(page).to have_field(label_admin_only)
+    else
+      expect(page).to have_no_label(label_admin_only)
     end
-  when "Version"
-    it "shows the right options for the version custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Version"
-      end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp,
-        label_possible_values, label_default_value, label_ee_banner_hierarchy
-      )
+    if format in "Text" | "Integer" | "Float" | "Long text"
+      expect_page_to_have(fields: [
+                            label_min_length,
+                            label_max_length
+                          ])
+    else
+      expect_page_to_have(no_labels: [
+                            label_min_length,
+                            label_max_length
+                          ])
     end
-  when "Hierarchy"
-    it "shows the right options for the hierarchy custom field type" do
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Hierarchy"
-      end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_is_required, label_ee_banner_hierarchy
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_allow_non_open_versions,
-        label_possible_values, label_default_value
-      )
-      expect(page).to have_button("Save", disabled: true)
+    # Integer and Float have min/max_len and regex as well which seems strange.
+    if format in "Text" | "Integer" | "Float" | "Long text" | "Link"
+      expect(page).to have_field(label_regexp)
+    else
+      expect(page).to have_no_label(label_regexp)
+    end
+
+    case format
+    in "Text" | "Integer" | "Float" | "Link"
+      expect(page).to have_field(label_default_value, type: "text")
+    in "Boolean"
+      expect(page).to have_field(label_default_value, type: "checkbox")
+    in "Long text"
+      expect(page).to have_rich_text_field(label_default_value)
+    else
+      expect(page).to have_no_label(label_default_value)
+    end
+
+    if format in "List" | "User" | "Version" | "Hierarchy"
+      expect(page).to have_field(label_multi_value)
+    else
+      expect(page).to have_no_label(label_multi_value)
+    end
+
+    if format in "Boolean" | "Calculated value"
+      expect(page).to have_no_label(label_is_required)
+    else
+      expect(page).to have_field(label_is_required)
+    end
+
+    if format == "Calculated value"
+      expect(page).to have_pattern_input(label_formula)
+    else
+      expect(page).to have_no_label(label_formula)
+    end
+
+    if format == "Version"
+      expect(page).to have_field(label_allow_non_open_versions)
+    else
+      expect(page).to have_no_label(label_allow_non_open_versions)
+    end
+
+    if format == "List"
+      expect(page).to have_fieldset(label_possible_values)
+    else
+      expect(page).to have_no_fieldset(label_possible_values)
     end
   end
 end

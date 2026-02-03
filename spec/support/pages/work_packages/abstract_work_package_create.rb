@@ -44,11 +44,12 @@ module Pages
       @parent_work_package = parent_work_package
     end
 
-    def update_attributes(attribute_map)
+    def fill_in_attributes(attribute_map)
       attribute_map.each do |label, value|
         work_package_field(label.downcase).set_value(value)
       end
     end
+    alias :update_attributes :fill_in_attributes
 
     def select_attribute(property, value)
       element = page.first(".inline-edit--container.#{property.downcase} select")

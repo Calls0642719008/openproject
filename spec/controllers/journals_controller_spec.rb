@@ -76,80 +76,126 @@ RSpec.describe JournalsController do
       end
 
       describe "with a user not having the :view_work_package permission" do
-        before do
-          RolePermission.delete_all
-        end
+        let(:user) { build_stubbed(:user) }
 
         it { expect(response).to have_http_status(:forbidden) }
       end
     end
 
-    context "for work package text custom field" do
+    context "for work package custom field" do
       shared_let(:type) { project.types.first }
-
-      shared_let(:custom_field) do
-        create(:text_wp_custom_field).tap do |custom_field|
-          project.work_package_custom_fields << custom_field
-          type.custom_fields << custom_field
-        end
-      end
-
       shared_let(:work_package) do
         create(:work_package, type:,
                               author: user,
                               project:)
       end
+
+      let!(:custom_field) do
+        create(factory_name).tap do |custom_field|
+          project.work_package_custom_fields << custom_field
+          type.custom_fields << custom_field
+        end
+      end
+
       let(:params) { { id: work_package.last_journal.id.to_s, field: "custom_fields_#{custom_field.id}", format: "js" } }
 
       before do
         work_package.update custom_field_values: { custom_field.id => "foo" }
       end
 
-      describe "with a user having :view_work_package permission" do
-        it { expect(response).to have_http_status(:ok) }
+      context "with format text" do
+        let(:factory_name) { :text_wp_custom_field }
 
-        it "presents the diff correctly" do
-          expect(response.body.strip).to be_html_eql <<-HTML
-            <div class="text-diff">
-              <label class="sr-only">Begin of the insertion</label>
-              <ins class="diffmod">foo</ins>
-              <label class="sr-only">End of the insertion</label>
-            </div>
-          HTML
+        describe "with a user having :view_work_package permission" do
+          it { expect(response).to have_http_status(:ok) }
+
+          it "presents the diff correctly" do
+            expect(response.body.strip).to be_html_eql <<-HTML
+              <div class="text-diff">
+                <label class="sr-only">Begin of the insertion</label>
+                <ins class="diffmod">foo</ins>
+                <label class="sr-only">End of the insertion</label>
+              </div>
+            HTML
+          end
+        end
+
+        describe "with a user not having the :view_work_package permission" do
+          let(:user) { build_stubbed(:user) }
+
+          it { expect(response).to have_http_status(:forbidden) }
         end
       end
 
-      describe "with a user not having the :view_work_package permission" do
-        before do
-          RolePermission.delete_all
-        end
+      context "with format string" do
+        let(:factory_name) { :wp_custom_field }
 
-        it { expect(response).to have_http_status(:forbidden) }
+        it { expect(response).to have_http_status(:not_found) }
       end
     end
 
-    context "for work package string custom field" do
-      shared_let(:type) { project.types.first }
+    context "for project custom field" do
+      let(:params) { { id: project.last_journal.id.to_s, field: "custom_fields_#{custom_field.id}", format: "js" } }
 
-      shared_let(:custom_field) do
-        create(:wp_custom_field).tap do |custom_field|
-          project.work_package_custom_fields << custom_field
-          type.custom_fields << custom_field
+      before do
+        project.update custom_field_values: { custom_field.id => "foo" }
+      end
+
+      context "with format text" do
+        context "when visible to everyone" do
+          let!(:custom_field) { create(:text_project_custom_field, projects: [project]) }
+
+          describe "with a user being project member" do
+            it { expect(response).to have_http_status(:ok) }
+
+            it "presents the diff correctly" do
+              expect(response.body.strip).to be_html_eql <<-HTML
+                <div class="text-diff">
+                  <label class="sr-only">Begin of the insertion</label>
+                  <ins class="diffmod">foo</ins>
+                  <label class="sr-only">End of the insertion</label>
+                </div>
+              HTML
+            end
+          end
+
+          describe "with a user not being project member" do
+            let(:user) { build_stubbed(:user) }
+
+            it { expect(response).to have_http_status(:forbidden) }
+          end
+        end
+
+        context "when admin only" do
+          let!(:custom_field) { create(:text_project_custom_field, :admin_only, projects: [project]) }
+
+          describe "with a non admin user being a project member" do
+            it { expect(response).to have_http_status(:forbidden) }
+          end
+
+          describe "with an admin user" do
+            let(:user) { build_stubbed(:admin) }
+
+            it { expect(response).to have_http_status(:ok) }
+
+            it "presents the diff correctly" do
+              expect(response.body.strip).to be_html_eql <<-HTML
+                <div class="text-diff">
+                  <label class="sr-only">Begin of the insertion</label>
+                  <ins class="diffmod">foo</ins>
+                  <label class="sr-only">End of the insertion</label>
+                </div>
+              HTML
+            end
+          end
         end
       end
 
-      shared_let(:work_package) do
-        create(:work_package, type:,
-                              author: user,
-                              project:)
-      end
-      let(:params) { { id: work_package.last_journal.id.to_s, field: "custom_fields_#{custom_field.id}", format: "js" } }
+      context "with format string" do
+        let!(:custom_field) { create(:string_project_custom_field, projects: [project]) }
 
-      before do
-        work_package.update custom_field_values: { custom_field.id => "foo" }
+        it { expect(response).to have_http_status(:not_found) }
       end
-
-      it { expect(response).to have_http_status(:not_found) }
     end
 
     context "for project description" do
@@ -174,9 +220,7 @@ RSpec.describe JournalsController do
       end
 
       describe "with a user not being member of the project" do
-        before do
-          Member.delete_all
-        end
+        let(:user) { build_stubbed(:user) }
 
         it { expect(response).to have_http_status(:forbidden) }
       end
@@ -204,6 +248,7 @@ RSpec.describe JournalsController do
                               author: user,
                               project:)
       end
+
       let(:params) { { id: work_package.last_journal.id.to_s, field: :another_field, format: "js" } }
 
       it { expect(response).to have_http_status(:not_found) }
@@ -220,9 +265,7 @@ RSpec.describe JournalsController do
       end
 
       describe "even with a user having all permissions" do
-        before do
-          user.update(admin: true)
-        end
+        let(:user) { build_stubbed(:admin) }
 
         it { expect(response).to have_http_status(:forbidden) }
       end

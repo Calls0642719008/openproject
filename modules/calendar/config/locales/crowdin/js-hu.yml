@@ -6,4 +6,4 @@ hu:
       title: 'Naptár'
       too_many: 'Összesen %{count} munkacsomag van, de csak %{max} jeleníthető meg.'
       unsaved_title: 'Névtelen naptár'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'Naptárak'

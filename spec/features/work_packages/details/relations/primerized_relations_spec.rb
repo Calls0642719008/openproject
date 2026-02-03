@@ -365,7 +365,7 @@ RSpec.describe "Primerized work package relations tab",
 
       wait_for_network_idle
 
-      expect(page).to have_text "Related work package not found."
+      expect(page).to have_text "The selected work package could not be found."
 
       relations_tab.search_in_autocompleter(wp_blocks)
 

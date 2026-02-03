@@ -123,17 +123,20 @@ describe('WorkPackage', () => {
 
     it('when work package is not new', () => {
       workPackage.$source.id = 420;
+
       expect(workPackage.canAddAttachments).toEqual(false);
     });
 
     it('when the work package has no `addAttachment` link and is not new', () => {
       workPackage.$source.id = 69;
       workPackage.$links.addAttachment = null as any;
+
       expect(workPackage.canAddAttachments).toEqual(false);
     });
 
     it('when the work package has an `addAttachment` link', () => {
-      workPackage.$links.addAttachment = <any> _.noop;
+      workPackage.$links.addAttachment = _.noop as any;
+
       expect(workPackage.canAddAttachments).toEqual(true);
     });
   });

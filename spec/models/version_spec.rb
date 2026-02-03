@@ -490,8 +490,9 @@ RSpec.describe Version do
   end
 
   it_behaves_like "acts_as_customizable included" do
-    let(:model_instance) { version }
-    let(:custom_field) { create(:version_custom_field) }
+    let!(:model_instance) { create(:version) }
+    let!(:new_model_instance) { version }
+    let!(:custom_field) { create(:version_custom_field) }
   end
 
   describe ".visible scope" do
@@ -522,19 +523,37 @@ RSpec.describe Version do
       unrelated_version = create(:version)
       expect(described_class.visible(user)).not_to include(unrelated_version)
     end
+
+    context "when user has the manage_work_packages permission in project" do
+      let(:role) { create(:project_role, permissions: [:manage_versions]) }
+
+      it "returns the version from that project" do
+        visible_versions = described_class.visible(user)
+        expect(visible_versions).to include(version_in_project1)
+      end
+    end
+
+    context "when user has an unrelated permission in project" do
+      let(:role) { create(:project_role, permissions: [:manage_users]) }
+
+      it "does not return the version from that project" do
+        visible_versions = described_class.visible(user)
+        expect(visible_versions).not_to include(version_in_project1)
+      end
+    end
   end
 
   describe "#visible?" do
+    subject { version.visible?(user) }
+
     let(:user) { create(:user) }
     let(:project) { create(:project) }
     let(:role) { create(:project_role, permissions: [:view_work_packages]) }
     let!(:member) { create(:member, user: user, project: project, roles: [role]) }
-    let!(:version) { create(:version, project: project) }
+    let(:version) { create(:version, project: project) }
 
     context "when the user has project access" do
-      it "returns true" do
-        expect(version.visible?(user)).to be true
-      end
+      it { is_expected.to be_truthy }
     end
 
     context "when the user has access to a shared work package but not the project" do
@@ -553,22 +572,28 @@ RSpec.describe Version do
       end
     end
 
-    context "when the user has no access to the project or any work package" do
-      let(:stranger) { create(:user) }
-      let!(:unrelated_version) { create(:version) }
+    context "when the user has access to manage_versions in the project" do
+      let(:role) { create(:project_role, permissions: [:manage_versions]) }
 
-      it "returns false" do
-        expect(unrelated_version.visible?(stranger)).to be false
-      end
+      it { is_expected.to be_truthy }
+    end
+
+    context "when the user only has access to unrelated permission in the project" do
+      let(:role) { create(:project_role, permissions: [:manage_users]) }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context "when the user has no access to the project or any work package" do
+      let(:version) { create(:version) }
+
+      it { is_expected.to be_falsey }
     end
 
     context "when the version is systemwide" do
-      let(:stranger) { create(:user) }
-      let!(:systemwide_version) { create(:version, sharing: "system") }
+      let(:version) { create(:version, sharing: "system") }
 
-      it "returns true" do
-        expect(systemwide_version.visible?(stranger)).to be true
-      end
+      it { is_expected.to be_truthy }
     end
   end
 

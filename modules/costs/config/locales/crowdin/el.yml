@@ -30,14 +30,14 @@ el:
         overridden_costs: "Παράκαμπψη κόστους"
         spent: "Δαπανήθηκε"
         spent_on: "Ημερομηνία"
-        logged_by: "Logged by"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        logged_by: "Καταχώρηση από"
+        entity: Καταχώρηση για
+        entity_id: Καταχώρηση για
+        entity_gid: Καταχώρηση για
       cost_type:
         unit: "Όνομα μονάδας"
         unit_plural: "Πληθυντικός ονόματος μονάδας"
-        default: "Cost type by default"
+        default: "Προεπιλεγμένος τύπος κόστους"
       work_package:
         costs_by_type: "Δαπανημένες μονάδες"
         labor_costs: "Κόστος εργασίας"
@@ -58,12 +58,12 @@ el:
         comments: Σχόλιο
         activity: Δραστηριότητα
         spent_on: Ημερομηνία
-        start_time: Start time
-        end_time: Finish time
+        start_time: Ώρα έναρξης
+        end_time: Ώρα λήξης
         time: Ώρα
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Καταχώρηση για
+        entity_id: Καταχώρηση για
+        entity_gid: Καταχώρηση για
     models:
       time_entry:
         one: "Καταχώρηση χρόνου"
@@ -75,7 +75,7 @@ el:
         one: "Τύπος κόστους"
         other: "Τύποι κόστους"
       time_entry_activity:
-        one: "Time tracking activity"
+        one: "Δραστηριότητες καταγραφής χρόνου"
         other: "Δραστηριότητες καταγραφής χρόνου"
       rate: "Αμοιβή"
     errors:
@@ -98,10 +98,10 @@ el:
     fixed_date: "Καθορισμένη ημερομηνία"
   button_add_rate: "Προσθήκη αμοιβής"
   button_log_costs: "Καταγραφή κόστους μονάδας"
-  button_log_time: "Log"
+  button_log_time: "Αρχείο καταγραφής"
   button_add_activity: "Δραστηριότητα"
   button_add_time_entry: "Καταγραφή χρόνου"
-  button_stop_timer: "Stop timer"
+  button_stop_timer: "Διακοπή χρονόμετρου"
   caption_booked_on_project: "Κλείστηκαν στο έργο"
   caption_default: "Προεπιλογή"
   caption_default_rate_history_for: "Προεπιλεγμένο ιστορικό αμοιβής για %{user}"
@@ -158,19 +158,19 @@ el:
   label_valid_from: "Έγκυρο από"
   label_yes: "Ναι"
   label_time: "Ώρα"
-  label_cost: "Cost"
+  label_cost: "Κόστος"
   label_costs: "Κόστος"
-  label_mandatory_fields: "Mandatory fields"
-  label_my_time_tracking: "My time tracking"
-  label_no_time: "No time tracked"
-  label_next_day: "Next day"
+  label_mandatory_fields: "Υποχρεωτικά πεδία"
+  label_my_time_tracking: "Η παρακολούθηση χρόνου μου"
+  label_no_time: "Δεν υπάρχει καταχωρημένος χρόνος"
+  label_next_day: "Επόμενη μέρα"
   label_next_week: "Επόμενη εβδομάδα"
-  label_next_workweek: "Next work week"
-  label_next_month: "Next month"
-  label_previous_day: "Previous day"
-  label_previous_workweek: "Previous work week"
+  label_next_workweek: "Επόμενη εβδομάδα εργασίας"
+  label_next_month: "Επόμενος μήνας"
+  label_previous_day: "Προηγούμενη μέρα"
+  label_previous_workweek: "Προηγούμενη εβδομάδα εργασίας"
   label_previous_week: "Προηγούμενη εβδομάδα"
-  label_previous_month: "Previous month"
+  label_previous_month: "Προηγούμενος μήνας"
   label_specific_day: "Day %{day}"
   label_specific_week: "Calendar week %{week}"
   label_specific_month: "Month %{month}"

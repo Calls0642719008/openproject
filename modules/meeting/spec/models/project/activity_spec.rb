@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -57,16 +58,16 @@ RSpec.describe Projects::Activity, "meeting" do
 
   describe ".with_latest_activity" do
     it "set project.latest_activity_at to the latest updated meeting time" do
-      meeting.update(updated_at: initial_time - 10.seconds)
-      meeting2.update(updated_at: initial_time - 20.seconds)
+      meeting.update_columns(updated_at: initial_time - 10.seconds)
+      meeting2.update_columns(updated_at: initial_time - 20.seconds)
 
       # there is a loss of precision for timestamps stored in database
       expect(latest_activity).to equal_time_without_usec(meeting.updated_at)
     end
 
     it "takes the time stamp of the latest activity across models" do
-      work_package.update(updated_at: initial_time - 10.seconds)
-      meeting.update(updated_at: initial_time - 20.seconds)
+      work_package.update_columns(updated_at: initial_time - 10.seconds)
+      meeting.update_columns(updated_at: initial_time - 20.seconds)
 
       # Order:
       # work_package
@@ -74,7 +75,7 @@ RSpec.describe Projects::Activity, "meeting" do
 
       expect(latest_activity).to equal_time_without_usec(work_package.updated_at)
 
-      work_package.update(updated_at: meeting.updated_at - 10.seconds)
+      work_package.update_columns(updated_at: meeting.updated_at - 10.seconds)
 
       # Order:
       # meeting

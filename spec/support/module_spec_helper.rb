@@ -33,7 +33,7 @@ def require_module_spec_helper
   module_caller = caller.grep(Regexp.new("\\A#{Rails.root.join('modules')}")).first
   return unless module_caller
 
-  module_name = module_caller.scan(/modules\/\w+/).first
+  module_name = module_caller.scan(/modules\/[\w-]+/).first
   module_spec_helper = Rails.root.join("#{module_name}/spec/spec_helper.rb")
   require module_spec_helper if module_spec_helper.file?
 end

@@ -9,7 +9,8 @@
           render(Primer::Alpha::TabNav.new(label: "label")) do |component|
             component.with_tab(
               selected: @direction == :upcoming,
-              href: work_package_meetings_tab_index_path(
+              href: project_work_package_meetings_tab_index_path(
+                @work_package.project,
                 @work_package,
                 direction: :upcoming
               )
@@ -19,7 +20,8 @@
             end
             component.with_tab(
               selected: @direction == :past,
-              href: work_package_meetings_tab_index_path(
+              href: project_work_package_meetings_tab_index_path(
+                @work_package.project,
                 @work_package,
                 direction: :past
               )
@@ -32,6 +34,7 @@
         flex.with_row do
           render(
             WorkPackageMeetingsTab::ListComponent.new(
+              work_package: @work_package,
               agenda_items_grouped_by_meeting: @agenda_items_grouped_by_meeting,
               direction: @direction
             )

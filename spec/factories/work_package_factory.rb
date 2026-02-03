@@ -110,16 +110,21 @@ FactoryBot.define do
                                                 created_at: timestamp,
                                                 updated_at: timestamp,
                                                 user: work_package.author,
-                                                version: version + 1)
+                                                version: version + 1,
+                                                notes: "")
 
           data_attributes = work_package_attributes
                               .extract!(*Journal::WorkPackageJournal.attribute_names)
                               .symbolize_keys
                               .merge(attributes)
 
+          # Does not yet support overwriting the custom values via the provided attributes.
+          work_package_cv_attributes = work_package.custom_values.map { it.attributes.slice("custom_field_id", "value") }
+
           create(:work_package_journal,
                  **journal_attributes,
-                 data: build(:journal_work_package_journal, data_attributes))
+                 data: build(:journal_work_package_journal, data_attributes),
+                 customizable_journals: work_package_cv_attributes.map { build(:journal_customizable_journal, it) })
         end
 
         work_package.journals.reload
@@ -145,7 +150,6 @@ FactoryBot.define do
           / work_package.derived_estimated_hours.to_f * 100
       end
     end
-
 
     # force done_ratio in status-based mode if given done_ratio is different from status default
     callback(:after_create) do |work_package, evaluator|

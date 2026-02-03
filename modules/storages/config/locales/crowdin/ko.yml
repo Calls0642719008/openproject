@@ -22,16 +22,17 @@ ko:
         storage: 저장소
         storage_url: 저장소 URL
       storages/sharepoint_storage:
-        host: Sharepoint Site URL
-        library: Library ID
-        name: Name
-        site: Site ID
+        host: SharePoint 사이트 URL
+        library: 라이브러리 ID
+        name: 이름
+        site: 사이트 ID
       storages/storage:
         authentication_method: 인증 방법
         creator: 생성자
         drive: 드라이브 ID
         host: 호스트
         name: 이름
+        password: 애플리케이션 암호
         provider_type: 공급자 유형
         tenant: 디렉터리(테넌트) ID
     errors:
@@ -62,7 +63,7 @@ ko:
               op_application_not_installed: '"OpenProject Integration" 앱이 설치되지 않은 것 같습니다. 먼저 설치한 후 다시 시도하세요.'
             password:
               invalid_password: '- 유효하지 않습니다.'
-              unknown_error: '- 유효성을 검사할 수 없습니다. 저장소 연결을 확인하고 다시 시도하세요.'
+              unknown_error: 파일 저장소 공급자에서 유효성을 검사할 수 없습니다. 연결이 제대로 작동되고 있는지 확인하세요.
     models:
       file_link: 파일
       storages/storage: 저장소
@@ -95,12 +96,6 @@ ko:
       manual: 수동으로 관리되는 기존 폴더
     remove_project:
       deletion_failure_flash: 저장소에서 프로젝트를 제거하지 못했습니다. %{error}
-      dialog:
-        automatically_managed_appendix: 또한 이 경우에는 해당 저장소에 자동으로 관리되는 프로젝트 폴더가 있는 경우 이 폴더와 해당 파일이 영구적으로 삭제됩니다.
-        confirmation_text: 해당 사항을 이해하며 이 프로젝트에서 이 파일 저장소를 제거할 것인지 확인해 주세요
-        heading_text: '%{storage}에서 프로젝트 제거'
-        text: 이 작업은 되돌릴 수 없으며 이 프로젝트의 작업 패키지에서 해당 저장소의 파일 및 폴더에 대한 모든 링크를 제거합니다.
-        title: 저장소에서 프로젝트 제거
       label: 프로젝트 제거
   services:
     attributes:
@@ -109,18 +104,25 @@ ko:
         create_folder: '관리되는 프로젝트 폴더 생성:'
         ensure_root_folder_permissions: '기본 폴더 권한 설정:'
         hide_inactive_folders: '비활성 폴더 숨기기 단계:'
-        remote_folders: '그룹 폴더의 콘텐츠 읽기:'
+        remote_folders: 'Read contents of the team folder:'
         remove_user_from_group: '그룹에서 사용자 제거:'
         rename_project_folder: '관리되는 프로젝트 폴더의 이름 바꾸기:'
       one_drive_sync_service:
         create_folder: '관리되는 프로젝트 폴더 생성:'
         ensure_root_folder_permissions: '기본 폴더 권한 설정:'
         hide_inactive_folders: '비활성 폴더 숨기기 단계:'
-        remote_folders: '그룹 폴더의 콘텐츠 읽기:'
+        remote_folders: 'Read contents of the drive root folder:'
+        rename_project_folder: '관리되는 프로젝트 폴더의 이름 바꾸기:'
+      sharepoint_sync_service:
+        create_folder: '관리되는 프로젝트 폴더 생성:'
+        ensure_root_folder_permissions: '기본 폴더 권한 설정:'
+        hide_inactive_folders: '비활성 폴더 숨기기 단계:'
+        remote_folders: 'Read contents of the drive root folder:'
         rename_project_folder: '관리되는 프로젝트 폴더의 이름 바꾸기:'
     errors:
       messages:
         error: 예기치 않은 오류가 발생했습니다. OpenProject 로그에서 자세한 내용을 확인하거나 관리자에게 문의하세요
+        forbidden: 요청된 리소스에 OpenProject가 액세스할 수 없습니다. 저장소 공급자의 권한 구성을 확인하세요.
         unauthorized: OpenProject가 저장소 공급자를 인증할 수 없습니다. 액세스 권한이 있는지 확인하세요.
       models:
         copy_project_folders_service:
@@ -138,7 +140,7 @@ ko:
               conflict: '%{folder_name} 폴더가 이미 %{parent_location}에 있습니다.'
               not_found: "%{parent_location}을(를) 찾을 수 없습니다."
             ensure_root_folder_permissions:
-              not_found: "%{group_folder}을(를) 찾을 수 없습니다. Nextcloud 그룹 폴더 설정을 확인하세요."
+              not_found: "%{group_folder} wasn't found. Please check your Nextcloud Team Folder setup."
               permission_not_set: '- %{group_folder}에 대한 권한을 설정할 수 없습니다.'
             hide_inactive_folders:
               permission_not_set: '- %{path}에 대한 권한을 설정할 수 없습니다.'
@@ -158,6 +160,7 @@ ko:
           group_does_not_exist: "%{group}이(가) 없습니다. Nextcloud 인스턴스 구성을 확인하세요."
           insufficient_privileges: OpenProject에는 %{user}을(를) %{group}에 추가할 수 있는 권한이 충분하지 않습니다. Nextcloud에서 그룹 설정을 확인하세요.
           not_allowed: Nextcloud가 요청을 차단합니다.
+          not_found: OpenProject가 Nextcloud 저장소 공급자에서 파일을 찾을 수 없습니다. 파일이 삭제되지 않았는지 확인하세요.
           unauthorized: OpenProject가 Nextcloud와 동기화할 수 없습니다. 저장소 및 Nextcloud 구성을 확인하세요.
           user_does_not_exist: "%{user}이(가) Nextcloud에 없습니다."
         one_drive_sync_service:
@@ -175,16 +178,32 @@ ko:
               not_found: "%{current_path}을(를) 찾을 수 없습니다."
             set_folders_permissions:
               permission_not_set: '- %{path}에 대한 권한을 설정할 수 없습니다.'
+          error: 예기치 않은 오류가 발생했습니다. OneDrive에 연결할 수 있는지 확인하고 OpenProject 작업자 로그에서 자세한 내용을 확인하세요.
+          not_allowed: OpenProject가 OneDrive 드라이브에 액세스하도록 허용되지 않았습니다. Azure 애플리케이션에 설정된 권한을 확인하세요.
+          unauthorized: OpenProject가 OneDrive와 동기화할 수 없습니다. 저장소 및 Azure 애플리케이션 구성을 확인하세요.
+          user_does_not_exist: "%{user}이(가) Nextcloud에 없습니다."
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: '%{folder_name}은(는) 이미 %{parent_location}에 있습니다.'
+              not_found: "%{parent_location}을(를) 찾을 수 없습니다."
+            hide_inactive_folders:
+              permission_not_set: '- %{path}에 대한 권한을 설정할 수 없습니다.'
+            rename_project_folder:
+              conflict: 같은 이름의 폴더가 이미 있으므로 OpenProject에서 %{current_path} 폴더의 이름을 %{project_folder_name}(으)로 바꿀 수 없습니다.
+              forbidden: OpenProject에는 이름을 바꾸기 위한 %{current_path} 폴더에 대한 액세스 권한이 없습니다.
+              not_found: "%{current_path}을(를) 찾을 수 없습니다."
+            set_folders_permissions:
+              permission_not_set: '- %{path}에 대한 권한을 설정할 수 없습니다.'
           error: 예기치 않은 오류가 발생했습니다. OneDrive에 연결할 수 있는지 확인하고 OpenProject 작업자 로그에서 자세한 내용을 확인하세요
           not_allowed: OpenProject가 OneDrive 드라이브에 액세스하도록 허용되지 않았습니다. Azure 애플리케이션에 설정된 권한을 확인하세요.
+          not_found: OpenProject가 라이브러리 %{drive_name}에 액세스할 수 없습니다. SharePoint 사이트 문서 라이브러리를 확인하세요.
           unauthorized: OpenProject가 OneDrive와 동기화할 수 없습니다. 저장소 및 Azure 애플리케이션 구성을 확인하세요.
           user_does_not_exist: "%{user}이(가) Nextcloud에 없습니다."
         upload_link_service:
           not_found: '%{storage_name}에서 대상 폴더 %{folder}을(를) 찾을 수 없습니다.'
   storages:
     buttons:
-      complete_without_setup: 이것 없이 완료
-      done_complete_setup: 완료, 설정 완료
       done_continue: 완료, 계속
       open_storage: 파일 저장소 열기
       replace_oauth_application: OpenProject OAuth 바꾸기
@@ -195,25 +214,23 @@ ko:
       oauth_client_incomplete:
         nextcloud: OpenProject가 OAuth를 사용하여 Nextcloud 데이터에 액세스하도록 허용합니다.
         one_drive: OpenProject가 OAuth를 사용하여 Azure 데이터에 액세스하고 OneDrive에 연결하도록 허용하세요.
-        sharepoint: Allow OpenProject to access SharePoint data using OAuth.
+        sharepoint: OpenProject가 OAuth를 사용하여 SharePoint 데이터에 액세스하도록 허용하세요.
       redirect_uri_incomplete:
         one_drive: 올바른 URI 리디렉션으로 설정을 완료합니다.
-        sharepoint: Complete the setup with the correct URI redirection.
+        sharepoint: 올바른 URI 리디렉션으로 설정을 완료하세요.
     confirm_replace_oauth_application: 이 작업은 현재 OAuth 자격 증명을 재설정합니다. 확인 후 저장소 공급자에서 자격 증명을 다시 입력해야 하며 모든 원격 사용자는 OpenProject에 대해 다시 인증해야 합니다. 계속하시겠습니까?
     confirm_replace_oauth_client: 이 작업은 현재 OAuth 자격 증명을 재설정합니다. 확인 후 저장소 공급자의 새로운 자격 증명을 입력해야 하며 모든 사용자는 %{provider_type}에 대해 다시 인증해야 합니다. 계속하시겠습니까?
     delete_warning:
-      input_delete_confirmation: 파일 저장소 이름 %{file_storage}을(를) 입력하여 삭제를 확인합니다.
-      irreversible_notice: 파일 저장소를 삭제하면 되돌릴 수 없습니다.
-      project_storage: '이 프로젝트에서 %{file_storage}을(를) 삭제하시겠습니까? 이 작업을 확인하려면 아래 필드에 저장소 이름을 입력하세요. 이렇게 하면 다음이 허용됩니다.'
-      project_storage_delete_result_1: 이 프로젝트의 작업 패키지에서 해당 저장소의 파일 및 폴더에 대한 모든 링크를 제거합니다.
-      project_storage_delete_result_2: 이 저장소에 자동으로 관리되는 프로젝트 폴더가 있는 경우 이 폴더와 해당 파일이 영구적으로 삭제됩니다.
-      storage: '%{file_storage}을(를) 삭제하시겠습니까? 이 작업을 확인하려면 아래 필드에 저장소 이름을 입력하세요. 이렇게 하면 다음이 허용됩니다.'
-      storage_delete_result_1: 이 저장소를 사용하는 모든 프로젝트의 모든 저장소 설정을 제거합니다.
-      storage_delete_result_2: 모든 프로젝트의 작업 패키지에서 해당 저장소의 파일 및 폴더에 대한 모든 링크를 제거합니다.
-      storage_delete_result_3: 이 저장소에 자동으로 관리되는 프로젝트 폴더가 있는 경우 이 폴더와 포함된 해당 파일이 영구적으로 삭제됩니다.
+      project_storage: 이 프로젝트에서 %{file_storage}을(를) 제거하시겠습니까?
+      project_storage_delete_result_1: 해당 파일 및 폴더에 대한 모든 링크가 제거됩니다
+      project_storage_delete_result_2: 자동으로 관리되는 프로젝트 폴더 및 이 폴더 내 모든 파일이 삭제됩니다
+      storage: 외부 파일 저장소로 사용 중인 %{file_storage}을(를) 삭제하시겠습니까?
+      storage_delete_result_1: 저장소를 현재 사용 중인 모든 프로젝트에서 이 저장소가 제거됩니다
+      storage_delete_result_2: 해당 파일 및 폴더에 대한 모든 링크가 제거됩니다
+      storage_delete_result_3: 자동으로 관리되는 프로젝트 폴더 및 이 폴더 내 모든 파일이 삭제됩니다
     dependencies:
       nextcloud:
-        group_folders_app: 그룹 폴더
+        group_folders_app: Team Folders
         integration_app: Integration OpenProject
     enabled_in_projects:
       setup_incomplete_description: 이 저장소의 설정이 완료되지 않았습니다. 여러 프로젝트에서 활성화하기 전에 설정을 완료하세요.
@@ -221,25 +238,32 @@ ko:
     error_invalid_provider_type: 유효한 저장소 공급자를 선택하세요.
     file_storage_view:
       access_management:
-        automatic_management: 자동으로 관리되는 액세스 및 폴더
-        automatic_management_description: OpenProject가 프로젝트별 폴더를 자동으로 생성하고 해당 사용자 액세스를 관리하도록 하세요. 각 팀원이 항상 올바른 액세스 권한을 갖도록 보장하므로 권장됩니다.
-        description: 사용자 액세스 및 폴더 생성의 관리 유형을 선택하세요. 보다 체계적인 구조를 갖추고 모든 관련 사용자에게 액세스를 보장하려면 자동으로 관리되는 액세스를 사용하는 것이 좋습니다.
-        manual_management: 수동으로 관리되는 액세스 및 폴더
-        manual_management_description: 프로젝트별 폴더를 직접 수동으로 만들고 관리하세요. 관련 사용자에게 액세스 권한이 있는지 수동으로 확인해야 합니다.
+        automatic_management: 자동으로 관리되는 액세스 및 폴더 활성화
+        automatic_management_description: 각 프로젝트는 저장소가 해당 프로젝트에 추가될 때 폴더 및 액세스 관리에 대한 자동 관리 또는 수동 접근 방식을 적용할지 결정할 수 있습니다.
+        description: OpenProject는 프로젝트에 파일 저장소가 추가되면 자동으로 프로젝트 폴더를 생성하고 관리할 수 있습니다. 따라서 폴더 구조가 더욱 체계적으로 정리되고 모든 관련 사용자에게 액세스를 보장하는 간편한 액세스 관리가 가능합니다.
+        manual_management: 수동으로 관리되는 액세스 및 폴더만 허용
+        manual_management_description: 이 저장소를 사용하는 프로젝트에는 자동 관리 접근 방식의 옵션이 제공되지 않습니다. 폴더 및 액세스를 수동으로 관리해야 합니다.
         setup_incomplete: 사용자 액세스 및 폴더 생성의 관리 유형을 선택합니다.
-        subtitle: 액세스 관리
+        subtitle: 폴더 및 액세스 관리
       access_management_section: 액세스 및 프로젝트 폴더
       automatically_managed_folders: 자동으로 관리되는 폴더
       general_information: 일반 정보
       oauth_configuration: OAuth 구성
+      one_drive:
+        access_management:
+          automatic_management: 자동으로 관리되는 액세스 및 폴더 활성화
+          automatic_management_description: 이 파일 저장소를 사용하는 각 프로젝트는 반드시 폴더 및 액세스 관리에 대한 자동 관리 접근 방식을 사용해야 합니다. 수동으로 수행할 수 없습니다.
+          manual_management: 수동으로 관리되는 액세스 및 폴더만 허용
+          manual_management_description: 이 저장소를 사용하는 프로젝트에는 자동 관리 접근 방식의 옵션이 제공되지 않습니다. 폴더 및 액세스를 수동으로 관리해야 합니다.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: 프로젝트 폴더
       redirect_uri: 리디렉션 URI
+      sharepoint_oauth: Azure OAuth
       storage_audience_blank: 오디언스가 구성되지 않았습니다.
       storage_audience_description: 오디언스 "%{audience}"의 토큰을 교환하는 중입니다.
       storage_audience_idp: 오디언스에 관계없이, 로그인 시 ID 공급자가 얻은 액세스 토큰을 사용합니다.
-      storage_oauth: Nextcloud OAuth
+      storage_oauth: 저장소 OAuth
       storage_provider: 저장소 공급자
       token_exchange: 토큰 교환
     health:
@@ -252,12 +276,12 @@ ko:
         ampf_configuration:
           client_folder_creation: 자동 폴더 생성
           client_folder_removal: 자동 폴더 삭제
-          drive_contents: 드라이브에 예상 콘텐츠가 있습니다
-          files_request: 그룹 폴더 파일 가져오기
-          group_folder_app: '종속성: 그룹 폴더'
-          group_folder_contents: 그룹 폴더에 예상 콘텐츠가 있습니다
-          group_folder_presence: 그룹 폴더가 존재합니다
+          drive_contents: 드라이브 콘텐츠
+          files_request: Fetching team folder files
           header: 자동으로 관리되는 프로젝트 폴더
+          team_folder_app: 'Dependency: Team Folders'
+          team_folder_contents: Team folder content
+          team_folder_presence: Team folder exists
           userless_access: 서버 측 요청 인증
         authentication:
           existing_token: 사용자 토큰
@@ -278,6 +302,7 @@ ko:
           drive_id_exists: 드라이브가 존재합니다
           drive_id_format: 드라이브 ID 형식
           header: 구성
+          host: 호스트 URL
           host_url_accessible: 호스트 URL 액세스 가능
           storage_configured: 구성 완료
           tenant_id: 테넌트 ID
@@ -291,12 +316,12 @@ ko:
         client_secret_invalid: 구성된 OAuth 2 클라이언트 비밀번호가 잘못되었습니다. 구성을 확인하세요.
         nc_dependency_missing: '파일 저장소에 필수 종속성이 누락되었습니다. 다음 종속성을 추가하세요: %{dependency}.'
         nc_dependency_version_mismatch: '%{dependency} 앱 버전은 지원되지 않습니다. Nextcloud 서버를 업데이트하세요.'
-        nc_group_folder_not_found: 그룹 폴더를 찾을 수 없습니다.
         nc_host_not_found: 구성된 호스트 URL에서 Nextcloud 서버를 찾을 수 없습니다. 구성을 확인하세요.
         nc_oauth_request_not_found: 현재 연결된 사용자를 가져올 엔드포인트를 찾을 수 없습니다. 자세한 내용은 서버 로그를 확인하세요.
         nc_oauth_request_unauthorized: 현재 사용자는 원격 파일 저장소에 액세스할 수 있는 권한이 없습니다. 자세한 내용은 서버 로그를 확인하세요.
         nc_oauth_token_missing: 사용자가 아직 Nextcloud 계정을 링크하지 않았기 때문에 OpenProject가 Nextcloud와의 사용자 수준 통신을 테스트할 수 없습니다.
-        nc_unexpected_content: 관리되는 그룹 폴더에서 예기치 않은 콘텐츠가 발견되었습니다.
+        nc_team_folder_not_found: The team folder could not be found.
+        nc_unexpected_content: Unexpected content found in the managed team folder.
         nc_userless_access_denied: 구성된 앱 암호가 잘못되었습니다.
         not_configured: 연결에 대한 유효성 검사를 할 수 없습니다. 먼저 구성을 완료하세요.
         od_client_cant_delete_folder: 클라이언트에서 폴더를 삭제하는 중에 문제가 발생했습니다. 저장소에 대한 설정 설명서를 확인하세요.
@@ -317,15 +342,16 @@ ko:
         oidc_token_acquisition_failed: 해당 OpenID Connect 설정은 필요한 오디언스를 제공하지 않으며, 토큰 교환 기능도 제공하지 않습니다. 자세한 내용은 설명서를 확인하세요.
         oidc_token_exchange_failed: OpenID Connect 공급자의 Token Exchange 설정에 문제가 있는 것 같습니다. 해당 구성을 확인하고 다시 시도하세요.
         oidc_token_refresh_failed: 저장소에 대한 액세스를 확인하는 동안 오류가 발생했습니다. 자세한 내용은 서버 로그를 확인하세요.
-        sp_client_cant_delete_folder: The client is having trouble deleting folders in SharePoint. Please check the setup documentation for your storage.
-        sp_client_id_missing: The configured OAuth 2 client id is missing for SharePoint. Please check the configuration.
-        sp_client_secret_missing: The configured OAuth 2 client secret is missing for SharePoint. Please check the configuration.
-        sp_client_write_permission_missing: The client seems to have write permissions missing in SharePoint. Please check the setup documentation for your storage.
-        sp_existing_test_folder: The folder %{folder_name} needed for testing already exists in SharePoint. Please delete it and try again.
-        sp_oauth_request_error: The user-bound request to SharePoint failed. Please check the server logs for further information.
-        sp_oauth_token_missing: OpenProject cannot test the user level communication with SharePoint as the user did not yet link their SharePoint account.
-        sp_tenant_id_missing: The configured directory (tenant) id is missing for SharePoint. Please check the configuration.
-        sp_unexpected_content: Unexpected content found in the SharePoint drive.
+        sp_client_cant_delete_folder: 클라이언트가 SharePoint에서 폴더를 삭제하는 중에 문제가 발생했습니다. 저장소에 대한 설정 설명서를 확인하세요.
+        sp_client_id_missing: 구성된 OAuth 2 클라이언트 ID가 SharePoint에서 누락되었습니다. 구성을 확인하세요.
+        sp_client_secret_missing: 구성된 OAuth 2 클라이언트 비밀번호가 SharePoint에서 누락되었습니다. 구성을 확인하세요.
+        sp_client_write_permission_missing: 클라이언트가 SharePoint에서 쓰기 권한이 없는 것 같습니다. 저장소에 대한 설정 설명서를 확인하세요.
+        sp_existing_test_folder: 테스트에 필요한 %{folder_name} 폴더가 SharePoint에 이미 있습니다. 이 폴더를 삭제한 후에 다시 시도하세요.
+        sp_oauth_request_error: SharePoint에 대한 사용자 바인딩 요청이 실패했습니다. 자세한 내용은 서버 로그를 확인하세요.
+        sp_oauth_request_unauthorized: 현재 사용자는 원격 파일 저장소에 액세스할 수 있는 권한이 없습니다. 자세한 내용은 서버 로그를 확인하세요.
+        sp_oauth_token_missing: 사용자가 아직 SharePoint 계정을 링크하지 않았기 때문에 OpenProject가 SharePoint와의 사용자 수준 통신을 테스트할 수 없습니다.
+        sp_tenant_id_missing: 구성된 디렉터리(테넌트) ID가 SharePoint에서 누락되었습니다. 구성을 확인하세요.
+        sp_unexpected_content: SharePoint 문서 라이브러리에서 예기치 않은 콘텐츠가 발견되었습니다.
         unknown_error: 연결에 대한 유효성 검사를 할 수 없습니다. 알 수 없는 오류가 발생했습니다. 자세한 내용은 서버 로그를 확인하세요.
       label_error: 오류
       label_failed: 실패함
@@ -394,10 +420,10 @@ ko:
       setting_up_storages: '파일 저장소를 설정하려면 다음을 방문하세요:'
       setting_up_storages_non_admin: 관리자는 관리/파일 저장소에서 파일 저장소를 설정할 수 있습니다.
       sharepoint:
-        application_link_text: SharePoint site
-        integration: SharePoint Administration / OpenProject
-        oauth_configuration: Copy these values from the desired application in the %{application_link_text}.
-        provider_configuration: Please make sure you have administration privileges in the %{application_link_text} or contact your Microsoft administrator before doing the setup. In the portal, you also need to register an Azure application or use an existing one for authentication.
+        application_link_text: SharePoint 사이트
+        integration: SharePoint 관리/OpenProject
+        oauth_configuration: '%{application_link_text}에서 원하는 애플리케이션의 해당 값을 복사합니다.'
+        provider_configuration: 설정을 수행하기 전에 %{application_link_text}에서 관리 권한이 있는지 확인하거나 Microsoft 관리자에게 문의하세요. 또한 포털에서 Azure 애플리케이션을 등록하거나 기존 애플리케이션을 사용하여 인증해야 합니다.
       type: '설정을 수행하기 전에 Nextcloud 인스턴스에서 관리 권한이 있고 다음 애플리케이션이 설치되어 있는지 확인하세요.'
       type_link_text: "“Integration OpenProject”"
     label_active: 활성
@@ -470,7 +496,7 @@ ko:
         title: 프로젝트 폴더에 대한 권한을 설정하는 중입니다.
     page_titles:
       file_storages:
-        delete: 파일 저장소 삭제
+        delete: 파일 저장소를 삭제하시겠습니까?
         subtitle: 작업 패키지의 파일을 업로드하고, 링크하고, 관리하려면 외부 파일 저장소를 추가하세요.
       managed_project_folders:
         subtitle: |-
@@ -478,13 +504,14 @@ ko:
         subtitle_short: OpenProject가 프로젝트별 폴더를 자동으로 생성하도록 하세요.
         title: 자동으로 관리되는 프로젝트 폴더
       project_settings:
-        delete: 파일 저장소 삭제
         edit: 이 프로젝트에 대한 파일 저장소 편집
         members_connection_status: 멤버 연결 상태
         new: 이 프로젝트에 파일 저장소 추가
       project_storage_members:
         subtitle: 모든 프로젝트 멤버의 저장소 %{storage_name_link}에 대한 연결 상태를 확인하세요.
         title: 멤버 연결 상태
+      project_storages:
+        delete: 프로젝트에서 파일 저장소를 제거하시겠습니까?
     permission_header_explanation: '외부 저장소에 대한 파일 권한은 자동으로 관리되는 프로젝트 폴더 내의 폴더와 파일에만 적용됩니다. 모든 저장소 공급자가 모든 파일 권한을 지원하는 것은 아닙니다. 자세한 내용은 <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>파일 저장소 권한</a>에 대한 설명서를 참조하세요.'
     provider_types:
       label: 공급자 유형
@@ -499,10 +526,11 @@ ko:
         name: OneDrive
         name_placeholder: '예: OneDrive'
       sharepoint:
-        label_oauth_client_id: Azure OAuth Application (client) ID
-        label_oauth_client_secret: Azure OAuth Client Secret Value
+        drive_description: OpenProject 액세스 관리 문서 라이브러리
+        label_oauth_client_id: Azure OAuth 애플리케이션(클라이언트) ID
+        label_oauth_client_secret: Azure OAuth 클라이언트 비밀번호 값
         name: SharePoint
-        name_placeholder: e.g. SharePoint
+        name_placeholder: '예: SharePoint'
     show_attachments_toggle:
       description: 이 옵션을 비활성화하면 작업 패키지 파일 탭에서 첨부 파일 목록이 숨겨집니다. 작업 패키지 설명에 첨부된 파일은 내부 첨부 파일 저장소에 계속 업로드됩니다.
       label: 작업 패키지 파일 탭에 첨부 파일 표시
@@ -513,12 +541,17 @@ ko:
         label: 사용자 로그인 시 얻은 액세스 토큰을 사용하세요
       manual:
         helptext: OpenProject는 지정된 오디언스에 대한 ID 공급자와 토큰을 교환합니다.
-        label: 액세스 토큰을 교환할 오디언스를 수동으로 지정하세요
+        label: 액세스 토큰을 교환할 오디언스를 수동으로 지정하세요(권장)
     storage_list_blank_slate:
       description: 여기에서 보려면 저장소를 추가합니다.
       heading: 아직 저장소가 없습니다.
     successful_storage_connection: 저장소가 연결되었습니다! 이 저장소를 사용하려면 원하는 각 프로젝트의 프로젝트 탭에서 저장소를 활성화해야 합니다.
     upsell:
-      description: |-
-        OpenProject를 사용하여 OneDrive를 파일 저장소로 통합합니다. 파일을 업로드하고 프로젝트의 작업 패키지에 직접 링크합니다.
-      title: OneDrive 통합
+      one_drive:
+        description: |-
+          OpenProject를 사용하여 OneDrive 드라이브를 파일 저장소로 통합합니다. 파일을 업로드하고 프로젝트의 작업 패키지에 직접 링크합니다.
+        title: OneDrive 통합
+      sharepoint:
+        description: |-
+          OpenProject를 사용하여 SharePoint 사이트를 파일 저장소로 통합합니다. 파일을 업로드하고 프로젝트의 작업 패키지에 직접 링크합니다.
+        title: SharePoint 통합

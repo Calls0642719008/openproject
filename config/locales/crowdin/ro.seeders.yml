@@ -43,13 +43,6 @@ ro:
           name: PM2 Magenta
         item_3:
           name: PM2 Verde Galben
-      document_categories:
-        item_0:
-          name: Documentație
-        item_1:
-          name: Specificație
-        item_2:
-          name: Altele
       project_query_roles:
         item_0:
           name: Project query viewer
@@ -143,7 +136,7 @@ ro:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Bun venit
               item_1:
                 options:
                   name: Începe
@@ -315,7 +308,7 @@ ro:
             widgets:
               item_0:
                 options:
-                  name: Welcome
+                  name: Bun venit
               item_1:
                 options:
                   name: Noţiuni de bază
@@ -339,7 +332,7 @@ ro:
                   name: Pachete de lucru
               item_6:
                 options:
-                  name: Project plan
+                  name: Plan de proiect
           work_packages:
             item_0:
               subject: New login screen

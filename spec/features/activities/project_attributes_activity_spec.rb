@@ -110,8 +110,8 @@ RSpec.describe "Project attributes activity", :js do
         # own fields
         activity_page.expect_activity("Name changed from #{project_was.name} to #{project.name}")
         activity_page.expect_activity("Description set (Details)")
-        activity_page.expect_activity("Project status set to On track")
-        activity_page.expect_activity("Project status description set (Details)")
+        activity_page.expect_activity("Status set to On track")
+        activity_page.expect_activity("Status description set (Details)")
         activity_page.expect_activity("Visibility set to public")
         activity_page.expect_activity("No longer subproject of #{parent_project.name}")
         activity_page.expect_activity("Project unarchived")
@@ -158,8 +158,8 @@ RSpec.describe "Project attributes activity", :js do
         # own fields
         activity_page.expect_activity("Name changed from #{project_was.name} to #{project.name}")
         activity_page.expect_activity("Description set (Details)")
-        activity_page.expect_activity("Project status set to On track")
-        activity_page.expect_activity("Project status description set (Details)")
+        activity_page.expect_activity("Status set to On track")
+        activity_page.expect_activity("Status description set (Details)")
         activity_page.expect_activity("Visibility set to public")
         activity_page.expect_activity("No longer subproject of #{parent_project.name}")
         activity_page.expect_activity("Project unarchived")

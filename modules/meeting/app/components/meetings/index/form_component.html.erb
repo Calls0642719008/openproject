@@ -140,37 +140,6 @@
             render(Meetings::EmailUpdatesBannerComponent.new(@meeting))
           end
         end
-
-        if (@meeting.is_a?(RecurringMeeting) && !@meeting.persisted?) || @meeting.is_a?(Meeting)
-          modal_body.with_row(mt: 3) do
-            render(Meeting::SendEmailUpdates.new(f, meeting: @meeting, copy_from: @copy_from))
-          end
-
-          modal_body.with_row(
-            mt: 3,
-            data: {
-              "show-when-checked-target-name": "notification-banner",
-              "show-when-checked-target": "effect",
-              "show-when": "checked",
-              visibility_class: "d-none"
-            }
-          ) do
-            render(Meetings::EmailUpdatesBannerComponent.new(@meeting, override: :enabled))
-          end
-
-          modal_body.with_row(
-            mt: 3,
-            classes: "d-none",
-            data: {
-              "show-when-checked-target-name": "notification-banner",
-              "show-when-checked-target": "effect",
-              "show-when": "unchecked",
-              visibility_class: "d-none"
-            }
-          ) do
-            render(Meetings::EmailUpdatesBannerComponent.new(@meeting, override: :disabled))
-          end
-        end
       end
     end
   end

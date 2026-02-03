@@ -71,7 +71,7 @@ module ReportingHelper
   end
 
   def month_name(index)
-    Date::MONTHNAMES[index].to_s
+    I18n.t("date.month_names")[index].to_s
   end
 
   # ======================= SHARED CODE END
@@ -174,7 +174,7 @@ module ReportingHelper
 
     days_between = (end_timestamp.to_date - start_timestamp.to_date).to_i
     if days_between.positive?
-      " (+#{WorkPackage::Exports::Formatters::Days.new(nil)
+      " (+#{WorkPackage::Exports::Formatters::PDF::Days.new(nil)
                                                   .format_value(days_between, nil)
                                                   .delete(' ')})"
     end

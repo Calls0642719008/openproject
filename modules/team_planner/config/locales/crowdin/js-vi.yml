@@ -3,7 +3,7 @@ vi:
   js:
     team_planner:
       add_existing: 'Thêm hiện có'
-      label_team_planner_plural: 'Team planners'
+      label_team_planner_plural: 'Các kế hoạch nhóm'
       add_existing_title: 'Thêm các gói công việc hiện có'
       create_label: 'Lịch trình nhóm'
       create_title: 'Tạo kế hoạch nhóm mới'
@@ -18,7 +18,7 @@ vi:
       work_week: 'Tuần làm việc'
       today: 'Hôm nay'
       drag_here_to_remove: 'Kéo vào đây để xóa người được phân công và ngày bắt đầu và kết thúc.'
-      cannot_drag_here: 'Không thể xóa gói công việc do quyền hoặc hạn chế chỉnh sửa.'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'Gói công việc này không thể bắt đầu/kết thúc vào ngày không làm việc.'
       quick_add:
         empty_state: 'Sử dụng trường tìm kiếm để tìm các gói công việc và kéo chúng vào kế hoạch để phân công cho ai đó và xác định ngày bắt đầu và kết thúc.'

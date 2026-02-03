@@ -1,15 +1,15 @@
 #English strings go here for Rails i18n
 id:
   plugin_openproject_bim:
-    name: "OpenProject BIM and BCF functionality"
-    description: "This OpenProject plugin introduces BIM and BCF functionality."
+    name: "Fungsi OpenProject BIM dan BCF"
+    description: "Plugin OpenProject ini memperkenalkan fungsi BIM dan BCF."
   bim:
     label_bim: 'BIM'
   bcf:
     label_bcf: 'BCF'
     label_imported_failed: 'Gagal mengimport topik BCF'
     label_imported_successfully: 'Berhasil mengimport topik BCF'
-    label_bcf_issue_associated: "BCF issue associated"
+    label_bcf_issue_associated: "Masalah BCF yang berkaitan"
     issues: "Masalah"
     recommended: 'Disarankan'
     not_recommended: 'Tidak disarankan'
@@ -85,10 +85,10 @@ id:
         is_default: "Model bawaan"
         attachments: "berkas IFC"
       bim/bcf/issue:
-        bcf_comment: "BCF comment"
-        bim_snippet: "BIM snippet"
-        reference_links: "Reference links"
-        stage: "Stage"
+        bcf_comment: "Komentar BCF"
+        bim_snippet: "Cuplikan BIM"
+        reference_links: "Tautan rujukan"
+        stage: "Tahapan"
         viewpoint: "Sudut pandang"
     errors:
       models:
@@ -121,7 +121,7 @@ id:
     no_defaults_warning:
       title: 'Tidak ada model IFC yang ditetapkan sebagai bawaan dalam projek ini.'
       check_1: 'Pastikan anda telah mengunggah setidaknya satu model IFC.'
-      check_2: 'Check that at least one IFC model is set to "Default".'
+      check_2: 'Pastikan setidaknya satu model IFC disetel ke “Default”.'
     no_results: "Tidak ada model IFC yang diunggah dalam proyek ini."
     conversion_status:
       label: 'Memproses?'
@@ -140,4 +140,4 @@ id:
   permission_manage_ifc_models: "Import dan sesuaikan model IFC"
   extraction:
     available:
-      ifc_convert: "IFC conversion pipeline available"
+      ifc_convert: "Pipa konversi IFC tersedia"

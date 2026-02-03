@@ -53,7 +53,7 @@ export class WorkPackageRelationsTabComponent extends UntilDestroyedMixin implem
 
   ngOnInit() {
     const { workPackageId } = this.uiRouterGlobals.params as unknown as { workPackageId:string };
-    this.workPackageId = (this.workPackage.id as string) || workPackageId;
+    this.workPackageId = (this.workPackage.id!) || workPackageId;
 
     this
       .apiV3Service

@@ -1,5 +1,5 @@
-<ng-container class="board-list--more-menu" *ngIf="canDelete()">
-  <icon-triggered-context-menu
-     [menuItemsFactory]="menuItems">
-  </icon-triggered-context-menu>
-</ng-container>
+@if (canDelete()) {
+  <ng-container class="board-list--more-menu">
+    <icon-triggered-context-menu [menuItemsFactory]="menuItems" />
+  </ng-container>
+}

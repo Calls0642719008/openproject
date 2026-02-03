@@ -43,13 +43,6 @@ id:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Dokumentasi
-        item_1:
-          name: Spesifikasi
-        item_2:
-          name: Lainnya
       project_query_roles:
         item_0:
           name: Project query viewer
@@ -109,14 +102,14 @@ id:
             item_0:
               title: Selamat datang di demo proyek Anda
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
+                Kami senang Anda bergabung.
+                Dalam modul ini, Anda dapat menyampaikan informasi proyek kepada anggota tim Anda.
               description: Berita aktual
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategori 1 (akan diubah di Pengaturan Proyek)
           queries:
             item_0:
-              name: Project plan
+              name: Rencana proyek
             item_1:
               name: Pencapaian
             item_2:
@@ -227,8 +220,8 @@ id:
             item_0:
               title: Welcome to your Scrum demo project
               summary: |
-                We are glad you joined.
-                In this module you can communicate project news to your team members.
+                Kami senang Anda bergabung.
+                Dalam modul ini, Anda dapat menyampaikan informasi proyek kepada anggota tim Anda.
           versions:
             item_0:
               name: Bug Backlog
@@ -287,10 +280,10 @@ id:
             item_3:
               name: Sprint 2
           categories:
-            item_0: Category 1 (to be changed in Project settings)
+            item_0: Kategori 1 (akan diubah di Pengaturan Proyek)
           queries:
             item_0:
-              name: Project plan
+              name: Rencana proyek
             item_1:
               name: Backlog produk
             item_2:
@@ -339,7 +332,7 @@ id:
                   name: Paket-Penugasan
               item_6:
                 options:
-                  name: Project plan
+                  name: Rencana proyek
           work_packages:
             item_0:
               subject: New login screen

@@ -1,6 +1,24 @@
 nl:
   grids:
     label_widget_in_grid: "Widget opgenomen in Grid %{grid_name}"
+    widgets:
+      empty: "This widget is currently empty."
+      not_available: "This widget is not available."
+      subitems:
+        title: "Subitems"
+        no_results: "There are no visible children."
+        view_all_subitems: "View all subitems"
+        button_text: "Subitem"
+      members:
+        title: "Members"
+        no_results: "Geen zichtbare leden."
+        view_all_members: "Alle leden bekijken"
+        show_members_count: "Show all %{count} members"
+        x_more:
+          one: "and one more member."
+          other: "and %{count} more members."
+      news:
+        no_results: "Niets nieuws om te rapporteren."
   activerecord:
     attributes:
       grids/grid:

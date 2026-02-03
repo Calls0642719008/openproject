@@ -95,15 +95,18 @@
                     ml: 1,
                     classes: "work-packages-activities-tab-journals-item-component--action-menu"
                   ) do
-                    render(Primer::Alpha::ActionMenu.new(data: { test_selector: "op-wp-journal-#{journal.id}-action-menu" })) do |menu|
+                    render(
+                      Primer::Alpha::ActionMenu.new(
+                        menu_id:,
+                        data: { test_selector: "op-wp-journal-#{journal.id}-action-menu" },
+                        src: item_actions_work_package_activity_path(journal.journable, journal)
+                      )
+                    ) do |menu|
                       menu.with_show_button(
                         icon: "kebab-horizontal",
                         "aria-label": I18n.t(:button_actions),
                         scheme: :invisible
                       )
-                      copy_url_action_item(menu)
-                      edit_action_item(menu) if allowed_to_edit?
-                      quote_action_item(menu) if journal.notes.present? && allowed_to_quote?
                     end
                   end
                 end

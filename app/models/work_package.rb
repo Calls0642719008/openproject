@@ -72,6 +72,7 @@ class WorkPackage < ApplicationRecord
   has_and_belongs_to_many :github_pull_requests # rubocop:disable Rails/HasAndBelongsToMany
 
   has_many :meeting_agenda_items, dependent: :nullify
+  has_many :meeting_outcomes, dependent: :nullify
   # The MeetingAgendaItem has a default order, but the ordered field is not part of the select
   # that retrieves the meetings, hence we need to remove the order.
   has_many :meetings, -> { unscope(:order).distinct }, through: :meeting_agenda_items, source: :meeting
@@ -275,6 +276,11 @@ class WorkPackage < ApplicationRecord
 
   def to_s
     "#{type.name unless type.is_standard} ##{id}: #{subject}"
+  end
+
+  def infoline(show_standard_type: true)
+    type_name = show_standard_type || !type.is_standard ? type.name : ""
+    "#{type_name}: #{subject} (##{id})"
   end
 
   # Return true if the work_package is closed, otherwise false

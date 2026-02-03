@@ -34,7 +34,7 @@ import {
 
 export class ProjectStatusDisplayField extends DisplayField {
   public render(element:HTMLElement, displayText:string):void {
-    const code = this.value && this.value.id;
+    const code = this.value?.id;
 
     const bulb = document.createElement('span');
     bulb.classList.add('project-status--bulb', projectStatusCodeCssClass(code));

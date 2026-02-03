@@ -28,7 +28,7 @@ ru:
       property_groups:
         costs: "Затраты"
       properties:
-        overallCosts: "Общие затраты"
+        overallCosts: "Общие расходы"
         spentUnits: "Затраченное количество"
     button_log_costs: "Внести расходы на единицу"
     label_hour: "час"

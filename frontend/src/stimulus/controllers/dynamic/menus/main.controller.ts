@@ -35,7 +35,7 @@ export default class MainMenuController extends Controller {
 
     const backArrow = targetLi.querySelector('.main-menu--arrow-left-to-project') as HTMLElement;
     backArrow.focus();
-    this.markActive(targetLi.dataset.name as string);
+    this.markActive(targetLi.dataset.name!);
   }
 
   ascend(event:MouseEvent) {

@@ -43,6 +43,8 @@ class Tables::Meetings < Tables::Base
       t.integer :state, default: 0, null: false
       t.integer :lock_version, default: 0, null: false
       t.string :type, default: "Meeting", null: false
+      t.references :recurring_meeting, index: true
+      t.boolean :template, default: false, null: false
 
       t.index %i[project_id updated_at]
     end

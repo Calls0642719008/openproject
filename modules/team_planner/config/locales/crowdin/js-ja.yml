@@ -3,7 +3,7 @@ ja:
   js:
     team_planner:
       add_existing: '既存を追加'
-      label_team_planner_plural: 'Team planners'
+      label_team_planner_plural: 'チーム プランナー'
       add_existing_title: '既存のワークパッケージの追加'
       create_label: 'チーム プランナー'
       create_title: '新しいチームプランナーを作成'
@@ -18,10 +18,10 @@ ja:
       work_week: '作業週'
       today: '今日'
       drag_here_to_remove: 'ここをドラッグして、担当者と開始日と終了日を削除します。'
-      cannot_drag_here: '権限または編集の制限により、ワークパッケージを削除できません。'
+      cannot_drag_here: 'Cannot move the work package due to permissions or editing restrictions.'
       cannot_drag_to_non_working_day: 'ワークパッケージの開始日時/終了日時を非稼働日に設定することはできません。'
       quick_add:
-        empty_state: '検索フィールドを使用して作業項目を見つけて、プランナーにドラッグして割り当て、開始日と終了日を定義します。'
+        empty_state: '検索フィールドを使用してワークパッケージを見つけて、プランナーにドラッグして割り当て、開始日と終了日を設定します。'
         search_placeholder: '検索'
       modify:
         errors:

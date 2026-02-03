@@ -36,12 +36,10 @@ import moment from 'moment-timezone';
  * setting to null if it's empty.
  * @param date
  */
-// eslint-disable-next-line class-methods-use-this
 export function mappedDate(date:string|null):string|null {
   return (date === '') ? null : date;
 }
 
-// eslint-disable-next-line class-methods-use-this
 export function parseDate(date:Date|string):Date|'' {
   if (date instanceof Date) {
     return new Date(date.setHours(0, 0, 0, 0));

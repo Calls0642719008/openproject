@@ -43,16 +43,17 @@ class MyController < ApplicationController
 
   no_authorization_required! :account,
                              :update_account,
-                             :settings,
+                             :locale,
                              :interface,
                              :update_settings,
                              :password,
                              :change_password,
+                             :password_confirmation_dialog,
                              :notifications,
                              :reminders
 
   menu_item :account, only: [:account]
-  menu_item :settings, only: [:settings]
+  menu_item :locale, only: [:locale]
   menu_item :interface, only: [:interface]
   menu_item :password, only: [:password]
   menu_item :notifications, only: [:notifications]
@@ -64,7 +65,7 @@ class MyController < ApplicationController
     write_settings
   end
 
-  def settings; end
+  def locale; end
 
   def update_settings
     write_settings
@@ -83,6 +84,10 @@ class MyController < ApplicationController
     change_password_flow(user: @user, params:, update_legacy: false) do
       redirect_to action: "password"
     end
+  end
+
+  def password_confirmation_dialog
+    respond_with_dialog My::PasswordConfirmationDialog.new
   end
 
   # Configure user's in app notifications

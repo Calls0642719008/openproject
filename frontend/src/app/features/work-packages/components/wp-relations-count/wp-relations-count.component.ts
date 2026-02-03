@@ -9,7 +9,7 @@ import { WorkPackageRelationsService } from 'core-app/features/work-packages/com
   selector: 'wp-relations-count',
 })
 export class WorkPackageRelationsCountComponent extends UntilDestroyedMixin implements OnInit {
-  @Input('wpId') wpId:string;
+  @Input() wpId:string;
 
   public count = 0;
 

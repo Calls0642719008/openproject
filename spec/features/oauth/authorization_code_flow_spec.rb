@@ -91,20 +91,16 @@ RSpec.describe "OAuth authorization code flow", :js, :selenium do
     visit my_account_path
     click_on "Access token"
 
-    expect(page).to have_css("#oauth-application-grant-#{app.id}", text: app.name)
-    expect(page).to have_css("td", text: app.name)
+    expect(page).to have_test_selector("oauth-application-#{app.id}-name", text: app.name)
 
     # Revoke the application
-    within("#oauth-application-grant-#{app.id}") do
-      SeleniumHubWaiter.wait
-      find_test_selector("oauth-token-row-#{app.id}-revoke").click
-    end
+    find_test_selector("oauth-token-row-#{app.id}-revoke").click
 
     page.driver.browser.switch_to.alert.accept
 
     # Should be back on access_token path
     expect_flash(message: "Revocation of application Cool API app! successful.")
-    expect(page).to have_no_css("[id^=oauth-application-grant]")
+    expect(page).to have_no_test_selector("oauth-application-#{app.id}-name")
 
     expect(page).to have_current_path /\/my\/access_token/
 

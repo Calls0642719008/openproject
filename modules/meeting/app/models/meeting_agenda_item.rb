@@ -44,7 +44,11 @@ class MeetingAgendaItem < ApplicationRecord
   belongs_to :author, class_name: "User", optional: false
   belongs_to :presenter, class_name: "User", optional: true
 
-  has_many :outcomes, class_name: "MeetingOutcome", dependent: :destroy
+  has_many :outcomes,
+           -> { order(id: :asc) },
+           class_name: "MeetingOutcome",
+           dependent: :destroy,
+           inverse_of: :meeting_agenda_item
 
   acts_as_list scope: :meeting_section
   default_scope { order(:position) }
@@ -82,6 +86,18 @@ class MeetingAgendaItem < ApplicationRecord
       end
 
       self.meeting_section = meeting_section
+    end
+  end
+
+  def display_title
+    if visible_work_package?
+      work_package.to_s
+    elsif linked_work_package?
+      I18n.t(:label_agenda_item_undisclosed_wp, id: work_package_id)
+    elsif deleted_work_package?
+      I18n.t(:label_agenda_item_deleted_wp)
+    else
+      title
     end
   end
 
@@ -124,11 +140,7 @@ class MeetingAgendaItem < ApplicationRecord
   end
 
   def editable?
-    !(meeting&.closed? || deleted_work_package?)
-  end
-
-  def modifiable?
-    !(meeting&.closed? || (deleted_work_package? && work_package_id.present?))
+    !meeting&.closed?
   end
 
   def copy_attributes

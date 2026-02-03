@@ -35,7 +35,7 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_DB_SCHEMA=public
-      - KC_HOSTNAME=keycloak.local
+      - KC_HOSTNAME=keycloak.${OPENPROJECT_DOCKER_DEV_TLD:-local}
       - KC_TRANSACTION_XA_ENABLED=false
     volumes:
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
@@ -43,10 +43,8 @@ services:
       - ./themes/:/opt/keycloak/themes/
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.keycloak-sub-secure.rule=Host(`keycloak.local`)"
+      - "traefik.http.routers.keycloak-sub-secure.rule=Host(`keycloak.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
       - "traefik.http.routers.keycloak-sub-secure.entrypoints=websecure"
-      - "traefik.http.routers.keycloak-sub-secure.tls=true"
-      - "traefik.http.routers.keycloak-sub-secure.tls.certresolver=step"
     depends_on:
       - db-keycloak
 

@@ -18,7 +18,7 @@ module ::TwoFactorAuthentication
       def destroy
         clear_remember_token!
         flash[:notice] = I18n.t("two_factor_authentication.remember.cookie_removed")
-        redirect_to my_2fa_devices_path
+        redirect_to my_2fa_devices_path, status: :see_other
       end
     end
   end

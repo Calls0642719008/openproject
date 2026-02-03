@@ -12,6 +12,6 @@ export interface HTTPClientOptions {
   responseType:any;
 }
 
-export type HTTPClientParamMap = { [key:string]:any };
+export type HTTPClientParamMap = Record<string, any>;
 export type HTTPClientHeaders = HttpHeaders|HTTPClientParamMap;
 export type HTTPClientParams = HttpParams|HTTPClientParamMap;

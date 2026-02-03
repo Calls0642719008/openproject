@@ -22,7 +22,7 @@ $search-input-height: 30px
   &--button
     @include unset-button-styles
     position: absolute
-    right: 2px
+    left: 2px
     font-size: var(--header-item-font-size)
     color: var(--header-item-font-color)
     z-index: 1
@@ -63,6 +63,9 @@ $search-input-height: 30px
       &:focus-within
         @include spot-focus
 
+    .ng-value-container
+      padding-left: 35px !important
+
     .ng-arrow-wrapper
       display: none
 
@@ -70,7 +73,7 @@ $search-input-height: 30px
       color: var(--header-item-font-color)
       top: 1px
       width: 30px
-      right: 25px
+      right: 10px
       text-align: center
 
     .ng-input
@@ -92,6 +95,9 @@ $search-input-height: 30px
       border-radius: var(--borderRadius-medium)
       .ng-input input.global-search--input, .ng-clear-wrapper
         color: var(--body-font-color) !important
+      .ng-placeholder
+        color: var(--body-font-color) !important
+      
     .ng-dropdown-header
       border-bottom: none
       color: var(--fgColor-muted)
@@ -139,4 +145,4 @@ $search-input-height: 30px
     // Fix position of the spinner
     .ng-spinner-loader
       position: relative
-      right: 24px
+      right: 14px

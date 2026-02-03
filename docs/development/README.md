@@ -90,14 +90,14 @@ This code of conduct is adapted from the [Contributor Covenant](https://www.cont
 
 ## OpenProject Contributor License Agreement (CLA)
 
-If you want to contribute to OpenProject, please make sure to accept our Contributor License Agreement first. The contributor license agreement documents the rights granted by contributors to OpenProject.
+If you want to contribute to OpenProject, please make sure to accept our Contributor License Agreement. The contributor license agreement documents the rights granted by contributors to OpenProject.
 
-[Read and accept the Contributor License Agreement here.](https://www.openproject.org/legal/contributor-license-agreement/)
+A GitHub action will enforce the [CLA](https://www.openproject.org/legal/contributor-license-agreement/) has been read and accepted by every new contributor. You will only be asked once, the document is short, and signing is easy.
 
 ## Additional resources
 
 * [Development environment](development-environment)
 * [Developing Plugins](create-openproject-plugin)
-* [Running Tests](running-tests)
+* [Running Tests](testing)
 * [API Documentation](../api)
 * [Report a Bug](report-a-bug)

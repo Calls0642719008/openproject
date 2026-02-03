@@ -35,23 +35,40 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
   subject(:generated) { representer.to_json }
 
+  let(:available_custom_fields) { [int_custom_field, version_custom_field] }
+  let(:all_available_custom_fields) { [int_custom_field, version_custom_field] }
+  let(:favorited) { true }
   let(:project) do
     build_stubbed(:project,
                   :with_status,
-                  parent: parent_project,
+                  parent: parent_workspace,
                   description: "some description").tap do |p|
-      allow(p).to receive_messages(available_custom_fields: [int_custom_field, version_custom_field],
-                                   all_available_custom_fields: [int_custom_field, version_custom_field],
+      allow(p).to receive_messages(available_custom_fields:,
+                                   all_available_custom_fields:,
                                    ancestors_from_root: ancestors)
 
-      allow(p)
-        .to receive(int_custom_field.attribute_getter)
-              .and_return(int_custom_value.value)
+      if available_custom_fields.include?(int_custom_field)
+        allow(p)
+          .to receive(int_custom_field.attribute_getter)
+                .and_return(int_custom_value.value)
+      end
+
+      if available_custom_fields.include?(version_custom_field)
+        allow(p)
+          .to receive(:custom_value_for)
+                .with(version_custom_field)
+                .and_return(version_custom_value)
+      end
+
+      if available_custom_fields.include?(calculated_value_custom_field)
+        allow(p)
+          .to receive(calculated_value_custom_field.attribute_getter)
+                .and_return(calculated_custom_value.value)
+      end
 
       allow(p)
-        .to receive(:custom_value_for)
-              .with(version_custom_field)
-              .and_return(version_custom_value)
+        .to receive(:favorited_by?)
+              .and_return(favorited)
     end
   end
 
@@ -72,31 +89,62 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
               .and_return(version)
     end
   end
+  let(:calculated_value_custom_field) do
+    build_stubbed(:calculated_value_project_custom_field, :skip_validations, admin_only: false, formula: "21 + 3")
+  end
+  let(:calculated_custom_value) do
+    build(:custom_value, custom_field: calculated_value_custom_field, value: "24.0")
+  end
   let(:permissions) { %i[view_project add_work_packages view_members] }
-  let(:parent_project) do
+  let(:parent_workspace) do
     build_stubbed(:project).tap do |parent|
       allow(parent)
         .to receive(:visible?)
               .and_return(parent_visible)
     end
   end
-  let(:representer) { described_class.create(project, current_user: user, embed_links: true) }
+  let(:embed_links) { true }
+  let(:representer) { described_class.create(project, current_user:, embed_links:) }
   let(:parent_visible) { true }
-  let(:ancestors) { [parent_project] }
+  let(:ancestors) { [parent_workspace] }
 
-  let(:user) { build_stubbed(:user) }
+  let(:current_user) { build_stubbed(:user) }
 
   before do
-    mock_permissions_for(user) do |mock|
+    mock_permissions_for(current_user) do |mock|
       mock.allow_in_project *permissions, project:
     end
+  end
+
+  it "fulfills the documented schema" do
+    expect(generated).to match_json_schema.from_docs("project_model")
   end
 
   it { is_expected.to include_json("Project".to_json).at_path("_type") }
 
   describe "properties" do
-    it_behaves_like "property", :_type do
-      let(:value) { "Project" }
+    describe "_type" do
+      context "for a project" do
+        it_behaves_like "property", :_type do
+          let(:value) { "Project" }
+        end
+      end
+
+      context "for a portfolio" do
+        let(:project) { build_stubbed(:portfolio) }
+
+        it_behaves_like "property", :_type do
+          let(:value) { "Portfolio" }
+        end
+      end
+
+      context "for a program" do
+        let(:project) { build_stubbed(:program) }
+
+        it_behaves_like "property", :_type do
+          let(:value) { "Program" }
+        end
+      end
     end
 
     it_behaves_like "property", :id do
@@ -117,6 +165,24 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
     it_behaves_like "property", :public do
       let(:value) { project.public }
+    end
+
+    describe "favorited" do
+      it_behaves_like "property", :favorited do
+        let(:value) { true }
+      end
+
+      it "is not cached" do
+        representer.to_json
+
+        allow(project)
+          .to receive(:favorited_by?)
+                .and_return(!favorited)
+
+        expect(representer.to_json)
+          .to be_json_eql((!favorited).to_json)
+                .at_path("favorited")
+      end
     end
 
     it_behaves_like "formattable property", :description do
@@ -147,7 +213,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
     describe "int custom field" do
       context "if the user is admin" do
         before do
-          allow(user)
+          allow(current_user)
             .to receive(:admin?)
                   .and_return(true)
         end
@@ -187,28 +253,88 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
         end
       end
     end
+
+    describe "calculated value custom field" do
+      let(:available_custom_fields) { [calculated_value_custom_field] }
+      let(:all_available_custom_fields) { [calculated_value_custom_field] }
+      let(:cf_path) { "customField#{calculated_value_custom_field.id}" }
+
+      it "has a property for the calculated value custom field" do
+        expect(subject).to be_json_eql(calculated_custom_value.value.to_json)
+                             .at_path(cf_path)
+      end
+
+      context "when there is a calculation error" do
+        let(:cf_path) { "customField#{calculated_value_custom_field.id}Errors" }
+
+        let!(:calculated_value_error) do
+          build_stubbed(:calculated_value_error, custom_field: calculated_value_custom_field, customized: project)
+        end
+
+        before do
+          value_errors_double = instance_double(ActiveRecord::Relation)
+          allow(value_errors_double).to receive(:where)
+                                          .with(custom_field: calculated_value_custom_field)
+                                          .and_return([calculated_value_error])
+
+          allow(project).to receive(:calculated_value_errors)
+                                                    .and_return(value_errors_double)
+        end
+
+        it "has a property for calculation errors" do
+          expect(subject).to be_json_eql([
+            {
+              code: "ERROR_MATHEMATICAL",
+              message: I18n.t("calculated_values.errors.mathematical")
+            }
+          ].to_json).at_path(cf_path)
+        end
+      end
+    end
   end
 
   describe "_links" do
     it { is_expected.to have_json_type(Object).at_path("_links") }
 
-    it "links to self" do
-      expect(subject).to have_json_path("_links/self/href")
-    end
+    describe "self" do
+      context "for a project" do
+        it_behaves_like "has a titled link" do
+          let(:link) { "self" }
+          let(:href) { api_v3_paths.project(project.id) }
+          let(:title) { project.name }
+        end
+      end
 
-    it "has a title for link to self" do
-      expect(subject).to have_json_path("_links/self/title")
+      context "for a portfolio" do
+        let(:project) { build_stubbed(:portfolio) }
+
+        it_behaves_like "has a titled link" do
+          let(:link) { "self" }
+          let(:href) { api_v3_paths.portfolio(project.id) }
+          let(:title) { project.name }
+        end
+      end
+
+      context "for a program" do
+        let(:project) { build_stubbed(:program) }
+
+        it_behaves_like "has a titled link" do
+          let(:link) { "self" }
+          let(:href) { api_v3_paths.program(project.id) }
+          let(:title) { project.name }
+        end
+      end
     end
 
     describe "create work packages" do
       context "if user is allowed to create work packages" do
         it "has the correct path for a create form" do
-          expect(subject).to be_json_eql(api_v3_paths.create_project_work_package_form(project.id).to_json)
+          expect(subject).to be_json_eql(api_v3_paths.create_workspace_work_package_form(project.id).to_json)
                                .at_path("_links/createWorkPackage/href")
         end
 
         it "has the correct path to create a work package" do
-          expect(subject).to be_json_eql(api_v3_paths.work_packages_by_project(project.id).to_json)
+          expect(subject).to be_json_eql(api_v3_paths.work_packages_by_workspace(project.id).to_json)
                                .at_path("_links/createWorkPackageImmediately/href")
         end
       end
@@ -227,79 +353,43 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
     end
 
     describe "parent" do
-      let(:link) { "parent" }
-
-      it_behaves_like "has a titled link" do
-        let(:href) { api_v3_paths.project(parent_project.id) }
-        let(:title) { parent_project.name }
-      end
-
-      context "if lacking the permissions to see the parent" do
-        let(:parent_visible) { false }
-
-        it_behaves_like "has a titled link" do
-          let(:href) { API::V3::URN_UNDISCLOSED }
-          let(:title) { I18n.t(:"api_v3.undisclosed.parent") }
-        end
-      end
-
-      context "if lacking the permissions to see the parent but being an admin (archived project)" do
-        let(:parent_visible) { false }
-
-        before do
-          allow(user)
-            .to receive(:admin?)
-                  .and_return(true)
-        end
-
-        it_behaves_like "has a titled link" do
-          let(:href) { api_v3_paths.project(parent_project.id) }
-          let(:title) { parent_project.name }
-        end
-      end
-
-      context "without a parent" do
-        let(:parent_project) { nil }
-        let(:ancestors) { [] }
-
-        it_behaves_like "has an untitled link" do
-          let(:href) { nil }
-        end
+      it_behaves_like "has workspace linked", :parent_workspace do
+        let(:link) { :parent }
       end
     end
 
     describe "ancestors" do
       let(:link) { "ancestors" }
-      let(:grandparent_project) do
-        build_stubbed(:project).tap do |p|
+      let(:grandparent_program) do
+        build_stubbed(:program).tap do |p|
           allow(p)
             .to receive(:visible?)
                   .and_return(true)
         end
       end
-      let(:root_project) do
-        build_stubbed(:project).tap do |p|
+      let(:root_portfolio) do
+        build_stubbed(:portfolio).tap do |p|
           allow(p)
             .to receive(:visible?)
                   .and_return(true)
         end
       end
-      let(:ancestors) { [root_project, grandparent_project, parent_project] }
+      let(:ancestors) { [root_portfolio, grandparent_program, parent_workspace] }
 
       it_behaves_like "has a link collection" do
         let(:hrefs) do
           [
             {
-              href: api_v3_paths.project(root_project.id),
-              title: root_project.name
+              href: api_v3_paths.portfolio(root_portfolio.id),
+              title: root_portfolio.name
             },
             {
-              href: api_v3_paths.project(grandparent_project.id),
-              title: grandparent_project.name
+              href: api_v3_paths.program(grandparent_program.id),
+              title: grandparent_program.name
             },
             {
-              href: api_v3_paths.project(parent_project.id),
-              title: parent_project.name
+              href: api_v3_paths.project(parent_workspace.id),
+              title: parent_workspace.name
             }
           ]
         end
@@ -312,12 +402,12 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
           let(:hrefs) do
             [
               {
-                href: api_v3_paths.project(root_project.id),
-                title: root_project.name
+                href: api_v3_paths.portfolio(root_portfolio.id),
+                title: root_portfolio.name
               },
               {
-                href: api_v3_paths.project(grandparent_project.id),
-                title: grandparent_project.name
+                href: api_v3_paths.program(grandparent_program.id),
+                title: grandparent_program.name
               },
               {
                 href: API::V3::URN_UNDISCLOSED,
@@ -332,7 +422,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
         let(:parent_visible) { false }
 
         before do
-          allow(user)
+          allow(current_user)
             .to receive(:admin?)
                   .and_return(true)
         end
@@ -341,16 +431,16 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
           let(:hrefs) do
             [
               {
-                href: api_v3_paths.project(root_project.id),
-                title: root_project.name
+                href: api_v3_paths.portfolio(root_portfolio.id),
+                title: root_portfolio.name
               },
               {
-                href: api_v3_paths.project(grandparent_project.id),
-                title: grandparent_project.name
+                href: api_v3_paths.program(grandparent_program.id),
+                title: grandparent_program.name
               },
               {
-                href: api_v3_paths.project(parent_project.id),
-                title: parent_project.name
+                href: api_v3_paths.project(parent_workspace.id),
+                title: parent_workspace.name
               }
             ]
           end
@@ -358,7 +448,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
       end
 
       context "without an ancestor" do
-        let(:parent_project) { nil }
+        let(:parent_workspace) { nil }
         let(:ancestors) { [] }
 
         it_behaves_like "has an empty link collection"
@@ -393,7 +483,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
     describe "categories" do
       it "has the correct link to its categories" do
-        expect(subject).to be_json_eql(api_v3_paths.categories_by_project(project.id).to_json)
+        expect(subject).to be_json_eql(api_v3_paths.categories_by_workspace(project.id).to_json)
                              .at_path("_links/categories/href")
       end
     end
@@ -404,7 +494,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
         it_behaves_like "has an untitled link" do
           let(:link) { "versions" }
-          let(:href) { api_v3_paths.versions_by_project(project.id) }
+          let(:href) { api_v3_paths.versions_by_workspace(project.id) }
         end
       end
 
@@ -413,7 +503,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
         it_behaves_like "has an untitled link" do
           let(:link) { "versions" }
-          let(:href) { api_v3_paths.versions_by_project(project.id) }
+          let(:href) { api_v3_paths.versions_by_workspace(project.id) }
         end
       end
 
@@ -430,35 +520,26 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
       context "for a user having the view_work_packages permission" do
         let(:permissions) { [:view_work_packages] }
 
-        it "links to the types active in the project" do
-          expect(subject).to be_json_eql(api_v3_paths.types_by_project(project.id).to_json)
-                               .at_path("_links/types/href")
-        end
-
-        it "links to the work packages in the project" do
-          expect(subject).to be_json_eql(api_v3_paths.work_packages_by_project(project.id).to_json)
-                               .at_path("_links/workPackages/href")
+        it_behaves_like "has an untitled link" do
+          let(:link) { "types" }
+          let(:href) { api_v3_paths.types_by_workspace(project.id) }
         end
       end
 
       context "for a user having the manage_types permission" do
         let(:permissions) { [:manage_types] }
 
-        it "links to the types active in the project" do
-          expect(subject).to be_json_eql(api_v3_paths.types_by_project(project.id).to_json)
-                               .at_path("_links/types/href")
+        it_behaves_like "has an untitled link" do
+          let(:link) { "types" }
+          let(:href) { api_v3_paths.types_by_workspace(project.id) }
         end
       end
 
       context "for a user not having the necessary permissions" do
         let(:permission) { [] }
 
-        it "has no types link" do
-          expect(subject).not_to have_json_path("_links/types/href")
-        end
-
-        it "has no work packages link" do
-          expect(subject).not_to have_json_path("_links/workPackages/href")
+        it_behaves_like "has no link" do
+          let(:link) { "types" }
         end
       end
     end
@@ -474,6 +555,45 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
         it_behaves_like "has no link" do
           let(:link) { "memberships" }
+        end
+      end
+    end
+
+    describe "schema" do
+      it_behaves_like "has an untitled link" do
+        let(:link) { "schema" }
+        let(:href) { api_v3_paths.workspace_schema }
+      end
+    end
+
+    describe "favor" do
+      context "when the project isn't favored yet" do
+        let(:favorited) { false }
+        let(:link) { "favor" }
+
+        it_behaves_like "has an untitled link" do
+          let(:href) { api_v3_paths.favor_workspace(project.id) }
+        end
+
+        it_behaves_like "the link indicates the verb" do
+          let(:verb) { :post }
+        end
+      end
+
+      context "when the project is favorited" do
+        let(:favorited) { true }
+
+        it_behaves_like "has no link" do
+          let(:link) { "favor" }
+        end
+      end
+
+      context "when the project isn't favored yet and the user is not logged in" do
+        let(:current_user) { build_stubbed(:anonymous) }
+        let(:favorited) { false }
+
+        it_behaves_like "has no link" do
+          let(:link) { "favor" }
         end
       end
     end
@@ -510,7 +630,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
     describe "link custom field" do
       context "if the user is admin and the field is invisible" do
         before do
-          allow(user)
+          allow(current_user)
             .to receive(:admin?)
                   .and_return(true)
 
@@ -590,7 +710,7 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
     describe "delete" do
       context "for a user being admin" do
         before do
-          allow(user)
+          allow(current_user)
             .to receive(:admin?)
                   .and_return(true)
         end
@@ -609,39 +729,65 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
         end
       end
     end
+
+    describe "disfavor" do
+      context "when the project is favorited" do
+        let(:favorited) { true }
+        let(:link) { "disfavor" }
+
+        it_behaves_like "has an untitled link" do
+          let(:href) { api_v3_paths.favor_workspace(project.id) }
+        end
+
+        it_behaves_like "the link indicates the verb" do
+          let(:verb) { :delete }
+        end
+      end
+
+      context "when the project is not favorited" do
+        let(:favorited) { false }
+
+        it_behaves_like "has no link" do
+          let(:link) { "disfavor" }
+        end
+      end
+
+      # This should not happen at all since the anonymous user cannot favor a project
+      # in the first place.
+      context "when the project is favored yet and the user is not logged in" do
+        let(:current_user) { build_stubbed(:anonymous) }
+        let(:favorited) { true }
+
+        it_behaves_like "has no link" do
+          let(:link) { "unfavor" }
+        end
+      end
+    end
+
+    describe "workPackages" do
+      context "for a user having the view_work_packages permission" do
+        let(:permissions) { [:view_work_packages] }
+
+        it_behaves_like "has an untitled link" do
+          let(:link) { "workPackages" }
+          let(:href) { api_v3_paths.work_packages_by_workspace(project.id) }
+        end
+      end
+
+      context "for a user not having the necessary permissions" do
+        let(:permission) { [] }
+
+        it_behaves_like "has no link" do
+          let(:link) { "workPackages" }
+        end
+      end
+    end
   end
 
   describe "_embedded" do
     describe "parent" do
-      let(:embedded_path) { "_embedded/parent" }
-
-      before do
-        allow(parent_project)
-          .to receive(:visible?)
-                .and_return(parent_visible)
-      end
-
-      context "when the user is allowed to see the parent" do
-        let(:parent_visible) { true }
-
-        it "has the parent embedded" do
-          expect(generated)
-            .to be_json_eql("Project".to_json)
-                  .at_path("#{embedded_path}/_type")
-
-          expect(generated)
-            .to be_json_eql(parent_project.name.to_json)
-                  .at_path("#{embedded_path}/name")
-        end
-      end
-
-      context "when the user is forbidden to see the parent" do
-        let(:parent_visible) { false }
-
-        it "hides the parent" do
-          expect(generated)
-            .not_to have_json_path(embedded_path)
-        end
+      it_behaves_like "has workspace embedded", :parent_workspace do
+        let(:embedded_path) { "_embedded/parent" }
       end
     end
 

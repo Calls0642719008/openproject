@@ -110,4 +110,12 @@ FactoryBot.define do
       )
     end
   end
+
+  factory :custom_style_with_logo_mobile, class: "CustomStyle" do
+    logo_mobile do
+      Rack::Test::UploadedFile.new(
+        Rails.root.join("spec/support/custom_styles/logos/logo_image.png")
+      )
+    end
+  end
 end

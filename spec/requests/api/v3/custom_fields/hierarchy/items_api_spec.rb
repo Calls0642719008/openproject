@@ -84,13 +84,13 @@ RSpec.describe "API v3 custom field hierarchy items", :webmock, content_type: :j
       context "if parent is set to an undefined value" do
         let(:path) { api_v3_paths.custom_field_items(custom_field.id, "wrong item") }
 
-        it_behaves_like "error response", 400, "InvalidQuery", "Parent #{I18n.t('dry_validation.errors.int?')}"
+        it_behaves_like "error response", 400, "InvalidQuery", "Parent must be an integer."
       end
 
       context "if depth is negative" do
         let(:path) { api_v3_paths.custom_field_items(custom_field.id, nil, -1) }
 
-        it_behaves_like "error response", 400, "InvalidQuery", "Depth #{I18n.t('dry_validation.errors.greater_or_equal_zero')}"
+        it_behaves_like "error response", 400, "InvalidQuery", "Depth must be greater or equal to 0."
       end
     end
   end

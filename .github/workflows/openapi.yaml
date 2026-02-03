@@ -15,14 +15,14 @@ on:
 jobs:
   api-spec:
     name: APIv3 specification (OpenAPI 3.0)
-    if: github.repository == 'opf/openproject'
+    if: github.repository_owner == 'opf'
     runs-on: [ubuntu-latest]
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         node-version: '20'
     - run: ./script/api/validate_spec

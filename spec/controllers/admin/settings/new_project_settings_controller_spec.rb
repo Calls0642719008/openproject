@@ -42,8 +42,8 @@ RSpec.describe Admin::Settings::NewProjectSettingsController do
     render_views
 
     describe "default project modules" do
-      it "contains a check box for the activity module on the projects tab" do
-        get "show", params: { tab: "projects" }
+      it "contains a check box for the activity module on the settings tab" do
+        get "show", params: { tab: "settings" }
 
         expect(response).to be_successful
         expect(response).to render_template "admin/settings/new_project_settings/show"
@@ -56,7 +56,7 @@ RSpec.describe Admin::Settings::NewProjectSettingsController do
         end
 
         it "contains an unchecked checkbox for activity" do
-          get "show", params: { tab: "projects" }
+          get "show", params: { tab: "settings" }
 
           expect(response).to be_successful
           expect(response).to render_template "admin/settings/new_project_settings/show"
@@ -72,13 +72,23 @@ RSpec.describe Admin::Settings::NewProjectSettingsController do
         end
 
         it "contains a checked checkbox for activity" do
-          get "show", params: { tab: "projects" }
+          get "show", params: { tab: "settings" }
 
           expect(response).to be_successful
           expect(response).to render_template "admin/settings/new_project_settings/show"
           expect(response.body)
             .to have_css "input[@name='settings[default_projects_modules][]'][@value='activity'][@checked='checked']"
         end
+      end
+    end
+
+    describe "project creation notifications" do
+      it "contains a checkbox for sending confirmation emails in the notifications tab" do
+        get "show", params: { tab: "notifications" }
+
+        expect(response).to be_successful
+        expect(response).to render_template "admin/settings/new_project_settings/show"
+        expect(response.body).to have_css "input[@name='settings[new_project_send_confirmation_email]']"
       end
     end
   end
@@ -90,14 +100,14 @@ RSpec.describe Admin::Settings::NewProjectSettingsController do
       it "does not store the activity in the default_projects_modules if unchecked" do
         patch "update",
               params: {
-                tab: "projects",
+                tab: "settings",
                 settings: {
                   default_projects_modules: ["wiki"]
                 }
               }
 
         expect(response).to be_redirect
-        expect(response).to redirect_to action: "show", tab: "projects"
+        expect(response).to redirect_to action: "show", tab: "settings"
 
         expect(Setting.default_projects_modules).to eq(["wiki"])
       end
@@ -105,16 +115,49 @@ RSpec.describe Admin::Settings::NewProjectSettingsController do
       it "stores the activity in the default_projects_modules if checked" do
         patch "update",
               params: {
-                tab: "projects",
+                tab: "settings",
                 settings: {
                   default_projects_modules: ["activity", "wiki"]
                 }
               }
 
         expect(response).to be_redirect
-        expect(response).to redirect_to action: "show", tab: "projects"
+        expect(response).to redirect_to action: "show", tab: "settings"
 
         expect(Setting.default_projects_modules).to eq(["activity", "wiki"])
+      end
+    end
+
+    describe "project creation notifications" do
+      it "enables confirmation emails when checked" do
+        expect(Setting.new_project_send_confirmation_email).to be false
+
+        patch "update",
+              params: {
+                tab: "notifications",
+                settings: {
+                  new_project_send_confirmation_email: "1"
+                }
+              }
+
+        expect(response).to be_redirect
+        expect(response).to redirect_to action: "show", tab: "notifications"
+
+        expect(Setting.new_project_send_confirmation_email).to be true
+      end
+
+      it "stores the notification text" do
+        patch "update",
+              params: {
+                tab: "notifications",
+                settings: {
+                  new_project_send_confirmation_email: "1",
+                  new_project_notification_text: "Custom notification message"
+                }
+              }
+
+        expect(response).to be_redirect
+        expect(Setting.new_project_notification_text).to eq("Custom notification message")
       end
     end
 

@@ -37,7 +37,6 @@ See COPYRIGHT and LICENSE files for more details.
             placeholder.with_heading(tag: :h3) { I18n.t("storages.health.no_report") }
             placeholder.with_description { I18n.t("storages.health.no_report_description") }
             placeholder.with_primary_action(
-              tag: :a,
               href: admin_settings_storage_health_status_report_path(model),
               data: { turbo_method: :post, turbo: true },
               aria: { label: I18n.t("storages.health.actions.run_checks") }

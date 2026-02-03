@@ -46,8 +46,7 @@ See COPYRIGHT and LICENSE files for more details.
                                   inputs: {
                                     filters: [{ name: "user_action", operator: "=", values: ["boards/create"] }],
                                     inputName: "project_id",
-                                    model: @project,
-                                    appendTo: "body"
+                                    model: @project
                                   },
                                   id: "project_id",
                                   class: "form--select-container -wide remote-field--input",
@@ -85,7 +84,8 @@ See COPYRIGHT and LICENSE files for more details.
               </div>
             </div>
 
-            <img src="<%= frontend_asset_path board_type.image_path %>"
+            <img src="<%= frontend_asset_path board_type.image_path%>"
+                 alt=""
                  class="op-tile-block--image">
           </label>
         <% end %>

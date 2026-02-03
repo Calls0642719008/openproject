@@ -7,9 +7,9 @@ vi:
   activerecord:
     attributes:
       two_factor_authentication/device:
-        identifier: "Nhận diện"
+        identifier: "Định danh"
         default: "Giữ nguyên mặc định"
-        channel: "Channel"
+        channel: "Kênh"
       two_factor_authentication/device/sms:
         phone_number: "Số điện thoại"
       two_factor_authentication/device/webauthn:
@@ -169,7 +169,7 @@ vi:
       cookie_removed: "Tất cả các phiên 2FA đã nhớ đã bị xóa."
       dont_ask_again: "Tạo cookie để nhớ xác thực 2FA trên máy khách này trong %{days} ngày."
   field_phone: "Điện thoại di động"
-  field_otp: "Mật khẩu một lần"
+  field_otp: "Mật khẩu sử dụng một lần"
   notice_account_otp_invalid: "Mật khẩu một lần không hợp lệ."
   notice_account_otp_expired: "Mật khẩu một lần bạn nhập đã hết hạn."
   notice_developer_strategy_otp: "Chiến lược phát triển đã tạo mã mật khẩu một lần sau: %{token} (Kênh: %{channel})"

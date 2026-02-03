@@ -29,16 +29,15 @@
 import { NgModule } from '@angular/core';
 import { OpSharedModule } from 'core-app/shared/shared.module';
 import { OpenprojectModalModule } from 'core-app/shared/components/modal/modal.module';
-import { OpenprojectFieldsModule } from 'core-app/shared/components/fields/openproject-fields.module';
-import { TimeEntryCreateModalComponent } from 'core-app/shared/components/time_entries/create/create.modal';
-import { TimeEntryEditModalComponent } from 'core-app/shared/components/time_entries/edit/edit.modal';
-import { TimeEntryFormComponent } from 'core-app/shared/components/time_entries/form/form.component';
-import { TimeEntryEditService } from 'core-app/shared/components/time_entries/edit/edit.service';
-import { TriggerActionsEntryComponent } from 'core-app/shared/components/time_entries/edit/trigger-actions-entry.component';
+import {
+  TriggerActionsEntryComponent,
+} from 'core-app/shared/components/time_entries/edit/trigger-actions-entry.component';
 import { TimeEntryTimerService } from 'core-app/shared/components/time_entries/services/time-entry-timer.service';
 import { CommonModule } from '@angular/common';
 import { TimerAccountMenuComponent } from 'core-app/shared/components/time_entries/timer/timer-account-menu.component';
-import { StopExistingTimerModalComponent } from 'core-app/shared/components/time_entries/timer/stop-existing-timer-modal.component';
+import {
+  StopExistingTimerModalComponent,
+} from 'core-app/shared/components/time_entries/timer/stop-existing-timer-modal.component';
 
 @NgModule({
   imports: [
@@ -46,14 +45,8 @@ import { StopExistingTimerModalComponent } from 'core-app/shared/components/time
     CommonModule,
     OpSharedModule,
     OpenprojectModalModule,
-
-    // Editable fields e.g. for modals
-    OpenprojectFieldsModule,
   ],
   declarations: [
-    TimeEntryEditModalComponent,
-    TimeEntryCreateModalComponent,
-    TimeEntryFormComponent,
     TriggerActionsEntryComponent,
     TimerAccountMenuComponent,
     StopExistingTimerModalComponent,

@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
-<% html_title t(:label_administration), t(:"attribute_help_texts.label_plural") %>
+<% html_title t(:label_administration), AttributeHelpText.human_plural_model_name %>
 
 <% tabs = [
      {
@@ -55,7 +55,7 @@ See COPYRIGHT and LICENSE files for more details.
       href: new_attribute_help_text_path(name: selected_tab(tabs)[:name]),
       test_selector: "attribute-help-texts--create-button"
     ) do
-      t("activerecord.models.attribute_help_text")
+      t("activerecord.models.attribute_help_text.one")
     end
   end
 %>

@@ -47,7 +47,7 @@ import { JobStatusModalService } from 'core-app/features/job-status/job-status-m
        class="button export-bcf-button"
        [attr.href]="exportLink"
        (click)="showDelayedExport($event)">
-      <op-icon icon-classes="button--icon icon-export"></op-icon>
+      <op-icon icon-classes="button--icon icon-export" />
       <span class="button--text"> {{text.export}} </span>
     </a>
   `,

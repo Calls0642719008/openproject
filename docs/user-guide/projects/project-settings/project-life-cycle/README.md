@@ -9,8 +9,7 @@ keywords: project life cycle, project phase, phase gate
 
 Project phases are defined in [system administration](../../../../system-admin-guide/projects/project-life-cycle).
 
-> [!NOTE] 
-> Defining custom project phases is an Enterprise add-on and can only be used with [Enterprise cloud](../../../../enterprise-guide/enterprise-cloud-guide/) or [Enterprise on-premises](../../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easy and helps support OpenProject.
+[feature: customize_life_cycle ]
 
 You can enable or disable existing project phases by navigating to **Project settings → Project life cycle**.
 

@@ -9,7 +9,7 @@ export function fixFragmentAnchors():void {
   Array
     .from(document.getElementsByTagName('A'))
     .forEach((el:HTMLAnchorElement) => {
-      const href = el.getAttribute('href') as string;
+      const href = el.getAttribute('href')!;
 
       if (href && href !== '#' && href.startsWith('#')) {
         el.setAttribute('href', baseUrl + href);

@@ -58,14 +58,35 @@ module My
         case token_type.to_s
         when "Token::API" then Setting.rest_api_enabled?
         when "Token::ICalMeeting" then Setting.ical_enabled?
+        when "Token::RSS" then Setting.feeds_enabled?
         else raise ArgumentError, "Unknown token type: #{token_type}"
         end
       end
 
+      def show_add_button?
+        return @tokens.empty? if token_type.to_s == "Token::RSS"
+
+        true
+      end
+
       def add_button_icon
         case token_type.to_s
-        when "Token::ICalMeeting" then :rss
+        when "Token::RSS", "Token::ICalMeeting" then :rss
         else :plus
+        end
+      end
+
+      def add_button_method
+        case token_type.to_s
+        when "Token::RSS" then :post
+        else :get
+        end
+      end
+
+      def add_button_path
+        case token_type.to_s
+        when "Token::RSS" then generate_rss_key_my_access_tokens_path
+        else dialog_my_access_tokens_path(token_type: token_type.model_name.element)
         end
       end
     end

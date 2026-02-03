@@ -39,7 +39,7 @@ $filters--border-color: var(--borderColor-default) !default
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
   grid-gap:         10px 40px
   list-style-type:  none
-  margin:           10px 0 0 0
+  margin:           var(--base-size-32) 0 0 0
 
 .simple-filters--container
   @extend %filters--container
@@ -60,9 +60,8 @@ $filters--border-color: var(--borderColor-default) !default
 
   .simple-filters--close
     position: absolute
-    top: 5px
-    right: 5px
-    width: 1rem
+    top: var(--stack-padding-condensed)
+    right: var(--stack-padding-condensed)
     z-index: 2
 
 .simple-filters--filters

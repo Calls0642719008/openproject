@@ -30,7 +30,7 @@ See COPYRIGHT and LICENSE files for more details.
   component_wrapper do
     flex_layout(align_items: :center) do |item_information|
       item_information.with_column(mr: 2) do
-        render(Primer::OpenProject::DragHandle.new(draggable: true))
+        render(Primer::OpenProject::DragHandle.new)
       end
       item_information.with_column(flex: 1, flex_layout: true) do |title_container|
         title_container.with_column(pt: 1, mr: 2) do

@@ -28,7 +28,6 @@
 
 import { ChangeDetectionStrategy, Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { OpInviteUserModalService } from 'core-app/features/invite-user-modal/invite-user-modal.service';
 import {
   OpAutocompleterComponent,
 } from 'core-app/shared/components/autocompleter/op-autocompleter/op-autocompleter.component';
@@ -59,9 +58,6 @@ const RECENT_TIME_ENTRIES_MAGIC_NUMBER = 30;
       useExisting: forwardRef(() => TimeEntriesWorkPackageAutocompleterComponent),
       multi: true,
     },
-    // Provide a new version of the modal invite service,
-    // as otherwise the close event will be shared across all instances
-    OpInviteUserModalService,
   ],
   standalone: false,
 })

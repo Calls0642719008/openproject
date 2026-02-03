@@ -43,13 +43,6 @@ it:
           name: PM2 Magenta
         item_3:
           name: PM2 Giallo Verde
-      document_categories:
-        item_0:
-          name: Documentazione
-        item_1:
-          name: Specifiche
-        item_2:
-          name: Altro
       project_query_roles:
         item_0:
           name: Autorizzato a visualizzare l'elenco di progetti

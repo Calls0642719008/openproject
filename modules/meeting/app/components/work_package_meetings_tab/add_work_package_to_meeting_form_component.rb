@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -39,6 +40,19 @@ module WorkPackageMeetingsTab
       @work_package = work_package
       @meeting_agenda_item = meeting_agenda_item || MeetingAgendaItem.new(work_package: @work_package)
       @base_errors = base_errors
+    end
+
+    private
+
+    def data_attributes
+      {
+        controller: "refresh-on-form-changes",
+        "refresh-on-form-changes-target": "form",
+        "refresh-on-form-changes-turbo-stream-url-value": refresh_form_project_work_package_meeting_agenda_items_path(
+          @work_package.project,
+          @work_package
+        )
+      }
     end
   end
 end

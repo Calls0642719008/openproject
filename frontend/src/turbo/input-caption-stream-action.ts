@@ -4,7 +4,7 @@ export function registerInputCaptionStreamAction() {
   StreamActions.addInputCaption = function addInputCaptionAction(this:StreamElement) {
     const target = document.querySelector(this.target);
     if (target) {
-      const formControl = (target as HTMLElement).closest('.FormControl') as HTMLElement;
+      const formControl = (target as HTMLElement).closest('.FormControl')!;
 
       if (this.getAttribute('clean_other_captions') === 'true') {
         formControl

@@ -44,7 +44,7 @@ export class HierarchyDragActionService extends TableDragActionService {
     if (previous !== null && this.droppedIntoGroup(el, previous, next)) {
       // If the previous element is a relation row,
       // skip it until we find the real previous sibling
-      const isRelationRow = previous.className.indexOf(relationRowClass()) >= 0;
+      const isRelationRow = previous.className.includes(relationRowClass());
 
       if (isRelationRow) {
         const relationRoot = this.findRelationRowRoot(previous);
@@ -77,7 +77,7 @@ export class HierarchyDragActionService extends TableDragActionService {
   private findRelationRowRoot(el:Element):Element|null {
     let previous = el.previousElementSibling;
     while (previous !== null) {
-      if (previous.className.indexOf(relationRowClass()) < 0) {
+      if (!previous.className.includes(relationRowClass())) {
         return previous;
       }
       previous = previous.previousElementSibling;
@@ -87,8 +87,8 @@ export class HierarchyDragActionService extends TableDragActionService {
   }
 
   private droppedIntoGroup(element:Element, previous:Element, next:Element | null):boolean {
-    const inGroup = previous.className.indexOf(hierarchyGroupClass('')) >= 0;
-    const isRoot = previous.className.indexOf(hierarchyRootClass('')) >= 0;
+    const inGroup = previous.className.includes(hierarchyGroupClass(''));
+    const isRoot = previous.className.includes(hierarchyRootClass(''));
     let skipDroppedIntoGroup;
 
     if (inGroup || isRoot) {

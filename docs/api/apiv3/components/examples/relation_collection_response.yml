@@ -7,6 +7,7 @@ value:
   pageSize: 20
   offset: 1
   _embedded:
+    elements:
     - _type: Relation
       id: 650
       name: duplicated by

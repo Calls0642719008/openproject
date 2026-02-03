@@ -186,7 +186,6 @@ module OpenProject
     end
 
     describe "link_translation" do
-      let(:locale) { :en }
       let(:urls) do
         { url_1: "http://openproject.com/foo", url_2: "/baz" }
       end
@@ -194,31 +193,17 @@ module OpenProject
       before do
         allow(::I18n)
           .to receive(:t)
-          .with("translation_with_a_link", locale: anything)
+          .with("translation_with_a_link")
           .and_return("There is a [link](url_1) in this translation! Maybe even [two](url_2)?")
       end
 
       it "allows to insert links into translations" do
-        translated = link_translate :translation_with_a_link, links: urls
+        translated = link_translate :translation_with_a_link, links: urls, external: false
 
         expect(translated).to eq(
           'There is a <a href="http://openproject.com/foo" data-view-component="true" class="Link Link--underline">link</a>' +
           ' in this translation! Maybe even <a href="/baz" data-view-component="true" class="Link Link--underline">two</a>?'
         )
-      end
-
-      context "with locale" do
-        let(:locale) { :de }
-
-        it "uses the passed locale" do
-          translated = link_translate(:translation_with_a_link, links: urls, locale:)
-
-          expect(translated).to eq(
-            'There is a <a href="http://openproject.com/foo" data-view-component="true" class="Link Link--underline">link</a>' +
-            ' in this translation! Maybe even <a href="/baz" data-view-component="true" class="Link Link--underline">two</a>?'
-          )
-          expect(I18n).to have_received(:t).with(anything, locale:)
-        end
       end
 
       context "when passing URLs as a list of symbols" do
@@ -233,7 +218,7 @@ module OpenProject
         end
 
         it "resolves the links from static links" do
-          translated = link_translate :translation_with_a_link, links: urls
+          translated = link_translate :translation_with_a_link, links: urls, external: false
 
           expect(translated).to eq(
             'There is a <a href="https://example.com/a-b" data-view-component="true" class="Link Link--underline">link</a>' +

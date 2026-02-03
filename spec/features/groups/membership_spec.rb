@@ -32,17 +32,17 @@ require "spec_helper"
 
 RSpec.describe "group memberships through project members page", :js do
   shared_let(:admin) { create(:admin) }
+  shared_let(:alice) { create(:user, firstname: "Alice", lastname: "Wonderland") }
+  shared_let(:bob) { create(:user, firstname: "Bob", lastname: "Bobbit") }
+
+  shared_let(:alpha) { create(:project_role, name: "alpha", permissions: [:manage_members]) }
+  shared_let(:beta) { create(:project_role, name: "beta") }
+
+  let(:group) { create(:group, lastname: "group1") }
   let(:project) { create(:project, name: "Project 1", identifier: "project1", members: project_member) }
 
-  let(:alice) { create(:user, firstname: "Alice", lastname: "Wonderland") }
-  let(:bob)   { create(:user, firstname: "Bob", lastname: "Bobbit") }
-  let(:group) { create(:group, lastname: "group1") }
-
-  let!(:alpha) { create(:project_role, name: "alpha", permissions: [:manage_members]) }
-  let!(:beta)  { create(:project_role, name: "beta") }
-
   let(:members_page) { Pages::Members.new project.identifier }
-  let(:groups_page)  { Pages::Groups.new }
+  let(:groups_page) { Pages::Groups.new }
   let(:project_member) { {} }
 
   before do
@@ -50,16 +50,40 @@ RSpec.describe "group memberships through project members page", :js do
   end
 
   context "given a group with members" do
-    let!(:group) { create(:group, lastname: "group1", members: alice) }
+    shared_let(:group) { create(:group, lastname: "group1", members: alice) }
 
     current_user { bob }
 
-    specify "adding group1 as a member with the beta role" do
-      members_page.visit!
-      members_page.add_user! "group1", as: "beta"
+    shared_examples "adding group1 as a member with the beta role" do
+      it "can add group1 to the project" do
+        members_page.visit!
+        members_page.add_user! "group1", as: "beta"
 
-      expect(members_page).to have_added_user "group1"
-      expect(members_page).to have_user("Alice Wonderland", group_membership: true)
+        expect(members_page).to have_added_user "group1"
+        expect(members_page).to have_user("Alice Wonderland", group_membership: true)
+      end
+    end
+
+    context "when the user has the view_all_principals permission" do
+      current_user do
+        create(
+          :user,
+          global_permissions: [:view_all_principals],
+          member_with_roles: { project => [alpha] }
+        )
+      end
+      it_behaves_like "adding group1 as a member with the beta role"
+    end
+
+    context "when the user shares a membership with the group" do
+      let!(:shared_project) { create(:project) }
+
+      before do
+        create(:member, user: bob, project: shared_project, roles: [beta])
+        create(:member, user: group, project: shared_project, roles: [beta])
+      end
+
+      it_behaves_like "adding group1 as a member with the beta role"
     end
 
     context "which has has been added to a project" do
@@ -81,8 +105,8 @@ RSpec.describe "group memberships through project members page", :js do
       context "with the members having roles of their own" do
         before do
           project.members
-            .select { |m| m.user_id == alice.id }
-            .each   { |m| m.roles << alpha }
+                 .select { |m| m.user_id == alice.id }
+                 .each { |m| m.roles << alpha }
         end
 
         specify "removing the group leaves the user without their group roles" do

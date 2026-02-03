@@ -27,11 +27,14 @@ ar:
       no_results_table: No webhooks have been defined yet.
       label_add_new: Add new webhook
       label_edit: Edit webhook
-      label_event_resources: Event resources
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "تم إنشاؤه"
         updated: "محدث"
-        comment: "Comment"
+        comment: "تعليق"
         internal_comment: "Internal comment"
       explanation:
         text: >

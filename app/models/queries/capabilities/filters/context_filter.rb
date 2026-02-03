@@ -35,7 +35,8 @@ class Queries::Capabilities::Filters::ContextFilter < Queries::Capabilities::Fil
 
   def split_values
     values.map do |value|
-      if (matches = value.match(/\A([gp])(\d*)\z/))
+      # @deprecated Remove the context `p` for projects for 17.2
+      if (matches = value.match(/\A([gwp])(\d*)\z/))
         {
           context_key: matches[1],
           context_id: matches[2]

@@ -20,7 +20,6 @@ import * as TLodash from 'lodash';
 import { Screenfull } from 'screenfull';
 import { ErrorReporterBase } from 'core-app/core/errors/error-reporter-base';
 import { I18n } from 'i18n-js';
-import '@hotwired/turbo';
 
 declare module 'observable-array';
 declare module 'dom-autoscroller';
@@ -37,6 +36,10 @@ declare module '@hotwired/turbo' {
     adapter:BrowserAdapter;
   };
 
+  export const config:{
+    drive:{ progressBarDelay:number }
+  };
+
   export const navigator:{
     submitForm:(form:HTMLFormElement, submitter?:HTMLElement) => void;
   };
@@ -47,9 +50,6 @@ declare module '@hotwired/turbo' {
   }
 
   export function start():void;
-
-  export function setProgressBarDelay(delay:number):void;
-
 }
 
 declare global {
@@ -70,8 +70,6 @@ declare global {
   }
 
   interface JQuery {
-    topShelf:any;
-    mark:any;
     tablesorter:any;
   }
 

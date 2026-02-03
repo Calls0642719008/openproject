@@ -29,6 +29,7 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
+import { FetchRequestError, post, ValidationError } from 'core-stimulus/helpers/request-helpers';
 import dragula from 'dragula';
 import jQuery from 'jquery';
 import 'tablesorter';
@@ -329,7 +330,7 @@ export default class PageController extends Controller {
   }
 
   private loadAvailableValuesForFilterFromRemote(select:JQuery, filterName:string, callbackFunc:() => void) {
-    const url = select.attr('data-remote-url');
+    const url = select.attr('data-remote-url')!;
     const jsonPostSelectValues = select.attr('data-initially-selected');
     let postSelectValues:string[]|undefined;
 
@@ -341,32 +342,31 @@ export default class PageController extends Controller {
       window.global_prefix = '';
     }
 
-    void jQuery.ajax({
-      url,
-      method: 'POST',
-      data: {
+    jQuery(`select[data-filter-name='${filterName}']`).prop('disabled', true);
+
+    void post(url, {
+      body: {
         filter_name: filterName,
         values: jsonPostSelectValues,
       },
-      beforeSend: () => {
-        jQuery(`select[data-filter-name='${filterName}']`).prop('disabled', true);
-        jQuery('#ajax-indicator').show();
-      },
-      complete: (xhr) => {
-        const tagName = select.prop('tagName') as string;
+      responseKind: 'html',
+    })
+    .then((response) => response.html)
+    .then((html) => {
+      const tagName = select.prop('tagName') as string;
 
-        select.html(xhr.responseText);
-        jQuery(`select[data-filter-name='${filterName}']`).prop('disabled', false);
+      select.html(html);
+      jQuery(`select[data-filter-name='${filterName}']`).prop('disabled', false);
 
-        if (tagName && tagName.toLowerCase() === 'select') {
-          if (!postSelectValues || postSelectValues.length === 0) {
-            (select[0] as HTMLSelectElement).selectedIndex = 0;
-          } else {
-            this.selectValues(select, postSelectValues);
-          }
+      if (tagName && tagName.toLowerCase() === 'select') {
+        if (!postSelectValues || postSelectValues.length === 0) {
+          (select[0] as HTMLSelectElement).selectedIndex = 0;
+        } else {
+          this.selectValues(select, postSelectValues);
         }
-        callbackFunc();
-      },
+      }
+
+      callbackFunc();
     });
   }
 
@@ -451,12 +451,12 @@ export default class PageController extends Controller {
   }
 
   private operatorChanged(field:string, select:JQuery) {
-    if (!select || !select.length) {
+    if (!select?.length) {
       return;
     }
     const optionTag = select.find(`option[value="${select.val() as string}"]`);
-    const arity = parseInt(optionTag.attr('data-arity') as string, 10);
-    const forcedType = optionTag.attr('data-forced') as string;
+    const arity = parseInt(optionTag.attr('data-arity')!, 10);
+    const forcedType = optionTag.attr('data-forced')!;
     this.changeArgumentVisibility(field, arity, forcedType);
   }
 
@@ -481,7 +481,7 @@ export default class PageController extends Controller {
       [`#${fieldName}_arg_2`, argNr === 2],
     ];
 
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const [fieldSelector, active] of fields) {
       this.setActiveState(fieldSelector, active && !forcedType);
       this.knownForcedTypes.forEach((knownForcedType) => {
@@ -647,7 +647,7 @@ export default class PageController extends Controller {
   }
 
   private removeGroupBy(groupBy:JQuery) {
-    this.addingGroupByEnabled(groupBy.attr('data-group-by') as string, true);
+    this.addingGroupByEnabled(groupBy.attr('data-group-by')!, true);
     groupBy.remove();
   }
 
@@ -669,7 +669,7 @@ export default class PageController extends Controller {
       },
 
       observe_click: (elementId:string, callback:(e:Event) => void) => {
-        const target = document.getElementById(elementId) as HTMLElement;
+        const target = document.getElementById(elementId)!;
         target?.addEventListener('click', callback);
       },
 
@@ -721,13 +721,13 @@ export default class PageController extends Controller {
   }
 
   private attachSettingsCallback(element:JQuery, callback:(response:string) => void) {
-    if (!element || !element.length) {
+    if (!element?.length) {
       return;
     }
 
-    const failureCallback = (response:JQuery.jqXHR) => {
+    const failureCallback = (error:unknown) => {
       jQuery('#result-table').html('');
-      this.defaultFailureCallback(response);
+      this.defaultFailureCallback(error);
     };
 
     element[0].addEventListener('click', (e:Event) => {
@@ -737,45 +737,44 @@ export default class PageController extends Controller {
     });
   }
 
-  private sendSettingsData(targetUrl:string, callback:(response:string) => void, failureCallback?:(response:JQuery.jqXHR) => void) {
+  private sendSettingsData(targetUrl:string, callback:(_result:string) => void, failureCallback?:(_error:unknown) => void) {
     const errorCallback = failureCallback || this.defaultFailureCallback;
     this.clearFlash();
 
-    void jQuery.ajax({
-      url: targetUrl,
-      method: 'POST',
-      data: this.serializeSettingsForm(),
-      beforeSend: () => {
-        jQuery('#ajax-indicator').show();
-      },
-      error: errorCallback,
-      success: callback,
-    });
+    void post(targetUrl, { body: this.serializeSettingsForm() })
+      .then((response) => {
+        if (response.unprocessableEntity) {
+          return response.text.then((errorText) => { throw new ValidationError(errorText); });
+        }
+        if (!response.ok) {
+          throw new FetchRequestError(response.statusCode);
+        }
+
+        return response.text;
+      })
+      .then(callback)
+      .catch(errorCallback);
   }
 
   private serializeSettingsForm() {
-    let retStr = jQuery('#query_form').serialize();
-    const groupingStr = ['rows', 'columns'].reduce((grouping, type) => {
-      const elementMap = jQuery(`#group-by--${type} .group-by--selected-element`)
-        .map((i, el) => {
-          return `groups[${type}][]=${el.dataset.groupBy as string}`;
-        })
-        .get();
+    const queryForm = document.querySelector<HTMLFormElement>('#query_form')!;
+    const formData = new FormData(queryForm);
 
-      return grouping + elementMap.reduce((allGroupStr, groupStr) => {
-        return `${allGroupStr}&${groupStr}`;
-      }, '');
-    }, '');
+    ['rows', 'columns'].forEach((type) => {
+      Array.from(document.querySelectorAll<HTMLElement>(`#group-by--${type} .group-by--selected-element`))
+        .map((el) => el.dataset.groupBy)
+        .filter((value) => value !== undefined)
+        .forEach((value) => {
+          formData.append(`groups[${type}][]`, value);
+        });
+    });
 
-    if (groupingStr.length > 0) {
-      retStr += groupingStr;
-    }
-    return retStr;
+    return formData;
   }
 
-  private defaultFailureCallback = (response:JQuery.jqXHR) => {
-    if (response.status >= 400 && response.status < 500) {
-      this.flash(response.responseText);
+  private defaultFailureCallback = (error:unknown) => {
+    if (error instanceof ValidationError) {
+      this.flash(error.message);
     } else {
       this.flash(window.I18n.t('js.reporting_engine.label_response_error'));
     }

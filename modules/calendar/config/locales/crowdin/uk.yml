@@ -2,7 +2,7 @@
 uk:
   plugin_openproject_calendar:
     name: "Календар OpenProject "
-    description: "Дозволяти перегляд календаря"
+    description: "Дозволити перегляд календаря."
   label_calendar: "Календар"
   label_calendar_plural: "Календарі"
   label_new_calendar: "Новий календар"

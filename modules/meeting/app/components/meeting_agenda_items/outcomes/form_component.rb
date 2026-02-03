@@ -44,7 +44,7 @@ module MeetingAgendaItems::Outcomes
     end
 
     def wrapper_uniq_by
-      @meeting_outcome.persisted? ? @meeting_outcome.id : "new"
+      @meeting_outcome.persisted? ? @meeting_outcome.id : "new-for-#{@meeting_agenda_item.id}"
     end
 
     private
@@ -52,7 +52,7 @@ module MeetingAgendaItems::Outcomes
     def wrapper_data_attributes
       {
         controller: "ckeditor-focus scroll-into-view",
-        "test-selector": "meeting-outcome-input",
+        "test-selector": "meeting-outcome-input-for-#{@meeting_agenda_item.id}",
         "ckeditor-focus-target": "editor",
         "ckeditor-focus-autofocus-value": "true"
       }

@@ -33,6 +33,7 @@ require "spec_helper"
 RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
   include Redmine::I18n
   include PDFExportSpecUtils
+
   shared_let(:type_standard) { create(:type_standard) }
   shared_let(:type_bug) { create(:type_bug) }
   shared_let(:list_custom_field) do
@@ -167,7 +168,7 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
   end
 
   def work_package_details_long_text(field, work_package)
-    [field.name, work_package.custom_field_values.find { |cf| cf.custom_field == field }.value]
+    [field.name, work_package.typed_custom_value_for(field)]
   end
 
   def cover_page_content
@@ -217,6 +218,43 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
           *work_package_columns(work_package_child),
           "1/1", export_date_formatted, query.name
         ].join(" ")
+      end
+
+      context "when grouped by project phase column (regression #65740)" do
+        let(:user) { create(:admin) }
+        let!(:project_phase_with_gates) do
+          create(:project_phase, :with_gated_definition, project:)
+        end
+        let!(:project_phase) do
+          create(:project_phase, project:)
+        end
+        let(:query_attributes) { { group_by: "project_phase" } }
+        let(:column_names) { %w[id subject project_phase] }
+
+        before do
+          work_package_parent.update!(project_phase_definition_id: project_phase_with_gates.definition.id)
+          work_package_child.update!(project_phase_definition_id: project_phase.definition.id)
+        end
+
+        it "contains correct data" do
+          expected_pdf_strings = [
+            query.name,
+
+            project_phase_with_gates.name,
+            *column_titles - ["Project phase"],
+            work_package_parent.id.to_s,
+            work_package_parent.subject,
+
+            project_phase.name,
+            *column_titles - ["Project phase"],
+            work_package_child.id.to_s,
+            work_package_child.subject,
+
+            "1/1", export_date_formatted, query.name
+          ]
+
+          expect(pdf_strings).to eq(expected_pdf_strings.join(" "))
+        end
       end
     end
 

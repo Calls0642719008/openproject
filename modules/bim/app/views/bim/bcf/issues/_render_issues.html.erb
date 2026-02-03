@@ -18,14 +18,13 @@
               <% issue.errors.full_messages.each do |message| %>
                 <p><%= message %></p>
               <% end %>
-              </ul>
             </div>
           </div>
         <% else %>
           <% if issue.viewpoints.empty? %>
             <p>(<%= t("bcf.no_viewpoints") %>)</p>
           <% else %>
-            <img src="<%= API::V3::Utilities::PathHelper::ApiV3Path.attachment_content(issue.viewpoints.first.snapshot.id) %>">
+            <img src="<%= API::V3::Utilities::PathHelper::ApiV3Path.attachment_content(issue.viewpoints.first.snapshot.id) %>" alt="">
           <% end %>
         <% end %>
       </div>

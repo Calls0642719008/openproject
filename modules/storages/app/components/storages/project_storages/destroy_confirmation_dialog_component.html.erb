@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,30 +25,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 
 <%=
   render(
     Primer::OpenProject::DangerDialog.new(
-      id:,
-      title:,
-      test_selector: id,
+      title: I18n.t("storages.page_titles.file_storages.delete"),
+      form_arguments:,
       size: :large,
-      form_arguments: {
-        model: @project_storage,
-        action: admin_settings_storage_project_storage_path(id: @project_storage, page: current_page),
-        data: {
-          turbo: true
-        },
-        method: :delete
-      },
-      confirm_button_text: I18n.t("button_remove")
+      test_selector: TEST_SELECTOR,
+      confirm_button_text: I18n.t("button_remove_permanently")
     )
   ) do |dialog|
-    dialog.with_confirmation_message do |message|
-      message.with_heading(tag: :h2) { heading }
-      message.with_description_content(text)
-    end
-    dialog.with_confirmation_check_box_content(confirmation_text)
-  end
 %>
+  <% dialog.with_confirmation_message do |message|
+       message.with_heading(tag: :h2) { I18n.t("storages.page_titles.project_storages.delete") }
+     end %>
+  <% dialog.with_additional_details do %>
+    <% render(Primer::OpenProject::FlexLayout.new) do |flex| %>
+      <% flex.with_row do %>
+        <%= t("storages.delete_warning.project_storage", file_storage: "<strong>#{h(@project_storage.storage.name)}</strong>").html_safe %>
+      <% end %>
+      <% flex.with_row do %>
+        <ul>
+          <li><%= t("storages.delete_warning.project_storage_delete_result_1") %></li>
+          <li><%= t("storages.delete_warning.project_storage_delete_result_2") %></li>
+        </ul>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% dialog.with_confirmation_check_box_content(I18n.t(:text_permanent_remove_confirmation_checkbox_label)) %>
+<% end %>

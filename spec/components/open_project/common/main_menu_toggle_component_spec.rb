@@ -45,7 +45,7 @@ RSpec.describe OpenProject::Common::MainMenuToggleComponent, type: :component do
     it "does render the expanded icon" do
       expect(subject).to have_element class: "octicon-sidebar-expand"
       expect(subject).to have_no_element class: "octicon-sidebar-collapse"
-      expect(subject).to have_element id: "menu-toggle--collapse-button"
+      expect(subject).to have_element id: "menu-toggle--collapse-button", aria: { expanded: true }
       expect(subject).to have_element "tool-tip",
                                       text: "Collapse project menu",
                                       for: "menu-toggle--collapse-button",
@@ -60,7 +60,7 @@ RSpec.describe OpenProject::Common::MainMenuToggleComponent, type: :component do
     it "does render the collapsed icon" do
       expect(subject).to have_element class: "octicon-sidebar-collapse"
       expect(subject).to have_no_element class: "octicon-sidebar-expand"
-      expect(subject).to have_element id: "menu-toggle--expand-button"
+      expect(subject).to have_element id: "menu-toggle--expand-button", aria: { expanded: false }
       expect(subject).to have_element "tool-tip",
                                       text: "Expand project menu",
                                       for: "menu-toggle--expand-button",

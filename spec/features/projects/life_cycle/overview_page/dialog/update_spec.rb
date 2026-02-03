@@ -263,6 +263,10 @@ RSpec.describe "Edit project phases on project overview page", :js do
     end
 
     context "when only the first Project::Phase has dates set" do
+      around do |example|
+        Timecop.travel("2024-08-22T09:22:00Z".to_datetime) { example.run }
+      end
+
       it "shows updates the following Project::Phase correctly" do
         life_cycle_planning.update!(start_date: nil, finish_date: nil, duration: nil)
 
@@ -277,6 +281,7 @@ RSpec.describe "Edit project phases on project overview page", :js do
         # The earliest enabled date should be after initiating date's finish date
         initiating_finish_date_succesor = initiating_finish_date + 1.day
 
+        datepicker.show_date(initiating_finish_date)
         datepicker.expect_not_disabled(initiating_finish_date)
         datepicker.expect_not_disabled(initiating_finish_date_succesor)
 
@@ -296,6 +301,7 @@ RSpec.describe "Edit project phases on project overview page", :js do
         dialog.expect_input("Finish date", value: "")
         dialog.expect_input("Duration", value: "", disabled: true)
 
+        datepicker.show_date(initiating_finish_date)
         datepicker.expect_disabled(initiating_finish_date)
         datepicker.expect_not_disabled(initiating_finish_date_succesor)
 

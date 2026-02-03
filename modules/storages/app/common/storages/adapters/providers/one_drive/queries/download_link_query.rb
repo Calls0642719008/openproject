@@ -36,7 +36,7 @@ module Storages
           class DownloadLinkQuery < Base
             def call(auth_strategy:, input_data:)
               Authentication[auth_strategy].call(storage: @storage) do |http|
-                handle_errors http.get(url_for(input_data.file_link.origin_id))
+                handle_errors http.get(url_for(input_data.file_id))
               end
             end
 

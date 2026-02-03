@@ -102,20 +102,64 @@ RSpec.describe "Recurring meetings move to next meeting", :js do
 
     context "with manage_agendas permission, but next occurrence is cancelled" do
       let(:current_user) { user_with_manage_permissions }
+      let(:first_occurrence_time) { series.next_occurrence(from_time: Time.current) }
       let!(:cancelled_occurrence) do
         create(:scheduled_meeting,
                :cancelled,
                recurring_meeting: series,
-               start_time: series.next_occurrence(from_time: recurring_meeting.start_time))
+               start_time: first_occurrence_time)
       end
 
-      it "shows the move to next meeting option" do
+      it "skips the cancelled occurrence and moves to the next available one" do
+        meeting_page.visit!
         meeting_page.expect_agenda_item(title: "Test notes")
 
-        meeting_page.move_item_to_next_meeting(agenda_item)
+        meeting_page.select_action(agenda_item, "Move to next meeting")
 
-        expect(page).to have_text "Unable to move to the next meeting since it has been cancelled."
+        expect(page).to have_text("Move to next meeting?")
+        expect(page).to have_text("Note: Skipping cancelled occurrence")
+
+        page.within_modal "Move to next meeting?" do
+          click_on "Move"
+        end
+
+        expect_and_dismiss_flash(message: "Agenda item moved to the next meeting")
+        meeting_page.expect_no_agenda_item(title: "Test notes")
+      end
+    end
+
+    context "with manage_agendas permission, but multiple next occurrences are cancelled" do
+      let(:current_user) { user_with_manage_permissions }
+      let(:first_occurrence_time) { series.next_occurrence(from_time: Time.current) }
+      let(:second_occurrence_time) { series.next_occurrence(from_time: first_occurrence_time) }
+      let!(:first_cancelled_occurrence) do
+        create(:scheduled_meeting,
+               :cancelled,
+               recurring_meeting: series,
+               start_time: first_occurrence_time)
+      end
+      let!(:second_cancelled_occurrence) do
+        create(:scheduled_meeting,
+               :cancelled,
+               recurring_meeting: series,
+               start_time: second_occurrence_time)
+      end
+
+      it "skips all cancelled occurrences and shows the count in the dialog" do
+        meeting_page.visit!
         meeting_page.expect_agenda_item(title: "Test notes")
+
+        meeting_page.select_action(agenda_item, "Move to next meeting")
+
+        expect(page).to have_text("Move to next meeting?")
+        expect(page).to have_text("Note: Skipping 2 cancelled occurrences")
+
+        page.within_modal "Move to next meeting?" do
+          click_on "Move"
+        end
+
+        expect_and_dismiss_flash(message: "Agenda item moved to the next meeting")
+        meeting_page.expect_no_agenda_item(title: "Test notes")
       end
     end
 

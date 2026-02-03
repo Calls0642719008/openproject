@@ -40,6 +40,8 @@ da:
               task_version_must_be_the_same_as_story_version: "skal være identisk med hovedhistorieversionen."
         sprint:
           cannot_end_before_it_starts: "Sprint kan ikke afsluttes før det starter."
+  attributes:
+    task_type: "Opgavetype"
   backlogs:
     add_new_story: "Ny historie"
     any: "alle"
@@ -55,7 +57,7 @@ da:
     hours: "Timer"
     impediment: "Hindring"
     label_versions_default_fold_state: "Vis versioner sammenfoldet"
-    caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."
+    caption_versions_default_fold_state: "Versioner vil ikke blive udvidet som standard, når man ser på backlogs. Hver enkelt version skal udvides manuelt."
     work_package_is_closed: "Arbejdspakken er færdig, når"
     label_is_done_status: "Status %{status_name} betyder færdig"
     no_burndown_data: "Ingen tilgængelige burndown-data. Sprint start- og slutdatoerne er obligatoriske."
@@ -75,8 +77,8 @@ da:
     task_color: "Opgavefarve"
     unassigned: "Utildelt"
     user_preference:
-      header_backlogs: "Backlogs module"
-      button_update_backlogs: "Update backlogs module"
+      header_backlogs: "Backlog-modul"
+      button_update_backlogs: "Opdater backlog-modul"
     x_more: "%{count} flere..."
   backlogs_active: "aktiv"
   backlogs_any: "alle"
@@ -100,7 +102,10 @@ da:
   backlogs_empty_title: "Ingen versioner defineret til brug i backlogs"
   backlogs_empty_action_text: "For at komme i gang med backlogs, opret en ny version og tildel den til en backlogs-kolonne."
   button_edit_wiki: "Redigér wikiside"
-  error_backlogs_task_cannot_be_story: "Indstillingerne er ugyldige. Den valgte opgavetype kan ikke også være en historietype."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "kan ikke også være en historietype"
   error_intro_plural: "Flg. fejl opstod:"
   error_intro_singular: "Flg. fejl opstod:"
   error_outro: "Ret ovenstående fejl før genindsendelse."
@@ -124,6 +129,10 @@ da:
   label_points_burn_up: "Op"
   label_product_backlog: "produkt-backlog"
   label_select_all: "Vælg alle"
+  label_select_type: "Vælg en type"
+  label_select_types: "Vælg typer"
+  label_selected_type: "Valgt type"
+  label_selected_types: "Valgte typer"
   label_sprint_backlog: "sprint-backlog"
   label_sprint_cards: "Eksportere kort"
   label_sprint_impediments: "Sprint-hindringer"
@@ -160,3 +169,7 @@ da:
   version_settings_display_option_left: "venstre"
   version_settings_display_option_none: "ingen"
   version_settings_display_option_right: "højre"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Typer, der behandles som backlog-historier (f.eks. funktion, brugerhistorie). Skal være forskellig fra opgavetypen.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type, der bruges til historieopgaver. Skal være forskellig fra historietyper.

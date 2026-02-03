@@ -29,16 +29,12 @@
  */
 
 import BaseController from './base.controller';
-
-enum AnchorType {
-  Comment = 'comment',
-  Activity = 'activity',
-}
+import { UrlHelpers, ActivityAnchorType, ActivityAnchor } from './services/url-helpers';
 
 interface CustomEventWithIdParam extends Event {
   params:{
     id:string;
-    anchorName:AnchorType;
+    anchorName:ActivityAnchorType;
   };
 }
 
@@ -59,19 +55,20 @@ export default class AutoScrollingController extends BaseController {
     // not using the scrollToActivity method here as it is causing flickering issues
     // in case of a setAnchor click, we can go for a direct scroll approach
     const scrollableContainer = this.scrollableContainer;
-    const activityElement = this.getActivityAnchorElement(anchorName, activityId);
+    const activityElement = this.getActivityAnchorElement({ type: anchorName, id: activityId });
+    const locationHash = `#${anchorName}-${activityId}`;
 
     if (scrollableContainer && activityElement) {
+      this.brieflyHighlightAndResetUrl(activityElement, locationHash);
       scrollableContainer.scrollTo({
         top: activityElement.offsetTop - 90,
         behavior: 'smooth',
       });
     }
-
-    window.location.hash = `#${anchorName}-${activityId}`;
+    window.location.hash = locationHash;
   }
 
-  performAutoScrollingOnStreamsUpdate(journalsContainerAtBottom:boolean = false) {
+  performAutoScrollingOnStreamsUpdate(journalsContainerAtBottom = false) {
     if (this.indexOutlet.sortingAscending && journalsContainerAtBottom) {
       // scroll to (new) bottom if sorting is ascending and journals container was already at bottom before a new activity was added
       if (this.isMobile()) {
@@ -92,7 +89,7 @@ export default class AutoScrollingController extends BaseController {
     }
   }
 
-  scrollInputContainerIntoView(timeout:number = 0, behavior:ScrollBehavior = 'smooth') {
+  scrollInputContainerIntoView(timeout = 0, behavior:ScrollBehavior = 'smooth') {
     const inputContainer = this.inputContainer;
     setTimeout(() => {
       if (inputContainer) {
@@ -104,7 +101,7 @@ export default class AutoScrollingController extends BaseController {
     }, timeout);
   }
 
-  scrollJournalContainer(toBottom:boolean, smooth:boolean = false) {
+  scrollJournalContainer(toBottom:boolean, smooth = false) {
     const scrollableContainer = this.scrollableContainer;
     if (scrollableContainer) {
       if (smooth) {
@@ -119,28 +116,29 @@ export default class AutoScrollingController extends BaseController {
   }
 
   private handleInitialScroll() {
-    const anchorTypeRegex = new RegExp(`#(${AnchorType.Comment}|${AnchorType.Activity})-(\\d+)`, 'i');
-    const activityIdMatch = window.location.hash.match(anchorTypeRegex); // Ex. [ "#comment-80", "comment", "80" ]
+    const hash = window.location.hash;
+    const anchorInfo = UrlHelpers.extractActivityAnchor(hash);
 
-    if (activityIdMatch && activityIdMatch.length === 3) {
-      this.scrollToActivity(activityIdMatch[1] as AnchorType, activityIdMatch[2]);
+    if (anchorInfo) {
+      const activityElement = this.getActivityAnchorElement(anchorInfo);
+      this.brieflyHighlightAndResetUrl(activityElement, hash);
+      this.scrollToActivity(activityElement);
     } else if (this.indexOutlet.sortingAscending && (!this.isMobile() || this.isWithinNotificationCenter())) {
       this.scrollToBottom();
     }
   }
 
-  private scrollToActivity(activityAnchorName:AnchorType, activityId:string) {
+  private scrollToActivity(activityElement:HTMLElement|null) {
     const maxAttempts = 20; // wait max 20 seconds for the activity to be rendered
-    this.tryScroll(activityAnchorName, activityId, 0, maxAttempts);
+    this.tryScroll(activityElement, 0, maxAttempts);
   }
 
   private scrollToBottom() {
     this.tryScrollToBottom(0, 20, 'auto');
   }
 
-  private tryScroll(activityAnchorName:AnchorType, activityId:string, attempts:number, maxAttempts:number) {
+  private tryScroll(activityElement:HTMLElement|null, attempts:number, maxAttempts:number) {
     const scrollableContainer = this.scrollableContainer;
-    const activityElement = this.getActivityAnchorElement(activityAnchorName, activityId);
     const topPadding = 70;
 
     if (activityElement && scrollableContainer) {
@@ -154,16 +152,20 @@ export default class AutoScrollingController extends BaseController {
         scrollableContainer.scrollTop = relativeTop - topPadding;
       }, 50);
     } else if (attempts < maxAttempts) {
-      setTimeout(() => this.tryScroll(activityAnchorName, activityId, attempts + 1, maxAttempts), 1000);
+      setTimeout(() => {
+        this.tryScroll(activityElement, attempts + 1, maxAttempts);
+      }, 1000);
     }
   }
 
-  private tryScrollToBottom(attempts:number = 0, maxAttempts:number = 20, behavior:ScrollBehavior = 'smooth') {
+  private tryScrollToBottom(attempts = 0, maxAttempts = 20, behavior:ScrollBehavior = 'smooth') {
     const scrollableContainer = this.scrollableContainer;
 
     if (!scrollableContainer) {
       if (attempts < maxAttempts) {
-        setTimeout(() => this.tryScrollToBottom(attempts + 1, maxAttempts), 1000);
+        setTimeout(() => {
+          this.tryScrollToBottom(attempts + 1, maxAttempts);
+        }, 1000);
       }
       return;
     }
@@ -173,7 +175,6 @@ export default class AutoScrollingController extends BaseController {
     let timeoutId:ReturnType<typeof setTimeout>;
 
     const observer = new MutationObserver(() => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       clearTimeout(timeoutId);
 
       timeoutId = setTimeout(() => {
@@ -192,8 +193,21 @@ export default class AutoScrollingController extends BaseController {
     });
   }
 
-  private getActivityAnchorElement(activityAnchorName:AnchorType, activityId:string):HTMLElement | null {
-    return document.querySelector(`[data-anchor-${activityAnchorName}-id="${activityId}"]`);
+  private brieflyHighlightAndResetUrl(activityElement:HTMLElement|null, locationHash:string) {
+    if (activityElement) {
+      activityElement.classList.add('--anchor-highlighted');
+      setTimeout(() => {
+        document.addEventListener('click', () => {
+          activityElement.classList.remove('--anchor-highlighted');
+          const newLocation = window.location.href.replace(locationHash, '');
+          window.history.replaceState(null, 'Remove anchor', newLocation);
+        }, {once: true});
+      });
+    }
+  }
+
+  private getActivityAnchorElement(activityAnchor:ActivityAnchor):HTMLElement | null {
+    return document.querySelector(`[data-anchor-${activityAnchor.type}-id="${activityAnchor.id}"]`);
   }
 
   private get inputContainer():HTMLElement | null {

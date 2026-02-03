@@ -34,6 +34,7 @@ RSpec.describe IncomingEmails::Handlers::WorkPackage do
   let(:email) { instance_double(Mail::Message, attachments: [], subject: "My message") }
   let(:user) { build_stubbed(:user) }
   let(:reference) { {} }
+  let(:automated_email) { false }
   let(:options) { { issue: { project: "foobar" }, allow_override: [] } }
   let(:plain_text_body) { "Test body".dup }
 
@@ -46,7 +47,16 @@ RSpec.describe IncomingEmails::Handlers::WorkPackage do
       let(:reference) { { klass: "work_package", id: 123 } }
 
       it "returns true" do
-        expect(described_class).to be_handles(email, reference:)
+        expect(described_class).to be_handles(email, reference:, automated_email:)
+      end
+    end
+
+    context "with work package reference, but assuming an automated email" do
+      let(:automated_email) { true }
+      let(:reference) { { klass: "work_package", id: 123 } }
+
+      it "returns false" do
+        expect(described_class).not_to be_handles(email, reference:, automated_email:)
       end
     end
 
@@ -54,7 +64,7 @@ RSpec.describe IncomingEmails::Handlers::WorkPackage do
       let(:reference) { {} }
 
       it "returns true for new work package creation" do
-        expect(described_class).to be_handles(email, reference:)
+        expect(described_class).to be_handles(email, reference:, automated_email:)
       end
     end
 
@@ -62,7 +72,7 @@ RSpec.describe IncomingEmails::Handlers::WorkPackage do
       let(:reference) { { klass: "messages", id: 123 } }
 
       it "returns false" do
-        expect(described_class).not_to be_handles(email, reference:)
+        expect(described_class).not_to be_handles(email, reference:, automated_email:)
       end
     end
   end

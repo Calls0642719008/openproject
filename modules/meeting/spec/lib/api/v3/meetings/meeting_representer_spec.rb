@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -32,22 +33,19 @@ require "spec_helper"
 RSpec.describe API::V3::Meetings::MeetingRepresenter do
   include API::V3::Utilities::PathHelper
 
-  shared_let(:project) { create(:project) }
-  let(:permissions) { [:view_meetings] }
-  let(:user) do
-    create(:user,
-           member_with_permissions: { project => permissions },
-           created_at: 1.day.ago,
-           updated_at: Time.zone.now)
+  let(:workspace) { build_stubbed(:project) }
+  let(:current_user) do
+    build_stubbed(:user)
   end
   let(:meeting) do
-    create(:meeting,
-           author: user,
-           location: "https://foo.example.com",
-           project:)
+    build_stubbed(:meeting,
+                  author: current_user,
+                  location: "https://foo.example.com",
+                  project: workspace)
   end
 
-  let(:representer) { described_class.new(meeting, current_user: user) }
+  let(:embed_links) { true }
+  let(:representer) { described_class.new(meeting, current_user:, embed_links:) }
 
   describe "generation" do
     subject(:generated) { representer.to_json }
@@ -67,15 +65,12 @@ RSpec.describe API::V3::Meetings::MeetingRepresenter do
 
     it_behaves_like "has a titled link" do
       let(:link) { "author" }
-      let(:href) { api_v3_paths.user(user.id) }
-      let(:title) { user.name }
+      let(:href) { api_v3_paths.user(current_user.id) }
+      let(:title) { current_user.name }
     end
 
-    it_behaves_like "has a titled link" do
-      let(:link) { "project" }
-      let(:href) { api_v3_paths.project(project.id) }
-      let(:title) { project.name }
-    end
+    it_behaves_like "has workspace linked"
+    it_behaves_like "has workspace embedded"
 
     it_behaves_like "has an untitled action link" do
       let(:link) { :addAttachment }

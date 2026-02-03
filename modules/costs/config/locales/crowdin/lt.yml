@@ -31,9 +31,9 @@ lt:
         spent: "Praleista"
         spent_on: "Data"
         logged_by: "Registravo"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Registruota
+        entity_id: Registruota
+        entity_gid: Registruota
       cost_type:
         unit: "Vieneto pavadinimas"
         unit_plural: "Daugiaskaitinis vienetų pavadinimas"
@@ -61,9 +61,9 @@ lt:
         start_time: Pradžios laikas
         end_time: Finish time
         time: Laikas
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Registruota
+        entity_id: Registruota
+        entity_gid: Registruota
     models:
       time_entry:
         one: "Laiko įrašas"

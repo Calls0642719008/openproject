@@ -44,6 +44,7 @@ RSpec.describe Principals::DeleteJob, "Meetings", type: :model do
     let!(:meeting) { create(:meeting, author: principal) }
     let!(:meeting_agenda_item) { create(:meeting_agenda_item, presenter: principal) }
     let!(:meeting_outcome) { create(:meeting_outcome, meeting_agenda_item:, author: principal) }
+    let!(:recurring_meeting) { create(:recurring_meeting, author: principal) }
 
     it "rewrites the references" do
       job
@@ -51,6 +52,7 @@ RSpec.describe Principals::DeleteJob, "Meetings", type: :model do
       expect(meeting.reload.author).to eq deleted_user
       expect(meeting_agenda_item.reload.presenter).to eq deleted_user
       expect(meeting_outcome.reload.author).to eq deleted_user
+      expect(recurring_meeting.reload.author).to eq deleted_user
     end
   end
 end

@@ -30,13 +30,11 @@
 
 module CustomFields
   module Hierarchy
-    class InsertListItemContract < Dry::Validation::Contract
-      config.messages.backend = :i18n
-
+    class InsertListItemContract < DryApplicationContract
       params do
         required(:parent).filled(type?: CustomField::Hierarchy::Item)
         required(:label).filled(:string)
-        optional(:short).filled(:string)
+        required(:short).maybe(:string)
       end
 
       rule(:parent) do
@@ -53,7 +51,7 @@ module CustomFields
 
       rule(:short) do
         next if schema_error?(:parent)
-        next unless key?
+        next if value.nil?
 
         key.failure(:not_unique) if values[:parent].children.exists?(short: value)
       end

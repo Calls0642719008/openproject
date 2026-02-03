@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# Method to manually wait for an asynchronous request (through jQuery) to complete.
+# Method to manually wait for an asynchronous request to complete.
 # This applies to all requests through resources as well.
 #
 # Note: Use this only if there are no other means of detecting the successful

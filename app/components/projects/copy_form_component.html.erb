@@ -32,7 +32,7 @@ See COPYRIGHT and LICENSE files for more details.
     settings_primer_form_with(model: target_project, url: copy_project_path(source_project), method: :post) do |f|
       flex_layout do |container|
         container.with_row(mb: 3) do
-          render(Primer::Box.new(border: true, border_radius: 2, bg: :inset, p: 3)) do
+          render(OpPrimer::InsetBoxComponent.new) do
             render(Projects::CopyForm.new(f, copy_options:))
           end
         end
@@ -41,7 +41,7 @@ See COPYRIGHT and LICENSE files for more details.
           render(
             Primer::Forms::FormList.new(
               Projects::Settings::NameForm.new(f),
-              Projects::Settings::RelationsForm.new(f),
+              Projects::Settings::RelationsForm.new(f, invisible: params[:parent_id].present?),
               Projects::Settings::CustomFieldsForm.new(f)
             )
           )

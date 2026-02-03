@@ -81,6 +81,6 @@ export class BannersService {
   }
 
   private callMaybe(func?:() => unknown) {
-    func && func();
+    func?.();
   }
 }

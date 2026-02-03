@@ -9,21 +9,21 @@ id:
         demo-project:
           meeting_series:
             item_0:
-              title: Weekly
+              title: Mingguan
           meeting_agenda_items:
             item_0:
-              title: Good news
+              title: Kabar baik
             item_1:
-              title: Updates from development team
+              title: Pembaruan dari tim pengembangan
             item_2:
-              title: Updates from product team
+              title: Pembaruan dari tim produk
             item_3:
-              title: Updates from marketing team
+              title: Pembaruan dari tim marketing
             item_5:
-              title: Updates from sales team
+              title: Pembaruan dari tim penjualan
             item_6:
-              title: Review of quarterly goals
+              title: Tinjauan target triwulan
             item_7:
-              title: Core values feedback
+              title: Umpan balik nilai-nilai inti
             item_8:
-              title: General topics
+              title: Topik umum

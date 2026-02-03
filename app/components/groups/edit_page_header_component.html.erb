@@ -54,8 +54,8 @@ See COPYRIGHT and LICENSE files for more details.
         href: group_path(@group),
         aria: { label: I18n.t(:button_delete) },
         data: {
-          confirm: t(:text_are_you_sure),
-          method: :delete
+          turbo_confirm: t(:text_are_you_sure),
+          turbo_method: :delete
         },
         title: I18n.t(:button_delete)
       ) do |button|

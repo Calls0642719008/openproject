@@ -69,6 +69,24 @@ RSpec.describe MeetingAgendaItems::CreateContract do
 
       it_behaves_like "contract is valid"
     end
+
+    context "with presenter" do
+      before do
+        item.presenter = presenter
+      end
+
+      context "when presenter can view meetings in the project" do
+        let(:presenter) { create(:user, member_with_permissions: { project => [:view_meetings] }) }
+
+        it_behaves_like "contract is valid"
+      end
+
+      context "when presenter cannot view meetings in the project" do
+        let(:presenter) { create(:user) }
+
+        it_behaves_like "contract is invalid", presenter: :invalid_user
+      end
+    end
   end
 
   context "without permission" do

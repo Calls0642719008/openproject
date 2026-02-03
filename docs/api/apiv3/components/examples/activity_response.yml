@@ -17,16 +17,16 @@ value:
       _type: Collection
       total: 1
       count: 1
-      _hint: Attachments resource shortened for brevity.
+      _abbreviated: Attachments resource shortened for brevity.
     workPackage:
       id: 207
       _type: WorkPackage
-      _hint: Work package resource shortened for brevity.
+      _abbreviated: Work package resource shortened for brevity.
     emojiReactions:
       _type: Collection
       total: 1
       count: 1
-      _hint: Emoji reactions resource shortened for brevity.
+      _abbreviated: Emoji reactions resource shortened for brevity.
   _links:
     attachments:
       href: "/api/v3/activities/1478/attachments"

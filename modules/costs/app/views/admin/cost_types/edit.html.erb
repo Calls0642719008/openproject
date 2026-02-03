@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 
 <% if(@cost_type.id) %>
   <% html_title t(:label_cost_type_specific, id: @cost_type.id, name: @cost_type.name) %>
@@ -132,4 +132,3 @@ See COPYRIGHT and LICENSE files for more details.
   </div>
   <%= styled_button_tag t(:button_save), class: "-with-icon icon-checkmark" %>
 <% end %>
-</costs-subform>

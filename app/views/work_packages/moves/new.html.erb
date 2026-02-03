@@ -82,7 +82,6 @@ See COPYRIGHT and LICENSE files for more details.
                                           filters: [{ name: "user_action", operator: "=", values: ["work_packages/#{@copy ? 'copy' : 'move'}"] }],
                                           inputName: "new_project_id",
                                           model: @target_project,
-                                          appendTo: "body",
                                           hiddenFieldAction: "change->refresh-on-form-changes#triggerReload",
                                           clearable: false
                                         },
@@ -186,7 +185,7 @@ See COPYRIGHT and LICENSE files for more details.
             <div class="form--field-container -visible-overflow">
               <%= angular_component_tag "opce-basic-single-date-picker",
                                         inputs: {
-                                          inputId: "start_date",
+                                          id: "start_date",
                                           name: "start_date"
                                         } %>
             </div>
@@ -196,7 +195,7 @@ See COPYRIGHT and LICENSE files for more details.
             <div class="form--field-container -visible-overflow">
               <%= angular_component_tag "opce-basic-single-date-picker",
                                         inputs: {
-                                          inputId: "due_date",
+                                          id: "due_date",
                                           name: "due_date"
                                         } %>
             </div>

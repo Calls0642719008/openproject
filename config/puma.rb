@@ -90,3 +90,55 @@ if OpenProject::Configuration.statsd_host.present?
 
   plugin :statsd
 end
+
+metrics_enabled = OpenProject::Configuration.metrics["enabled"]
+
+if metrics_enabled
+  def start_metrics_server!
+    require "open_project/metrics/metrics_app"
+
+    Thread.new do
+      require "webrick"
+
+      port = OpenProject::Configuration.metrics["port"]
+      # we silence the logs because lots of 'GET /metrics HTTP/1.1' logs are not particularly useful
+      server = WEBrick::HTTPServer.new Port: port, BindAddress: "0.0.0.0", AccessLog: []
+
+      Rails.logger.info "Starting metrics server on port #{port} under /metrics"
+
+      server.mount "/", Rack::Handler::WEBrick, OpenProject::Metrics::MetricsApp.new
+      server.start
+    end
+  end
+
+  if OpenProject::Configuration.web["workers"] > 0
+    before_fork do
+      start_metrics_server!
+    end
+  else
+    start_metrics_server!
+  end
+end
+
+# Open app in default browser by pressing Ctrl+T
+if Rails.env.development?
+  siginfo_supported = begin
+    Signal.trap("INFO", "IGNORE")
+  rescue ArgumentError
+    # Ignore unsupported signal `SIGINFO' on Linux
+  end
+
+  if siginfo_supported
+    # Using on_booted is needed to override puma adding handler to show thread statuses
+    on_booted do
+      Signal.trap("INFO") do
+        system "open", Rails.application.root_url
+      end
+    end
+
+    # Remove handling of INFO signal in forked workers
+    on_worker_boot do
+      Signal.trap("INFO", "IGNORE")
+    end
+  end
+end

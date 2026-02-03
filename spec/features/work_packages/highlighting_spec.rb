@@ -2,10 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Work Package highlighting fields",
-               :js,
-               :selenium,
-               with_ee: %i[conditional_highlighting] do
+RSpec.describe "Work Package highlighting fields", :js, :selenium do
   let(:user) { create(:admin) }
 
   let(:project) { create(:project) }

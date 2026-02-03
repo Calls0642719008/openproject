@@ -32,30 +32,34 @@ require "spec_helper"
 
 RSpec.describe "Projects#destroy", :js do
   let!(:project) { create(:project, name: "foo", identifier: "foo") }
-  let(:project_page) { Pages::Projects::Destroy.new(project) }
-  let(:danger_zone) { DangerZone.new(page) }
+  let(:project_page) { Pages::Projects::Settings::General.new(project) }
 
   current_user { create(:admin) }
 
-  before { project_page.visit! }
+  before do
+    project_page.visit!
+    project_page.click_delete_action
+  end
 
   it "destroys the project" do
-    # Confirm the deletion
-    # Without confirmation, the button is disabled
-    expect(danger_zone).to be_disabled
+    expect(page).to have_modal "Delete project"
+    within_modal "Delete project" do
+      expect(page).to have_heading "Permanently delete this project?"
 
-    # With wrong confirmation, the button is disabled
-    danger_zone.confirm_with("#{project.identifier}_wrong")
+      expect(page).to have_unchecked_field "I understand that this deletion cannot be reversed"
 
-    expect(danger_zone).to be_disabled
+      # Without confirmation, the button is disabled
+      expect(page).to have_button "Delete permanently", disabled: true
 
-    # With correct confirmation, the button is enabled
-    # and the project can be deleted
-    danger_zone.confirm_with(project.identifier)
-    expect(danger_zone).not_to be_disabled
-    danger_zone.danger_button.click
+      # Confirm the deletion
+      check "I understand that this deletion cannot be reversed", allow_label_click: true
+      expect(page).to have_button "Delete permanently", disabled: false
 
-    expect_flash message: I18n.t("projects.delete.scheduled")
+      click_on "Delete permanently"
+    end
+    expect(page).to have_no_modal "Delete project"
+
+    expect_flash type: :success, message: I18n.t("projects.delete.scheduled")
     expect(project.reload).to eq(project)
 
     perform_enqueued_jobs

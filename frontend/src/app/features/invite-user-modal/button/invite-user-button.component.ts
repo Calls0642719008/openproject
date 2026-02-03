@@ -1,22 +1,29 @@
 import {
   Component,
   Input,
+  inject, ChangeDetectionStrategy, OnInit,
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from 'core-app/core/current-user/current-user.service';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
-import { OpInviteUserModalService } from 'core-app/features/invite-user-modal/invite-user-modal.service';
+import { OpInviteUserDialogService } from 'core-app/features/invite-user-modal/invite-user-dialog.service';
 import { OpAutocompleterComponent } from 'core-app/shared/components/autocompleter/op-autocompleter/op-autocompleter.component';
 
 @Component({
   selector: 'op-invite-user-button',
   templateUrl: './invite-user-button.component.html',
-  styleUrls: ['./invite-user-button.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class InviteUserButtonComponent {
+export class InviteUserButtonComponent implements OnInit {
   @Input() projectId:string|null;
+
+  readonly I18n = inject(I18nService);
+  readonly opInviteUserModalService = inject(OpInviteUserDialogService);
+  readonly currentProjectService = inject(CurrentProjectService);
+  readonly currentUserService = inject(CurrentUserService);
+  readonly autocompleter = inject(OpAutocompleterComponent);
 
   /** This component does not provide an output, because both primary usecases were in places where the button was
    * destroyed before the modal closed, causing the data from the modal to never arrive at the parent.
@@ -29,22 +36,13 @@ export class InviteUserButtonComponent {
 
   canInviteUsersToProject$:Observable<boolean>;
 
-  constructor(
-    readonly I18n:I18nService,
-    readonly opInviteUserModalService:OpInviteUserModalService,
-    readonly currentProjectService:CurrentProjectService,
-    readonly currentUserService:CurrentUserService,
-    readonly autocompleter:OpAutocompleterComponent,
-  ) {
-  }
-
   public ngOnInit():void {
-    this.projectId = this.projectId || this.currentProjectService.id;
+    this.projectId = this.projectId ?? this.currentProjectService.id;
     this.canInviteUsersToProject$ = this
       .currentUserService
       .hasCapabilities$(
         'memberships/create',
-        this.projectId || null,
+        this.projectId ?? null,
       );
   }
 

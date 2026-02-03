@@ -16,7 +16,7 @@ jobs:
     steps:
     - id: find_latest_release
       env:
-        GITHUB_TOKEN: ${{ secrets.OPENPROJECT_CI_GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.OPENPROJECTCI_GH_CORE_PAT }}
         GITHUB_REPOSITORY: ${{ github.repository }}
       run: |
         BRANCH=$(curl -H "Authorization: token $GITHUB_TOKEN" \
@@ -43,7 +43,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.BASE_BRANCH }}
 
@@ -107,4 +107,4 @@ jobs:
             fi
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.OPENPROJECT_CI_GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.OPENPROJECTCI_GH_CORE_PAT }}

@@ -110,7 +110,7 @@ RSpec.describe API::V3::EmojiReactions::EmojiReactionsByWorkPackageCommentsAPI d
         project.save!
       end
 
-      context "and user has permission to view internal comments" do
+      context "and user has permission to view internal comments", with_ee: [:internal_comments] do
         before do
           get api_v3_paths.emoji_reactions_by_work_package_comments(work_package.id)
         end

@@ -40,6 +40,8 @@
               task_version_must_be_the_same_as_story_version: "må være det samme som den overordnete historiens versjon."
         sprint:
           cannot_end_before_it_starts: "Sprinten kan ikke avsluttes før den starter."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Ny historie"
     any: "hvilken som helst"
@@ -100,7 +102,10 @@
   backlogs_empty_title: "Ingen versjoner er definert til å brukes i forsinkelser"
   backlogs_empty_action_text: "For å komme i gang med forsinkelser, lag en ny versjon og legg den til i en forsinkelse-kolonne"
   button_edit_wiki: "Rediger Wiki-side"
-  error_backlogs_task_cannot_be_story: "Instillingene er ugyldige. Den valgte oppgavetypen kan ikke også være en historietype."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Møtte på følgende feil:"
   error_intro_singular: "Møtte på følgende feil:"
   error_outro: "Venligst rett feilene over før du sender inn igjen."
@@ -124,6 +129,10 @@
   label_points_burn_up: "Opp"
   label_product_backlog: "produkt-forsinkelse"
   label_select_all: "Velg alle"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Eksporter kort"
   label_sprint_impediments: "Hindring i etappe"
@@ -160,3 +169,7 @@
   version_settings_display_option_left: "venstre"
   version_settings_display_option_none: "ingen"
   version_settings_display_option_right: "høyre"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

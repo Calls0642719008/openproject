@@ -37,7 +37,11 @@ RSpec.describe API::V3::Priorities::PriorityRepresenter do
   include API::V3::Utilities::PathHelper
 
   context "generation" do
-    subject { representer.to_json }
+    subject(:generated) { representer.to_json }
+
+    it "fulfills the documented schema" do
+      expect(generated).to match_json_schema.from_docs("priority_model")
+    end
 
     it "indicates its type" do
       expect(subject).to include_json("Priority".to_json).at_path("_type")

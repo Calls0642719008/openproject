@@ -30,14 +30,7 @@
 
 class CreateGoodJobExecutionDuration < ActiveRecord::Migration[7.1]
   def change
-    reversible do |dir|
-      dir.up do
-        # Ensure this incremental update migration is idempotent
-        # with monolithic install migration.
-        return if connection.column_exists?(:good_job_executions, :duration)
-      end
-    end
-
-    add_column :good_job_executions, :duration, :interval
+    # Moved to db/migrate/tables/good_job_executions.rb
+    # These files are not squashed since good_job will recreate them otherwise when an update is done.
   end
 end

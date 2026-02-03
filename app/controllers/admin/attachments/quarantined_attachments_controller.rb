@@ -52,7 +52,7 @@ module Admin
                        I18n.t("antivirus_scan.deleted_by_admin", filename: @attachment.filename))
 
         flash[:notice] = t(:notice_successful_delete)
-        redirect_to action: :index
+        redirect_to action: :index, status: :see_other
       end
 
       private

@@ -32,6 +32,7 @@ module API
       class NotificationSettingRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
         include API::Decorators::DateProperty
+        include API::V3::Workspaces::LinkedResource
 
         NotificationSetting.all_settings.each do |setting|
           if setting.in?(NotificationSetting.date_alert_settings)
@@ -44,9 +45,7 @@ module API
           end
         end
 
-        associated_resource :project,
-                            skip_render: ->(*) { true },
-                            skip_link: ->(*) { false }
+        associated_project skip_render: ->(*) { true }
       end
     end
   end

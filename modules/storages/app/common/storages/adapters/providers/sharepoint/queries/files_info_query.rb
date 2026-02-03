@@ -55,10 +55,8 @@ module Storages
             private
 
             def wrap_storage_file_error(file_id, query_result)
-              split_identifier(file_id) => { location: }
-
               Results::StorageFileInfo.new(
-                id: location.path,
+                id: file_id,
                 status: query_result.code,
                 status_code: Rack::Utils::SYMBOL_TO_STATUS_CODE[query_result.code] || 500
               )

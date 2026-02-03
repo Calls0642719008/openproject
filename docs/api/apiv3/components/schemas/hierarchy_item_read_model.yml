@@ -1,6 +1,15 @@
 # Schema: HierarchyItemReadModel
 ---
 type: object
+required:
+  - _type
+  - id
+  - label
+  - short
+  - weight
+  - formattedWeight
+  - depth
+  - _links
 properties:
   _type:
     type: string
@@ -10,16 +19,43 @@ properties:
     type: integer
     description: Hierarchy item identifier
   label:
-    type: string
+    type:
+      - "string"
+      - "null"
     description: The label of the hierarchy item
   short:
-    type: string
-    description: The short name of the hierarchy item
+    type:
+      - string
+      - "null"
+    description: |-
+      The short name of the hierarchy item. If this attribute is set, the `weight` and
+      the `formattedWeight` are `null`.
+  weight:
+    type:
+      - string
+      - "null"
+    description: |-
+      The accurate weight of the hierarchy item. As a decimal precision number it is written as a string to
+      not loose precision with conversion to a floating point number.
+      If this attribute is set, the `short` is null.
+  formattedWeight:
+    type:
+      - string
+      - "null"
+    description: |-
+      The formatted weight of the hierarchy item. The standard formatting of the OpenProject server is used to
+      convert this number into a representable format - i.e. falling back to scientific notation for very small and
+      very big numbers.
+      If this attribute is set, the `short` is null.
   depth:
     type: integer
     description: The hierarchy depth. The root item has a depth of 0.
   _links:
     type: object
+    required:
+      - self
+      - children
+      - branch
     properties:
       self:
         allOf:
@@ -42,5 +78,12 @@ properties:
             - $ref: './link.yml'
             - description: |-
                 A hierarchy item that is a child of the current hierarchy item
-                
+
                 **Resource**: HierarchyItem
+      branch:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The branch of the hierarchy item, ordered from root to node.
+
+              **Resource**: HierarchyItemCollection

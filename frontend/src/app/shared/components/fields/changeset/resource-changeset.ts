@@ -68,10 +68,13 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
   protected form$ = input<FormResource>();
 
   /** Request cache for objects within the changeset for the current form */
-  protected cache:{ [key:string]:Promise<unknown> } = {};
+  protected cache:Record<string, Promise<unknown>> = {};
 
   /** Flag whether this is currently being saved */
   public inFlight = false;
+
+  /** Flag whether to validate all custom fields */
+  public validateCustomFields = false;
 
   /** Keep a reference to the original resource */
   protected _pristineResource:T;
@@ -111,7 +114,7 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
   /**
    * Build the request attributes against the fresh form
    */
-  public buildRequestPayload():Promise<Object> {
+  public buildRequestPayload():Promise<object> {
     return this
       .getForm()
       .then(() => this.buildPayloadFromChanges());
@@ -207,14 +210,14 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
    * Return the HAL href of the resource we're editing
    */
   public get href():string {
-    return this.pristineResource.href as string;
+    return this.pristineResource.href!;
   }
 
   /**
    * Returns the changed `to` values of the ChangeMap
    */
-  public get changes():{ [key:string]:unknown } {
-    const changes:{ [key:string]:unknown } = {};
+  public get changes():Record<string, unknown> {
+    const changes:Record<string, unknown> = {};
 
     _.each(this.changeset.all, (item, key) => {
       changes[key] = item.to;
@@ -322,7 +325,7 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
   }
 
   public clear() {
-    this.state && this.state.clear();
+    this.state?.clear();
     this.changeset.clear();
     this.cache = {};
     this.form$.clear();
@@ -400,6 +403,12 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
         plainPayload[key] = val.to;
       }
     });
+
+    // Validate all custom fields if the flag is set
+    if (this.validateCustomFields) {
+      plainPayload._meta ??= {};
+      plainPayload._meta!.validateCustomFields = true;
+    }
 
     return plainPayload;
   }

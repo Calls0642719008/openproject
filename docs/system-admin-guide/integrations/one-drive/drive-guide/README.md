@@ -94,10 +94,7 @@ specific toolset.
 
 ### Example 1: Microsoft GRAPH explorer
 
-Microsoft provides a web application, which can browse the GRAPH API. This tool can be
-found [here](https://developer.microsoft.com/en-us/graph/graph-explorer). This method only works, if the drive is not
-configured as described in the section
-about [configuring a drive for automatic management](./#configure-drive-for-automatic-management), so the better
+Microsoft provides a web application, which can browse the GRAPH API. This tool can be found [here](https://developer.microsoft.com/en-us/graph/graph-explorer). This method only works, if the drive is not configured as described in the section about [configuring a drive for automatic management](./#configure-drive-for-automatic-management), so the better
 alternative is [example 2](./#example-2-terminal).
 
 #### Preconditions

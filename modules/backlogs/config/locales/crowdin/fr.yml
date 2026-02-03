@@ -40,6 +40,8 @@ fr:
               task_version_must_be_the_same_as_story_version: "doit être identique à la version de l'histoire parente."
         sprint:
           cannot_end_before_it_starts: "Un sprint ne peut pas se terminer avant d'avoir débuté."
+  attributes:
+    task_type: "Type de tâche"
   backlogs:
     add_new_story: "Nouvelle histoire"
     any: "tout"
@@ -100,7 +102,10 @@ fr:
   backlogs_empty_title: "Aucune version n'est définie pour être utilisée dans les backlogs"
   backlogs_empty_action_text: "Pour démarrer avec les backlogs, créez une nouvelle version et assignez-y une colonne de backlogs."
   button_edit_wiki: "Éditer la page du wiki"
-  error_backlogs_task_cannot_be_story: "Les paramètres ne sont pas valides. Le type de tâche sélectionné ne peut pas aussi être un type d'histoire."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "ne peut pas être également un type d'histoire"
   error_intro_plural: "Les erreurs suivantes ont été rencontrées :"
   error_intro_singular: "L'erreur suivante a été rencontrée :"
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau."
@@ -124,6 +129,10 @@ fr:
   label_points_burn_up: "Vers le haut"
   label_product_backlog: "carnet de produit"
   label_select_all: "Tout sélectionner"
+  label_select_type: "Sélectionnez un type"
+  label_select_types: "Sélectionnez le type"
+  label_selected_type: "Type sélectionné"
+  label_selected_types: "Types sélectionnés"
   label_sprint_backlog: "carnet de sprint"
   label_sprint_cards: "Exporter les cartes"
   label_sprint_impediments: "Obstacles de sprint"
@@ -160,3 +169,7 @@ fr:
   version_settings_display_option_left: "gauche"
   version_settings_display_option_none: "aucune"
   version_settings_display_option_right: "droite"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types traités comme des histoires du backlog (par exemple, Feature, User story). Doit être différent du type de tâche.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type utilisé pour les tâches liées aux histoires. Doit être différent des types d'histoires.

@@ -40,6 +40,8 @@ ms:
               task_version_must_be_the_same_as_story_version: "perlu sama dengan versi cerita induk."
         sprint:
           cannot_end_before_it_starts: "Pecutan tidak boleh berakhir lebih awal sebelum ia bermula."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Cerita Baharu"
     any: "sebarang"
@@ -100,7 +102,10 @@ ms:
   backlogs_empty_title: "Tiada versi ditetapkan untuk digunakan dalam tunggakan"
   backlogs_empty_action_text: "Untuk bermula dengan tunggakan, cipta satu versi baru dan tetapkan ia ke kolum tunggakan."
   button_edit_wiki: "Edit halaman wiki"
-  error_backlogs_task_cannot_be_story: "Tetapan tidak sah. Jenis tugasan yang dipilih juga tidak boleh dijadikan jenis cerita."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Ralat-ralat berikut telah ditemui:"
   error_intro_singular: "Ralat berikut telah ditemui:"
   error_outro: "Sila betulkan ralat-ralat di atas sebelum menghantar semula."
@@ -124,6 +129,10 @@ ms:
   label_points_burn_up: "Atas"
   label_product_backlog: "produk tunggakan"
   label_select_all: "Pilih semua"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "tunggakan pecutan "
   label_sprint_cards: "Eksport kad"
   label_sprint_impediments: "Halangan Pecutan"
@@ -160,3 +169,7 @@ ms:
   version_settings_display_option_left: "kiri"
   version_settings_display_option_none: "tiada"
   version_settings_display_option_right: "kanan"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

@@ -30,9 +30,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -41,6 +42,7 @@ import {
   mergeMap,
   shareReplay,
   take,
+  tap,
 } from 'rxjs/operators';
 
 import { I18nService } from 'core-app/core/i18n/i18n.service';
@@ -75,7 +77,7 @@ import { calculatePositions } from 'core-app/shared/components/project-include/c
   ],
   standalone: false,
 })
-export class OpProjectIncludeComponent extends UntilDestroyedMixin implements OnInit {
+export class OpProjectIncludeComponent extends UntilDestroyedMixin implements OnInit, OnDestroy {
   @HostBinding('class.op-project-include') className = true;
 
   public text = {
@@ -136,6 +138,7 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
   public set selectedProjects(val:string[]) {
     this._selectedProjects = val;
     this.selectedProjects$.next(val);
+    this.searchableProjectListService.preloadProjectIds = val.map((s) => s.split('/').pop()!);
   }
 
   public selectedProjects$ = new BehaviorSubject<string[]>([]);
@@ -165,17 +168,17 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
     this.searchableProjectListService.allProjects$,
     this.displayMode$.pipe(distinctUntilChanged()),
     this.includeSubprojects$.pipe(debounceTime(20)),
-    this.searchableProjectListService.searchText$.pipe(debounceTime(200)),
   ]).pipe(
-    mergeMap(([projects, displayMode, includeSubprojects, searchText]) => this.selectedProjects$.pipe(
+    mergeMap(([projects, displayMode, includeSubprojects]) => this.selectedProjects$.pipe(
       take(1),
-      map((selected) => [projects, displayMode, includeSubprojects, searchText, selected]),
+      map((selected) => [projects, displayMode, includeSubprojects, selected]),
     )),
     map(
-      ([projects, displayMode, includeSubprojects, searchText, selected]:[IProject[], string, boolean, string, string[]]) => [
+      ([projects, displayMode, includeSubprojects, selected]:[IProject[], string, boolean, string[]]) => [
         projects
           .filter(
             (project) => {
+              const searchText = this.searchableProjectListService.searchText;
               if (searchText.length) {
                 const matches = project.name.toLowerCase().includes(searchText.toLowerCase());
 
@@ -221,6 +224,7 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
         includeSubprojects,
       ],
     ),
+    tap(() => this.loading$.next(false)),
     mergeMap(([projects, includeSubprojects]) => this.selectedProjects$.pipe(
       map((selected) => [projects, includeSubprojects, selected]),
     )),
@@ -252,23 +256,7 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
     shareReplay(),
   );
 
-  /* This seems like a way too convoluted loading check, but there's a good reason we need it.
-   * The searchableProjectListService says fetching is "done" when the request returns.
-   * However, this causes flickering on the initial load, since `projects$` still needs
-   * to do the tree calculation. In the template, we show the project-list when `loading$ | async` is false,
-   * but if we would only make this depend on `fetchingProjects$` Angular would still wait with
-   * rendering the project-list until `projects$ | async` has also fired.
-   *
-   * To fix this, we first wait for fetchingProjects$ to be true once,
-   * then switch over to projects$, and after that has pinged once, it switches back to
-   * fetchingProjects$ as the decider for when fetching is done.
-   */
-  public loading$ = this.searchableProjectListService.fetchingProjects$.pipe(
-    filter((fetching) => fetching),
-    take(1),
-    mergeMap(() => this.projects$),
-    mergeMap(() => this.searchableProjectListService.fetchingProjects$),
-  );
+  public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     readonly I18n:I18nService,
@@ -291,6 +279,8 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
       });
   }
 
+  private onTextInput:Subscription;
+
   public ngOnInit():void {
     this.query$
       .pipe(
@@ -300,6 +290,13 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
       .subscribe((includeSubprojects) => {
         this.includeSubprojects = includeSubprojects;
       });
+
+    this.onTextInput = this.searchableProjectListService.queriedSearchText$.subscribe(() => this.loading$.next(true));
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+    this.onTextInput.unsubscribe();
   }
 
   public toggleIncludeSubprojects():void {
@@ -310,14 +307,14 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
     this.opened = !this.opened;
 
     if (this.opened) {
-      this.searchableProjectListService.loadAllProjects();
+      this.loading$.next(true);
+      this.searchableProjectListService.enableLoading();
       this.projectsInFilter$
         .pipe(
           take(1),
         )
         .subscribe((selectedProjects) => {
           this.displayMode = 'all';
-          this.searchableProjectListService.searchText = '';
           this.selectedProjects = selectedProjects as string[];
         });
     }
@@ -333,7 +330,6 @@ export class OpProjectIncludeComponent extends UntilDestroyedMixin implements On
     // Replace actually also instantiates if it does not exist, which is handy here
     this.wpTableFilters.replace('project', (projectFilter:QueryFilterInstanceResource) => {
       const projectHrefs = this.selectedProjects;
-      // eslint-disable-next-line no-param-reassign
       projectFilter.values = projectHrefs.map((href:string) => this.halResourceService.createHalResource({ href }, true));
     });
 

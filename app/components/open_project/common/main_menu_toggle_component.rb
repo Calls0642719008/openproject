@@ -31,47 +31,31 @@
 module OpenProject
   module Common
     class MainMenuToggleComponent < ApplicationComponent
-      def initialize(expanded:)
+      include Primer::AttributesHelper
+
+      def initialize(expanded:, **system_arguments)
         super()
 
-        @expanded = expanded
+        @system_arguments = system_arguments
+        @system_arguments[:scheme] = :invisible
+        @system_arguments[:icon] = expanded ? :"sidebar-expand" : :"sidebar-collapse"
+        @system_arguments[:size] = expanded ? :medium : :small
+        @system_arguments[:id]   = "menu-toggle--#{expanded ? 'collapse-button' : 'expand-button'}"
+        @system_arguments[:data] = merge_data(
+          @system_arguments,
+          data: { action: "click->menus--main-toggle#toggleNavigation" }
+        )
+        @system_arguments[:aria] = merge_aria(
+          @system_arguments,
+          aria: {
+            expanded:,
+            label: expanded ? I18n.t("js.label_hide_project_menu") : I18n.t("js.label_expand_project_menu")
+          }
+        )
       end
 
       def call
-        render(Primer::Beta::IconButton.new(icon:,
-                                            id:,
-                                            aria: { label: aria_label },
-                                            scheme:,
-                                            size:,
-                                            data:))
-      end
-
-      private
-
-      def icon
-        @expanded ? "sidebar-expand" : :"sidebar-collapse"
-      end
-
-      def id
-        "menu-toggle--#{@expanded ? 'collapse-button' : 'expand-button'}"
-      end
-
-      def aria_label
-        @expanded ? I18n.t("js.label_hide_project_menu") : I18n.t("js.label_expand_project_menu")
-      end
-
-      def scheme
-        :invisible
-      end
-
-      def size
-        @expanded ? :medium : :small
-      end
-
-      def data
-        {
-          action: "click->menus--main-toggle#toggleNavigation"
-        }
+        render(Primer::Beta::IconButton.new(**@system_arguments))
       end
     end
   end

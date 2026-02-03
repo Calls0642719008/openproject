@@ -53,7 +53,7 @@ describe('UrlParamsHelper', () => {
     });
 
     it('escapes special characters', () => {
-      expect(queryString.indexOf('@') === -1).toBeTruthy();
+      expect(!queryString.includes('@')).toBeTruthy();
     });
 
     it('does not omit false', () => {

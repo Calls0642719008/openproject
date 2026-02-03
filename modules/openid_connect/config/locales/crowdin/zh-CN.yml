@@ -43,6 +43,10 @@ zh-CN:
               response_is_not_successful: " 响应状态为 %{status}。"
               response_is_not_json: " 不返回 JSON 正文。"
               response_misses_required_attributes: " 不返回所需的属性。缺少的属性有 %{missing_attributes}."
+          invalid_claims_essential: "未在 %{attribute} 中定义布尔值。"
+          invalid_claims_location: "包含不受支持的位置：%{invalid}。支持的位置为：%{supported}。"
+          invalid_claims_values: "未在 %{attribute} 中定义数组。"
+          non_object_attribute: "未在 %{attribute} 中定义 JSON 对象。"
   provider:
     delete_warning:
       input_delete_confirmation: 输入占位符名称 %{name} 以确认删除。
@@ -58,15 +62,26 @@ zh-CN:
     menu_title: OpenID 提供商
     delete_title: "删除 OpenID Connect 提供商"
     group_links_heading: OpenID Connect 群组链接
+    groups:
+      match_preview_component:
+        title: 提取的群组名称
+        placeholder_none: 目前没有与模式匹配的组。
+      match_preview_dialog_component:
+        description: 这样，您便可根据样本数据测试正则表达式模式，以验证您希望提取的群组名称是否已正确提取。您可以在此处修改模式，但测试字符串和匹配项本身不会随配置一起保存。
+        group_names_label: 测试群组名称
+        group_names_description: 每行输入一个与 OIDC 声明中显示形式一致的群组名称，以查看正则表达式模式对群组名称的影响。
+        show_button: 测试模式
+        title: 测试正则表达式
     instructions:
       endpoint_url: OpenID Connect 提供商给您的端点 URL
       group_regexes: 每行一个正则表达式模式。有关如何操作的更多信息，请阅读[文档](docs_url)。
       group_regexes_detail: 可选择使用正则表达式定义模式，以匹配群组声明中的群组名称。例如，输入类似 <code>^Level1/Level2/([\w/]+)$</code> 的模式将从包含“Level1/Level2/GroupName/SubGroup”的响应中提取群组“Groupname/SubGroup”。如果没有模式匹配，则会忽略该群组。留空可使用完整群组名称同步所有群组。
+      group_regexes_testing: "点击“测试模式”，以根据样本 OIDC 用户信息测试正则表达式模式。"
       group_sync: 自动从身份提供商提取并同步群组成员信息。
       groups_claim: 指定预期表示用户所属群组名称的声明的名称。
       metadata_none: 我没有这个信息
       metadata_url: 我有一个发现端点网址
-      oidc_information: These values are needed to configure the OpenID Connect provider.
+      oidc_information: 配置 OpenID Connect 提供商需要使用这些值。
       client_id: 这是您的 OpenID Connect 提供商给您的客户端 ID
       client_secret: 这是您的 OpenID Connect 提供商给您的客户端密钥
       limit_self_registration: 如果启用，用户只能在提供商的配置允许的情况下使用该提供商进行注册。
@@ -116,6 +131,7 @@ zh-CN:
       label_configuration_details: 元数据
       label_client_details: 客户端详细信息
       label_attribute_mapping: 属性映射
+      notice_created: 新的 OpenID 提供程序已成功创建。
       client_details_description: OpenProject 作为 OIDC 客户端的配置详细信息
       no_results_table: 尚未定义提供商。
       plural: OpenID 提供商

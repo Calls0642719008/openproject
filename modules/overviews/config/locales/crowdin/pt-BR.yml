@@ -1,4 +1,5 @@
 pt-BR:
   overviews:
-    label: 'Visão geral'
-  permission_manage_overview: 'Gerenciar página de visão geral'
+    label_home: "%{workspace_type} inicial"
+    label_dashboard: "Painel"
+    label_overview: "Visão geral"

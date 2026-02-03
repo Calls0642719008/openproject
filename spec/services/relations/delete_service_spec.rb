@@ -94,6 +94,12 @@ RSpec.describe Relations::DeleteService do
         end
 
         it "still updates correctly" do
+          # Note: Since the introduction of #63550, invalid custom fields no longer prevent
+          # the work package from being saved. However this test could still be kept as a
+          # regression test, by forcing the custom field validation with setting the
+          # custom_values_to_validate attribute.
+          work_package.custom_values_to_validate = work_package.custom_field_values
+
           # ensure the work package is invalid as intended
           expect(work_package.schedule_manually).to be false
           expect(work_package).not_to be_valid(:saving_custom_fields)
@@ -134,6 +140,7 @@ RSpec.describe Relations::DeleteService do
       context "when the successor is invalid (missing required custom field for instance)" do
         before do
           work_package.update_attribute(:type, type_with_mandatory_cf)
+          work_package.custom_values_to_validate = work_package.custom_field_values
         end
 
         it "still updates correctly" do

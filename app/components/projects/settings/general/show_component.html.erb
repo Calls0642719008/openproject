@@ -1,4 +1,4 @@
-<%#-- copyright
+<%# -- copyright
 OpenProject is an open source project management software.
 Copyright (C) the OpenProject GmbH
 
@@ -25,64 +25,62 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
-++#%>
+++# %>
 
-<%=
-  flex_layout do |container|
-    container.with_row(mb: 3) do
-      settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
-        concat(
-          render(Primer::Beta::Subhead.new) do |component|
-            component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_details") }
-          end
+<%= render(Primer::BaseComponent.new(tag: :section, mb: 4)) do %>
+  <%=
+    render(Primer::Beta::Subhead.new) do |component|
+      component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_details") }
+    end
+  %>
+  <%=
+    settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
+      render(
+        Primer::Forms::FormList.new(
+          Projects::Settings::NameForm.new(f),
+          Projects::Settings::DescriptionForm.new(f),
+          Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_details"))
         )
-        concat(
-          render(
-            Primer::Forms::FormList.new(
-              Projects::Settings::NameForm.new(f),
-              Projects::Settings::DescriptionForm.new(f),
-              Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_details"))
-            )
+      )
+    end
+  %>
+<% end %>
+
+<%= render(Primer::BaseComponent.new(tag: :section, mb: 4)) do %>
+  <%=
+    render(Primer::Beta::Subhead.new) do |component|
+      component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_status") }
+    end
+  %>
+  <%=
+    settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
+      render(
+        Primer::Forms::FormList.new(
+          Projects::StatusButtonComponent.new(project:, user: current_user),
+          Projects::Settings::StatusForm.new(f),
+          Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_status_description"))
+        )
+      )
+    end
+  %>
+<% end %>
+
+<% if parent_allowed? %>
+  <%= render(Primer::BaseComponent.new(tag: :section, mb: 4)) do %>
+    <%=
+      render(Primer::Beta::Subhead.new) do |component|
+        component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_relations") }
+      end
+    %>
+    <%=
+      settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
+        render(
+          Primer::Forms::FormList.new(
+            Projects::Settings::RelationsForm.new(f),
+            Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_parent_project"))
           )
         )
       end
-    end
-
-    container.with_row(mb: 3) do
-      settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
-        concat(
-          render(Primer::Beta::Subhead.new) do |component|
-            component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_status") }
-          end
-        )
-        concat(
-          render(
-            Primer::Forms::FormList.new(
-              Projects::StatusButtonComponent.new(project:, user: current_user),
-              Projects::Settings::StatusForm.new(f),
-              Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_status_description"))
-            )
-          )
-        )
-      end
-    end
-
-    container.with_row(mb: 3) do
-      settings_primer_form_with(model: project, url: project_settings_general_path(project)) do |f|
-        concat(
-          render(Primer::Beta::Subhead.new) do |component|
-            component.with_heading(tag: :h3, size: :medium) { I18n.t("projects.settings.header_relations") }
-          end
-        )
-        concat(
-          render(
-            Primer::Forms::FormList.new(
-              Projects::Settings::RelationsForm.new(f),
-              Projects::Settings::Submit.new(f, label: I18n.t("projects.settings.button_update_parent_project"))
-            )
-          )
-        )
-      end
-    end
-  end
-%>
+    %>
+  <% end %>
+<% end %>

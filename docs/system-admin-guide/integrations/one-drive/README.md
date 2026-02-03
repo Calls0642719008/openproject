@@ -3,7 +3,7 @@ sidebar_navigation:
   title: OneDrive integration setup
   priority: 601
 description: Set up One Drive as a file storage in your OpenProject instance
-keywords: OneDrive, SharePoint, file storage, integration
+keywords: OneDrive, file storage, integration
 ---
 
 # OneDrive (Enterprise add-on) integration setup
@@ -17,11 +17,10 @@ keywords: OneDrive, SharePoint, file storage, integration
 | [Edit a OneDrive file storage](#edit-a-onedrive-file-storage)      | Edit a OneDrive file storage                                          |
 | [Delete an OneDrive file storage](#delete-a-onedrive-file-storage) | Delete a OneDrive file storage                                        |
 
+[feature: one_drive_sharepoint_file_storage]
+
 > [!NOTE]
-> OneDrive integration is an Enterprise add-on and can only be used
-> with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/)
-> or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free
-> Community edition is easy and helps support OpenProject.
+> This feature includes using both OneDrive and SharePoint integrations.
 
 OpenProject offers an integration with OneDrive to allow users to:
 
@@ -36,8 +35,7 @@ OneDrive for Business plan as well. There might be some differences in the setup
 documentation.
 
 > [!NOTE]
-> This guide only covers the integration setup. Please go to
-> our [OneDrive integration user guide](../../../user-guide/file-management/nextcloud-integration/) to learn
+> This guide only covers the integration setup. Please go to our [OneDrive integration user guide](../../../user-guide/file-management/nextcloud-integration/) to learn
 > more about how to work with the OneDrive integration.
 
 ## Minimum requirements
@@ -77,7 +75,7 @@ generated information to the Azure portal. Enter your data and click the green *
 
 ![Setting up a new OneDrive](openproject_system_guide_new_onedrive_storage_details_new.png)
 
-The *Access and project folders* section of the setup will open next, where you can choose between automatically or manually managed access and folders. Choose your preferred option and click the green *Save and continue* button to proceed.
+The *Access and project folders* section of the setup will open next, where you can choose between automatically- or manually-managed access and folders. Choose your preferred option and click the green *Save and continue* button to proceed.
 
 ![Access and project folders details in OneDrive file storages setup in OpenProject](openproject_system_guide_new_onedrive_storage_access_and_project_folders.png)
 
@@ -85,7 +83,7 @@ Continue by filling out the information for the *Azure OAuth* and once again cli
 
 ![OAuth applications details in OneDrive file storages setup in OpenProject](openproject_system_guide_new_onedrive_storage_OAuth.png)
 
-Finally, copy the *Redirect URl* and click the green *Done, complete setup* button.
+Finally, copy the *Redirect URl* and click the green *Finish setup* button.
 
 ![Redirect URI details in OneDrive file storage setup in OpenProject](openproject_system_guide_new_onedrive_storage_redirect_URL.png)
 
@@ -95,8 +93,7 @@ You will see the following message confirming the successful setup on top of the
 
 > [!IMPORTANT]
 > In Sharepoint you can add (custom) columns in addition to the ones shown by default (*Modified* and *Modified by*).
-> Please keep in mind if these custom columns are added, OpenProject integration can no longer copy the automatically
-> managed project folders. The columns will have to be de-activated, or ideally not be created in the first place.
+> Please keep in mind if these custom columns are added, OpenProject integration can no longer copy the automatically-managed project folders. The columns will have to be de-activated, or ideally not be created in the first place.
 
 ## Enable OneDrive file storage in projects
 
@@ -141,9 +138,7 @@ by clicking on the **Copy-to-Clipboard** element next to the information text, o
 **View** icon.
 
 > [!TIP]
-> If you have selected automatically managed access and folders you will also see the *Health status* message on the
-> right side. If the file storage set-up is incomplete or faulty, an error message will be displayed in that section. Read
-> more about errors and troubleshooting [here](../../files/external-file-storages/health-status/).
+> If you have selected automatically-managed access and folders you will also see the *Health status* message on the right side. If the file storage set-up is incomplete or faulty, an error message will be displayed in that section. Read more about errors and troubleshooting [here](../../files/external-file-storages/health-status/).
 
 ![Edit OneDrive in OpenProject](openproject_system_guide_edit_icon_onedrive_storage.png)
 
@@ -167,7 +162,7 @@ it to enter the next page. Then they need to click the **Delete** button in the 
 
 ![Delete icon for OneDrive integration in OpenProject system settings](openproject_system_guide_delete_icon_onedrive_storage.png)
 
-You will be asked to confirm the exact file storage name.
+You will be asked to confirm you understand the consequences of the deletion.
 
 ![Delete a OneDrive integration from OpenProject system settings](openproject_system_guide_delete_onedrive_storage.png)
 

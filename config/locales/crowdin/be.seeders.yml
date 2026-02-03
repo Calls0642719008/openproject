@@ -43,13 +43,6 @@ be:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: Documentation
-        item_1:
-          name: Specification
-        item_2:
-          name: Other
       project_query_roles:
         item_0:
           name: Project query viewer

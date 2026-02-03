@@ -35,12 +35,20 @@ module Overviews
       include OpTurbo::Streamable
       include OpPrimer::ComponentHelpers
 
-      def initialize(project:,
-                     project_custom_field_section:)
+      def initialize(project:, project_custom_field:)
         super
-
         @project = project
-        @project_custom_field_section = project_custom_field_section
+        @project_custom_field = project_custom_field
+      end
+
+      private
+
+      def dialog_id
+        "edit-project-custom-field-dialog-#{@project_custom_field.id}"
+      end
+
+      def wrapper_id
+        "##{dialog_id}"
       end
     end
   end

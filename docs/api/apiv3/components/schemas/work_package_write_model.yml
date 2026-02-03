@@ -119,3 +119,15 @@ properties:
               Parent work package
 
               **Resource**: WorkPackage
+  _meta:
+    type: object
+    description: Meta information for the work package request
+    properties:
+      validateCustomFields:
+        type: boolean
+        description: |-
+          When set to true, explicitly validates all required custom fields on the work package, regardless of whether
+          they are provided in the request body. This overrides the default behavior where only custom fields included
+          in the request are validated. Use this parameter when you need to ensure all required custom fields have
+          valid values before allowing the update to proceed.
+        default: false

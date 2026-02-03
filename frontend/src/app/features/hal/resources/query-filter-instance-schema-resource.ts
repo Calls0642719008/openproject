@@ -119,6 +119,6 @@ export class QueryFilterInstanceSchemaResource extends SchemaResource {
 
   private definesAllowedValues() {
     return _.some(this._dependencies[0].dependencies,
-      (dependency:any) => dependency.values && dependency.values._links && dependency.values._links.allowedValues);
+      (dependency:any) => dependency.values?._links?.allowedValues);
   }
 }

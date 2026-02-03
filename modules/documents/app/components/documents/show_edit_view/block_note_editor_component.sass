@@ -1,0 +1,34 @@
+.controller-documents:has(.op-document-view)
+  @include extended-content--top
+  @include extended-content--bottom
+
+  @media screen and (min-width: $breakpoint-lg)
+    @include extended-content--left
+
+  @media screen and (min-width: $breakpoint-lg)
+    // Do not offset the breadcrumbs within documents as page header is nested within main layout
+    #wrapper .hidden-navigation .PageHeader-contextBar
+      margin-left: 0
+
+.op-document-view
+  .PageHeader
+    margin-bottom: var(--base-size-8) // Compensate for .bn-editor padding-top increase to maintain visual spacing
+
+  &--header
+    padding-top: var(--main-menu-toggler-top-spacing)
+
+  &--main,
+  &--sidebar
+    padding-bottom: 10px
+
+  &--header,
+  &--editor
+    @media screen and (min-width: $breakpoint-lg)
+      max-width: $blocknote-max-width
+      width: 100%
+      margin: 0 auto
+      padding-left: var(--base-size-16, 1rem)
+      padding-right: var(--base-size-16, 1rem)
+
+  .UnderlineNav
+    padding-left: var(--base-size-16, 1rem)

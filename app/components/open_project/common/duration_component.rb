@@ -35,7 +35,7 @@ module OpenProject
       attr_reader :duration, :abbreviated, :separator
 
       def initialize(duration, type = :seconds, separator: ", ", abbreviated: false, **args)
-        super
+        super()
 
         @duration = parse_duration(duration, type)
         @abbreviated = abbreviated

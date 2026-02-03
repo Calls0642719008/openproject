@@ -43,7 +43,7 @@ module Redmine::MenuManager::TopMenu::ModuleMenu
                                 "aria-controls": "op-app-header--modules-menu-list",
                                 "aria-label": I18n.t("label_global_modules"))
         dialog.with_header(classes: "op-app-header--modules-menu-header") do
-          render_waffle_menu_logo_icon unless custom_logo?
+          render_waffle_menu_logo_icon if show_waffle_icon?
         end
 
         item_groups.each do |item_group|
@@ -76,14 +76,24 @@ module Redmine::MenuManager::TopMenu::ModuleMenu
 
   def render_action_list_items(list, items)
     items.each do |item|
+      label = if item.enterprise_feature_missing?
+                h(item.caption) + upsell_icon
+              else
+                item.caption
+              end
+
       list.with_item(
         href: url_for(item.url),
-        label: item.caption,
+        label:,
         test_selector: "op-menu--item-action"
       ) do |menu_item|
         menu_item.with_leading_visual_icon(icon: item.icon) if item.icon
       end
     end
+  end
+
+  def upsell_icon
+    render(Primer::Beta::Octicon.new(icon: "op-enterprise-addons", classes: "upsell-colored", ml: 2))
   end
 
   def module_top_menu_item_groups

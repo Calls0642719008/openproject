@@ -32,13 +32,13 @@ class HourlyRatesController < ApplicationController
   helper :users
   helper :sort
   include SortHelper
+
   helper :hourly_rates
   include HourlyRatesHelper
 
-  before_action :find_user, only: %i[show edit update set_rate]
-
-  before_action :find_optional_project, only: %i[show edit update]
-  before_action :find_project, only: [:set_rate]
+  before_action :find_optional_project, only: %i[edit update]
+  before_action :find_project, only: %i[show]
+  before_action :find_user, only: %i[show edit update]
 
   # #show, #edit and #update have their own authorization
   before_action :authorize, except: %i[show edit update]
@@ -48,15 +48,10 @@ class HourlyRatesController < ApplicationController
 
   # TODO: this should be an index
   def show
-    if @project
-      return deny_access unless User.current.allowed_in_project?(:view_hourly_rates, @project)
+    return deny_access if @project.nil?
+    return deny_access unless User.current.allowed_in_project?(:view_hourly_rates, @project)
 
-      @rates = HourlyRate.where(user_id: @user, project_id: @project)
-               .order("#{HourlyRate.table_name}.valid_from desc")
-    else
-      @rates = HourlyRate.history_for_user(@user)
-      @rates_default = @rates.delete(nil)
-    end
+    @rates = HourlyRate.where(user_id: @user, project_id: @project).order("#{HourlyRate.table_name}.valid_from desc")
   end
 
   def edit # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
@@ -129,32 +124,6 @@ class HourlyRatesController < ApplicationController
     end
   end
 
-  def set_rate
-    today = Time.zone.today
-
-    rate = @user.rate_at(today, @project)
-    rate = HourlyRate.new if rate.nil? || rate.valid_from != today
-
-    rate.tap do |hr|
-      hr.project    = @project
-      hr.user       = @user
-      hr.valid_from = today
-      hr.rate = parse_number_string_to_number(params[:rate])
-    end
-
-    if rate.save
-      if request.xhr?
-        render :update do |page|
-          page.replace_html "rate_for_#{@user.id}",
-                            link_to(number_to_currency(rate.rate), action: "edit", id: @user, project_id: @project)
-        end
-      else
-        flash[:notice] = t(:notice_successful_update)
-        redirect_to action: "index"
-      end
-    end
-  end
-
   private
 
   def update_rates(user, project, added_rates, changed_rates)
@@ -171,14 +140,16 @@ class HourlyRatesController < ApplicationController
   end
 
   def find_project
-    @project = Project.find(params[:project_id])
-  end
-
-  def find_optional_project
-    @project = params[:project_id].blank? ? nil : Project.find(params[:project_id])
+    @project = Project.visible.find(params[:project_id])
   end
 
   def find_user
-    @user = params[:id] ? User.find(params[:id]) : User.current
+    @user = if params[:id].blank?
+              User.current
+            elsif @project
+              User.in_project(@project).visible.find(params[:id])
+            else
+              User.visible.find(params[:id])
+            end
   end
 end

@@ -75,7 +75,7 @@ module Storages
                     id: entry.dig(:drive, :id).to_s,
                     mime_type: "application/x-op-drive",
                     location: UrlBuilder.path("/", entry[:name]),
-                    permissions: %i[readable writeable]
+                    permissions: %i[readable]
                   ).value_or { nil }
                 end
 
@@ -101,7 +101,7 @@ module Storages
                   id:,
                   name: URI(@storage.host).path&.split("/")&.last,
                   location: "/",
-                  permissions: %i[readable writeable]
+                  permissions: %i[readable]
                 )
               end
             end

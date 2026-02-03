@@ -1,6 +1,23 @@
 id:
   grids:
     label_widget_in_grid: "Widget terdapat dalam Kisi %{grid_name}"
+    widgets:
+      empty: "Saat ini, widget ini kosong."
+      not_available: "Widget ini tidak tersedia."
+      subitems:
+        title: "Subitem"
+        no_results: "There are no visible children."
+        view_all_subitems: "Lihat semua subitem"
+        button_text: "Subitem"
+      members:
+        title: "Anggota"
+        no_results: "Tidak ada anggota yang terlihat."
+        view_all_members: "View all members"
+        show_members_count: "Tampilkan seluruh %{count} anggota"
+        x_more:
+          other: "dan %{count} anggota lainnya."
+      news:
+        no_results: "Nothing new to report."
   activerecord:
     attributes:
       grids/grid:

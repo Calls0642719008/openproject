@@ -38,7 +38,6 @@ import { StateService } from '@uirouter/core';
 import { BoardService } from 'core-app/features/boards/board/board.service';
 import { BoardActionsRegistryService } from 'core-app/features/boards/board/board-actions/board-actions-registry.service';
 import { BoardActionService } from 'core-app/features/boards/board/board-actions/board-action.service';
-import { trackByHref } from 'core-app/shared/helpers/angular/tracking-functions';
 import { HalResourceNotificationService } from 'core-app/features/hal/services/hal-resource-notification.service';
 import { tap } from 'rxjs/operators';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
@@ -87,8 +86,6 @@ export class AddListModalComponent extends OpModalComponent implements OnInit {
 
   /** avoid double click */
   public inFlight = false;
-
-  public trackByHref = trackByHref;
 
   public warningText:string|undefined;
 

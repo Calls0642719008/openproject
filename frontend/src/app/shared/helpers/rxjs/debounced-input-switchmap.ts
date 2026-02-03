@@ -46,7 +46,7 @@ export class DebouncedRequestSwitchmap<T, R = HalResource> {
   constructor(
     readonly requestHandler:RequestSwitchmapHandler<T, R[]>,
     readonly errorHandler:RequestErrorHandler,
-    readonly preFilterNull:boolean = false,
+    readonly preFilterNull = false,
     readonly debounceMs = 250,
   ) {
     /** Output switchmap observable */

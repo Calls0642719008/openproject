@@ -213,9 +213,10 @@ module Pages
       end
     end
 
-    def update_attributes(save: !create_page?, **key_value_map)
+    def fill_in_attributes(save: !create_page?, **key_value_map)
       set_attributes(key_value_map, save:)
     end
+    alias :update_attributes :fill_in_attributes
 
     def set_attributes(key_value_map, save: !create_page?)
       key_value_map.each_with_index.map do |(key, value), index|
@@ -319,8 +320,13 @@ module Pages
       find(".inline-edit--container.subject input")
     end
 
-    def go_back
-      find(".work-packages-back-button").click
+    def go_back(wait: true)
+      page.go_back
+
+      if wait
+        wait_for_network_idle
+        ensure_page_loaded
+      end
     end
 
     def mark_notifications_as_read

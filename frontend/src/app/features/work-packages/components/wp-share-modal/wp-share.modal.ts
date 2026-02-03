@@ -47,7 +47,7 @@ export class WorkPackageShareModalComponent extends OpModalComponent implements 
     super(locals, cdRef, elementRef);
 
     this.workPackage = this.locals.workPackage as WorkPackageResource;
-    this.frameSrc = this.pathHelper.workPackageSharePath(this.workPackage.id as string);
+    this.frameSrc = this.pathHelper.workPackageSharePath(this.workPackage.id!);
   }
 
   ngOnInit() {
@@ -55,7 +55,7 @@ export class WorkPackageShareModalComponent extends OpModalComponent implements 
   }
 
   onClose():boolean {
-    this.actions$.dispatch(shareModalUpdated({ workPackageId: this.workPackage.id as string }));
+    this.actions$.dispatch(shareModalUpdated({ workPackageId: this.workPackage.id! }));
 
     return super.onClose();
   }

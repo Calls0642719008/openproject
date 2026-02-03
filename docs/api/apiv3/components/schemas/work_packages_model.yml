@@ -17,7 +17,7 @@ allOf:
               - $ref: './link.yml'
               - description: |-
                   The work package collection
-                  
+
                   **Resource**: WorkPackageCollection
                 readOnly: true
       _embedded:
@@ -39,13 +39,13 @@ example:
   _type: Collection
   _embedded:
     elements:
-      - _hint: Work package resource shortened for brevity
+      - _abbreviated: Work package resource shortened for brevity
         _type: WorkPackage
         _links:
           self:
             href: '/api/v3/work_packages/1'
         id: 1
-      - _hint: Work package resource shortened for brevity
+      - _abbreviated: Work package resource shortened for brevity
         _type: WorkPackage
         _links:
           self:

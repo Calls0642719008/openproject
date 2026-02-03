@@ -41,7 +41,7 @@ export class ReminderSettingsDailyTimeComponent implements OnInit {
   // of times stored in the backend. As the order of the times should be kept,
   // the position needs to be maintained.
   // Upon a reload of the page, it is accepted to loose this information.
-  public inactiveTimes:Array<{ position:number, time:string }> = [];
+  public inactiveTimes:{ position:number, time:string }[] = [];
 
   public form:UntypedFormGroup;
 
@@ -161,7 +161,6 @@ export class ReminderSettingsDailyTimeComponent implements OnInit {
     this.inactiveTimes
       .forEach((inactiveTime) => {
         if (inactiveTime.position > index) {
-          // eslint-disable-next-line no-param-reassign
           inactiveTime.position -= 1;
         }
       });
@@ -199,7 +198,6 @@ export class ReminderSettingsDailyTimeComponent implements OnInit {
       );
   }
 
-  // eslint-disable-next-line class-methods-use-this
   isDisabled(time:string, activeTimes:string[]):boolean {
     return activeTimes.length === 0 || (activeTimes.length === 1 && activeTimes[0] === time);
   }

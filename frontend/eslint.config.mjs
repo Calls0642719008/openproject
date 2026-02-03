@@ -7,7 +7,7 @@ import stylistic from '@stylistic/eslint-plugin';
 
 import { defineConfig, globalIgnores } from 'eslint/config';
 
-const config = defineConfig([
+export default defineConfig([
   {
     files: ['**/*.{js,mjs,cjs}'],
     extends: [
@@ -20,10 +20,10 @@ const config = defineConfig([
     }
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{ts,tsx}'],
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.strictTypeChecked,
+      ...tseslint.configs.recommendedTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
       ...angular.configs.tsRecommended
     ],
@@ -58,8 +58,7 @@ const config = defineConfig([
         },
       ],
 
-      // Sometimes we need to shush the TypeScript compiler
-      'no-unused-vars': ['error', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
 
       // Allow short circuit evaluations
@@ -146,6 +145,13 @@ const config = defineConfig([
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
     ],
+    rules: {
+      '@angular-eslint/template/elements-content': [
+        'error',
+        { 'allowList': ['textContent'] }
+      ],
+      '@angular-eslint/template/prefer-control-flow': 'error'
+    }
   },
   {
     files: ['**/*.spec.ts'],
@@ -210,9 +216,7 @@ const config = defineConfig([
   },
   globalIgnores([
     '**/.eslintrc.js',
+    'coverage/',
     '**/vendor',
-    'src/app/shared/helpers/chronic_duration.js',
   ]),
 ]);
-
-export default tseslint.config(config);

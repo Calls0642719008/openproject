@@ -40,15 +40,17 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<%= styled_form_tag(admin_settings_languages_path, method: :patch) do %>
-
-  <section class="form--section">
-    <div class="form--field" id="setting_available_languages">
-      <%= setting_multiselect :available_languages, highlight_default_language(all_lang_options_for_select) %>
-    </div>
-  </section>
-
-  <%= styled_button_tag t(:button_save),
-                        class: "-primary -with-icon icon-checkmark",
-                        disabled: !Setting.available_languages_writable? %>
-<% end %>
+<%=
+  settings_primer_form_with(
+    url: admin_settings_languages_path,
+    scope: :settings,
+    method: :patch
+  ) do |f|
+    render(
+      Primer::Forms::FormList.new(
+        Admin::Settings::LanguagesSettingsForm.new(f),
+        Admin::Settings::Save.new(f, disabled: !Setting.available_languages_writable?)
+      )
+    )
+  end
+%>

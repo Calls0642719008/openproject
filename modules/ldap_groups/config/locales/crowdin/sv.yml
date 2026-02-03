@@ -3,20 +3,20 @@ sv:
     upsell:
       ldap_groups:
         title: 'Synkronisering av LDAP-grupp'
-        description: 'Synchronize LDAP groups with OpenProject groups to manage users, change their permissions and facilitate user management across groups.'
+        description: 'Synkronisera LDAP-grupper med OpenProject-grupper för att hantera användare, ändra deras behörigheter och underlätta användarhantering mellan grupper.'
   plugin_openproject_ldap_groups:
-    name: "OpenProject LDAP groups"
-    description: "Synchronization of LDAP group memberships."
+    name: "OpenProject LDAP-grupper"
+    description: "Synkronisering av LDAP-gruppmedlemskap."
   activerecord:
     attributes:
       ldap_groups/synchronized_group:
         dn: 'DN'
-        auth_source: 'Auth source'
+        auth_source: 'Auth källa'
         ldap_auth_source: 'LDAP-anslutning'
         sync_users: 'Synkronisera användare'
       ldap_groups/synchronized_filter:
         filter_string: 'LDAP-filter'
-        auth_source: 'Auth source'
+        auth_source: 'Auth källa'
         ldap_auth_source: 'LDAP-anslutning'
         group_name_attribute: "Attribut för gruppnamn"
         sync_users: 'Synkronisera användare'
@@ -52,7 +52,7 @@ sv:
         group_name_attribute_text: 'Ange attribut för LDAP-gruppen som används för att ange namnet på OpenProject-gruppen.'
         filter_string_text: 'Ange RFC4515 LDAP-filtret som returnerar grupper i din LDAP för att synkronisera med OpenProject.'
         base_dn_text: >
-          Enter the search base DN to use for this filter. It needs to be below the base DN of the selected LDAP connection. Leave this option empty to reuse the base DN of the connection
+          Ange sökbasen DN för att använda det här filtret. Den måste ligga under basen DN för den valda LDAP-anslutningen. Lämna detta alternativ tomt för att återanvända basen DN för anslutningen
     synchronized_groups:
       add_new: 'Lägg till synkroniserad LDAP-grupp'
       destroy:
@@ -77,4 +77,4 @@ sv:
         dn_text: 'Skriv in hela DN''en av gruppen i LDAP'
         group_text: 'Välj en befintlig OpenProject-grupp som medlemmar i LDAP-gruppen ska synkroniseras med'
       upsell:
-        description: 'Take advantage of synchronised LDAP groups to manage users, change their permissions and facilitate user management across groups.'
+        description: 'Dra nytta av synkroniserade LDAP-grupper för att hantera användare, ändra deras behörigheter och underlätta användarhantering mellan grupper.'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -34,7 +36,7 @@ module Redmine
     include ActionView::Helpers::NumberHelper
 
     IN_CONTEXT_TRANSLATION_CODE = :lol
-    IN_CONTEXT_TRANSLATION_NAME = "In-Context Crowdin Translation".freeze
+    IN_CONTEXT_TRANSLATION_NAME = "In-Context Crowdin Translation"
 
     def self.included(base)
       base.extend Redmine::I18n
@@ -111,10 +113,10 @@ module Redmine
     #
     # @param i18n_key [String] The I18n key to translate.
     # @param links [Hash] Link names mapped to URLs.
-    # @param external [Boolean] Whether the links should be opened as external links, i.e. in a new tab (default: false)
+    # @param external [Boolean] Whether the links should be opened as external links, i.e. in a new tab (default: true)
     # @param underline [Boolean] Whether to underline links inserted into the text (default: true)
-    def link_translate(i18n_key, links: {}, locale: ::I18n.locale, external: false, underline: true)
-      translation = ::I18n.t(i18n_key.to_s, locale:)
+    def link_translate(i18n_key, links: {}, external: true, underline: true) # rubocop:disable Metrics/AbcSize
+      translation = ::I18n.t(i18n_key.to_s)
       result = translation.scan(link_regex).inject(translation) do |t, matches|
         link, text, key = matches
         link_reference = links[key.to_sym]
@@ -239,6 +241,21 @@ module Redmine
       parent_match = valid_languages.detect { |l| l =~ /#{lang}/i }
 
       direct_match || parent_match
+    end
+
+    # Returns the language name in its own language for a given locale
+    #
+    # @param lang_code [String] the locale for the desired language, like `en`,
+    #   `de`, `fil`, `zh-CN`, and so on.
+    # @return [String] the language name translated in its own language
+    def translate_language(lang_code)
+      # rename in-context translation language name for the language select box
+      if lang_code.to_sym == Redmine::I18n::IN_CONTEXT_TRANSLATION_CODE &&
+        ::I18n.locale != Redmine::I18n::IN_CONTEXT_TRANSLATION_CODE
+        [Redmine::I18n::IN_CONTEXT_TRANSLATION_NAME, lang_code.to_s]
+      else
+        [::I18n.t("cldr.language_name", locale: lang_code), lang_code.to_s]
+      end
     end
 
     def set_language_if_valid(lang)

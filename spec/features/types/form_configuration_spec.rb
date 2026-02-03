@@ -378,4 +378,40 @@ RSpec.describe "form configuration", :js, :selenium do
       dialog.expect_open
     end
   end
+
+  describe "form submission", :js, with_ee: %i[edit_attribute_groups] do
+    # Regression test for double form submission happening on the form configuration page
+    it "only submits the form once (Regression#70297)" do
+      call_count = 0
+      subscription =
+        ActiveSupport::Notifications.subscribe("process_action.action_controller") do |*, payload|
+          payload => { controller:, action: }
+          if controller == "WorkPackageTypes::FormConfigurationTabController" && action == "update"
+            call_count += 1
+          end
+        end
+
+      login_as(admin)
+      visit edit_type_form_configuration_path(type)
+
+      # Wait for form to load
+      form.expect_group("details", "Details")
+
+      # Simulate native mousedown -> mouseup -> click sequence
+      # Including some sleep time to simulate the user actually
+      # holding the mouse button for > 50ms then releasing it.
+      save_button = find(".form-configuration--save")
+
+      save_button.execute_script("this.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))")
+      sleep 0.1
+      save_button.execute_script("this.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))")
+      sleep 0.1
+      save_button.execute_script("this.dispatchEvent(new MouseEvent('click', { bubbles: true }))")
+
+      expect_flash(message: "Successful update.")
+
+      ActiveSupport::Notifications.unsubscribe(subscription)
+      expect(call_count).to eq(1), "Expected 1 form submission but got #{call_count}"
+    end
+  end
 end

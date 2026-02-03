@@ -30,7 +30,7 @@ See COPYRIGHT and LICENSE files for more details.
 <% html_title t("activerecord.models.wiki"), t(:button_change_parent_page) %>
 <%=
   render Primer::OpenProject::PageHeader.new do |header|
-    header.with_title { h(@page.title) }
+    header.with_title_content(@page.title)
     header.with_breadcrumbs(
       breadcrumb_for_page(@project, @page)
     )
@@ -39,18 +39,19 @@ See COPYRIGHT and LICENSE files for more details.
 <%= error_messages_for "page" %>
 
 <%= labelled_tabular_form_for @page, url: { id: @page, action: "update_parent_page" } do |f| %>
+  <% options_for_select = wiki_page_options_for_select(@parent_pages) %>
   <div class='form--field'>
     <%= f.select :parent_id,
-                 wiki_page_options_for_select(@parent_pages),
-                 { label: WikiPage.human_attribute_name(:parent_title), include_blank: false, container_class: "-wide" } %>
+                 options_for_select,
+                 { label: WikiPage.human_attribute_name(:parent_title), include_blank: false, container_class: "-wide" },
+                 {
+                   size: options_for_select.size + 1,
+                   style: "height:unset",
+                   data: {
+                     controller: "select-autosize",
+                     select_autosize_size_limit_value: 8
+                   }
+                 } %>
   </div>
-
-  <%= nonced_javascript_tag  do -%>
-    jQuery(function() {
-        var parent_select = jQuery('#wiki_page_parent_id');
-        parent_select.attr('size', parent_select.children().length);
-      }
-    ));
-  <% end -%>
   <%= submit_tag t(:button_save), class: "button -primary" %>
 <% end %>

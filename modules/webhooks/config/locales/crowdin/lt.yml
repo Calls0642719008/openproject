@@ -27,11 +27,14 @@ lt:
       no_results_table: Dar nenustatytas joks „webhook“.
       label_add_new: Pridėti „webhook“
       label_edit: Keisti „webhook“
-      label_event_resources: Įvykio resursai
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Sukurta"
         updated: "Atnaujinta"
-        comment: "Comment"
+        comment: "Komentaras"
         internal_comment: "Internal comment"
       explanation:
         text: >

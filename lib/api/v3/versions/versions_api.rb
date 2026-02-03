@@ -48,21 +48,7 @@ module API
 
           route_param :id, type: Integer, desc: "Version ID" do
             after_validation do
-              @version = Version.find(params[:id])
-
-              authorized_for_version?(@version)
-            end
-
-            helpers do
-              def authorized_for_version?(version)
-                projects = version.projects
-
-                permissions = %i(view_work_packages manage_versions)
-
-                authorize_in_projects(permissions, projects:) do
-                  raise ::API::Errors::NotFound.new
-                end
-              end
+              @version = Version.visible.find(params[:id])
             end
 
             get &::API::V3::Utilities::Endpoints::Show.new(model: Version).mount
@@ -70,7 +56,7 @@ module API
             delete &::API::V3::Utilities::Endpoints::Delete.new(model: Version).mount
 
             mount ::API::V3::Versions::UpdateFormAPI
-            mount ::API::V3::Versions::ProjectsByVersionAPI
+            mount ::API::V3::Versions::WorkspacesByVersionAPI
           end
         end
       end

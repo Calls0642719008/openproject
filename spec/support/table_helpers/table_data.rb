@@ -46,7 +46,7 @@ module TableHelpers
           attrs.merge!(column.attributes_for_work_package(work_package))
         end
         row = columns.to_h { [it.title, nil] }
-        identifier = to_identifier(work_package.subject)
+        identifier = Registry.find_identifier(work_package) || to_identifier(work_package.subject)
         {
           attributes:,
           row:,
@@ -82,6 +82,7 @@ module TableHelpers
 
     def create_work_packages
       work_packages_by_identifier, relations = Factory.new(self).create
+      Registry.store(work_packages_by_identifier)
       Table.new(work_packages_by_identifier, relations)
     end
 
@@ -129,6 +130,24 @@ module TableHelpers
         identifiers_ordered_like(other_table, identifier, acc)
       end
       acc
+    end
+
+    class Registry
+      class << self
+        def store(work_packages_by_identifier)
+          work_packages_by_identifier.each do |identifier, work_package|
+            identifiers_by_work_package_id[work_package.id] = identifier
+          end
+        end
+
+        def find_identifier(work_package)
+          identifiers_by_work_package_id[work_package.id]
+        end
+
+        def identifiers_by_work_package_id
+          @identifiers_by_work_package_id ||= {}
+        end
+      end
     end
 
     class Factory

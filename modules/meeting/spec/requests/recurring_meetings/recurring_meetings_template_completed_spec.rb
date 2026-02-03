@@ -50,7 +50,8 @@ RSpec.describe "Recurring meetings complete template",
   let(:current_user) { user }
   let(:show_page) { Pages::RecurringMeeting::Show.new(recurring_meeting).with_capybara_page(page) }
   let(:request) do
-    post template_completed_project_recurring_meeting_path(project, recurring_meeting)
+    post template_completed_project_recurring_meeting_path(project, recurring_meeting), as: :turbo_stream,
+                                                                                        params: { meeting: { notify: "1" } }
   end
 
   subject do
@@ -64,7 +65,10 @@ RSpec.describe "Recurring meetings complete template",
   context "when first occurrence is not existing" do
     it "instantiates the first occurrence from template and schedules the init job" do
       expect { subject }.to change(recurring_meeting.scheduled_meetings, :count).by(1)
-      expect(response).to be_redirect
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include('action="redirect_to"')
+      expect(response.body).to include(project_recurring_meeting_path(project, recurring_meeting))
 
       expect(recurring_meeting.scheduled_meetings.count).to eq(1)
       first = recurring_meeting.scheduled_meetings.first
@@ -92,7 +96,7 @@ RSpec.describe "Recurring meetings complete template",
 
     it "does not create a new meeting" do
       expect { subject }.not_to change(recurring_meeting.scheduled_meetings, :count)
-      expect(response).to be_redirect
+      expect(response).to redirect_to(project_recurring_meeting_path(project, recurring_meeting))
 
       expect(recurring_meeting.scheduled_meetings.count).to eq(1)
       first = recurring_meeting.scheduled_meetings.first.meeting
@@ -110,7 +114,10 @@ RSpec.describe "Recurring meetings complete template",
 
     it "takes over that occurrence" do
       expect { subject }.to change(recurring_meeting.meetings, :count).by(1)
-      expect(response).to be_redirect
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include('action="redirect_to"')
+      expect(response.body).to include(project_recurring_meeting_path(project, recurring_meeting))
 
       expect(recurring_meeting.scheduled_meetings.count).to eq(1)
       first = recurring_meeting.scheduled_meetings.first

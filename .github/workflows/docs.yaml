@@ -13,12 +13,27 @@ permissions:
   contents: read
 
 jobs:
-  docs-check:
+  docs-links-check:
     name: Check internal links in documentation
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
       - run: bundle exec ./script/docs/check_links
+  docs-readme-case-check:
+    name: Check README.md case in documentation
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - run: script/docs/check_readme_case
+  docs-readme-yaml-header-syntax-check:
+    name: Check README.md YAML header syntax in documentation
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - run: script/docs/check_readme_yaml_header_syntax

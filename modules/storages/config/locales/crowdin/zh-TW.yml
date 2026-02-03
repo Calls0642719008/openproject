@@ -32,6 +32,7 @@ zh-TW:
         drive: Drive ID
         host: 主機
         name: 名稱
+        password: 應用程式密碼
         provider_type: 提供商類型
         tenant: 目錄 (租戶) ID
     errors:
@@ -62,7 +63,7 @@ zh-TW:
               op_application_not_installed: 似乎沒有安裝應用「OpenProject 整合套件」。請先安裝，然後重試。
             password:
               invalid_password: 無效。
-              unknown_error: 無法驗證。請檢查您的存儲區連接，然後重試。
+              unknown_error: 無法與檔案儲存提供者驗證。請確認連線運作正常。
     models:
       file_link: 檔案
       storages/storage: 儲存空間
@@ -95,12 +96,6 @@ zh-TW:
       manual: 手動管理現有資料夾
     remove_project:
       deletion_failure_flash: 從儲存裝置移除專案失敗. %{error}
-      dialog:
-        automatically_managed_appendix: 此外，在這種情況下，此儲存空間有一個自動管理的專案資料夾，此資料夾及其檔案將永遠刪除。
-        confirmation_text: 請確認您瞭解並希望從本專案中移除此檔案儲存空間
-        heading_text: 從 %{storage} 移除專案
-        text: 此動作是不可逆轉的，並會移除此專案的工作套件到該儲存的檔案和資料夾的所有連結。
-        title: 從儲存庫中移除專案
       label: 移除專案
   services:
     attributes:
@@ -109,18 +104,25 @@ zh-TW:
         create_folder: '託管的專案資料夾建立：'
         ensure_root_folder_permissions: '設定基本資料夾權限：'
         hide_inactive_folders: '隱藏不活動的資料夾步驟：'
-        remote_folders: '讀取群組資料夾的內容：'
+        remote_folders: '閱讀團隊資料夾的內容：'
         remove_user_from_group: '從群組移除使用者：'
         rename_project_folder: '重新命名託管的專案資料夾：'
       one_drive_sync_service:
         create_folder: '託管的專案資料夾建立：'
         ensure_root_folder_permissions: '設定基本資料夾權限：'
         hide_inactive_folders: '隱藏不活動的資料夾步驟：'
-        remote_folders: '讀取群組資料夾的內容：'
+        remote_folders: '讀取磁碟機根資料夾的內容：'
         rename_project_folder: '重新命名託管的專案資料夾：'
+      sharepoint_sync_service:
+        create_folder: '管理專案資料夾建立：'
+        ensure_root_folder_permissions: '設定基本資料夾權限：'
+        hide_inactive_folders: '隱藏不活動的資料夾步驟：'
+        remote_folders: '讀取磁碟機根資料夾的內容：'
+        rename_project_folder: '重新命名管理的專案資料夾：'
     errors:
       messages:
         error: 發生意外錯誤。請檢查 OpenProject 記錄以獲得更多資訊，或聯絡管理員
+        forbidden: OpenProject 無法存取所要求的資源。請檢查您在儲存服務提供者上的權限設定。
         unauthorized: OpenProject 無法驗證儲存服務提供商。請確認您有存取權。
       models:
         copy_project_folders_service:
@@ -138,7 +140,7 @@ zh-TW:
               conflict: 資料夾 %{folder_name} 已存在於 %{parent_location}上。
               not_found: "%{parent_location} 沒有找到。"
             ensure_root_folder_permissions:
-              not_found: "%{group_folder} 未找到。請檢查您的 Nextcloud 群組資料夾設定。"
+              not_found: "%{group_folder} 未找到。請檢查您的 Nextcloud Team Folder 設定。"
               permission_not_set: 無法在 %{group_folder} 上設定權限。
             hide_inactive_folders:
               permission_not_set: 無法在 %{path} 上設定權限。
@@ -158,6 +160,7 @@ zh-TW:
           group_does_not_exist: "%{group} 不存在。請檢查您的 Nextcloud 實例配置。"
           insufficient_privileges: OpenProject 沒有足夠的權限將 %{user} 加入 %{group}。請檢查 Nextcloud 中的群組設定。
           not_allowed: Nextcloud 封鎖該請求。
+          not_found: OpenProject 無法在 Nextcloud 儲存提供者中找到該檔案。請確認該檔案是否已被刪除。
           unauthorized: OpenProject 無法與 Nextcloud 同步。請檢查您的儲存空間和 Nextcloud 設定。
           user_does_not_exist: "%{user} 在 Nextcloud 中不存在。"
         one_drive_sync_service:
@@ -170,21 +173,37 @@ zh-TW:
             remote_folders:
               request_error: OpenProject 無法存取您的磁碟機 %{drive_id}。請檢查您的儲存設定是否正確。
             rename_project_folder:
-              conflict: OpenProject 無法將 %{current_path} 資料夾重新命名為 %{project_folder_name} ，因為已存在相同名稱的資料夾
+              conflict: OpenProject 無法重新命名資料夾 %{current_path} 至 %{project_folder_name} ，因為已存在相同名稱的資料夾。
               forbidden: OpenProject 無法存取 %{current_path} 以便重新命名。
               not_found: "%{current_path} 沒有找到。"
             set_folders_permissions:
               permission_not_set: 無法在 %{path} 上設定權限。
-          error: 發生意外錯誤。請確保 OneDrive/SharePoint 可以存取，並檢查 OpenProject Worker 日誌以取得更多資訊
+          error: 發生意外錯誤。請確保 OneDrive 可以存取，並檢查 OpenProject Worker 日誌以取得更多資訊。
           not_allowed: OpenProject 不允許存取您的 OneDrive 磁碟機。請檢查 Azure 應用程式上設定的權限。
+          unauthorized: OpenProject 無法與 OneDrive 同步。請檢查您的儲存空間和 Azure 應用程式設定。
+          user_does_not_exist: "%{user} 在 Nextcloud 中不存在。"
+        sharepoint_sync_service:
+          attributes:
+            create_folder:
+              conflict: '%{folder_name} 已存在於 %{parent_location} 上。'
+              not_found: "%{parent_location} 沒有找到。"
+            hide_inactive_folders:
+              permission_not_set: 無法在 %{path} 上設定權限。
+            rename_project_folder:
+              conflict: OpenProject 無法將資料夾 %{current_path} 重新命名為 %{project_folder_name} ，因為已存在相同名稱的資料夾
+              forbidden: OpenProject 沒有存取 %{current_path} 的權限，因此無法重新命名它。
+              not_found: "%{current_path} 沒有找到。"
+            set_folders_permissions:
+              permission_not_set: 無法在 %{path}上設定權限。
+          error: 發生意外錯誤。請確保 OneDrive/SharePoint 可以存取，並檢查 OpenProject Worker 日誌以取得更多資訊
+          not_allowed: OpenProject 不允許存取您的 OneDrive 磁碟。請檢查 Azure 應用程式上設定的權限。
+          not_found: OpenProject 無法存取您的資料庫 %{drive_name}。請檢查您的 Sharepoint 網站文件庫。
           unauthorized: OpenProject 無法與 OneDrive 同步。請檢查您的儲存空間和 Azure 應用程式設定。
           user_does_not_exist: "%{user} 在 Nextcloud 中不存在。"
         upload_link_service:
           not_found: 在 %{storage_name} 上找不到目標資料夾 %{folder}。
   storages:
     buttons:
-      complete_without_setup: 排除它完成
-      done_complete_setup: 完成。完成設置
       done_continue: 完成，繼續
       open_storage: 開啟檔案儲存
       replace_oauth_application: 替換 OpenProject OAuth
@@ -202,18 +221,16 @@ zh-TW:
     confirm_replace_oauth_application: 此操作將重設目前的 OAuth 憑證。 確認後，您必須在儲存空間提供商重新輸入憑證，並且所有遠端使用者都必須再次針對 OpenProject 進行授權。 您確定要繼續嗎？
     confirm_replace_oauth_client: 此操作將重設目前的 OAuth 憑證。 確認後，您必須輸入儲存提供者的新憑證，並且所有使用者都必須再次針對 %{provider_type} 進行授權。 您確定要繼續嗎？
     delete_warning:
-      input_delete_confirmation: 輸入檔案儲存名稱 %{file_storage} 以確認刪除。
-      irreversible_notice: 刪除這個儲存空間是不可逆轉的動作
-      project_storage: '您確定要從此項目中刪除 %{file_storage} 嗎？ 若要確認此操作，請在下面的欄位中輸入儲存名稱，這將：'
-      project_storage_delete_result_1: 移除此專案中所有工作套件與該儲存空間檔案及資料夾的連結。
-      project_storage_delete_result_2: 如果此儲存空間具有自動管理的專案資料夾，則該資料夾及其檔案將永久刪除。
-      storage: '您確定要從此項目中刪除 %{file_storage} 嗎？ 若要確認此操作，請在下面的欄位中輸入儲存名稱，這將：'
-      storage_delete_result_1: 刪除使用此儲存的所有項目的所有儲存設定。
-      storage_delete_result_2: 移除所有專案中工作套件與該儲存空間檔案及資料夾的所有連結。
-      storage_delete_result_3: 如果此儲存空間具有自動管理的專案資料夾，則該資料夾及其檔案將永久刪除。
+      project_storage: 您確定要從此專案中移除 %{file_storage}？
+      project_storage_delete_result_1: 所有相應檔案和資料夾的連結將被移除
+      project_storage_delete_result_2: 自動管理的專案資料夾及其中的所有檔案都會刪除
+      storage: 您確定要刪除 %{file_storage} 作為外部檔案儲存空間嗎？
+      storage_delete_result_1: 儲存空間將從目前使用的所有專案中移除
+      storage_delete_result_2: 所有相應檔案和資料夾的連結將被移除
+      storage_delete_result_3: 自動管理的專案資料夾及其中的所有檔案都會刪除
     dependencies:
       nextcloud:
-        group_folders_app: 群組資料夾
+        group_folders_app: 團隊資料夾
         integration_app: 整合 OpenProject
     enabled_in_projects:
       setup_incomplete_description: 此儲存的設定不完整。請先完成設定，再於多個專案中啟用。
@@ -221,25 +238,32 @@ zh-TW:
     error_invalid_provider_type: 請選擇有效的儲存空間提供商。
     file_storage_view:
       access_management:
-        automatic_management: 自動管理的專案文件夾
-        automatic_management_description: 讓 OpenProject 自動為每個專案建立資料夾並管理其使用者存取權限。建議這樣做，因為它可以確保每個團隊成員始終擁有正確的存取權限。
-        description: 選擇使用者存取和資料夾建立的管理類型。 我們建議使用自動管理存取以獲得更有組織的結構並保證對所有相關使用者的存取。
-        manual_management: 手動管理的存取和資料夾
-        manual_management_description: 您自己手動建立和管理每個專案的資料夾。 您需要手動確保相關使用者俱有存取權限。
+        automatic_management: 啟用自動管理存取和資料夾
+        automatic_management_description: 每個專案在新增儲存空間時，都能決定他們是要使用自動管理方式，或是手動方式來管理資料夾和存取。
+        description: 當檔案儲存被加入專案時，OpenProject 可以自動建立並管理專案資料夾。這可以產生更有組織的資料夾結構和直接的存取管理，保證所有相關使用者都能存取。
+        manual_management: 只允許手動管理存取權限和資料夾
+        manual_management_description: 使用此儲存空間的專案無法選擇自動管理方式。資料夾和存取必須手動管理。
         setup_incomplete: 選擇使用者存取和資料夾建立的管理類型。
-        subtitle: 存取管理
+        subtitle: 資料夾和存取管理
       access_management_section: 存取和專案資料夾
       automatically_managed_folders: 自動管理文件夾
       general_information: 基本資訊
       oauth_configuration: OAuth 設定
+      one_drive:
+        access_management:
+          automatic_management: 啟用自動管理存取和資料夾
+          automatic_management_description: 使用此檔案儲存的每個專案都必須使用自動管理的方式來管理資料夾和存取。他們無法手動執行。
+          manual_management: 只允許手動管理存取權限和資料夾
+          manual_management_description: 使用此儲存空間的專案無法選擇自動管理方式。資料夾和存取必須手動管理。
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject 開放授權 (OAuth) 
       project_folders: 專案資料夾
       redirect_uri: 重新導向 URI
+      sharepoint_oauth: Azure OAuth
       storage_audience_blank: 尚未設定受眾。
       storage_audience_description: 正在為『%{audience}』交換存取令牌(Token)。
       storage_audience_idp: 不論受眾為何，將使用登入時由身份提供者發出的存取令牌(Token)。
-      storage_oauth: NextCloud 授權 (OAuth) 
+      storage_oauth: 儲存服務器 OAuth
       storage_provider: 儲存空間提供商
       token_exchange: 令牌(Token)交換
     health:
@@ -252,12 +276,12 @@ zh-TW:
         ampf_configuration:
           client_folder_creation: 自動新增資料夾
           client_folder_removal: 自動刪除資料夾
-          drive_contents: 硬碟有預期內容
-          files_request: 正在擷取群組資料夾檔案
-          group_folder_app: '依賴：群組資料夾'
-          group_folder_contents: 群組資料夾包含預期的內容
-          group_folder_presence: 群組目錄已存在
+          drive_contents: 磁碟內容
+          files_request: 擷取團隊資料夾檔案
           header: 自動管理的專案資料夾
+          team_folder_app: '依賴性：團隊文件夾'
+          team_folder_contents: 團隊資料夾內容
+          team_folder_presence: 團隊資料夾存在
           userless_access: 服務器端要求認證
         authentication:
           existing_token: 用戶令牌(Token)
@@ -278,6 +302,7 @@ zh-TW:
           drive_id_exists: 硬碟已存在
           drive_id_format: 硬碟ID格式
           header: 配置
+          host: 主機網址
           host_url_accessible: 主機URL可存取
           storage_configured: 設定完成
           tenant_id: 租戶ID
@@ -291,12 +316,12 @@ zh-TW:
         client_secret_invalid: 設定的 OAuth 2 用戶端密鑰無效。請檢查設定。
         nc_dependency_missing: '檔案儲存中缺少所需的相依性。請新增下列相依性： %{dependency}。'
         nc_dependency_version_mismatch: '%{dependency} 應用程式版本不受支援。請更新您的 Nextcloud 伺服器。'
-        nc_group_folder_not_found: 無法找到群組資料夾。
         nc_host_not_found: 在設定的主機網址未找到 Nextcloud 伺服器。請檢查設定。
         nc_oauth_request_not_found: 無法找到取得目前連線使用者的端點。請檢查伺服器日誌以取得更多資訊。
         nc_oauth_request_unauthorized: 當前使用者未獲授權存取遠端檔案儲存空間。請檢查伺服器日誌以取得進一步資訊。
         nc_oauth_token_missing: OpenProject 無法測試與 Nextcloud 的用戶級連線，因為沒有當前用戶的令牌(Token)。
-        nc_unexpected_content: 在管理的群組資料夾中發現非預期內容。
+        nc_team_folder_not_found: 找不到團隊資料夾。
+        nc_unexpected_content: 在管理的團隊資料夾中發現意外內容。
         nc_userless_access_denied: 設定的應用程式密碼無效。
         not_configured: 連線無法驗證。請先完成設定。
         od_client_cant_delete_folder: 用戶刪除資料夾失敗，請檢查儲存空間的文件設定。
@@ -323,9 +348,10 @@ zh-TW:
         sp_client_write_permission_missing: 客戶在 SharePoint 中似乎缺少寫入權限。請檢查您的儲存空間設定文件。
         sp_existing_test_folder: 用於測試的資料夾 %{folder_name} 已存在於 SharePoint 中。請將其刪除後再試一次。
         sp_oauth_request_error: 綁定至使用者的 SharePoint 請求失敗。請檢查伺服器日誌以取得更多資訊。
+        sp_oauth_request_unauthorized: 目前的使用者未獲授權存取遠端檔案儲存空間。請檢查伺服器日誌以取得進一步資訊。
         sp_oauth_token_missing: 由於使用者尚未連結其 SharePoint 帳號，OpenProject 無法測試使用者層級的與 SharePoint 之間的通訊。
         sp_tenant_id_missing: 已設定的 SharePoint 目錄（租用戶）Id 遺失。請檢查設定。
-        sp_unexpected_content: 在 SharePoint 磁碟機中發現非預期的內容。
+        sp_unexpected_content: 在 SharePoint 文件庫中發現意外內容。
         unknown_error: 連線無法驗證。發生未知錯誤。請檢查伺服器日誌以瞭解進一步資訊。
       label_error: 錯誤
       label_failed: 損壞
@@ -470,7 +496,7 @@ zh-TW:
         title: 我們正在設定您在專案資料夾上的權限。
     page_titles:
       file_storages:
-        delete: 刪除儲存區
+        delete: 刪除檔案儲存空間？
         subtitle: 新增外部檔案存儲空間，以便上傳、連結和管理工作套件中的文件。
       managed_project_folders:
         subtitle: |-
@@ -479,13 +505,14 @@ zh-TW:
         subtitle_short: 讓 OpenProject 自動為每個專案建立資料夾。
         title: 自動管理的專案文件夾
       project_settings:
-        delete: 刪除儲存區
         edit: 編輯此專案中的儲存區
         members_connection_status: 成員連接狀態
         new: 增加一個儲存區至此專案
       project_storage_members:
         subtitle: 檢查所有專案成員存儲區 %{storage_name_link} 的連線狀態。
         title: 成員連線狀態
+      project_storages:
+        delete: 從專案中移除檔案儲存空間？
     permission_header_explanation: '外部存儲器上的文件權限僅適用於自動管理的項目文件夾內的文件夾和文件。請注意，並非所有存儲提供商都支持所有文件權限。更多信息請查看<a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>文件存儲權限</a>文檔。'
     provider_types:
       label: 提供商類型
@@ -500,6 +527,7 @@ zh-TW:
         name: OneDrive
         name_placeholder: 例如 OneDrive
       sharepoint:
+        drive_description: OpenProject 存取管理的文件庫
         label_oauth_client_id: Azure OAuth 應用程式 (用戶端) ID
         label_oauth_client_secret: Azure OAuth 客戶端密鑰值
         name: Sharepoint
@@ -520,7 +548,13 @@ zh-TW:
       heading: 目前沒有任何儲存空間
     successful_storage_connection: 儲存已成功連接！請記住在每個所需專案的專案索引標籤中啟動儲存，以便使用。
     upsell:
-      description: |-
-        將你的 OneDrive 整合為 OpenProject 的檔案儲存空間。
-        你可以上傳檔案，並將其直接連結至專案中的工作套件。
-      title: OneDrive 整合
+      one_drive:
+        description: |-
+          整合您的 OneDrive 磁碟機作為 OpenProject 的檔案儲存空間。上傳檔案並直接連結至專案中的
+          工作套件。
+        title: OneDrive 整合
+      sharepoint:
+        description: |-
+          將您的 SharePoint 網站整合為 OpenProject 的檔案儲存空間。上傳檔案並將其直接連結至專案中的
+          工作套件。
+        title: SharePoint 整合

@@ -2,9 +2,7 @@
 <%=
   render Primer::OpenProject::PageHeader.new do |header|
     header.with_title { t("team_planner.label_team_planner_plural") }
-    header.with_breadcrumbs(
-      [t("team_planner.label_team_planner_plural")]
-    )
+    header.with_breadcrumbs(nil)
   end
 %>
 

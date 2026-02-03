@@ -64,10 +64,10 @@ const globalCapability:ICapability = {
 };
 
 const projectCapabilityp63Update:ICapability = {
-  id: 'memberships/update/p6-3',
+  id: 'memberships/update/w6-3',
   _links: {
     self: {
-      href: '/api/v3/capabilities/memberships/update/p6-3',
+      href: '/api/v3/capabilities/memberships/update/w6-3',
     },
     action: {
       href: '/api/v3/actions/memberships/update',
@@ -84,10 +84,10 @@ const projectCapabilityp63Update:ICapability = {
 };
 
 const projectCapabilityp63Read:ICapability = {
-  id: 'memberships/read/p6-3',
+  id: 'memberships/read/w6-3',
   _links: {
     self: {
-      href: '/api/v3/capabilities/memberships/read/p6-3',
+      href: '/api/v3/capabilities/memberships/read/w6-3',
     },
     action: {
       href: '/api/v3/actions/memberships/read',
@@ -104,10 +104,10 @@ const projectCapabilityp63Read:ICapability = {
 };
 
 const projectCapabilityp53Update:ICapability = {
-  id: 'memberships/update/p5-3',
+  id: 'memberships/update/w5-3',
   _links: {
     self: {
-      href: '/api/v3/capabilities/memberships/update/p5-3',
+      href: '/api/v3/capabilities/memberships/update/w5-3',
     },
     action: {
       href: '/api/v3/actions/memberships/update',
@@ -159,7 +159,7 @@ describe('Capabilities service', () => {
       .forEach((req) => {
         expect(req.request.method).toBe('GET');
         const url = URI(req.request.url);
-        const filterParams = new URLSearchParams(url.query()).get('filters') as string;
+        const filterParams = new URLSearchParams(url.query()).get('filters')!;
         const context = JSON.parse(filterParams)[1].context.values[0] as string;
         let elements:ICapability[];
 
@@ -167,10 +167,10 @@ describe('Capabilities service', () => {
           case 'g':
             elements = [globalCapability];
             break;
-          case 'p6':
+          case 'w6':
             elements = [projectCapabilityp63Read, projectCapabilityp63Update];
             break;
-          case 'p5':
+          case 'w5':
             elements = [projectCapabilityp53Update];
             break;
           default:
@@ -236,7 +236,7 @@ describe('Capabilities service', () => {
         });
 
       params = {
-        filters: [['principal', '=', ['1']], ['context', '=', ['p6']]],
+        filters: [['principal', '=', ['1']], ['context', '=', ['w6']]],
       };
 
       service
@@ -246,7 +246,7 @@ describe('Capabilities service', () => {
         });
 
       params = {
-        filters: [['principal', '=', ['1']], ['context', '=', ['p5']]],
+        filters: [['principal', '=', ['1']], ['context', '=', ['w5']]],
       };
 
       service

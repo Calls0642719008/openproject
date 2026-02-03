@@ -337,12 +337,26 @@ RSpec.describe "API v3 memberships resource", content_type: :json do
           } }]
         end
 
-        it "returns empty members" do
-          expect(subject.status).to eq(200)
+        context "when user can see group" do
+          let(:current_user) { create(:user, global_permissions: %i[view_all_principals]) }
 
-          expect(subject.body)
-          .to be_json_eql([])
-          .at_path("_embedded/elements")
+          it "returns empty members" do
+            expect(subject.status).to eq(200)
+
+            expect(subject.body)
+              .to be_json_eql([])
+                    .at_path("_embedded/elements")
+          end
+        end
+
+        context "when user cannot see group" do
+          it "complains about the group id" do
+            expect(subject.status).to eq(400)
+
+            expect(subject.body)
+              .to be_json_eql("urn:openproject-org:api:v3:errors:InvalidQuery".to_json)
+              .at_path("errorIdentifier")
+          end
         end
       end
     end

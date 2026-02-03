@@ -30,7 +30,7 @@
 
 class ApplicationRecord < ActiveRecord::Base
   include ::OpenProject::Acts::Watchable
-  include ::OpenProject::Acts::Favorable
+  include ::OpenProject::Acts::Favoritable
 
   self.abstract_class = true
 
@@ -81,5 +81,31 @@ class ApplicationRecord < ActiveRecord::Base
     SQL
 
     ActiveRecord::Base.connection.select_value(union_query)
+  end
+
+  def self.human_model_name
+    model_name.human
+  end
+
+  def self.human_plural_model_name(count: 2)
+    model_name.human(count:)
+  end
+
+  # Returns all the attribute names as symbols.
+  # @return [Array<Symbol>]
+  def attribute_keys
+    attribute_names.map(&:to_sym)
+  end
+
+  # Returns the keys of the attributes that have been changed.
+  # @return [Array<Symbol>]
+  def changed_attribute_keys
+    changes.keys.map(&:to_sym)
+  end
+
+  # Returns the keys of the attributes that have been changed before the last save.
+  # @return [Array<Symbol>]
+  def changed_attribute_keys_before_last_save
+    previous_changes.keys.map(&:to_sym)
   end
 end

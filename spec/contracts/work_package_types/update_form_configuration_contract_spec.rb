@@ -37,75 +37,88 @@ module WorkPackageTypes
 
     subject(:contract) { described_class.new(model, user, options: {}) }
 
-    context "when the user isn't admin" do
-      let(:user) { create(:user) }
-
+    context "without enterprise features enabled" do
       it "the contract is invalid" do
         expect(contract.validate).to be_falsey
       end
 
       it "adds and error to the contract" do
         contract.validate
-        expect(contract.errors.details).to eq(base: [{ error: :error_unauthorized }])
+        expect(contract.errors.details).to eq(base: [{ action: "Edit Attribute Groups", error: :error_enterprise_only }])
       end
     end
 
-    describe "validations" do
-      context "when attribute_groups is present and valid" do
-        let(:valid_group) { ["foo", ["assignee", "responsible"]] }
+    context "with enterprise features enabled", with_ee: %i[edit_attribute_groups] do
+      context "when the user isn't admin" do
+        let(:user) { create(:user) }
 
-        it "is valid" do
-          model.attribute_groups = [valid_group]
+        it "the contract is invalid" do
+          expect(contract.validate).to be_falsey
+        end
 
-          expect(contract.validate).to be_truthy
+        it "adds and error to the contract" do
+          contract.validate
+          expect(contract.errors.details).to eq(base: [{ error: :error_unauthorized }])
         end
       end
 
-      context "when a group has no name" do
-        let(:invalid_group) { ["", ["assignee"]] }
+      describe "validations" do
+        context "when attribute_groups is present and valid" do
+          let(:valid_group) { ["foo", ["assignee", "responsible"]] }
 
-        it "is invalid and adds :group_without_name error" do
-          model.attribute_groups = [invalid_group]
+          it "is valid" do
+            model.attribute_groups = [valid_group]
 
-          expect(contract.validate).to be_falsey
-          expect(contract.errors.details[:attribute_groups]).to include(error: :group_without_name)
+            expect(contract.validate).to be_truthy
+          end
         end
-      end
 
-      context "when there are duplicate group names" do
-        let(:duplicate_group) { ["foo", ["assignee"]] }
+        context "when a group has no name" do
+          let(:invalid_group) { ["", ["assignee"]] }
 
-        it "is invalid and adds :duplicate_group error" do
-          model.attribute_groups = [duplicate_group, duplicate_group]
+          it "is invalid and adds :group_without_name error" do
+            model.attribute_groups = [invalid_group]
 
-          expect(contract.validate).to be_falsey
-          expect(contract.errors.details[:attribute_groups]).to include(error: :duplicate_group, group: "foo")
+            expect(contract.validate).to be_falsey
+            expect(contract.errors.details[:attribute_groups]).to include(error: :group_without_name)
+          end
         end
-      end
 
-      context "when an attribute group contains unknown attributes" do
-        let(:invalid_group) { ["foo", ["unknown_attribute"]] }
+        context "when there are duplicate group names" do
+          let(:duplicate_group) { ["foo", ["assignee"]] }
 
-        it "is invalid and adds an error for the unknown attribute" do
-          model.attribute_groups = [invalid_group]
+          it "is invalid and adds :duplicate_group error" do
+            model.attribute_groups = [duplicate_group, duplicate_group]
 
-          expect(contract.validate).to be_falsey
-          expect(contract.errors.details[:attribute_groups]).to include(
-            error: "Invalid work package attribute used: unknown_attribute"
-          )
+            expect(contract.validate).to be_falsey
+            expect(contract.errors.details[:attribute_groups]).to include(error: :duplicate_group, group: "foo")
+          end
         end
-      end
 
-      context "with invalid query group" do
-        let(:query) { Query.new(name: "Invalid Query", user:) }
-        let(:invalid_query_group) { ["query_group", [query]] }
+        context "when an attribute group contains unknown attributes" do
+          let(:invalid_group) { ["foo", ["unknown_attribute"]] }
 
-        it "is invalid and adds an error for the query group" do
-          model.attribute_groups = [invalid_query_group]
+          it "is invalid and adds an error for the unknown attribute" do
+            model.attribute_groups = [invalid_group]
 
-          expect(contract.validate).to be_falsey
-          expect(contract.errors.details[:attribute_groups])
-            .to include(hash_including(error: :query_invalid, group: "query_group"))
+            expect(contract.validate).to be_falsey
+            expect(contract.errors.details[:attribute_groups]).to include(
+              error: "Invalid work package attribute used: unknown_attribute"
+            )
+          end
+        end
+
+        context "with invalid query group" do
+          let(:query) { Query.new(name: "Invalid Query", user:) }
+          let(:invalid_query_group) { ["query_group", [query]] }
+
+          it "is invalid and adds an error for the query group" do
+            model.attribute_groups = [invalid_query_group]
+
+            expect(contract.validate).to be_falsey
+            expect(contract.errors.details[:attribute_groups])
+              .to include(hash_including(error: :query_invalid, group: "query_group"))
+          end
         end
       end
     end

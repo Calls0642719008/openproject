@@ -38,7 +38,7 @@ module Projects::Scopes
       def allowed_to(user, permission)
         permissions = allowed_to_permissions(permission)
 
-        return none if user.locked?
+        return none if user.locked? || user.deleted?
         return none if permissions.empty?
 
         if user.admin? && permissions.all?(&:grant_to_admin?)

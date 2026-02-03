@@ -21,35 +21,35 @@
 #++
 id:
   attributes:
-    additions_count: "Number of additions"
-    deletions_count: "Number of deletions"
-    comments_count: "Comments count"
-    github_html_url: "Pull Request URL"
-    github_app_owner_avatar_url: "Owner avatar URL"
-    review_comments_count: "Review comments count"
-    github: "GitHub identifer"
-    github_avatar_url: "Avatar URL"
-    github_updated_at: "Updated at"
-    github_login: "GitHub login"
+    additions_count: "Jumlah penambahan"
+    deletions_count: "Jumlah penghapusan"
+    comments_count: "Jumlah komentar"
+    github_html_url: "URL permintaan pull"
+    github_app_owner_avatar_url: "URL avatar pemilik"
+    review_comments_count: "Jumlah komentar tinjauan"
+    github: "Tanda pengenal GitHub"
+    github_avatar_url: "URL avatar"
+    github_updated_at: "Diperbarui pada"
+    github_login: "Masuk melalui GitHub"
     host: "Host"
-    labels: "Labels"
+    labels: "Label"
     repository: "Repositori"
-    changed_files_count: "Changed files"
-  button_add_deploy_target: Add deploy target
-  label_deploy_target: Deploy target
-  label_deploy_target_new: New deploy target
-  label_deploy_target_plural: Deploy targets
-  label_github_integration: GitHub Integration
-  notice_deploy_target_created: Deploy target created
-  notice_deploy_target_destroyed: Deploy target deleted
+    changed_files_count: "File yang diubah"
+  button_add_deploy_target: Tambahkan target penyebaran
+  label_deploy_target: Sebarkan target
+  label_deploy_target_new: Target penyebaran baru
+  label_deploy_target_plural: Sebarkan target
+  label_github_integration: Integrasi GitHub
+  notice_deploy_target_created: Sebaran target telah dibuat
+  notice_deploy_target_destroyed: Sebaran target telah dihapus
   plugin_openproject_github_integration:
-    name: "OpenProject GitHub Integration"
-    description: "Integrates OpenProject and GitHub for a better workflow"
+    name: "Integrasi OpenProject dengan GitHub"
+    description: "Mengintegrasikan OpenProject dan GitHub untuk alur kerja yang lebih baik"
   project_module_github: "GitHub"
   permission_show_github_content: "Tampilkan konten GitHub"
-  permission_introspection: Read running OpenProject core version and build SHA
+  permission_introspection: Baca versi inti OpenProject yang sedang berjalan dan bangun SHA
   text_deploy_target_type_info: >
-    So far we only support OpenProject itself.
+    Sampai saat ini, kami hanya mendukung OpenProject saja.
   text_deploy_target_api_key_info: >
-    An OpenProject [API key](docs_url) belonging to a user who has the global introspection permission.
-  text_pull_request_deployed_to: "%{pr_link} deployed to %{deploy_target_link}"
+    Kunci API OpenProject [API key](docs_url) yang dimiliki oleh pengguna yang memiliki izin introspeksi global.
+  text_pull_request_deployed_to: "%{pr_link} disebarkan ke %{deploy_target_link}"

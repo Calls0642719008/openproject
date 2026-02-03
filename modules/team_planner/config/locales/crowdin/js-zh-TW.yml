@@ -18,7 +18,7 @@ zh-TW:
       work_week: '工作週'
       today: '今日'
       drag_here_to_remove: '拖曳此處可刪除執行者以及開始和結束日期。'
-      cannot_drag_here: '由於權限或編輯限制，無法刪除工作套件。'
+      cannot_drag_here: '由於權限或編輯限制，無法移動工作套件。'
       cannot_drag_to_non_working_day: '此工作套件無法在非工作日開始/完成。'
       quick_add:
         empty_state: '您可利用搜尋欄位找到工作套件，然後拖曳到規劃器中，即可指派給指定人員並設定起訖日期。'

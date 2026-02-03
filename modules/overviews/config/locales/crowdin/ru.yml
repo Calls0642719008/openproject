@@ -1,4 +1,5 @@
 ru:
   overviews:
-    label: 'Обзор'
-  permission_manage_overview: 'Управление страницей обзора'
+    label_home: "%{workspace_type} главная"
+    label_dashboard: "Панель"
+    label_overview: "Обзор"

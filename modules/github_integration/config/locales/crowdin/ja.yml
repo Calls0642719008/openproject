@@ -21,7 +21,7 @@
 #++
 ja:
   attributes:
-    additions_count: "追加の数"
+    additions_count: "追加数"
     deletions_count: "削除数"
     comments_count: "コメント数"
     github_html_url: "プルリクエストURL"

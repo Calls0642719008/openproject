@@ -40,6 +40,8 @@ de:
               task_version_must_be_the_same_as_story_version: "muss der Version der übergeordneten Story entsprechen."
         sprint:
           cannot_end_before_it_starts: "Sprint kann nicht enden, bevor er begonnen hat."
+  attributes:
+    task_type: "Aufgaben-Typ"
   backlogs:
     add_new_story: "Neue Aufgabe"
     any: "beliebig"
@@ -54,7 +56,7 @@ de:
     generating_chart: "Generiere Graph..."
     hours: "Stunden"
     impediment: "Hindernis"
-    label_versions_default_fold_state: "Zeige Versionen eingeklappt"
+    label_versions_default_fold_state: "Versionen eingeklappt anzeigen"
     caption_versions_default_fold_state: "Versionen werden beim Anzeigen des Backlogs standardmäßig nicht aufgeklappt. Sie müssen manuell geöffnet werden."
     work_package_is_closed: "Arbeitspaket ist abgeschlossen, wenn"
     label_is_done_status: "Status %{status_name} bedeutet abgeschlossen"
@@ -100,7 +102,10 @@ de:
   backlogs_empty_title: "Für Backlogs sind keine Versionen definiert"
   backlogs_empty_action_text: "Um mit Backlogs zu beginnen, erstellen Sie eine neue Version und fügen diese einer Backlogs-Spalte hinzu."
   button_edit_wiki: "Wiki Seite bearbeiten"
-  error_backlogs_task_cannot_be_story: "Die Einstellungen sind ungültig. Der gewählte Aufgabentyp kann nicht auch ein Story-Typ sein."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "kann nicht auch ein Story-Typ sein"
   error_intro_plural: "Die folgenden Fehler sind aufgetreten:"
   error_intro_singular: "Der folgende Fehler ist aufgetreten:"
   error_outro: "Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken."
@@ -124,6 +129,10 @@ de:
   label_points_burn_up: "Hoch"
   label_product_backlog: "Produkt Backlog"
   label_select_all: "Alle auswählen"
+  label_select_type: "Typ auswählen"
+  label_select_types: "Typen auswählen"
+  label_selected_type: "Ausgewählter Typ"
+  label_selected_types: "Ausgewähle Typen"
   label_sprint_backlog: "Sprint Backlog"
   label_sprint_cards: "Karten exportieren"
   label_sprint_impediments: "Sprint Hindernisse"
@@ -160,3 +169,7 @@ de:
   version_settings_display_option_left: "links"
   version_settings_display_option_none: "keine"
   version_settings_display_option_right: "rechts"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Typen, die wie Backlog Stories behandelt werden (z.B. Feature, User Story). Muss sich vom Aufgabentyp unterscheiden.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Typ, der für Story-Aufgaben verwendet wird. Muss sich von den Story-Typen unterscheiden.

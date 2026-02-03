@@ -32,7 +32,7 @@ get:
         JSON specifying filter conditions. Accepts the same format as returned by
         the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint. Currently supported filters
         are:
-        
+
         - page: Filter grid by work package
       in: query
       required: false
@@ -67,7 +67,7 @@ post:
     - Grids
   description: |-
     Creates a new grid applying the attributes provided in the body. The constraints applied to the grid depend on the
-    page the grid is placed in which is why the create form end point should be used to be guided when wanting to
+    page the grid is placed in which is why the create form endpoint should be used to be guided when wanting to
     create a grid.
   requestBody:
     content:
@@ -75,7 +75,7 @@ post:
         schema:
           $ref: '../components/schemas/grid_write_model.yml'
         examples:
-          'Simple grid creation': 
+          'Simple grid creation':
             $ref: '../components/examples/grid-simple-patch-model.yml'
   responses:
     '201':

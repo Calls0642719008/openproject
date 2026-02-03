@@ -67,7 +67,7 @@ See COPYRIGHT and LICENSE files for more details.
         end
         flex.with_row do
           render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert)) do
-            I18n.t(:warning, scope: i18n_scope)
+            I18n.t("my.access_token.created_dialog.one_time_warning")
           end
         end
       end

@@ -43,13 +43,6 @@ ar:
           name: PM2 Magenta
         item_3:
           name: PM2 Green Yellow
-      document_categories:
-        item_0:
-          name: التوثيق
-        item_1:
-          name: مواصفات
-        item_2:
-          name: اخرى
       project_query_roles:
         item_0:
           name: Project query viewer

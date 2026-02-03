@@ -56,7 +56,7 @@ export class BoardConfigurationModalComponent extends OpModalComponent implement
   }
 
   ngOnInit() {
-    this.$element = this.elementRef.nativeElement as HTMLElement;
+    this.element = this.elementRef.nativeElement as HTMLElement;
 
     this.tabPortalHost = new TabPortalOutlet(
       this.boardConfigurationService.tabs,
@@ -112,6 +112,6 @@ export class BoardConfigurationModalComponent extends OpModalComponent implement
   }
 
   protected get afterFocusOn():HTMLElement {
-    return this.$element;
+    return this.element;
   }
 }

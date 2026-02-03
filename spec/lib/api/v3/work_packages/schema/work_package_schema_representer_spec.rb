@@ -1039,9 +1039,6 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
     end
 
     describe "responsible and assignee" do
-      let(:base_href) { "/api/v3/projects/#{work_package.project.id}" }
-      let(:wp_base_href) { "/api/v3/work_packages/#{work_package.id}" }
-
       describe "assignee" do
         it_behaves_like "has basic schema properties" do
           let(:path) { "assignee" }
@@ -1054,8 +1051,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
 
         it_behaves_like "links to allowed values via collection link" do
           let(:path) { "assignee" }
-          let(:base_href) { "/api/v3/work_packages/#{work_package.id}" }
-          let(:href) { "#{base_href}/available_assignees" }
+          let(:href) { api_v3_paths.available_assignees_in_work_package(work_package.id) }
         end
 
         context "when not embedded" do
@@ -1092,7 +1088,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
         context "when the work package is persisted" do
           it_behaves_like "links to allowed values via collection link" do
             let(:path) { "responsible" }
-            let(:href) { "#{wp_base_href}/available_assignees" }
+            let(:href) { api_v3_paths.available_assignees_in_work_package(work_package.id) }
           end
         end
 
@@ -1101,7 +1097,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
 
           it_behaves_like "links to allowed values via collection link" do
             let(:path) { "responsible" }
-            let(:href) { "#{base_href}/available_assignees" }
+            let(:href) { api_v3_paths.available_assignees_in_workspace(work_package.project_id) }
           end
         end
 

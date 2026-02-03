@@ -21,7 +21,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 })
 export class InAppNotificationRelativeTimeComponent implements OnInit {
   @Input() notification:INotification;
-  @Input() hasActorByLine:boolean = true;
+  @Input() hasActorByLine = true;
 
   // Fixed notification time
   fixedTime:string;

@@ -71,7 +71,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   @Input() public startDate:string|null;
   @Input() public dueDate:string|null;
 
-  @Input() public isSchedulable:boolean = true;
+  @Input() public isSchedulable = true;
   @Input() public dateMode:DateMode;
   @Input() public minDate:string|null;
 
@@ -79,7 +79,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   @Input() dueDateFieldId:string;
   @Input() durationFieldId:string;
 
-  @Input() isMilestone:boolean = false;
+  @Input() isMilestone = false;
 
   @ViewChild('flatpickrTarget') flatpickrTarget:ElementRef;
 
@@ -150,7 +150,11 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   }
 
   private computeMinimalSchedulingDate() {
-    this.minimalSchedulingDate = this.startDateValue && this.timezoneService.utcDateToLocalDate(this.startDateValue);
+    if (this.dateMode === 'single') {
+      this.minimalSchedulingDate = null;
+    } else {
+      this.minimalSchedulingDate = this.startDateValue && this.timezoneService.utcDateToLocalDate(this.startDateValue);
+    }
   }
 
   private findDateToJumpTo(dates:Date[]):Date|null {

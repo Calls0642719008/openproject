@@ -84,11 +84,10 @@ RSpec.describe "Meetings CRUD",
     end
 
     meetings_page.click_create
+    expect_and_dismiss_flash(type: :success, message: I18n.t(:notice_successful_create))
   end
 
   it "can create a meeting and add agenda items" do
-    expect_and_dismiss_flash(type: :success, message: "Successful creation")
-
     # Can add and edit a single item
     show_page.add_agenda_item do
       fill_in "Title", with: "My agenda item"
@@ -101,7 +100,6 @@ RSpec.describe "Meetings CRUD",
     # Can update
     show_page.edit_agenda_item(item) do
       fill_in "Title", with: "Updated title"
-      click_on "Save"
     end
 
     show_page.expect_no_agenda_item title: "My agenda item"
@@ -138,7 +136,7 @@ RSpec.describe "Meetings CRUD",
     show_page.assert_agenda_order! "First", "Updated title", "Second"
 
     # Can edit and cancel with escape
-    show_page.edit_agenda_item(first) do
+    show_page.edit_agenda_item(first, save: false) do
       find_field("Title").send_keys :escape
     end
     show_page.expect_item_edit_form(first, visible: false)
@@ -159,46 +157,49 @@ RSpec.describe "Meetings CRUD",
     expect(wp_item).to be_present
 
     # Can edit and validate a work package item
-    show_page.edit_agenda_item(wp_item) do
+    show_page.edit_agenda_item(wp_item, save: false) do
       show_page.clear_item_edit_work_package_title
-      click_on "Save"
+      click_on "Save" # triggers an error
     end
 
     show_page.expect_item_edit_field_error(wp_item, "Work package can't be blank.")
     show_page.cancel_edit_form(wp_item)
 
-    # Keeping the editing state of an agenda item while modifying other items
-    show_page.edit_agenda_item(second) do
+    # Shows a confirmation dialog when trying to reorder while editing an agenda item
+    show_page.assert_agenda_order! "Updated title", "Second", "Important task"
+
+    show_page.edit_agenda_item(second, save: false) do
       fill_in "Title", with: "Second edited"
+      fill_in_rich_text "Notes", with: "Notes for the agenda item"
     end
 
-    show_page.select_action(item, I18n.t(:label_sort_lowest))
-    show_page.assert_agenda_order! "Important task", "Updated title"
-
-    show_page.add_agenda_item do
-      fill_in "Title", with: "My agenda item"
-      fill_in "Duration", with: "25"
+    dismiss_confirm do
+      show_page.select_action(wp_item, I18n.t(:label_sort_highest))
     end
 
-    show_page.expect_agenda_item title: "My agenda item"
-    my_item = MeetingAgendaItem.find_by!(title: "My agenda item")
+    show_page.assert_agenda_order! "Updated title", "Important task"
+    show_page.expect_item_edit_form(second, visible: true)
 
-    show_page.edit_agenda_item(my_item) do
-      fill_in "Title", with: "My agenda item edited"
-      click_on "Save"
+    # Accepting the confirmation reorders items and closes the edit state
+    accept_confirm do
+      show_page.select_action(wp_item, I18n.t(:label_sort_highest))
     end
 
-    show_page.remove_agenda_item my_item
+    show_page.assert_agenda_order! "Important task", "Updated title", "Second"
+    show_page.expect_item_edit_form(second, visible: false)
 
-    show_page.expect_item_edit_form(second)
-    show_page.expect_item_edit_title(second, "Second edited")
-    show_page.cancel_edit_form(second)
+    # After accepting the confirmation dialog, subsequent reordering should not show the dialog again
+    expect do
+      accept_confirm do
+        show_page.select_action(second, I18n.t(:label_sort_highest))
+      end
+    end.to raise_error(Capybara::ModalNotFound)
 
     # user can see actions
     expect(page).to have_css("#meeting-agenda-items-new-button-component")
     expect(page).to have_test_selector("op-meeting-agenda-actions", count: 3)
 
-    # other_use can view and copy links, but not edit
+    # other_use can view and copy links, but not edit or move
     login_as other_user
     show_page.visit!
 
@@ -206,7 +207,7 @@ RSpec.describe "Meetings CRUD",
     expect(page).to have_test_selector("op-meeting-agenda-actions", count: 3)
 
     show_page.open_menu(second) do
-      expect(page).to have_css(".ActionListItem-label", text: "Copy to clipboard")
+      expect(page).to have_css(".ActionListItem-label", text: "Copy link to clipboard")
       expect(page).to have_css(".ActionListItem-label", count: 1)
     end
   end
@@ -264,8 +265,6 @@ RSpec.describe "Meetings CRUD",
   end
 
   it "shows an error toast trying to update an outdated item" do
-    expect_flash(type: :success, message: "Successful creation")
-
     # Can add and edit a single item
     show_page.add_agenda_item do
       fill_in "Title", with: "My agenda item"
@@ -275,20 +274,18 @@ RSpec.describe "Meetings CRUD",
     show_page.expect_agenda_item title: "My agenda item"
     item = MeetingAgendaItem.find_by!(title: "My agenda item")
 
-    show_page.edit_agenda_item(item) do
+    show_page.edit_agenda_item(item, save: false) do
       # Side effect: update the item
       item.update!(title: "Updated title")
 
       fill_in "Title", with: "My agenda item edited"
-      click_on "Save"
+      click_on "Save" # triggers an error
     end
 
     expect(page).to have_css(".flash", text: I18n.t("activerecord.errors.messages.error_conflict"))
   end
 
-  it "can copy the meeting via the dialog form" do
-    expect_flash(type: :success, message: "Successful creation")
-
+  it "can duplicate the meeting via the dialog form" do
     show_page.add_agenda_item do
       fill_in "Title", with: "My agenda item"
       fill_in "Duration", with: "25"
@@ -305,16 +302,15 @@ RSpec.describe "Meetings CRUD",
 
     wait_for_network_idle
 
-    # check for email notifications for creator & added participant
+    # check that no emails are sent out in draft mode
     perform_enqueued_jobs
-    expect(ActionMailer::Base.deliveries.size).to eq 2
-    ActionMailer::Base.deliveries.clear
+    expect(ActionMailer::Base.deliveries.size).to eq 0
 
     retry_block do
       click_on("op-meetings-header-action-trigger")
-      click_on "Copy"
+      click_on "Duplicate"
       # dynamically wait for the modal to be loaded
-      expect(page).to have_text("Copy meeting")
+      show_page.expect_modal("Duplicate meeting")
     end
 
     fill_in "Title", with: ""
@@ -324,6 +320,7 @@ RSpec.describe "Meetings CRUD",
     expect(page).to have_content "Title can't be blank."
     fill_in "Title", with: "Some title"
     click_on "Create meeting"
+    expect_and_dismiss_flash(type: :success, message: I18n.t(:notice_successful_create))
 
     new_meeting = Meeting.last
     copied_meeting_page = Pages::Meetings::Show.new(new_meeting)
@@ -332,7 +329,7 @@ RSpec.describe "Meetings CRUD",
     # check for copied agenda items
     copied_meeting_page.expect_agenda_item title: "My agenda item"
 
-    copied_meeting_page.start_meeting
+    new_meeting.update!(state: "in_progress")
 
     # check for copied participants with attended status reset
     copied_meeting_page.open_participant_form
@@ -341,9 +338,9 @@ RSpec.describe "Meetings CRUD",
       copied_meeting_page.expect_participant(other_user)
     end
 
-    # check for email notifications for both participants
+    # check that no emails are sent out as the copied meeting is in draft mode
     perform_enqueued_jobs
-    expect(ActionMailer::Base.deliveries.size).to eq 2
+    expect(ActionMailer::Base.deliveries.size).to eq 0
   end
 
   context "with a work package reference to another" do
@@ -374,8 +371,6 @@ RSpec.describe "Meetings CRUD",
 
     context "when starting with empty sections" do
       it "can add, edit and delete sections" do
-        expect_flash(type: :success, message: "Successful creation")
-
         # create the first section
         show_page.add_section do
           fill_in "Title", with: "First section"
@@ -449,6 +444,19 @@ RSpec.describe "Meetings CRUD",
 
         second_section = MeetingSection.find_by!(title: "Second section")
 
+        # try to add an item to the latest section
+        show_page.add_agenda_item(save: false) do
+          fill_in "Title", with: "First item"
+          fill_in "Duration", with: "25"
+        end
+
+        # a confirmation prevents losing unsaved edit state when reordering sections
+        dismiss_confirm do
+          show_page.select_section_action(second_section, "Move to top")
+        end
+
+        click_on "Cancel"
+
         # remove the second section
         show_page.remove_section second_section
 
@@ -489,7 +497,6 @@ RSpec.describe "Meetings CRUD",
 
         show_page.edit_agenda_item(item_in_second_section) do
           fill_in "Duration", with: "15"
-          click_on "Save"
         end
 
         # duration gets updated
@@ -505,6 +512,29 @@ RSpec.describe "Meetings CRUD",
         # no sections are left, and so the blankslate will be rendered
         show_page.expect_blankslate
       end
+    end
+
+    it "maintains section order when rendering" do
+      section1 = create(:meeting_section, meeting:, title: "Section A")
+      section2 = create(:meeting_section, meeting:, title: "Section B")
+      section3 = create(:meeting_section, meeting:, title: "Section C")
+
+      show_page.visit!
+
+      expect(show_page.section_headers)
+        .to eq(["Section A", "Section B", "Section C"])
+
+      show_page.select_section_action(section3, "Move up")
+
+      wait_for { [section1, section2, section3].map { |s| s.reload.position } }
+        .to eq([1, 3, 2])
+      wait_for { show_page.section_headers }
+        .to eq(["Section A", "Section C", "Section B"])
+
+      show_page.reload!
+
+      expect(show_page.section_headers)
+        .to eq(["Section A", "Section C", "Section B"])
     end
   end
 end

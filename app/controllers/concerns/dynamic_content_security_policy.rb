@@ -29,6 +29,12 @@
 #++
 
 module DynamicContentSecurityPolicy
+  extend ActiveSupport::Concern
+
+  included do
+    before_action :add_hocuspocus_host_to_csp
+  end
+
   ##
   # Dynamically append sources to CSP directives
   # This replaces the secure_headers named append functionality
@@ -46,5 +52,30 @@ module DynamicContentSecurityPolicy
       policy.send(directive, *new_values)
       request.content_security_policy = policy
     end
+  end
+
+  private
+
+  def add_hocuspocus_host_to_csp
+    hocuspocus_url = Setting.collaborative_editing_hocuspocus_url
+    if hocuspocus_url.present?
+      uri = begin
+        URI.parse(hocuspocus_url)
+      rescue URI::InvalidURIError
+        OpenProject.logger.info do
+          "Setting.collaborative_editing_hocuspocus_url is set to an invalid URI: #{hocuspocus_url}"
+        end
+        nil
+      end
+      if uri.present?
+        append_content_security_policy_directives(connect_src: ["#{uri.scheme}://#{host_with_port(uri)}"])
+      end
+    end
+  end
+
+  def host_with_port(uri)
+    # Include port if it's not the default port for the scheme (necessary for local dev support)
+    default_port = ["wss", "https"].include?(uri.scheme) ? 443 : 80
+    uri.port && uri.port != default_port ? "#{uri.host}:#{uri.port}" : uri.host
   end
 end

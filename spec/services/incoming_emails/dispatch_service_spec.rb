@@ -40,7 +40,7 @@ RSpec.describe IncomingEmails::DispatchService do
   before do
     allow(body).to receive_messages(decoded: "Test body".dup)
     allow(text_part).to receive_messages(body:, charset: "UTF-8")
-    allow(email).to receive_messages(text_part: text_part, from: ["test@example.com"])
+    allow(email).to receive_messages(text_part: text_part, header: {}, from: ["test@example.com"])
   end
 
   describe "#initialize" do
@@ -61,6 +61,7 @@ RSpec.describe IncomingEmails::DispatchService do
   describe ".handlers" do
     it "returns the default handlers" do
       expect(described_class.handlers).to include(
+        IncomingEmails::Handlers::MeetingResponse,
         IncomingEmails::Handlers::MessageReply,
         IncomingEmails::Handlers::WorkPackage
       )
@@ -114,7 +115,10 @@ RSpec.describe IncomingEmails::DispatchService do
 
   describe "#ignore_mail?" do
     it "returns false by default" do
-      allow(service).to receive_messages(mail_from_system?: false, ignored_by_header?: false, ignored_user?: false)
+      allow(service).to receive_messages(
+        mail_from_system?: false,
+        ignored_user?: false
+      )
 
       expect(service.send(:ignore_mail?)).to be_falsey
     end
@@ -153,7 +157,7 @@ RSpec.describe IncomingEmails::DispatchService do
       end
 
       it "returns true" do
-        expect(service.send(:ignored_by_header?)).to be_truthy
+        expect(service.send(:automated_email?)).to be_truthy
       end
     end
 
@@ -163,7 +167,7 @@ RSpec.describe IncomingEmails::DispatchService do
       end
 
       it "returns true" do
-        expect(service.send(:ignored_by_header?)).to be_truthy
+        expect(service.send(:automated_email?)).to be_truthy
       end
     end
 
@@ -173,7 +177,7 @@ RSpec.describe IncomingEmails::DispatchService do
       end
 
       it "returns false" do
-        expect(service.send(:ignored_by_header?)).to be_falsey
+        expect(service.send(:automated_email?)).to be_falsey
       end
     end
   end

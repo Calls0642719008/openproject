@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class StrategyContract < Dry::Validation::Contract
+      class StrategyContract < DryApplicationContract
         AUTH_METHODS = %i[noop basic_auth oauth_client_credentials oauth_user_token sso_user_token bearer_token].to_set.freeze
 
         params do

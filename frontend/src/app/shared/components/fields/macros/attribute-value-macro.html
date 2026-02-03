@@ -1,10 +1,12 @@
-<span *ngIf="error">
-  <i class="icon icon-error"></i>
-  <em [textContent]="error"></em>
-</span>
-<display-field *ngIf="!!resource"
-               [resource]="resource"
-               containerType="single-view"
-               [displayFieldOptions]="{ writable: false }"
-               [fieldName]="fieldName">
-</display-field>
+@if (error) {
+  <span>
+    <i class="icon icon-error"></i>
+    <em [textContent]="error"></em>
+  </span>
+}
+@if (!!resource) {
+  <display-field [resource]="resource"
+    containerType="single-view"
+    [displayFieldOptions]="{ writable: false }"
+    [fieldName]="fieldName" />
+}

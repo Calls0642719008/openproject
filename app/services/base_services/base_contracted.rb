@@ -56,7 +56,7 @@ module BaseServices
       in_context(model, send_notifications:, &)
     end
 
-    def perform
+    def perform # rubocop:disable Metrics/AbcSize
       self.params, send_notifications = extract(params, :send_notifications)
       service_context(send_notifications:) do
         service_call = validate_params
@@ -64,6 +64,7 @@ module BaseServices
         service_call = validate_contract(service_call) if service_call.success?
         service_call = after_validate(service_call) if service_call.success?
         service_call = persist(service_call) if service_call.success?
+        service_call = after_persist(service_call) if service_call.success?
         service_call = after_perform(service_call) if service_call.success?
 
         service_call
@@ -106,6 +107,11 @@ module BaseServices
     alias_method :after_save, :after_perform
 
     def persist(call)
+      # nothing for now but subclasses can override
+      call
+    end
+
+    def after_persist(call)
       # nothing for now but subclasses can override
       call
     end

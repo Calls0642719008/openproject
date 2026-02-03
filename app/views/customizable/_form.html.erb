@@ -38,7 +38,7 @@ See COPYRIGHT and LICENSE files for more details.
      .each do |custom_field| %>
   <%
     form_options = {
-      custom_value: form.object.custom_value_for(custom_field.id),
+      custom_value: form.object.custom_value_for(custom_field),
       custom_field: custom_field
     }
   %>

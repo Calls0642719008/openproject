@@ -6,13 +6,11 @@
 
   <div class="spot-divider"></div>
 
-  <query-sharing-form
-    class="spot-modal--body spot-container"
+  <query-sharing-form class="spot-modal--body spot-container"
     [isSave]="false"
     (onChange)="setValues($event)"
     [isStarred]="isStarred"
-    [isPublic]="isPublic">
-  </query-sharing-form>
+    [isPublic]="isPublic" />
 
   <div class="spot-action-bar">
     <div class="spot-action-bar--right">

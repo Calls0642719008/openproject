@@ -17,7 +17,7 @@ export class AlternativeSearchService {
     remainingWorkAlternative: this.I18n.t('js.work_packages.properties.remainingWorkAlternative'),
   };
 
-  private alternativeNames:{ [index:string]:string } = {
+  private alternativeNames:Record<string, string> = {
     [this.specialSearchStrings.percentCompleteAlternative]: this.specialSearchStrings.percentComplete,
     [this.specialSearchStrings.workAlternative]: this.specialSearchStrings.work,
     [this.specialSearchStrings.remainingWorkAlternative]: this.specialSearchStrings.remainingWork,

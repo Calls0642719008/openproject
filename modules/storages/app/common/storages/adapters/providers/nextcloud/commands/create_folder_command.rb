@@ -55,9 +55,9 @@ module Storages
             def create_folder_request(auth_strategy, request_url, path_prefix)
               Authentication[auth_strategy].call(storage: @storage) do |http|
                 handle_response(http.mkcol(request_url)).bind do
-                  handle_response(http.propfind(request_url, requested_properties)).bind do |response|
+                  handle_response(http.propfind(request_url, storage_file_transformer.requested_properties)).bind do |response|
                     info "Folder successfully created"
-                    storage_file(path_prefix, response)
+                    storage_file_transformer.transform_document(response.xml, path_prefix)
                   end
                 end
               end
@@ -80,43 +80,8 @@ module Storages
               end
             end
 
-            def requested_properties
-              Nokogiri::XML::Builder.new do |xml|
-                xml["d"].propfind("xmlns:d" => "DAV:", "xmlns:oc" => "http://owncloud.org/ns") do
-                  xml["d"].prop do
-                    xml["oc"].fileid
-                    xml["oc"].size
-                    xml["d"].getlastmodified
-                    xml["oc"].permissions
-                    xml["oc"].send(:"owner-display-name")
-                  end
-                end
-              end.to_xml
-            end
-
-            # FIXME: Move this to a transformer?
-            # rubocop:disable Metrics/AbcSize
-            def storage_file(path_prefix, response)
-              xml = response.xml
-              path = xml.xpath("//d:response/d:href/text()").to_s
-              timestamp = xml.xpath("//d:response/d:propstat/d:prop/d:getlastmodified/text()").to_s
-              creator = xml.xpath("//d:response/d:propstat/d:prop/oc:owner-display-name/text()").to_s
-              location = CGI.unescapeURIComponent(
-                UrlBuilder.path(CGI.unescapeURIComponent(path)).gsub(path_prefix, "")
-              ).delete_suffix("/")
-
-              Results::StorageFile.build(
-                id: xml.xpath("//d:response/d:propstat/d:prop/oc:fileid/text()").to_s,
-                name: location.split("/").last,
-                size: xml.xpath("//d:response/d:propstat/d:prop/oc:size/text()").to_s,
-                mime_type: "application/x-op-directory",
-                created_at: Time.zone.parse(timestamp),
-                last_modified_at: Time.zone.parse(timestamp),
-                created_by_name: creator,
-                last_modified_by_name: creator,
-                location:
-              )
-              # rubocop:enable Metrics/AbcSize
+            def storage_file_transformer
+              @storage_file_transformer ||= StorageFileTransformer.new
             end
           end
         end

@@ -1452,6 +1452,19 @@
             }
           ]
         },
+        "work_package": {
+          "type": "object",
+          "title": "Agenda item outcome work package",
+          "description": "Styling for work package outcomes",
+          "allOf": [
+            {
+              "$ref": "#/$defs/font"
+            },
+            {
+              "$ref": "#/$defs/margin"
+            }
+          ]
+        },
         "indent": {
           "title": "Indent width",
           "description": "Indent for agenda item notes",

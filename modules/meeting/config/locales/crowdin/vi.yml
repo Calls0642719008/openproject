@@ -44,7 +44,7 @@ vi:
       meeting_agenda_item:
         title: "Tiêu đề"
         author: "Tác giả"
-        duration_in_minutes: "Duration"
+        duration_in_minutes: "Thời gian"
         description: "Ghi chú"
         presenter: "Người trình bày"
       meeting_section:
@@ -59,8 +59,9 @@ vi:
         end_date: "End date"
         iterations: "Số lần xuất hiện"
       meeting_participant:
-        invited: "Invited"
-        attended: "Attended"
+        invited: "Đã mời"
+        attended: "Đã tham dự"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:
@@ -104,7 +105,7 @@ vi:
     meeting_agenda_opened: Chương trình nghị sự cuộc họp đã được mở
     meeting_minutes: Biên bản cuộc họp đã được chỉnh sửa
     meeting_minutes_created: Biên bản cuộc họp đã được tạo
-  error_notification: "Failed to send notification."
+  error_notification: "Lỗi gửi thông báo"
   error_notification_with_errors: "Không thể gửi thông báo. Những người không thể nhận được thông báo: %{recipients}"
   label_meeting: "Cuộc họp"
   label_meeting_plural: "Những cuộc họp"
@@ -112,7 +113,7 @@ vi:
   label_meeting_new_dynamic: "Cuộc họp đột xuất mới"
   label_meeting_new_recurring: "Cuộc họp định kỳ mới"
   label_meeting_create: "Tạo cuộc họp"
-  label_meeting_copy: "Sao chép cuộc họp"
+  label_meeting_duplicate: "Duplicate meeting"
   label_meeting_edit: "Chỉnh sửa cuộc họp"
   label_meeting_agenda: "Chương trình họp"
   label_meeting_minutes: "Biên bản cuộc họp"
@@ -124,7 +125,8 @@ vi:
   label_meeting_date_time: "Ngày/Giờ"
   label_meeting_date_and_time: "Ngày và giờ"
   label_meeting_diff: "Sự khác biệt"
-  label_meeting_send_updates: "Send email calendar updates"
+  label_meeting_send_updates: "Send email calendar invite and updates"
+  label_meeting_send_updates_caption: "Send out email invites to all participants of this meeting"
   label_recurring_meeting: "Họp định kỳ"
   label_recurring_meeting_part_of: "Phần của chuỗi cuộc họp"
   label_recurring_meeting_new: "Cuộc họp định kỳ mới"
@@ -132,7 +134,7 @@ vi:
   label_template: "Mẫu"
   label_recurring_meeting_view: "Xem chuỗi các cuộc họp"
   label_recurring_meeting_create: "Mở"
-  label_recurring_meeting_copy: "Copy as one-time"
+  label_recurring_meeting_duplicate: "Duplicate as a one-time meeting"
   label_recurring_meeting_cancel: "Hủy lần này"
   label_recurring_meeting_delete: "Xóa lần họp"
   label_recurring_meeting_restore: "Khôi phục lại lần họp này"
@@ -172,24 +174,24 @@ vi:
   label_version: "0886055830 "
   label_time_zone: "Múi giờ"
   label_start_date: "Ngày bắt đầu"
-  label_subscribe_icalendar: "Subscribe to calendar"
+  label_subscribe_icalendar: "Đăng ký lịch"
   meeting:
     participants:
       label:
-        participants: "Participants"
-        attended: "Attended"
+        participants: "Người tham gia"
+        attended: "Đã tham dự"
         mark_as_attended: "Mark as attended"
         mark_all_as_attended: "Mark all as attended"
         remove_participant: "Remove participant"
-        manage_participants: "Manage participants"
-        no_participants: "No participants"
-        show_all: "Show all"
+        manage_participants: "Quản lý người tham gia"
+        no_participants: "Không có người tham gia"
+        show_all: "Hiển thị tất cả"
       text:
-        template: "These participants will be invited automatically to all future meetings as they are created."
+        template: "Những người này sẽ được mời tham gia tự động tất cả các cuộc họp được tạo trong tương lai."
         manage_participants: "Search for and add project members as participants to this meeting."
         search_for_members: "Search for project members"
       blankslate:
-        heading: "No participants"
+        heading: "Không có người tham gia"
         description: "There are no participants yet."
     attachments:
       template: "Những tệp đính kèm này sẽ được bổ sung trong tất cả các cuộc họp tương lai trong chuỗi."
@@ -202,17 +204,17 @@ vi:
       agenda_items: "Chép mục chương trình nghị sự"
       agenda_text: "Sao chép chương trình nghị sự của cuộc họp cũ"
       participants: "Chép danh sách người tham gia"
-      to_clipboard: "Copy to clipboard"
+      to_clipboard: "Sao chép liên kết vào clipboard"
     email:
       send_emails: "Gửi email cho người tham gia"
       send_invitation_emails: >
         Gửi lời mời qua email ngay lập tức đến những người tham gia được chọn ở trên. Bạn cũng có thể thực hiện thủ công bất kỳ lúc nào sau đó.
       send_invitation_emails_structured: "Gửi lời mời qua email ngay lập tức đến tất cả người tham gia. Bạn cũng có thể thực hiện thủ công bất kỳ lúc nào sau đó."
       open_meeting_link: "Mở cuộc họp"
-      open_my_meetings_link: "Go to My meetings"
+      open_my_meetings_link: "Đến buổi họp của tôi"
       series:
         title: "[%{project_name}] Meeting series '%{title}'"
-        summary: "%{actor} has set up a new meeting series '%{title}'"
+        summary: "%{actor} has invited you to a new meeting series '%{title}'"
       series_updated:
         title: "[%{project_name}] Meeting series '%{title}' has been updated"
         summary: "Meeting series '%{title}' has been updated by %{actor}"
@@ -228,12 +230,27 @@ vi:
         summary_series: "Meeting series '%{title}' has been cancelled by %{actor}."
         summary: "'%{title}' has been cancelled by %{actor}."
         date_time: "Scheduled date/time"
+      participant_added:
+        header: "Meeting '%{title}' - Participant added"
+        header_series: "Meeting series '%{title}' - Participant added"
+        summary: "%{actor} added %{participant} to the meeting '%{title}'"
+        summary_series: "%{actor} added %{participant} to the meeting series '%{title}'"
+      participant_removed:
+        header: "Meeting '%{title}' - Participant removed"
+        header_series: "Meeting series '%{title}' - Participant removed"
+        summary: "%{actor} removed %{participant} from the meeting '%{title}'"
+        summary_series: "%{actor} removed %{participant} from the meeting series '%{title}'"
+      ended:
+        header_series: "Ended: Meeting series '%{title}'"
+        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
       updated:
         header: "Meeting '%{title}' has been updated"
         summary: "Meeting '%{title}' has been updated by %{actor}"
         body: "The meeting '%{title}' has been updated by %{actor}."
-        old_date_time: "Old date/time"
-        new_date_time: "New date/time"
+        old_title: "Old title"
+        new_title: "New title"
+        old_date_time: "Ngày/giờ cũ"
+        new_date_time: "Ngày/giờ mới"
         old_location: "Old location"
         new_location: "New location"
     label_mail_all_participants: "Send email invite to participants"
@@ -257,33 +274,33 @@ vi:
           Any meeting information not in the template will be lost. Do you want to continue?
         confirm_button: "Cancel occurrence"
     blankslate:
-      title: "No meetings to display"
-      desc: "There are no meetings that meet the active filter criteria."
+      title: "There are no meetings to display"
+      desc: "You can create a new meeting or change filter criteria"
     label_export_pdf: "Export PDF"
     export:
       your_meeting_export: "Meeting is being exported"
       minutes:
         footer_page_numbers: "P. %{current_page} of %{total_pages}"
-        author: "Author"
-        date: "Date"
-        time: "Time"
-        location: "Location"
-        title: "Minutes"
+        author: "Tác giả"
+        date: "Ngày"
+        time: "Thời gian"
+        location: "Địa điểm"
+        title: "Biên bản cuộc họp"
     export_pdf_dialog:
       title: Export PDF
       description: Generate a printable PDF file of this meeting at the current state.
       templates:
         default:
-          label: Default
+          label: Mặc định
           caption: The default template is suitable for most meetings and represent the current state.
         minutes:
-          label: Minutes
+          label: Biên bản cuộc họp
           caption: The minutes template is suitable for closed and archived meetings.
       first_page_header_left:
         label: First page header left
         caption: This text will appear on the first page at the left of the header.
       author:
-        label: Author
+        label: Tác giả
         caption: The author of the minutes will be displayed in the subtitle.
       include_participants:
         label: Include list of participants
@@ -300,7 +317,7 @@ vi:
       footer_text:
         label: Footer text
         caption: This text will appear on every page at the center of the footer.
-      submit_button: Download
+      submit_button: Tải
     notifications:
       sidepanel:
         title: "Email calendar updates"
@@ -328,9 +345,9 @@ vi:
             Email calendar updates are disabled. Participants will not receive an email informing them when you add or remove participants.
         onetime:
           enabled: >
-            All participants will receive updated calendar invites via email informing them of your changes.
+            All participants will receive updated calendar invites via email when you add or remove participants.
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them of your changes.
+            Participants will not receive an email informing them of changes to meeting date, time or participants.
         occurrence:
           enabled: >
             Email calendar updates are enabled for the meeting series. All participants will receive updated calendar invites informing them of your changes to this occurrence.
@@ -341,11 +358,31 @@ vi:
             Email calendar updates are enabled for the meeting series. All participants will receive updated calendar invites informing them of your changes to this template or to individual occurrences.
           disabled: >
             Email calendar updates are disabled for the meeting series. Participants will not receive an email informing them of your changes to this template or to individual occurrences.
+    presentation_mode:
+      title: "Presentation Mode"
+      button_present: "Present"
+      exit: "Exit presentation"
+      current_item: "Current item"
+      total_items: "%{current} of %{total}"
+      previous: "Previous"
+      next: "Next"
+      no_items: "No agenda items"
+      no_items_flash: "There are no agenda items to present."
+    ical_response:
+      update_failed: "Could not update participation status."
+      meeting_not_found: "Meeting not found for the given UID."
   meeting_section:
     untitled_title: "Phần không tiêu đề"
     delete_confirmation: "Xóa phần này cũng sẽ xóa tất cả các mục chương trình nghị sự của nó. Bạn có chắc chắn muốn làm điều này không?"
     placeholder_title: "Phần mới"
     empty_text: "Kéo các mục vào đây hoặc tạo một cái mới"
+  meeting_participant:
+    participation_status:
+      needs_action: "No response"
+      accepted: "Accepted"
+      declined: "Declined"
+      tentative: "Maybe"
+      unknown: "Unknown"
   recurring_meeting:
     time_zone_difference_banner:
       title: "Time zone difference"
@@ -366,12 +403,12 @@ vi:
       blank_title: "Mẫu chuỗi họp của bạn đang trống"
       description: >
         Mẫu này sẽ được sử dụng bất cứ khi nào các cuộc họp mới trong chuỗi được tạo. Bạn có thể thêm các mục chương trình làm việc, người tham gia và tệp đính kèm vào mẫu này.
-      blankslate_finalize: >
-        Khi bạn chuẩn bị xong mẫu này, hãy nhấp vào nút '%{button_title}' ở trên để hoàn tất thiết lập và lên lịch cuộc họp đầu tiên của chuỗi.
       label_view_template: "Xem Mẫu"
       label_edit_template: "Sửa mẫu"
       banner_html: >
-        Bạn hiện đang chỉnh sửa mẫu của chuỗi họp: %{link}. Mỗi lần xuất hiện mới của một cuộc họp trong chuỗi sẽ sử dụng mẫu này. Các thay đổi sẽ không ảnh hưởng đến các cuộc họp trước đây hoặc đã tạo.
+        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already-created meetings.
+      draft_banner_html: >
+        You are currently editing a template of a meeting series: %{link}. Every new occurrence of a meeting in the series will use this template. Changes will not affect past or already-created meetings. No email invites will be sent in this current draft mode until you open the first meeting.
     frequency:
       x_daily:
         other: "Every %{count} days"
@@ -447,6 +484,12 @@ vi:
   text_meeting_agenda_open_are_you_sure: "Điều này sẽ ghi đè tất cả các thay đổi trong biên bản! Bạn có muốn tiếp tục không?"
   text_meeting_minutes_for_meeting: 'biên bản cuộc họp "%{meeting}"'
   text_notificiation_invited: "Email này chứa một mục ics cho cuộc họp dưới đây:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "Cuộc họp của bạn trống"
   text_meeting_empty_description1: "Bắt đầu bằng cách thêm các mục chương trình nghị sự dưới đây. Mỗi mục có thể đơn giản chỉ là tiêu đề, nhưng bạn cũng có thể thêm các chi tiết bổ sung như thời gian và ghi chú."
   text_meeting_empty_description2: 'Bạn cũng có thể thêm các tham chiếu đến các gói công việc hiện có. Khi bạn làm như vậy, các ghi chú liên quan sẽ tự động hiển thị trong tab "Cuộc họp" của gói công việc.'
@@ -463,30 +506,38 @@ vi:
   label_meeting_index_later: "Next week and later"
   label_agenda_items: "Các mục chương trình nghị sự"
   label_agenda_items_reordered: "đã sắp xếp lại"
-  label_agenda_item_add: "Add agenda item"
-  label_agenda_item_remove_from_agenda: "Remove from agenda"
+  label_agenda_item_add: "Thêm mục chương trình nghị sự"
+  label_agenda_item_remove_from_agenda: "Gỡ bỏ khỏi chương trình nghị sự"
   label_agenda_item_remove_from_backlog: "Remove from backlog"
   label_agenda_item_undisclosed_wp: "Gói công việc #%{id} không hiển thị"
   label_agenda_item_deleted_wp: "Tham chiếu gói công việc đã bị xóa"
   label_agenda_item_actions: "Các hành động mục chương trình nghị sự"
   label_agenda_item_move_to_next_title: "Move to next meeting?"
-  label_agenda_item_move: "Move"
+  label_agenda_item_move: "Di chuyển"
   label_agenda_item_move_to_next: "Move to next meeting"
   label_agenda_item_move_to_backlog: "Move to backlog"
   label_agenda_item_move_to_current_meeting: "Move to current meeting"
-  label_agenda_item_move_to_top: "Di chuyển lên đầu"
-  label_agenda_item_move_to_bottom: "Di chuyển xuống cuối"
+  label_agenda_item_move_to_section: "Move to section"
+  label_agenda_item_move_to_top: "Lên trên cùng"
+  label_agenda_item_move_to_bottom: "Chuyển đến dưới cùng"
   label_agenda_item_move_up: "Di chuyển lên"
-  label_agenda_item_move_down: "Di chuyển xuống"
+  label_agenda_item_move_down: "Dịch xuống"
+  label_agenda_item_duplicate: "Duplicate"
+  label_agenda_item_duplicate_in_next: "Duplicate in next occurrence"
+  label_agenda_item_duplicate_in_next_title: "Duplicate in next occurrence?"
   label_agenda_item_add_notes: "Thêm ghi chú"
   label_agenda_item_add_outcome: "Add outcome"
   label_agenda_item_work_package_add: "Add work package"
   label_agenda_item_work_package: "Gói công việc mục chương trình nghị sự"
   label_section_rename: "Rename section"
   label_agenda_outcome: "Outcome"
+  label_agenda_new_outcome: "New outcome"
   label_agenda_outcome_actions: "Agenda outcome actions"
   label_agenda_outcome_edit: "Edit outcome"
   label_agenda_outcome_delete: "Remove outcome"
+  label_added_as_outcome: "Added as outcome"
+  label_write_outcome: "Write outcome"
+  label_existing_work_package: "Existing work package"
   text_outcome_not_editable_anymore: "This outcome is not editable anymore."
   text_outcome_cannot_be_added: "An outcome can no longer be added."
   label_backlog_clear: "Clear backlog"
@@ -512,6 +563,7 @@ vi:
   label_meeting_series_details: "Chi tiết chuỗi họp"
   label_meeting_details_edit: "Chỉnh sửa chi tiết cuộc họp"
   label_meeting_state: "Trạng thái cuộc họp"
+  label_meeting_state_draft: "Draft"
   label_meeting_state_open: "Mở"
   label_meeting_state_closed: "Đã đóng"
   label_meeting_state_agenda_created: "Agenda đã tạo"
@@ -522,36 +574,51 @@ vi:
   label_meeting_reopen_action: "Mở lại cuộc họp"
   label_meeting_close_action: "Đóng cuộc họp"
   label_meeting_in_progress_action: "Start meeting"
+  label_meeting_open_action: "Open meeting"
+  text_meeting_draft_description: "Prepare your agenda in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
   text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
   text_meeting_closed_description: "Cuộc họp này đã đóng. Bạn không thể thêm/xóa các mục chương trình nghị sự nữa."
   text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
   text_meeting_open_dropdown_description: "Any existing outcomes will remain but users will not be able to add new outcomes."
   text_meeting_in_progress_dropdown_description: "Document outcomes like information needs or decisions taken during the meeting."
   text_meeting_closed_dropdown_description: "This meeting is closed. You cannot modify agenda items or outcomes anymore."
+  text_meeting_draft_banner: "You are currently in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
+  text_exit_draft_mode_dialog_title: "Open this meeting and send invites?"
+  text_exit_draft_mode_dialog_subtitle: "You cannot return to draft mode once you schedule a meeting."
+  text_exit_draft_mode_dialog_template_title: "Open the first occurrence of this meeting series?"
+  text_exit_draft_mode_dialog_template_subtitle: "You cannot return to draft mode after this."
   text_meeting_not_editable_anymore: "Cuộc họp này không còn có thể chỉnh sửa nữa."
   text_meeting_not_present_anymore: "Cuộc họp này đã bị xóa. Vui lòng chọn cuộc họp khác."
-  label_add_work_package_to_meeting_dialog_title: "Thêm gói công việc vào cuộc họp"
+  label_add_work_package_to_meeting_dialog_title: "Select meeting"
+  label_add_work_package_to_meeting_section_label: "Phần"
   label_add_work_package_to_meeting_dialog_button: "Thêm vào cuộc họp"
-  label_meeting_selection_caption: "Chỉ có thể thêm gói công việc này vào các cuộc họp sắp tới hoặc đang mở."
+  label_meeting_selection_caption: "It is only possible to add this work package to an upcoming or an ongoing meeting."
+  label_section_selection_caption: "Choose a particular section of the agenda or add it to the backlog."
+  placeholder_section_select_meeting_first: "Meeting selection is required first"
+  text_add_work_package_to_meeting_form: "The work package will be added to the selected meeting or backlog as an agenda item."
   text_add_work_package_to_meeting_description: "Một gói công việc có thể được thêm vào một hoặc nhiều cuộc họp để thảo luận. Bất kỳ ghi chú nào liên quan cũng sẽ hiển thị ở đây."
   text_agenda_item_no_notes: "Không có ghi chú được cung cấp"
   text_agenda_item_not_editable_anymore: "Mục chương trình nghị sự này không còn có thể chỉnh sửa nữa."
   text_agenda_item_move_next_meeting: "This item will be moved to the next meeting on %{date} at %{time}."
   text_agenda_item_moved_to_next_meeting: "Agenda item moved to the next meeting, on %{date}"
+  text_agenda_item_duplicate_in_next_meeting: "Are you sure you want to add a copy of this agenda item to the next meeting, on %{date} at %{time}? Outcomes will not be duplicated."
+  text_agenda_item_duplicated_in_next_meeting: "Agenda item duplicated in the next meeting, on %{date}"
   text_work_package_has_no_upcoming_meeting_agenda_items: "Gói công việc này chưa được lên lịch trong chương trình nghị sự cuộc họp sắp tới."
   text_agenda_item_move_next_meeting_cancelled: "Unable to move to the next meeting since it has been cancelled."
   text_work_package_add_to_meeting_hint: 'Sử dụng nút "Thêm vào cuộc họp" để thêm gói công việc này vào một cuộc họp sắp tới.'
-  text_work_package_has_no_past_meeting_agenda_items: "Gói công việc này không được đề cập trong chương trình nghị sự cuộc họp đã qua."
+  text_work_package_has_no_past_meeting_agenda_items: "This work package was not added as an agenda item in a past meeting."
   text_email_updates_muted: "Email calendar updates are muted. Participants will not receive updated invites via email when you make changes."
   text_email_updates_enabled: "Email calendar updates are enabled. All participants will receive updated invites via email when you make changes."
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar for meetings"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendar meeting tokens allow users to subscribe to all their meetings and view up-to-date meeting information in external clients."
         disabled_text: "iCalendar meeting subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
-        empty_text_hint: 'To add an iCalendar meeting token, go to the <a href="%{path}">meetings section</a> and subscribe from there.'
-        add_button: "Subscribe to calendar"
+        add_button: "Đăng ký lịch"
   my:
     access_token:
       dialog:
@@ -560,12 +627,11 @@ vi:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"
           body: "Treat the following URL as you would a password. Anyone who has access to it can view all your meetings."
-          warning: "This is the only time you will see this token. Make sure to copy it now."
       revocation:
         token/ical_meeting:
           notice_success: "The iCalendar meeting subscription has been revoked successfully."

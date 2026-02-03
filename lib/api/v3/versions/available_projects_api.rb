@@ -39,7 +39,6 @@ module API
                                                           scope: -> {
                                                             Project
                                                               .allowed_to(User.current, :manage_versions)
-                                                              .includes(::API::V3::Projects::ProjectRepresenter.to_eager_load)
                                                           })
                                                      .mount
         end

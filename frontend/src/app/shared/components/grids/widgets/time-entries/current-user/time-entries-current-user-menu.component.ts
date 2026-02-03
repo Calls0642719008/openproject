@@ -47,7 +47,7 @@ import { OpContextMenuItem } from 'core-app/shared/components/op-context-menu/op
 export class WidgetTimeEntriesCurrentUserMenuComponent extends WidgetAbstractMenuComponent {
   @InjectField() opModalService:OpModalService;
 
-  @Output() onConfigured:EventEmitter<any> = new EventEmitter();
+  @Output() onConfigured = new EventEmitter<any>();
 
   protected async buildItems():Promise<OpContextMenuItem[]> {
     return [

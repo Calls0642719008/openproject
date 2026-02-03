@@ -30,6 +30,9 @@ module API
   module V3
     module WorkPackages
       class WorkPackageCollectionRepresenter < ::API::Decorators::OffsetPaginatedCollection
+        self.to_eager_load = []
+        self.to_preload = []
+
         attr_accessor :timestamps, :query
 
         def initialize(models,

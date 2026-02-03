@@ -75,7 +75,7 @@ export class BoardAssigneeActionService extends CachedBoardActionService {
     const filter = this.getActionFilter(query);
 
     // Return the special unassigned user
-    if (filter && filter.operator.id === '!*') {
+    if (filter?.operator.id === '!*') {
       return Promise.resolve(this.unassignedUser);
     }
 

@@ -29,9 +29,19 @@
 #++
 
 class CustomValue::HierarchyStrategy < CustomValue::ARObjectStrategy
+  def formatted_value
+    item = cached_ar_object
+
+    if item
+      item.to_s
+    else
+      "#{value} #{I18n.t(:label_not_found)}"
+    end
+  end
+
   def validate_type_of_value
-    item = CustomField::Hierarchy::Item.find_by(id: value)
-    return :invalid if item.nil?
+    item = ar_object(value)
+    return :invalid unless item
 
     parent = custom_field.hierarchy_root
 
@@ -44,17 +54,6 @@ class CustomValue::HierarchyStrategy < CustomValue::ARObjectStrategy
 
   def ar_class
     CustomField::Hierarchy::Item
-  end
-
-  def ar_object(value)
-    item = CustomField::Hierarchy::Item.find_by(id: value.to_s)
-    if item.nil?
-      "#{value} #{I18n.t(:label_not_found)}"
-    elsif item.short.present?
-      "#{item.label} (#{item.short})"
-    else
-      item.label
-    end
   end
 
   def persistence_service

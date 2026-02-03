@@ -32,9 +32,10 @@ module WorkPackageMeetingsTab
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
 
-    def initialize(meeting:, meeting_agenda_items:)
+    def initialize(work_package:, meeting:, meeting_agenda_items:)
       super
 
+      @work_package = work_package
       @meeting = meeting
       @meeting_agenda_items = meeting_agenda_items
     end

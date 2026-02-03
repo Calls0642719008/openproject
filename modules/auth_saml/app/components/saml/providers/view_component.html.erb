@@ -20,7 +20,7 @@
                 form_class: Saml::Providers::NameInputForm,
                 edit_state:,
                 next_edit_state: :metadata,
-                edit_mode:,
+                new_mode:,
                 heading: nil
               )
             )
@@ -46,7 +46,7 @@
             render(
               Saml::Providers::Sections::MetadataFormComponent.new(
                 provider,
-                edit_mode:
+                new_mode:
               )
             )
           else
@@ -76,7 +76,7 @@
                 form_class: Saml::Providers::ConfigurationForm,
                 edit_state:,
                 next_edit_state: :encryption,
-                edit_mode:,
+                new_mode:,
                 banner: provider.last_metadata_update ? t("saml.providers.section_texts.configuration_metadata") : nil,
                 banner_scheme: :default,
                 heading: nil
@@ -104,7 +104,7 @@
                 form_class: Saml::Providers::EncryptionForm,
                 edit_state:,
                 next_edit_state: :mapping,
-                edit_mode:,
+                new_mode:,
                 heading: t("saml.providers.section_texts.encryption_form")
               )
             )
@@ -133,7 +133,7 @@
                 form_class: Saml::Providers::MappingForm,
                 edit_state:,
                 next_edit_state: :requested_attributes,
-                edit_mode:,
+                new_mode:,
                 heading: t("saml.instructions.mapping")
               )
             )
@@ -156,7 +156,7 @@
             render(
               Saml::Providers::Sections::RequestAttributesFormComponent.new(
                 provider,
-                edit_mode:
+                new_mode:
               )
             )
           else

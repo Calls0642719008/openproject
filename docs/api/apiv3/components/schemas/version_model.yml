@@ -21,10 +21,14 @@ properties:
     - "$ref": "./formattable.yml"
     - {}
   startDate:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
   endDate:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: date
   status:
     type: string
@@ -80,17 +84,17 @@ properties:
         allOf:
         - "$ref": "./link.yml"
         - description: |-
-            The project to which the version belongs
+            The workspace to which the version belongs
 
-            **Resource**: Project
+            **Resource**: Workspace
           readOnly: true
       availableInProjects:
         allOf:
         - "$ref": "./link.yml"
         - description: |-
-            Projects where this version can be used
+            Workspaces where this version can be used
 
-            **Resource**: Projects
+            **Resource**: Workspace
           readOnly: true
 example:
   _links:
@@ -105,7 +109,7 @@ example:
     definingProject:
       href: "/api/v3/projects/11"
     availableInProjects:
-      href: "/api/v3/versions/11/projects"
+      href: "/api/v3/versions/11/workspaces"
     customField4:
       href: "/api/v3/custom_options/5"
       title: Custom field option
@@ -117,7 +121,9 @@ example:
     raw: This version has a description
     html: This version has a description
   startDate: '2014-11-20'
-  endDate: 
+  endDate:
   status: open
   sharing: system
   customField14: '1234567890'
+  createdAt: "2025-12-10T13:37:00Z"
+  updatedAt: "2025-12-10T13:37:00Z"

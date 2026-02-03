@@ -40,7 +40,7 @@ module IncomingEmails::Handlers
     end
 
     # Override in subclasses to determine if this handler can process the email
-    def self.handles?(email, reference:)
+    def self.handles?(email, reference:, automated_email:)
       raise NotImplementedError, "Subclasses must implement can_handle? method"
     end
 

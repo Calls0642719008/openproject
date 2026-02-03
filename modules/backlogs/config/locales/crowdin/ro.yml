@@ -40,6 +40,8 @@ ro:
               task_version_must_be_the_same_as_story_version: "trebuie să fie aceeași cu versiunea cerinței părinte."
         sprint:
           cannot_end_before_it_starts: "Sprint nu se poate termina înainte de a începe."
+  attributes:
+    task_type: "Tip de sarcină"
   backlogs:
     add_new_story: "Poveste nouă"
     any: "Oricare"
@@ -100,7 +102,10 @@ ro:
   backlogs_empty_title: "Nu sunt definite versiuni care să fie utilizate în dosarele de așteptare"
   backlogs_empty_action_text: "Pentru a începe să folosiți agendele, creați o nouă versiune și atribuiți-o unei coloane de agende."
   button_edit_wiki: "Editați pagina wiki"
-  error_backlogs_task_cannot_be_story: "Setările nu sunt valide. Tipul de sarcină selectat nu poate fi și un tip de poveste."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "nu poate fi și un tip poveste"
   error_intro_plural: "Au fost întâlnite următoarele erori:"
   error_intro_singular: "Eroare"
   error_outro: "Te rog să corectezi erorile de mai sus înainte de a le trimite din nou."
@@ -124,6 +129,10 @@ ro:
   label_points_burn_up: "Sus"
   label_product_backlog: "backlog de produse"
   label_select_all: "Setectează Tot"
+  label_select_type: "Selectează un tip"
+  label_select_types: "Selectează tipuri"
+  label_selected_type: "Tip selectat"
+  label_selected_types: "Tipuri selectate"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Carduri de export"
   label_sprint_impediments: "Impedimentele Sprint"
@@ -160,3 +169,7 @@ ro:
   version_settings_display_option_left: "stanga"
   version_settings_display_option_none: "niciuna"
   version_settings_display_option_right: "dreapta"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

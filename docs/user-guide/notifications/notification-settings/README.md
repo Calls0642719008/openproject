@@ -32,13 +32,14 @@ By default, you will be notified of all activities in work packages in which you
 
 You cannot disable notifications for when you are mentioned since the goal of mentioning you is to get your attention. If you no longer wish to receive notifications for certain work packages you are watching, you can simply unwatch them.
 
-> **Info**: Modifying these settings may cause you to miss updates and changes that are relevant to you. We do not recommend changing them unless you are absolutely certain of the consequences.
+> [!NOTE]
+> Modifying these settings may cause you to miss updates and changes that are relevant to you. We do not recommend changing them unless you are absolutely certain of the consequences.
 
 ## Date alerts (Enterprise add-on)
 
 Starting with 12.4, OpenProject offers notification for date alerts.
 
-> **Note**: Date alerts are an Enterprise add-on and can only be used with [Enterprise cloud](../../../enterprise-guide/enterprise-cloud-guide/) or [Enterprise on-premises](../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easy and helps support OpenProject.
+[feature: date_alerts ]
 
 Date alerts allow you to receive a notification when a start date or a finish date is approaching for a work package you are participating in (that is, for which you are assignee, accountable or a watcher).
 
@@ -46,13 +47,15 @@ Date alerts allow you to receive a notification when a start date or a finish da
 
 For **start** and **finish dates**, you can choose to be alerted the same day, 1 day before, 3 days before or a week before.
 
-> **Info:** Please note that these are natural days and not working days. For a work package starting on a Monday, "3 days before" would be Friday.
+> [!NOTE]
+> Please note that these are natural days and not working days. For a work package starting on a Monday, "3 days before" would be Friday.
 > Date alerts are generated once a day at 1am local time.
 > Please note that when you activate a date alert, work packages that are due earlier than the duration selected will not generate notifications (for example, if you choose to be notified "3 days before" the finish date, work packages that are due in 2 days at that point in time will not generate a date alert.
 
 For **overdue dates**, you can also choose to receive a recurring notification (every day, every 3 days or every week).
 
-> **Info:** A previously unread notification for an overdue date alert is marked as read and replaced by a new one with the updated due date (for example, if you choose to be alerted every day for an overdue work package, and ignore that alert for a week, you will still see only one notification for this work package). You can stop receiving these alerts by either unchecking this option, or changing or removing the dates of the work package.
+> [!NOTE]
+> A previously unread notification for an overdue date alert is marked as read and replaced by a new one with the updated due date (for example, if you choose to be alerted every day for an overdue work package, and ignore that alert for a week, you will still see only one notification for this work package). You can stop receiving these alerts by either unchecking this option, or changing or removing the dates of the work package.
 
 Date alerts notifications appear in [Notification center](../#access-in-app-notifications), both in the _Inbox_ and the separate _Date alerts_ sections on the left menu.
 
@@ -70,7 +73,8 @@ You can be notified of:
 
 ![A screenshot of options for non-participating work packages](Notification-settings-12.4-nonPartipating.png)
 
-> **Info:** Please note that these apply to _all_ work packages in _all_ of your projects. If you enable many of them, you may receive too many irrelevant notifications. Please use this feature with parsimony.
+> [!NOTE]
+> Please note that these apply to _all_ work packages in _all_ of your projects. If you enable many of them, you may receive too many irrelevant notifications. Please use this feature with parsimony.
 
 ## Project-specific notifications
 
@@ -84,7 +88,8 @@ Once you do so, you will see a table with a column for that project and and the 
 
 ![Text](Notification-settings-12.4-projectSpecific.png)
 
-> **Info**: These project-specific settings will override any global settings above. You can use these settings if you find that you receive too many or not enough notifications for a particular project.
+> [!NOTE]
+> These project-specific settings will override any global settings above. You can use these settings if you find that you receive too many or not enough notifications for a particular project.
 
 ## Email reminders
 

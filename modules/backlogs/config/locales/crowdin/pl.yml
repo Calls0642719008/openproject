@@ -40,6 +40,8 @@ pl:
               task_version_must_be_the_same_as_story_version: "musi być taka sama jak wersja story nadrzędnej."
         sprint:
           cannot_end_before_it_starts: "Sprint nie może się skończyć przed swoim rozpoczęciem."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Nowe Story"
     any: "którekolwiek"
@@ -100,7 +102,10 @@ pl:
   backlogs_empty_title: "Nie ma wersji zdefiniowanej do użycia w zaległościach"
   backlogs_empty_action_text: "Aby rozpocząć pracę z zaległościami, utworzyć nową wersję i przypisać ją do kolumna w zaległości."
   button_edit_wiki: "Edytuj stronę wiki"
-  error_backlogs_task_cannot_be_story: "Ustawienia są nieprawidłowe. Wybrany typ zadania nie może być również typem historii."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Wystąpiły następujące błędy:"
   error_intro_singular: "Wystąpił następujący błąd:"
   error_outro: "Popraw błędy powyżej przed ponownym złożeniem."
@@ -124,6 +129,10 @@ pl:
   label_points_burn_up: "W górę"
   label_product_backlog: "backlog produktu"
   label_select_all: "Wybierz wszystko"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "backlog sprintu"
   label_sprint_cards: "Eksportuj karty"
   label_sprint_impediments: "Przeszkody sprintu"
@@ -160,3 +169,7 @@ pl:
   version_settings_display_option_left: "w lewo"
   version_settings_display_option_none: "żaden"
   version_settings_display_option_right: "w prawo"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

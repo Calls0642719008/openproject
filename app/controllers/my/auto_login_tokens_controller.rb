@@ -42,7 +42,7 @@ module My
       @token.destroy
 
       flash[:notice] = I18n.t(:notice_successful_delete)
-      redirect_to my_sessions_path
+      redirect_to my_sessions_path, status: :see_other
     end
 
     private

@@ -51,12 +51,8 @@ class CustomValue::FormatStrategy
     value.to_s
   end
 
-  # Parses the value to
-  # 1) have a unified representation for different inputs
-  # 2) memoize typed values (if the subclass decides to do so
+  # Parses the value to have a unified representation for different inputs
   def parse_value(val)
-    self.memoized_typed_value = nil
-
     val
   end
 
@@ -65,8 +61,4 @@ class CustomValue::FormatStrategy
   def validate_type_of_value
     raise "SubclassResponsibility"
   end
-
-  private
-
-  attr_accessor :memoized_typed_value
 end

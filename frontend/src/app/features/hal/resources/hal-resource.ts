@@ -36,24 +36,14 @@ import { ICKEditorContext } from 'core-app/shared/components/editor/components/c
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
 
-export interface HalResourceClass<T extends HalResource = HalResource> {
-  new(injector:Injector,
-    source:any,
-    $loaded:boolean,
-    halInitializer:(halResource:T) => void,
-    $halType:string):T;
-}
-
-export type HalSourceLink = { href:string|null, title?:string };
-
-export type HalSourceLinks = {
-  [key:string]:HalSourceLink
-};
-
-export type HalSource = {
-  [key:string]:string|number|boolean|null|HalSourceLinks,
-  _links:HalSourceLinks
-};
+export type HalResourceClass<T extends HalResource = HalResource> = new(
+  _injector:Injector,
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  _source:any,
+  _$loaded:boolean,
+  _halInitializer:(_:T) => void,
+  _$halType:string,
+) => T;
 
 export class HalResource {
   // TODO this is the source of many issues in the frontend
@@ -95,6 +85,7 @@ export class HalResource {
    */
   public constructor(
     public injector:Injector,
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public $source:any,
     public $loaded:boolean,
     public halInitializer:(halResource:any) => void,
@@ -177,7 +168,7 @@ export class HalResource {
    * @param {HalResource} other
    * @returns A HalResource with the identitical copied source of other.
    */
-  public $copy<T extends HalResource = HalResource>(source:Object = {}):T {
+  public $copy<T extends HalResource = HalResource>(source:object = {}):T {
     const clone:HalResourceClass<T> = this.constructor as any;
 
     return new clone(this.injector, _.merge(this.$plain(), source), this.$loaded, this.halInitializer, this.$halType);
@@ -252,11 +243,12 @@ export class HalResource {
     // Otherwise, we risk returning a promise, that will never be resolved.
     state.putFromPromiseIfPristine(() => this.$loadResource(force));
 
-    return <Promise<this>>state.valuesPromise().then((source:any) => {
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    return state.valuesPromise().then((source:any) => {
       this.$initialize(source);
       this.$loaded = true;
       return this;
-    });
+    }) as Promise<this>;
   }
 
   $loadResource(force = false):Promise<this> {

@@ -20,20 +20,18 @@ export function setPosition(element:HTMLInputElement, offset:number):void {
  * @param evt
  * @return {number}
  */
-export function getPosition(evt:any):number {
-  const originalEvt = evt.originalEvent;
-
+export function getPosition(evt:MouseEvent):number {
   try {
-    if (originalEvt.rangeParent) {
+    if ((evt as any).rangeParent) {
       const range = document.createRange();
-      range.setStart(originalEvt.rangeParent, originalEvt.rangeOffset);
+      range.setStart((evt as any).rangeParent, (evt as any).rangeOffset);
       return range.startOffset;
     }
 
     const legacyDocument = document as { caretRangeFromPoint?:(x:number, y:number) => { startOffset:number } };
     if (legacyDocument.caretRangeFromPoint) {
       return legacyDocument
-        .caretRangeFromPoint((evt as MouseEvent).clientX, (evt as MouseEvent).clientY)
+        .caretRangeFromPoint(evt.clientX, evt.clientY)
         .startOffset;
     }
 

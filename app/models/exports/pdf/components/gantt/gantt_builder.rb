@@ -29,8 +29,11 @@
 #++
 
 module Exports::PDF::Components::Gantt
+  class InvalidDateRangeError < StandardError; end
+
   class GanttBuilder
     include Redmine::I18n
+
     BAR_CELL_PADDING = 5.to_f
     TEXT_CELL_PADDING_H = 3.to_f
     TEXT_CELL_PADDING_V = 1.to_f
@@ -39,6 +42,7 @@ module Exports::PDF::Components::Gantt
     DEFAULT_TEXT_COLUMN_DIVIDER = 4
     TEXT_COLUMN_MAX_WIDTH = 250.to_f
     LINE_STEP = 5.to_f
+    MAX_YEAR_RANGE = 10
 
     def initialize(pdf, title, column_width)
       @pdf = pdf
@@ -843,6 +847,11 @@ module Exports::PDF::Components::Gantt
     # @return [Array<Date>]
     def collect_column_dates(work_packages)
       wp_dates = collect_work_packages_dates(work_packages)
+      years = ((wp_dates.last - wp_dates.first) / 365).floor
+      if years > MAX_YEAR_RANGE
+        raise InvalidDateRangeError, I18n.t(:error_pdf_date_range_too_long, years: MAX_YEAR_RANGE)
+      end
+
       build_column_dates_range(wp_dates.first..wp_dates.last)
     end
 

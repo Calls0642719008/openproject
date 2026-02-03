@@ -79,7 +79,7 @@ module WorkPackages
       end
 
       def learn_more_href
-        OpenProject::Static::Links.links[:progress_tracking_docs][:href]
+        OpenProject::Static::Links.url_for(:progress_tracking_docs)
       end
 
       private
@@ -91,11 +91,7 @@ module WorkPackages
         # an element by default.
         return nil if field.nil?
 
-        field = FIELD_MAP[field.to_s]
-
-        return field if field.present?
-
-        raise ArgumentError, "The selected field is not one of #{FIELD_MAP.keys.join(', ')}."
+        FIELD_MAP[field.to_s].presence || :no_field
       end
     end
   end

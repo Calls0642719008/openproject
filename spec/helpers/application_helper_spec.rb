@@ -193,7 +193,54 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  describe ".all_lang_options_for_select" do
+  describe "#lang_options_for_select" do
+    before do
+      allow(Redmine::I18n)
+        .to receive(:all_languages)
+        .and_return %w[en de es ja zh-CN]
+    end
+
+    context "with all available languages" do
+      it "returns options for all languages" do
+        expect(lang_options_for_select).to eq [
+          ["(auto)", ""],
+          ["Deutsch", "de", { lang: "de" }],
+          ["English", "en", { lang: "en" }],
+          ["Español", "es", { lang: "es" }],
+          ["日本語", "ja", { lang: "ja" }],
+          ["简体中文", "zh-CN", { lang: "zh-CN" }]
+        ]
+      end
+    end
+
+    context "with some available languages", with_settings: { available_languages: %w[en es ja] } do
+      it "returns options for available languages" do
+        expect(lang_options_for_select).to eq [
+          ["English", "en", { lang: "en" }],
+          ["Español", "es", { lang: "es" }],
+          ["日本語", "ja", { lang: "ja" }]
+        ]
+      end
+    end
+
+    context "when blank is true (default)" do
+      it "returns auto option if all languages available" do
+        expect(lang_options_for_select).to start_with ["(auto)", ""]
+      end
+
+      it "does not return auto option if some languages available", with_settings: { available_languages: %w[en] } do
+        expect(lang_options_for_select).not_to start_with ["(auto)", ""]
+      end
+    end
+
+    context "when blank is false" do
+      it "does not return auto option" do
+        expect(lang_options_for_select(false)).not_to start_with ["(auto)", ""]
+      end
+    end
+  end
+
+  describe "#all_lang_options_for_select" do
     it 'has all languages translated ("English" should appear only once)' do
       impostor_locales =
         all_lang_options_for_select

@@ -42,6 +42,7 @@ class Tables::Journals < Tables::Base
       t.references :data, polymorphic: true, index: false, null: false
       t.jsonb :cause, default: {}
       t.tstzrange :validity_period
+      t.boolean :restricted, default: false, null: false
 
       t.index :journable_id
       t.index :journable_type

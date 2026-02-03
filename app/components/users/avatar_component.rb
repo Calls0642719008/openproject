@@ -34,6 +34,8 @@ module Users
     include AvatarHelper
     include OpPrimer::ComponentHelpers
 
+    with_collection_parameter :user
+
     def initialize(user:, show_name: true, link: true, size: "default", classes: "", title: nil, name_classes: "",
                    hover_card: { active: true })
       super

@@ -40,6 +40,8 @@ si:
               task_version_must_be_the_same_as_story_version: "මව් කතාවේ අනුවාදයට සමාන විය යුතුය."
         sprint:
           cannot_end_before_it_starts: "ස්ප්රින්ට් ආරම්භ වීමට පෙර අවසන් කළ නොහැක."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "නව කතාව"
     any: "ඔනෑම"
@@ -100,7 +102,10 @@ si:
   backlogs_empty_title: "කිසිදු අනුවාදයක් backlogs භාවිතා කිරීමට අර්ථ දක්වා නැත"
   backlogs_empty_action_text: "backlogs සමඟ ආරම්භ කිරීම සඳහා, නව අනුවාදයක් නිර්මාණය කර එය backlogs තීරුවකට පවරන්න."
   button_edit_wiki: "විකි පිටුව සංස්කරණය කරන්න"
-  error_backlogs_task_cannot_be_story: "The settings are invalid. The selected task type can not also be a story type."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "පහත සඳහන් දෝෂ වලට මුහුණ දීමට සිදු විය:"
   error_intro_singular: "පහත දැක්වෙන දෝෂය ඇති විය:"
   error_outro: "නැවත ඉදිරිපත් කිරීමට පෙර ඉහත දෝෂ නිවැරදි කරන්න."
@@ -124,6 +129,10 @@ si:
   label_points_burn_up: "ඉහළට"
   label_product_backlog: "නිෂ්පාදන බැක්ලොග්"
   label_select_all: "සියල්ල තෝරන්න"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "ස්ප්රින්ට් බැක්ලොග්"
   label_sprint_cards: "අපනයන කාඩ්පත්"
   label_sprint_impediments: "ස්ප්රින්ට් බාධාවන්"
@@ -160,3 +169,7 @@ si:
   version_settings_display_option_left: "වම්"
   version_settings_display_option_none: "කිසිවක් නැත"
   version_settings_display_option_right: "අයිතිය"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

@@ -39,7 +39,7 @@ RSpec.describe "Meeting Backlogs", :js do
     create :user,
            lastname: "First",
            preferences: { time_zone: "Etc/UTC" },
-           member_with_permissions: { project => %i[view_meetings manage_agendas manage_outcomes] }
+           member_with_permissions: { project => %i[view_meetings edit_meetings manage_agendas manage_outcomes] }
   end
   shared_let(:reader) do
     create :user,
@@ -179,7 +179,6 @@ RSpec.describe "Meeting Backlogs", :js do
         # edit item
         show_page.edit_agenda_item(item) do
           fill_in "Title", with: "Updated title"
-          click_on "Save"
         end
         show_page.expect_backlog collapsed: false
 
@@ -200,6 +199,49 @@ RSpec.describe "Meeting Backlogs", :js do
         show_page.select_action(agenda_item, I18n.t(:label_agenda_item_move_to_backlog))
         show_page.clear_backlog
         show_page.expect_backlog collapsed: true
+
+        # expect all agenda items to be removed (Bug #67844)
+        show_page.click_on_backlog
+        show_page.expect_empty_backlog
+      end
+
+      it "shows a confirmation dialog when moving items with unsaved changes" do
+        # Moving item to backlog with unsaved changes for a backlog item
+        show_page.visit!
+
+        show_page.add_agenda_item_to_backlog do
+          fill_in "Title", with: "Backlog item"
+        end
+
+        agenda_item = MeetingAgendaItem.find(meeting_agenda_item.id)
+        backlog_item = MeetingAgendaItem.find_by(title: "Backlog item")
+
+        show_page.edit_agenda_item(backlog_item, save: false) do
+          fill_in "Title", with: "Unsaved edit"
+        end
+        show_page.expect_backlog_count(1)
+
+        dismiss_confirm do
+          show_page.select_action(agenda_item, I18n.t(:label_agenda_item_move_to_backlog))
+        end
+
+        show_page.expect_backlog_count(1)
+        show_page.expect_item_edit_form(backlog_item, visible: true)
+
+        click_on "Cancel"
+
+        # Moving item to current meeting with unsaved changes for a meeting item
+        show_page.edit_agenda_item(agenda_item, save: false) do
+          fill_in "Title", with: "Unsaved edit"
+        end
+        show_page.expect_backlog_count(1)
+
+        dismiss_confirm do
+          show_page.select_action(backlog_item, I18n.t(:label_agenda_item_move_to_current_meeting))
+        end
+
+        show_page.expect_backlog_count(1)
+        show_page.expect_item_edit_form(agenda_item, visible: true)
       end
     end
   end
@@ -326,7 +368,6 @@ RSpec.describe "Meeting Backlogs", :js do
         # edit item
         first_occurrence_page.edit_agenda_item(item) do
           fill_in "Title", with: "Updated title"
-          click_on "Save"
         end
         first_occurrence_page.expect_series_backlog collapsed: false
 
@@ -346,6 +387,10 @@ RSpec.describe "Meeting Backlogs", :js do
         first_occurrence_page.select_action(agenda_item, I18n.t(:label_agenda_item_move_to_backlog))
         first_occurrence_page.clear_backlog
         first_occurrence_page.expect_series_backlog collapsed: true
+
+        # expect all agenda items to be removed (Bug #67844)
+        first_occurrence_page.click_on_backlog
+        first_occurrence_page.expect_empty_backlog
       end
 
       it "allow items to be moved from multiple occurrences to the series backlog and vice versa" do
@@ -355,7 +400,6 @@ RSpec.describe "Meeting Backlogs", :js do
         item = first_occurrence.agenda_items.first
         first_occurrence_page.edit_agenda_item(item) do
           fill_in "Title", with: "Meeting 1 item"
-          click_on "Save"
         end
 
         first_occurrence_page.select_action(item, I18n.t(:label_agenda_item_move_to_backlog))
@@ -371,7 +415,6 @@ RSpec.describe "Meeting Backlogs", :js do
         other_meeting_item = next_occurrence.agenda_items.first
         next_occurrence_page.edit_agenda_item(other_meeting_item) do
           fill_in "Title", with: "Meeting 2 item"
-          click_on "Save"
         end
 
         next_occurrence_page.select_action(other_meeting_item, I18n.t(:label_agenda_item_move_to_backlog))
@@ -396,7 +439,6 @@ RSpec.describe "Meeting Backlogs", :js do
         # update moved item to check if component is updated correctly
         first_occurrence_page.edit_agenda_item(other_meeting_item) do
           fill_in "Title", with: "Meeting 2 item, now updated"
-          click_on "Save"
         end
         first_occurrence_page.expect_agenda_item(title: "Meeting 2 item, now updated")
 
@@ -462,7 +504,7 @@ RSpec.describe "Meeting Backlogs", :js do
   describe "outcomes" do
     let!(:meeting_agenda_item) { create(:meeting_agenda_item, meeting:) }
     let(:field) do
-      TextEditorField.new(page, "Outcome", selector: test_selector("meeting-outcome-input"))
+      TextEditorField.new(page, "New outcome", selector: test_selector("meeting-outcome-input-for-#{meeting_agenda_item.id}"))
     end
 
     before do

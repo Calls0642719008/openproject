@@ -46,7 +46,7 @@ module Mailer
     include MailLayoutHelper
 
     def initialize(scheme:, text:)
-      super
+      super()
 
       @color = LABEL_SCHEME_COLORS[scheme]
       @text = text

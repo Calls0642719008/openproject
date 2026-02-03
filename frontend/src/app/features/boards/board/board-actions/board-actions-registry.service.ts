@@ -17,7 +17,7 @@ export class BoardActionsRegistryService {
     private bannersService:BannersService,
   ) {}
 
-  private mapping:{ [attribute:string]:BoardActionService } = {};
+  private mapping:Record<string, BoardActionService> = {};
 
   public add(attribute:string, service:BoardActionService):void {
     this.mapping[attribute] = service;

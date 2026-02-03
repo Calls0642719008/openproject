@@ -27,7 +27,7 @@ export class OpApplicationController extends ApplicationController {
   }
 
   controllerAttributeFound(target:HTMLElement) {
-    const controllers = (target.dataset.controller as string).split(' ');
+    const controllers = target.dataset.controller!.split(' ');
     const registered = this.application.router.modules.map((module) => module.definition.identifier);
 
     controllers.forEach((controller) => {

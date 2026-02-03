@@ -114,7 +114,7 @@ module DemoData
         .includes(:role_permissions)
         .where(role_permissions: { permission: "edit_project" })
         .each do |role|
-        role.add_permission!(:manage_overview)
+        role.add_permission!(:manage_dashboards)
       end
     end
   end

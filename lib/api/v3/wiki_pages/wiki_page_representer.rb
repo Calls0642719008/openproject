@@ -31,6 +31,7 @@ module API
     module WikiPages
       class WikiPageRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Caching::CachedRepresenter
         include ::API::V3::Attachments::AttachableRepresenterMixin
 
@@ -40,15 +41,7 @@ module API
 
         property :title
 
-        associated_resource :project,
-                            link: ->(*) do
-                              next unless represented.project.present?
-
-                              {
-                                href: api_v3_paths.project(represented.project.id),
-                                title: represented.project.name
-                              }
-                            end
+        associated_project
 
         def _type
           "WikiPage"

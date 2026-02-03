@@ -6,6 +6,8 @@ get:
   tags:
     - Work Packages
   description: Returns the collection of work packages that are related to the given project.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/work_packages`](https://www.openproject.org/docs/api/endpoints/work-packages/#get-work-packages-of-workspace)
   parameters:
     - description: Project id
       example: '1'
@@ -120,6 +122,8 @@ post:
     When calling this endpoint the client provides a single object, containing at least the properties and links that
     are required, in the body. The required fields of a WorkPackage can be found in its schema, which is embedded in
     the respective form. Note that it is only allowed to provide properties or links supporting the write operation.
+
+    This endpoint is deprecated and replaced by [`/api/v3/workspaces/{id}/work_packages`](https://www.openproject.org/docs/api/endpoints/work-packages/#create-work-package-in-workspace)
   requestBody:
     content:
       application/json:

@@ -31,23 +31,20 @@ See COPYRIGHT and LICENSE files for more details.
 <%= render Workflows::PageHeaderComponent.new(state: :show) %>
 
 <% if @workflow_counts.any? %>
-  <div class="autoscroll">
+
     <div class="generic-table--container">
       <div class="generic-table--results-container">
-        <table class="generic-table" data-controller="table-highlighting">
+        <table class="generic-table workflow-table" data-controller="table-highlighting" id="workflow_summary">
           <colgroup>
             <col data-highlight="false">
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col data-highlight="false">
+            <% @roles.size.times do |role| %>
+              <col>
+            <% end %>
           </colgroup>
-          <thead>
+          <thead class="-sticky">
             <tr>
               <th><div class="generic-table--empty-header"></div></th>
-              <% @workflow_counts.first.last.each do |role, count| %>
+              <% @roles.each do |role| %>
                 <th>
                   <div class="generic-table--sort-header-outer">
                     <div class="generic-table--sort-header">
@@ -74,7 +71,7 @@ See COPYRIGHT and LICENSE files for more details.
 
       </div>
     </div>
-  </div>
+
 <% else %>
   <%= no_results_box %>
 <% end %>

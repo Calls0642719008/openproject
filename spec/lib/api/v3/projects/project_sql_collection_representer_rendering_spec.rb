@@ -143,7 +143,7 @@ RSpec.describe API::V3::Projects::ProjectSqlCollectionRepresenter, "rendering" d
     it_behaves_like "successful rendering"
   end
 
-  context "if rendering only total" do
+  context "when rendering only total" do
     let(:select) { { "total" => {} } }
     let(:expected) { { total: 1 }.to_json }
 
@@ -161,6 +161,71 @@ RSpec.describe API::V3::Projects::ProjectSqlCollectionRepresenter, "rendering" d
 
         it_behaves_like "successful rendering"
       end
+    end
+  end
+
+  context "when rendering only elements" do
+    let(:select) do
+      { "elements" => { "*" => {} } }
+    end
+
+    let(:expected) do
+      {
+        _embedded: {
+          elements: [
+            {
+              id: project.id,
+              _type: "Project",
+              name: project.name,
+              identifier: project.identifier,
+              active: true,
+              public: false,
+              _links: {
+                ancestors: [],
+                self: {
+                  href: api_v3_paths.project(project.id),
+                  title: project.name
+                }
+              }
+            }
+          ]
+        }
+      }.to_json
+    end
+
+    it_behaves_like "successful rendering"
+  end
+
+  context "when rendering only nextByOffset" do
+    let(:select) do
+      { "nextByOffset" => {} }
+    end
+
+    let(:expected) do
+      {
+        # there is really no next page
+        _links: {}
+      }.to_json
+    end
+
+    it_behaves_like "successful rendering"
+
+    context "and when there is a next page" do
+      let(:scope) { Project.all }
+
+      let(:expected) do
+        {
+          _links: {
+            nextByOffset: { href: "some_path?offset=2&pageSize=5&select=nextByOffset" }
+          }
+        }.to_json
+      end
+
+      before do
+        create_list(:project, 10)
+      end
+
+      it_behaves_like "successful rendering"
     end
   end
 

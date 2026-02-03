@@ -58,28 +58,32 @@ class WorkPackages::BulkController < ApplicationController
     end
   end
 
+  def reassign
+    respond_to do |format|
+      format.html do
+        render locals: { work_packages: @work_packages,
+                         associated: WorkPackage.associated_classes_to_address_before_destruction_of(@work_packages) }
+      end
+      format.json do
+        render json: { error_message: "Clean up of associated objects required" }, status: 420
+      end
+    end
+  end
+
   def destroy
     if WorkPackage.cleanup_associated_before_destructing_if_required(@work_packages, current_user, params[:to_do])
       destroy_work_packages(@work_packages)
 
       respond_to do |format|
         format.html do
-          redirect_back_or_default(project_work_packages_path(@work_packages.first.project))
+          redirect_to (project_work_packages_path(@work_packages.first.project))
         end
         format.json do
           head :ok
         end
       end
     else
-      respond_to do |format|
-        format.html do
-          render locals: { work_packages: @work_packages,
-                           associated: WorkPackage.associated_classes_to_address_before_destruction_of(@work_packages) }
-        end
-        format.json do
-          render json: { error_message: "Clean up of associated objects required" }, status: 420
-        end
-      end
+      redirect_to(action: :reassign, ids: @work_packages.map(&:id))
     end
   end
 

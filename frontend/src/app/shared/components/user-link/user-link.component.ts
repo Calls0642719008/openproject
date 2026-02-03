@@ -34,16 +34,18 @@ import { PathHelperService } from 'core-app/core/path-helper/path-helper.service
 @Component({
   selector: 'op-user-link',
   template: `
-    <a *ngIf="href"
-       data-hover-card-trigger-target="trigger"
-       [attr.data-hover-card-url]="hoverCardUrl"
-       [attr.href]="href"
-       [attr.title]="label"
-       [textContent]="name">
-    </a>
-    <ng-container *ngIf="!href">
+    @if (href) {
+      <a
+        data-hover-card-trigger-target="trigger"
+        [attr.data-hover-card-url]="hoverCardUrl"
+        [attr.href]="href"
+        [attr.title]="label"
+        [textContent]="name">
+      </a>
+    }
+    @else {
       {{ name }}
-    <ng-container>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

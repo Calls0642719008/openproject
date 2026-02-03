@@ -37,7 +37,7 @@ RSpec.describe Projects::SetAttributesService, type: :model do
 
     allow(contract)
       .to receive(:new)
-      .with(project, user, options: {})
+      .with(project, user, options: contract_options)
       .and_return(contract_instance)
 
     contract
@@ -50,10 +50,12 @@ RSpec.describe Projects::SetAttributesService, type: :model do
     instance_double(ActiveModel::Errors)
   end
   let(:project_valid) { true }
+  let(:contract_options) { {} }
   let(:instance) do
     described_class.new(user:,
                         model: project,
-                        contract_class:)
+                        contract_class:,
+                        contract_options:)
   end
   let(:call_attributes) { {} }
   let(:project) do
@@ -310,350 +312,45 @@ RSpec.describe Projects::SetAttributesService, type: :model do
           include_examples "setting status attributes"
         end
       end
+    end
 
-      describe "calculated custom fields", with_flag: { calculated_value_project_attribute: true } do
-        shared_let(:project) { create(:project) }
+    context "with a required custom field" do
+      shared_let(:required_custom_field) { create(:text_project_custom_field, is_required: true) }
+      shared_let(:call_attributes) { { custom_field_values: { required_custom_field.id => "Provided value" } } }
 
-        before do
-          # Both User.current and :select_project_custom_fields for ProjectCustomField.visible
-          User.current = user
-          mock_permissions_for(user) do |mock|
-            mock.allow_in_project(:select_project_custom_fields, project:)
-          end
+      context "when skip_custom_field_validation is true" do
+        let(:contract_options) { { skip_custom_field_validation: true } }
+        let(:project) { create(:project) }
+
+        it "deactivates custom field validations" do
+          allow(project).to receive(:deactivate_custom_field_validations!).and_call_original
+          subject
+
+          expect(project).to have_received(:deactivate_custom_field_validations!)
         end
 
-        def ref(custom_field) = "{{cf_#{custom_field.id}}}"
+        it "clears the custom values to validate" do
+          subject
 
-        context "when trying to explicitly set values of calculated custom fields" do
-          let!(:cf_static) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated) do
-            create(:calculated_value_project_custom_field,
-                   projects: [project], formula: "1 + 1")
-          end
+          expect(subject.result.custom_values_to_validate).to be_empty
+        end
+      end
 
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_static.id => 3,
-                cf_calculated.id => 4
-              }
-            }
-          end
+      context "when skip_custom_field_validation is false" do
+        let(:contract_options) { { skip_custom_field_validation: false } }
+        let(:project) { create(:project) }
 
-          before do
-            create(:custom_value, customized: project, custom_field: cf_static, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_calculated, value: -6)
-          end
+        it "does not deactivate custom field validations" do
+          allow(project).to receive(:deactivate_custom_field_validations!).and_call_original
+          subject
 
-          it "doesn't allow to assign calculated value" do
-            expect(subject.result.custom_value_attributes).to eq(cf_static.id => "3", cf_calculated.id => "-6")
-          end
+          expect(project).not_to have_received(:deactivate_custom_field_validations!)
         end
 
-        context "when setting value of field referenced in calculated values" do
-          let!(:cf_static) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated1) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_static} * 7")
-          end
-          let!(:cf_calculated2) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_calculated1} * 11")
-          end
+        it "keeps the custom values to validate" do
+          custom_field_ids = subject.result.custom_values_to_validate.map(&:custom_field_id).uniq
 
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_static.id => 3
-              }
-            }
-          end
-
-          before do
-            create(:custom_value, customized: project, custom_field: cf_static, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_calculated1, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated2, value: -6)
-          end
-
-          it "calculates all values" do
-            expect(subject.result.custom_value_attributes).to eq(
-              cf_static.id => "3",
-              cf_calculated1.id => "21",
-              cf_calculated2.id => "231"
-            )
-          end
-        end
-
-        context "when removing value of field referenced in calculated values" do
-          let!(:cf_static) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated1) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_static} * 7")
-          end
-          let!(:cf_calculated2) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_calculated1} * 11")
-          end
-
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_static.id => nil
-              }
-            }
-          end
-
-          before do
-            create(:custom_value, customized: project, custom_field: cf_static, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_calculated1, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated2, value: -6)
-          end
-
-          it "blanks all values" do
-            expect(subject.result.custom_value_attributes).to eq(
-              cf_static.id => nil,
-              cf_calculated1.id => nil,
-              cf_calculated2.id => nil
-            )
-          end
-        end
-
-        context "when setting value of only part of fields referenced in calculated values" do
-          let!(:cf_a) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_b) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_c) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated1) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project], formula: "#{ref cf_a} * 7")
-          end
-          let!(:cf_calculated2) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project], formula: "#{ref cf_b} * 11")
-          end
-          let!(:cf_calculated3) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project], formula: "#{ref cf_c} * 13")
-          end
-
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_a.id => 3,
-                cf_b.id => -5
-              }
-            }
-          end
-
-          before do
-            create(:custom_value, customized: project, custom_field: cf_a, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_b, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_c, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_calculated1, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated2, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated3, value: -6)
-          end
-
-          it "calculates only values referenced by changed field" do
-            expect(subject.result.custom_value_attributes).to eq(
-              cf_a.id => "3",
-              cf_b.id => "-5",
-              cf_c.id => "-5",
-              cf_calculated1.id => "21",
-              cf_calculated2.id => "-6",
-              cf_calculated3.id => "-6"
-            )
-          end
-        end
-
-        context "when intermediate calculated value field is not enabled" do
-          let!(:cf_static) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated1) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_static} * 7")
-          end
-          let!(:cf_calculated2) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   formula: "#{ref cf_calculated1} * 11")
-          end
-          let!(:cf_calculated3) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_calculated2} * 13")
-          end
-
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_static.id => 3
-              }
-            }
-          end
-
-          before do
-            create(:custom_value, customized: project, custom_field: cf_static, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_calculated1, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated2, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated3, value: -6)
-          end
-
-          it "calculates only accessible values" do
-            expect(subject.result.custom_value_attributes).to eq(
-              cf_static.id => "3",
-              cf_calculated1.id => "21",
-              cf_calculated3.id => "-6"
-            )
-
-            expect(subject.result.custom_value_attributes(all: true)).to eq(
-              cf_static.id => "3",
-              cf_calculated1.id => "21",
-              cf_calculated2.id => "-6",
-              cf_calculated3.id => "-6"
-            )
-          end
-        end
-
-        context "when intermediate calculated value field is for admin only" do
-          let!(:cf_static) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated1) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_static} * 7")
-          end
-          let!(:cf_calculated2) do
-            create(:calculated_value_project_custom_field, :skip_validations, :admin_only,
-                   projects: [project],
-                   formula: "#{ref cf_calculated1} * 11")
-          end
-          let!(:cf_calculated3) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_calculated2} * 13")
-          end
-
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_static.id => 3
-              }
-            }
-          end
-
-          before do
-            create(:custom_value, customized: project, custom_field: cf_static, value: -5)
-            create(:custom_value, customized: project, custom_field: cf_calculated1, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated2, value: -6)
-            create(:custom_value, customized: project, custom_field: cf_calculated3, value: -6)
-          end
-
-          it "calculates all values" do
-            expect(subject.result.custom_value_attributes).to eq(
-              cf_static.id => "3",
-              cf_calculated1.id => "21",
-              cf_calculated2.id => "231",
-              cf_calculated3.id => "3003"
-            )
-          end
-        end
-
-        context "when referenced value field is for admin only" do
-          let!(:cf_static) { create(:integer_project_custom_field, projects: [project]) }
-          let!(:cf_calculated) do
-            create(:calculated_value_project_custom_field, :skip_validations,
-                   projects: [project],
-                   formula: "#{ref cf_static} * #{ref cf_referenced}")
-          end
-
-          let(:call_attributes) do
-            {
-              custom_field_values: {
-                cf_static.id => 3
-              }
-            }
-          end
-
-          before do
-            create(:custom_value, customized: project, custom_field: cf_static, value: 1)
-            create(:custom_value, customized: project, custom_field: cf_calculated, value: -6)
-          end
-
-          context "when referenced value is static" do
-            let!(:cf_referenced) { create(:integer_project_custom_field, :admin_only, projects: [project]) }
-
-            before do
-              create(:custom_value, customized: project, custom_field: cf_referenced, value: 2)
-            end
-
-            it "calculates using existing value" do
-              expect(subject.result.custom_value_attributes).to eq(
-                cf_static.id => "3",
-                cf_calculated.id => "6"
-              )
-
-              expect(subject.result.custom_value_attributes(all: true)).to eq(
-                cf_static.id => "3",
-                cf_referenced.id => "2",
-                cf_calculated.id => "6"
-              )
-            end
-          end
-
-          context "when referenced value is calculated value without references" do
-            let!(:cf_referenced) do
-              create(:calculated_value_project_custom_field, :skip_validations, :admin_only,
-                     projects: [project],
-                     formula: "21 * -2")
-            end
-
-            before do
-              create(:custom_value, customized: project, custom_field: cf_referenced, value: 2)
-            end
-
-            it "calculates using existing value" do
-              expect(subject.result.custom_value_attributes).to eq(
-                cf_static.id => "3",
-                cf_calculated.id => "6"
-              )
-
-              expect(subject.result.custom_value_attributes(all: true)).to eq(
-                cf_static.id => "3",
-                cf_referenced.id => "2",
-                cf_calculated.id => "6"
-              )
-            end
-          end
-
-          context "when referenced value is calculated value with unchanged reference" do
-            let!(:cf_referenced1) { create(:integer_project_custom_field, :admin_only, projects: [project]) }
-            let!(:cf_referenced) do
-              create(:calculated_value_project_custom_field, :skip_validations, :admin_only,
-                     projects: [project],
-                     formula: "21 * #{ref cf_referenced1}")
-            end
-
-            before do
-              create(:custom_value, customized: project, custom_field: cf_referenced1, value: -2)
-              create(:custom_value, customized: project, custom_field: cf_referenced, value: 2)
-            end
-
-            it "calculates using existing value" do
-              expect(subject.result.custom_value_attributes).to eq(
-                cf_static.id => "3",
-                cf_calculated.id => "6"
-              )
-
-              expect(subject.result.custom_value_attributes(all: true)).to eq(
-                cf_static.id => "3",
-                cf_referenced1.id => "-2",
-                cf_referenced.id => "2",
-                cf_calculated.id => "6"
-              )
-            end
-          end
+          expect(custom_field_ids).to contain_exactly(required_custom_field.id)
         end
       end
     end

@@ -73,10 +73,10 @@ export abstract class EditFieldHandler extends UntilDestroyedMixin {
   public onDestroy = new Subject<void>();
 
   // OnSubmit callbacks that may register from fields
-  protected _onSubmitHandlers:Array<() => Promise<void>> = [];
+  protected _onSubmitHandlers:(() => Promise<void>)[] = [];
 
   // OnPreSubmit callbacks that may register from fields
-  protected _onBeforeSubmitHandlers:Array<() => void> = [];
+  protected _onBeforeSubmitHandlers:(() => void)[] = [];
 
   /**
    * Call field submission callback handlers
@@ -103,7 +103,7 @@ export abstract class EditFieldHandler extends UntilDestroyedMixin {
   /**
    * Stop event propagation
    */
-  public abstract stopPropagation(evt:JQuery.TriggeredEvent):boolean;
+  public abstract stopPropagation(evt:Event):boolean;
 
   /**
    * Focus on the active field.
@@ -122,7 +122,7 @@ export abstract class EditFieldHandler extends UntilDestroyedMixin {
    * In an edit mode, we can't derive from a submit event whether the user pressed enter
    * (and on what field he did that).
    */
-  public abstract handleUserKeydown(event:JQuery.TriggeredEvent, onlyCancel?:boolean):void;
+  public abstract handleUserKeydown(event:KeyboardEvent, onlyCancel?:boolean):void;
 
   /**
    * Cancel edit

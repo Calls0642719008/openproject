@@ -64,7 +64,7 @@ RSpec.describe Journals::UpdateService do
         context "and note creation is successful" do
           it "creates an attachment claim" do
             expect(subject).to be_success
-            expect(WorkPackages::ActivitiesTab::CommentAttachmentsClaims::ClaimsService)
+            expect(claims_service)
               .to have_received(:new).with(user: user, model: model_instance)
 
             dependent_results = subject.dependent_results
@@ -79,7 +79,7 @@ RSpec.describe Journals::UpdateService do
 
           it "does not create an attachment claim" do
             expect(subject).to be_a_failure
-            expect(WorkPackages::ActivitiesTab::CommentAttachmentsClaims::ClaimsService)
+            expect(claims_service)
               .not_to have_received(:new)
 
             expect(subject.dependent_results).to be_empty
@@ -93,10 +93,37 @@ RSpec.describe Journals::UpdateService do
         it "does not create an attachment claim" do
           expect(subject).to be_a_success
 
-          expect(WorkPackages::ActivitiesTab::CommentAttachmentsClaims::ClaimsService)
+          expect(claims_service)
               .not_to have_received(:new)
 
           expect(subject.dependent_results).to be_empty
+        end
+
+        context "and previous attachments" do
+          let(:user) { create(:user) }
+          let(:work_package) { create(:work_package, author: user) }
+          let(:model_instance) { create(:work_package_journal, journable: work_package, version: 2, notes: "") }
+
+          let(:attachment1) { create(:attachment, container: model_instance) }
+          let(:attachment2) { create(:attachment, container: model_instance) }
+
+          before do
+            model_instance.attachments << [attachment1, attachment2]
+            model_instance.save(validate: false)
+            allow(claims_service).to receive(:new).and_call_original
+          end
+
+          it "removes the previous attachments" do
+            expect(model_instance.attachments).to contain_exactly(attachment1, attachment2)
+
+            expect(subject).to be_a_success
+
+            expect(model_instance.reload.attachments).to be_empty
+            expect(Attachment.exists?(attachment1.id)).to be(false)
+            expect(Attachment.exists?(attachment2.id)).to be(false)
+
+            expect(claims_service).to have_received(:new)
+          end
         end
       end
     end

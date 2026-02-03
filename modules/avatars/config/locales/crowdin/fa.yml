@@ -3,7 +3,7 @@ fa:
   plugin_openproject_avatars:
     name: "آواتارها"
     description: >-
-      This plugin allows OpenProject users to upload a picture to be used as an avatar or use registered images from Gravatar.
+      این پلاگین به کاربران OpenProject اجازه می‌دهد تا تصویری را بارگذاری کنند که به عنوان یک آواتار یا از تصاویر ثبت‌شده از Gravatar استفاده شود.
   label_avatar: "چهرک"
   label_avatar_plural: "آواتارها"
   label_current_avatar: "آواتار فعلی"

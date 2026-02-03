@@ -80,29 +80,39 @@ module WorkPackageTypes
 
       subject(:service) { described_class.new(user:, model:, contract_class:) }
 
-      it "doesn't change the type if no attribute group is passed" do
-        service_result = service.call({})
-        expect(service_result.result).to eq(type)
+      context "without enterprise feature enabled" do
+        it "returns an error" do
+          result = service.call(params)
+          expect(result).to be_failure
+          expect(result.errors.details).to eq(base: [{ action: "Edit Attribute Groups", error: :error_enterprise_only }])
+        end
       end
 
-      it "set the attribute groups to the default value if empty" do
-        allow(type).to receive(:reset_attribute_groups).and_call_original
-        service_result = service.call(attribute_groups: [])
+      context "with enterprise feature enabled", with_ee: %i[edit_attribute_groups] do
+        it "doesn't change the type if no attribute group is passed" do
+          service_result = service.call({})
+          expect(service_result.result).to eq(type)
+        end
 
-        expect(service_result).to be_success
-        expect(type).to have_received(:reset_attribute_groups)
-      end
+        it "set the attribute groups to the default value if empty" do
+          allow(type).to receive(:reset_attribute_groups).and_call_original
+          service_result = service.call(attribute_groups: [])
 
-      it "set the attribute groups to the passed values" do
-        service_result = service.call(params)
+          expect(service_result).to be_success
+          expect(type).to have_received(:reset_attribute_groups)
+        end
 
-        expect(service_result).to be_success
-        group1, groups = *type.reload.attribute_groups
+        it "set the attribute groups to the passed values" do
+          service_result = service.call(params)
 
-        expect(group1.key).to eq("group1")
-        expect(group1.attributes).to contain_exactly(cf1.attribute_name, cf2.attribute_name)
-        expect(groups.key).to eq("groups")
-        expect(groups.attributes).to contain_exactly(cf2.attribute_name)
+          expect(service_result).to be_success
+          group1, groups = *type.reload.attribute_groups
+
+          expect(group1.key).to eq("group1")
+          expect(group1.attributes).to contain_exactly(cf1.attribute_name, cf2.attribute_name)
+          expect(groups.key).to eq("groups")
+          expect(groups.attributes).to contain_exactly(cf2.attribute_name)
+        end
       end
     end
 

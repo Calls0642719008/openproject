@@ -60,8 +60,8 @@ See COPYRIGHT and LICENSE files for more details.
         href: version_path(@version),
         aria: { label: I18n.t(:button_delete) },
         data: {
-          confirm: I18n.t(:text_are_you_sure),
-          method: :delete,
+          turbo_confirm: I18n.t(:text_are_you_sure),
+          turbo_method: :delete,
           test_selector: "version-delete-button"
         },
         title: I18n.t(:button_delete)
@@ -88,61 +88,19 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<div class="widget-boxes -grid">
-  <div class="widget-box -thin">
-    <%= render partial: "versions/overview", locals: { version: @version } %>
-  </div>
-
-  <% if @version.estimated_hours > 0 || User.current.allowed_in_project?(:view_time_entries, @project) %>
-    <div class="widget-box -thin">
-      <fieldset class="form--fieldset">
-        <legend class="form--fieldset-legend"><%= t(:label_estimates_and_progress) %></legend>
-        <table>
-          <tr>
-            <td width="130px" align="right"><%= Version.human_attribute_name(:estimated_hours) %></td>
-            <td width="240px" class="total-hours" align="right"><%= l_hours(@version.estimated_hours) %></td>
-          </tr>
-          <% if User.current.allowed_in_project?(:view_time_entries, @project) %>
-            <tr>
-              <td width="130px" align="right"><%= t(:label_spent_time) %></td>
-              <td width="240px" class="total-hours" align="right"><%= l_hours(@version.spent_hours) %></td>
-            </tr>
-          <% end %>
-        </table>
-      </fieldset>
-    </div>
-  <% end %>
-
+<%= render(Grids::WidgetGridComponent.new) do |grid| %>
+  <% grid.with_widget(Projects::Settings::Versions::OverviewWidgetComponent, version: @version) %>
+  <% grid.with_widget(Projects::Settings::Versions::ProgressWidgetComponent, version: @version, project: @project) %>
   <% if @version.wiki_page %>
-    <div class="widget-box -thin -wider">
-      <%= render(partial: "wiki/text", locals: { page: @version.wiki_page }) if @version.wiki_page %>
-    </div>
+    <% grid.with_widget(Projects::Settings::Versions::WikiWidgetComponent, version: @version) %>
   <% end %>
-
   <% if @issues.present? %>
-    <div class="widget-box -thin -wider">
-      <% if @issues.present? %>
-        <fieldset class="form--fieldset related_issues">
-          <legend class="form--fieldset-legend"><%= t(:label_related_work_packages) %></legend>
-          <ul>
-            <% @issues.each do |issue| -%>
-              <li><%= link_to_work_package(issue, project: issue.project != @version.project) %></li>
-            <% end -%>
-          </ul>
-        </fieldset>
-      <% end %>
-    </div>
+    <% grid.with_widget(Projects::Settings::Versions::RelatedIssuesWidgetComponent, version: @version, issues: @issues) %>
   <% end %>
-
-  <% if @version.work_packages.count > 0 %>
-    <div class="widget-box -thin -wider">
-      <opce-wp-overview-graph
-        global-scope='<%= @version.systemwide? %>'
-        initial-filters='<%= version_wp_overview_graph_initial_filters(@version) %>'>
-      </opce-wp-overview-graph>
-    </div>
+  <% if @version.work_packages.any? %>
+    <% grid.with_widget(Projects::Settings::Versions::WorkPackagesGraphWidgetComponent, version: @version) %>
   <% end %>
-</div>
+<% end %>
 <%= call_hook :view_versions_show_bottom, version: @version %>
 
 <% html_title h(@version.name) %>

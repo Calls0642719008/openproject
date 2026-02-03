@@ -58,6 +58,7 @@ module OpenProject::TextFormatting::Formats::Markdown
         OpenProject::TextFormatting::Filters::AutolinkCustomProtocolsFilter,
         OpenProject::TextFormatting::Filters::RelativeLinkFilter,
         OpenProject::TextFormatting::Filters::LinkAttributeFilter,
+        OpenProject::TextFormatting::Filters::ExternalLinkCaptureFilter,
         OpenProject::TextFormatting::Filters::FigureWrappedFilter,
         OpenProject::TextFormatting::Filters::BemCssFilter
       ]

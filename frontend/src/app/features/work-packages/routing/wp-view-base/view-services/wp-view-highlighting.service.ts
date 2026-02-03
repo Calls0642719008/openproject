@@ -32,7 +32,7 @@ export class WorkPackageViewHighlightingService extends WorkPackageQueryStateSer
    */
   public shouldHighlightInline(name:string):boolean {
     // 1. Are we in inline mode or unable to render?
-    if (!this.isInline || !this.Banners.allowsTo('conditional_highlighting')) {
+    if (!this.isInline) {
       return false;
     }
 
@@ -85,14 +85,6 @@ export class WorkPackageViewHighlightingService extends WorkPackageQueryStateSer
     if (_.isEmpty(value.selectedAttributes)) {
       value.selectedAttributes = undefined;
     }
-
-    void this.Banners.conditional(
-      'conditional_highlighting',
-      () => {
-        value.mode = 'none';
-        value.selectedAttributes = undefined;
-      },
-    );
 
     return value;
   }

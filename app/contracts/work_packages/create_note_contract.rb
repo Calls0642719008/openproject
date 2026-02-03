@@ -45,6 +45,10 @@ module WorkPackages
         errors.add(:journal_internal, :enterprise_plan_required, plan_name:)
       end
 
+      unless model.project.enabled_internal_comments
+        errors.add(:journal_internal, :feature_disabled_for_project)
+      end
+
       unless allowed_in_project?(:add_internal_comments)
         errors.add(:journal_internal, :error_unauthorized)
       end

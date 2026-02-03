@@ -55,7 +55,7 @@ module Storages
 
               case response
               in { status: 200..299 }
-                Success(response.json(symbolize_keys: true))
+                fail_on_ocs_error(response.json(symbolize_keys: true), error)
               in { status: 404 }
                 Failure(error.with(code: :not_found))
               in { status: 401 }

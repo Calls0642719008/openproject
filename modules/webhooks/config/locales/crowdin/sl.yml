@@ -27,11 +27,14 @@ sl:
       no_results_table: Še ni definirana nobena spletna zanka.
       label_add_new: Dodajte novo spletno zanko
       label_edit: Uredite spletno zanko
-      label_event_resources: Viri dogodka
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Ustvarjen"
         updated: "Posodobljen"
-        comment: "Comment"
+        comment: "Komentar"
         internal_comment: "Internal comment"
       explanation:
         text: >
@@ -54,7 +57,7 @@ sl:
           placeholder: 'Neobvezen opis spletne zanke.'
         enabled:
           description: >
-            Če je označeno, se bo spletna zanka sprožila na izbranih dogodkih. Počistite polje, da onemogočite spletno zanko. 
+            Če je označeno, se bo spletna zanka sprožila na izbranih dogodkih. Počistite polje, da onemogočite spletno zanko.
         events:
           title: 'Omogočeni dogodki'
         project_ids:
@@ -66,4 +69,4 @@ sl:
           title: 'Izbrani projekti'
         secret:
           description: >
-            Če je nastavljeno, OpenProject to skrivno vrednost uporabi za podpis uporabnega bremena spletne zanke. 
+            Če je nastavljeno, OpenProject to skrivno vrednost uporabi za podpis uporabnega bremena spletne zanke.

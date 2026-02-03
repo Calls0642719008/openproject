@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -54,15 +55,6 @@ module MeetingSections
       }
     end
 
-    def drag_and_drop_target_config
-      {
-        "is-drag-and-drop-target": true,
-        "target-container-accessor": ".Box > ul", # the accessor of the container that contains the drag and drop items
-        "target-id": @meeting_section.id, # the id of the target
-        "target-allowed-drag-type": "custom-field" # the type of dragged items which are allowed to be dropped in this target
-      }
-    end
-
     def editable?
       @meeting_section.editable? && User.current.allowed_in_project?(:manage_agendas, @meeting_section.project)
     end
@@ -101,18 +93,24 @@ module MeetingSections
 
     def move_action_item(menu, move_to, label_text, icon)
       menu.with_item(label: label_text,
-                     href: move_meeting_section_path(@meeting_section.meeting, @meeting_section, move_to:),
-                     form_arguments: {
-                       method: :put, data: { "turbo-stream": true,
-                                             test_selector: "meeting-section-move-#{move_to}" }
-                     }) do |item|
+                     tag: :button,
+                     content_arguments: { data: {
+                       action: "click->meetings--submit#intercept",
+                       href: move_project_meeting_section_path(@meeting_section.meeting.project,
+                                                               @meeting_section.meeting,
+                                                               @meeting_section,
+                                                               move_to:),
+                       test_selector: "meeting-section-move-#{move_to}"
+                     } }) do |item|
         item.with_leading_visual_icon(icon:)
       end
     end
 
     def edit_action_item(menu)
       menu.with_item(label: t("label_section_rename"),
-                     href: edit_meeting_section_path(@meeting_section.meeting, @meeting_section),
+                     href: edit_project_meeting_section_path(@meeting_section.meeting.project,
+                                                             @meeting_section.meeting,
+                                                             @meeting_section),
                      content_arguments: {
                        data: { "turbo-stream": true, "test-selector": "meeting-section-edit" }
                      }) do |item|
@@ -123,7 +121,10 @@ module MeetingSections
     def add_agenda_item_action(menu)
       menu.with_item(
         label: t("label_agenda_item_add"),
-        href: new_meeting_agenda_item_path(@meeting_section.meeting, type: "simple", meeting_section_id: @meeting_section&.id),
+        href: new_project_meeting_agenda_item_path(@meeting_section.meeting.project,
+                                                   @meeting_section.meeting,
+                                                   type: "simple",
+                                                   meeting_section_id: @meeting_section&.id),
         content_arguments: {
           data: { "turbo-stream": true, "test-selector": "meeting-section-add-agenda-item-from-menu" }
         }
@@ -135,8 +136,10 @@ module MeetingSections
     def add_work_package_action(menu)
       menu.with_item(
         label: t("label_agenda_item_work_package_add"),
-        href: new_meeting_agenda_item_path(@meeting_section.meeting, type: "work_package",
-                                                                     meeting_section_id: @meeting_section&.id),
+        href: new_project_meeting_agenda_item_path(@meeting_section.meeting.project,
+                                                   @meeting_section.meeting,
+                                                   type: "work_package",
+                                                   meeting_section_id: @meeting_section&.id),
         content_arguments: {
           data: { "turbo-stream": true, "test-selector": "meeting-section-add-work-package-from-menu" }
         }
@@ -153,12 +156,17 @@ module MeetingSections
           t("text_are_you_sure")
         end
       menu.with_item(label: t("text_destroy"),
+                     tag: :button,
                      scheme: :danger,
-                     href: meeting_section_path(@meeting_section.meeting, @meeting_section),
-                     form_arguments: {
-                       method: :delete, data: { confirm: confirm_text, "turbo-stream": true,
-                                                test_selector: "meeting-section-delete" }
-                     }) do |item|
+                     content_arguments: { data: {
+                       action: "click->meetings--submit#intercept",
+                       href: project_meeting_section_path(@meeting_section.meeting.project,
+                                                          @meeting_section.meeting,
+                                                          @meeting_section),
+                       method: "DELETE",
+                       confirm_message: confirm_text,
+                       test_selector: "meeting-section-delete"
+                     } }) do |item|
         item.with_leading_visual_icon(icon: :trash)
       end
     end

@@ -92,7 +92,7 @@ eo:
       title: "Your PDF timesheet export"
       button: "Export PDF timesheet"
       timesheet: "Timesheet"
-      time: "Time"
+      time: "Tempo"
       sums_hours: Sums
       overview_per_user_total: "Overview: Total hours per user"
       overview_per_user_day: "Overview: Hours per user per day"

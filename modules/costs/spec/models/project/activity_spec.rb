@@ -56,16 +56,16 @@ RSpec.describe Projects::Activity, "costs" do
 
   describe ".with_latest_activity" do
     it "set project.latest_activity_at to the latest updated budget time" do
-      budget.update(updated_at: initial_time - 10.seconds)
-      budget2.update(updated_at: initial_time - 20.seconds)
+      budget.update_columns(updated_at: initial_time - 10.seconds)
+      budget2.update_columns(updated_at: initial_time - 20.seconds)
 
       # there is a loss of precision for timestamps stored in database
       expect(latest_activity).to equal_time_without_usec(budget.updated_at)
     end
 
     it "takes the time stamp of the latest activity across models" do
-      work_package.update(updated_at: initial_time - 10.seconds)
-      budget.update(updated_at: initial_time - 20.seconds)
+      work_package.update_columns(updated_at: initial_time - 10.seconds)
+      budget.update_columns(updated_at: initial_time - 20.seconds)
 
       # Order:
       # work_package
@@ -73,7 +73,7 @@ RSpec.describe Projects::Activity, "costs" do
 
       expect(latest_activity).to equal_time_without_usec(work_package.updated_at)
 
-      work_package.update(updated_at: budget.updated_at - 10.seconds)
+      work_package.update_columns(updated_at: budget.updated_at - 10.seconds)
 
       # Order:
       # budget

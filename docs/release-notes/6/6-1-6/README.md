@@ -8,7 +8,7 @@ release_date: 2017-03-20
 
 # OpenProject 6.1.6
 
-The release contains an important security fix regarding session expiry.
+The release contains an important security fix regarding session expiration.
 
 For details on the security fix, take a look at the
 [release news](https://www.openproject.org/blog/openproject-6-1-6-released-security-fix/).

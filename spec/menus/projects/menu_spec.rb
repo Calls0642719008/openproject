@@ -78,7 +78,7 @@ RSpec.describe Projects::Menu do
       end
 
       it "has the favorite projects item" do
-        expect(children_menu_items).to include(have_attributes(title: I18n.t("projects.lists.favored")))
+        expect(children_menu_items).to include(have_attributes(title: I18n.t("projects.lists.favorited")))
       end
 
       it "has an archived projects item" do
@@ -96,7 +96,7 @@ RSpec.describe Projects::Menu do
       end
 
       it "has the favorite projects item" do
-        expect(children_menu_items).to include(have_attributes(title: I18n.t("projects.lists.favored")))
+        expect(children_menu_items).to include(have_attributes(title: I18n.t("projects.lists.favorited")))
       end
 
       it "has no archived projects item" do
@@ -136,7 +136,7 @@ RSpec.describe Projects::Menu do
       end
 
       it "has no favorite projects item" do
-        expect(children_menu_items).not_to include(have_attributes(title: I18n.t("projects.lists.favored")))
+        expect(children_menu_items).not_to include(have_attributes(title: I18n.t("projects.lists.favorited")))
       end
 
       it "has no archived projects item" do
@@ -163,13 +163,13 @@ RSpec.describe Projects::Menu do
     end
 
     before do
-      favored_queries.each do |query|
-        query.add_favoring_user(current_user)
+      favorited_queries.each do |query|
+        query.add_favoriting_user(current_user)
       end
     end
 
-    context "when no queries are favored" do
-      let(:favored_queries) { [] }
+    context "when no queries are favorited" do
+      let(:favorited_queries) { [] }
 
       it "orders persisted titles alphabetically" do
         expect(titles).to eq(
@@ -183,8 +183,8 @@ RSpec.describe Projects::Menu do
       end
     end
 
-    context "when some queries are favored" do
-      let(:favored_queries) do
+    context "when some queries are favorited" do
+      let(:favorited_queries) do
         [
           current_user_query,
           public_query,
@@ -192,7 +192,7 @@ RSpec.describe Projects::Menu do
         ]
       end
 
-      it "orders persisted titles by favor then alphabetically" do
+      it "orders persisted titles by favorite then alphabetically" do
         expect(titles).to eq(
           [
             ["Active projects", "My projects", "Favorite projects"],
@@ -204,8 +204,8 @@ RSpec.describe Projects::Menu do
       end
     end
 
-    context "when all queries are favored" do
-      let(:favored_queries) do
+    context "when all queries are favorited" do
+      let(:favorited_queries) do
         [
           current_user_query,
           another_current_user_query,

@@ -25,19 +25,19 @@ id:
       work_packages:
         tab_name: "GitHub"
       tab_header:
-        title: "Pull requests"
+        title: "Permintaan pull"
         copy_menu:
-          label: Git snippets
-          description: Copy git snippets to clipboard
+          label: Cuplikan Git
+          description: Salin cuplikan git ke papan klip
         git_actions:
-          branch_name: Branch name
-          commit_message: Commit message
-          cmd: Create branch with empty commit
-          title: Quick snippets for Git
-          copy_success: '✅ Copied!'
-          copy_error: '❌ Copy failed!'
+          branch_name: Nama cabang
+          commit_message: Pesan commit
+          cmd: Buat cabang dengan komit kosong
+          title: Cuplikan cepat untuk Git
+          copy_success: '✅ Tersalin!'
+          copy_error: '❌ Gagal tersalin!'
       tab_prs:
-        empty: 'There are no pull requests linked yet. Link an existing PR by using the code <code>OP#%{wp_id}</code> in the PR description or create a new PR.'
+        empty: 'Belum ada pull request yang terhubung. Hubungkan pull request yang sudah ada dengan menggunakan kode <code>OP#%{wp_id}</code> dalam deskripsi pull request atau buat pull request baru.'
       github_actions: Tindakan
       pull_requests:
         message: "Permintaan tarik #%{pr_number} %{pr_link} untuk %{repository_link} yang ditulis oleh %{github_user_link} telah %{pr_state}."

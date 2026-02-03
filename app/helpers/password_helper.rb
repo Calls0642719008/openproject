@@ -60,7 +60,7 @@ module PasswordHelper
     controller = with_data.fetch(:controller, "")
 
     if password_confirmation_required?
-      with_data.merge(controller: "#{controller} password-confirmation-dialog".strip)
+      with_data.merge(controller: "#{controller} require-password-confirmation".strip)
     else
       with_data
     end

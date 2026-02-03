@@ -32,5 +32,5 @@ require "spec_helper"
 require_relative "../shared_custom_field_expectations"
 
 RSpec.describe "version float custom fields", :js do
-  it_behaves_like "expected fields for the custom field's format", "Version", "Float"
+  it_behaves_like "expected fields for the custom field's format", "Versions", "Float"
 end

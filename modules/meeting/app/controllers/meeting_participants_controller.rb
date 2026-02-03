@@ -33,7 +33,8 @@ class MeetingParticipantsController < ApplicationController
   include OpTurbo::FlashStreamHelper
   include Meetings::AgendaComponentStreams
 
-  before_action :authorize
+  load_and_authorize_with_permission_in_project :edit_meetings
+
   before_action :set_meeting
   before_action :set_participant, only: %i[toggle_attendance destroy]
 
@@ -65,21 +66,26 @@ class MeetingParticipantsController < ApplicationController
   def toggle_attendance
     @participant.toggle!(:attended)
 
-    update_add_user_form_component_via_turbo_stream
-    update_list_component_via_turbo_stream
+    update_box_row_component_via_turbo_stream(participant: @participant)
     update_sidebar_participants_component_via_turbo_stream(meeting: @meeting)
 
     respond_with_turbo_streams
   end
 
   def destroy
-    if @participant.destroy!
+    call = MeetingParticipants::DeleteService
+      .new(user: User.current, model: @participant)
+      .call
+
+    if call.success?
       update_add_user_form_component_via_turbo_stream
       update_list_component_via_turbo_stream
       update_sidebar_participants_component_via_turbo_stream(meeting: @meeting)
-
-      respond_with_turbo_streams
+    else
+      render_error_flash_message_via_turbo_stream(message: join_flash_messages(call.errors))
     end
+
+    respond_with_turbo_streams
   end
 
   def manage_participants_dialog
@@ -89,11 +95,11 @@ class MeetingParticipantsController < ApplicationController
   private
 
   def set_meeting
-    @meeting = Meeting.find(params[:meeting_id])
+    @meeting = @project.meetings.visible.find(params[:meeting_id])
   end
 
   def set_participant
-    @participant = MeetingParticipant.find(params[:id])
+    @participant = @meeting.participants.find(params[:id])
   end
 
   def create_new_participants(user_ids)
@@ -109,9 +115,9 @@ class MeetingParticipantsController < ApplicationController
       .new(user: User.current)
       .call(meeting: @meeting, user_id: user_id, invited: true, attended: false)
       .on_failure do |call|
-      call.errors.full_messages.each do |msg|
-        @meeting.errors.add(:base, msg)
-      end
+        call.errors.full_messages.each do |msg|
+          @meeting.errors.add(:base, msg)
+        end
     end
   end
 end

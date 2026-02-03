@@ -285,7 +285,7 @@ export abstract class WorkPackagesViewBase extends UntilDestroyedMixin implement
    */
   protected filterRefreshEvents(events:HalEvent[]):boolean {
     const source:string[] = this.querySpace.renderedWorkPackageIds.value
-      || this.querySpace.results.value?.elements.map((el) => el.id as string)
+      || this.querySpace.results.value?.elements.map((el) => el.id!)
       || [];
 
     const rendered = new Set(source);

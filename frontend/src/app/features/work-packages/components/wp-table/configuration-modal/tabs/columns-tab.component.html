@@ -5,11 +5,9 @@
                               [inputPlaceholder]="text.inputPlaceholder"
                               [dragAreaLabel]="text.inputDragLabel"
                               [id]="'columns-select'"
-                              (onChange)="updateSelected($event)">
-  </op-draggable-autocompleter>
+                              (onChange)="updateSelected($event)" />
 </div>
 
-<op-enterprise-banner-frame
-  feature="work_package_query_relation_columns"
+<op-enterprise-banner-frame feature="work_package_query_relation_columns"
   [dismissable]="true"
-></op-enterprise-banner-frame>
+ />

@@ -1,5 +1,5 @@
 function dataURItoBlob(dataURI:string) {
-  const bytes = dataURI.split(',')[0].indexOf('base64') >= 0
+  const bytes = dataURI.split(',')[0].includes('base64')
     ? atob(dataURI.split(',')[1])
     : unescape(dataURI.split(',')[1]);
   const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];

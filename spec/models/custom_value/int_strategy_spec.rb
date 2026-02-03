@@ -37,8 +37,14 @@ RSpec.describe CustomValue::IntStrategy do
   describe "#typed_value" do
     subject { instance.typed_value }
 
+    context "when value is an int string" do
+      let(:value) { "12" }
+
+      it { is_expected.to be(12) }
+    end
+
     context "when value is a float string" do
-      let(:value) { "10" }
+      let(:value) { "10.0" }
 
       it { is_expected.to be(10) }
     end
@@ -57,24 +63,36 @@ RSpec.describe CustomValue::IntStrategy do
   end
 
   describe "#formatted_value" do
-    subject { instance.typed_value }
+    subject { instance.formatted_value }
 
     context "when value is an int string" do
       let(:value) { "10" }
 
-      it { is_expected.to be(10) }
+      it { is_expected.to eql("10") }
+    end
+
+    context "when value is a big integer" do
+      let(:value) { "10432501" }
+
+      it { is_expected.to eql("10,432,501") }
+
+      it "is localized" do
+        I18n.with_locale(:de) do
+          expect(subject).to eql "10.432.501"
+        end
+      end
     end
 
     context "when value is blank" do
       let(:value) { "" }
 
-      it { is_expected.to be_nil }
+      it { is_expected.to be("") }
     end
 
     context "when value is nil" do
       let(:value) { nil }
 
-      it { is_expected.to be_nil }
+      it { is_expected.to be("") }
     end
   end
 

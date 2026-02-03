@@ -29,36 +29,54 @@
 #++
 
 FactoryBot.define do
-  factory :project do
+  factory :project, parent: :workspace do
     transient do
-      no_types { false }
-      disable_modules { [] }
-      members { [] }
+      # example:
+      #   member_with_permissions: {
+      #     user => :view_work_packages
+      #     other_user => [:view_work_packages, :edit_work_packages]
+      #   }
+      member_with_permissions { {} }
+
+      # example:
+      #   member_wih_roles: {
+      #     user => role1,
+      #     other_user => [role2, role3]
+      #   }
+      member_with_roles { {} }
     end
+
+    workspace_type { "project" }
 
     sequence(:name) { |n| "My Project No. #{n}" }
     sequence(:identifier) { |n| "myproject_no_#{n}" }
-    created_at { Time.zone.now }
-    updated_at { Time.zone.now }
-    enabled_module_names { OpenProject::AccessControl.available_project_modules }
-    public { false }
-    templated { false }
-    workspace_type { "project" }
 
-    callback(:after_build) do |project, evaluator|
-      disabled_modules = Array(evaluator.disable_modules).map(&:to_s)
-      project.enabled_module_names = project.enabled_module_names - disabled_modules
+    callback(:after_build) do |_project, evaluator|
+      is_build_strategy = evaluator.instance_eval { @build_strategy.is_a? FactoryBot::Strategy::Build }
+      uses_member_association = evaluator.member_with_permissions.present? || evaluator.member_with_roles.present?
+      if is_build_strategy && uses_member_association
+        raise ArgumentError,
+              "Use create(...) with principals and member_with_permissions, member_with_roles traits."
+      end
+    end
 
-      if !evaluator.no_types && project.types.empty?
-        project.types << (Type.where(is_standard: true).first || build(:type_standard))
+    callback(:after_stub) do |_project, evaluator|
+      uses_member_association = evaluator.member_with_permissions.present? || evaluator.member_with_roles.present?
+      if uses_member_association
+        raise ArgumentError,
+              "To create memberships, you either need to use create(...) or use the `mock_permissions_for` " \
+              "helper on the stubbed models"
       end
     end
 
     callback(:after_create) do |project, evaluator|
-      evaluator.members.each do |user, roles|
-        Members::CreateService
-          .new(user: User.system, contract_class: EmptyContract)
-          .call(principal: user, project:, roles: Array(roles))
+      evaluator.member_with_permissions.each do |principal, permission_or_permissions|
+        role = create(:project_role, permissions: Array(permission_or_permissions))
+        create(:member, principal:, project: project, roles: [role])
+      end
+
+      evaluator.member_with_roles.each do |principal, role_or_roles|
+        create(:member, principal:, project: project, roles: Array(role_or_roles))
       end
     end
 
@@ -69,42 +87,22 @@ FactoryBot.define do
     factory :template_project do
       sequence(:name) { |n| "Template project No. #{n}" }
       sequence(:identifier) { |n| "template_no_#{n}" }
-      templated { true }
+      template
     end
 
-    factory :project_with_types do
-      # using initialize_with types to prevent
-      # the project's initialize function looking for the default type
-      # when we will be setting the type later on anyway
-      initialize_with do
-        types = if instance_variable_get(:@build_strategy).is_a?(FactoryBot::Strategy::Stub)
-                  [build_stubbed(:type)]
-                else
-                  [build(:type)]
-                end
+    # Factories for
+    # * portfolio
+    # * program
+    # are in separate files.
 
-        new(types:)
-      end
+    factory :project_with_types do
+      with_types
 
       factory :valid_project do
         callback(:after_build) do |project|
           project.types << build(:type_with_workflow)
         end
       end
-    end
-
-    trait :with_status do
-      status_code { Project.status_codes.keys.sample }
-      status_explanation { "some explanation" }
-    end
-
-    trait :archived do
-      active { false }
-    end
-
-    trait :updated_a_long_time_ago do
-      created_at { 2.years.ago }
-      updated_at { 2.years.ago }
     end
   end
 end

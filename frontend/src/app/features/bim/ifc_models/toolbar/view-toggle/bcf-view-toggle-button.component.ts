@@ -32,19 +32,19 @@ import { BcfViewService } from 'core-app/features/bim/ifc_models/pages/viewer/bc
 
 @Component({
   template: `
-    <ng-container *ngIf="(view$ | async) as current">
+    @if ((view$ | async); as current) {
       <button class="button"
-              id="bcf-view-toggle-button"
-              opBcfViewDropdown>
-        <op-icon icon-classes="button--icon {{bcfView.icon[current]}}"></op-icon>
+        id="bcf-view-toggle-button"
+        opBcfViewDropdown>
+        <op-icon icon-classes="button--icon {{bcfView.icon[current]}}" />
         <span class="button--text"
-              aria-hidden="true"
-              [textContent]="bcfView.text[current]">
+          aria-hidden="true"
+          [textContent]="bcfView.text[current]">
         </span>
-        <op-icon icon-classes="button--icon icon-small icon-pulldown"></op-icon>
+        <op-icon icon-classes="button--icon icon-small icon-pulldown" />
       </button>
-    </ng-container>
-  `,
+    }
+    `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'op-bcf-view-toggle-button',
   standalone: false,

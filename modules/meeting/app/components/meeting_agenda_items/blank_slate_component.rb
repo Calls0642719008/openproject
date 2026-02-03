@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -51,10 +52,12 @@ module MeetingAgendaItems
       end
     end
 
-    def can_finalize_template?
-      template? &&
-        User.current.allowed_in_project?(:create_meetings, @meeting.project) &&
-        @meeting.recurring_meeting.scheduled_meetings.none?
+    def description
+      if template?
+        t(:"recurring_meeting.template.description")
+      else
+        t(%i[text_meeting_empty_description1 text_meeting_empty_description2]).join(" ")
+      end
     end
   end
 end

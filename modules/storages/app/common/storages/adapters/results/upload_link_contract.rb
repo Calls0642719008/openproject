@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Results
-      class UploadLinkContract < Dry::Validation::Contract
+      class UploadLinkContract < DryApplicationContract
         params do
           required(:destination).filled { uri?(:https) }
           required(:method).filled(AdapterTypes::HTTPVerb)

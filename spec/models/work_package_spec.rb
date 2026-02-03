@@ -591,8 +591,7 @@ RSpec.describe WorkPackage do
 
     before do
       without_timestamping do
-        work_package1.updated_at = 1.minute.ago
-        work_package1.save!
+        work_package1.update_column(:updated_at, 1.minute.ago)
       end
     end
 

@@ -234,8 +234,21 @@ class Attachment < ApplicationRecord
     self.digest = Digest::MD5.file(file.path).hexdigest
   end
 
+  ##
+  # Detects the content type of a file based on its actual content.
+  # This method always relies on file content detection (via the `file` command)
+  # and never uses filename-based narrowing (MimeType.narrow_type) to ensure
+  # security-sensitive types like SVG are correctly identified even when the
+  # filename extension doesn't match the actual content.
+  #
+  # @param file_path [String] Path to the file to analyze
+  # @param fallback [String] Default content type if detection fails
+  # @return [String] The detected content type
   def self.content_type_for(file_path, fallback = OpenProject::ContentTypeDetector::SENSIBLE_DEFAULT)
-    content_type = OpenProject::MimeType.narrow_type file_path, OpenProject::ContentTypeDetector.new(file_path).detect
+    # Always use ContentTypeDetector which analyzes file content, not filename
+    # Do NOT use MimeType.narrow_type here as it could incorrectly narrow
+    # security-sensitive types (e.g., SVG with .png extension -> image/png)
+    content_type = OpenProject::ContentTypeDetector.new(file_path).detect
     content_type || fallback
   end
 

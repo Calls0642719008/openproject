@@ -1,4 +1,5 @@
 pl:
   overviews:
-    label: 'Przegląd'
-  permission_manage_overview: 'Zarządzanie stroną przeglądową'
+    label_home: "Strona główna %{workspace_type}"
+    label_dashboard: "Pulpit nawigacyjny"
+    label_overview: "Przegląd"

@@ -43,13 +43,6 @@ pt-BR:
           name: PM2 Magenta
         item_3:
           name: PM2 Verde amarelo
-      document_categories:
-        item_0:
-          name: Documentação
-        item_1:
-          name: Especificação
-        item_2:
-          name: Outro
       project_query_roles:
         item_0:
           name: Visualizador de consulta do projeto

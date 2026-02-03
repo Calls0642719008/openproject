@@ -52,15 +52,13 @@ class CustomValue::BoolStrategy < CustomValue::FormatStrategy
   end
 
   def parse_value(val)
-    parsed_val = if !present?(val)
-                   nil
-                 elsif ActiveRecord::Type::Boolean::FALSE_VALUES.include?(val)
-                   OpenProject::Database::DB_VALUE_FALSE
-                 else
-                   OpenProject::Database::DB_VALUE_TRUE
-                 end
-
-    super(parsed_val)
+    if !present?(val)
+      nil
+    elsif ActiveRecord::Type::Boolean::FALSE_VALUES.include?(val)
+      OpenProject::Database::DB_VALUE_FALSE
+    else
+      OpenProject::Database::DB_VALUE_TRUE
+    end
   end
 
   def validate_type_of_value; end

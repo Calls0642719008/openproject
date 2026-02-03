@@ -32,6 +32,7 @@ module API::V3::ProjectStorages
   class ProjectStorageRepresenter < ::API::Decorators::Single
     include API::Decorators::DateProperty
     include API::Decorators::LinkedResource
+    include API::V3::Workspaces::LinkedResource
 
     defaults render_nil: true
 
@@ -61,7 +62,7 @@ module API::V3::ProjectStorages
     end
 
     associated_resource :storage, skip_render: ->(*) { true }, skip_link: ->(*) { false }
-    associated_resource :project, skip_render: ->(*) { true }, skip_link: ->(*) { false }
+    associated_project  skip_render: ->(*) { true }
     associated_resource :creator,
                         v3_path: :user,
                         representer: ::API::V3::Users::UserRepresenter,

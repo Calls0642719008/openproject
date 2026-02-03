@@ -32,12 +32,10 @@
 
     <h2 class="spot-subheader-extra-small">{{ text.label_visibility_settings }}</h2>
 
-      <query-sharing-form
-        [isSave]="true"
+      <query-sharing-form [isSave]="true"
         (onChange)="setValues($event)"
         [isStarred]="isStarred"
-        [isPublic]="isPublic">
-      </query-sharing-form>
+        [isPublic]="isPublic" />
   </div>
 
   <div class="spot-action-bar">

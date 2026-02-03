@@ -118,7 +118,7 @@ class Meeting::TimeGroup < ApplicationForm
   def timezone_caption
     return if editing_recurring?
 
-    friendly_timezone_name(User.current.time_zone, period: @meeting.start_time)
+    friendly_timezone_name(User.current.time_zone, period: @meeting.start_time || Time.zone.now)
   end
 
   def editing_recurring?

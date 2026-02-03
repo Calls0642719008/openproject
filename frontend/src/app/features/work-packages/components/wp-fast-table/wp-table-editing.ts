@@ -14,7 +14,7 @@ export class WorkPackageTableEditingContext {
     readonly injector:Injector) {
   }
 
-  public forms:{ [wpId:string]:TableEditForm } = {};
+  public forms:Record<string, TableEditForm> = {};
 
   public reset() {
     _.each(this.forms, (form) => form.destroy());

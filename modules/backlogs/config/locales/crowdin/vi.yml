@@ -27,7 +27,7 @@ vi:
     attributes:
       work_package:
         position: "Vị trí"
-        story_points: "Điểm Story"
+        story_points: "Điểm câu chuyện"
         backlogs_work_package_type: "Loại Backlog"
     errors:
       models:
@@ -40,6 +40,8 @@ vi:
               task_version_must_be_the_same_as_story_version: "phải giống với phiên bản của bảng cha."
         sprint:
           cannot_end_before_it_starts: "Sprint không thể kết thúc trước khi nó bắt đầu."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Câu chuyện mới"
     any: "bất kỳ"
@@ -90,7 +92,7 @@ vi:
   backlogs_sprint_unestimated: "Cao điểm đã đóng hoặc đang hoạt động có những câu chuyện chưa được ước lượng"
   backlogs_sprint_unsized: "Dự án có những câu chuyện trên các cao điểm đang hoạt động hoặc đã đóng gần đây mà chưa được ước lượng"
   backlogs_sprints: "Cao điểm"
-  backlogs_story: "Story"
+  backlogs_story: "Câu chuyện"
   backlogs_story_type: "Loại câu truyện tóm tắt"
   backlogs_task: "Nhiệm vụ"
   backlogs_task_type: "Loại công việc"
@@ -100,7 +102,10 @@ vi:
   backlogs_empty_title: "Không có phiên bản nào được xác định để sử dụng trong các nhiệm vụ tồn đọng"
   backlogs_empty_action_text: "Để bắt đầu vớicác nhiệm vụ tồn đọng, hãy tạo một phiên bản mới và gán nó vào một cột các nhiệm vụ tồn đọng"
   button_edit_wiki: "Sửa trang wiki"
-  error_backlogs_task_cannot_be_story: "Cài đặt không hợp lệ. Loại nhiệm vụ đã chọn không thể đồng thời là loại câu chuyện."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Các lỗi đã gặp phải:"
   error_intro_singular: "Lỗi sau đã được gặp phải:"
   error_outro: "Vui lòng sửa các lỗi trên trước khi gửi lại."
@@ -112,18 +117,22 @@ vi:
   label_backlog: "Nhiệm vụ tồn đọng"
   label_backlogs: "Các nhiệm vụ tồn đọng"
   label_backlogs_unconfigured: "Bạn chưa cấu hình Bảng nhiệm vụ tồn đọng. Vui lòng vào %{administration} > %{plugins}, sau đó nhấp vào liên kết %{configure} cho gắn thêm này. Khi bạn đã thiết lập các trường, quay lại trang này để bắt đầu sử dụng công cụ."
-  label_blocks_ids: "ID của các gói công việc bị chặn"
+  label_blocks_ids: "ID của các work package bị chặn"
   label_burndown: "Giảm dần"
   label_column_in_backlog: "Cột trong các nhiệm vụ tồn đọng"
-  label_hours: "giờ"
+  label_hours: "hours"
   label_work_package_hierarchy: "Hệ thống phân cấp gói công việc"
   label_master_backlog: "Các nhiệm vụ tồn đọng chính"
   label_not_prioritized: "không được ưu tiên"
   label_points: "điểm"
   label_points_burn_down: "Xuống"
-  label_points_burn_up: "Tăng"
+  label_points_burn_up: "Lên"
   label_product_backlog: "tồn đọng sản phẩm"
   label_select_all: "Chọn tất cả"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "Cao điểm nhiệm vụ tồn đọng"
   label_sprint_cards: "Xuất thẻ"
   label_sprint_impediments: "Vướng mắc của Cao điểm"
@@ -158,5 +167,9 @@ vi:
   todo_work_package_summary: "%{type}: %{summary}"
   version_settings_display_label: "Cột trong nhiệm vụ tồn đọng"
   version_settings_display_option_left: "trái"
-  version_settings_display_option_none: "không có"
+  version_settings_display_option_none: "không"
   version_settings_display_option_right: "phải"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

@@ -88,6 +88,21 @@ class MeetingsController < ApplicationController
     end
   end
 
+  def new; end
+
+  def edit
+    respond_to do |format|
+      format.turbo_stream do
+        update_header_component_via_turbo_stream(state: :edit)
+
+        render turbo_stream: @turbo_streams
+      end
+      format.html do
+        render :edit
+      end
+    end
+  end
+
   def create # rubocop:disable Metrics/AbcSize
     call =
       if @copy_from
@@ -106,7 +121,7 @@ class MeetingsController < ApplicationController
       text = I18n.t(:notice_successful_create)
       unless User.current.pref.time_zone?
         link = I18n.t(:notice_timezone_missing, zone: formatted_time_zone_offset)
-        text += " #{view_context.link_to(link, { controller: '/my', action: :settings, anchor: 'pref_time_zone' },
+        text += " #{view_context.link_to(link, { controller: '/my', action: :locale, anchor: 'pref_time_zone' },
                                          class: 'link_to_profile')}"
       end
       flash[:notice] = text.html_safe # rubocop:disable Rails/OutputSafety
@@ -144,8 +159,6 @@ class MeetingsController < ApplicationController
     )
   end
 
-  def new; end
-
   current_menu_item :new do
     :meetings
   end
@@ -179,6 +192,20 @@ class MeetingsController < ApplicationController
     )
   end
 
+  def update
+    call = ::Meetings::UpdateService
+      .new(user: current_user, model: @meeting)
+      .call(@converted_params)
+
+    if call.success?
+      flash[:notice] = I18n.t(:notice_successful_update)
+      redirect_to action: "show", id: @meeting
+    else
+      @meeting = call.result
+      render action: :edit, status: :unprocessable_entity
+    end
+  end
+
   def destroy # rubocop:disable Metrics/AbcSize
     recurring = @meeting.recurring_meeting
 
@@ -197,19 +224,6 @@ class MeetingsController < ApplicationController
     end
   end
 
-  def edit
-    respond_to do |format|
-      format.turbo_stream do
-        update_header_component_via_turbo_stream(state: :edit)
-
-        render turbo_stream: @turbo_streams
-      end
-      format.html do
-        render :edit
-      end
-    end
-  end
-
   def history
     @events = get_events
   rescue ActiveRecord::RecordNotFound => e
@@ -221,20 +235,6 @@ class MeetingsController < ApplicationController
     update_header_component_via_turbo_stream(state: :show)
 
     respond_with_turbo_streams
-  end
-
-  def update
-    call = ::Meetings::UpdateService
-      .new(user: current_user, model: @meeting)
-      .call(@converted_params)
-
-    if call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to action: "show", id: @meeting
-    else
-      @meeting = call.result
-      render action: :edit, status: :unprocessable_entity
-    end
   end
 
   def details_dialog; end
@@ -296,7 +296,7 @@ class MeetingsController < ApplicationController
       .call
       .on_failure { |call| render_500(message: call.message) }
       .on_success do |call|
-      send_data call.result, filename: filename_for_content_disposition("#{@meeting.title}.ics")
+        send_data call.result, filename: filename_for_content_disposition("#{@meeting.title}.ics")
     end
   end
 
@@ -335,8 +335,15 @@ class MeetingsController < ApplicationController
   def toggle_notifications
     @meeting.toggle!(:notify)
 
+    # Reload to get the updated value
+    @meeting.recurring_meeting.template.reload if @meeting.template?
+
     if @meeting.notify?
-      handle_notification(type: :toggle_notifications)
+      if @meeting.template?
+        handle_series_notification
+      else
+        handle_notification(type: :toggle_notifications)
+      end
     end
 
     update_sidebar_component_via_turbo_stream
@@ -345,7 +352,43 @@ class MeetingsController < ApplicationController
     respond_with_turbo_streams
   end
 
+  def exit_draft_mode_dialog
+    respond_with_dialog Meetings::ExitDraftModeDialogComponent.new(meeting: @meeting)
+  end
+
+  def exit_draft_mode
+    call = ::Meetings::UpdateService
+             .new(user: current_user, model: @meeting)
+             .call({ state: "open", notify: meeting_params[:notify] == "1" })
+
+    if call.success?
+      deliver_invitation_mails
+      update_all_via_turbo_stream
+      update_backlog_via_turbo_stream(collapsed: nil)
+
+      respond_with_turbo_streams
+    else
+      @meeting = call.result
+      render action: :edit, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def deliver_invitation_mails
+    return false unless @meeting.notify?
+
+    @meeting
+      .participants
+      .invited
+      .find_each do |participant|
+        MeetingMailer.invited(
+          @meeting,
+          participant.user,
+          User.current
+        ).deliver_later
+    end
+  end
 
   def load_query
     query = ParamsToQueryService.new(
@@ -381,41 +424,13 @@ class MeetingsController < ApplicationController
 
     # We group meetings into individual groups, but only for upcoming meetings
     if params[:upcoming] == "false"
-      @meetings = show_more_pagination(@query.results)
+      @meetings = show_more_pagination(@query.results, limit: params[:limit])
     else
-      @grouped_meetings = group_meetings(@query.results)
+      service = ::GroupMeetingsService.new(@query.results, limit: params[:limit])
+      call = service.call
+
+      @grouped_meetings = call.result
     end
-  end
-
-  def group_meetings(all_meetings) # rubocop:disable Metrics/AbcSize
-    next_week = Time
-      .current
-      .next_occurring(OpenProject::Internationalization::Date.beginning_of_week)
-      .beginning_of_day
-    groups = Hash.new { |h, k| h[k] = [] }
-    groups[:later] = show_more_pagination(all_meetings
-                                            .where(start_time: next_week..)
-                                            .order(start_time: :asc))
-
-    all_meetings
-      .where(start_time: ...next_week)
-      .order(start_time: :asc)
-      .each do |meeting|
-      start_date = in_user_zone(meeting.start_time).to_date
-
-      group_key =
-        if start_date == Time.zone.today
-          :today
-        elsif start_date == Time.zone.tomorrow
-          :tomorrow
-        else
-          :this_week
-        end
-
-      groups[group_key] << meeting
-    end
-
-    groups
   end
 
   def build_meeting
@@ -441,8 +456,12 @@ class MeetingsController < ApplicationController
   end
 
   def find_meeting
-    @meeting = Meeting
-      .includes([:project, :author, { participants: :user }, :sections, { agenda_items: :outcomes }])
+    scope = @project ? @project.meetings : Meeting.all
+
+    @meeting = scope
+      .visible
+      .includes([:project, :author, { participants: :user }, { agenda_items: :outcomes }])
+      .preload(:sections)
       .find(params[:id])
   end
 
@@ -576,5 +595,22 @@ class MeetingsController < ApplicationController
     else
       render_error_flash_message_via_turbo_stream(message:)
     end
+  end
+
+  def handle_series_notification
+    recurring_meeting = @meeting.recurring_meeting
+
+    @meeting
+      .participants
+      .invited
+      .find_each do |participant|
+        MeetingSeriesMailer.invited(
+          recurring_meeting,
+          participant.user,
+          User.current
+        ).deliver_later
+    end
+
+    render_success_flash_message_via_turbo_stream(message: I18n.t(:notice_successful_notification))
   end
 end

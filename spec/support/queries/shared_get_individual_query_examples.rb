@@ -39,6 +39,11 @@ RSpec.shared_examples_for "GET individual query" do
       base_path
     end
   end
+  let(:self_path) do
+    super()
+  rescue NoMethodError
+    path
+  end
 
   before do
     work_package
@@ -51,7 +56,7 @@ RSpec.shared_examples_for "GET individual query" do
 
   it "has the right endpoint set for the self reference" do
     expect(last_response.body)
-      .to be_json_eql(path.to_json)
+      .to be_json_eql(self_path.to_json)
       .at_path("_links/self/href")
   end
 

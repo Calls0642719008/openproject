@@ -70,7 +70,7 @@ RSpec.describe "API v3 Work package form resource" do
     shared_context "with post request" do
       before do
         login_as(current_user)
-        post post_path, (params ? params.to_json : nil), "CONTENT_TYPE" => "application/json"
+        post post_path, params&.to_json, "CONTENT_TYPE" => "application/json"
       end
     end
 
@@ -786,26 +786,103 @@ RSpec.describe "API v3 Work package form resource" do
               }
             end
 
-            describe "formattable custom field set to nil" do
-              let(:custom_field) do
-                create(:work_package_custom_field, field_format: "text")
+            describe "custom fields" do
+              describe "formattable custom field set to nil" do
+                let(:custom_field) do
+                  create(:work_package_custom_field, field_format: "text")
+                end
+
+                let(:cf_param) { { custom_field.attribute_name(:camel_case) => nil } }
+                let(:params) { valid_params.merge(cf_param) }
+
+                before do
+                  project.work_package_custom_fields << custom_field
+                  project.save!
+                  work_package.type.custom_fields << custom_field
+                  work_package.save!
+
+                  login_as(current_user)
+                  post post_path, params&.to_json, "CONTENT_TYPE" => "application/json"
+                end
+
+                it "responds with a valid body (Regression OP#37510)" do
+                  expect(last_response).to have_http_status(:ok)
+                end
               end
 
-              let(:cf_param) { { custom_field.attribute_name(:camel_case) => nil } }
-              let(:params) { valid_params.merge(cf_param) }
+              context "when the custom field is required" do
+                let!(:required_custom_field) do
+                  create(:work_package_custom_field,
+                         field_format: "string",
+                         name: "Department",
+                         is_required: true,
+                         projects: [project],
+                         types: [work_package.type])
+                end
 
-              before do
-                project.work_package_custom_fields << custom_field
-                project.save!
-                work_package.type.custom_fields << custom_field
-                work_package.save!
+                context "when no custom field value is provided" do
+                  let(:params) { valid_params }
 
-                login_as(current_user)
-                post post_path, (params ? params.to_json : nil), "CONTENT_TYPE" => "application/json"
-              end
+                  include_context "with post request"
 
-              it "responds with a valid body (Regression OP#37510)" do
-                expect(last_response).to have_http_status(:ok)
+                  it_behaves_like "having no errors"
+
+                  it "has a commit link" do
+                    expect(subject.body)
+                      .to be_json_eql(api_v3_paths.work_package(work_package.id).to_json)
+                      .at_path("_links/commit/href")
+                  end
+                end
+
+                context "when the custom field value is provided but empty" do
+                  let(:params) do
+                    valid_params.merge("customField#{required_custom_field.id}" => "")
+                  end
+
+                  include_context "with post request"
+
+                  it "has validation errors for the required custom field" do
+                    expect(subject.body).to have_json_path("_embedded/validationErrors/customField#{required_custom_field.id}")
+                  end
+
+                  it "explains the custom field error" do
+                    expect(subject.body)
+                      .to be_json_eql("Department can't be blank.".to_json)
+                      .at_path("_embedded/validationErrors/customField#{required_custom_field.id}/message")
+                  end
+
+                  it "includes the empty value in the payload" do
+                    expect(subject.body)
+                      .to be_json_eql("".to_json)
+                      .at_path("_embedded/payload/customField#{required_custom_field.id}")
+                  end
+
+                  it "does not have a commit link" do
+                    expect(subject.body).not_to have_json_path("_links/commit")
+                  end
+                end
+
+                context "when the custom field value is provided and valid" do
+                  let(:params) do
+                    valid_params.merge("customField#{required_custom_field.id}" => "Engineering")
+                  end
+
+                  include_context "with post request"
+
+                  it_behaves_like "having no errors"
+
+                  it "has a commit link" do
+                    expect(subject.body)
+                      .to be_json_eql(api_v3_paths.work_package(work_package.id).to_json)
+                      .at_path("_links/commit/href")
+                  end
+
+                  it "has the custom field value in the payload" do
+                    expect(subject.body)
+                      .to be_json_eql("Engineering".to_json)
+                      .at_path("_embedded/payload/customField#{required_custom_field.id}")
+                  end
+                end
               end
             end
           end

@@ -21,7 +21,7 @@ export default class DialogController extends Controller {
 
   private adjustFormSubmitTarget(element:HTMLElement) {
     const form = element.querySelector('form');
-    const formID = form?.getAttribute('id') as string;
+    const formID = form?.getAttribute('id')!;
     this.submitTarget.setAttribute('form', formID);
   }
 }

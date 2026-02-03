@@ -19,10 +19,10 @@ services:
     networks:
       - external
     extra_hosts:
-      - "openproject.local:host-gateway"
+      - "openproject.${OPENPROJECT_DOCKER_DEV_TLD:-local}:host-gateway"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gitlab.rule=Host(`gitlab.local`)"
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
       - "traefik.http.routers.gitlab.entrypoints=websecure"
       - "traefik.http.services.gitlab.loadbalancer.server.port=80"
 

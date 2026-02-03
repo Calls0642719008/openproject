@@ -76,7 +76,7 @@ module Storages
             Results::StorageFileInfo.build(
               status: json[:status],
               status_code: json[:status_code],
-              id: json[:id],
+              id: compose_id(json),
               name: json[:name],
               mime_type: mime_type(json),
               size: json[:size],

@@ -45,7 +45,7 @@ RSpec.describe OpenProject::JournalFormatter::ProjectStatusCode do
       let(:new_value) { status_code_as_integer("off_track") }
       let(:expected) do
         I18n.t(:text_journal_set_to,
-               label: "<strong>Project status</strong>",
+               label: "<strong>Status</strong>",
                value: "<i>Off track</i>")
       end
 
@@ -57,7 +57,7 @@ RSpec.describe OpenProject::JournalFormatter::ProjectStatusCode do
       let(:new_value) { nil }
       let(:expected) do
         I18n.t(:text_journal_deleted,
-               label: "<strong>Project status</strong>",
+               label: "<strong>Status</strong>",
                old: "<strike><i>Discontinued</i></strike>")
       end
 
@@ -69,7 +69,7 @@ RSpec.describe OpenProject::JournalFormatter::ProjectStatusCode do
       let(:new_value) { status_code_as_integer("on_track") }
       let(:expected) do
         I18n.t(:text_journal_changed_plain,
-               label: "<strong>Project status</strong>",
+               label: "<strong>Status</strong>",
                linebreak: nil,
                old: "<i>Off track</i>",
                new: "<i>On track</i>")

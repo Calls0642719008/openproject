@@ -80,25 +80,64 @@ module Meetings::PDF::Common::Agenda
     end
   end
 
-  def write_outcome(agenda_item)
-    return unless agenda_item.outcomes.exists?
-
-    outcome = agenda_item.outcomes.information_kind.last
-    return if outcome.notes.blank?
-
-    pdf.indent(styles.outcome_indent) do
-      write_optional_page_break
-      write_outcome_title
-      write_outcome_notes(outcome.notes)
+  def write_outcomes(agenda_item)
+    outcomes = agenda_item.outcomes.to_a
+    outcomes.each_with_index do |outcome, index|
+      pdf.indent(styles.outcome_indent) do
+        write_optional_page_break
+        write_outcome_title(index, outcomes.size > 1)
+        if outcome.work_package_kind?
+          write_work_package_outcome(outcome)
+        elsif outcome.notes.present?
+          write_outcome_notes(outcome.notes)
+        end
+      end
     end
   end
 
-  def write_outcome_title
+  def write_work_package_outcome(outcome)
+    with_vertical_margin(styles.outcome_work_package_margin) do
+      if outcome.visible_work_package?
+        write_visible_work_package_outcome(outcome.work_package)
+      elsif outcome.linked_work_package?
+        write_undisclosed_work_package_outcome(outcome.work_package_id)
+      elsif outcome.deleted_work_package?
+        write_deleted_work_package_outcome
+      end
+    end
+  end
+
+  def write_visible_work_package_outcome(work_package)
+    href = url_helpers.work_package_url(work_package)
+    link_text = "#{work_package.type.name} ##{work_package.id} #{work_package.subject}"
+    status_text = " (#{work_package.status.name})"
+    base_style = styles.outcome_work_package
+    pdf.formatted_text([
+                         base_style.merge({ text: link_text, link: href, styles: [:underline] }),
+                         base_style.merge({ text: status_text })
+                       ])
+  end
+
+  def write_undisclosed_work_package_outcome(work_package_id)
+    pdf.formatted_text([
+                         { text: I18n.t(:label_agenda_item_undisclosed_wp, id: work_package_id) }
+                       ], styles.outcome_work_package)
+  end
+
+  def write_deleted_work_package_outcome
+    pdf.formatted_text([
+                         { text: I18n.t(:label_agenda_item_deleted_wp) }
+                       ], styles.outcome_work_package)
+  end
+
+  def write_outcome_title(index, multiple_outcomes)
+    text = I18n.t("label_agenda_outcome")
+    text = "#{text} #{index + 1}" if multiple_outcomes
     with_vertical_margin(styles.outcome_title_margins) do
       style = styles.outcome_title
       pdf.formatted_text([
                            styles.outcome_symbol.merge({ text: "✓ " }),
-                           style.merge({ text: I18n.t("label_agenda_outcome") })
+                           style.merge({ text: })
                          ], style)
     end
   end

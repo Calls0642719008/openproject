@@ -22,6 +22,9 @@ import {
   UserAutocompleterComponent,
 } from 'core-app/shared/components/autocompleter/user-autocompleter/user-autocompleter.component';
 import {
+  MeetingAutocompleterComponent,
+} from 'core-app/shared/components/autocompleter/meeting-autocompleter/meeting-autocompleter.component';
+import {
   ProjectAutocompleterComponent,
 } from 'core-app/shared/components/autocompleter/project-autocompleter/project-autocompleter.component';
 import {
@@ -47,6 +50,9 @@ import {
   UserAutocompleterTemplateComponent,
 } from 'core-app/shared/components/autocompleter/user-autocompleter/user-autocompleter-template.component';
 import {
+  MeetingAutocompleterTemplateComponent,
+} from 'core-app/shared/components/autocompleter/meeting-autocompleter/meeting-autocompleter-template.component';
+import {
   ProjectAutocompleterTemplateComponent,
 } from 'core-app/shared/components/autocompleter/project-autocompleter/project-autocompleter-template.component';
 import {
@@ -55,6 +61,7 @@ import {
 import {
   ProjectPhaseAutocompleterComponent,
 } from './project-phase-autocompleter/project-phase-autocompleter.component';
+import { IconModule } from 'core-app/shared/components/icon/icon.module';
 
 export const OPENPROJECT_AUTOCOMPLETE_COMPONENTS = [
   CreateAutocompleterComponent,
@@ -64,6 +71,8 @@ export const OPENPROJECT_AUTOCOMPLETE_COMPONENTS = [
   DraggableAutocompleteComponent,
   UserAutocompleterComponent,
   UserAutocompleterTemplateComponent,
+  MeetingAutocompleterTemplateComponent,
+  MeetingAutocompleterComponent,
   ProjectAutocompleterComponent,
   ProjectAutocompleterTemplateComponent,
   ProjectPhaseAutocompleterComponent,
@@ -87,6 +96,7 @@ export const OPENPROJECT_AUTOCOMPLETE_COMPONENTS = [
     DynamicModule,
     OpenprojectPrincipalRenderingModule,
     InviteUserButtonModule,
+    IconModule,
   ],
   exports: OPENPROJECT_AUTOCOMPLETE_COMPONENTS,
   declarations: OPENPROJECT_AUTOCOMPLETE_COMPONENTS,

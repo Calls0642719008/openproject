@@ -76,7 +76,7 @@ RSpec.describe "Work package filtering by hierarchy custom field", :js, with_ee:
 
         # Filtering by hierarchy (=)
 
-        filters.add_filter_by(hierarchy_cf.name, "is", [luke.label], hierarchy_cf.attribute_name(:camel_case))
+        filters.add_filter_by(hierarchy_cf.name, "is (OR)", [luke.label], hierarchy_cf.attribute_name(:camel_case))
 
         wp_table.ensure_work_package_not_listed!(wp_leia)
         wp_table.expect_work_package_listed(wp_luke)

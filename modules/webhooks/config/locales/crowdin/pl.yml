@@ -27,7 +27,10 @@ pl:
       no_results_table: Jeszcze nie określono żadnych webhooków.
       label_add_new: Dodaj nowy webhook
       label_edit: Edytuj webhook
-      label_event_resources: Zasoby zdarzeń
+      label_x_events:
+        one: "1 zdarzenie"
+        other: "Liczba zdarzeń: %{count}"
+        zero: "Brak zdarzeń"
       events:
         created: "Utworzono"
         updated: "Zaktualizowano"

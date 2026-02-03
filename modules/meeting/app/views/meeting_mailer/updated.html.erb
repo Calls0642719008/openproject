@@ -40,6 +40,27 @@ See COPYRIGHT and LICENSE files for more details.
       <%= placeholder_cell("24px", vertical: true) %>
       <td>
         <table>
+          <% if @changes[:old_title] != @changes[:new_title] %>
+            <tr>
+              <td style="<%= placeholder_text_styles(width: "30%") %>">
+                <%= t("meeting.email.updated.old_title") %>
+              </td>
+              <td style="<%= placeholder_text_styles %>">
+                <s>
+                  <%= @changes[:old_title] %>
+                </s>
+              </td>
+            </tr>
+            <tr>
+              <td style="<%= placeholder_text_styles(width: "30%") %>">
+                <%= t("meeting.email.updated.new_title") %>
+              </td>
+              <td style="<%= placeholder_text_styles(color: "#1f2328", "font-weight": "bold") %>">
+                <%= @changes[:new_title] %>
+              </td>
+            </tr>
+          <% end %>
+
           <% if @changes[:old_start] != @changes[:new_start] || @changes[:old_duration] != @changes[:new_duration] %>
             <tr>
               <td style="<%= placeholder_text_styles(width: "30%") %>">

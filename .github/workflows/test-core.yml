@@ -16,6 +16,7 @@ on:
       - 'help/**'
       - 'packaging/**'
       - '.pkgr.yml'
+      - '.github/workflows/packager.yml'
 
 permissions:
   contents: read
@@ -23,7 +24,7 @@ permissions:
 jobs:
   all:
     name: Units + Features
-    if: github.repository == 'opf/openproject'
+    if: github.repository_owner == 'opf'
     runs-on:
       labels: "runs-on=${{ github.run_id }}/image=ubuntu24-full-x64/family=m7+c7+r7+i7+r8/ram=128+256/cpu=32"
     timeout-minutes: 40
@@ -34,7 +35,7 @@ jobs:
     - uses: runs-on/action@v2
       with:
         metrics: cpu,memory,disk,io,network
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Cache DOCKER
       id: cache_docker
       uses: runs-on/cache@v4
@@ -49,9 +50,9 @@ jobs:
       uses: runs-on/cache@v4
       with:
         path: cache/bundle
-        key: gem-bookworm-${{ hashFiles('.ruby-version') }}-${{ hashFiles('Gemfile.lock') }}
+        key: gem-trixie-${{ hashFiles('.ruby-version') }}-${{ hashFiles('Gemfile.lock') }}
         restore-keys: |
-          gem-bookworm-${{ hashFiles('.ruby-version') }}-
+          gem-trixie-${{ hashFiles('.ruby-version') }}-
     - name: Cache NPM
       uses: runs-on/cache@v4
       with:

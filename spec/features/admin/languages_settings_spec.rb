@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Languages settings page", :cuprite, :js do
+RSpec.describe "Languages settings page", :js do
   current_user { create(:admin) }
 
   let(:languages_page) { Pages::Admin::SystemSettings::Languages.new }
@@ -44,13 +44,15 @@ RSpec.describe "Languages settings page", :cuprite, :js do
     it "adds default language to available languages when saving" do
       languages_page.visit!
 
-      expect(languages_page).to have_field("available_languages_de", checked: true)
-      expect(languages_page).to have_field("available_languages_en", checked: true)
-      expect(languages_page).to have_field("available_languages_fr", checked: true, disabled: true)
-      expect(languages_page).to have_field("available_languages_ja", checked: false)
+      within_fieldset "Available languages" do
+        expect(languages_page).to have_checked_field("Deutsch") # 🇩🇪
+        expect(languages_page).to have_checked_field("English")
+        expect(languages_page).to have_checked_field("Français", disabled: true) # 🇫🇷
+        expect(languages_page).to have_unchecked_field("日本語") # 🇯🇵
+      end
 
       expect { languages_page.save }
-        .to change { Setting.find_by(name: "available_languages").value }
+        .to change { Setting.find_by(name: "available_languages").value.sort }
         .from(%w[de en])
         .to(%w[de en fr])
     end
@@ -67,12 +69,14 @@ RSpec.describe "Languages settings page", :cuprite, :js do
 
       languages_page.visit!
 
-      expect(languages_page).to have_field("available_languages_de", checked: true, disabled: true)
-      expect(languages_page).to have_field("available_languages_en", checked: true, disabled: true)
-      expect(languages_page).to have_field("available_languages_fr", checked: true, disabled: true)
-      expect(languages_page).to have_field("available_languages_ja", checked: false, disabled: true)
+      within_fieldset "Available languages" do
+        expect(languages_page).to have_checked_field("Deutsch", disabled: true) # 🇩🇪
+        expect(languages_page).to have_checked_field("English", disabled: true)
+        expect(languages_page).to have_checked_field("Français", disabled: true) # 🇫🇷
+        expect(languages_page).to have_unchecked_field("日本語", disabled: true) # 🇯🇵
+      end
 
-      expect(page).to have_button("Save", disabled: true)
+      expect(languages_page).to have_button("Save", disabled: true)
 
       expect(Setting.where(name: "available_languages")).not_to exist
     end

@@ -74,6 +74,8 @@ RSpec.describe "work package export", :js, :selenium do
   end
 
   before do
+    login_as(current_user)
+
     service_instance = instance_double(WorkPackages::Exports::ScheduleService)
     allow(WorkPackages::Exports::ScheduleService)
       .to receive(:new)
@@ -92,8 +94,6 @@ RSpec.describe "work package export", :js, :selenium do
 
     query.column_names = query_columns
     query.save!
-
-    login_as(current_user)
   end
 
   RSpec::Matchers.define :has_mandatory_params do |expected|
@@ -208,8 +208,7 @@ RSpec.describe "work package export", :js, :selenium do
     end
 
     it "opens the dialog and exports" do
-      settings_menu.open_and_choose I18n.t("js.toolbar.settings.export")
-      click_on export_type
+      open_export_dialog!
       export!
     end
   end
@@ -422,6 +421,37 @@ RSpec.describe "work package export", :js, :selenium do
         expect(page).to have_text(I18n.t("export.dialog.columns.input_caption_required"))
         click_on I18n.t("export.dialog.submit")
         expect(page).to have_button(I18n.t("export.dialog.submit")) # form not submitted, button is still there
+      end
+
+      context "when exporting grouped by project phase column (regression #65740)" do
+        let!(:project_phase_with_gates) do
+          create(:project_phase,
+                 :with_gated_definition,
+                 project: project,
+                 start_date: Date.new(2024, 12, 1),
+                 finish_date: Date.new(2024, 12, 13))
+        end
+        let!(:project_phase) do
+          create(:project_phase,
+                 project:,
+                 start_date: Date.new(2024, 12, 1),
+                 finish_date: Date.new(2024, 12, 13))
+        end
+
+        let(:query) { create(:query, user: current_user, project:, group_by: "project_phase", name: "My custom query title") }
+        let(:export_type) { I18n.t("export.dialog.format.options.pdf.label") }
+        let(:export_sub_type) { I18n.t("export.dialog.pdf.export_type.options.table.label") }
+        let(:expected_params) { default_expected_params.merge({ pdf_export_type: "table", groupBy: "project_phase" }) }
+        let(:expected_columns) { %w[ID Subject Type Status Assignee Priority ProjectPhase] }
+
+        before do
+          wp1.update!(project_phase_definition_id: project_phase_with_gates.definition_id)
+          wp2.update!(project_phase_definition_id: project_phase.definition_id)
+        end
+
+        it "exports a pdf table" do
+          export!
+        end
       end
     end
 

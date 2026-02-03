@@ -28,25 +28,73 @@
  * ++
  */
 
-declare module 'idiomorph/dist/idiomorph.cjs' {
+declare module 'idiomorph' {
+  type ConfigHeadStyle = 'merge'|'append'|'morph'|'none';
+
+  interface ConfigHead {
+    style?:ConfigHeadStyle;
+    block?:boolean;
+    ignore?:boolean;
+    shouldPreserve?:(element:Element) => boolean;
+    shouldReAppend?:(element:Element) => boolean;
+    shouldRemove?:(element:Element) => boolean;
+    afterHeadMorphed?:(element:Element, data:{ added:Node[]; kept:Element[]; removed:Element[] }) => void;
+  }
+
+  interface ConfigCallbacks {
+    beforeNodeAdded?:(node:Node) => boolean;
+    afterNodeAdded?:(node:Node) => void;
+    beforeNodeMorphed?:(oldElement:Element, newElement:Node) => boolean;
+    afterNodeMorphed?:(oldElement:Element, newElement:Node) => void;
+    beforeNodeRemoved?:(element:Element) => boolean;
+    afterNodeRemoved?:(element:Element) => void;
+    beforeAttributeUpdated?:(attributeName:string, element:Element, updateType:'update'|'remove') => boolean;
+  }
+
+  export interface Config {
+    morphStyle?:'outerHTML'|'innerHTML';
+    ignoreActive?:boolean;
+    ignoreActiveValue?:boolean;
+    restoreFocus?:boolean;
+    callbacks?:ConfigCallbacks;
+    head?:ConfigHead;
+  }
+
+  type NoOp = () => void;
+
+  interface ConfigHeadInternal {
+    style:ConfigHeadStyle;
+    block?:boolean;
+    ignore?:boolean;
+    shouldPreserve?:((element:Element) => boolean)|NoOp;
+    shouldReAppend?:((element:Element) => boolean)|NoOp;
+    shouldRemove?:((element:Element) => boolean)|NoOp;
+    afterHeadMorphed?:((element:Element, data:{ added:Node[], kept:Element[], removed:Element[] }) => void )| NoOp;
+  }
+
+  interface ConfigCallbacksInternal {
+      beforeNodeAdded?:(node:Node) => boolean|NoOp,
+      afterNodeAdded?:(node:Node) => undefined|NoOp,
+      beforeNodeMorphed?:(oldElement:Node,newElement:Node) => boolean|NoOp,
+      afterNodeMorphed?:(oldElement:Node,newElement:Node) => undefined|NoOp,
+      beforeNodeRemoved?:(element:Node) => boolean|NoOp,
+      afterNodeRemoved?:(element:Node) => undefined|NoOp,
+      beforeAttributeUpdated?(attributeName:string, element:Element, updateType:'update'|'remove'):boolean|NoOp
+  }
+
+  interface ConfigInternal {
+    morphStyle:'outerHTML'|'innerHTML',
+    ignoreActive?:boolean ,
+    ignoreActiveValue?:boolean ,
+    restoreFocus?:boolean ,
+    callbacks?:ConfigCallbacksInternal ,
+    head?:ConfigHeadInternal
+  }
+
   export const Idiomorph:{
-      morph(oldNode:Element|Document, newContent?:string|Element|Iterable<Element>|null, options?:{
-        morphStyle?:'innerHTML'|'outerHTML';
-        ignoreActive?:boolean;
-        ignoreActiveValue?:boolean;
-        head?:{
-          style?:'merge'|'append'|'morph'|'none';
-        };
-        callbacks?:{
-          beforeNodeAdded?:(node:ChildNode) => void|boolean;
-          afterNodeAdded?:(node:ChildNode) => void;
-          beforeNodeMorphed?:(oldNode:Element, newNode:Element) => void|boolean;
-          afterNodeMorphed?:(oldNode:Element, newNode:Element) => void;
-          beforeNodeRemoved?:(node:ChildNode) => void|boolean;
-          afterNodeRemoved?:(node:ChildNode) => void;
-        };
-      })
+    morph(ldNode:Element|Document, newContent?:Element|Node|HTMLCollection|Node[]|string|null, options?:Config);
+    defaults:ConfigInternal;
   };
 
-  export = Idiomorph;
+  export { Idiomorph };
 }

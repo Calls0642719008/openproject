@@ -2,8 +2,8 @@ description: |-
   A simple membership collection response example.
 value:
   _type: Collection
-  total: 2
-  count: 2
+  total: 1
+  count: 1
   pageSize: 20
   offset: 1
   _embedded:
@@ -33,9 +33,6 @@ value:
           roles:
             - href: '/api/v3/roles/4'
               title: Sith Lord
-      - _type: Membership
-        id: 12
-        _hint: Membership resource shortened for brevity
   _links:
     self:
       href: '/api/v3/memberships'

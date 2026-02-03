@@ -43,13 +43,6 @@ zh-CN:
           name: PM2 品红
         item_3:
           name: PM2 绿黄
-      document_categories:
-        item_0:
-          name: 文档
-        item_1:
-          name: 技术规范
-        item_2:
-          name: 其他
       project_query_roles:
         item_0:
           name: 项目查询查看器

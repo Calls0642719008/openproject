@@ -1,44 +1,29 @@
 services:
   traefik:
     image: traefik:latest
-    command: >
-      --log.level=INFO
-      --providers.docker
-      --providers.docker.network=gateway
-      --providers.docker.exposedByDefault=false
-      --api.dashboard=true
-      --api.disabledashboardad=true
-      --entryPoints.web.address=:80
-      --entryPoints.web.http.redirections.entrypoint.to=websecure
-      --entryPoints.websecure.address=:443
-      --entryPoints.websecure.http.tls=true
-      --entryPoints.websecure.http.tls.certresolver=step
-      --certificatesresolvers.step.acme.caserver=https://step:9000/acme/acme/directory
-      --certificatesresolvers.step.acme.tlschallenge=true
-      --certificatesresolvers.step.acme.email=root@localhost
-      --certificatesresolvers.step.acme.keytype=RSA4096
-      --certificatesresolvers.step.acme.storage=acme.json
-    environment:
-      - TZ=UTC
-      - LEGO_CA_CERTIFICATES=/step/certs/root_ca.crt
     ports:
       - "80:80"
       - "443:443"
     volumes:
+      - ./traefik.yaml:/etc/traefik/traefik.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ./acme.json:/acme.json
       - step:/step:ro
     restart: unless-stopped
-    depends_on:
-      step:
-        condition: service_healthy
     networks:
       external:
         aliases:
-          - traefik.local
+          - traefik.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - openproject.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - openproject-assets.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - nextcloud.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - gitlab.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - keycloak.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - hocuspocus.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - minio.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - minioadmin.${OPENPROJECT_DOCKER_DEV_TLD:-local}
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.local`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.entrypoints=websecure"
 

@@ -23,13 +23,13 @@ tr:
   js:
     text_are_you_sure: "Emin misiniz?"
     myTimeTracking:
-      noSpecificTime: "No specific time"
+      noSpecificTime: "Belirli bir zaman yok"
     work_packages:
       property_groups:
         costs: "Maliyetler"
       properties:
         overallCosts: "Tüm maliyetler"
         spentUnits: "Harcanan maliyet"
-    button_log_costs: "Birim maliyet kaydet"
+    button_log_costs: "Günlük birim maliyetleri"
     label_hour: "saat"
     label_hours: "saatler"

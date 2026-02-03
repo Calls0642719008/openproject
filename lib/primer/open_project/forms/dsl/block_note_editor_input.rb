@@ -33,19 +33,35 @@ module Primer
     module Forms
       module Dsl
         class BlockNoteEditorInput < Primer::Forms::Dsl::Input
-          attr_reader :name, :label, :value, :classes
+          attr_reader :name,
+                      :label,
+                      :value,
+                      :readonly,
+                      :classes,
+                      :attachments_upload_url,
+                      :attachments_collection_key
 
-          def initialize(name:, label:, value:, **system_arguments)
+          ##
+          # @param name [String] The name of the input field.
+          # @param label [String] The label for the input field.
+          # @param value [String] The initial value of the input in base64 format.
+          # @param attachments_upload_url [String] The URL to which attachments will be uploaded.
+          # @param attachments_collection_key [String] The collection key for attachments.
+          def initialize(name:, label:, value:, readonly: false, attachments_upload_url: "", attachments_collection_key: "",
+                         **system_arguments)
             @name = name
             @label = label
             @value = value
+            @readonly = readonly
             @classes = system_arguments[:classes]
+            @attachments_upload_url = attachments_upload_url
+            @attachments_collection_key = attachments_collection_key
 
             super(**system_arguments)
           end
 
           def to_component
-            BlockNoteEditor.new(input: self, value:)
+            BlockNoteEditor.new(input: self, value:, readonly:, attachments_upload_url:, attachments_collection_key:)
           end
 
           def type

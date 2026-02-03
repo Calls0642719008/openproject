@@ -28,39 +28,39 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-  component_wrapper(
-    tag: "turbo-frame",
-    refresh: :morph,
-    data: {
-      turbo_action: :replace
-    },
-    target: "_top"
-  ) do
-    settings_primer_form_with(model: project) do |f|
+  component_wrapper(target: "_top") do
+    settings_primer_form_with(
+      model: project,
+      url: workspaces_path,
+      html: { id: "project-create-form" }
+    ) do |f|
       flex_layout do |container|
-        if template
-          container.with_row(mb: 3) do
-            render(Primer::Box.new(border: true, border_radius: 2, bg: :inset, p: 3)) do
-              render(
-                Projects::TemplateForm.new(f, template:, copy_options:)
-              )
-            end
-          end
-        end
-
-        container.with_row(mb: 3) do
+        container.with_row(mb: 3, **step_2_display) do
           render(
             Primer::Forms::FormList.new(
-              Projects::Settings::TypeForm.new(f),
               Projects::Settings::NameForm.new(f),
-              Projects::Settings::RelationsForm.new(f),
-              Projects::Settings::CustomFieldsForm.new(f)
+              Projects::Settings::DescriptionForm.new(f),
+              Projects::Settings::RelationsForm.new(f, invisible: params[:parent_id].present?),
+              Projects::Settings::TypeForm.new(f)
             )
           )
         end
 
-        container.with_row(mb: 3) do
-          render Projects::SubmitOrCancel.new(f)
+        container.with_row(mb: 3, **step_3_display) do
+          render(Projects::Settings::CustomFieldsForm.new(f))
+        end
+
+        container.with_row do
+          template_id = template&.id
+          render_inline_form(f) do |form|
+            if template_id
+              form.hidden name: :template_id, value: template_id, scope_name_to_model: false
+            end
+          end
+        end
+
+        container.with_row do
+          render Projects::StepForm.new(f, step:)
         end
       end
     end

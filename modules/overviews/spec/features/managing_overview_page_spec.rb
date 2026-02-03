@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -30,7 +32,7 @@ require "spec_helper"
 
 require_relative "../support/pages/overview"
 
-RSpec.describe "Overview page managing", :js do
+RSpec.describe "Overview page managing", :js, with_flag: { new_project_overview: false } do
   let!(:type) { create(:type) }
   let!(:project) { create(:project, types: [type], description: "My **custom** description") }
   let!(:open_status) { create(:default_status) }
@@ -48,7 +50,7 @@ RSpec.describe "Overview page managing", :js do
   end
 
   let(:permissions) do
-    %i[manage_overview
+    %i[manage_dashboards
        view_members
        view_work_packages
        add_work_packages

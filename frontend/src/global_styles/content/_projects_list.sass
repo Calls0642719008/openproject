@@ -73,13 +73,18 @@ $content-padding: 10px
 
     .archived
       color: var(--fgColor-muted)
-      span.archived-label
-        text-transform: uppercase
 
   td.name
-    @include text-shortener
-    a
-      white-space: nowrap
+    > .projects-table--name
+        display: flex
+        gap: var(--base-size-8, 8px)
+
+        > .projects-table--name-text
+            @include text-shortener
+            white-space: nowrap
+
+        > .projects-table--name-description
+            @extend %autocomplete-description
 
   td.project--hierarchy
     white-space: nowrap

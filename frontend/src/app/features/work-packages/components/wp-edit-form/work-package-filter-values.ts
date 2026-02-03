@@ -16,7 +16,7 @@ export class WorkPackageFilterValues {
 
   @InjectField() currentProject:CurrentProjectService;
 
-  handlers:Partial<Record<FilterOperator, (change:WorkPackageChangeset|{ [id:string]:unknown }, filter:QueryFilterInstanceResource) => void>> = {
+  handlers:Partial<Record<FilterOperator, (change:WorkPackageChangeset|Record<string, unknown>, filter:QueryFilterInstanceResource) => void>> = {
     '=': this.applyFirstValue.bind(this),
     '!*': this.setToNull.bind(this),
   };
@@ -27,10 +27,10 @@ export class WorkPackageFilterValues {
     private excluded:string[] = [],
   ) {}
 
-  applyDefaultsFromFilters(change:WorkPackageChangeset|{ [id:string]:unknown }):void {
+  applyDefaultsFromFilters(change:WorkPackageChangeset|Record<string, unknown>):void {
     _.each(this.filters, (filter) => {
       // Exclude filters specified in constructor
-      if (this.excluded.indexOf(filter.id) !== -1) {
+      if (this.excluded.includes(filter.id)) {
         return;
       }
       const operator = filter.operator.id as FilterOperator;
@@ -68,7 +68,7 @@ export class WorkPackageFilterValues {
    * @param filter A positive '=' filter with at least one value
    * @private
    */
-  private applyFirstValue(change:WorkPackageChangeset|{ [id:string]:unknown }, filter:QueryFilterInstanceResource):void {
+  private applyFirstValue(change:WorkPackageChangeset|Record<string, unknown>, filter:QueryFilterInstanceResource):void {
     // Avoid setting a value if current value is in filter list
     // and more than one value selected
     if (this.filterAlreadyApplied(change, filter)) {
@@ -92,13 +92,13 @@ export class WorkPackageFilterValues {
    * @param filter A none '!*' filter
    * @private
    */
-  private setToNull(change:WorkPackageChangeset|{ [id:string]:unknown }, filter:QueryFilterInstanceResource):void {
+  private setToNull(change:WorkPackageChangeset|Record<string, unknown>, filter:QueryFilterInstanceResource):void {
     const attributeName = this.mapFilterToAttribute(filter);
 
     this.setValue(change, attributeName, { href: null });
   }
 
-  private setValueFor(change:WorkPackageChangeset|{ [id:string]:unknown }, field:string, value:string|HalResource):void {
+  private setValueFor(change:WorkPackageChangeset|Record<string, unknown>, field:string, value:string|HalResource):void {
     const newValue = this.findSpecialValue(value, field) || value;
 
     if (newValue) {
@@ -106,7 +106,7 @@ export class WorkPackageFilterValues {
     }
   }
 
-  private setValue(change:WorkPackageChangeset|{ [id:string]:unknown }, field:string, value:unknown):void {
+  private setValue(change:WorkPackageChangeset|Record<string, unknown>, field:string, value:unknown):void {
     if (change instanceof WorkPackageChangeset) {
       change.setValue(field, value);
     } else {
@@ -135,7 +135,7 @@ export class WorkPackageFilterValues {
    * Avoid applying filter values when changeset already matches one of the selected values
    * @param filter
    */
-  private filterAlreadyApplied(change:WorkPackageChangeset|{ [id:string]:unknown }, filter:{ id:string, values:unknown[] }):boolean {
+  private filterAlreadyApplied(change:WorkPackageChangeset|Record<string, unknown>, filter:{ id:string, values:unknown[] }):boolean {
     const value:unknown = change instanceof WorkPackageChangeset ? change.projectedResource[filter.id] : change[filter.id];
     const current = _.castArray(value);
 

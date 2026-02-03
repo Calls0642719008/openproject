@@ -61,5 +61,13 @@ module OpenProject::JobStatus
       # That way, the result of a background job is available even after the original job is gone.
       EventListener.register!
     end
+
+    config.after_initialize do
+      if Rails.application.config.reloading_enabled?
+        Rails.autoloaders.main.on_unload(EventListener.name) do |klass, _abspath|
+          klass.unsubscribe_all_to_prevent_duplicates_on_reload!
+        end
+      end
+    end
   end
 end

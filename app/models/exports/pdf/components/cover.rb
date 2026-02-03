@@ -156,9 +156,15 @@ module Exports::PDF::Components::Cover
   end
 
   def write_cover_footer
+    return if cover_page_footer_date.blank?
+
     text_style = styles.cover_footer
     text_style[:color] = cover_text_color if cover_text_color.present?
-    draw_text_left(footer_date, text_style, pdf.bounds.bottom - styles.cover_footer_offset)
+    draw_text_left(cover_page_footer_date, text_style, pdf.bounds.bottom - styles.cover_footer_offset)
+  end
+
+  def cover_page_footer_date
+    footer_date
   end
 
   def write_cover_logo

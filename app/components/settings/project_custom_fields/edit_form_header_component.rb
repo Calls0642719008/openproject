@@ -37,25 +37,64 @@ module Settings
       end
 
       def tabs
-        [
+        tabs = [
           {
             name: "project_custom_field_edit",
             path: edit_admin_settings_project_custom_field_path(@custom_field),
             label: t(:label_details)
-          },
+          }
+        ]
+
+        if @custom_field.hierarchical_list?
+          tabs << {
+            name: "items",
+            path: admin_settings_project_custom_field_items_path(@custom_field),
+            label: t(:label_item_plural)
+          }
+        end
+
+        if @custom_field.user?
+          tabs << {
+            name: "role_assignment",
+            path: role_assignment_admin_settings_project_custom_field_path(@custom_field),
+            label: t("custom_fields.admin.role_assignment.title")
+          }
+        end
+
+        tabs <<
           {
             name: "project_custom_field_project_mappings",
             path: project_mappings_admin_settings_project_custom_field_path(@custom_field),
             label: t(:label_project_mappings)
           }
-        ]
+
+        tabs <<
+          {
+            name: "attribute_help_text",
+            path: attribute_help_text_admin_settings_project_custom_field_path(@custom_field),
+            label: AttributeHelpText.human_attribute_name(:help_text)
+          }
+
+        tabs
+      end
+
+      def page_title
+        concat @custom_field.attribute_in_database("name")
+        concat render(Primer::Beta::Text.new(color: :muted)) { " (#{helpers.label_for_custom_field_format(@custom_field.field_format)})" }
       end
 
       def breadcrumbs_items
-        [{ href: admin_index_path, text: t("label_administration") },
-         { href: admin_settings_project_custom_fields_path, text: t("label_project_plural") },
-         { href: admin_settings_project_custom_fields_path, text: t("settings.project_attributes.heading") },
-         @custom_field.attribute_in_database("name")]
+        [
+          { href: admin_index_path, text: t("label_administration") },
+          { href: admin_settings_project_custom_fields_path, text: t("label_project_plural") },
+          { href: admin_settings_project_custom_fields_path, text: t("settings.project_attributes.heading") },
+          helpers.nested_breadcrumb_element(helpers.label_for_custom_field_format(@custom_field.field_format),
+                                            @custom_field.attribute_in_database("name"))
+        ]
+      end
+
+      def hide_description?
+        @custom_field.field_format_calculated_value? && !EnterpriseToken.allows_to?(:calculated_values)
       end
     end
   end

@@ -37,6 +37,7 @@ module Queries
 
         def operator_map
           super.dup.tap do |super_value|
+            super_value["="] = ::Queries::Operators::EqualsOr
             super_value["eq_with_descendants"] = ::Queries::Operators::CustomFields::Hierarchies::EqualsWithDescendants
           end
         end

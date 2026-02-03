@@ -33,6 +33,7 @@ FactoryBot.define do
     author factory: :user
     project
     start_time { Date.tomorrow + 10.hours }
+    current_schedule_start { start_time }
     end_date { 1.year.from_now }
     duration { 1.0 }
     frequency { "weekly" }

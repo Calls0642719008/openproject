@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -44,56 +45,63 @@ module Pages::RecurringMeeting
     end
 
     def expect_planned_meeting(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).to have_css(".status", text: "Planned")
       end
     end
 
     def expect_no_planned_meeting(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).to have_no_css(".status", text: "Planned")
       end
     end
 
     def expect_open_meeting(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).to have_css(".status", text: "Open")
       end
     end
 
     def expect_no_open_meeting(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).to have_no_css(".status", text: "Open")
       end
     end
 
     def expect_cancelled_meeting(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).to have_css(".status", text: "Cancelled")
       end
     end
 
     def expect_no_cancelled_meeting(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).to have_no_css(".status", text: "Cancelled")
       end
     end
 
     def expect_rescheduled_meeting(old_date:, new_date:)
-      within("li", text: old_date) do
+      within_row(old_date) do
         expect(page).to have_css("s", text: old_date)
         expect(page).to have_text("#{old_date}\n#{new_date}")
       end
     end
 
     def open(date:)
-      within("li", text: date) do
+      within_row(date) do
         click_on "Open"
       end
     end
 
+    def restore(date:)
+      within_row(date) do
+        click_on "more-button"
+        click_on "Restore this occurrence"
+      end
+    end
+
     def cancel_occurrence(date:)
-      within("li", text: date) do
+      within_row(date) do
         click_on "more-button"
         click_on "Cancel this occurrence"
       end
@@ -127,21 +135,21 @@ module Pages::RecurringMeeting
     end
 
     def expect_modal(...)
-      expect(page).to have_modal(...)
+      Components::Common::Modal.new.expect_modal(...)
     end
 
     def expect_no_meeting(date:)
-      expect(page).to have_no_css("li", text: date)
+      expect(page).to have_no_row(date)
     end
 
     def expect_no_actions(date:)
-      within("li", text: date) do
+      within_row(date) do
         expect(page).not_to have_test_selector("more-button")
       end
     end
 
     def expect_open_actions(date:)
-      within("li", text: date) do
+      within_row(date) do
         click_on "more-button"
 
         expect(page).to have_css(".ActionListItem-label", count: 2)
@@ -154,7 +162,7 @@ module Pages::RecurringMeeting
     end
 
     def expect_planned_actions(date:)
-      within("li", text: date) do
+      within_row(date) do
         click_on "more-button"
 
         expect(page).to have_css(".ActionListItem-label", count: 2)
@@ -167,7 +175,7 @@ module Pages::RecurringMeeting
     end
 
     def expect_cancelled_actions(date:)
-      within("li", text: date) do
+      within_row(date) do
         click_on "more-button"
 
         expect(page).to have_css(".ActionListItem-label", count: 1)

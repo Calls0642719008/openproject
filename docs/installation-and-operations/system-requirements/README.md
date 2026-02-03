@@ -22,6 +22,21 @@ The server hardware requirements should be roughly the same for both the package
 
 This is for a single server running OpenProject for up to 200 total users. Depending on your number of concurrent users,  these requirements might vary drastically.
 
+## Database
+
+OpenProject officially supports [PostgreSQL version 16](https://www.postgresql.org/) or above since [OpenProject 16.0.0](https://www.openproject.org/docs/release-notes/16-0-0/).
+
+PostgreSQL versions 13 - 15 are not officially supported, but MAY continue to work, but could result in incompatibilities and degraded performance in the future. If you are using one of these versions currently, we have a [migration guide on how to upgrade to PostgreSQL 17](../misc/migration-to-postgresql17/) and strongly recommend you to upgrade your DBMS, as there are significant performance improvements.
+
+OpenProject currently requires some bundled extensions, that should be available in all distributions, but may require additional packages:
+
+- [pg_trgm:  support for similarity of text using trigram matching](https://www.postgresql.org/docs/current/pgtrgm.html)
+- [btree_gist: GiST operator classes with B-tree behavior](https://www.postgresql.org/docs/current/btree-gist.html)
+- [unaccent: a text search dictionary which removes diacritics](https://www.postgresql.org/docs/current/unaccent.html)
+
+Additionally, OpenProject will try to create a [custom collation](https://www.postgresql.org/docs/current/collation.html) for version sorting that depends on `und-u-kn-true` ICU collation. 
+
+
 ## Scaling requirements
 
 Generally speaking you will need more CPUs (the faster the better) and more RAM with an increasing number of users.
@@ -42,6 +57,7 @@ Using a rough estimate we can give the following recommendations based on the nu
 | <=200              | 4         | 4         | 2           | 1                  | 20               |
 | 500                | 8         | 8         | 4           | 2                  | 40               |
 | 1500               | 16        | 16        | 8          | 4                  | 80               |
+| >1500 | Please refer to the [additional scaling recommendations](#additional-scaling-recommendations)  |
 
 Mind, even just for 5 users we do recommend 2 web workers as each page may require
 multiple requests to be made simultaneously. Having just one will work, but pages may take longer to finish loading.
@@ -150,7 +166,7 @@ For high-availability setups, distribute traffic across multiple servers and ava
 
 > [!IMPORTANT]
 >
-> Some features we plan for the future will only be shipped with Docker-based installations. We also don't plan to provide packaged-based installations for more recent Linux versions, e.g. Ubuntu 24.04.  
+> Some features we plan for the future will only be shipped with Docker-based installations. We also don't plan to provide packaged-based installations for more recent Linux versions, e.g. Ubuntu 24.04.
 
 ### Docker-based installation (recommendation)
 
@@ -173,17 +189,10 @@ The [package-based installation](../installation/packaged) requires one of the f
 
 ### Overview of dependencies
 
-Both the package and docker based installations will install and setup the following dependencies that are required by OpenProject to run:
+Both the package and docker based installations will install and setup the the [Ruby runtime](https://www.ruby-lang.org/en/), as well as the [Puma application server](https://puma.io/) that are required by OpenProject to run.
 
-* __Runtime:__ [Ruby](https://www.ruby-lang.org/en/) Version = 3.3.x
-* __Webserver:__ [Apache](https://httpd.apache.org/)
-  or [nginx](https://nginx.org/en/docs/)
-* __Application server:__ [Puma](https://puma.io/)
-* __Database__: [PostgreSQL](https://www.postgresql.org/) Version >= 16
-
-Starting in OpenProject 16.0, PostgreSQL 16.0 will be a minimum requirement.
-PostgreSQL versions 13. and up will continue to work, but may result in incompatibilities and degraded performance in the future. We have a [migration guide on how to upgrade to PostgreSQL 17](../misc/migration-to-postgresql17/).
-
+For the [packaged installation](../installation/packaged/) and the [all-in-one docker container](../installation/docker#all-in-one-container) container, an [Apache](https://httpd.apache.org/) web server and a [PostgreSQL 17](https://www.postgresql.org/) database are installed.
+The all-in-one container will only additionally install [hocuspocus](https://github.com/opf/op-blocknote-hocuspocus), which is required for the [real-time collaboration](../../user-guide/documents/#collaborative-editing) feature in OpenProject.
 ## Client
 
 OpenProject supports the latest versions of the major browsers.
@@ -219,19 +228,19 @@ OpenProject supports the latest versions of the major browsers.
 
 ##### OpenProject integration
 
-* [OpenProject Integration 2.9.0](https://github.com/nextcloud/integration_openproject/releases/tag/v2.9.0)
+* [OpenProject Integration 2.10.0](https://github.com/nextcloud/integration_openproject/releases/tag/v2.10.0)
 
 ##### Team folders
 
 If you want to use the feature of [automatically managed project folders](../../system-admin-guide/integrations/nextcloud/#4-automatically-managed-project-folders) you need to install the [Team folders](https://apps.nextcloud.com/apps/groupfolders) app in Nextcloud (formerly Group folders).
 
-* [Team folders 19.0.4](https://github.com/nextcloud/groupfolders/releases/tag/v19.0.4)
+* [Team folders 19.1.7](https://github.com/nextcloud/groupfolders/releases/tag/v19.1.7)
 
 ### Keycloak token exchange
 
-OpenProject will be tested against the following versions:
+OpenProject is tested against the following version:
 
-* [Keycloak 26.2.4](https://github.com/keycloak/keycloak/releases/tag/26.2.4)
+* [Keycloak 26.4.0](https://github.com/keycloak/keycloak/releases/tag/26.4.0)
 
 ## Frequently asked questions (FAQ)
 

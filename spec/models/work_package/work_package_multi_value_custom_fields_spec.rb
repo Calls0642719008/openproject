@@ -64,7 +64,7 @@ RSpec.describe WorkPackage do
   end
 
   let(:values) { work_package.custom_value_for(custom_field) }
-  let(:typed_values) { work_package.typed_custom_value_for(custom_field.id) }
+  let(:typed_values) { work_package.typed_custom_value_for(custom_field) }
 
   it "returns the properly typed values" do
     expect(values.map(&:value)).to eq(custom_values)
@@ -75,10 +75,8 @@ RSpec.describe WorkPackage do
     let(:work_package) { create(:work_package, project:, type:) }
 
     it "returns nil properly" do
-      # I suspect this should rather be
-      # expect(values.map(&:value)).to eq([nil])
-      expect(values.value).to be_nil
-      expect(typed_values).to be_nil
+      expect(values.map(&:value)).to eq([nil])
+      expect(typed_values).to eq([nil])
     end
   end
 

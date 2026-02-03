@@ -21,7 +21,7 @@ export default class MyTimersController extends Controller {
 
   timer(value:string|null|undefined) {
     setInterval(() => {
-      this.elapsedTimeTarget.textContent = formatElapsedTime(value as string);
+      this.elapsedTimeTarget.textContent = formatElapsedTime(value!);
     }, 1000);
   }
 }

@@ -37,7 +37,7 @@ RSpec.describe Queries::Projects::Filters::ProjectStatusFilter do
     let(:model) { Project }
     let(:attribute) { :status_code }
     let(:values) { ["On track"] }
-    let(:human_name) { "Project status" }
+    let(:human_name) { "Status" }
     let(:admin) { build_stubbed(:admin) }
     let(:user) { build_stubbed(:user) }
     let(:expected) do
@@ -56,5 +56,11 @@ RSpec.describe Queries::Projects::Filters::ProjectStatusFilter do
         expect(instance.allowed_values).to match_array(expected)
       end
     end
+  end
+
+  it_behaves_like "list_optional query filter" do
+    let(:attribute) { :status_code }
+    let(:model) { Project }
+    let(:valid_values) { ["0", "1", "2"] }
   end
 end

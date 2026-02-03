@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import {
   ExternalRelationQueryConfigurationService,
@@ -32,9 +39,11 @@ export const emptyTypeGroup = '__empty';
 
 @Component({
   selector: 'opce-admin-type-form-configuration',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './type-form-configuration.html',
   providers: [
     TypeBannerService,
+    DragulaService
   ],
   standalone: false,
 })
@@ -54,9 +63,9 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
 
   private element:HTMLElement;
 
-  private form:JQuery;
+  private form:HTMLFormElement;
 
-  private submit:JQuery;
+  private submit:HTMLButtonElement;
 
   public groups:TypeGroup[] = [];
 
@@ -68,8 +77,14 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
 
   private no_filter_query:string;
 
+  private eventListeners = {
+    typeFormUpdater: () => {
+      this.updateHiddenFields();
+    }
+  };
+
   constructor(
-    private elementRef:ElementRef,
+    private elementRef:ElementRef<HTMLElement>,
     private I18n:I18nService,
     private dragula:DragulaService,
     private confirmDialog:ConfirmDialogService,
@@ -90,33 +105,11 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
     // Hook on form submit
     this.element = this.elementRef.nativeElement;
     this.no_filter_query = this.element.dataset.noFilterQuery!;
-    this.form = jQuery(this.element).closest('form');
-    this.submit = this.form.find('.form-configuration--save');
-
-    // In the following we are triggering the form submit ourselves to work around
-    // a firefox shortcoming. But to avoid double submits which are sometimes not canceled fast
-    // enough, we need to memoize whether we have already submitted.
-    let submitted = false;
-
-    this.form.on('submit', () => {
-      submitted = true;
-    });
-
-    // Capture mousedown on button because firefox breaks blur on click
-    this.submit.on('mousedown', () => {
-      setTimeout(() => {
-        if (!submitted) {
-          this.form.trigger('submit');
-        }
-      }, 50);
-      return true;
-    });
+    this.form = this.element.closest('form')!;
+    this.submit = this.form.querySelector('.form-configuration--save')!;
 
     // Capture regular form submit
-    this.form.on('submit.typeformupdater', () => {
-      this.updateHiddenFields();
-      return true;
-    });
+    this.form.addEventListener('submit', this.eventListeners.typeFormUpdater);
 
     // Setup groups
     this.groupsDrake = this
@@ -161,7 +154,7 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
   }
 
   ngAfterViewInit():void {
-    const menu = jQuery(this.elementRef.nativeElement).find('.toolbar-items');
+    const menu = this.elementRef.nativeElement.querySelector<HTMLElement>('.toolbar-items')!;
     installMenuLogic(menu);
   }
 
@@ -240,11 +233,12 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
         },
       })
       .then(() => {
-        this.form.find('input#type_attribute_groups').val(JSON.stringify([]));
+        const input = this.form.querySelector<HTMLInputElement>('input#type_attribute_groups')!;
+        input.value = JSON.stringify([]);
 
         // Disable our form handler that updates the attribute groups
-        this.form.off('submit.typeformupdater');
-        this.form.trigger('submit');
+        this.form.removeEventListener('submit', this.eventListeners.typeFormUpdater);
+        this.form.requestSubmit();
       })
       .catch(() => {
       });
@@ -268,13 +262,13 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
   }
 
   private updateHiddenFields():void {
-    const hiddenField = this.form.find('.admin-type-form--hidden-field');
+    const hiddenField = this.form.querySelector<HTMLInputElement>('.admin-type-form--hidden-field')!;
     if (this.groups.length === 0) {
       // Ensure we're adding an empty group if deliberately removing
       // all values.
-      hiddenField.val(JSON.stringify([this.emptyGroup]));
+      hiddenField.value = JSON.stringify([this.emptyGroup]);
     } else {
-      hiddenField.val(JSON.stringify(this.groups));
+      hiddenField.value = JSON.stringify(this.groups);
     }
   }
 }

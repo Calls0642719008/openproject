@@ -34,7 +34,7 @@ module OpenIDConnect
       include OpTurbo::Streamable
       include OpPrimer::ComponentHelpers
 
-      options :view_mode, :edit_state, :edit_mode
+      options :view_mode, :edit_state, :new_mode
 
       alias_method :provider, :model
     end

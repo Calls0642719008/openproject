@@ -220,7 +220,7 @@ RSpec.describe "custom field inplace editor", :js do
         field.expect_state_text "10,000.55"
 
         work_package.reload
-        expect(work_package.custom_value_for(custom_field.id).typed_value).to eq 10000.55
+        expect(work_package.custom_value_for(custom_field).typed_value).to eq 10000.55
       end
     end
 
@@ -234,7 +234,7 @@ RSpec.describe "custom field inplace editor", :js do
         field.expect_state_text "10.000,55"
 
         work_package.reload
-        expect(work_package.custom_value_for(custom_field.id).typed_value).to eq 10000.55
+        expect(work_package.custom_value_for(custom_field).typed_value).to eq 10000.55
       end
     end
   end

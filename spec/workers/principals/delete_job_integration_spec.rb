@@ -65,27 +65,24 @@ RSpec.describe Principals::DeleteJob, type: :model do
 
       before do
         work_package
+        principal.update_column(:status, User.statuses[:deleted])
         job
       end
 
       it "resets assigned to to the deleted user" do
-        expect(work_package.reload.assigned_to)
-          .to eql(deleted_user)
+        expect(work_package.reload.assigned_to).to eql(deleted_user)
       end
 
       it "resets assigned to in all journals to the deleted user" do
-        expect(Journal::WorkPackageJournal.pluck(:assigned_to_id))
-          .to eql([deleted_user.id])
+        expect(Journal::WorkPackageJournal.pluck(:assigned_to_id)).to eql([deleted_user.id])
       end
 
       it "resets responsible to to the deleted user" do
-        expect(work_package.reload.responsible)
-          .to eql(deleted_user)
+        expect(work_package.reload.responsible).to eql(deleted_user)
       end
 
       it "resets responsible to in all journals to the deleted user" do
-        expect(Journal::WorkPackageJournal.pluck(:responsible_id))
-          .to eql([deleted_user.id])
+        expect(Journal::WorkPackageJournal.pluck(:responsible_id)).to eql([deleted_user.id])
       end
     end
 
@@ -480,12 +477,12 @@ RSpec.describe Principals::DeleteJob, type: :model do
 
       describe "favorites" do
         before do
-          project.add_favoring_user(principal)
+          project.add_favoriting_user(principal)
           job
         end
 
         it "removes the assigned_to association to the principal" do
-          expect(project.favoring_users.reload).to be_empty
+          expect(project.favoriting_users.reload).to be_empty
         end
       end
     end

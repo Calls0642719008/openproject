@@ -55,6 +55,11 @@ module Projects::Copy
             .result
 
         array << { source: source_project_storage, target: project_storage_copy }
+
+
+        if target.project_creation_wizard_artifact_export_storage == source_project_storage.id.to_s
+          target.project_creation_wizard_artifact_export_storage = project_storage_copy.id.to_s
+        end
       end
     end
     # rubocop:enable Metrics/AbcSize

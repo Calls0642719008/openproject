@@ -33,9 +33,9 @@ namespace :migrations do
     include Tasks::Shared::UserFeedback
 
     # rubocop:disable Rails/ApplicationRecord
-    class TemporaryDocument < ActiveRecord::Base
+    class TemporaryDocument < ActiveRecord::Base # rubocop:disable Lint/ConstantDefinitionInBlock
       belongs_to :project
-      belongs_to :category, class_name: "DocumentCategory"
+      belongs_to :type, class_name: "DocumentType", optional: true
     end
     # rubocop:enable Rails/ApplicationRecord
 

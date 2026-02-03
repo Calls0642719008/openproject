@@ -52,7 +52,7 @@ module Ferrum
       main_frame_id = @traffic.first&.request&.frame_id
       current_navigation = @traffic.reverse.find { |conn| conn.navigation_request?(main_frame_id) }
       current_traffic = @traffic.filter do |exchange|
-        next unless exchange.request
+        next unless exchange.request && current_navigation
 
         exchange.request.loader_id == current_navigation.request.loader_id
       end

@@ -51,14 +51,14 @@ class Watcher < ApplicationRecord
   def validate_active_user
     return if user.blank?
 
-    errors.add :user_id, :locked if user.locked?
+    errors.add :user_id, :locked if user.locked? || user.deleted?
   end
 
   def validate_user_allowed_to_watch
     return if user.blank? || watchable.blank?
     # No need to add a missing permission error on top of the user locked error
     # created by validate_active_user.
-    return if user.locked?
+    return if user.locked? || user.deleted?
 
     errors.add :user_id, :not_allowed_to_view unless watchable.possible_watcher?(user)
   end

@@ -68,7 +68,7 @@ class CustomActionsController < ApplicationController
   def destroy
     @custom_action.destroy
 
-    redirect_to custom_actions_path
+    redirect_to custom_actions_path, status: :see_other
   end
 
   private
@@ -76,7 +76,7 @@ class CustomActionsController < ApplicationController
   def index_or_render(render_action)
     ->(call) {
       call.on_success do
-        redirect_to custom_actions_path
+        redirect_to custom_actions_path, status: :see_other
       end
 
       call.on_failure do

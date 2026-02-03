@@ -34,8 +34,10 @@ class Journals::CreateService
       journable.respond_to?(:agenda_items)
     end
 
-    def cleanup_predecessor(predecessor)
+    def cleanup_predecessor(predecessor, notes, cause)
       cleanup_predecessor_for(predecessor,
+                              notes,
+                              cause,
                               "meeting_agenda_item_journals",
                               :journal_id,
                               :id)

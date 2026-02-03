@@ -273,20 +273,6 @@ RSpec.describe Journable::Timestamps do
         describe "when querying with at_timestamp" do
           subject { relation.at_timestamp(friday) }
 
-          it "joins the journable table rather than the journal-data table" do
-            expect(subject.to_sql).not_to include <<~SQL.squish
-              INNER JOIN "time_entries"
-              ON "time_entries"."entity_type" = 'WorkPackage'
-              AND "time_entries"."entity_id" = "work_package_journals"."id"
-            SQL
-
-            expect(subject.to_sql).to include <<~SQL.squish
-              INNER JOIN "time_entries"
-                ON "time_entries"."entity_type" = 'WorkPackage'
-                AND "time_entries"."entity_id" = "journals"."journable_id"
-            SQL
-          end
-
           it "returns the matching records in their historic states" do
             expect(subject.pluck(:description)).to eq ["The work package as it is since Friday"]
             expect(subject.pluck(:id)).to eq [work_package.id]

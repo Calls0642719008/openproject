@@ -73,14 +73,13 @@ RSpec.describe "Recently viewed work packages",
 
       # work package is displayed and marked
       global_search.expect_work_package_option(work_package)
-      global_search.expect_work_package_marked(work_package)
 
       # clicking goes to the work package view
       global_search.click_work_package(work_package)
       expect(page)
         .to have_css(".subject", text: work_package.subject)
       expect(page)
-        .to have_current_path project_work_package_path(work_package.project, work_package, state: "activity")
+        .to have_current_path project_work_package_path(work_package.project, work_package, "activity")
     end
 
     it "is not shown after typing something in the global search bar" do

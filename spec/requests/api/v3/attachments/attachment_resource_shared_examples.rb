@@ -469,6 +469,10 @@ RSpec.shared_examples "an APIv3 attachment resource", content_type: :json, type:
           expect(expires_time > Time.now.utc + max_age - 60).to be_truthy
         end
 
+        it "includes X-Content-Type-Options nosniff header to prevent content type sniffing" do
+          expect(subject.headers["X-Content-Type-Options"]).to eq "nosniff"
+        end
+
         it "sends the file in binary" do
           expect(subject.body)
             .to match(mock_file.read)

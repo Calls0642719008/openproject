@@ -27,7 +27,10 @@ ro:
       no_results_table: Nu au fost definite încă niciun fel de webhooks.
       label_add_new: Adaugă un nou webhook
       label_edit: Editați webhook
-      label_event_resources: Resurse pentru evenimente
+      label_x_events:
+        one: "1 event"
+        other: "%{count} events"
+        zero: "No events"
       events:
         created: "Creat pe"
         updated: "Actualizat"

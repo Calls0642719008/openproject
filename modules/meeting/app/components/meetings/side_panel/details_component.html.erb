@@ -143,7 +143,7 @@
                       scheme: :link,
                       underline: false,
                       tag: :a,
-                      href: manage_participants_dialog_meeting_participants_path(@meeting),
+                      href: manage_participants_dialog_project_meeting_participants_path(@meeting.project, @meeting),
                       classes: "hide-when-print",
                       data: { controller: "async-dialog" }
                     )

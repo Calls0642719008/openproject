@@ -210,7 +210,7 @@ export class WorkPackagesListService {
    * - If the query is saved, use `/api/v3/queries/:id`
    *
    */
-  public loadQueryFromExisting(query:QueryResource, additionalParams:Object, projectIdentifier?:string):Observable<QueryResource> {
+  public loadQueryFromExisting(query:QueryResource, additionalParams:object, projectIdentifier?:string):Observable<QueryResource> {
     const params = this.UrlParamsHelper.buildV3GetQueryFromQueryResource(query, additionalParams);
 
     let path:ApiV3QueriesPaths|ApiV3QueryPaths;
@@ -376,7 +376,7 @@ export class WorkPackagesListService {
 
   private handleQueryLoadingError(
     error:ErrorResource,
-    queryProps:{ [key:string]:unknown },
+    queryProps:Record<string, unknown>,
     queryId?:string|null,
     projectIdentifier?:string|null,
   ):Promise<QueryResource> {

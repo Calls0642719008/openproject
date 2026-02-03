@@ -8,8 +8,7 @@ keywords: work package subject, automatic subject, subject pattern
 
 # Configure automatic work package subjects (Enterprise add-on)
 
-> [!NOTE]
-> Configuring automatically generated work package subjects is an Enterprise add-on and can only be used with [Enterprise cloud](../../../../enterprise-guide/enterprise-cloud-guide/) or [Enterprise on-premises](../../../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free Community edition is easily possible.
+[feature: work_package_subject_generation ]
 
 This guide explains how administrators can configure **automatic subject patterns** for work packages in OpenProject. Please also refer to the [user guide on automatic work package subjects](../../../../user-guide/work-packages/automatic-subjects/) for more details on automatic subjects within projects. 
 

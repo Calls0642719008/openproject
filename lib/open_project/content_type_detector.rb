@@ -83,6 +83,11 @@ module OpenProject
     SENSIBLE_DEFAULT = "application/binary"
     EMPTY_TYPE = "inode/x-empty"
 
+    # Returns a String describing the file's content type
+    def self.detect(filename)
+      new(filename).detect
+    end
+
     def initialize(filename)
       @filename = filename
     end

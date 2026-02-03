@@ -36,7 +36,7 @@ module Storages
           class FilesQuery < Base
             def call(auth_strategy:, input_data:)
               origin_user_id(auth_strategy:).bind do |origin_user|
-                @location_prefix = CGI.unescape(UrlBuilder.path(@storage.uri.path, "remote.php/dav/files", origin_user))
+                @location_prefix = UrlBuilder.path(@storage.uri.path, "remote.php/dav/files", origin_user)
                 make_request(auth_strategy:, folder: input_data.folder, origin_user:).bind do |xml|
                   storage_files(xml)
                 end
@@ -52,7 +52,7 @@ module Storages
                                                        "remote.php/dav/files",
                                                        origin_user,
                                                        folder.path),
-                                        xml: requested_properties)
+                                        xml: storage_file_transformer.requested_properties)
                 handle_response(response)
               end
             end
@@ -72,28 +72,10 @@ module Storages
               end
             end
 
-            # rubocop:disable Metrics/AbcSize
-            def requested_properties
-              Nokogiri::XML::Builder.new do |xml|
-                xml["d"].propfind(
-                  "xmlns:d" => "DAV:",
-                  "xmlns:oc" => "http://owncloud.org/ns"
-                ) do
-                  xml["d"].prop do
-                    xml["oc"].fileid
-                    xml["oc"].size
-                    xml["d"].getcontenttype
-                    xml["d"].getlastmodified
-                    xml["oc"].permissions
-                    xml["oc"].send(:"owner-display-name")
-                  end
-                end
-              end.to_xml
-            end
-            # rubocop:enable Metrics/AbcSize
-
             def storage_files(xml)
-              parent, *files = xml.xpath("//d:response").to_a.map { |file_element| storage_file(file_element) }
+              parent, *files = xml.xpath("//d:response").to_a.map do |file_element|
+                storage_file_transformer.transform_element(file_element, @location_prefix).value!
+              end
 
               Results::StorageFileCollection.build(files:, parent:, ancestors: ancestors(parent.location))
             end
@@ -120,88 +102,8 @@ module Storages
               location == "/" ? "Root" : CGI.unescape(location.split("/").last)
             end
 
-            def storage_file(file_element)
-              location = location(file_element)
-
-              Results::StorageFile.new(
-                id: id(file_element),
-                name: name(location),
-                size: size(file_element),
-                mime_type: mime_type(file_element),
-                last_modified_at: last_modified_at(file_element),
-                created_by_name: created_by(file_element),
-                location:,
-                permissions: permissions(file_element)
-              )
-            end
-
-            def id(element)
-              element
-                .xpath(".//oc:fileid")
-                .map(&:inner_text)
-                .reject(&:empty?)
-                .first
-            end
-
-            def location(element)
-              texts = element
-                      .xpath("d:href")
-                      .map(&:inner_text)
-
-              return nil if texts.empty?
-
-              element_name = texts.first.delete_prefix(@location_prefix)
-
-              return element_name if element_name == "/"
-
-              element_name.delete_suffix("/")
-            end
-
-            def size(element)
-              element
-                .xpath(".//oc:size")
-                .map(&:inner_text)
-                .map { |e| Integer(e) }
-                .first
-            end
-
-            def mime_type(element)
-              element
-                .xpath(".//d:getcontenttype")
-                .map(&:inner_text)
-                .reject(&:empty?)
-                .first || "application/x-op-directory"
-            end
-
-            def last_modified_at(element)
-              element
-                .xpath(".//d:getlastmodified")
-                .map { |e| DateTime.parse(e) }
-                .first
-            end
-
-            def created_by(element)
-              element
-                .xpath(".//oc:owner-display-name")
-                .map(&:inner_text)
-                .reject(&:empty?)
-                .first
-            end
-
-            def permissions(element)
-              permissions_string =
-                element
-                .xpath(".//oc:permissions")
-                .map(&:inner_text)
-                .reject(&:empty?)
-                .first
-
-              # Nextcloud Dav permissions:
-              # https://github.com/nextcloud/server/blob/66648011c6bc278ace57230db44fd6d63d67b864/lib/public/Files/DavUtil.php
-              result = []
-              result << :readable if permissions_string&.include?("G")
-              result << :writeable if permissions_string&.match?(/W|CK/)
-              result
+            def storage_file_transformer
+              @storage_file_transformer ||= StorageFileTransformer.new
             end
           end
         end

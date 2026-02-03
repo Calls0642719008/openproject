@@ -52,6 +52,30 @@ RSpec.describe Budget do
     it { expect(work_package.reload.budget).to be_nil }
   end
 
+  describe "#base_amount=" do
+    it "sets the base amount to 0.0 when an empty string is passed" do
+      budget.base_amount = ""
+      expect(budget.base_amount).to eq(0.0)
+    end
+
+    it "sets the base amount to 0.0 when nil is passed" do
+      budget.base_amount = nil
+      expect(budget.base_amount).to eq(0.0)
+    end
+
+    it "sets the base amount to the given float value" do
+      budget.base_amount = "12.34"
+      expect(budget.base_amount).to eq(12.34)
+    end
+
+    it "parses the base amount according to the current locale" do
+      I18n.with_locale(:de) do
+        budget.base_amount = "12,34"
+        expect(budget.base_amount).to eq(12.34)
+      end
+    end
+  end
+
   describe "#existing_material_budget_item_attributes=" do
     let!(:existing_material_budget_item) do
       create(:material_budget_item, budget:, units: 10.0)

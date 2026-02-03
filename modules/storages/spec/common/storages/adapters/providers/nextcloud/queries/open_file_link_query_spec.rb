@@ -44,7 +44,7 @@ module Storages
             let(:input_data) { Input::OpenFileLink.build(file_id:, open_location:).value! }
             let(:open_file_link) { "#{storage.host}/index.php/f/#{file_id}?openfile=#{open_location ? '0' : '1'}" }
 
-            it_behaves_like "adapter open_file_link_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "open_file_link"
 
             context "with open location flag not set" do
               it_behaves_like "adapter open_file_link_query: successful link response"

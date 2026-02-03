@@ -30,6 +30,8 @@
 
 module Shares
   class ShareDialogComponent < ApplicationComponent
+    DIALOG_ID = "sharing-modal"
+
     include ApplicationHelper
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers

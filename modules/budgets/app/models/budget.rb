@@ -132,7 +132,7 @@ class Budget < ApplicationRecord
   end
 
   def base_amount=(value)
-    super(parse_number_string(value))
+    super(parse_number_string_to_number(value))
   end
 
   def material_budget

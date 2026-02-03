@@ -40,7 +40,7 @@ module Exports
         item = ::CustomField::Hierarchy::Item.find_by(id: item_value.to_s)
         return "#{item_value} #{I18n.t(:label_not_found)}" unless item
 
-        item.ancestry_path
+        item.ancestry_path(include_shorts_and_weights: true)
       end
     end
   end

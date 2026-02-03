@@ -53,9 +53,10 @@ module Storages
             end
 
             it "deletes a folder", vcr: "sharepoint/delete_folder" do
-              create_result = Input::CreateFolder
-                                .build(folder_name: "To Be Deleted Soon", parent_location: composite_identifier(nil))
-                                .bind do |input_data|
+              create_result = Input::CreateFolder.build(
+                folder_name: "To Be Deleted Soon",
+                parent_location: SharepointSpecHelper.composite_identifier(base_drive, nil)
+              ).bind do |input_data|
                 Registry.resolve("sharepoint.commands.create_folder").call(storage:, auth_strategy:, input_data:)
               end
 
@@ -67,17 +68,15 @@ module Storages
             end
 
             it "when the folder is not found, returns a failure", vcr: "sharepoint/delete_folder_not_found" do
-              result = Input::DeleteFolder.build(location: composite_identifier("NOT_HERE")).bind do |input_data|
+              result = Input::DeleteFolder.build(
+                location: SharepointSpecHelper.composite_identifier(base_drive, "NOT_HERE")
+              ).bind do |input_data|
                 described_class.call(storage:, auth_strategy:, input_data:)
               end
 
               expect(result).to be_failure
               expect(result.failure.code).to eq(:not_found)
             end
-
-            private
-
-            def composite_identifier(item_id) = "#{base_drive}#{SharepointStorage::IDENTIFIER_SEPARATOR}#{item_id}"
           end
         end
       end

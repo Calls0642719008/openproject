@@ -22,7 +22,7 @@
 sv:
   plugin_costs:
     name: "Tid och kostnader"
-    description: "This module adds features for planning and tracking costs of projects."
+    description: "Denna modul lägger till funktioner för planering och uppföljning av projektkostnader."
   activerecord:
     attributes:
       cost_entry:
@@ -30,14 +30,14 @@ sv:
         overridden_costs: "Åsidosatta kostnader"
         spent: "Spenderat"
         spent_on: "Datum"
-        logged_by: "Logged by"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        logged_by: "Loggad av"
+        entity: Loggad för
+        entity_id: Loggad för
+        entity_gid: Loggad för
       cost_type:
         unit: "Enhetsnamn"
         unit_plural: "Enhetsnamn plural"
-        default: "Cost type by default"
+        default: "Kostnadstyp som standard"
       work_package:
         costs_by_type: "Bokade enheter"
         labor_costs: "Personalkostnader"
@@ -58,32 +58,32 @@ sv:
         comments: Kommentar
         activity: Aktivitet
         spent_on: Datum
-        start_time: Start time
-        end_time: Finish time
+        start_time: Starttid
+        end_time: Sluttid
         time: Tid
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Loggad för
+        entity_id: Loggad för
+        entity_gid: Loggad för
     models:
       time_entry:
         one: "Tidspost"
-        other: "Time entries"
+        other: "Tidsposter"
       cost_entry:
         one: "Kostnadspost"
-        other: "Cost entries"
+        other: "Kostnadsposter"
       cost_type:
         one: "Kostnadstyp"
         other: "Kostnadstyper"
       time_entry_activity:
-        one: "Time tracking activity"
-        other: "Time tracking activities"
+        one: "Tidspårningsaktivitet"
+        other: "Tidsspårningsaktiviteter"
       rate: "Timpris"
     errors:
       models:
         time_entry:
-          invalid_time: "must be between 00:00 and 23:59."
-          cannot_log_for_this_work_package: "Cannot log time for this work package."
-          duplicate_ongoing: "An ongoing time entry already exists for this user."
+          invalid_time: "måste vara mellan 00:00 och 23:59."
+          cannot_log_for_this_work_package: "Kan inte logga tid för detta arbetspaket."
+          duplicate_ongoing: "En pågående tidspost finns redan för den här användaren."
         work_package:
           is_not_a_valid_target_for_cost_entries: "Arbetspaket #%{id} är inte ett giltigt mål för omfördelning av kostnadsposterna."
           nullify_is_not_valid_for_cost_entries: "Kostnadsposterna kan inte tilldelas till ett projekt."
@@ -98,10 +98,10 @@ sv:
     fixed_date: "Referensdatum"
   button_add_rate: "Lägg till timpris"
   button_log_costs: "Logga enhetskostnader"
-  button_log_time: "Log"
+  button_log_time: "Logga"
   button_add_activity: "Aktivitet"
   button_add_time_entry: "Logga tid"
-  button_stop_timer: "Stop timer"
+  button_stop_timer: "Stoppa timer"
   caption_booked_on_project: "Bokade på projekt"
   caption_default: "Standard"
   caption_default_rate_history_for: "Historiskt standardtimpris för %{user}"
@@ -115,8 +115,8 @@ sv:
   caption_show_locked: "Visa låst typer"
   caption_log_time_dialog: "Logga tid"
   description_date_for_new_rate: "Datum för nytt timpris"
-  description_costs_settings: "Define the desired format for the costs in all projects."
-  description_time_settings: "Define which fields are mandatory to fill when logging time in all projects."
+  description_costs_settings: "Definiera önskat format för kostnaderna i alla projekt."
+  description_time_settings: "Definiera vilka fält som är obligatoriska att fylla i vid tidsloggning i alla projekt."
   group_by_others: "inte i någon grupp"
   label_between: "mellan"
   label_cost_filter_add: "Lägg till filter för kostnadspost"
@@ -143,8 +143,8 @@ sv:
   label_kind: "Typ"
   label_less_or_equal: "<="
   label_log_costs: "Logga enhetskostnader"
-  label_new_time_entry_activity: "New time entry activity"
-  label_time_entry_activity_form_description: "Changes to this time entry activity will be reflected in all projects where it is enabled."
+  label_new_time_entry_activity: "Ny aktivitet vid inmatning"
+  label_time_entry_activity_form_description: "Ändringar i denna inmatningsaktivitet kommer att återspeglas i alla projekt där den är aktiverad."
   label_no: "Nej"
   label_option_plural: "Alternativ"
   label_overall_costs: "Totalkostnader"
@@ -158,37 +158,37 @@ sv:
   label_valid_from: "Gäller från"
   label_yes: "Ja"
   label_time: "Tid"
-  label_cost: "Cost"
+  label_cost: "Kostnad"
   label_costs: "Kostnader"
-  label_mandatory_fields: "Mandatory fields"
-  label_my_time_tracking: "My time tracking"
-  label_no_time: "No time tracked"
-  label_next_day: "Next day"
+  label_mandatory_fields: "Obligatoriska fält"
+  label_my_time_tracking: "Min tidsspårning"
+  label_no_time: "Ingen tid spårad"
+  label_next_day: "Nästa dag"
   label_next_week: "Nästa vecka"
-  label_next_workweek: "Next work week"
-  label_next_month: "Next month"
-  label_previous_day: "Previous day"
-  label_previous_workweek: "Previous work week"
+  label_next_workweek: "Nästa arbetsvecka"
+  label_next_month: "Nästa månad"
+  label_previous_day: "Föregående dag"
+  label_previous_workweek: "Föregående arbetsvecka"
   label_previous_week: "Föregående vecka"
-  label_previous_month: "Previous month"
-  label_specific_day: "Day %{day}"
-  label_specific_week: "Calendar week %{week}"
-  label_specific_month: "Month %{month}"
+  label_previous_month: "Föregående månad"
+  label_specific_day: "Dag %{day}"
+  label_specific_week: "Kalendervecka %{week}"
+  label_specific_month: "Månad %{month}"
   label_list: "Lista"
   label_month: "Månad"
-  label_workweek: "Work week"
+  label_workweek: "Arbetsvecka"
   label_day: "Dag"
-  label_today_capitalized: "Today"
-  label_view_mode_switcher: "Change view"
-  label_timer_since: "Started at %{time}"
-  placeholder_activity_select_work_package_first: Work package selection is required first
+  label_today_capitalized: "Idag"
+  label_view_mode_switcher: "Ändra vy"
+  label_timer_since: "Startade på %{time}"
+  placeholder_activity_select_work_package_first: Val av arbetspaket krävs först
   notice_something_wrong: "Ett fel inträffade. Försök igen."
   notice_successful_restore: "Lyckad återställning."
   notice_successful_lock: "Låst framgångsrikt."
   notice_cost_logged_successfully: "Enhetskostnaden loggad framgångsrikt."
-  notice_different_time_zones: "This user has a different time zone (%{tz}). Time will be logged using their time zone."
-  notice_time_entry_update_failed: "Failed to update time entry. Errors: %{errors}"
-  notice_time_entry_delete_failed: "Failed to delete time entry. Errors: %{errors}"
+  notice_different_time_zones: "Den här användaren har en annan tidszon (%{tz}). Tiden kommer att loggas med hjälp av sin tidszon."
+  notice_time_entry_update_failed: "Det gick inte att uppdatera tidsposten. Fel: %{errors}"
+  notice_time_entry_delete_failed: "Det gick inte att ta bort tidsposten. Fel: %{errors}"
   permission_edit_cost_entries: "Redigera bokade enhetskostnader"
   permission_edit_own_cost_entries: "Redigera egna bokade enhetskostnader"
   permission_edit_hourly_rates: "Redigera timpriser"
@@ -203,13 +203,13 @@ sv:
   permission_view_own_hourly_rate: "Visa egna timpriser"
   permission_view_own_time_entries: "Visa egen spenderad tid"
   project_module_costs: "Tid och kostnader"
-  setting_allow_tracking_start_and_end_times: "Allow start and finish times"
+  setting_allow_tracking_start_and_end_times: "Tillåt start- och sluttider"
   setting_costs_currency: "Valuta"
   setting_costs_currency_format: "Formatet för valuta"
-  setting_enforce_tracking_start_and_end_times: "Require start and finish times"
-  setting_enforce_without_allow: "Requiring start and finish times is not possible without allowing them"
-  setting_allow_tracking_start_and_end_times_caption: "Enables entering start and finish times when logging time."
-  setting_enforce_tracking_start_and_end_times_caption: "Makes entering start and finish times mandatory when logging time."
+  setting_enforce_tracking_start_and_end_times: "Kräv start- och sluttider"
+  setting_enforce_without_allow: "Det är inte möjligt att begära start- och sluttider utan att låta dem"
+  setting_allow_tracking_start_and_end_times_caption: "Gör det möjligt att ange start- och sluttider vid tidsloggning."
+  setting_enforce_tracking_start_and_end_times_caption: "Gör det obligatoriskt att ange start- och sluttider när du loggar tid."
   text_assign_time_and_cost_entries_to_project: "Tilldela rapporterade timmar och kostnader till projektet"
   text_destroy_cost_entries_question: "%{cost_entries} rapporterades på de arbetspaket som du håller på och tar bort. Vad vill du göra?"
   text_destroy_time_and_cost_entries: "Ta bort rapporterade timmar och kostnader"
@@ -218,17 +218,17 @@ sv:
   text_warning_hidden_elements: "Vissa poster kan ha undantagits från summeringen."
   week: "vecka"
   total_times:
-    workweek: "Workweek Total: %{hours}"
-    week: "Week Total: %{hours}"
-    month: "Month Total: %{hours}"
-    day: "Day Total: %{hours}"
+    workweek: "Arbetsvecka Totalt: %{hours}"
+    week: "Vecka totalt: %{hours}"
+    month: "Månad totalt: %{hours}"
+    day: "Dag totalt: %{hours}"
   api_v3:
     errors:
       validation:
-        start_time_different_date: "Date part of startTime (%{start_time}) must be the same as the spentOn (%{spent_on}) date."
+        start_time_different_date: "Datum del av startTime (%{start_time}) måste vara samma som datumet för spentOn (%{spent_on})."
   ee:
     features:
-      time_entry_time_restrictions: Require exact time tracking
+      time_entry_time_restrictions: Kräv exakt tidsspårning
     upsell:
       time_entry_time_restrictions:
-        description: "Improve your time tracking by requiring exact start and finish times when logging time."
+        description: "Förbättra din tidsspårning genom att kräva exakta start- och sluttider när du loggar tid."

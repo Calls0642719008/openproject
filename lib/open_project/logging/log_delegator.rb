@@ -5,7 +5,7 @@ module OpenProject
         ##
         # Consume a message and let it be handled
         # by all handlers
-        def log(exception, context = {})
+        def log(exception, context = {}) # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
           # in case we're getting ActionController::Parameters
           context = if context.respond_to?(:to_unsafe_h)
                       context.to_unsafe_h
@@ -28,9 +28,11 @@ module OpenProject
 
           # Set current contexts
           context[:level] ||= context[:exception] ? :error : :info
-          context[:current_user] ||= User.current
+          if the_current_user = current_user
+            context[:current_user] ||= the_current_user
+          end
 
-          registered_handlers.values.each do |handler|
+          registered_handlers.each_value do |handler|
             handler.call message, context
           rescue StandardError => e
             Rails.logger.error "Failed to delegate log to #{handler.inspect}: #{e.inspect}\nMessage: #{message.inspect}"
@@ -102,6 +104,14 @@ module OpenProject
           payload = context.slice(%i[current_user project reference]).compact
           extended = OpenProject::Logging.extend_payload!(payload, context)
           OpenProject::Logging.formatter.call extended
+        end
+
+        def current_user
+          User.current
+        # Probably more performant to rescue "ActiveRecord::StatementInvalid: PG::UndefinedTable"
+        # than to check for table existence with `User.connection.data_source_exists?(User.table_name)`
+        rescue StandardError
+          nil
         end
       end
     end

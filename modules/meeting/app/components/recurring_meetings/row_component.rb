@@ -40,14 +40,6 @@ module RecurringMeetings
       meeting.present?
     end
 
-    def column_args(column)
-      if column == :title
-        { style: "grid-column: span 2" }
-      else
-        super
-      end
-    end
-
     def start_time
       if instantiated?
         link_to start_time_title, project_meeting_path(project, meeting)
@@ -95,7 +87,7 @@ module RecurringMeetings
     def status
       scheme = status_scheme(state)
 
-      render(Primer::Beta::Label.new(title:, scheme:)) do
+      render(Primer::Beta::Label.new(scheme:)) do
         render(Primer::Beta::Text.new) { t("label_meeting_state_#{state}") }
       end
     end

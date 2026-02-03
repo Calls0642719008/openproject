@@ -164,7 +164,7 @@ module DemoData
         enabled_module_names: project_data.lookup("modules"),
         types: Type.all,
         parent: Project.find_by(identifier: project_data.lookup("parent")),
-        workspace_type: Project.workspace_types[:project]
+        workspace_type: "project"
       }
     end
   end

@@ -36,24 +36,17 @@ RSpec.describe UserPreferences::UpdateService, "integration", type: :model do
       u.pref.save
     end
   end
-  shared_let(:preferences) do
-    create(:user_preference, user: current_user)
-  end
+  shared_let(:preferences) { current_user.preference }
 
   let(:instance) { described_class.new(user: current_user, model: preferences) }
 
   let(:attributes) { {} }
-  let(:service_result) do
-    instance
-      .call(attributes)
-  end
-
-  let(:updated_pref) do
-    service_result.result
-  end
 
   describe "notification_settings" do
-    subject { updated_pref.notification_settings }
+    subject do
+      service_result = instance.call(attributes)
+      service_result.result.notification_settings
+    end
 
     context "with a partial update" do
       let(:attributes) do
@@ -101,7 +94,7 @@ RSpec.describe UserPreferences::UpdateService, "integration", type: :model do
 
         expect(subject.first).to eq(default_ian.reload)
         expect(current_user.notification_settings.count).to eq(1)
-        expect { default_ian.reload }.not_to raise_error(ActiveRecord::RecordNotFound)
+        expect { default_ian.reload }.not_to raise_error
       end
     end
 

@@ -7,8 +7,9 @@ properties:
     description: The id of the time entry
     minimum: 1
   comment:
-    type: string
-    description: A comment to the time entry
+    allOf:
+      - $ref: './formattable.yml'
+      - description: A comment to the time entry
   spentOn:
     type: string
     format: date
@@ -57,6 +58,7 @@ properties:
       - project
       - user
       - activity
+      - entity
     properties:
       self:
         allOf:
@@ -106,13 +108,13 @@ properties:
               The project the time entry is bundled in. The project might be different from the work package's project once the workPackage is moved.
 
               **Resource**: Project
-      workPackage:
+      entity:
         allOf:
           - "$ref": "./link.yml"
           - description: |-
-              The work package the time entry is created on
+              The entity the time entry is created on
 
-              **Resource**: WorkPackage
+              **Resource**: WorkPackage, Meeting
       user:
         allOf:
           - "$ref": "./link.yml"
@@ -128,42 +130,42 @@ properties:
 
               **Resource**: TimeEntriesActivity
 
-examples:
-  - _type: TimeEntry
-    id: 42
-    comment:
-      format: plain
-      raw: "The force shall set me free."
-      html: "<p>The force shall set me free.</p>"
-    spentOn: "2023-01-11"
-    hours: "PT4H"
-    startTime: "2023-01-11T09:58:00.000Z"
-    endTime: "2023-01-11T13:58:00.000Z"
-    createdAt: "2023-01-11T13:58:24.927Z"
-    updatedAt: "2023-01-11T13:58:24.927Z"
-    _links:
-      self:
-        href: "/api/v3/time_entries/42"
-      updateImmediately:
-        href: "/api/v3/time_entries/42"
-        method: patch
-      update:
-        href: "/api/v3/time_entries/42/form"
-        method: post
-      delete:
-        href: "/api/v3/time_entries/42"
-        method: delete
-      schema:
-        href: "/api/v3/time_entries/schema"
-      project:
-        href: "/api/v3/projects/11"
-        title: DeathStarV2
-      workPackage:
-        href: "/api/v3/work_packages/77"
-        title: Build new hangar
-      user:
-        href: "/api/v3/users/3"
-        title: Darth Vader
-      activity:
-        href: "/api/v3/time_entries/activities/1"
-        title: Management
+example:
+  _type: TimeEntry
+  id: 42
+  comment:
+    format: plain
+    raw: "The force shall set me free."
+    html: "<p>The force shall set me free.</p>"
+  spentOn: "2023-01-11"
+  hours: "PT4H"
+  startTime: "2023-01-11T09:58:00.000Z"
+  endTime: "2023-01-11T13:58:00.000Z"
+  createdAt: "2023-01-11T13:58:24.927Z"
+  updatedAt: "2023-01-11T13:58:24.927Z"
+  _links:
+    self:
+      href: "/api/v3/time_entries/42"
+    updateImmediately:
+      href: "/api/v3/time_entries/42"
+      method: patch
+    update:
+      href: "/api/v3/time_entries/42/form"
+      method: post
+    delete:
+      href: "/api/v3/time_entries/42"
+      method: delete
+    schema:
+      href: "/api/v3/time_entries/schema"
+    project:
+      href: "/api/v3/projects/11"
+      title: DeathStarV2
+    entity:
+      href: "/api/v3/work_packages/77"
+      title: Build new hangar
+    user:
+      href: "/api/v3/users/3"
+      title: Darth Vader
+    activity:
+      href: "/api/v3/time_entries/activities/1"
+      title: Management

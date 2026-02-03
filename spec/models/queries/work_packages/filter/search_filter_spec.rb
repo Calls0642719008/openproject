@@ -116,12 +116,16 @@ RSpec.describe Queries::WorkPackages::Filter::SearchFilter do
           let(:text) { "lorem ipsum" }
           let(:filename) { "plaintext-file.txt" }
           let(:attachment) { create(:attachment, container: work_package, filename:) }
+          let(:plaintext_file_handler) do
+            Plaintext::Resolver.file_handlers.find { |h| h.accept? attachment.content_type }.tap do |plaintext_file_handler|
+              if plaintext_file_handler.nil?
+                fail "Plaintext::FileHandler not found for content type #{attachment.content_type}"
+              end
+            end
+          end
 
           before do
-            allow_any_instance_of(Plaintext::Resolver).to receive(:text).and_return(text)
-            allow(attachment).to receive(:readable?).and_return(true)
-            attachment.reload
-            work_package.reload
+            allow(plaintext_file_handler).to receive(:text).and_return(text)
           end
 
           it "finds in attachment content" do
@@ -146,12 +150,16 @@ RSpec.describe Queries::WorkPackages::Filter::SearchFilter do
           let(:filename) { "plaintext-file.txt" }
           let(:attachment) { create(:attachment, container: work_package, filename:) }
           let(:attachment2) { create(:attachment, container: work_package, filename:) }
+          let(:plaintext_file_handler) do
+            Plaintext::Resolver.file_handlers.find { |h| h.accept? attachment.content_type }.tap do |plaintext_file_handler|
+              if plaintext_file_handler.nil?
+                fail "Plaintext::FileHandler not found for content type #{attachment.content_type}"
+              end
+            end
+          end
 
           before do
-            allow_any_instance_of(Plaintext::Resolver).to receive(:text).and_return(text)
-            allow(attachment).to receive(:readable?).and_return(true)
-            allow(attachment2).to receive(:readable?).and_return(true)
-            work_package.reload
+            allow(plaintext_file_handler).to receive(:text).and_return(text)
           end
 
           context "with the search string in both attachments" do

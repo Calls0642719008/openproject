@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -32,15 +33,16 @@ require "support/pages/page"
 
 module Pages
   class MeetingsTab < Page
-    attr_reader :work_package_id
+    attr_reader :work_package_id, :project_id
 
-    def initialize(work_package_id)
+    def initialize(project_id:, work_package_id:)
       super()
       @work_package_id = work_package_id
+      @project_id = project_id
     end
 
     def path
-      "/work_packages/#{work_package_id}/tabs/meetings"
+      "/projects/#{project_id}/work_packages/#{work_package_id}/tabs/meetings"
     end
 
     def expect_tab_present

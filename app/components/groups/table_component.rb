@@ -54,7 +54,7 @@ module Groups
         component.with_visual_icon(icon: blank_icon, size: :medium) if blank_icon
         component.with_heading(tag: :h2) { blank_title }
         component.with_description { blank_description }
-        component.with_primary_action(label: t(:label_group_new), tag: :a, href: new_group_path) do |button|
+        component.with_primary_action(label: t(:label_group_new), href: new_group_path) do |button|
           button.with_leading_visual_icon(icon: :plus)
           t("activerecord.models.group")
         end

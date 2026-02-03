@@ -1,4 +1,5 @@
 ms:
   overviews:
-    label: 'Gambaran Keseluruhan'
-  permission_manage_overview: 'Urus halaman gambaran keseluruhan'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Papan Pemuka"
+    label_overview: "Gambaran Keseluruhan"

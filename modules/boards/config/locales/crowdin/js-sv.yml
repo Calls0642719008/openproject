@@ -3,7 +3,7 @@ sv:
   ee:
     upsell:
       board_view:
-        description: 'Would you like to automate your workflows with Boards? Advanced boards are an Enterprise add-on. Please upgrade to a paid plan.'
+        description: 'Vill du automatisera dina arbetsflöden med Tavlor? Avancerade tavlor är ett Enterprise tillägg. Vänligen uppgradera till en betald plan.'
   js:
     boards:
       create_new: 'Skapa ny bräda'
@@ -29,35 +29,35 @@ sv:
       error_attribute_not_writable: "Kan inte flytta arbetspaketet, %{attribute} är inte skrivbar."
       error_loading_the_list: "Fel vid inläsning av listan: %{error_message}"
       error_permission_missing: "Behörigheten att skapa offentliga frågor saknas"
-      error_cannot_move_into_self: "You can not move a work package into its own column."
-      text_hidden_list_warning: "Not all lists are displayed because you lack the permission. Contact your admin for more information."
+      error_cannot_move_into_self: "Du kan inte flytta ett arbetspaket till sin egen kolumn."
+      text_hidden_list_warning: "Inte alla listor visas eftersom du saknar tillstånd. Kontakta administratören för mer information."
       click_to_remove_list: "Klicka för att ta bort denna lista"
       board_type:
         text: 'Brädstyp'
-        free: 'basic'
-        select_board_type: 'Please choose the type of board you need.'
+        free: 'grundläggande'
+        select_board_type: 'Välj vilken typ av tavla du behöver.'
         free_text: >
-          Start from scratch with a blank board. Manually add cards and columns to this board.
+          Börja från början med en tom tavla. Lägg till kort och kolumner manuellt till tavlan.
         action: 'Åtgärdstavla'
         action_by_attribute: 'Åtgärdstavla (%{attribute})'
         action_text: >
-          A board with filtered lists on %{attribute} attribute. Moving work packages to other lists will update their attribute.
+          En tavla med filtrerade listor på %{attribute} attribut. Om du flyttar arbetspaket till andra listor uppdateras deras attribut.
         action_text_subprojects: >
-          Board with automated columns for subprojects. Dragging work packages to other lists updates the (sub-)project accordingly.
+          Tavla med automatiserade kolumner för delprojekt. Genom att dra arbetspaket till andra listor uppdateras (del-)projektet i enlighet med detta.
         action_text_subtasks: >
-          Board with automated columns for sub-elements. Dragging work packages to other lists updates the parent accordingly.
+          Tavla med automatiserade kolumner för underelement. Om du drar arbetspaket till andra listor uppdateras den överordnade listan i enlighet med detta.
         action_text_status: >
-          Basic kanban style board with columns for status such as To Do, In Progress, Done.
+          Grundläggande kanban-tavla med kolumner för status, t. ex. Att göra, Pågående, Klar.
         action_text_assignee: >
-          Board with automated columns based on assigned users. Ideal for dispatching work packages.
+          Tavla med automatiserade kolumner baserat på tilldelade användare. Perfekt för att skicka ut arbetspaket.
         action_text_version: >
-          Board with automated columns based on the version attribute. Ideal for planning product development.
+          Tavla med automatiserade kolumner baserade på versionsattributet. Idealisk för planering av produktutveckling.
         action_type:
-          assignee: assignee
+          assignee: tilldelad till
           status: status
           version: version
-          subproject: subproject
-          subtasks: parent-child
+          subproject: delprojekt
+          subtasks: förälder-barn
         board_type_title:
           assignee: Tilldelad till
           status: Status
@@ -68,18 +68,18 @@ sv:
         select_attribute: "Åtgärdsattribut"
       add_list_modal:
         labels:
-          assignee: Select user to add as a new assignee list
-          status: Select status to add as a new list
-          version: Select version to add as a new list
-          subproject: Select subproject to add as a new list
-          subtasks: Select work package to add as a new list
+          assignee: Välj användare som ska läggas till som en ny mottagarlista
+          status: Välj status för att lägga till som en ny lista
+          version: Välj version för att lägga till som en ny lista
+          subproject: Välj delprojekt som ska läggas till som en ny lista
+          subtasks: Välj arbetspaket som ska läggas till som en ny lista
         warning:
           status: |
-            There is currently no status available. <br>
-            Either there are none or they have all already been added to the board.
-          assignee: There isn't any member matched with your filter value.  <br>
-          no_member: This project currently does not have any members that can be added.  <br>
-          add_members: <a href="%{link}">Add a new member to this project</a> to select users again.
+            Det finns för närvarande ingen status tillgänglig. <br>
+            Antingen finns det ingen eller så har alla redan lagts till på tavlan.
+          assignee: Det finns ingen medlem som matchar ditt filtervärde. <br>
+          no_member: Det här projektet har för närvarande inga medlemmar som kan läggas till. <br>
+          add_members: <a href="%{link}">Lägg till en ny medlem i detta projekt</a> för att välja användare igen.
       configuration_modal:
         title: 'Konfigurera denna tavla'
         display_settings:

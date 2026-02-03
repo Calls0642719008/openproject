@@ -50,7 +50,7 @@ module MeetingAgendaItems
 
     def drop_target_config
       {
-        "is-drag-and-drop-target": true,
+        meetings__drag_and_drop_target: "container",
         "target-allowed-drag-type": "section" # the type of dragged items which are allowed to be dropped in this target
       }
     end
@@ -64,7 +64,28 @@ module MeetingAgendaItems
     end
 
     def sections_except_backlog
-      @meeting.sections.reject(&:backlog?)
+      @meeting.sections.reject { |s| s.backlog? || !s.persisted? }
+    end
+
+    def banner
+      render Primer::Alpha::Banner.new(
+        scheme: :default,
+        icon: :info,
+        dismiss_scheme: :none
+      ) do
+        if @meeting.template?
+          draft = @meeting.draft? ? "draft_" : ""
+          t(
+            "recurring_meeting.template.#{draft}banner_html",
+            link: link_to(
+              @meeting.recurring_meeting.title,
+              project_recurring_meeting_path(@meeting.project, @meeting.recurring_meeting)
+            )
+          )
+        elsif @meeting.draft?
+          t("text_meeting_draft_banner")
+        end
+      end
     end
   end
 end

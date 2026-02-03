@@ -224,7 +224,7 @@ export class IanCenterService extends UntilDestroyedMixin {
     );
   }
 
-  openSplitScreen(workPackageId:string, tabIdentifier:string = 'activity'):void {
+  openSplitScreen(workPackageId:string, tabIdentifier = 'activity'):void {
     const link = this.pathHelper.notificationsDetailsPath(workPackageId, tabIdentifier) + window.location.search;
     Turbo.visit(link, { frame: 'content-bodyRight', action: 'advance' });
   }
@@ -327,7 +327,6 @@ export class IanCenterService extends UntilDestroyedMixin {
     wpIds.forEach((id) => {
       cache.clearAndLoad(
         id,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         from(promise).pipe(map(() => cache.current(id)!)),
       );
     });

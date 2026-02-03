@@ -150,8 +150,9 @@ RSpec.describe API::V3::Activities::ActivitiesByWorkPackageAPI, with_ee: [:inter
       end
 
       context "when creating an internal comment" do
-        shared_context "to create internal comment" do |internal: false|
+        shared_context "to create internal comment" do |internal: false, enabled_internal_comments: true|
           before do
+            work_package.project.update!(enabled_internal_comments:)
             header "Content-Type", "application/json"
             post api_v3_paths.work_package_activities(work_package.id),
                  { comment: { raw: comment }, internal: }.to_json
@@ -205,6 +206,22 @@ RSpec.describe API::V3::Activities::ActivitiesByWorkPackageAPI, with_ee: [:inter
           it "notes the error" do
             expect(last_response.body)
               .to be_json_eql("Internal Journal may not be accessed.".to_json)
+              .at_path("message")
+          end
+        end
+
+        context "and internal comments are disabled on the project" do
+          let(:permissions) { %i(view_work_packages add_work_package_comments view_internal_comments add_internal_comments) }
+
+          include_context "to create internal comment", internal: true, enabled_internal_comments: false
+
+          it "fails with HTTP Unprocessable Entity" do
+            expect(last_response).to have_http_status :unprocessable_entity
+          end
+
+          it "notes the error" do
+            expect(last_response.body)
+              .to be_json_eql("Internal Journal is disabled for this project.".to_json)
               .at_path("message")
           end
         end

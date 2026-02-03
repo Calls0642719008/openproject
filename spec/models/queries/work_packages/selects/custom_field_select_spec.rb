@@ -123,8 +123,9 @@ RSpec.describe Queries::WorkPackages::Selects::CustomFieldSelect do
     let(:mock) { instance_double(WorkPackage) }
 
     it "delegates to formatted_custom_value_for" do
-      expect(mock).to receive(:formatted_custom_value_for).with(custom_field.id)
+      allow(mock).to receive(:formatted_custom_value_for).with(custom_field)
       instance.value(mock)
+      expect(mock).to have_received(:formatted_custom_value_for).with(custom_field)
     end
   end
 end

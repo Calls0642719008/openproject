@@ -30,14 +30,14 @@ da:
         overridden_costs: "Tilsidesatte omkostninger"
         spent: "Forbrugt"
         spent_on: "Dato"
-        logged_by: "Logged by"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        logged_by: "Logget af"
+        entity: Logget til
+        entity_id: Logget til
+        entity_gid: Logget til
       cost_type:
         unit: "Enhedsnavn"
         unit_plural: "Pluralistisk enhedsnavn"
-        default: "Cost type by default"
+        default: "Omkostningstype som standard"
       work_package:
         costs_by_type: "Forbrugte enheder"
         labor_costs: "Lønomkostninger"
@@ -50,7 +50,7 @@ da:
       user:
         default_rates: "Standardsatser"
       time_entry:
-        project: Prjoekt
+        project: Projekt
         user: Bruger
         work_package: Arbejdspakke
         subject: Emne
@@ -58,32 +58,32 @@ da:
         comments: Kommentér
         activity: Aktivivtet
         spent_on: Dato
-        start_time: Start time
-        end_time: Finish time
+        start_time: Starttidspunkt
+        end_time: Sluttidspunkt
         time: Tidspunkt
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Logget til
+        entity_id: Logget til
+        entity_gid: Logget til
     models:
       time_entry:
-        one: "Time entry"
-        other: "Time entries"
+        one: "Tidspunkt"
+        other: "Tidsangivelser"
       cost_entry:
         one: "Omkostningspostering"
-        other: "Cost entries"
+        other: "Omkostningsposteringer"
       cost_type:
         one: "Omkostningstype"
         other: "Omkostningstyper"
       time_entry_activity:
-        one: "Time tracking activity"
-        other: "Time tracking activities"
+        one: "Tidsregistrering af aktivitet"
+        other: "Tidsregistrering af aktiviteter"
       rate: "Sats"
     errors:
       models:
         time_entry:
-          invalid_time: "must be between 00:00 and 23:59."
-          cannot_log_for_this_work_package: "Cannot log time for this work package."
-          duplicate_ongoing: "An ongoing time entry already exists for this user."
+          invalid_time: "skal være mellem 00:00 og 23:59."
+          cannot_log_for_this_work_package: "Kan ikke logge tid for denne arbejdspakke."
+          duplicate_ongoing: "Der findes allerede en igangværende tidsregistrering for denne bruger."
         work_package:
           is_not_a_valid_target_for_cost_entries: "Arbejdspakke #%{id} er ikke et gyldigt mål til omfordeling af omkostningsangivelser."
           nullify_is_not_valid_for_cost_entries: "Omkostningsangivelser kan ikke tildeles et projekt."
@@ -101,7 +101,7 @@ da:
   button_log_time: "Log"
   button_add_activity: "Aktivivtet"
   button_add_time_entry: "Tidsregistrering"
-  button_stop_timer: "Stop timer"
+  button_stop_timer: "Stop stopur"
   caption_booked_on_project: "Reservationer til projekt"
   caption_default: "Forhåndsvalgt"
   caption_default_rate_history_for: "Standardsatshistorik for %{user}"
@@ -115,20 +115,20 @@ da:
   caption_show_locked: "Vis låste typer"
   caption_log_time_dialog: "Tidsregistrering"
   description_date_for_new_rate: "Dato for ny sats"
-  description_costs_settings: "Define the desired format for the costs in all projects."
-  description_time_settings: "Define which fields are mandatory to fill when logging time in all projects."
+  description_costs_settings: "Definer det ønskede format for omkostningerne i alle projekter."
+  description_time_settings: "Definer, hvilke felter der er obligatoriske at udfylde, når du logger tid i alle projekter."
   group_by_others: "ikke i nogen gruppe"
   label_between: "mellem"
   label_cost_filter_add: "Tilføj omkostningangivelsesfilter"
   label_costlog: "Registrerede enhedsomkostninger"
   label_cost_plural: "Omkostninger"
   label_cost_type_plural: "Omkostningstyper"
-  label_cost_type_specific: "Cost type #%{id}: %{name}"
+  label_cost_type_specific: "Omkostningstype #%{id}: %{name}"
   label_costs_per_page: "Omkostninger pr. side"
   label_current_default_rate: "Nuværende standardsats"
   label_date_on: "d."
   label_deleted_cost_types: "Slettede omkostningstyper"
-  label_locked_cost_types: "Locked cost types"
+  label_locked_cost_types: "Låste omkostningstyper"
   label_display_cost_entries: "Vis enhedsomkostninger"
   label_display_time_entries: "Vis indberettede timer"
   label_display_types: "Vis typer"
@@ -143,8 +143,8 @@ da:
   label_kind: "Type"
   label_less_or_equal: "<="
   label_log_costs: "Registrér enhedsomkostninger"
-  label_new_time_entry_activity: "New time entry activity"
-  label_time_entry_activity_form_description: "Changes to this time entry activity will be reflected in all projects where it is enabled."
+  label_new_time_entry_activity: "Ny tidsregistreringsaktivitet"
+  label_time_entry_activity_form_description: "Ændringer i denne tidsregistreringsaktivitet vil blive afspejlet i alle projekter, hvor den er aktiveret."
   label_no: "Nej"
   label_option_plural: "Valgmuligheder"
   label_overall_costs: "Samlede omkostninger"
@@ -158,37 +158,37 @@ da:
   label_valid_from: "Gældende fra"
   label_yes: "Ja"
   label_time: "Tidspunkt"
-  label_cost: "Cost"
+  label_cost: "Omkostning"
   label_costs: "Omkostninger"
-  label_mandatory_fields: "Mandatory fields"
-  label_my_time_tracking: "My time tracking"
-  label_no_time: "No time tracked"
-  label_next_day: "Next day"
+  label_mandatory_fields: "Obligatoriske felter"
+  label_my_time_tracking: "Min tidsregistrering"
+  label_no_time: "Ingen tid registreret"
+  label_next_day: "Næste dag"
   label_next_week: "Næste uge"
-  label_next_workweek: "Next work week"
-  label_next_month: "Next month"
-  label_previous_day: "Previous day"
-  label_previous_workweek: "Previous work week"
+  label_next_workweek: "Næste arbejdsuge"
+  label_next_month: "Næste måned"
+  label_previous_day: "Forrige dag"
+  label_previous_workweek: "Forrige arbejdsuge"
   label_previous_week: "Foregående uge"
-  label_previous_month: "Previous month"
-  label_specific_day: "Day %{day}"
-  label_specific_week: "Calendar week %{week}"
-  label_specific_month: "Month %{month}"
+  label_previous_month: "Forrige måned"
+  label_specific_day: "Dag %{day}"
+  label_specific_week: "Kalenderuge %{week}"
+  label_specific_month: "Måned %{month}"
   label_list: "Liste"
   label_month: "Måned"
-  label_workweek: "Work week"
+  label_workweek: "Arbejdsuge"
   label_day: "Dag"
-  label_today_capitalized: "Today"
-  label_view_mode_switcher: "Change view"
-  label_timer_since: "Started at %{time}"
-  placeholder_activity_select_work_package_first: Work package selection is required first
+  label_today_capitalized: "I dag"
+  label_view_mode_switcher: "Skift visning"
+  label_timer_since: "Startede %{time}"
+  placeholder_activity_select_work_package_first: Valg af arbejdspakke er påkrævet først
   notice_something_wrong: "Noget gik galt. Forsøg venligst igen."
   notice_successful_restore: "Gendannet."
-  notice_successful_lock: "Locked successfully."
-  notice_cost_logged_successfully: "Unit cost logged successfully."
-  notice_different_time_zones: "This user has a different time zone (%{tz}). Time will be logged using their time zone."
-  notice_time_entry_update_failed: "Failed to update time entry. Errors: %{errors}"
-  notice_time_entry_delete_failed: "Failed to delete time entry. Errors: %{errors}"
+  notice_successful_lock: "Låst med succes."
+  notice_cost_logged_successfully: "Enhedsomkostningerne er logget korrekt."
+  notice_different_time_zones: "Denne bruger har en anden tidszone (%{tz}). Tiden vil blive logget ved hjælp af deres tidszone."
+  notice_time_entry_update_failed: "Kunne ikke opdatere tidsregistreringen. Fejl: %{errors}"
+  notice_time_entry_delete_failed: "Kunne ikke slette tidsregistreringen. Fejl: %{errors}"
   permission_edit_cost_entries: "Redigér reserverede enhedsomkostninger"
   permission_edit_own_cost_entries: "Redigér egne reserverede enhedsomkostninger"
   permission_edit_hourly_rates: "Redigér timesatser"
@@ -202,12 +202,12 @@ da:
   permission_view_own_cost_entries: "Se egen reservationsomkostninger"
   permission_view_own_hourly_rate: "Se egen timestaser"
   permission_view_own_time_entries: "Se eget tidsforbrug"
-  project_module_costs: "Time and costs"
-  setting_allow_tracking_start_and_end_times: "Allow start and finish times"
+  project_module_costs: "Tid og omkostninger"
+  setting_allow_tracking_start_and_end_times: "Tillad start- og sluttider"
   setting_costs_currency: "Valuta"
   setting_costs_currency_format: "Valutaformat"
-  setting_enforce_tracking_start_and_end_times: "Require start and finish times"
-  setting_enforce_without_allow: "Requiring start and finish times is not possible without allowing them"
+  setting_enforce_tracking_start_and_end_times: "Kræv start- og sluttider"
+  setting_enforce_without_allow: "Det er ikke muligt at kræve start- og sluttider uden at tillade dem"
   setting_allow_tracking_start_and_end_times_caption: "Enables entering start and finish times when logging time."
   setting_enforce_tracking_start_and_end_times_caption: "Makes entering start and finish times mandatory when logging time."
   text_assign_time_and_cost_entries_to_project: "Tildel indberettede timer og omkostninger til projektet"
@@ -218,17 +218,17 @@ da:
   text_warning_hidden_elements: "Visse angivelser kan været blevet ekskluderet fra sammenlægning."
   week: "uge"
   total_times:
-    workweek: "Workweek Total: %{hours}"
-    week: "Week Total: %{hours}"
-    month: "Month Total: %{hours}"
-    day: "Day Total: %{hours}"
+    workweek: "Arbejdsuge i alt: %{hours}"
+    week: "Uge i alt: %{hours}"
+    month: "Måned i alt: %{hours}"
+    day: "Dag i alt: %{hours}"
   api_v3:
     errors:
       validation:
-        start_time_different_date: "Date part of startTime (%{start_time}) must be the same as the spentOn (%{spent_on}) date."
+        start_time_different_date: "Datodelen af startTime (%{start_time}) skal være den samme som datoen for spentOn (%{spent_on})."
   ee:
     features:
-      time_entry_time_restrictions: Require exact time tracking
+      time_entry_time_restrictions: Kræver præcis tidsregistrering
     upsell:
       time_entry_time_restrictions:
-        description: "Improve your time tracking by requiring exact start and finish times when logging time."
+        description: "Forbedr din tidsregistrering ved at kræve nøjagtige start- og sluttider, når du logger tid."

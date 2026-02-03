@@ -41,5 +41,9 @@ module Meetings
       @meeting = meeting
       @participant = participant
     end
+
+    def wrapper_uniq_by
+      @participant.id
+    end
   end
 end

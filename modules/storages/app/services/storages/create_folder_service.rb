@@ -32,8 +32,8 @@ module Storages
   class CreateFolderService < BaseService
     using Peripherals::ServiceResultRefinements
 
-    def self.call(storage:, user:, name:, parent_id:)
-      new(storage).call(user:, name:, parent_id:)
+    def self.call(storage:, user:, folder_name:, parent_id:)
+      new(storage).call(user:, folder_name:, parent_id:)
     end
 
     def initialize(storage)
@@ -41,19 +41,19 @@ module Storages
       @storage = storage
     end
 
-    def call(user:, name:, parent_id:)
-      auth_strategy = Adapters::Registry.resolve("#{@storage}.authentication.user_bound").call(user, @storage)
-      parent_location = parent_path(parent_id, user).on_failure { return add_error(:base, it.errors) }.result
+    def call(user:, folder_name:, parent_id:)
+      error = parent_path(parent_id, user).bind do |parent_location|
+        input_data = Adapters::Input::CreateFolder.build(folder_name:, parent_location:).value_or { return add_validation_error(it) }
+        Adapters::Registry["#{@storage}.commands.create_folder"]
+          .call(storage: @storage,
+                auth_strategy: Adapters::Registry["#{@storage}.authentication.user_bound"].call(user, @storage),
+                input_data:).bind do |created_folder|
+          @result.result = created_folder
+          return @result
+        end
+      end
 
-      input_data = Adapters::Input::CreateFolder.build(folder_name: name, parent_location:)
-                                                .value_or { return add_validation_error(it) }
-
-      storage_folder = Adapters::Registry.resolve("#{@storage}.commands.create_folder")
-                                         .call(storage: @storage, auth_strategy:, input_data:)
-                                         .value_or { return add_error(:base, it, options: input_data.to_h) }
-
-      @result.result = storage_folder
-      @result
+      add_error(:base, error.failure)
     end
 
     private
@@ -62,18 +62,16 @@ module Storages
       case @storage.short_provider_type
       when "nextcloud"
         location_from_file_info(parent_id, user)
-      when "one_drive"
-        ServiceResult.success(result: parent_id)
+      when "one_drive", "sharepoint"
+        Success(parent_id)
       else
         raise "Unknown Storage Type"
       end
     end
 
     def location_from_file_info(parent_id, user)
-      StorageFileService.call(storage: @storage, user:, file_id: parent_id).on_success do |success|
-        path = URI.decode_uri_component(success.result.location)
-        return ServiceResult.success(result: path)
-      end
+      StorageFileService.call(storage: @storage, user:, file_id: parent_id)
+                        .to_monad.fmap { URI.decode_uri_component(it.location) }
     end
   end
 end

@@ -157,7 +157,7 @@ export default class ProjectStorageFormController extends Controller {
   }
 
   protected get storage():IStorage {
-    return JSON.parse(this.storageTarget.dataset.storage as string) as IStorage;
+    return JSON.parse(this.storageTarget.dataset.storage!) as IStorage;
   }
 
   protected get projectFolderHref():string|null {

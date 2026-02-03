@@ -1,6 +1,6 @@
 fa:
   js:
     work_packages:
-      label_gantt_chart_plural: "Gantt charts"
+      label_gantt_chart_plural: "نمودارهای گانت"
       default_queries:
         milestones: 'نقاط عطف'

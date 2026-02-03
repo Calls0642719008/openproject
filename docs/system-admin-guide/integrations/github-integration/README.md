@@ -75,6 +75,15 @@ The **Payload URL** must point to your OpenProject server's GitHub webhook endpo
 > [!NOTE]
 > For the events that should be triggered by the webhook, please select "Send me everything".
 
+> [!IMPORTANT]
+> OpenProject only supports the following GitHub events:
+>
+> - check_run
+> - issue_comment
+> - ping
+> - pull_request
+> If the GitHub webhook sends an event that OpenProject does not support, a 404 error is returned by OpenProject.
+
 You will need the API key you copied earlier in OpenProject. Append it to the *Payload URL* as a simple GET parameter named `key`. In the end the URL should look something like this:
 
 `https://myopenproject.com/webhooks/github?key=42`

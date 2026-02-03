@@ -64,14 +64,6 @@ module RecurringMeetings
       )
     end
 
-    def header_args(column)
-      if column == :title
-        { style: "grid-column: span 2" }
-      else
-        super
-      end
-    end
-
     def mobile_title
       I18n.t(:label_recurring_meeting_plural)
     end

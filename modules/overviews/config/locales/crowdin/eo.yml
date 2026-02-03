@@ -1,4 +1,5 @@
 eo:
   overviews:
-    label: 'Superrigardo'
-  permission_manage_overview: 'Adminsitri antaŭrigardan paĝon'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Paneloj"
+    label_overview: "Superrigardo"

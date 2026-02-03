@@ -28,7 +28,7 @@
 
 import { PrincipalLike } from 'core-app/shared/components/principal/principal-types';
 import { IPrincipal } from 'core-app/core/state/principals/principal.model';
-import { HalSourceLink } from 'core-app/features/hal/resources/hal-resource';
+import { HalSourceLink } from 'core-app/features/hal/interfaces';
 
 export type PrincipalType = 'user'|'placeholder_user'|'group'|'external_user';
 

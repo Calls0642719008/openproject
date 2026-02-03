@@ -40,7 +40,7 @@ RSpec.describe MeetingParticipants::CreateContract do
   shared_let(:user_without_meeting_permissions) { create(:user, member_with_permissions: { project => %i[view_project] }) }
   shared_let(:user_not_in_project) { create(:user) }
 
-  let(:participant) { build(:meeting_participant, meeting:, user:) }
+  let(:participant) { build(:meeting_participant, :needs_action, meeting:, user:) }
   let(:contract) { described_class.new(participant, user) }
 
   describe "validation" do

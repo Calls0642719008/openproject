@@ -39,12 +39,8 @@ RSpec.describe "my routes" do
     expect(patch("/my/account")).to route_to("my#update_account")
   end
 
-  it "/my/settings GET routes to my#settings" do
-    expect(get("/my/settings")).to route_to("my#settings")
-  end
-
-  it "/my/settings PATCH routes to my#update_account" do
-    expect(patch("/my/settings")).to route_to("my#update_settings")
+  it "/my/locale GET routes to my#locale" do
+    expect(get("/my/locale")).to route_to("my#locale")
   end
 
   it "/my/interface GET routes to my#interface" do
@@ -62,6 +58,10 @@ RSpec.describe "my routes" do
   it "/my/deletion_info GET routes to users#deletion_info" do
     expect(get("/my/deletion_info")).to route_to(controller: "users",
                                                  action: "deletion_info")
+  end
+
+  it "/my/settings PATCH routes to my#update_account" do
+    expect(patch("/my/settings")).to route_to("my#update_settings")
   end
 
   context "for access tokens controller" do
@@ -95,8 +95,8 @@ RSpec.describe "my routes" do
                                                                             access_token_id: "123")
     end
 
-    it "/my/revoke_storage_token DELETE routes to my/access_tokens#revoke_storage_token" do
-      expect(delete("/my/access_tokens/123/revoke_storage_token")).to route_to("my/access_tokens#revoke_storage_token",
+    it "/my/remove_oauth_client_token DELETE routes to my/access_tokens#remove_oauth_client_token" do
+      expect(delete("/my/access_tokens/123/remove_oauth_client_token")).to route_to("my/access_tokens#remove_oauth_client_token",
                                                                                access_token_id: "123")
     end
   end

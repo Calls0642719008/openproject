@@ -136,7 +136,7 @@ RSpec.describe "Search", :js, :selenium, with_settings: { per_page_options: "5" 
         .to have_css(".subject", text: target_work_package.subject)
 
       expect(page)
-        .to have_current_path project_work_package_path(target_work_package.project, target_work_package, state: "activity")
+        .to have_current_path project_work_package_path(target_work_package.project, target_work_package, "activity")
 
       search_target = work_packages.last
 
@@ -153,7 +153,7 @@ RSpec.describe "Search", :js, :selenium, with_settings: { per_page_options: "5" 
         .to have_css(".subject", text: search_target.subject)
 
       expect(page)
-        .to have_current_path project_work_package_path(search_target.project, search_target, state: "activity")
+        .to have_current_path project_work_package_path(search_target.project, search_target, "activity")
 
       # Typing a hash sign before an ID shall only suggest that work package and (no hits within the subject)
       global_search.search("##{search_target.id}", submit: false)
@@ -172,6 +172,18 @@ RSpec.describe "Search", :js, :selenium, with_settings: { per_page_options: "5" 
       expect(current_url).to include("q=#{"%23#{search_target.id}"}")
       expect(current_url).to include("filter=work_packages")
       expect(current_url).to include("scope=all")
+    end
+
+    it "announces the number of items via aria-live" do
+      input = page.find(".top-menu-search--input")
+      input.set "Subject"
+
+      live_region = page.find(
+        "live-region",
+        visible: :all
+      )
+
+      expect(live_region).to have_text(/\d+ items available/, wait: 5)
     end
   end
 

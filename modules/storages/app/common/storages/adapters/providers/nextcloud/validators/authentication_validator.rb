@@ -77,17 +77,17 @@ module Storages
                 :non_provisioned_user,
                 :provisioned_user_provider,
                 :provider_capabilities,
+                :offline_access,
                 :token_negotiable,
-                :user_bound_request,
-                :offline_access
+                :user_bound_request
               )
 
               non_provisioned_user
               non_oidc_provisioned_user
               provider_capabilities
+              offline_access
               token_negotiable
               user_bound_request
-              offline_access
             end
 
             def non_provisioned_user

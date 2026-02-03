@@ -9,6 +9,10 @@
   &--input[type="text"]
     // Uppercase letters with accents like Ü and Â would get cut off
     line-height: 20px
+    padding-left: 25px !important
+
+    @media screen and (max-width: $breakpoint-md)
+      padding-left: 0 !important
 
   &--option,
   &--option:hover

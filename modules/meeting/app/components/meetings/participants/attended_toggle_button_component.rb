@@ -46,7 +46,7 @@ module Meetings
       render(
         Primer::Beta::Button.new(
           tag: :a,
-          href: toggle_attendance_meeting_participant_path(@meeting, @participant),
+          href: toggle_attendance_project_meeting_participant_path(@meeting.project, @meeting, @participant),
           data: {
             turbo_method: :post,
             test_selector: "attendance_button_#{@participant.user_id}"

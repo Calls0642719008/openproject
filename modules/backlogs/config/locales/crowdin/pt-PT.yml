@@ -40,6 +40,8 @@ pt-PT:
               task_version_must_be_the_same_as_story_version: "tem ser o mesmo que a versão da história do pai."
         sprint:
           cannot_end_before_it_starts: "Sprint não pode terminar antes de começar."
+  attributes:
+    task_type: "Tipo de tarefa"
   backlogs:
     add_new_story: "Nova história"
     any: "qualquer"
@@ -100,7 +102,10 @@ pt-PT:
   backlogs_empty_title: "Não há versões definidas para serem utilizadas em backlogs"
   backlogs_empty_action_text: "Para começar a utilizar os backlogs, crie uma nova versão e atribua-a a uma coluna de backlogs."
   button_edit_wiki: "Editar página wiki"
-  error_backlogs_task_cannot_be_story: "As definições são inválidas. O tipo de tarefa selecionado não pode ser também um tipo de história."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "não pode ser também um tipo de história"
   error_intro_plural: "Os seguintes erros foram encontrados:"
   error_intro_singular: "Foi encontrado o seguinte erro:"
   error_outro: "Por favor, corrija os erros acima antes de enviar novamente."
@@ -124,6 +129,10 @@ pt-PT:
   label_points_burn_up: "Acima"
   label_product_backlog: "backlog do produto"
   label_select_all: "Seleccionar todos"
+  label_select_type: "Selecionar um tipo"
+  label_select_types: "Selecionar tipos"
+  label_selected_type: "Tipo selecionado"
+  label_selected_types: "Tipos selecionados"
   label_sprint_backlog: "backlog de sprint"
   label_sprint_cards: "Exportar cartões"
   label_sprint_impediments: "Impedimentos de Sprint"
@@ -160,3 +169,7 @@ pt-PT:
   version_settings_display_option_left: "esquerda"
   version_settings_display_option_none: "nenhum"
   version_settings_display_option_right: "direita"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Tipos tratados como histórias do backlog (por exemplo, destaque, história de utilizador). Deve ser diferente do tipo de tarefa.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Tipo utilizado para tarefas da história. Deve ser diferente dos tipos de histórias.

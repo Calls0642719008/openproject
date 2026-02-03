@@ -1,0 +1,10 @@
+<%= render(Primer::Beta::Text.new(tag: :p)) do %>
+  <%= I18n.t(:text_line_separated) %>
+<% end %>
+
+<%= render(Primer::Beta::Text.new(tag: :p)) do %>
+  <%= I18n.t(
+          :setting_apiv3_cors_origins_text_html,
+          origin_link: ::OpenProject::Static::Links.url_for(:origin_mdn_documentation)
+        ).html_safe %>
+<% end %>

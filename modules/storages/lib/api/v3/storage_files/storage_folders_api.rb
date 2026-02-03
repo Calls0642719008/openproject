@@ -46,7 +46,7 @@ module API
             ::Storages::CreateFolderService.call(
               storage: @storage,
               user: current_user,
-              name: params["name"],
+              folder_name: params["name"],
               parent_id: params["parent_id"]
             ).match(
               on_success: ->(storage_folder) {

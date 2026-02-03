@@ -8,7 +8,7 @@ fa:
     boards:
       create_new: 'ایجاد تابلوی‌ اعلانات'
       label_unnamed_board: 'انجمن بدون نام'
-      label_unnamed_list: 'Unnamed list'
+      label_unnamed_list: 'لیست بدون نام'
       label_board_type: 'نوع انجمن'
       lists:
         delete: 'حذف لیست'
@@ -20,25 +20,25 @@ fa:
         lock_version: 'قفل نگارش'
         unlock_version: 'بازکردن نسخه'
         edit_version: 'ویرایش نسخه'
-        show_version: 'Show version'
+        show_version: 'نمایش نسخه'
         locked: 'قفل شده'
         closed: 'بسته'
-      new_board: 'New board'
-      add_list: 'افزودن لیست به برد'
-      add_card: ''
+      new_board: 'تابلوی جدید'
+      add_list: 'افزودن لیست به تابلو'
+      add_card: 'افزودن کارت'
       error_attribute_not_writable: "Cannot move the work package, %{attribute} is not writable."
       error_loading_the_list: "Error loading the list: %{error_message}"
       error_permission_missing: "مجوز ایجاد سؤالات عمومی از بین رفته است"
       error_cannot_move_into_self: "You can not move a work package into its own column."
       text_hidden_list_warning: "Not all lists are displayed because you lack the permission. Contact your admin for more information."
-      click_to_remove_list: "Click to remove this list"
+      click_to_remove_list: "برای حذف این لیست کلیک کنید"
       board_type:
-        text: 'نوع انجمن'
-        free: 'basic'
-        select_board_type: 'Please choose the type of board you need.'
+        text: 'نوع تابلو'
+        free: 'پایه ای'
+        select_board_type: 'لطفاً نوع تابلویی که نیاز دارید را انتخاب کنید.'
         free_text: >
           از ابتدا با یک تخته خالی شروع کنید. به صورت دستی کارت ها و ستون ها را به این تابلو اضافه کنید.
-        action: 'Action board'
+        action: 'تابلوی فعالیت'
         action_by_attribute: 'تابلوی فعالیت (%{attribute})'
         action_text: >
           A board with filtered lists on %{attribute} attribute. Moving work packages to other lists will update their attribute.
@@ -53,11 +53,11 @@ fa:
         action_text_version: >
           تابلویی با ستون های خودکار بر اساس ویژگی نسخه. ایده آل برای برنامه ریزی توسعه محصول.
         action_type:
-          assignee: assignee
-          status: status
-          version:
-          subproject: subproject
-          subtasks: parent-child
+          assignee: مسئول انجام
+          status: وضعیت
+          version: نسخه
+          subproject: زیر پروژه
+          subtasks: والد-فرزند
         board_type_title:
           assignee: نماینده
           status: وضعیت
@@ -65,22 +65,23 @@ fa:
           subproject: زیر پروژه
           subtasks: والد-فرزند
           basic: اصول اولیه
-        select_attribute: "Action attribute"
+        select_attribute: "ویژگی فعالیت"
       add_list_modal:
         labels:
-          assignee: Select user to add as a new assignee list
+          assignee: برای افزودن به لیست مسئول انجام کاربر انتخاب کنید
           status: Select status to add as a new list
           version: Select version to add as a new list
           subproject: Select subproject to add as a new list
           subtasks: انتخاب بسته کاری جهت افزودن به لیست جدید
         warning:
           status: |
-
+            در حال حاضر هیچ وضعیت در دسترسی موجود نیست.<br>
+            یا هیچ موردی وجود ندارد و یا همه به تابلو اضافه شده اند.
           assignee: There isn't any member matched with your filter value.  <br>
           no_member: This project currently does not have any members that can be added.  <br>
           add_members: <a href="%{link}">Add a new member to this project</a> to select users again.
       configuration_modal:
         title: 'Configure this board'
         display_settings:
-          card_mode: "نمایش بصورت کارت"
+          card_mode: "نمایش به صورت کارت"
           table_mode: "نمایش به عنوان جدول"

@@ -129,7 +129,7 @@ RSpec.describe "API v3 Grids resource", content_type: :json do
   describe "#post api/v3/grids" do
     let(:path) { api_v3_paths.grids }
 
-    let(:permissions) { %i[manage_overview] }
+    let(:permissions) { %i[manage_dashboards] }
 
     let(:params) do
       {
@@ -149,7 +149,7 @@ RSpec.describe "API v3 Grids resource", content_type: :json do
 
     it_behaves_like "creates a grid resource"
 
-    context "if lacking the manage_overview permission and not changing the default values" do
+    context "if lacking the manage_dashboards permission and not changing the default values" do
       # Creating a grid should be possible for every member in the project to avoid having an empty page for the project
       # which is why this test case is the same as the one above.
       # But this is only true if only the scope is provided and no other attribute.
@@ -167,7 +167,7 @@ RSpec.describe "API v3 Grids resource", content_type: :json do
       it_behaves_like "creates a grid resource"
     end
 
-    context "if lacking the manage_overview permission and changing the default values" do
+    context "if lacking the manage_dashboards permission and changing the default values" do
       # Creating a grid should be possible for every member in the project to avoid having an empty page for the project
       # which is why this test case is the same as the one above.
       # But this is only true if only the scope is provided and no other attribute.

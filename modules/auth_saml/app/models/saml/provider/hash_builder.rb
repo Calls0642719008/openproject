@@ -71,6 +71,7 @@ module Saml
         sp_entity_id:,
         idp_sso_service_url:,
         idp_slo_service_url:,
+        idp_slo_target_url: idp_slo_service_url, # for compatibility with 1.10 version of the omniauth-saml gem
         name_identifier_format:,
         certificate:,
         private_key:,

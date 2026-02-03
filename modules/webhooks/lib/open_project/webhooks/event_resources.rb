@@ -1,24 +1,26 @@
+# frozen_string_literal: true
+
 module OpenProject::Webhooks
   module EventResources
     class << self
       def subscribe!
-        resource_modules.each do |handler|
-          handler.subscribe!
-        end
+        resource_modules.each(&:subscribe!)
       end
 
       ##
       # Return a complete mapping of all resource modules
       # in the form { label => { event1: label , event2: label } }
       def available_events_map
-        resource_modules.map { |m| [m.resource_name, m.available_events_map] }.to_h
+        resource_modules.to_h { |m| [m.resource_name, m.available_events_map] }
       end
 
       ##
       # Find a module based on the event name
       def lookup_resource_name(event_name)
-        resource = resource_modules.detect { |m| m.available_events_map.key?(event_name) }
-        resource.try(:resource_name)
+        resource, events = available_events_map.detect { |_, events_map| events_map.key?(event_name) }
+        event = events[event_name] if resource
+
+        [resource, event]
       end
 
       def resource_modules

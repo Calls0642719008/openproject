@@ -31,5 +31,12 @@
 module Projects
   class CreateService < ::BaseServices::Create
     include Projects::Concerns::NewProjectService
+    include Projects::Concerns::ManageMembershipsFromCustomFields
+
+    def after_perform(service_call)
+      super.tap do |call|
+        update_calculated_value_custom_fields(call.result)
+      end
+    end
   end
 end

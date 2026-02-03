@@ -40,6 +40,8 @@ sk:
               task_version_must_be_the_same_as_story_version: "musí byť rovnaká ako verzia nadradeného článku."
         sprint:
           cannot_end_before_it_starts: "Šprint nemôže byť ukončený ešte pred jeho spustením."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Nový príbeh"
     any: "akékoľvek"
@@ -100,7 +102,10 @@ sk:
   backlogs_empty_title: "Nie sú definované žiadne verzie pre rozpracovanosť"
   backlogs_empty_action_text: "Ak chcete používať rozpracovanosť, vytvorte novú verziu a priraďte ju do stĺpca rozpracovanosti."
   button_edit_wiki: "Upraviť stránku wiki"
-  error_backlogs_task_cannot_be_story: "The settings are invalid. The selected task type can not also be a story type."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "The following errors were encountered:"
   error_intro_singular: "The following error was encountered:"
   error_outro: "Please correct the above errors before submitting again."
@@ -124,6 +129,10 @@ sk:
   label_points_burn_up: "Nahor"
   label_product_backlog: "product backlog"
   label_select_all: "Vybrať všetko"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Export karty"
   label_sprint_impediments: "Sprint Impediments"
@@ -160,3 +169,7 @@ sk:
   version_settings_display_option_left: "vľavo"
   version_settings_display_option_none: "žiadne"
   version_settings_display_option_right: "napravo"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

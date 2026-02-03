@@ -11,11 +11,11 @@ on:
 
 jobs:
   danger:
-    if: github.repository == 'opf/openproject'
+    if: github.repository_owner == 'opf'
     runs-on: [ubuntu-latest]
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: ruby/setup-ruby@v1

@@ -4,6 +4,6 @@ vi:
     calendar:
       create_new: 'Tạo lịch mới'
       title: 'Lịch'
-      too_many: 'Có tổng cộng %{count} công việc, nhưng chỉ có thể hiển thị %{max} công việc.'
+      too_many: 'Tổng cộng có %{count} công việc, nhưng chỉ %{max} có thể được hiển thị.'
       unsaved_title: 'Lịch không tên'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'Các lịch'

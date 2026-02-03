@@ -33,8 +33,10 @@
 <section class="admin--edit-section">
   <% unless devices.empty? %>
     <%= link_to delete_all_user_2fa_devices_path(@user),
-                method: :post,
-                data: { confirm: t("two_factor_authentication.admin.delete_all_are_you_sure") },
+                data: {
+                  turbo_method: :post,
+                  turbo_confirm: t("two_factor_authentication.admin.delete_all_are_you_sure")
+                },
                 class: "button -danger" do %>
       <%= op_icon "button--icon icon-delete" %>
       <span class="button--text"><%= t "two_factor_authentication.admin.button_delete_all_devices" %></span>

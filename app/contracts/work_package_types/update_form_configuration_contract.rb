@@ -30,6 +30,10 @@
 
 module WorkPackageTypes
   class UpdateFormConfigurationContract < BaseContract
+    include RequiresEnterpriseGuard
+
+    self.enterprise_action = :edit_attribute_groups
+
     attribute :attribute_groups
 
     validate :validate_attribute_group_names

@@ -30,8 +30,8 @@
 #
 module Saml::Providers::Sections
   class MetadataFormComponent < FormComponent
-    def initialize(provider, edit_mode: nil)
-      super(provider, edit_state: :metadata, edit_mode:, form_class: nil, heading: nil)
+    def initialize(provider, new_mode: nil)
+      super(provider, edit_state: :metadata, new_mode:, form_class: nil, heading: nil)
     end
   end
 end

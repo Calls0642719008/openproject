@@ -59,18 +59,6 @@ RSpec.describe MeetingSection do
     end
   end
 
-  describe "#modifiable?" do
-    subject { meeting_section.modifiable? }
-
-    let(:attributes) { {} }
-
-    context "when meeting is closed" do
-      let(:meeting_attributes) { { state: :closed } }
-
-      it { is_expected.to be false }
-    end
-  end
-
   describe "#agenda_items_sum_duration_in_minutes" do
     subject { meeting_section.agenda_items_sum_duration_in_minutes }
 

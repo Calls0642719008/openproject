@@ -29,12 +29,7 @@
 #++
 
 Rails.application.config.to_prepare do
-  # Dashboards should currently always be disabled since the functionality is not desired.
-  to_disable = if Rails.env.test?
-                 OpenProject::Configuration.disabled_modules
-               else
-                 ["dashboards"] + OpenProject::Configuration.disabled_modules
-               end
+  to_disable = OpenProject::Configuration.disabled_modules
 
   if to_disable.any?
     OpenProject::Plugins::ModuleHandler.disable_modules!(to_disable)

@@ -1,6 +1,25 @@
 ro:
   grids:
     label_widget_in_grid: "Widget conținut în grila %{grid_name}"
+    widgets:
+      empty: "Acest widget este în prezent gol."
+      not_available: "Acest widget nu este disponibil."
+      subitems:
+        title: "Subelemente"
+        no_results: "Nu sunt copii vizibili."
+        view_all_subitems: "Vezi toate subelementele"
+        button_text: "Subelement"
+      members:
+        title: "Membri"
+        no_results: "Nu există membri vizibili."
+        view_all_members: "Vizualizează toți participanții"
+        show_members_count: "Arată toți membrii %{count}"
+        x_more:
+          one: "şi încă un membru."
+          few: "şi încă %{count} membrii."
+          other: "şi încă %{count} membrii."
+      news:
+        no_results: "Nimic nou de raportat."
   activerecord:
     attributes:
       grids/grid:

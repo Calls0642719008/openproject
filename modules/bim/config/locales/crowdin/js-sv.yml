@@ -4,26 +4,26 @@ sv:
     bcf:
       label_bcf: 'BCF'
       import: 'Importera'
-      import_bcf_xml_file: 'Import BCF XML file (BCF version 2.1)'
+      import_bcf_xml_file: 'Importera BCF XML-fil (BCF version 2.1)'
       export: 'Exportera'
-      export_bcf_xml_file: 'Export BCF XML file (BCF version 2.1)'
-      viewpoint: 'Viewpoint'
-      add_viewpoint: 'Add viewpoint'
-      show_viewpoint: 'Show viewpoint'
-      delete_viewpoint: 'Delete viewpoint'
-      management: 'BCF management'
-      refresh: 'Refresh'
-      refresh_work_package: 'Refresh work package'
+      export_bcf_xml_file: 'Exportera BCF XML-fil (BCF version 2.1)'
+      viewpoint: 'Utsiktspunkt'
+      add_viewpoint: 'Lägg till utsiktspunkt'
+      show_viewpoint: 'Visa utsiktspunkt'
+      delete_viewpoint: 'Ta bort utsiktspunkt'
+      management: 'BCF hantering'
+      refresh: 'Uppdatera'
+      refresh_work_package: 'Uppdatera arbetspaket'
     ifc_models:
-      empty_warning: "This project does not yet have any IFC models."
-      use_this_link_to_manage: "Use this link to upload and manage your IFC models"
-      keyboard_input_disabled: "Viewer does not have keyboard controls. Click on the viewer to give keyboard control to the viewer."
+      empty_warning: "Detta projekt har ännu inga IFC-modeller."
+      use_this_link_to_manage: "Använd denna länk för att ladda upp och hantera dina IFC-modeller"
+      keyboard_input_disabled: "Viewer har inte tangentbordskontroller. Klicka på tittaren för att ge tangentbordskontroll till tittaren."
       models:
         ifc_models: 'IFC-modeller'
       views:
-        viewer: 'Viewer'
-        split: 'Viewer and table'
-        split_cards: 'Viewer and cards'
+        viewer: 'Visare'
+        split: 'Visare och tabell'
+        split_cards: 'Visare och kort'
     revit:
-      revit_add_in: "Revit Add-In"
-      revit_add_in_settings: "Revit Add-In settings"
+      revit_add_in: "Revit tillägg"
+      revit_add_in_settings: "Revit tilläggsinställningar"

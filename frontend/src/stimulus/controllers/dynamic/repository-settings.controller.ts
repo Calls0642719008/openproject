@@ -52,7 +52,7 @@ export default class RepositorySettingsController extends Controller {
 
   updateSelectedType(event:InputEvent) {
     const select = event.target as HTMLSelectElement;
-    const url = URI(select.dataset.url as string)
+    const url = URI(select.dataset.url)
       .search({ scm_vendor: select.value });
 
     window.location.href = url.toString();

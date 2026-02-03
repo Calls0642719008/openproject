@@ -31,24 +31,54 @@
 require "spec_helper"
 
 RSpec.describe RemovedJsHelpersHelper do
-  include RemovedJsHelpersHelper
-
-  describe "link_to_function" do
+  describe "#link_to_function" do
     it "returns a valid link" do
       allow(SecureRandom).to receive(:uuid).and_return "uuid"
-      expect(self).to receive(:content_for).with(:additional_js_dom_ready)
-      expect(link_to_function("blubs", nil))
+      expect(helper.link_to_function("blubs", nil))
         .to be_html_eql %{
           <a id="link-to-function-uuid" href="">blubs</a>
         }
     end
 
     it "adds the provided method to the onclick handler" do
-      expect(self).to receive(:content_for).with(:additional_js_dom_ready)
-      expect(link_to_function("blubs", "doTheMagic(now)", id: :foo))
+      expect(helper.link_to_function("blubs", "doTheMagic(now)", id: :foo))
         .to be_html_eql %{
           <a id="foo" href="">blubs</a>
         }
+    end
+  end
+
+  describe "#csp_onclick" do
+    it "generates a 'click' event handler for the element" do
+      helper.csp_onclick("console.log('hello');", "#my-element")
+
+      expect(helper.content_for(:additional_js_dom_ready)).to eq(<<~JS)
+        document.querySelector('#my-element')?.addEventListener('click', function(event) {
+          console.log('hello');
+          event.preventDefault();
+        });
+      JS
+    end
+
+    it "generates a 'click' event handler for the element that does not call event.preventDefault()" do
+      helper.csp_onclick("console.log('hello');", "#my-element", prevent_default: false)
+
+      expect(helper.content_for(:additional_js_dom_ready)).to eq(<<~JS)
+        document.querySelector('#my-element')?.addEventListener('click', function(event) {
+          console.log('hello');
+        });
+      JS
+    end
+
+    it "escapes selector" do
+      helper.csp_onclick("console.log('hello');", "[data-attr^='foo']")
+
+      expect(helper.content_for(:additional_js_dom_ready)).to eq(<<~JS)
+        document.querySelector('[data-attr^=\\'foo\\']')?.addEventListener('click', function(event) {
+          console.log('hello');
+          event.preventDefault();
+        });
+      JS
     end
   end
 end

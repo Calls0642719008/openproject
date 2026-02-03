@@ -31,8 +31,6 @@
 require "spec_helper"
 require_module_spec_helper
 
-RSpec::Matchers.define_negated_matcher :not_change, :change
-
 module Storages
   RSpec.describe OneDriveManagedFolderPermissionsService, :webmock do
     shared_let(:admin) { create(:admin) }

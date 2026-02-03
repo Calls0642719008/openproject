@@ -121,8 +121,7 @@ RSpec.describe "authorization for BCF api",
     visit my_account_path
     click_on "Access token"
 
-    expect(page).to have_css("#oauth-application-grant-#{app.id}", text: app.name)
-    expect(page).to have_css("td", text: app.name)
+    expect(page).to have_test_selector("oauth-application-#{app.id}-name", text: app.name)
 
     # While being logged in, the api can be accessed with the session
     visit("/api/bcf/2.1/projects/#{project.id}")

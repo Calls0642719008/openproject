@@ -88,6 +88,8 @@ pt-BR:
     button_list_view: "Lista"
     button_show_view: "Visualização em tela cheia"
     button_log_time: "Registro de tempo"
+    button_start_timer: "Iniciar temporizador"
+    button_stop_timer: "Parar temporizador"
     button_more: "Mais"
     button_open_details: "Abrir visão detalhada"
     button_close_details: "Fechar visão detalhada"
@@ -200,6 +202,8 @@ pt-BR:
         add_table: "Adicionar tabela de pacotes de trabalho relacionados"
         edit_query: "Editar consulta"
         new_group: "Novo grupo"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Voltar à configuração original"
       working_days:
         calendar:
@@ -287,17 +291,6 @@ pt-BR:
         format:
           date: "%{attribute} não é uma data válida - AAAA-MM-DD esperado."
         general: "Ocorreu um erro."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Ler sobre os novos recursos e atualizações de produtos."
-          learn_about: "Saiba mais sobre todos os novos recursos"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                A versão traz várias novidades e melhorias, como <br> <ul class="%{list_styling_class}"> <li>Interface UX/UI renovada para um visual mais moderno.</li> <li>Reuniões: opção para silenciar notificações por e-mail e arquivos ICS.</li> <li>Temporizadores ativos exibidos no módulo Meu controle de tempo.</li> <li>Relatórios de progresso: soma da % concluída também exibida no modo com base em status.</li> <li>Verificação de integridade do Nextcloud: alerta sobre falta da capacidade de troca de token (complementos Enterprise).</li> </ul>
     ical_sharing_modal:
       title: "Assinar calendário"
       inital_setup_error_message: "Ocorreu um erro ao buscar dados."
@@ -305,12 +298,13 @@ pt-BR:
       warning: "Não compartilhe este URL com outros usuários. Qualquer pessoa com este link poderá visualizar os detalhes do pacote de trabalho sem uma conta ou senha."
       token_name_label: "Onde você usará isto?"
       token_name_placeholder: 'Digite um nome, por ex.: "Telefone"'
-      token_name_description_text: 'Se você assinar este calendário em vários dispositivos, este nome ajudará na distinção entre eles em sua lista de <a href="my/access_token", target="_blank">tokens de acesso</a>.'
+      token_name_description_text: 'Se você assinar este calendário em vários dispositivos, este nome ajudará a diferenciá-los na sua lista de <a href="%{myAccessTokensUrl}" target="_blank">tokens de acesso</a>.'
       copy_url_label: "Copiar URL"
       ical_generation_error_text: "Ocorreu um erro ao gerar o URL do calendário."
       success_message: 'O URL "%{name}" foi copiado com sucesso para sua área de transferência. Cole-o em seu cliente de calendário para concluir a assinatura.'
     label_activate: "Ativar"
     label_assignee: "Atribuído para"
+    label_assignee_alt_text: "Este pacote de trabalho está atribuído a %{name}"
     label_add_column_after: "Adicionar coluna depois"
     label_add_column_before: "Adicionar coluna antes"
     label_add_columns: "Adicionar colunas"
@@ -352,6 +346,7 @@ pt-BR:
     label_collapse: "Recolher"
     label_collapsed: "recolhido"
     label_collapse_all: "Recolher todos"
+    label_collapse_text: "Recolher texto"
     label_comment: "Comentário"
     label_committed_at: "%{committed_revision_link} em %{date}"
     label_committed_link: "revisão commitada %{revision_identifier}"
@@ -364,6 +359,7 @@ pt-BR:
     label_expand: "Expandir"
     label_expanded: "expandido"
     label_expand_all: "Expandir todos"
+    label_expand_text: "Mostrar texto completo"
     label_expand_project_menu: "Expandir menu do projeto"
     label_export: "Exportar"
     label_export_preparing: "A exportação está sendo preparada e será baixada em breve."
@@ -396,8 +392,6 @@ pt-BR:
     label_me: "eu"
     label_meeting_agenda: "Agenda"
     label_meeting_minutes: "Atas"
-    label_menu_collapse: "recolher"
-    label_menu_expand: "expandir"
     label_more_than_ago: "mais do que dias atrás"
     label_moderate_comment: "Moderar comentário"
     label_next: "Próximo"
@@ -431,6 +425,7 @@ pt-BR:
     label_remove_row: "Remover linha"
     label_report: "Relatório"
     label_repository_plural: "Repositórios"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "Salvar como"
     label_search_columns: "Buscar uma coluna"
     label_select_watcher: "Selecione um observador..."
@@ -443,7 +438,7 @@ pt-BR:
     label_sort_lower: "Mover para baixo"
     label_sorting: "Ordenação"
     label_spent_time: "Tempo gasto"
-    label_star_query: "Favorecido"
+    label_star_query: "Adicionado aos favoritos"
     label_press_enter_to_save: "Pressione enter para salvar."
     label_public_query: "Público"
     label_sum: "Soma"
@@ -562,7 +557,7 @@ pt-BR:
       date_alerts:
         milestone_date: "Data de marco"
         overdue: "Atrasado"
-        overdue_since: "desde %{difference_in_days}."
+        overdue_since: "por %{difference_in_days}."
         property_today: "é hoje."
         property_is: "está em %{difference_in_days}."
         property_was: "há %{difference_in_days}."
@@ -637,9 +632,6 @@ pt-BR:
           add: "Adicionar configuração para o projeto"
           already_selected: "Este projeto já está selecionado"
           remove: "Remover configurações de projeto"
-    password_confirmation:
-      field_description: "Você precisa digitar sua senha para confirmar essa alteração."
-      title: "Confirme sua senha para continuar"
     pagination:
       no_other_page: "Você está na página única."
       pages_skipped: "Páginas puladas."
@@ -1079,8 +1071,8 @@ pt-BR:
     notice_successful_delete: "Excluído com sucesso"
     notice_successful_update: "Atualizado com sucesso."
     notice_job_started: "trabalho iniciado."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "Nenhum ID de tarefa retornado pelo servidor."
+    invalid_job_response: "Resposta inválida do servidor."
     notice_bad_request: "Requisição Inválida."
     relations:
       empty: Nenhuma relação existente
@@ -1113,6 +1105,7 @@ pt-BR:
       child_work_packages:
         one: "um pacote de trabalho filho"
         other: "%{count} pacotes de trabalho filhos"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} hs"
@@ -1130,9 +1123,12 @@ pt-BR:
     global_search:
       all_projects: "Em todos os projetos"
       close_search: "Fechar pesquisa"
+      items_available: "%{count} itens disponíveis"
+      direct_hit_available: "Pacote de trabalho com ID exato encontrado. Pressione Enter para abri-lo."
       current_project_and_all_descendants: "Neste projeto + subprojetos"
       current_project: "Neste projeto"
       recently_viewed: "Visualizado recentemente"
+      search_placeholder_expanded: "Pesquisar pacotes de trabalho por assunto, projeto, tipo, status ou ID"
       title:
         all_projects: "todos os projetos"
         project_and_subprojects: "e todos os subprojetos"
@@ -1142,71 +1138,8 @@ pt-BR:
       list: "Tabela"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Voltar"
       invite: "Convidar"
-      title:
-        invite: "Convidar usuário"
-        invite_to_project: "Convide %{type} para %{project}"
-        User: "usuário"
-        Group: "grupo"
-        PlaceholderUser: "usuário do espaço reservado"
-        invite_principal_to_project: "Convide %{principal} para %{project}"
-      project:
-        label: "Projeto"
-        required: "Selecione um projeto"
-        lacking_permission: "Você não tem permissões para atribuir usuários para o projeto selecionado, favor selecionar outro."
-        lacking_permission_info: "Você não possui permissão para atribuir usuários ao projeto que você está atualmente. Você precisa selecionar um diferente. "
-        next_button: "Próxima"
-        no_results: "Nenhum projeto foi encontrado"
-        no_invite_rights: "Você não tem permissão para convidar membros para este projeto"
-      type:
-        required: "Selecione o tipo a ser convidado"
-        user:
-          title: "Usuário"
-          description: "Permissões baseadas no papel atribuído no projeto selecionado"
-        group:
-          title: "Grupo"
-          description: "Permissões baseadas no papel atribuído no projeto selecionado"
-        placeholder:
-          title: "Usuário do espaço reservado"
-          title_no_ee: "Usuário do espaço reservado (complemento apenas da edição Enterprise)"
-          description: "Não possui acesso ao projeto e nenhum e-mail é enviado."
-          description_no_ee: 'Não possui acesso ao projeto e nenhum e-mail é enviado. <br>Confira a <a href="%{eeHref}" target="_blank">edição Enterprise</a>'
-      principal:
-        label:
-          name_or_email: "Nome ou endereço de e-mail"
-          name: "Nome"
-        already_member_message: "Já é um membro de %{project}"
-        no_results_user: "Nenhum usuário foi encontrado"
-        invite_user: "Convite:"
-        no_results_placeholder: "Nenhum espaço reservado encontrado"
-        create_new_placeholder: "Criar novo espaço reservado:"
-        no_results_group: "Nenhum grupo encontrado"
-        next_button: "Próxima"
-        required:
-          user: "Selecione um usuário"
-          placeholder: "Selecione um espaço reservado"
-          group: "Selecione um grupo"
-      role:
-        label: "Papel em %{project}"
-        no_roles_found: "Nenhum papel encontrado"
-        description: >-
-          Esta é a função que o usuário receberá ao ingressar em seu projeto. A função define quais ações  podem ser realizadas e quais informações podem ser visualizadas. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Saiba mais sobre as funções e permissões. </a>
-        required: "Selecione um papel"
-        next_button: "Próxima"
-      message:
-        label: "Mensagem de convite"
-        description: "Enviaremos um e-mail para o usuário, à qual você pode adicionar uma mensagem pessoal por aqui. Uma explicação para o convite pode se útil, ou talvez algumas informações sobre o projeto para ajudá-lo a começar."
-        next_button: "Avançar"
-      summary:
-        next_button: "Enviar convite"
-      success:
-        title: "%{principal} foi convidado!"
-        description:
-          user: "O usuário agora pode entrar para acessar %{project}. Enquanto isso, você já pode planejar com este usuário e atribuir pacotes de trabalho por exemplo."
-          placeholder: "O espaço reservado agora pode ser usado em %{project}. Enquanto isso, você já pode planejar com este usuário e atribuir pacotes de trabalho por exemplo."
-          group: "O grupo agora faz parte de %{project}. Enquanto isso, você já pode planejar com este grupo e atribuir pacotes de trabalho por exemplo."
-        next_button: "Continuar"
+      placeholder_add_tag: "Criar usuário de espaço reservado"
     exclusion_info:
       modal:
         title: "Status excluído dos totais da hierarquia"
@@ -1223,15 +1156,20 @@ pt-BR:
       selected_filter:
         all: "Todos os projetos"
         selected: "Somente selecionados"
-      search_placeholder: "Pesquisar projetos..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Buscar projetos..."
+      search_placeholder_favorites: "Pesquisar favoritos..."
       include_subprojects: "Incluir todos os subprojetos"
       tooltip:
         include_all_selected: "Como a opção Incluir todos os sub-projetos está habilitada, o projeto já foi incluído."
         current_project: "Este é o projeto atual em que você está."
         does_not_match_search: "O projeto não corresponde ao critério de pesquisa"
       no_results: "Nenhum projeto corresponde ao seu critério de busca."
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Nenhum projeto favorito corresponde aos seus critérios de busca."
+    include_workspaces:
+      search_placeholder: "Pesquisar..."
+      types:
+        program: "Programa"
+        portfolio: "Portfólio"
     baseline:
       toggle_title: "Linha base"
       clear: "Remover"

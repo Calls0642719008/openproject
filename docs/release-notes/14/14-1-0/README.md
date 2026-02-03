@@ -53,7 +53,7 @@ This feature was requested by many in the Community and will be a great benefit,
 
 ![OpenProject dropdown menu showing favorite projects, displayed with yellow stars](openproject-14-1-favorite-projects-overview.shadow.png)
 
-See our documentation to learn more about [how to mark a project as favorite](../../../user-guide/project-overview/#mark-a-project-as-favorite).
+See our documentation to learn more about [how to mark a project as favorite](../../../user-guide/project-home/#mark-a-project-as-favorite).
 
 ### Advanced features for the Meetings module
 
@@ -106,7 +106,7 @@ Read more on [project lists](../../../user-guide/projects/project-lists/).
 
 ### A "Manage project attributes" button on the project overview page
 
-With OpenProject 14.0, we released the feature to create a custom set of project attributes grouped in sections on the project overview page. With 14.1, you will additionally have a button to [Manage project attributes](../../../user-guide/project-overview/#project-attributes) on the project overview page.
+With OpenProject 14.0, we released the feature to create a custom set of project attributes grouped in sections on the project overview page. With 14.1, you will additionally have a button to [Manage project attributes](../../../user-guide/project-home/project-attributes) on the project overview page.
 
 ### OneDrive/SharePoint: A "no permission“ message to file links
 

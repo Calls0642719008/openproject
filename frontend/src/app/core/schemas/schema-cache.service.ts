@@ -63,7 +63,7 @@ export class SchemaCacheService extends StateCacheService<SchemaResource> {
    * @return The schema for the HalResource
    */
   of(resource:HalResource):ISchemaProxy {
-    const schema = this.state(resource).value as SchemaResource;
+    const schema = this.state(resource).value!;
 
     return this.proxied(resource, schema);
   }

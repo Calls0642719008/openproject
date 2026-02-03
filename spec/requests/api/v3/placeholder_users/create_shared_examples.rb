@@ -96,7 +96,7 @@ RSpec.shared_examples "create placeholder user request flow" do
 
       expect(last_response).to have_http_status(:unprocessable_entity)
       expect(parsed_response["message"])
-        .to eq("Placeholder Users is only available in the OpenProject Enterprise edition")
+        .to eq("Placeholder Users is only available in the OpenProject Enterprise edition.")
 
       expect(last_response.body)
         .to be_json_eql("urn:openproject-org:api:v3:errors:PropertyConstraintViolation".to_json)

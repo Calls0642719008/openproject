@@ -39,11 +39,13 @@ module API
 
           def initialize(model:,
                          api_name: model.name.demodulize,
+                         self_path: "#{api_name.underscore}_schema",
                          render_representer: nil,
                          contract: nil,
                          instance_generator: default_instance_generator(model))
             self.model = model
             self.api_name = api_name
+            self.self_path = self_path
             self.instance_generator = instance_generator
             self.representer = render_representer || deduce_representer
             self.contract = contract || deduce_contract
@@ -66,12 +68,9 @@ module API
                       current_user: request.current_user)
           end
 
-          def self_path
-            "#{api_name.underscore}_schema"
-          end
-
           attr_accessor :model,
                         :api_name,
+                        :self_path,
                         :representer,
                         :contract,
                         :instance_generator

@@ -46,7 +46,7 @@ See COPYRIGHT and LICENSE files for more details.
     <span class="form--field-instructions">
       <%= I18n.t(
             "activerecord.attributes.user_preference.disable_keyboard_shortcuts_caption_html",
-            href: OpenProject::Static::Links.links[:shortcuts][:href]
+            href: OpenProject::Static::Links.url_for(:shortcuts)
           ).html_safe %>
     </span>
   </div>

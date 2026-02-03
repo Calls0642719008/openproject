@@ -212,7 +212,7 @@ RSpec.describe XlsExport::WorkPackage::Exporter::XLS do
 
       # Check row after header row
       hours = sheet.rows[1].values_at(2)
-      expect(hours).to include("27.5")
+      expect(hours).to include(27.5)
     end
 
     context "with duration format being set to 'days and hours'", with_settings: { duration_format: "days_and_hours" } do
@@ -221,7 +221,7 @@ RSpec.describe XlsExport::WorkPackage::Exporter::XLS do
 
         # Check row after header row
         hours = sheet.rows[1].values_at(2)
-        expect(hours).to include("27.5")
+        expect(hours).to include(27.5)
       end
     end
   end
@@ -317,7 +317,7 @@ RSpec.describe XlsExport::WorkPackage::Exporter::XLS do
       headers_row.compact!
       expect(headers_row.zip(values_row)).to eq [
         ["Work", nil],
-        ["Total work", "15.0"],
+        ["Total work", 15.0],
         ["Remaining work", nil],
         ["Total remaining work", nil],
         ["% Complete", nil],
@@ -347,12 +347,12 @@ RSpec.describe XlsExport::WorkPackage::Exporter::XLS do
       # why is there a nil at the end of the headers row?
       headers_row.compact!
       expect(headers_row.zip(values_row)).to eq [
-        ["Work", "10.0"],
-        ["Total work", "15.0"],
-        ["Remaining work", "5.0"],
-        ["Total remaining work", "8.0"],
-        ["% Complete", "50%"],
-        ["Total % complete", "75%"]
+        ["Work", 10.0],
+        ["Total work", 15.0],
+        ["Remaining work", 5.0],
+        ["Total remaining work", 8.0],
+        ["% Complete", 0.5],
+        ["Total % complete", 0.75]
       ]
     end
   end
@@ -378,12 +378,12 @@ RSpec.describe XlsExport::WorkPackage::Exporter::XLS do
       # why is there a nil at the end of the headers row?
       headers_row.compact!
       expect(headers_row.zip(values_row)).to eq [
-        ["Work", "0.0"],
-        ["Total work", "15.0"],
-        ["Remaining work", "0.0"],
-        ["Total remaining work", "8.0"],
-        ["% Complete", "0%"],
-        ["Total % complete", "42%"]
+        ["Work", 0.0],
+        ["Total work", 15.0],
+        ["Remaining work", 0.0],
+        ["Total remaining work", 8.0],
+        ["% Complete", 0.0],
+        ["Total % complete", 0.42]
       ]
     end
   end

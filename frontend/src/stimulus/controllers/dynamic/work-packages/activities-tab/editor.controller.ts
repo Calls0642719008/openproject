@@ -100,7 +100,7 @@ export default class EditorController extends BaseController {
     }
   }
 
-  focusEditor(timeout:number = 10) {
+  focusEditor(timeout = 10) {
     const ckEditorInstance = this.ckEditorInstance;
     if (ckEditorInstance) {
       setTimeout(() => ckEditorInstance.editing.view.focus(), timeout);
@@ -136,7 +136,6 @@ export default class EditorController extends BaseController {
     if (this.isEditorEmpty()) {
       this.closeForm();
     } else {
-      // eslint-disable-next-line no-alert
       const shouldClose = window.confirm(this.unsavedChangesConfirmationMessageValue);
       if (shouldClose) { this.closeForm(); }
     }

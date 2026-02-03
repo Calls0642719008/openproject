@@ -12,9 +12,13 @@ RSpec.shared_context "with default_url_options and host name set to Capybara tes
     original_host = default_url_options[:host]
     original_port = default_url_options[:port]
     original_host_setting = Setting.host_name
-    default_url_options[:host] = Capybara.server_host
-    default_url_options[:port] = Capybara.server_port
-    Setting.host_name = "#{Capybara.server_host}:#{Capybara.server_port}"
+
+    capybara_uri = URI.parse(Capybara.app_host)
+
+    default_url_options[:host] = capybara_uri.host
+    default_url_options[:port] = capybara_uri.port
+    Setting.host_name = "#{capybara_uri.host}:#{capybara_uri.port}"
+
     example.run
   ensure
     default_url_options[:host] = original_host
@@ -48,18 +52,10 @@ RSpec.configure do |config|
   end
   Capybara.always_include_port = true
 
-  hostname =
-    if ENV["CAPYBARA_DYNAMIC_BIND_IP"]
-      ip_address = Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }.ip_address
-      Capybara.server_host = ip_address
+  app_hostname = ENV.fetch("CAPYBARA_APP_HOSTNAME", "localhost")
 
-      ENV.fetch("CAPYBARA_APP_HOSTNAME", ip_address)
-    else
-      ENV.fetch("CAPYBARA_APP_HOSTNAME", "localhost")
-    end
-
-  Capybara.server_host = hostname
-  Capybara.app_host = "http://#{hostname}:#{Capybara.server_port}"
+  Capybara.server_host = ENV.fetch("CAPYBARA_BIND_ADDRESS", "127.0.0.1")
+  Capybara.app_host = "http://#{app_hostname}:#{Capybara.server_port}"
   Capybara.default_host = Capybara.app_host
 
   # Set the default options

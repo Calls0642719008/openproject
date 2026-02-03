@@ -42,6 +42,9 @@ Rails.application.configure do
       # Skip transaction that may be blocked
       next if data[:sql].match?(/BEGIN|COMMIT/)
 
+      # Skip tenant creation (load dump sql which is around 300kB)
+      next if data[:sql][..120].include?("Dumped by pg_dump") || data[:sql].size > 200_000
+
       # Skip smaller durations
       duration = ((finish - start) * 1000).round(4)
       next if duration <= slow_sql_threshold

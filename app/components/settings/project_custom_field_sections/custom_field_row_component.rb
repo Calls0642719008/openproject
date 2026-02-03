@@ -49,7 +49,15 @@ module Settings
                        href: edit_admin_settings_project_custom_field_path(@project_custom_field),
                        data: { turbo: "false", test_selector: "project-custom-field-edit" }) do |item|
           item.with_leading_visual_icon(icon: :pencil)
+
+          if show_enterprise_icon_for_edit_action?
+            item.with_trailing_visual_icon(icon: :"op-enterprise-addons", classes: "upsell-colored")
+          end
         end
+      end
+
+      def show_enterprise_icon_for_edit_action?
+        @project_custom_field.field_format_calculated_value? && !EnterpriseToken.allows_to?(:calculated_values)
       end
 
       def move_actions(menu)
@@ -81,8 +89,12 @@ module Settings
                        scheme: :danger,
                        href: admin_settings_project_custom_field_path(@project_custom_field),
                        form_arguments: {
-                         method: :delete, data: { confirm: t("text_are_you_sure_with_project_custom_fields"),
-                                                  "turbo-stream": true, test_selector: "project-custom-field-delete" }
+                         method: :delete,
+                         data: {
+                           turbo_confirm: t("text_are_you_sure_with_project_custom_fields"),
+                           turbo_stream: true,
+                           test_selector: "project-custom-field-delete"
+                         }
                        }) do |item|
           item.with_leading_visual_icon(icon: :trash)
         end

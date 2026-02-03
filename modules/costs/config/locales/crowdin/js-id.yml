@@ -23,7 +23,7 @@ id:
   js:
     text_are_you_sure: "Apakah anda yakin?"
     myTimeTracking:
-      noSpecificTime: "No specific time"
+      noSpecificTime: "Tidak ada waktu khusus"
     work_packages:
       property_groups:
         costs: "Biaya"

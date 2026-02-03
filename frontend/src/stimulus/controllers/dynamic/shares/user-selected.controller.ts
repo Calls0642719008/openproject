@@ -81,6 +81,6 @@ export default class UserSelectedController extends Controller {
 
   // Accessors
   private get autocompleterElement():HTMLElement {
-    return this.element.querySelector('opce-user-autocompleter') as HTMLElement;
+    return this.element.querySelector('opce-user-autocompleter')!;
   }
 }

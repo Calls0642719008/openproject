@@ -36,10 +36,24 @@ module CustomActions::Actions::Strategies::UserCustomField
     :user
   end
 
+  def available_principles
+    custom_field.possible_values_options.map { |label, value| [value.empty? ? nil : value.to_i, label] }
+  end
+
+  # Implement the apply method explicitly, because the MeAssociated module would override the default
+  # implementation. This could have been solved by swapping the module includes, however then the
+  # transformed_value method would get an incorrect implementation.
   def apply(work_package)
     if work_package.respond_to?(custom_field.attribute_setter)
-      work_package.send(custom_field.attribute_setter, transformed_values(work_package))
+      set_custom_field_value(work_package)
+      validate_custom_field(work_package)
     end
+  end
+
+  private
+
+  def set_custom_field_value(work_package)
+    work_package.send(custom_field.attribute_setter, transformed_values(work_package))
   end
 
   def transformed_values(work_package)
@@ -63,9 +77,5 @@ module CustomActions::Actions::Strategies::UserCustomField
 
   def available_principal_ids_for(work_package)
     custom_field.possible_values_options(work_package).map { |_, value| value.empty? ? nil : value.to_i }
-  end
-
-  def available_principles
-    custom_field.possible_values_options.map { |label, value| [value.empty? ? nil : value.to_i, label] }
   end
 end

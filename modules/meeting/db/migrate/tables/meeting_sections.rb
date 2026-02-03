@@ -36,8 +36,8 @@ class Tables::MeetingSections < Tables::Base
       t.integer :position
       t.string :title
       t.references :meeting, null: false, foreign_key: true
-
       t.timestamps
+      t.boolean :backlog, default: false, null: false
     end
   end
 end

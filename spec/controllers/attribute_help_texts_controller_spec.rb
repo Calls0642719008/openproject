@@ -4,14 +4,7 @@ require "spec_helper"
 
 RSpec.describe AttributeHelpTextsController do
   let(:user) { build_stubbed(:user) }
-  let(:model) { build_stubbed(:work_package_help_text) }
-
-  let(:find_expectation) do
-    allow(AttributeHelpText)
-      .to receive(:find)
-      .with(1234.to_s)
-      .and_return(model)
-  end
+  let!(:model) { create(:work_package_help_text) }
 
   before do
     login_as user
@@ -23,14 +16,12 @@ RSpec.describe AttributeHelpTextsController do
 
   describe "#index" do
     before do
-      allow(AttributeHelpText).to receive(:all).and_return [model]
-
       get :index
     end
 
     it "is successful" do
       expect(response).to be_successful
-      expect(assigns(:texts_by_type)).to eql("WorkPackage" => [model])
+      expect(assigns(:attribute_help_texts).count).to eq(1)
     end
   end
 
@@ -43,18 +34,20 @@ RSpec.describe AttributeHelpTextsController do
         .with(user)
         .and_return(visible_scope)
 
-      find_expectation
+      allow(visible_scope)
+        .to receive(:find)
+        .and_raise ActiveRecord::RecordNotFound
 
-      get :show_dialog, params: { id: 1234 }, format: :turbo_stream
+      allow(visible_scope)
+        .to receive(:find)
+        .with(model.id.to_s)
+        .and_return(model)
+
+      get :show_dialog, params: { id: find_id }, format: :turbo_stream
     end
 
     context "when found" do
-      let(:find_expectation) do
-        allow(visible_scope)
-          .to receive(:find)
-          .with("1234")
-          .and_return(model)
-      end
+      let(:find_id) { model.id }
 
       it "renders turbo stream dialog action", :aggregate_failures do
         expect(response).to be_successful
@@ -64,12 +57,7 @@ RSpec.describe AttributeHelpTextsController do
     end
 
     context "when not found" do
-      let(:find_expectation) do
-        allow(visible_scope)
-          .to receive(:find)
-          .with("1234")
-          .and_raise(ActiveRecord::RecordNotFound)
-      end
+      let(:find_id) { "123451234" }
 
       it "responds with 404 Not Found status", :aggregate_failures do
         expect(response).not_to be_successful
@@ -80,12 +68,12 @@ RSpec.describe AttributeHelpTextsController do
 
   describe "#edit" do
     before do
-      find_expectation
-
-      get :edit, params: { id: 1234 }
+      get :edit, params: { id: find_id }
     end
 
     context "when found" do
+      let(:find_id) { model.id }
+
       it "is successful" do
         expect(response).to be_successful
         expect(assigns(:attribute_help_text)).to eql model
@@ -93,12 +81,7 @@ RSpec.describe AttributeHelpTextsController do
     end
 
     context "when not found" do
-      let(:find_expectation) do
-        allow(AttributeHelpText)
-          .to receive(:find)
-          .with(1234.to_s)
-          .and_raise(ActiveRecord::RecordNotFound)
-      end
+      let(:find_id) { "123451234" }
 
       it "returns 404" do
         expect(response).to have_http_status :not_found
@@ -107,23 +90,21 @@ RSpec.describe AttributeHelpTextsController do
   end
 
   describe "#update" do
+    let(:find_id) { model.id.to_s }
     let(:call) do
       put :update,
           params: {
-            id: 1234,
+            id: find_id,
             attribute_help_text: {
               help_text: "my new help text"
             }
           }
     end
 
-    before do
-      find_expectation
-    end
-
     context "when save is success" do
       before do
-        expect(model).to receive(:save).and_return(true)
+        allow(AttributeHelpText).to receive(:find).with(find_id).and_return(model)
+        allow(model).to receive(:save).and_return(true)
 
         call
       end
@@ -138,7 +119,8 @@ RSpec.describe AttributeHelpTextsController do
 
     context "when save is failure" do
       before do
-        expect(model).to receive(:save).and_return(false)
+        allow(AttributeHelpText).to receive(:find).with(find_id).and_return(model)
+        allow(model).to receive(:save).and_return(false)
 
         call
       end
@@ -150,12 +132,7 @@ RSpec.describe AttributeHelpTextsController do
     end
 
     context "when not found" do
-      let(:find_expectation) do
-        allow(AttributeHelpText)
-          .to receive(:find)
-          .with(1234.to_s)
-          .and_raise(ActiveRecord::RecordNotFound)
-      end
+      let(:find_id) { "123451234" }
 
       before do
         call

@@ -61,6 +61,10 @@ module Exports::PDF::Common::Styles
     style
   end
 
+  def resolve_borders(style)
+    opts_borders(style || {})
+  end
+
   def resolve_font(style)
     opts_font(style || { size: 10 })
   end

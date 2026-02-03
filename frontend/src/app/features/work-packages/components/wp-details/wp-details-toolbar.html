@@ -1,26 +1,28 @@
 <div class="work-packages--details-toolbar">
-  <wp-watcher-button [workPackage]="workPackage">
-  </wp-watcher-button>
+  <wp-watcher-button [workPackage]="workPackage" />
 
-  <op-work-package-mark-notification-button
-    *ngIf="displayNotificationsButton"
-    [workPackage]="workPackage"
-    data-test-selector="mark-notification-read-button"
-  ></op-work-package-mark-notification-button>
+  @if (displayNotificationsButton) {
+    <op-work-package-mark-notification-button [workPackage]="workPackage"
+      data-test-selector="mark-notification-read-button"
+     />
+  }
 
-  <wp-share-button [workPackage]="workPackage"
-                   *ngIf="displayShareButton$ | async">
-  </wp-share-button>
+  @if (displayShareButton$ | async) {
+    <wp-share-button [workPackage]="workPackage"
+       />
+  }
 
-  <wp-reminder-button [workPackage]="workPackage"
-                      *ngIf="displayReminderButton$ | async">
-  </wp-reminder-button>
+  @if (displayReminderButton$ | async) {
+    <wp-reminder-button [workPackage]="workPackage"
+       />
+  }
 
   <button class="button dropdown-relative"
-          [attr.accesskey]="7"
-          [title]="text.button_more"
-          wpSingleContextMenu
-          [wpSingleContextMenu-workPackage]="workPackage">
+    [attr.accesskey]="7"
+    [title]="text.button_more"
+    data-test-selector="wp-details-toolbar--show-more-button"
+    wpSingleContextMenu
+    [wpSingleContextMenu-workPackage]="workPackage">
     <svg
       kebab-horizontal-icon
       class="button--icon"

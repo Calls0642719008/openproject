@@ -31,7 +31,7 @@ export class ShareCellbuilder {
     const relevantShares = this
       .isolatedQuerySpace
       .workPackageSharesCache
-      .get(workPackage.id as string)
+      .get(workPackage.id!)
       .getValueOr([]);
 
     if (relevantShares.length === 0) {

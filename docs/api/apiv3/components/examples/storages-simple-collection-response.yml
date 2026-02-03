@@ -63,3 +63,14 @@ value:
             href: /api/v3/project_storages?filters=[{"storageId":{"operator":"=","values":["1338"]}}]
           oauthClientCredentials:
             href: /api/v3/oauth_client_credentials/44
+  _links:
+    self:
+      href: /api/v3/storages?filters=%5B%5D&offset=1&pageSize=20
+    jumpTo:
+      href: /api/v3/storages?filters=%5B%5D&offset=%7Boffset%7D&pageSize=20
+      templated: true
+    changeSize:
+      href: /api/v3/storages?filters=%5B%5D&offset=1&pageSize=%7Bsize%7D
+      templated: true
+    nextByOffset:
+      href: /api/v3/storages?filters=%5B%5D&offset=2&pageSize=20

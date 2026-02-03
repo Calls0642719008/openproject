@@ -35,7 +35,7 @@ import { Subject } from 'rxjs';
 export class NavigationService {
   private _currentURL = document.location.href;
 
-  private _urlChanged$:Subject<string> = new Subject();
+  private _urlChanged$ = new Subject<string>();
 
   public urlChanged$ = this._urlChanged$.asObservable();
 

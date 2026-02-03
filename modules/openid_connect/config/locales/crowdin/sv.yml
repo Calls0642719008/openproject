@@ -18,7 +18,7 @@ sv:
         group_regexes: Patterns (regular expressions)
         secret: Hemlighet
         scope: Omfattning
-        sync_groups: Synchronize groups
+        sync_groups: Synkronisera grupper
         grant_types_supported: Supported grant types
         limit_self_registration: Limit self registration
         authorization_endpoint: Authorization endpoint
@@ -30,9 +30,9 @@ sv:
         issuer: Issuer
         tenant: Tenant
         metadata_url: Metadata URL
-        icon: Custom icon
+        icon: Anpassad ikon
         claims: Claims
-        acr_values: ACR values
+        acr_values: ACR-värden
         redirect_url: Redirect URL
     errors:
       models:
@@ -43,6 +43,10 @@ sv:
               response_is_not_successful: " responds with %{status}."
               response_is_not_json: " does not return JSON body."
               response_misses_required_attributes: " does not return required attributes. Missing attributes are: %{missing_attributes}."
+          invalid_claims_essential: "does not define a boolean at %{attribute}."
+          invalid_claims_location: "contain unsupported locations: %{invalid}. Supported locations are: %{supported}."
+          invalid_claims_values: "does not define an array at %{attribute}."
+          non_object_attribute: "does not define a JSON object at %{attribute}."
   provider:
     delete_warning:
       input_delete_confirmation: Enter the provider name %{name} to confirm deletion.
@@ -58,10 +62,21 @@ sv:
     menu_title: OpenID leverantörer
     delete_title: "Delete OpenID Connect provider"
     group_links_heading: OpenID Connect group links
+    groups:
+      match_preview_component:
+        title: Extracted group names
+        placeholder_none: No groups currently match the pattern.
+      match_preview_dialog_component:
+        description: This allows you to test your regular expression pattern against sample data to verify that the group names you want extracted are indeed extracted properly. You can modify your pattern here but the test string and matches themselves will not be saved with the configuration.
+        group_names_label: Test group names
+        group_names_description: Enter one group name per line as it would appear in the OIDC claim, to see how your regular expression patterns affect them.
+        show_button: Testmönster
+        title: Test regular expressions
     instructions:
       endpoint_url: The endpoint URL given to you by the OpenID Connect provider
       group_regexes: One regular expression pattern per line. Please read [the documentation](docs_url) for more information on how to do this.
       group_regexes_detail: Optionally define patterns using regular expressions to match group names from the groups claim. For example, entering a pattern like <code>^Level1/Level2/([\w/]+)$</code> will extract the group “Groupname/SubGroup” from a response including “Level1/Level2/GroupName/SubGroup”. If no pattern matches, the group is ignored. Leave empty to synchronize all groups using their full group name.
+      group_regexes_testing: "Click on 'Test pattern' to test your regular expression pattern against sample OIDC userinfo."
       group_sync: Automatically extract and synchronise group membership information from the identity provider.
       groups_claim: Specify the name of the claim that's expected to indicate the group names that the user is a member of.
       metadata_none: I don't have this information
@@ -69,10 +84,10 @@ sv:
       oidc_information: These values are needed to configure the OpenID Connect provider.
       client_id: This is the client ID given to you by your OpenID Connect provider
       client_secret: This is the client secret given to you by your OpenID Connect provider
-      limit_self_registration: If enabled, users can only register using this provider if configuration on the provider's end allows it.
-      display_name: The name of the provider. This will be displayed as the login button and in the list of providers.
+      limit_self_registration: Om aktiverad, kan användare bara registrera sig med denna leverantör om konfigurationen på leverantörens ände tillåter det.
+      display_name: Namnet på leverantören. Detta kommer att visas som inloggningsknapp och i listan över leverantörer.
       tenant: 'Please replace the default tenant with your own if applicable. See <a href=" https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc#find-your-apps-openid-configuration-document-uri">this</a>.'
-      scope: If you want to request custom scopes, you can add one or multiple scope values separated by spaces here. For more information, see the [OpenID Connect documentation](docs_url).
+      scope: Om du vill begära anpassade omfattningar, kan du lägga till ett eller flera omfattningsvärden separerade med mellanslag här. För mer information, se [OpenID Connect dokumentation](docs_url).
       post_logout_redirect_uri: The URL the OpenID Connect provider should redirect to after a logout request.
       claims: >
         You can request additional claims for the userinfo and id token endpoints. Please see [our OpenID connect documentation](docs_url) for more information.
@@ -100,7 +115,7 @@ sv:
       microsoft_entra:
         name: Microsoft Entra
       custom:
-        name: Custom
+        name: Anpassad
       upsell:
         title: "Single Sign-On (SSO) with OpenID connect"
         description: Connect OpenProject to an OpenID connect identity provider
@@ -116,6 +131,7 @@ sv:
       label_configuration_details: Metadata
       label_client_details: Client details
       label_attribute_mapping: Attributmappning
+      notice_created: En ny OpenID-leverantör har skapats.
       client_details_description: Configuration details of OpenProject as an OIDC client
       no_results_table: Inga leverantörer har definierats ännu.
       plural: OpenID leverantörer
@@ -136,4 +152,4 @@ sv:
           backchannel_logout_url: Backchannel logout URL
     setting_instructions:
       limit_self_registration: >
-        If enabled users can only register using this provider if the self registration setting allows for it.
+        Om den är aktiverad kan användare endast registrera sig med hjälp av den här leverantören om inställningen för självregistrering tillåter det.

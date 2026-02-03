@@ -14,6 +14,8 @@ import { WorkPackageTable } from '../wp-fast-table';
 import {
   ChildRelationsRenderPass,
 } from 'core-app/features/work-packages/components/wp-fast-table/builders/relations/child-relations-render-pass';
+import { getNodeIndex } from 'core-app/shared/helpers/dom-helpers';
+import invariant from 'tiny-invariant';
 
 export type RenderedRowType = 'primary'|'relations'|'child_relations';
 
@@ -116,8 +118,8 @@ public readonly injector:Injector,
    * @param row
    */
   public refresh(row:RowRenderInfo, workPackage:WorkPackageResource, body:HTMLElement) {
-    const oldRow = jQuery(body).find(`.${row.classIdentifier}`);
-    let replacement:JQuery|null = null;
+    const oldRow = body.querySelector<HTMLTableRowElement>(`.${row.classIdentifier}`)!;
+    let replacement:HTMLElement|null = null;
 
     switch (row.renderType) {
       case 'relations':
@@ -131,7 +133,7 @@ public readonly injector:Injector,
         break;
     }
 
-    if (replacement !== null && oldRow.length) {
+    if (replacement !== null && oldRow) {
       oldRow.replaceWith(replacement);
     }
   }
@@ -150,17 +152,19 @@ public readonly injector:Injector,
    * 1. Insert into the document fragment after the last match of the selector
    * 2. Splice into the renderedOrder array.
    */
-  public spliceRow(row:HTMLElement, selector:string, renderedInfo:RowRenderInfo) {
+  public spliceRow(row:HTMLTableRowElement, selector:string, renderedInfo:RowRenderInfo) {
     // Insert into table using the selector
-    // If it matches multiple, select the last element
-    const target = jQuery(this.tableBody)
-      .find(selector)
-      .last();
+    const matches = this.tableBody.querySelectorAll(selector);
+    invariant(matches.length, `No matches found for selector: ${selector}`);
 
-    target.after(row);
+    // If it matches multiple, select the last element
+    const target = matches[matches.length - 1];
+
+    // Insert the new row AFTER the target
+    target.parentNode!.insertBefore(row, target.nextSibling);
 
     // Splice the renderedOrder at this exact location
-    const index = target.index();
+    const index = getNodeIndex(target);
     this.renderedOrder.splice(index + 1, 0, renderedInfo);
   }
 

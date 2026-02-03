@@ -38,7 +38,7 @@ module Exports::PDF::Common::Logo
     custom_logo_image_filename || Rails.root.join("app/assets/images/logo_openproject.png")
   end
 
-  def custom_logo_image_filename
+  def custom_logo_image_filename # rubocop:disable Metrics/AbcSize
     return unless CustomStyle.current.present? &&
       CustomStyle.current.export_logo.present? && CustomStyle.current.export_logo.local_file.present?
 
@@ -47,5 +47,8 @@ module Exports::PDF::Common::Logo
     return unless pdf_embeddable?(content_type)
 
     image_file
+  rescue StandardError => e
+    Rails.logger.error "Failed to access custom PDF logo file: #{e}"
+    nil # Fallback to default logo
   end
 end

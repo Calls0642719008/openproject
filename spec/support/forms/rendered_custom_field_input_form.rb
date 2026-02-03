@@ -28,6 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 RSpec.shared_context "with rendered custom field input form" do
+  extend DeprecatedAlias
   include ViewComponent::TestHelpers
 
   let(:model) { create(:project) }
@@ -42,7 +43,7 @@ RSpec.shared_context "with rendered custom field input form" do
     described_class.new(builder, custom_field:, object: model)
   end
 
-  def render_form
+  def vc_render_form
     render_in_view_context(model, self) do |model, spec_context|
       primer_form_with(url: "/foo", model:) do |f|
         render(spec_context.build_form(f))
@@ -50,13 +51,15 @@ RSpec.shared_context "with rendered custom field input form" do
     end
   end
 
+  deprecated_alias :render_form, :vc_render_form
+
   before do
     model.custom_field_values = { "#{custom_field.id}": value } if value
     model.custom_field_values.first.valid?
   end
 
   subject(:rendered_form) do
-    render_form
+    vc_render_form
     page
   end
 

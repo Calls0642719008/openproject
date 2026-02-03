@@ -1,12 +1,13 @@
 ---
 sidebar_navigation:
-  title: Meeting Management
-  priority: 900
+  title: Meeting management
+  priority: 999
+
 description: Meeting management in OpenProject
 keywords: meetings, meeting management, use case, use-case, agenda
 ---
 
-# Use case: meeting management with OpenProject
+# Meeting management with OpenProject
 
 At OpenProject, we manage internal team coordination using the very tools we build. We actively use the [Meetings module](https://www.openproject.org/collaboration-software-features/meeting-management/) in our daily work at OpenProject. It’s a key part of how we plan, collaborate, and follow up — and it saves us real time and effort.
 

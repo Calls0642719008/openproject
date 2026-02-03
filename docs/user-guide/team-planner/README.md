@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Team planner
   priority: 863
 description: Using the team planner module in OpenProject.
-keywords: team planner, planning, calendar, resource management, assign, team view
+keywords: team planner, teamplanner, team planer, teamplaner, team-planer, team-planner, capacity, resources, planning, calendar, resource management, assign, team view
 ---
 
 # Team planner
@@ -14,8 +14,7 @@ The team planner module helps you get a complete overview of what each member of
 
 Essentially, the team planner is a calendar view with an assignee column on the left side. Each work package assigned to a team member will appear as a card that spans a certain duration (start date to finish date). These cards can be moved, stretched, shortened or removed to organize the planning of your team.
 
-> [!NOTE]
-> Team planner is an Enterprise add-on and can only be used with [Enterprise cloud](../../enterprise-guide/enterprise-cloud-guide/) or  [Enterprise on-premises](../../enterprise-guide/enterprise-on-premises-guide/). An upgrade from the free community edition is easy and helps support OpenProject.
+[feature: team_planner_view ]
 
 To use this module, you must have the work packages module enabled.
 
@@ -42,7 +41,7 @@ Clicking on the **Team planners** entry on the left sidebar takes you to the tea
 5. New team planners by default appear under the **Private** heading in the left menu bar. These are visible only to you.
 
 > [!TIP]
-> Both *public* and *private* team planners can be added as **favored** planners.
+> Both *public* and *private* team planners can be added as **favorited** planners.
 
 ## Team planner basics
 
@@ -51,12 +50,22 @@ Clicking on the **Team planners** entry on the left sidebar takes you to the tea
 A team planner has a number of features numbered 1 to 8 in the above screenshot:
 
 1. Click on the name of your team planner (*Marketing Team* in the example above) to edit it. Unless it's a new team planner, this change has to be confirmed by pressing the floppy disk icon that appears next to the name after you change it.
+
 2. Use the **+ Add existing** button to add an existing work package  to the team planner. You do this by searching for work package and dragging its card to an assignee, at a certain time. This will then update the *assignee*, *start date* and *finish date* attributes of that work package.
+
 3. Add a new team member to the assignee column by Clicking on the **+ Assignee** button.
-4. By default, the team planner will only show assigned work packages belonging to the current project. However, it is possible to also add assigned work packages belonging to other projects. You can make these work packages from other projects visible by using **Include projects** feature and selecting additional projects to be included in this view.
+
+4. By default, the team planner will only show assigned work packages belonging to the current project. 
+
+> [!TIP]
+> It is possible to also add assigned work packages belonging to other projects. You can make these work packages from other projects visible by using **Include projects** feature and selecting additional projects to be included in this view.
+
 5. Use the **Filter** feature (same as in the [work packages](../work-packages/work-package-table-configuration/#filter-work-packages) module) to display only work packages that meet certain filter criteria. You could, for example, filter such that only work packages of certain types, certain status or certain custom field values are visible.
+
 6. The **Fullscreen** button lets you view the team planner in fullscreen mode.
+
 7. The  **\[⋮\]** (more) button gives you additional options, such as saving, renaming and saving a copy (saving as), or deleting the team planner. This is also where you can modify the visibility options.
+
 8. By default the team planner only shows the [work week](../../system-admin-guide/calendars-and-dates/#working-days-and-hours) (week excluding the weekend and non-working days). Use the drop down to toggle between work week, 1-week, 2-week, 4-week or 8-week views. With the arrows you can navigate the weeks back and forth. The Today button brings you to the current week.
 
 > [!TIP]

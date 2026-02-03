@@ -60,10 +60,10 @@ RSpec.describe API::V3::Projects::ProjectEagerLoadingWrapper do
       end
 
       it "returns available custom fields for each project separately" do
-        expect(loaded_projects.first.available_custom_fields).to eq([])
-        expect(loaded_projects.second.available_custom_fields).to eq([text_project_custom_field])
+        expect(loaded_projects.first.available_custom_fields).to be_empty
+        expect(loaded_projects.second.available_custom_fields).to contain_exactly(text_project_custom_field)
         expect(loaded_projects.third.available_custom_fields)
-          .to eq([text_project_custom_field, string_project_custom_field])
+          .to contain_exactly(text_project_custom_field, string_project_custom_field)
       end
     end
   end

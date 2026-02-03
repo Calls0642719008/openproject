@@ -33,7 +33,7 @@ require "spec_helper"
 RSpec.describe "Multi-value custom fields creation", :js, :selenium do
   shared_let(:admin) { create(:admin) }
 
-  let(:index_cf_page) { Pages::CustomFields::IndexPage.new }
+  let(:index_cf_page) { Pages::CustomFields::Index.new }
 
   current_user { admin }
 

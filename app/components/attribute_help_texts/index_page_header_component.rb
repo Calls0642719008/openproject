@@ -41,7 +41,7 @@ class AttributeHelpTexts::IndexPageHeaderComponent < ApplicationComponent
   def breadcrumb_items
     [
       { href: admin_index_path, text: t("label_administration") },
-      helpers.nested_breadcrumb_element(t(:"attribute_help_texts.label_plural"),
+      helpers.nested_breadcrumb_element(AttributeHelpText.human_plural_model_name,
                                         I18n.t(currently_selected_tab[:label].to_s))
     ]
   end

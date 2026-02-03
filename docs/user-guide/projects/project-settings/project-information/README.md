@@ -20,8 +20,8 @@ Project settings are grouped into three sections:
 
 2. **Project status**. Here you can: 
 
-   - Set a **project status**. The project status can be displayed in the [project overview](../../../project-overview). If you want to set additional or different status options you can create and use a [project custom field](../../../../system-admin-guide/custom-fields/custom-fields-projects).
-   - Add a **project status description**. The status description will be shown on the [project overview](../../../project-overview) page.
+   - Set a **project status**. The project status can be displayed in the [project home](../../../project-home). If you want to set additional or different status options you can create and use a [project custom field](../../../../system-admin-guide/custom-fields/custom-fields-projects).
+   - Add a **project status description**. The status description will be shown on the [project home](../../../project-home) page.
 
 3. **Project relations**, where you can select the **parent project**.
 
@@ -75,7 +75,7 @@ You can copy an existing project by navigating to the *Project settings -> Proje
 ![Copy a project under project settings in OpenProject](openproject_user_guide_project_settings_information_copy_project.png)
 
 Under the **Copy from project** section you can select what additional project data and settings, such as versions, work package categories, attachments, project life cycle and project members should be copied as well. 
-You can copy existing [boards](../../../agile-boards/) (apart from the Subproject board) and the [Project overview](../../../project-overview/#project-overview) dashboards along with your project, too. 
+You can copy existing [boards](../../../agile-boards/) (apart from the Subproject board) and the [Project overview](../../../project-home/#project-overview) dashboards along with your project, too. 
 
 Select which modules and settings you want to copy and whether or not you want to notify users via email during copying.
 
@@ -122,7 +122,7 @@ Once archived, a project can no longer be selected from the project list accessi
 
 ![An archived project shown in projects list in OpenProject](openproject_user_guide_project_settings_information_archived_project_projects_list.png)
 
-You can also archive a project directly on the [project overview page.](../../../project-overview/#archive-a-project) 
+You can also archive a project directly on the [project overview page.](../../../project-home/#archive-a-project) 
 
 ## Change the project hierarchy
 

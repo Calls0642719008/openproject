@@ -19,6 +19,8 @@ export class TypeFormAttributeGroupComponent {
 
   text = {
     custom_field: this.I18n.t('js.admin.type_form.custom_field'),
+    delete_group: this.I18n.t('js.admin.type_form.delete_group'),
+    remove_attribute: this.I18n.t('js.admin.type_form.remove_attribute')
   };
 
   constructor(private I18n:I18nService,

@@ -43,7 +43,7 @@ module Storages
             let(:auth_strategy) { Registry["sharepoint.authentication.userless"].call(false) }
             let(:input_data) { Input::Files.build(folder:).value! }
 
-            it_behaves_like "adapter files_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "files"
 
             context "when parent folder is root", vcr: "sharepoint/files_query_root" do
               let(:folder) { "/" }
@@ -55,62 +55,62 @@ module Storages
                       name: "OpenProject",
                       mime_type: "application/x-op-drive",
                       location: "/OpenProject",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw",
                       name: "Shared Documents",
                       mime_type: "application/x-op-drive",
                       location: "/Shared%20Documents",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Pmdpc8mQ1QJkyIbbWQJol",
                       name: "Selected Permissions",
                       mime_type: "application/x-op-drive",
                       location: "/Selected%20Permissions",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_YoKf1JPvYSJeFRsyx4zF_",
                       name: "Chris document library",
                       mime_type: "application/x-op-drive",
                       location: "/Chris%20document%20library",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8CfNaHr_0ERYs5kgmEWFrX",
                       name: "Marcello AMPF",
                       mime_type: "application/x-op-drive",
                       location: "/Marcello%20AMPF",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8opHtYeMANTahXlS54FgHn",
                       name: "Dominic",
                       mime_type: "application/x-op-drive",
                       location: "/Dominic",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY93AQ5rgPKoR7tMwpspgj95",
                       name: "Markus",
                       mime_type: "application/x-op-drive",
                       location: "/Markus",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     ),
                     Results::StorageFile.new(
                       id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW",
                       name: "Marcello VCR",
                       mime_type: "application/x-op-drive",
                       location: "/Marcello%20VCR",
-                      permissions: %i[readable writeable]
+                      permissions: %i[readable]
                     )
                   ],
                   parent: Results::StorageFile.new(id: "1269877d26360587caf07834bc72ee3ad3c3698f1651bf85d8562e7fda19aa0f",
                                                    name: "OPTest",
                                                    location: "/",
-                                                   permissions: %i[readable writeable]),
+                                                   permissions: %i[readable]),
                   ancestors: []
                 )
               end
@@ -235,33 +235,33 @@ module Storages
             end
 
             context "when requesting a sub folder", vcr: "sharepoint/files_query_sub_folder" do
-              let(:folder) { "/Marcello VCR/data/subfolder" }
+              let(:folder) { "/Marcello VCR/Ümlæûts/data" }
               let(:files_result) do
                 Results::StorageFileCollection.new(
                   files: [
                     Results::StorageFile.new(
-                      id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW:01ANJ53W7MUYDYQAA3WVEYDJQNZVSKNPGD",
-                      name: "fw13-easy-effects.json",
-                      size: 11845,
-                      mime_type: "application/json",
-                      created_at: Time.zone.parse("2025-07-28 15:06:31.000000000 UTC +00:00"),
-                      last_modified_at: Time.zone.parse("2025-07-28 15:06:31.000000000 UTC +00:00"),
+                      id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW:01ANJ53WZDKAGBGPSC2VGJGLYJX4DBZE7V",
+                      name: "written_in_stone.webp",
+                      size: 190656,
+                      mime_type: "application/octet-stream",
+                      created_at: Time.zone.parse("2025-09-10T13:08:15Z"),
+                      last_modified_at: Time.zone.parse("2025-09-10T13:08:15Z"),
                       created_by_name: "Eric Schubert",
                       last_modified_by_name: "Eric Schubert",
-                      location: "/Marcello%20VCR/data/subfolder/fw13-easy-effects.json",
+                      location: "/Marcello%20VCR/%C3%9Cml%C3%A6%C3%BBts/data/written_in_stone.webp",
                       permissions: %i[readable writeable]
                     )
                   ],
                   parent: Results::StorageFile.new(
-                    id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW:01ANJ53W6DBDYX553L4REYNOMUI6XVMTO6",
-                    name: "subfolder",
-                    location: "/Marcello%20VCR/data/subfolder",
+                    id: "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW:01ANJ53W552X5C42XRLBCL2EC4BBBZYA5Y",
+                    name: "data",
+                    location: "/Marcello%20VCR/%C3%9Cml%C3%A6%C3%BBts/data",
                     permissions: %i[readable writeable]
                   ),
                   ancestors: [
                     Results::StorageFileAncestor.new(name: "OPTest", location: "/"),
                     Results::StorageFileAncestor.new(name: "Marcello VCR", location: "/Marcello VCR"),
-                    Results::StorageFileAncestor.new(name: "data", location: "/Marcello VCR/data")
+                    Results::StorageFileAncestor.new(name: "Ümlæûts", location: "/Marcello VCR/Ümlæûts")
                   ]
                 )
               end
@@ -314,14 +314,16 @@ module Storages
 
             context "when requesting an unknown file", vcr: "sharepoint/files_query_file_not_found" do
               let(:folder) { "/Marcello VCR/POTATO" }
+              let(:error_source) { Internal::ChildrenQuery }
 
-              it_behaves_like "adapter files_query: not found", Internal::ChildrenQuery
+              it_behaves_like "storage adapter: error response", :not_found
             end
 
             context "when requestion an unknown drive", vcr: "sharepoint/files_query_drive_not_found" do
               let(:folder) { "/That is no moon" }
+              let(:error_source) { described_class }
 
-              it_behaves_like "adapter files_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

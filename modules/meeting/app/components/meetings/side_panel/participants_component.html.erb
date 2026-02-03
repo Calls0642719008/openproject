@@ -13,7 +13,7 @@
           icon: :gear,
           scheme: :invisible,
           tag: :a,
-          href: manage_participants_dialog_meeting_participants_path(@meeting),
+          href: manage_participants_dialog_project_meeting_participants_path(@meeting.project, @meeting),
           classes: "hide-when-print",
           data: { controller: "async-dialog" },
           "aria-label": I18n.t("meeting.participants.label.manage_participants"),
@@ -40,7 +40,7 @@
                   underline: false,
                   font_weight: :bold,
                   tag: :a,
-                  href: manage_participants_dialog_meeting_participants_path(@meeting),
+                  href: manage_participants_dialog_project_meeting_participants_path(@meeting.project, @meeting),
                   classes: "hide-when-print",
                   data: { controller: "async-dialog" }
                 )

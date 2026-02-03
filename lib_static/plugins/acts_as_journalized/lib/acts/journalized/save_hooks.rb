@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -65,6 +67,7 @@ module Acts::Journalized
 
         if create_call.success? && create_call.result
           OpenProject::Notifications.send(OpenProject::Events::JOURNAL_CREATED,
+                                          changes: previous_changes,
                                           journal: create_call.result,
                                           send_notification: Journal::NotificationConfiguration.active?)
         end

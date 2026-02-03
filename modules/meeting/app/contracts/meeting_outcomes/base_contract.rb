@@ -41,5 +41,17 @@ module MeetingOutcomes
 
     attribute :notes
     attribute :kind
+
+    validate :validate_work_package_visible
+
+    private
+
+    def validate_work_package_visible
+      return if model.work_package_id.blank?
+
+      unless WorkPackage.visible(user).exists?(id: model.work_package_id)
+        errors.add :work_package, :error_not_found
+      end
+    end
   end
 end

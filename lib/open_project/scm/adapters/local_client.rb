@@ -82,9 +82,7 @@ module OpenProject
           root_url
         end
 
-        def config
-          self.class.config
-        end
+        delegate :config, to: :class
 
         ##
         # client executable command
@@ -202,6 +200,14 @@ module OpenProject
 
         def scm_encode(to, from, str)
           return nil if str.nil?
+
+          str = str.to_s
+          raise ArgumentError, "path is too long" if str.bytesize > 4096
+
+          if str.include?("\0") || str.include?("\n") || str.include?("\r")
+            raise ArgumentError, "path contains invalid characters"
+          end
+
           return str if to == from
 
           begin

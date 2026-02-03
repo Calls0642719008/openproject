@@ -58,7 +58,7 @@
             content_arguments: {
               data: { turbo_stream: true, test_selector: "op-wp-journals-sorting-desc" }
             },
-            active: desc_sorting?
+            active: journal_sorting.desc?
           )
           menu.with_item(
             label: t("activities.work_packages.activity_tab.label_sort_asc"),
@@ -67,7 +67,7 @@
             content_arguments: {
               data: { turbo_stream: true, test_selector: "op-wp-journals-sorting-asc" }
             },
-            active: asc_sorting?
+            active: journal_sorting.asc?
           )
         end
       end

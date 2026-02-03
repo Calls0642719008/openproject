@@ -67,10 +67,16 @@ See COPYRIGHT and LICENSE files for more details.
       ) %>
   <%=
     content_for(:additional_js_dom_ready) do
-      "jQuery('#repository-password-placeholder')
-        .change(function() { this.name = 'repository[password]'; })
-        .focus(function() { this.value = ''; this.name = 'repository[password]'; });
-        ".html_safe
+      raw <<~JS
+        const placeholder = document.getElementById('repository-password-placeholder');
+        placeholder?.addEventListener('input', function(event) {
+          placeholder.name = 'repository[password]';
+        });
+        placeholder?.addEventListener('focus', function(event) {
+          placeholder.value = '';
+          placeholder.name = 'repository[password]';
+        });
+      JS
     end
   %>
 </div>

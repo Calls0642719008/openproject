@@ -84,7 +84,7 @@
                     <%= render Primer::Beta::Octicon.new(icon: "op-enterprise-addons", "aria-label": I18n.t(:label_enterprise_edition), classes: "upsell-colored", ml: 2) %>
                   <% end %>
 
-                  <% if child_item.favored %>
+                  <% if child_item.favorited %>
                     <%= render Primer::Beta::Octicon.new(icon: "star-fill", "aria-label": I18n.t(:label_favorite), classes: %w[op-submenu--item-mark op-primer--star-icon], ml: 2) %>
                   <% end %>
                 </span>

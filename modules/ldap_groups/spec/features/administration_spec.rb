@@ -45,11 +45,21 @@ RSpec.describe "LDAP group sync administration spec", :js do
       find("td.dn a").click
       expect(page).to have_css ".generic-table--empty-row"
 
+      # Edit entry
+      click_on "Edit"
+      fill_in "DN", with: "cn=bar,ou=groups,dc=example,dc=com"
+      click_on "Save"
+
+      expect_flash(message: I18n.t(:notice_successful_update))
+
+      visit ldap_groups_synchronized_groups_path
+      expect(page).to have_css("td.dn", text: "cn=bar,ou=groups,dc=example,dc=com")
+
       # Check created group
       sync = LdapGroups::SynchronizedGroup.last
       expect(sync.group_id).to eq(group.id)
       expect(sync.ldap_auth_source_id).to eq(auth_source.id)
-      expect(sync.dn).to eq "cn=foo,ou=groups,dc=example,dc=com"
+      expect(sync.dn).to eq "cn=bar,ou=groups,dc=example,dc=com"
 
       # Assume we have a membership
       sync.users.create user_id: admin.id
@@ -63,7 +73,7 @@ RSpec.describe "LDAP group sync administration spec", :js do
       find(".buttons a", text: "Delete").click
 
       SeleniumHubWaiter.wait
-      find(".danger-zone--verification input").set "cn=foo,ou=groups,dc=example,dc=com"
+      find(".danger-zone--verification input").set "cn=bar,ou=groups,dc=example,dc=com"
 
       SeleniumHubWaiter.wait
       click_on "Delete"

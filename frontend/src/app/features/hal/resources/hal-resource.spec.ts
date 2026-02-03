@@ -70,6 +70,7 @@ describe('HalResource', () => {
 
   it('should be instantiable using a default object', () => {
     const resource = halResourceService.createHalResource({}, true);
+
     expect(resource.href).toEqual(null);
   });
 
@@ -96,6 +97,7 @@ describe('HalResource', () => {
     it('should perform a request', () => {
       resource = halResourceService.createHalResource(source, true);
       resource.$update();
+
       expect(getStub).toHaveBeenCalled();
     });
   });
@@ -179,12 +181,14 @@ describe('HalResource', () => {
     it('should use the source link only once when called', () => {
       resource.link;
       resource.link;
+
       expect(linkFn.calls.count()).toEqual(1);
     });
 
     it('should use the source embedded only once when called', () => {
       resource.resource;
       resource.resource;
+
       expect(embeddedFn.calls.count()).toEqual(1);
     });
   });
@@ -254,6 +258,7 @@ describe('HalResource', () => {
 
     it('should have a writable name attribute', () => {
       resource.name = 'some name';
+
       expect(resource.name).toEqual('some name');
     });
 
@@ -707,6 +712,7 @@ describe('HalResource', () => {
 
         it('should update the source when set', () => {
           resource.property = resource;
+
           expect(resource.$source._links.property.href).toEqual('/api/self');
         });
 
@@ -742,7 +748,7 @@ describe('HalResource', () => {
             promise.then(() => {
               expect(resource.$loaded).toBeTruthy();
               done();
-            });
+            }).catch(done.fail);
           });
 
           it('should be updated', () => {
@@ -751,6 +757,7 @@ describe('HalResource', () => {
 
           it('should have properties that have a getter and setter', () => {
             const descriptor = Object.getOwnPropertyDescriptor(newResult, 'foo');
+
             expect(descriptor).toBeDefined('Descriptor should be defined');
 
             expect(descriptor!.get).toBeDefined('Descriptor getter should be defined');

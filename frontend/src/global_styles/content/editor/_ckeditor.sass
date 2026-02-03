@@ -10,8 +10,9 @@
     @include op-uc-table-header-styles
 
 // Wrapper for full text element
+// matches the primer form default spacing
 opce-ckeditor-augmented-textarea .op-ckeditor--attachments
-  margin-top: 2rem
+  margin-top: var(--stack-gap-normal)
 
 // Ensure same border and min-height for preview
 .ck-content,
@@ -128,3 +129,14 @@ opce-ckeditor-augmented-textarea .op-ckeditor--attachments
 .ck-icon_inherit-color
   path
     fill: var(--body-font-color) !important
+
+.ck.ck-balloon-panel.ck-powered-by-balloon
+  z-index: var(--ck-z-default) !important
+
+@media (max-width: $breakpoint-sm)
+  .ck-balloon-panel.ck-balloon-panel_visible
+    left: 5vw !important
+    right: 5vw !important
+
+  .ck-list__item .mention-list-item
+    max-width: none !important

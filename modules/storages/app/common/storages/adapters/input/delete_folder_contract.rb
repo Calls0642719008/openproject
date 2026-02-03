@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class DeleteFolderContract < Dry::Validation::Contract
+      class DeleteFolderContract < DryApplicationContract
         params do
           # FIXME: Should this be a Location?
           required(:location).filled(:string)

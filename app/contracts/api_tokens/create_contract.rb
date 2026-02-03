@@ -32,7 +32,7 @@ module APITokens
   class CreateContract < BaseContract
     attribute :token_name
 
-    validates :token_name, presence: { message: proc { I18n.t("my.access_token.errors.token_name_blank") } }
+    validates :token_name, presence: true
     validate :token_name_is_unique, unless: :token_name_is_blank?
 
     private
@@ -42,8 +42,8 @@ module APITokens
     end
 
     def token_name_is_unique
-      if Token::API.where(user: model.user).any? { |t| t.token_name == model.token_name }
-        errors.add(:token_name, :taken, message: I18n.t("my.access_token.errors.token_name_in_use"))
+      if model.class.where(user: model.user).any? { |t| t.token_name == model.token_name }
+        errors.add(:token_name, :in_use)
       end
     end
   end

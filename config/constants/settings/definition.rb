@@ -28,6 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
+# rubocop:disable Metrics/CollectionLiteralLength
 module Settings
   class Definition
     ENV_PREFIX = "OPENPROJECT_"
@@ -60,7 +61,7 @@ module Settings
       },
       apiv3_docs_enabled: {
         description: "Enable interactive APIv3 documentation as part of the application",
-        default: true
+        default: false
       },
       apiv3_enable_basic_auth: {
         description: "Enable API token or global basic authentication for APIv3 requests",
@@ -168,9 +169,10 @@ module Settings
         default: %w[ca cs de el en es fr hu id it ja ko lt nl no pl pt-BR pt-PT ro ru sk sl sv tr uk vi zh-CN zh-TW].freeze,
         allowed: -> { Redmine::I18n.all_languages }
       },
-      avatar_link_expiry_seconds: {
+      avatar_link_expiration_seconds: {
         description: "Cache duration for avatar image API responses",
-        default: 24.hours.to_i
+        default: 24.hours.to_i,
+        env_alias: "OPENPROJECT_AVATAR__LINK__EXPIRY__SECONDS"
       },
       # Allow users with the required permissions to create backups via the web interface or API.
       backup_enabled: {
@@ -215,7 +217,7 @@ module Settings
         default: 20
       },
       cache_expires_in_seconds: {
-        description: "Expiration time for memcache entries, empty for no expiry be default",
+        description: "Expiration time for memcache entries, empty for no expiration be default",
         format: :integer,
         default: nil,
         writable: false
@@ -344,7 +346,14 @@ module Settings
         allowed: -> { Redmine::I18n.all_languages }
       },
       default_projects_modules: {
-        default: %w[calendar board_view work_package_tracking gantt news costs wiki],
+        default: -> {
+          base_modules = %w[calendar board_view work_package_tracking gantt news costs wiki]
+          if Setting.real_time_text_collaboration_enabled?
+            base_modules + %w[documents]
+          else
+            base_modules
+          end
+        },
         allowed: -> { OpenProject::AccessControl.available_project_modules.map(&:to_s) }
       },
       default_projects_public: {
@@ -463,7 +472,7 @@ module Settings
         default: false
       },
       enabled_projects_columns: {
-        default: %w[favored name project_status public created_at latest_activity_at required_disk_space],
+        default: %w[favorited name project_status public created_at latest_activity_at required_disk_space],
         allowed: -> { ProjectQuery.new.available_selects.map { |s| s.attribute.to_s } }
       },
       enabled_scm: {
@@ -554,6 +563,11 @@ module Settings
         writable: false,
         default: 7.days
       },
+      good_job_engine_basic_auth: {
+        description: "Allow basic authentication for GoodJob web interface by setting a password",
+        format: :string,
+        default: nil
+      },
       host_name: {
         format: :string,
         default: -> { "#{ENV.fetch('HOST', 'localhost')}:#{ENV.fetch('PORT', 3000)}" },
@@ -565,6 +579,29 @@ module Settings
       additional_host_names: {
         description: "Additional allowed host names for the application.",
         default: []
+      },
+      real_time_text_collaboration_enabled: {
+        description: "Enable real-time collaborative editing of text fields using BlockNoteJS and Hocuspocus server.",
+        default: -> {
+          Setting.collaborative_editing_hocuspocus_url.present? &&
+            Setting.collaborative_editing_hocuspocus_secret.present?
+        }
+      },
+      collaborative_editing_hocuspocus_url: {
+        format: :string,
+        default: nil,
+        description: "The URL of the hocuspocus server used by BlockNoteJS editor to enable collaborative editing.",
+        default_by_env: {
+          development: "wss://hocuspocus.local"
+        }
+      },
+      collaborative_editing_hocuspocus_secret: {
+        format: :string,
+        default: nil,
+        default_by_env: {
+          development: "secret12345"
+        },
+        description: "The secret used for generating access tokens to access documents on hocuspocus server."
       },
       hours_per_day: {
         description: "This will define what is considered a “day” when displaying duration in a more natural way " \
@@ -623,11 +660,6 @@ module Settings
       },
       journal_aggregation_time_minutes: {
         default: 5
-      },
-      large_instance_wp_allowed_to_sql: {
-        description: "When querying for allowed work packages, use SQL better suited for instances " \
-                     "with a larger set of work packages, projects, members and users",
-        default: false
       },
       ldap_force_no_page: {
         description: "Force LDAP to respond as a single page, in case paged responses do not work with your server.",
@@ -717,6 +749,14 @@ module Settings
         default: nil,
         allowed: -> { Role.pluck(:id) }
       },
+      new_project_send_confirmation_email: {
+        format: :boolean,
+        default: false
+      },
+      new_project_notification_text: {
+        format: :string,
+        default: ""
+      },
       notifications_hidden: {
         default: false
       },
@@ -740,10 +780,6 @@ module Settings
         format: :string,
         default: nil,
         writable: false # this changes a global variable and must therefore not be writable at runtime
-      },
-      onboarding_video_url: {
-        description: "Onboarding guide instructional video URL",
-        default: "https://player.vimeo.com/video/163426858?autoplay=1"
       },
       onboarding_enabled: {
         description: "Enable or disable onboarding guided tour for new users",
@@ -865,6 +901,10 @@ module Settings
         writable: false,
         allowed: (0..),
         default: 20
+      },
+      opentelemetry_enabled: {
+        description: "Enable OpenTelemetry metrics",
+        default: false
       },
       rate_limiting: {
         default: {},
@@ -1001,11 +1041,13 @@ module Settings
       sendmail_arguments: {
         description: "Arguments to call sendmail with in case it is configured as outgoing email setup",
         format: :string,
+        writable: false,
         default: "-i"
       },
       sendmail_location: {
         description: "Location of sendmail to call if it is configured as outgoing email setup",
         format: :string,
+        writable: false,
         default: "/usr/sbin/sendmail"
       },
       # Allow separate error reporting for frontend errors
@@ -1128,6 +1170,17 @@ module Settings
         },
         writable: false
       },
+      metrics: {
+        description: "
+          Publish a reduced set of puma metrics on a separate port for Prometheus consumption,
+          providing autoscaling hints
+        ".squish,
+        default: {
+          "enabled" => false,
+          "port" => 9394
+        },
+        writable: false
+      },
       sys_api_enabled: {
         description: "Enable internal system API for setting up managed repositories",
         default: false
@@ -1208,9 +1261,8 @@ module Settings
       },
       work_package_list_default_highlighting_mode: {
         format: :string,
-        default: -> { EnterpriseToken.allows_to?(:conditional_highlighting) ? "inline" : "none" },
-        allowed: -> { Query::QUERY_HIGHLIGHTING_MODES.map(&:to_s) },
-        writable: -> { EnterpriseToken.allows_to?(:conditional_highlighting) }
+        default: -> { "inline" },
+        allowed: -> { Query::QUERY_HIGHLIGHTING_MODES.map(&:to_s) }
       },
       work_package_list_default_columns: {
         default: %w[id subject type status assigned_to priority],
@@ -1228,6 +1280,11 @@ module Settings
       youtube_channel: {
         description: "Link to YouTube channel in help menu",
         default: "https://www.youtube.com/c/OpenProjectCommunity"
+      },
+      capture_external_links: {
+        description: "Redirect external links through a warning page before leaving the application",
+        default: false,
+        writable: -> { EnterpriseToken.allows_to?(:capture_external_links) }
       }
     }.freeze
 
@@ -1642,3 +1699,4 @@ module Settings
     end
   end
 end
+# rubocop:enable Metrics/CollectionLiteralLength

@@ -61,7 +61,11 @@ module Storages
                 if location.root?
                   UrlBuilder.url(base_uri, "/v1.0/drives", drive_id, "/root/children")
                 else
-                  UrlBuilder.url(base_uri, "/v1.0/drives", drive_id, "/root:#{UrlBuilder.path(location.path)}:/children")
+                  [
+                    UrlBuilder.url(base_uri, "/v1.0/drives", drive_id, "/root"),
+                    UrlBuilder.path(location.path),
+                    UrlBuilder.path("children")
+                  ].join(":")
                 end
               end
 

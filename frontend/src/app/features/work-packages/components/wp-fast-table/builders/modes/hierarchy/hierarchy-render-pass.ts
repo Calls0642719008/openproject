@@ -25,20 +25,20 @@ export class HierarchyRenderPass extends PrimaryRenderPass {
   @InjectField() wpTableHierarchies:WorkPackageViewHierarchiesService;
 
   // Remember which rows were already rendered
-  readonly rendered:{ [workPackageId:string]:boolean } = {};
+  readonly rendered:Record<string, boolean> = {};
 
   // Remember additional parents inserted that are not part of the results table
-  private additionalParents:{ [workPackageId:string]:WorkPackageResource } = {};
+  private additionalParents:Record<string, WorkPackageResource> = {};
 
   // Defer children to be rendered when their parent occurs later in the table
-  private deferred:{ [parentId:string]:WorkPackageResource[] } = {};
+  private deferred:Record<string, WorkPackageResource[]> = {};
 
   // Collapsed state
   private hierarchies:WorkPackageViewHierarchies;
 
   // Build a map of hierarchy elements present in the table
   // with at least a visible child
-  public parentsWithVisibleChildren:{ [id:string]:boolean } = {};
+  public parentsWithVisibleChildren:Record<string, boolean> = {};
 
   constructor(public readonly injector:Injector,
     public workPackageTable:WorkPackageTable,

@@ -107,7 +107,7 @@ export function updateMenuItem(menuItemClass:string|undefined, action:'add'|'rem
     return;
   }
 
-  const menuItem = jQuery(`#main-menu .${menuItemClass}`)[0];
+  const menuItem = document.querySelector(`#main-menu .${menuItemClass}`);
 
   if (!menuItem) {
     return;
@@ -234,7 +234,7 @@ export function initializeUiRouterListeners(injector:Injector) {
     const profiler:{ pageTransition:() => void }|undefined = window.MiniProfiler;
     profiler?.pageTransition();
 
-    const toStateObject:StateObject|undefined = toState.$$state && toState.$$state();
+    const toStateObject:StateObject|undefined = toState.$$state?.();
     const hasProjectRoutes = toStateObject?.includes?.root;
     const projectIdentifier = toParams.projectPath as string || currentProject.identifier;
     if (hasProjectRoutes && !toParams.projects && projectIdentifier) {
@@ -281,6 +281,9 @@ export function initializeUiRouterListeners(injector:Injector) {
     if (toParams.flash_message) {
       toastService.add(toParams.flash_message as IToast);
     }
+
+    // Reset the page state on navigation
+    window.OpenProject.pageState = 'pristine';
 
     return true;
   });

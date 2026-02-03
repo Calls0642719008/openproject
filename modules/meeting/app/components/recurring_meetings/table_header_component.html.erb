@@ -38,12 +38,14 @@ See COPYRIGHT and LICENSE files for more details.
 
           if @planned
             container.with_column do
-              render(Primer::Beta::Button.new(
-                       tag: :a,
-                       mobile_label: I18n.t("recurring_meeting.template.label_view_template"),
-                       side: :medium,
-                       href: meeting_path(@meeting.template)
-                     )) do |button|
+              render(
+                Primer::Beta::Button.new(
+                  tag: :a,
+                  mobile_label: I18n.t("recurring_meeting.template.label_view_template"),
+                  side: :medium,
+                  href: meeting_path(@meeting.template)
+                )
+              ) do |button|
                 button.with_leading_visual_icon(icon: :pencil)
                 I18n.t("recurring_meeting.template.label_edit_template")
               end

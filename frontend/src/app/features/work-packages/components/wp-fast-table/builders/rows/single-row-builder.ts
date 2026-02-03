@@ -92,7 +92,7 @@ export class SingleRowBuilder {
     return columns;
   }
 
-  public buildCell(workPackage:WorkPackageResource, column:QueryColumn):HTMLElement|null {
+  public buildCell(workPackage:WorkPackageResource, column:QueryColumn):HTMLTableCellElement|null {
     // handle relation types
     if (isRelationColumn(column)) {
       return this.relationCellBuilder.build(workPackage, column);
@@ -175,23 +175,24 @@ export class SingleRowBuilder {
   /**
    * Refresh a row that is currently being edited, that is, some edit fields may be open
    */
-  public refreshRow(workPackage:WorkPackageResource, jRow:JQuery):JQuery {
+  public refreshRow(workPackage:WorkPackageResource, row:HTMLTableRowElement):HTMLTableRowElement {
     // Detach all current edit cells
-    const cells = jRow.find(`.${tdClassName}`).detach();
+    const cells = Array.from(row.querySelectorAll<HTMLTableCellElement>(`.${tdClassName}`))
+      .map((el) => el.parentNode!.removeChild(el));
 
     // Remember the order of all new edit cells
-    const newCells:HTMLElement[] = [];
+    const newCells:HTMLTableCellElement[] = [];
 
     this.augmentedColumns.forEach((column:QueryColumn) => {
-      const oldTd = cells.filter(`td.${column.id}`);
+      const oldTd = cells.find((cell) => cell.matches(`td.${column.id}`));
 
       // Treat internal columns specially
       // and skip the replacement of the column if this is being edited.
       // But only do that, if the column existed before. Sometimes, e.g. when lacking permissions
       // the column was not correctly created (with the intended classes). This code then
       // increases the robustness.
-      if ((column.id.startsWith('__internal') || this.isColumnBeingEdited(workPackage, column)) && oldTd.length) {
-        newCells.push(oldTd[0]);
+      if ((column.id.startsWith('__internal') || this.isColumnBeingEdited(workPackage, column)) && oldTd) {
+        newCells.push(oldTd);
         return;
       }
 
@@ -203,8 +204,8 @@ export class SingleRowBuilder {
       }
     });
 
-    jRow.prepend(newCells);
-    return jRow;
+    row.prepend(...newCells);
+    return row;
   }
 
   protected isColumnBeingEdited(workPackage:WorkPackageResource, column:QueryColumn) {
@@ -215,24 +216,27 @@ export class SingleRowBuilder {
 
   protected buildEmptyRow(workPackage:WorkPackageResource, row:HTMLTableRowElement):[HTMLTableRowElement, boolean] {
     const change = this.workPackageTable.editing.change(workPackage);
-    const cells:{ [attribute:string]:JQuery } = {};
+    const cells:Record<string, HTMLTableCellElement> = {};
 
     if (change && !change.isEmpty()) {
       // Try to find an old instance of this row
       const oldRow = locateTableRowByIdentifier(this.classIdentifier(workPackage));
 
       change.changedAttributes.forEach((attribute:string) => {
-        cells[attribute] = oldRow.find(`.${tdClassName}.${attribute}`);
+        const oldCell = oldRow?.querySelector<HTMLTableCellElement>(`.${tdClassName}.${attribute}`);
+        if (oldCell) {
+          cells[attribute] = oldCell;
+        }
       });
     }
 
     this.augmentedColumns.forEach((column:QueryColumn) => {
       let cell:Element|null;
-      const oldCell:JQuery|undefined = cells[column.id];
+      const oldCell = cells[column.id];
 
-      if (oldCell && oldCell.length) {
+      if (oldCell) {
         debugLog(`Rendering previous open column ${column.id} on ${workPackage.id}`);
-        jQuery(row).append(oldCell);
+        row.appendChild(oldCell);
       } else {
         cell = this.buildCell(workPackage, column);
 

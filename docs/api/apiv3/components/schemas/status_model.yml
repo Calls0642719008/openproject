@@ -17,7 +17,9 @@ properties:
     type: boolean
     description: Indicates, whether work package of this status are considered closed
   color:
-    type: string
+    type:
+      - "string"
+      - "null"
     format: hex-code
     description: The color of the status
   isDefault:
@@ -49,5 +51,5 @@ properties:
           - $ref: './link.yml'
           - description: |-
               This status
-              
+
               **Resource**: Status

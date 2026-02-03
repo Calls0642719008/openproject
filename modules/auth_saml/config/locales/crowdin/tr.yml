@@ -4,21 +4,21 @@ tr:
       saml/provider:
         display_name: İsim
         identifier: Tanımlayıcı
-        secret: Gizli Anahtar
+        secret: Gizli
         scope: Kapsam
-        assertion_consumer_service_url: ACS (Assertion consumer service) URL
+        assertion_consumer_service_url: ACS (Assertion tüketici hizmeti) URL'si
         limit_self_registration: Kendi kendine kaydı sınırlayın
-        sp_entity_id: Service entity ID
-        metadata_url: Identity provider metadata URL
-        name_identifier_format: Name identifier format
-        idp_sso_service_url: Identity provider login endpoint
-        idp_slo_service_url: Identity provider logout endpoint
-        idp_cert: Public certificate of identity provider
-        authn_requests_signed: Sign SAML AuthnRequests
-        want_assertions_signed: Require signed responses
-        want_assertions_encrypted: Require encrypted responses
-        certificate: Certificate used by OpenProject for SAML requests
-        private_key: Corresponding private key for OpenProject SAML requests
+        sp_entity_id: Hizmet kuruluşu kimliği
+        metadata_url: Kimlik sağlayıcı meta veri URL'si
+        name_identifier_format: Ad tanımlayıcı biçimi
+        idp_sso_service_url: Kimlik sağlayıcı oturum açma uç noktası
+        idp_slo_service_url: Kimlik sağlayıcı oturum kapatma uç noktası
+        idp_cert: Kamu kimlik belgesi sağlayıcısı.
+        authn_requests_signed: SAML Kimlik Doğrulama İsteklerini İmzalayın.
+        want_assertions_signed: İmzalı yanıtları zorunlu kıl.
+        want_assertions_encrypted: Şifrelenmiş yanıtlar gerektir.
+        certificate: OpenProject tarafından SAML istekleri için kullanılan sertifika
+        private_key: OpenProject SAML istekleri için karşılık gelen özel anahtar
         signature_method: İmza Algoritması
         digest_method: Özet algoritması
         format: "Biçim"
@@ -26,9 +26,9 @@ tr:
     errors:
       models:
         saml/provider:
-          invalid_certificate: "is not a valid PEM-formatted certificate: %{additional_message}"
-          invalid_private_key: "is not a valid PEM-formatted private key: %{additional_message}"
-          certificate_expired: "is expired and can no longer be used."
+          invalid_certificate: "%{additional_message}, Geçerli bir PEM formatlı sertifika değildir."
+          invalid_private_key: "%{additional_message}, Geçerli bir PEM formatında özel anahtar değildir"
+          certificate_expired: "Süresi dolmuştur ve artık kullanılamaz."
           unmatched_private_key: "verilen sertifikaya ait değil"
   saml:
     menu_title: SAML sağlayıcıları
@@ -39,16 +39,16 @@ tr:
         OpenProject ile kimlik sağlayıcı bağlantınızı yapılandırmak için bu parametreleri kullanın.
     metadata_parser:
       success: "Kimlik sağlayıcı meta verilerini kullanarak yapılandırma başarıyla güncelledi."
-      invalid_url: "Provided metadata URL is invalid. Provide a HTTP(s) URL."
-      error: "Failed to retrieve the identity provider metadata: %{error}"
+      invalid_url: "Sağlanan meta veri URL'si geçersiz. Lütfen bir HTTP(s) URL'si sağlayın."
+      error: "Kimlik sağlayıcı meta verilerini alma işlemi başarısız oldu: %{error}"
     providers:
-      label_empty_title: "No SAML providers configured yet."
-      label_empty_description: "Add a provider to see them here."
+      label_empty_title: "Henüz hiçbir SAML sağlayıcısı yapılandırılmadı."
+      label_empty_description: "Onları burada görmek için bir sağlayıcı ekleyin."
       label_automatic_configuration: Otomatik yapılandırma
       label_metadata: Metaveri
       label_metadata_endpoint: OpenProject Metaveri bitiş noktası
       label_openproject_information: OpenProject Bilgileri
-      label_configuration_details: "Identity provider endpoints and certificates"
+      label_configuration_details: "Kimlik sağlayıcı uç noktaları ve sertifikaları"
       label_configuration_encryption: "Signatures and Encryption"
       label_add_new: New SAML identity provider
       label_edit: SAML kimlik sağlayıcısını düzenle %{name}
@@ -56,6 +56,7 @@ tr:
       label_mapping: İlişkilendirme
       label_requested_attribute_for: "%{attribute} için nitelik talebi"
       no_results_table: No SAML identity providers have been defined yet.
+      notice_created: A new SAML identity provider was successfully created.
       plural: SAML kimlik sağlayıcıları
       singular: SAML kimlik sağlayıcısı
       requested_attributes: Talep edilen nitelikler
@@ -72,7 +73,7 @@ tr:
         legend: >
           These attributes are added to the SAML XML metadata to signify to the identify provider which attributes OpenProject requires. You may still need to explicitly configure your identity provider to send these attributes. Please refer to your IdP's documentation.
         name: 'Requested attribute key'
-        format: 'Attribute format'
+        format: 'Öznitelik biçimi'
       section_headers:
         configuration: "Birincil yapılandırma"
         attributes: "Özellikler"
@@ -110,7 +111,7 @@ tr:
       idp_sso_service_url: >
         The URL of the identity provider login endpoint.
       idp_slo_service_url: >
-        The URL of the identity provider login endpoint.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         Enter the X509 PEM-formatted public certificate of the identity provider. You can enter multiple certificates by separating them with a newline.
       name_identifier_format: >

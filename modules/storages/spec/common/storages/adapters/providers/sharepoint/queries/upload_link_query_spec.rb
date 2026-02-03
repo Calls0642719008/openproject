@@ -43,7 +43,7 @@ module Storages
             let(:input_data) { Input::UploadLink.build(folder_id:, file_name:).value! }
             let(:file_name) { "DeathStart_blueprints.tiff" }
 
-            it_behaves_like "adapter upload_link_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "upload_link"
 
             context "when creating an upload link to the root folder of a list", vcr: "sharepoint/upload_link_success" do
               let(:folder_id) { "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK" }
@@ -101,8 +101,9 @@ module Storages
                   file_name: "DeathStart_blueprints.tiff"
                 ).value!
               end
+              let(:error_source) { described_class }
 
-              it_behaves_like "adapter upload_link_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
           end
         end

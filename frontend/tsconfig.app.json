@@ -17,8 +17,11 @@
     "src/stimulus/controllers/**/*.ts",
     "src/**/*.d.ts"
   ],
+  "exclude": [
+    "src/stimulus/controllers/**/*.spec.ts"
+  ],
   "types": [
     "node",
     "react"
-  ],
+  ]
 }

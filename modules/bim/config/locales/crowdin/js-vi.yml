@@ -5,7 +5,7 @@ vi:
       label_bcf: 'BCF'
       import: 'Nhập khẩu'
       import_bcf_xml_file: 'Nhập khẩu tệp BCF XML (Phiên bản BCF 2.1)'
-      export: 'Xuất khẩu'
+      export: 'Xuất'
       export_bcf_xml_file: 'Xuất khẩu tệp BCF XML (Phiên bản BCF 2.1)'
       viewpoint: 'Góc nhìn'
       add_viewpoint: 'Thêm góc nhìn'

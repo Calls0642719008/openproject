@@ -1,7 +1,8 @@
-<ng-container *ngIf="count">
-  <span
-    class="op-tab-count"
-    *ngIf="count > 0"
-    [textContent]="count"
-  ></span>
-</ng-container>
+@if (count) {
+  @if (count > 0) {
+    <span
+      class="op-tab-count"
+      [textContent]="count"
+    ></span>
+  }
+}

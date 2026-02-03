@@ -169,6 +169,22 @@ RSpec.describe WorkPackages::CreateService, "integration", type: :model do
         .to contain_exactly(user)
     end
 
+    it "creates only one WorkflowJob and one JournalsCompletedJob for the created work package" do
+      # avoid setting the parent to avoid creating unrelated jobs
+      attributes[:parent] = nil
+
+      # create objects before clearing jobs to make sure unrelated jobs are cleared
+      project
+      clear_enqueued_jobs
+      expect(service_result).to be_success
+
+      got_enqueued_jobs = enqueued_jobs.pluck(:job)
+      expect(got_enqueued_jobs)
+        .to contain_exactly(WorkPackages::WorkflowJob,
+                            Notifications::WorkflowJob,
+                            Journals::CompletedJob)
+    end
+
     describe "setting the attachments" do
       let!(:other_users_attachment) do
         create(:attachment, container: nil, author: create(:user))

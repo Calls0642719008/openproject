@@ -40,8 +40,40 @@ module MeetingParticipants
     def send_notification(meeting_participant)
       meeting = meeting_participant.meeting
 
-      if Journal::NotificationConfiguration.active? && !meeting.templated? && meeting.notify?
-        MeetingMailer.invited(meeting, meeting_participant.user, user).deliver_later
+      if Journal::NotificationConfiguration.active? && meeting.send_emails?
+        send_meeting_invite(meeting, meeting_participant)
+        notify_other_participants(meeting, meeting_participant)
+      end
+    end
+
+    def send_meeting_invite(meeting, participant)
+      if meeting.template?
+        MeetingSeriesMailer.invited(meeting.recurring_meeting, participant.user, user).deliver_later
+      else
+        MeetingMailer.invited(meeting, participant.user, user).deliver_later
+      end
+    end
+
+    def notify_other_participants(meeting, new_participant)
+      added_participant_name = new_participant.user.name
+
+      meeting
+        .participants
+        .invited
+        .where.not(id: new_participant.id)
+        .includes(:user)
+        .find_each do |participant|
+          send_participant_added_notification(meeting, participant.user, added_participant_name)
+      end
+    end
+
+    def send_participant_added_notification(meeting, recipient, added_participant_name)
+      if meeting.template?
+        MeetingSeriesMailer.participant_added(meeting.recurring_meeting, recipient, user,
+                                              added_participant: added_participant_name).deliver_later
+      else
+        MeetingMailer.participant_added(meeting, recipient, user,
+                                        added_participant: added_participant_name).deliver_later
       end
     end
   end

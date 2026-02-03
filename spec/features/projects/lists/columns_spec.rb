@@ -83,7 +83,7 @@ RSpec.describe "Projects lists columns", :js, with_settings: { login_required?: 
 
       projects_page.set_columns("Name", "Status", integer_custom_field.name)
 
-      projects_page.expect_no_columns("Public", "Description", "Project status description")
+      projects_page.expect_no_columns("Public", "Description", "Project description")
 
       projects_page.within_row(project) do
         expect(page)
@@ -401,7 +401,9 @@ RSpec.describe "Projects lists columns", :js, with_settings: { login_required?: 
     end
   end
 
-  context "with calculated value columns", with_flag: { calculated_value_project_attribute: true } do
+  context "with calculated value columns",
+          with_ee: %i[calculated_values],
+          with_flag: { calculated_value_project_attribute: true } do
     let!(:static_calculated_value) do
       create(:calculated_value_project_custom_field,
              name: "Calculated value field",
@@ -435,6 +437,47 @@ RSpec.describe "Projects lists columns", :js, with_settings: { login_required?: 
           .to have_css(".cf_#{static_calculated_value.id}", text: 4.8)
         expect(page)
           .to have_css(".cf_#{static_int_calculated_value.id}", text: 2)
+      end
+    end
+
+    context "when there is a calculation error" do
+      let!(:integer_custom_field) { create(:integer_project_custom_field) }
+      let!(:division_by_zero_calculated_value) do
+        create(:calculated_value_project_custom_field,
+               name: "Calculated value error field",
+               formula: "6 / {{cf_#{integer_custom_field.id}}}",
+               projects: [project])
+      end
+
+      before do
+        login_as(admin)
+
+        project.custom_field_values = { integer_custom_field.id => 0 }
+        project.save!
+        project.reload
+        project.calculate_custom_fields([division_by_zero_calculated_value])
+
+        projects_page.visit!
+      end
+
+      it "displays the error in the value cell" do
+        projects_page.set_columns("Name", division_by_zero_calculated_value.name, static_int_calculated_value.name)
+
+        projects_page.within_row(project) do
+          expect(page)
+            .to have_css(".name", text: project.name)
+
+          # No error for that field:
+          expect(page).to have_no_test_selector("calculated-value-error-btn-#{static_int_calculated_value.id}")
+
+          # But there is one here:
+          error_button = page.find_test_selector("calculated-value-error-btn-#{division_by_zero_calculated_value.id}")
+          expect(error_button).to be_present
+          error_button.click
+        end
+
+        expect(page).to have_test_selector("calculated-value-error-dialog-#{division_by_zero_calculated_value.id}",
+                                           text: I18n.t("calculated_values.errors.mathematical"))
       end
     end
   end

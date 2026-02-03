@@ -3,12 +3,12 @@ const PORT = process.env.PORT || '3000';
 
 export default [
   {
-    "context": [
-      '/api', 
+    'context': [
+      '/api',
       '/assets/frontend/media'
     ],
-    "target": `http://${PROXY_HOSTNAME}:${PORT}`,
-    "secure": false,
-    "timeout": 360000,
+    'target': `http://${PROXY_HOSTNAME}:${PORT}`,
+    'secure': false,
+    'timeout': 360000,
   }
 ];

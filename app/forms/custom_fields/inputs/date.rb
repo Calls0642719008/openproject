@@ -34,6 +34,6 @@ class CustomFields::Inputs::Date < CustomFields::Inputs::Base::Input
   end
 
   def input_attributes
-    super.merge({ type: "date" })
+    super.merge({ input_width: :xsmall, type: "date" })
   end
 end

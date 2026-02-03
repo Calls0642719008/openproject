@@ -42,7 +42,7 @@ export class QueryFilterInstanceResource extends HalResource {
 
   public values:HalResource[]|string[];
 
-  private memoizedCurrentSchemas:{ [key:string]:QueryFilterInstanceSchemaResource } = {};
+  private memoizedCurrentSchemas:Record<string, QueryFilterInstanceSchemaResource> = {};
 
   @InjectField(SchemaCacheService) schemaCache:SchemaCacheService;
 

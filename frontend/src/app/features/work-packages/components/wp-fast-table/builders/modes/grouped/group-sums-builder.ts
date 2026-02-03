@@ -28,7 +28,7 @@ export class GroupSumsBuilder extends SingleRowBuilder {
     return tr;
   }
 
-  public renderColumns(sums:{ [key:string]:any }, tr:HTMLTableRowElement) {
+  public renderColumns(sums:Record<string, any>, tr:HTMLTableRowElement) {
     this.augmentedColumns.forEach((column, i:number) => {
       const td = document.createElement('td');
       const div = this.renderContent(sums, column.id, this.sumsSchema[column.id]);

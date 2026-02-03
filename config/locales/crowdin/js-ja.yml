@@ -30,9 +30,9 @@ ja:
       delete_confirmation: |
         本当に、このファイルを削除してもよろしいですか? この操作は元に戻すことができません。
       draggable_hint: |
-        インライン画像または参照添付ファイルをエディタ領域にドラッグします。
-        ドラッグしつづけると閉じられたエディタ領域が開きます。
-      quarantined_hint: "ウイルスが発見されたように、ファイルは隔離されています。ダウンロードできません。"
+        埋め込み画像または添付ファイルをエディタにドラッグします。
+        ドラッグしつづけると閉じているエディタ領域が開きます。
+      quarantined_hint: "ウイルスが発見されたため，ファイルは隔離されています。ダウンロードできません。"
     autocomplete_ng_select:
       add_tag: "項目を追加"
       clear_all: "すべてクリア"
@@ -46,13 +46,13 @@ ja:
       remove: "%{name} を削除"
       active: "アクティブ %{label} %{name}"
     backup:
-      attachments_disabled: 添付ファイルは、許容されている最大サイズを超えているため、含まれない場合があります。これは、設定で変更できます（サーバーの再起動が必要です）。
+      attachments_disabled: 添付ファイルは、許容されている最大サイズを超えているため、添付されないかもしれません。許容サイズは設定で変更できます（サーバーの再起動が必要です）。
       info: >
         ここでは、バックアップを開始することができます。データ（特に添付ファイル）の量によっては、処理に時間がかかる場合があります。準備が整うとメールが届きます。
       note: >
-        新しいバックアップは以前のバックアップを上書きします。1日にリクエストできるバックアップの数には限りがあります。
-      last_backup: 前回バックアップ
-      last_backup_from: 前回バックアップ日
+        新しいバックアップは以前のバックアップを上書きします。1日に作成できるバックアップの数には限りがあります。
+      last_backup: 前回のバックアップ
+      last_backup_from: 前回のバックアップ日
       title: OpenProject のバックアップ
       options: オプション
       include_attachments: 添付ファイルを含める
@@ -89,6 +89,8 @@ ja:
     button_list_view: "一覧表示"
     button_show_view: "全画面表示"
     button_log_time: "時間を記録"
+    button_start_timer: "Start timer"
+    button_stop_timer: "タイマー停止"
     button_more: "続き"
     button_open_details: "詳細表示を開く"
     button_close_details: "詳細表示を閉じる"
@@ -113,10 +115,10 @@ ja:
         inline: "インラインを強調表示："
         entire_card_by: "カード全体で"
       remove_from_list: "リストからカードを削除"
-    caption_rate_history: "進捗履歴"
+    caption_rate_history: "単価設定(予算とコスト)"
     clipboard:
       browser_error: "お使いのブラウザーはクリップボードへのコピーをサポートしていません。手動でコピーしてください: %{content}"
-      copied_successful: "クリップボードにコピーしました"
+      copied_successful: "クリップボードにコピーしました！"
     chart:
       type: "グラフの種類"
       axis_criteria: "座標条件"
@@ -136,8 +138,8 @@ ja:
         could_not_load: "グラフを表示するデータを読み込みできませんでした。 必要な権限が不足している可能性があります。"
     description_available_columns: "利用できる項目"
     description_current_position: "現在の位置: "
-    description_select_work_package: "作業項目を選択 #%{id}"
-    description_subwork_package: "作業項目の子 #%{id}"
+    description_select_work_package: "ワークパッケージを選択 #%{id}"
+    description_subwork_package: "ワークパッケージの子 #%{id}"
     editor:
       revisions: "ローカルの修正を表示"
       no_revisions: "ローカルでの修正は見つからず"
@@ -182,15 +184,15 @@ ja:
             タイトルやスラッグを指定して別のwikiページの内容を含める。
             次の例のように、別のプロジェクトのwikiページをコロンで区切って含めることができます。
         work_package_button:
-          button: "作業項目作成ボタンを挿入"
-          type: "作業項目の種類"
+          button: "ワークパッケージ作成ボタンを挿入"
+          type: "ワークパッケージの種類"
           button_style: "ボタンスタイルを使用する"
           button_style_hint: "オプション: マクロをリンクではなくボタンとして表示するかどうかをチェックします。"
-          without_type: "作業項目を作成"
-          with_type: "作業項目を作成 (種類: %{typename})"
+          without_type: "ワークパッケージを作成"
+          with_type: "ワークパッケージを作成 (種類: %{typename})"
         embedded_table:
-          button: "作業項目表を埋め込む"
-          text: "[Placeholder] 埋め込まれた作業項目表"
+          button: "ワークパッケージ表を埋め込む"
+          text: "[Placeholder] 埋め込まれたワークパッケージ表"
         embedded_calendar:
           text: "[Placeholder] 埋め込みカレンダー"
     admin:
@@ -202,6 +204,8 @@ ja:
         add_table: "関係するワークパッケージのテーブルを追加する"
         edit_query: "クエリの編集"
         new_group: "新規グループ"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "デフォルトに戻す"
       working_days:
         calendar:
@@ -209,11 +213,11 @@ ja:
           empty_state_description: '休業日が定義されていません。「休業日を追加」ボタンをクリックして日付を追加してください。'
           new_date: "(新)"
         add_non_working_day: "休業日を追加"
-        already_added_error: "この日付の非稼働日はすでに存在します。一意の日付に対して作成できる非稼働日は1つだけです。"
+        already_added_error: "この日付の非営業日はすでに存在します。一意の日付に対して作成できる非営業日は1つだけです。"
         change_button: "保存して再スケジュール"
         change_title: "営業日を変更する"
-        removed_title: "You will remove the following days from the non-working days list:"
-        change_description: "営業日とみなす曜日を変更すると、このインスタンス内のすべてのプロジェクトのすべての作業項目の開始日と終了日に影響を与える可能性があります。"
+        removed_title: "以下の日を非稼働日リストから削除します："
+        change_description: "営業日とみなす曜日を変更すると、このサイト内のすべてのプロジェクトのすべてのワークパッケージの開始日と終了日に影響を与える可能性があります。"
         warning: >
           変更の反映には時間がかかる場合があります。関連するすべてのワークパッケージとプロジェクトライフサイクルが更新されたら、通知されます。
           本当に続けますか？
@@ -289,30 +293,20 @@ ja:
         format:
           date: "%{attribute} は有効な日付ではありません - YYYY-MM-DDの形式で入力してください。"
         general: "エラーが発生しました。"
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "新しい機能と製品の更新について紹介します。"
-          learn_about: "新機能の詳細"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                このリリースには、<br> のような様々な新機能や改善が含まれています。 <ul class="%{list_styling_class}"> <li>UX/UIが改善され、よりモダンな外観になりました。</li> <li>ミーティング：メール通知とICSをミュートするオプション。</li> <li>進行中のタイマーがマイタイムトラッキングモジュールに表示されます。</li> <li>進捗報告: ステータスベースのモードでも、完了率の合計が表示されます。</li> <li>Nextcloudヘルスチェック：トークン交換機能（Enterpriseアドオン）がないことを表示します。</li> </ul>
     ical_sharing_modal:
       title: "カレンダーを購読する"
       inital_setup_error_message: "データ取得中にエラーが発生しました。"
       description: "URL(iCalendar)を使用して、外部クライアントでこのカレンダーを購読し、そこから最新の作業パッケージ情報を表示することができます。"
-      warning: "このURLを他のユーザーと共有しないでください。このリンクを持つ誰でもアカウントやパスワードなしで作業項目の詳細を表示することができます。"
+      warning: "このURLを他のユーザーと共有しないでください。このリンクを持つ誰でもアカウントやパスワードなしでワークパッケージの詳細を表示することができます。"
       token_name_label: "どこで使うのですか？？"
-      token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: '複数のデバイスからこのカレンダーを購読する場合、この名前は、<a href="my/access_token", target="_blank">アクセストークンリストで</a>それらを区別するのに役立ちます。'
+      token_name_placeholder: '名前を入力してください。例："電話"'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "URLをコピー"
       ical_generation_error_text: "カレンダーのURL生成時にエラーが発生しました。"
       success_message: 'URL "%{name}" がクリップボードにコピーされました。カレンダークライアントに貼り付けて購読を完了してください。'
     label_activate: "有効にする"
     label_assignee: "担当者"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "後に列を追加"
     label_add_column_before: "前に列を追加"
     label_add_columns: "列を追加"
@@ -327,7 +321,7 @@ ja:
     label_all: "全て"
     label_all_projects: "すべてのプロジェクト"
     label_all_uppercase: "全て"
-    label_all_work_packages: "全ての作業項目"
+    label_all_work_packages: "全てのワークパッケージ"
     label_and: "及び"
     label_ascending: "昇順"
     label_author: "作者: %{user}"
@@ -354,6 +348,7 @@ ja:
     label_collapse: "折りたたむ"
     label_collapsed: "折りたたまれている。"
     label_collapse_all: "全てを折りたたむ"
+    label_collapse_text: "Collapse text"
     label_comment: "コメント"
     label_committed_at: "%{date}で%{committed_revision_link}"
     label_committed_link: "コミットされたバージョン%{revision_identifier}"
@@ -366,6 +361,7 @@ ja:
     label_expand: "展開"
     label_expanded: "展開"
     label_expand_all: "全てを展開"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "プロジェクトメニューを展開"
     label_export: "エクスポート"
     label_export_preparing: "エクスポートは準備中です。まもなくダウンロードされます。"
@@ -398,8 +394,6 @@ ja:
     label_me: "自分"
     label_meeting_agenda: "アジェンダ"
     label_meeting_minutes: "議事録"
-    label_menu_collapse: "折りたたむ"
-    label_menu_expand: "展開する"
     label_more_than_ago: "今日より○日前以前"
     label_moderate_comment: "コメントをモデレートする"
     label_next: "次へ"
@@ -433,6 +427,7 @@ ja:
     label_remove_row: "行を削除"
     label_report: "レポート"
     label_repository_plural: "リポジトリ"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "名前をつけて保存"
     label_search_columns: "列を検索する"
     label_select_watcher: "ウォッチャーを選択..."
@@ -445,7 +440,7 @@ ja:
     label_sort_lower: "下へ移動"
     label_sorting: "ソート中"
     label_spent_time: "作業時間の記録"
-    label_star_query: "支持された"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Enterを押して保存します。"
     label_public_query: "公開"
     label_sum: "合計"
@@ -467,15 +462,15 @@ ja:
     label_warning: "注意"
     label_work_package: "ワーク パッケージ"
     label_work_package_parent: "親のワークパッケージ"
-    label_work_package_plural: "作業項目"
+    label_work_package_plural: "ワークパッケージ"
     label_watch: "ウォッチする"
-    label_watch_work_package: "作業項目をウォッチ"
+    label_watch_work_package: "ワークパッケージをウォッチ"
     label_watcher_added_successfully: "ウォッチャーが正常に追加されました ！"
     label_watcher_deleted_successfully: "ウォッチャーが正常に削除されました ！"
     label_work_package_details_you_are_here: "あなたは %{type} %{subject}の %{tab} タブを表示しています。"
     label_work_package_context_menu: "作業パッケージのコンテキストメニュー"
     label_unwatch: "ウォッチしない"
-    label_unwatch_work_package: "作業項目のウォッチを削除"
+    label_unwatch_work_package: "ワークパッケージのウォッチを削除"
     label_uploaded_by: "アップロードした人"
     label_default_queries: "既定の項目"
     label_starred_queries: "お気に入り"
@@ -493,14 +488,14 @@ ja:
     label_remove_all_files: 全てのファイルを削除
     label_add_description: "%{file} の説明を追加"
     label_upload_notification: "ファイルをアップロード中..."
-    label_work_package_upload_notification: "作業項目#%{id}: %{subject} 用ファイルをアップロード中"
+    label_work_package_upload_notification: "ワークパッケージ#%{id}: %{subject} 用ファイルをアップロード中"
     label_wp_id_added_by: "#%{id} が %{author} によって追加されました"
     label_files_to_upload: "これらのファイルをアップロードします:"
     label_rejected_files: "これらのファイルをアップロードできません："
     label_rejected_files_reason: "ファイルサイズが %{maximumFilesize} を越えたために、これらのファイルをアップロードできません"
     label_wait: "構成をお待ちください..."
     label_upload_counter: "%{done} / %{count} 個のファイルが完了"
-    label_validation_error: "次のエラーのために作業項目を保存できませんでした:"
+    label_validation_error: "次のエラーのためにワークパッケージを保存できませんでした:"
     label_version_plural: "バージョン"
     label_view_has_changed: "このビューには未保存の変更があります。 クリックすると保存します。"
     help_texts:
@@ -564,7 +559,7 @@ ja:
       date_alerts:
         milestone_date: "マイルストーン"
         overdue: "期限切れ"
-        overdue_since: "%{difference_in_days}以降。"
+        overdue_since: "for %{difference_in_days}."
         property_today: "は今日です。"
         property_is: "は%{difference_in_days}後。"
         property_was: "は、 %{difference_in_days} 前です。"
@@ -572,7 +567,7 @@ ja:
       center:
         label_actor_and: "及び"
         and_more_users:
-          other: "and %{count} others"
+          other: "と %{count} その他"
         no_results:
           at_all: "あなたに関係する活動があると、新しい通知がここに表示されます。"
           with_current_filter: "現在、このビューには通知はありません"
@@ -624,23 +619,20 @@ ja:
         global:
           immediately:
             title: "参加"
-            description: "自分が関与しているワークパッケージのすべてのアクティビティに関する通知（アサイニー、アカウンタブル、ウォッチャー）。"
+            description: "自分が関与しているワークパッケージのすべてのアクティビティに関する通知（担当、責任、ウォッチャー）。"
           delayed:
             title: "不参加"
             description: "全プロジェクトにおける活動の追加通知。"
           date_alerts:
             title: "日付アラート"
-            description: "あなたが関与している（アサイニー、アカウンタブル、ウォッチャー）オープンワークパッケージの重要な日付が近づくと自動通知。"
+            description: "あなたが関与している（担当、責任、ウォッチャー）オープンワークパッケージの重要な日付が近づくと自動通知。"
           overdue: 期限を過ぎた場合
         project_specific:
           title: "プロジェクト固有の通知設定"
-          description: "これらのプロジェクト固有の設定は、上記のデフォルト設定を上書きする。"
+          description: "これらのプロジェクト固有の設定は、上記のデフォルト設定を上書きします。"
           add: "プロジェクトの設定を追加する"
           already_selected: "このプロジェクトはすでに選ばれている"
           remove: "プロジェクトの設定を削除する"
-    password_confirmation:
-      field_description: "この変更を確認するには、アカウントのパスワードを入力する必要があります。"
-      title: "続行するにはパスワードを確認してください"
     pagination:
       no_other_page: "このページだけです。"
       pages_skipped: "ページスキップ。"
@@ -677,19 +669,19 @@ ja:
         immediate:
           title: "電子メールのリマインダーを送信"
           mentioned: "@mentionするとすぐに"
-          personal_reminder: "個人的なリマインダーを受け取ったら直ちに"
+          personal_reminder: "個人的なリマインダーを受け取ったとき"
         alerts:
           title: "その他の項目（ワークパッケージではないもの）に対する電子メールアラート"
           explanation: >
             本日の通知はワークパッケージに限定されています。これらのイベントが通知に含まれるようになるまで、Eメールアラートを受信し続けることを選択できます：
           news_added: "ニュースが追加されました。"
           news_commented: "ニュースへのコメント"
-          document_added: "追加された書類"
+          document_added: "ドキュメントの追加"
           forum_messages: "新しいフォーラムメッセージ"
           wiki_page_added: "Wikiページが追加されました。"
           wiki_page_updated: "Wikiページが更新されました。"
-          membership_added: "メンバーシップが追加されました"
-          membership_updated: "メンバーシップ更新"
+          membership_added: "メンバーシップの追加"
+          membership_updated: "メンバーシップの更新"
         title: "電子メールによるリマインダー"
         pause:
           label: "毎日のEメールリマインダーを一時停止する"
@@ -772,7 +764,7 @@ ja:
       update_relation: "クリックして関係のタイプを変更"
       show_relations: "関連するタスクを表示"
       add_predecessor: "先行を追加"
-      add_successor: "後継者を加える"
+      add_successor: "後継の要素を加える"
       remove: "関係を削除"
       save: "関係を保存"
       abort: "中止"
@@ -781,7 +773,7 @@ ja:
       parent_placeholder: "新しい親を選択するか、ESCを押してキャンセルしてください。"
     autocompleter:
       placeholder: "検索キーワードを入力"
-      notFoundText: "No items found"
+      notFoundText: "見つかりませんでした"
       search: "検索"
       project:
         placeholder: "プロジェクトを選択"
@@ -836,7 +828,7 @@ ja:
       comment_added: "正常にコメントを追加しました。"
       comment_send_failed: "エラーが発生しました。コメントを投稿できませんでした。"
       comment_updated: "正常にコメントを更新しました。"
-      confirm_edit_cancel: "作業項目の編集をキャンセルしてもよろしいですか？"
+      confirm_edit_cancel: "ワークパッケージの編集をキャンセルしてもよろしいですか？"
       description_filter: "フィルタ"
       description_enter_text: "テキスト"
       description_options_hide: "オプションを非表示"
@@ -849,11 +841,11 @@ ja:
       label_filter_by_text: "テキストで絞り込む"
       label_options: "オプション"
       label_column_multiselect: "結合されたドロップダウンフィールド: 矢印キーで選択する、エンターキーで選択を確認する、バックスペースキーで削除する"
-      message_error_during_bulk_delete: 作業項目を削除する際にエラーが発生しました。
-      message_successful_bulk_delete: 作業項目が正常に削除されました。
-      message_successful_show_in_fullscreen: "クリックすると全画面表示でこの作業項目を開きます。"
+      message_error_during_bulk_delete: ワークパッケージを削除する際にエラーが発生しました。
+      message_successful_bulk_delete: ワークパッケージが正常に削除されました。
+      message_successful_show_in_fullscreen: "クリックすると全画面表示でこのワークパッケージを開きます。"
       message_view_spent_time: "このワークパッケージに費やした時間を表示する"
-      message_work_package_read_only: "作業項目はこの状態でロックされています。 ステータス以外の属性は変更できません。"
+      message_work_package_read_only: "ワークパッケージはこの状態でロックされています。 ステータス以外の属性は変更できません。"
       message_work_package_status_blocked: "ステータスがクローズでクローズされたバージョンが割り当てられているため、ワークパッケージのステータスは書き込みできません。"
       placeholder_filter_by_text: "タイトル、説明、コメント、..."
       progress:
@@ -868,7 +860,7 @@ ja:
         baseline_incompatible: "このフィルター属性はベースラインモードでは考慮されません。"
         baseline_warning: "ベースラインモードはオンですが、アクティブなフィルターの一部は比較に含まれません。"
       inline_create:
-        title: "クリックしてこのリストに新しい作業項目を追加します"
+        title: "クリックしてこのリストに新しいワークパッケージを追加します"
       create:
         title: "新しいワークパッケージ"
         header: "新しい %{type}"
@@ -885,12 +877,12 @@ ja:
         children_collapsed: "階層レベル %{level} を折りたたみました。クリックすると、フィルターされた子を表示します"
         children_expanded: "階層レベル %{level} を展開しました。クリックすると、フィルターされた子を折りたたみます"
       faulty_query:
-        title: 作業項目が読み込めませんでした。
+        title: ワークパッケージが読み込めませんでした。
         description: あなたの ビューは間違っており、処理できませんでした。
       no_results:
-        title: 表示できる作業項目がありません。
-        description: 作業項目が作成されていないかすべての作業項目が除外されています。
-      limited_results: 手動ソートモードで表示できるのは、 %{count} 作業項目だけです。フィルタリングするか、自動ソートに切り替えてください。
+        title: 表示できるワークパッケージがありません。
+        description: ワークパッケージが作成されていないかすべてのワークパッケージが除外されています。
+      limited_results: 手動ソートモードで表示できるのは、 %{count} ワークパッケージだけです。フィルタリングするか、自動ソートに切り替えてください。
       property_groups:
         details: "詳細"
         people: "人"
@@ -936,10 +928,10 @@ ja:
         overdue: "期限の過ぎたもの"
         summary: "サマリ"
         shared_with_users: "ユーザーと共有"
-        shared_with_me: "私と共有"
+        shared_with_me: "共有された項目"
       jump_marks:
         pagination: "表のページ設定に移動する"
-        label_pagination: "ここをクリックすると、作業項目表をスキップしてページ設定に移動します"
+        label_pagination: "ここをクリックすると、ワークパッケージ表をスキップしてページ設定に移動します"
         content: "コンテンツにジャンプ"
         label_content: "ここをクリックすると、メニューをスキップして、コンテンツへ移動します"
       placeholders:
@@ -990,13 +982,13 @@ ja:
         show_all_users: "ワークパッケージが共有されたすべてのユーザーを表示"
       table:
         configure_button: "ワークパッケージテーブルを設定する"
-        summary: "作業項目の行と、作業項目の属性の列から成る表。"
+        summary: "ワークパッケージの行と、ワークパッケージの属性の列から成る表。"
         text_inline_edit: "この表のほとんどのセルは、属性のインライン編集機能を有効にするボタンです。"
         text_sort_hint: "テーブル見出しのリンクで、並べ替え、グループ化、再並べ替え、削除、およびテーブルの列を追加ができます。"
         text_select_hint: "選択ボックスは 'ALT'と矢印キーで開きます。"
       table_configuration:
         button: "このワークパッケージテーブルを設定する"
-        choose_display_mode: "作業項目を次のように表示する"
+        choose_display_mode: "ワークパッケージを次のように表示する"
         modal_title: "ワークパッケージ一覧の設定"
         embedded_tab_disabled: "この設定タブは、編集中の埋め込みビューでは使用できません。"
         default: "デフォルト"
@@ -1070,8 +1062,8 @@ ja:
         single_text: "ワークパッケージを削除してもよろしいですか？"
         bulk_text: "%{label}を削除してもよろしいですか？"
         has_children: "ワークパッケージは %{childUnits} あります。"
-        confirm_deletion_children: "列挙された作業項目のすべての子孫が再帰的に削除されることを承認します。"
-        deletes_children: "すべての子作業項目とその子孫も再帰的に削除されます。"
+        confirm_deletion_children: "列挙されたワークパッケージのすべての子孫が再帰的に削除されることを承認します。"
+        deletes_children: "すべての子ワークパッケージとその子孫も再帰的に削除されます。"
       destroy_time_entry:
         title: "タイムエントリの削除を確認"
         text: "次のタイムエントリを削除してもよろしいですか？"
@@ -1112,6 +1104,7 @@ ja:
         other: "ワークパッケージ"
       child_work_packages:
         other: "%{count} の子ワークパッケージ"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1128,9 +1121,12 @@ ja:
     global_search:
       all_projects: "すべてのプロジェクトで"
       close_search: "検索を閉じる"
-      current_project_and_all_descendants: "このプロジェクトとサブプロジェクトでは"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
+      current_project_and_all_descendants: "このプロジェクトと子プロジェクトでは"
       current_project: "このプロジェクトでは"
       recently_viewed: "最近閲覧した記事"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "すべてのプロジェクト"
         project_and_subprojects: "すべてのプロジェクトで"
@@ -1140,71 +1136,8 @@ ja:
       list: "表"
       timeline: "ガント"
     invite_user_modal:
-      back: "戻る"
       invite: "招待"
-      title:
-        invite: "ユーザを招待"
-        invite_to_project: "%{type} を %{project} に招待する"
-        User: "ユーザー"
-        Group: "グループ"
-        PlaceholderUser: "プレースホルダー ユーザー"
-        invite_principal_to_project: "%{principal} を %{project} に招待する"
-      project:
-        label: "プロジェクト"
-        required: "プロジェクトを選択してください"
-        lacking_permission: "現在選択されているプロジェクトにユーザーを割り当てる権限がないため、別のプロジェクトを選択してください。"
-        lacking_permission_info: "現在参加しているプロジェクトにユーザーを割り当てる権限がありません。別のプロジェクトを選択する必要があります。"
-        next_button: "次へ"
-        no_results: "プロジェクトが見つかりませんでした"
-        no_invite_rights: "このプロジェクトにメンバーを招待することは許可されていません"
-      type:
-        required: "招待するタイプを選択してください"
-        user:
-          title: "ユーザ"
-          description: "選択したプロジェクトで割り当てられたロールに基づく権限"
-        group:
-          title: "グループ"
-          description: "選択したプロジェクトで割り当てられたロールに基づく権限"
-        placeholder:
-          title: "プレースホルダー ユーザー"
-          title_no_ee: "プレースホルダユーザ（Enterprise版のみのアドオン）"
-          description: "プロジェクトにアクセスできず、電子メールも送信されません。"
-          description_no_ee: 'プロジェクトにはアクセスできず、メールも送信されません。<br><a href="%{eeHref}" target="_blank">エンタープライズ版を</a>チェック'
-      principal:
-        label:
-          name_or_email: "名前またはメールアドレス"
-          name: "名称"
-        already_member_message: "既に %{project} のメンバーです"
-        no_results_user: "ユーザーが見つかりませんでした"
-        invite_user: "招待:"
-        no_results_placeholder: "プレースホルダが見つかりません"
-        create_new_placeholder: "新しいプレースホルダを作成:"
-        no_results_group: "グループが見つかりませんでした"
-        next_button: "次へ"
-        required:
-          user: "ユーザーを選択してください"
-          placeholder: "プレースホルダを選択してください"
-          group: "グループを選択してください"
-      role:
-        label: "%{project} でのロール"
-        no_roles_found: "ロールが見つかりません"
-        description: >-
-          これはユーザがプロジェクトに参加する際に与えられるロールです。ロールによって、どのようなアクションが許可され、どのような情報を見ることが許可されるかが定義されます。 <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> ロールと権限の詳細については、こちらをご覧ください。 </a>
-        required: "ロールを選択してください"
-        next_button: "次へ"
-      message:
-        label: "招待メッセージ"
-        description: "私たちはユーザーに電子メールを送信します。ここに個人的なメッセージを追加することができます。招待状に関する説明や、プロジェクトに関するちょっとした情報などを添えていただくと、より効果的です。"
-        next_button: "次へ"
-      summary:
-        next_button: "招待状を送信"
-      success:
-        title: "%{principal} が招待されました！"
-        description:
-          user: "ユーザはログインして %{project} にアクセスできるようになりました。一方で、そのユーザを使って計画を立てたり、ワークパッケージを割り当てたりすることができます。"
-          placeholder: "プレースホルダーを %{project} で使用できるようになりました。一方で、そのユーザを使って計画を立てたり、ワークパッケージを割り当てたりすることができます。"
-          group: "グループは %{project} の一部になりました。一方で、そのグループを使って計画を立てたり、ワークパッケージを割り当てたりすることができます。"
-        next_button: "続行"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "階層合計から除外される状態"
@@ -1223,18 +1156,23 @@ ja:
         selected: "選択したもののみ"
       search_placeholder: "プロジェクトを検索…"
       search_placeholder_favorites: "Search favorites..."
-      include_subprojects: "すべてのサブプロジェクトを含む"
+      include_subprojects: "すべての子プロジェクトを含む"
       tooltip:
-        include_all_selected: "すべてのサブプロジェクトを含める」が有効になっているため、プロジェクトはすでに含まれている。"
+        include_all_selected: "すべての子プロジェクトを含める」が有効になっているため、プロジェクトはすでに含まれている。"
         current_project: "これが現在あなたが参加しているプロジェクトです。"
         does_not_match_search: "プロジェクトが検索条件に一致しません。"
       no_results: "検索条件に一致するプロジェクトはありません。"
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "ベースライン"
       clear: "クリア"
       apply: "適用"
-      header_description: "過去のいずれかの時点からこのリストに加えられた変更を強調する。"
+      header_description: "過去の選択した時点からこのリストに加えられた変更をハイライト"
       show_changes_since: "以降の変更を表示する"
       help_description: "ベースラインの基準タイムゾーン。"
       time_description: "現地時間: %{datetime}"

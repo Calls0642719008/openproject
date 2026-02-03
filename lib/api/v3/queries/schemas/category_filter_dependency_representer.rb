@@ -38,7 +38,7 @@ module API
 
           def href_callback
             # This filter is only available inside projects
-            api_v3_paths.categories_by_project(filter.project.identifier)
+            api_v3_paths.categories_by_workspace(filter.project.identifier)
           end
 
           def type

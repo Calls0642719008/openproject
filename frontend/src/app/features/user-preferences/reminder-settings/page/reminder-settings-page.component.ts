@@ -97,7 +97,7 @@ export class ReminderSettingsPageComponent extends UntilDestroyedMixin implement
       .user$
       .pipe(take(1))
       .subscribe((user) => {
-        this.userId = this.userId || user?.id as string;
+        this.userId = this.userId || user?.id!;
         this.storeService.get(this.userId);
       });
 

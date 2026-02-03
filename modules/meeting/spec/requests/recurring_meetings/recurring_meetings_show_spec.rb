@@ -114,7 +114,7 @@ RSpec.describe "Recurring meetings show",
 
       expect(page).to have_text format_time(past_instance.start_time)
       expect(page).to have_no_text format_time(past_schedule_cancelled.start_time)
-      expect(page).to have_no_css("li", text: "Cancelled")
+      expect(page).to have_no_row("Cancelled")
     end
 
     context "when meeting has ended and no upcoming meetings remain" do
@@ -226,7 +226,7 @@ RSpec.describe "Recurring meetings show",
 
         old_date = format_time(rescheduled.start_time)
         new_date = format_time(rescheduled_instance.start_time)
-        expect(page).to have_css("li s", text: old_date)
+        expect(page).to have_css("[role='row'] s", text: old_date)
         expect(page).to have_text("#{old_date}\n#{new_date}")
       end
     end
@@ -293,8 +293,8 @@ RSpec.describe "Recurring meetings show",
       it "shows the cancelled occurrences" do
         get project_recurring_meeting_path(project, recurring_meeting)
 
-        expect(page).to have_css("li", text: format_time(rescheduled.start_time))
-        expect(page).to have_css("li", text: "Cancelled")
+        expect(page).to have_role(:cell, text: format_time(rescheduled.start_time))
+        expect(page).to have_role(:cell, text: "Cancelled")
       end
     end
 
@@ -401,6 +401,42 @@ RSpec.describe "Recurring meetings show",
         get project_recurring_meeting_path(project, recurring_meeting)
 
         expect(page).to have_text "There are more scheduled meetings"
+      end
+    end
+
+    describe "limit parameter" do
+      let(:recurring_meeting) do
+        create :recurring_meeting,
+               project:,
+               author: user,
+               start_time: Time.zone.today + 1.day,
+               frequency: "daily",
+               end_after: "iterations",
+               iterations: 15
+      end
+
+      it "respects the limit parameter and shows the correct number of meetings (Regression #68454, #68311)" do
+        get project_recurring_meeting_path(project, recurring_meeting, limit: 10)
+
+        (1..10).each do |i|
+          expect(page).to have_text format_time(Time.zone.today + i.days)
+        end
+
+        (11..15).each do |i|
+          expect(page).to have_no_text format_time(Time.zone.today + i.days)
+        end
+      end
+
+      it "defaults to 5 meetings when no limit parameter is provided" do
+        get project_recurring_meeting_path(project, recurring_meeting)
+
+        (1..5).each do |i|
+          expect(page).to have_text format_time(Time.zone.today + i.days)
+        end
+
+        (6..15).each do |i|
+          expect(page).to have_no_text format_time(Time.zone.today + i.days)
+        end
       end
     end
   end

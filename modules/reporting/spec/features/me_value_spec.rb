@@ -38,7 +38,7 @@ RSpec.describe "Cost report showing my own times", :js do
       user_autocompleter = find("opce-user-autocompleter##{filter_selector}")
 
       ng_select_clear(user_autocompleter, raise_on_missing: false)
-      select_autocomplete(user_autocompleter, query: "me")
+      select_autocomplete(user_autocompleter, query: "me", results_selector: "body")
 
       click_on "Save"
       fill_in "query_name", with: "Query ME value"
@@ -65,6 +65,8 @@ RSpec.describe "Cost report showing my own times", :js do
       visit cost_report_path(report.id, project_id: project.identifier)
       expect(page).to have_css(".report", text: "15.00")
 
+      # Refresh the user_autocompleter value to avoid cuprite issues in case the internal nodeID changes (stale element)
+      user_autocompleter = find("opce-user-autocompleter##{filter_selector}")
       expect_current_autocompleter_value(user_autocompleter, "me")
     end
   end

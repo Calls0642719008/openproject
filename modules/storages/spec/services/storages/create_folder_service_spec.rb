@@ -34,7 +34,7 @@ require_module_spec_helper
 module Storages
   RSpec.describe CreateFolderService do
     let(:user) { create(:admin) }
-    let(:file_info) do
+    let(:parent_file_info) do
       Adapters::Results::StorageFileInfo.build(
         status: "OK",
         status_code: 200,
@@ -44,66 +44,68 @@ module Storages
       ).value!
     end
 
-    let(:name) { "TestFolderName" }
+    let(:folder_name) { "TestFolderName" }
+    let(:parent_id) { parent_file_info.id }
     let(:auth_strategy) { Adapters::Registry["#{storage}.authentication.user_bound"].call(user, storage) }
+
+    let(:create_folder_input) do
+      Adapters::Input::CreateFolder.build(folder_name:, parent_location: parent_file_info.id).value!
+    end
 
     subject(:service) { described_class.new(storage) }
 
     before do
-      allow(StorageFileService).to receive(:call).with(storage:, user:, file_id: parent_id)
-                                                           .and_return(ServiceResult.success(result: file_info))
+      Adapters::Registry.stub("#{storage}.commands.create_folder", create_folder_command)
+      allow(create_folder_command).to receive(:call).and_return(Success("AwesomeFolderInfo"))
     end
 
     context "when storage is nextcloud" do
       let(:storage) { create(:nextcloud_storage) }
-      let(:parent_id) { file_info.id }
+
+      let(:create_folder_input) do
+        # FIXME: Nextcloud uses the path and not the parent ID as the location. This is prime target for refactor.
+        Adapters::Input::CreateFolder.build(folder_name:, parent_location: parent_file_info.location).value!
+      end
 
       let(:create_folder_command) { class_double(Adapters::Providers::Nextcloud::Commands::CreateFolderCommand) }
 
       before do
-        allow(create_folder_command).to receive(:call).and_return(Success())
-        Adapters::Registry.stub("nextcloud.commands.create_folder", create_folder_command)
+        allow(StorageFileService)
+          .to receive(:call).with(storage:, user:, file_id: parent_id)
+                            .and_return(ServiceResult.success(result: parent_file_info))
       end
 
       it "calls the appropriate command with the expected parameters" do
-        service.call(user:, name:, parent_id:)
+        service.call(user:, folder_name:, parent_id:)
 
-        expect(create_folder_command).to have_received(:call).with(
-          storage:,
-          auth_strategy:,
-          input_data: Adapters::Input::CreateFolder.build(folder_name: name, parent_location: file_info.location).value!
-        ).once
+        expect(create_folder_command)
+          .to have_received(:call).with(storage:, auth_strategy:, input_data: create_folder_input).once
       end
     end
 
     context "when storage is one_drive" do
       let(:storage) { create(:one_drive_storage) }
-      let(:parent_id) { file_info.id }
-
-      let(:file_info) do
-        Adapters::Results::StorageFileInfo.build(
-          status: "OK",
-          status_code: 200,
-          id: "/Path/To/Parent/One",
-          name: "/"
-        ).value!
-      end
-
+      let(:parent_id) { parent_file_info.id }
       let(:create_folder_command) { class_double(Adapters::Providers::OneDrive::Commands::CreateFolderCommand) }
 
-      before do
-        allow(create_folder_command).to receive(:call).and_return(Success())
-        Adapters::Registry.stub("one_drive.commands.create_folder", create_folder_command)
+      it "calls the appropriate command with the expected parameters" do
+        service.call(user:, folder_name:, parent_id:)
+
+        expect(create_folder_command)
+          .to have_received(:call).with(storage:, auth_strategy:, input_data: create_folder_input).once
       end
+    end
+
+    context "when storage is sharepoint" do
+      let(:storage) { create(:sharepoint_storage) }
+      let(:parent_id) { parent_file_info.id }
+      let(:create_folder_command) { class_double(Adapters::Providers::Sharepoint::Commands::CreateFolderCommand) }
 
       it "calls the appropriate command with the expected parameters" do
-        service.call(user:, name:, parent_id:)
+        service.call(user:, folder_name:, parent_id:)
 
-        expect(create_folder_command).to have_received(:call).with(
-          storage:,
-          auth_strategy:,
-          input_data: Adapters::Input::CreateFolder.build(folder_name: name, parent_location: file_info.id).value!
-        ).once
+        expect(create_folder_command)
+          .to have_received(:call).with(storage:, auth_strategy:, input_data: create_folder_input).once
       end
     end
   end

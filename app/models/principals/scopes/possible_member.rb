@@ -39,14 +39,18 @@ module Principals::Scopes
       # * Group
       # User instances need to be non locked (status)
       # Principals which already are project members are are returned.
-      # @project [Project] The project for which eligible candidates are to be searched
+      # @param [Project] project The project for which eligible candidates are to be searched
+      # @param [String|nil] type The type of principals to be returned. One of 'User', 'Group', 'PlaceholderUser'.
       # @return [ActiveRecord::Relation] A scope of eligible candidates
-      def possible_member(project)
-        Queries::Principals::PrincipalQuery
+      def possible_member(project, type: nil)
+        query = Queries::Principals::PrincipalQuery
           .new(user: ::User.current)
           .where(:member, "!", [project.id])
           .where(:status, "!", [statuses[:locked]])
-          .results
+
+        query.where(:type, "=", [type]) if type.present?
+
+        query.results
       end
     end
   end

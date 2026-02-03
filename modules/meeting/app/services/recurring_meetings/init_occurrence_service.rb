@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -45,7 +46,10 @@ module RecurringMeetings
       start_time = params.fetch(:start_time)
       in_context(recurring_meeting, send_notifications: false) do
         call = instantiate(start_time)
-        create_schedule(call) if call.success?
+        if call.success?
+          create_schedule(call)
+          move_interim_responses_to_participants(call.result)
+        end
 
         call
       end
@@ -78,6 +82,23 @@ module RecurringMeetings
 
       unless schedule.update(meeting:, cancelled: false)
         call.merge!(ServiceResult.failure(errors: schedule.errors))
+      end
+    end
+
+    def move_interim_responses_to_participants(meeting)
+      interim_responses = RecurringMeetingInterimResponse.where(
+        recurring_meeting: recurring_meeting,
+        start_time: params.fetch(:start_time),
+        user_id: meeting.participants.select(:user_id)
+      )
+
+      interim_responses.each do |response|
+        participant = meeting.participants.find { it.user == response.user }
+        next unless participant
+
+        if participant.update(participation_status: response.participation_status, comment: response.comment)
+          response.destroy!
+        end
       end
     end
   end

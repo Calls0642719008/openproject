@@ -99,7 +99,7 @@ module Exports::PDF::Components::Page
                   CustomStyle.current.export_footer.present? && CustomStyle.current.export_footer.local_file.present?
 
     image_file = CustomStyle.current.export_footer.local_file.path
-    content_type = OpenProject::ContentTypeDetector.new(image_file).detect
+    content_type = OpenProject::ContentTypeDetector.detect(image_file)
     return unless pdf_embeddable?(content_type)
 
     image_file

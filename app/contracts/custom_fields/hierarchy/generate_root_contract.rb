@@ -30,16 +30,14 @@
 
 module CustomFields
   module Hierarchy
-    class GenerateRootContract < Dry::Validation::Contract
-      config.messages.backend = :i18n
-
+    class GenerateRootContract < DryApplicationContract
       params do
         required(:custom_field).filled(type?: CustomField)
       end
 
       rule(:custom_field) do
         field_format = value.field_format
-        key.failure(:format_not_supported, field_format:) if %w[hierarchy scored_list].exclude?(field_format)
+        key.failure(:format_not_supported, field_format:) if %w[hierarchy weighted_item_list].exclude?(field_format)
         key.failure(:defined) if value.hierarchy_root.present?
       end
     end

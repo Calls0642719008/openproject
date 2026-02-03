@@ -35,6 +35,7 @@ class Meeting::Participant < ApplicationForm
       label: MeetingParticipant.model_name.human,
       visually_hide_label: true,
       autocomplete_options: {
+        appendTo: "##{Meetings::Participants::ManageParticipantsDialog::DIALOG_ID}",
         defaultData: true,
         component: "opce-user-autocompleter",
         url: ::API::V3::Utilities::PathHelper::ApiV3Path.principals,
@@ -57,14 +58,18 @@ class Meeting::Participant < ApplicationForm
 
   private
 
+  def meeting
+    @builder.object.meeting
+  end
+
   def excluded_ids
-    @excluded_ids ||= @builder.object.meeting.participants.filter_map(&:user_id)
+    @excluded_ids ||= meeting.participants.filter_map(&:user_id)
   end
 
   def filters
     list = [
       { name: "type", operator: "=", values: %w[User] },
-      { name: "member", operator: "=", values: [@builder.object.meeting.project_id] },
+      { name: "invitable_to_meeting_in_project", operator: "=", values: [meeting.project_id] },
       { name: "status", operator: "=", values: [Principal.statuses[:active], Principal.statuses[:invited]] }
     ]
 

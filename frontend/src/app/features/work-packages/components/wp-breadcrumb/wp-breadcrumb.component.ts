@@ -29,6 +29,7 @@
 import { Component, Input } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 
 @Component({
   templateUrl: './wp-breadcrumb.html',
@@ -37,15 +38,17 @@ import { WorkPackageResource } from 'core-app/features/hal/resources/work-packag
   standalone: false,
 })
 export class WorkPackageBreadcrumbComponent {
-  @Input('workPackage') workPackage:WorkPackageResource;
+  @Input() workPackage:WorkPackageResource;
 
   public text = {
     parent: this.I18n.t('js.relations_hierarchy.parent_headline'),
     hierarchy: this.I18n.t('js.relations_hierarchy.hierarchy_headline'),
   };
 
-  constructor(private I18n:I18nService) {
-  }
+  constructor(
+    private I18n:I18nService,
+    private pathHelper:PathHelperService,
+  ) {}
 
   public inputActive = false;
 
@@ -55,6 +58,10 @@ export class WorkPackageBreadcrumbComponent {
 
   public get hierarchyLabel() {
     return (this.hierarchyCount === 1) ? this.text.parent : this.text.hierarchy;
+  }
+
+  public ancestorPath(ancestor:WorkPackageResource):string {
+    return this.pathHelper.genericWorkPackagePath(this.workPackage.project?.identifier, ancestor.id!) + window.location.search;
   }
 
   public updateActiveInput(val:boolean) {

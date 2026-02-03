@@ -376,7 +376,7 @@ tr:
                     * Elektrik tesisatı
                     * ...
                 item_5:
-                  subject: Final touches
+                  subject: Son rötuşlar
                   description: |-
                     ## Hedef
 
@@ -391,19 +391,19 @@ tr:
                     * Dış cephenin tamamlanması
                     * ...
                 item_6:
-                  subject: House warming party
+                  subject: Ev ısınma partisi
                   description: |-
-                    ## Goal
+                    ## Hedef
 
-                    *   Have a blast!
+                    * Eğlenin!
 
-                    ## Description
+                    ## Açıklama
 
-                    *   Invite the construction team
-                    *   Invite your friends
-                    *   Bring some drinks, snacks and your smile
+                    * İnşaat ekibini davet edin
+                    * Arkadaşlarınızı davet edin
+                    * Biraz içecek, atıştırmalık ve gülümsemenizi getirin
         demo-bim-project:
-          name: "(Demo) BIM project"
+          name: "(Demo) BIM projesi"
           status_explanation: Tüm görevler ve alt projeler programa uygundur. İlgili kişiler görevlerini biliyor. Sistem tamamen kurulmuştur.
           description: Bu, bu demo BIM projesinin hedeflerinin kısa bir özetidir.
           news:
@@ -684,11 +684,11 @@ tr:
             item_0:
               name: Sorunlar
             item_1:
-              name: Clashes
+              name: Çatışmalar
             item_2:
-              name: Requests
+              name: Talepler
             item_3:
-              name: Remarks
+              name: Açıklamalar
             item_4:
               name: Proje planı
             item_5:
@@ -699,7 +699,7 @@ tr:
               name: Takım planlayıcısı
           boards:
             bcf:
-              name: BCF issues
+              name: BCF sorunları
           project-overview:
             widgets:
               item_0:

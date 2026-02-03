@@ -37,9 +37,11 @@ nl:
               can_only_contain_work_packages_of_current_sprint: "kan alleen ID's bevatten van werkpakketten in de huidige sprint."
               must_block_at_least_one_work_package: "het moet de ID bevatten van ten minste één ticket."
             version_id:
-              task_version_must_be_the_same_as_story_version: "moet hetzelfde zijn als de ouder verhaalversie."
+              task_version_must_be_the_same_as_story_version: "moet hetzelfde zijn als de bovenliggende verhaalversie."
         sprint:
           cannot_end_before_it_starts: "De sprint kan niet eindigen voordat het start."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Nieuwe Story"
     any: "elke"
@@ -100,7 +102,10 @@ nl:
   backlogs_empty_title: "Er zijn geen versies gedefinieerd om te worden gebruikt in de backlogs"
   backlogs_empty_action_text: "Om te beginnen met backlogs, maak een nieuwe versie en ken deze toe aan een backlog kolom."
   button_edit_wiki: "Wikipagina bewerken"
-  error_backlogs_task_cannot_be_story: "De instellingen zijn ongeldig. Het geselecteerde taaktype kan niet ook een verhaaltype zijn."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "De volgende fouten zijn opgetreden:"
   error_intro_singular: "De volgende fout is opgetreden:"
   error_outro: "Los de bovenstaande fouten op voordat u opnieuw verzendt."
@@ -124,6 +129,10 @@ nl:
   label_points_burn_up: "Omhoog"
   label_product_backlog: "product backlog"
   label_select_all: "Alles selecteren"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Exporteer de kaarten"
   label_sprint_impediments: "Sprint Obstakels"
@@ -151,12 +160,16 @@ nl:
   rb_label_copy_tasks_none: "Geen"
   rb_label_copy_tasks_open: "Open"
   rb_label_link_to_original: "Link toevoegen aan het originele verhaal"
-  remaining_hours: "resterend werk"
+  remaining_hours: "Resterend werk"
   required_burn_rate_hours: "vereiste burn rate (uren)"
   required_burn_rate_points: "vereiste burn rate (punten)"
   todo_work_package_description: "%{summary}: %{url}\n%{description}"
   todo_work_package_summary: "%{type}: %{summary}"
-  version_settings_display_label: "Kolom in achterstand"
+  version_settings_display_label: "Kolom in backlog"
   version_settings_display_option_left: "links"
   version_settings_display_option_none: "geen"
   version_settings_display_option_right: "rechts"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

@@ -2,11 +2,8 @@ module Webhooks
   class Webhook < ApplicationRecord
     default_scope { order(id: :asc) }
 
-    validates_presence_of :name
-    validates_presence_of :url
-
-    validates_uniqueness_of :name
-    validates :url, url: true
+    validates :name, presence: true, uniqueness: { case_sensitive: false }
+    validates :url, presence: true, url: true
 
     has_many :events, foreign_key: :webhooks_webhook_id, class_name: "::Webhooks::Event", dependent: :delete_all
     has_many :webhook_projects, foreign_key: :webhooks_webhook_id, class_name: "::Webhooks::Project", dependent: :delete_all

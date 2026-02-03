@@ -30,9 +30,7 @@
 
 module WorkPackageTypes
   module Patterns
-    class CollectionContract < Dry::Validation::Contract
-      config.messages.backend = :i18n
-
+    class CollectionContract < DryApplicationContract
       params do
         optional(:subject).hash do
           required(:blueprint).filled(:string)

@@ -211,16 +211,11 @@ RSpec.describe "Calendar sharing via ical", :js do
 
         # implicitly testing for success -> modal is closed and fallback message is shown
         expect(page).to have_no_css(".spot-modal--header", text: "Subscribe to calendar")
-        expect(page).to have_content("/projects/#{saved_query.project.id}/calendars/#{saved_query.id}/ical?ical_token=")
-
-        # explictly testing for success message is not working in test env, probably
-        # due to missing clipboard permissions of the headless browser
-        #
-        # expect(page).to have_content("URL copied to clipboard")
-
-        # TODO: Not able to test if the URL was actuall copied to the clipboard
-        # Tried following without success
-        # https://copyprogramming.com/howto/emulating-a-clipboard-copy-paste-with-selinum-capybara
+        expect(page).to have_message_copied_to_clipboard(
+          "/projects/#{saved_query.project.id}/calendars/#{saved_query.id}/ical?ical_token=",
+          successful_copy_message: 'The URL "A token name" was successfully copied to your clipboard. ' \
+                                   "Paste it in your calendar client to complete the subscription."
+        )
       end
 
       it "validates the presence of a name" do
@@ -243,7 +238,11 @@ RSpec.describe "Calendar sharing via ical", :js do
         click_button "Copy URL"
 
         expect(page).to have_no_css(".spot-modal--header", text: "Subscribe to calendar")
-        expect(page).to have_content("/projects/#{saved_query.project.id}/calendars/#{saved_query.id}/ical?ical_token=")
+        expect(page).to have_message_copied_to_clipboard(
+          "/projects/#{saved_query.project.id}/calendars/#{saved_query.id}/ical?ical_token=",
+          successful_copy_message: 'The URL "A token name" was successfully copied to your clipboard. ' \
+                                   "Paste it in your calendar client to complete the subscription."
+        )
 
         # do the same thing again, now expect validation error
 

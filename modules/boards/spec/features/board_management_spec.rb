@@ -59,6 +59,7 @@ RSpec.describe "Board management spec", :js, :selenium, with_ee: %i[board_view] 
         view_work_packages
         edit_work_packages
         manage_public_queries
+        save_queries
       ]
     end
     let(:board_view) { create(:board_grid_with_query, project:) }
@@ -253,8 +254,10 @@ RSpec.describe "Board management spec", :js, :selenium, with_ee: %i[board_view] 
     end
   end
 
-  context "with view boards + edit work package and change work package status permissions" do
-    let(:permissions) { %i[show_board_views view_work_packages add_work_packages edit_work_packages] }
+  context "with view boards + edit work package + save and manage public queries and change work package status permissions" do
+    let(:permissions) do
+      %i[show_board_views view_work_packages add_work_packages edit_work_packages save_queries manage_public_queries]
+    end
     let(:board_view) { create(:board_grid_with_queries, project:) }
 
     it "allows viewing boards index and moving items around" do

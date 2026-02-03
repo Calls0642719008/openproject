@@ -42,7 +42,7 @@ RB.i18n = {
 };
 
 RB.urlFor = (function () {
-  var routes = {
+  const routes = {
     update_sprint: '<%= backlogs_project_sprint_path(project_id: @project.identifier, id: ":id") %>',
 
     create_story: '<%= backlogs_project_sprint_stories_path(project_id: @project.identifier, sprint_id: ":sprint_id") %>',
@@ -58,20 +58,20 @@ RB.urlFor = (function () {
   };
 
   return function (routeName, options) {
-    route = routes[routeName];
+    let route = routes[routeName];
 
-    if (options){
+    if (options) {
       if (options.id) {
         route = route.replace(":id", options.id);
       }
-      if (options.project_id){
+      if (options.project_id) {
         route = route.replace(":project_id", options.project_id);
       }
-      if(options.sprint_id) {
-        route = route.replace(":sprint_id", options.sprint_id)
+      if (options.sprint_id) {
+        route = route.replace(":sprint_id", options.sprint_id);
       }
     }
 
     return route;
-  }
+  };
 }());

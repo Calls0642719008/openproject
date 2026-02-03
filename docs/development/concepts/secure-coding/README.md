@@ -99,7 +99,7 @@ As OpenProject is a web application, the web session is the central mechanism of
 **Guidelines**
 
 - Use Rails' built-in secure session cookies for maintaining the users' session. It incorporates best-practices to ensure strong session tokens, tamper resistance, and proper expiration.
-- Ensure session cookies are marked `secure` and `httponly`, as well as providing the appropriate `SameSite` and expiry flags according to the instance's configuration.
+- Ensure session cookies are marked `secure` and `httponly`, as well as providing the appropriate `SameSite` and expiration flags according to the instance's configuration.
 - Provide a secure logout mechanism that invalidates the session and clears session cookies. Ensure that users are logged out after a period of inactivity.
 - Implement session fixation protection mechanisms to prevent attackers from fixing a user's session to a known value.
 - Prevent storing sensitive unencrypted session information on the client device

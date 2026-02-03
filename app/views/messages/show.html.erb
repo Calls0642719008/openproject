@@ -66,8 +66,7 @@ See COPYRIGHT and LICENSE files for more details.
                       alt: t(:button_edit)) if message.editable_by?(User.current) %>
           <%= link_to(icon_wrapper('icon-context icon-delete', t(:button_delete)),
                       { action: 'destroy', id: message },
-                      method: :delete,
-                      data: { confirm: t(:text_are_you_sure) },
+                      data: { turbo_method: :delete, turbo_confirm: t(:text_are_you_sure) },
                       title: t(:button_delete),
                       class: 'no-decoration-on-hover',
                       alt: t(:button_delete)) if message.destroyable_by?(User.current) %>

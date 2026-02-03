@@ -216,6 +216,9 @@ RSpec.describe "Progress modal", :js do
                role:)
 
         visit_progress_query_displaying_work_package
+
+        wait_for_reload
+
         progress_popover.open
 
         progress_popover.expect_select_with_options(:status, "open (0%)", "in progress (50%)", "complete (100%)")

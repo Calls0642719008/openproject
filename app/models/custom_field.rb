@@ -49,8 +49,12 @@ class CustomField < ApplicationRecord
           dependent: :destroy,
           inverse_of: "custom_field"
 
+  attr_readonly :field_format
+
+  has_many :calculated_value_errors, dependent: :delete_all, inverse_of: "custom_field"
+
   scope :hierarchy_root_and_children, -> { includes(hierarchy_root: { children: :children }) }
-  scope :required, -> { where(is_required: true) }
+  scope :required, -> { where(is_required: true).where.not(field_format: "calculated_value") }
 
   scope :field_format_calculated_value, -> { where(field_format: "calculated_value") }
 
@@ -60,17 +64,10 @@ class CustomField < ApplicationRecord
   validates :custom_options,
             presence: { message: ->(*) { I18n.t(:"activerecord.errors.models.custom_field.at_least_one_custom_option") } },
             if: ->(*) { field_format == "list" }
-  validates :name, presence: true, length: { maximum: 256 }
-
-  validate :uniqueness_of_name_with_scope
-
-  def uniqueness_of_name_with_scope
-    taken_names = CustomField.where(type:)
-    taken_names = taken_names.where.not(id:) if id
-    taken_names = taken_names.pluck(:name)
-
-    errors.add(:name, :taken) if name.in?(taken_names)
-  end
+  validates :name,
+            presence: true,
+            length: { maximum: 256 },
+            uniqueness: { case_sensitive: false, scope: :type }
 
   validate :validate_field_format_inclusion
   validate :validate_default_value
@@ -78,8 +75,9 @@ class CustomField < ApplicationRecord
 
   validates :min_length, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :min_length, numericality: { less_than_or_equal_to: :max_length, message: :smaller_than_or_equal_to_max_length },
-                         unless: Proc.new { |cf| cf.max_length.blank? }
+  validates :min_length,
+            numericality: { less_than_or_equal_to: :max_length, message: :smaller_than_or_equal_to_max_length },
+            unless: Proc.new { |cf| cf.max_length.blank? }
 
   validates :multi_value, absence: true, unless: :multi_value_possible?
   validates :allow_non_open_versions, absence: true, unless: :allow_non_open_versions_possible?
@@ -185,6 +183,8 @@ class CustomField < ApplicationRecord
       possible_versions(obj).pluck(:id).map(&:to_s)
     when "list"
       custom_options
+    when "hierarchy", "weighted_item_list"
+      custom_field_hierarchy_items
     else
       read_attribute(:possible_values)
     end
@@ -208,6 +208,17 @@ class CustomField < ApplicationRecord
     custom_options.where("position > ?", max_position).destroy_all
   end
 
+  def custom_field_hierarchy_items
+    return [] if hierarchy_root.nil?
+
+    items = CustomFields::Hierarchy::HierarchicalItemService
+              .new
+              .get_descendants(item: hierarchy_root, include_self: false)
+              .fmap { |items| items.map { |item| [item.ancestry_path(include_shorts_and_weights: true), item.id] } }
+
+    items.value_or([])
+  end
+
   def cast_value(value)
     return if value.blank?
 
@@ -224,10 +235,14 @@ class CustomField < ApplicationRecord
       ActiveRecord::Type::Boolean.new.cast(value)
     when "int"
       value.to_i
-    when "float"
+    when "float", "calculated_value"
       value.to_f
-    when "user", "version"
-      field_format.classify.constantize.find_by(id: value.to_i)
+    when "user"
+      Principal.find_by(id: value.to_i)
+    when "version"
+      Version.find_by(id: value.to_i)
+    when "hierarchy", "weighted_item_list"
+      CustomField::Hierarchy::Item.find_by(id: value.to_i)
     end
   end
 
@@ -313,16 +328,18 @@ class CustomField < ApplicationRecord
     field_format == "hierarchy"
   end
 
-  def field_format_scored_list?
-    field_format == "scored_list"
+  def field_format_weighted_item_list?
+    field_format == "weighted_item_list"
   end
 
   def field_format_calculated_value?
     field_format == "calculated_value"
   end
 
+  def calculated_value? = field_format_calculated_value?
+
   def hierarchical_list?
-    field_format_hierarchy? || field_format_scored_list?
+    field_format_hierarchy? || field_format_weighted_item_list?
   end
 
   def multi_value_possible?
@@ -342,6 +359,19 @@ class CustomField < ApplicationRecord
     "#{super}/#{tag}"
   end
 
+  # If this custom field is a calculated value, return an existing calculation error.
+  # For non-calculated value custom fields, always returns `nil`.
+  #
+  # When there is at least one calculation error, will return the first one - or `nil` if there are none.
+  # Use this method when you want to present a calculation error to the user.
+  def first_calculation_error(customized)
+    return nil unless calculated_value?
+
+    # Use a ruby finder to avoid hitting the database with N+1 queries on the project list page,
+    # the errors are eager loaded via the Queries::Projects::CustomFieldContext.
+    calculated_value_errors.find { it.customized_id == customized.id }
+  end
+
   private
 
   def possible_versions(obj, options: {})
@@ -350,9 +380,10 @@ class CustomField < ApplicationRecord
   end
 
   def possible_version_values_options(obj, options: {})
-    possible_versions(obj, options:).references(:project)
-                          .sort
-                          .map { |u| [u.name, u.id.to_s, u.project.name] }
+    possible_versions(obj, options:)
+      .references(:project)
+      .sort
+      .map { |u| [u.name, u.id.to_s, u.project.name] }
   end
 
   def possible_users(obj)
@@ -378,21 +409,26 @@ class CustomField < ApplicationRecord
     end
   end
 
-  def deduce_project(project)
-    if project.is_a?(Project)
-      project
-    elsif project.respond_to?(:project)
-      project.project
+  def deduce_project(candidate)
+    if candidate.is_a?(Project)
+      candidate
+    elsif candidate.respond_to?(:project)
+      candidate.project
     end
   end
 
   def deduce_principals(project)
-    if project&.persisted?
+    if user_field_with_role_assignment?
+      Principal.visible
+    elsif project&.persisted?
       project.principals
     else
-      Principal
-        .in_visible_project_or_me(User.current)
+      Principal.in_visible_project_or_me(User.current)
     end
+  end
+
+  def user_field_with_role_assignment?
+    is_a?(ProjectCustomField) && user? && custom_fields_role.present?
   end
 
   def deduce_versions(project, options: {})

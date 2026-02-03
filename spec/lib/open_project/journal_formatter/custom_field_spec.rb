@@ -33,11 +33,10 @@ require "spec_helper"
 RSpec.describe OpenProject::JournalFormatter::CustomField do
   include CustomFieldsHelper
   include ActionView::Helpers::TagHelper
-  # WARNING: the order of the modules is important to ensure that url_for of
+  # WARNING: the order of inclusion is important to ensure that url_for of
   # ActionController::UrlWriter is called and not the one of ActionView::Helpers::UrlHelper
+  include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
-
-  def url_helper = Rails.application.routes.url_helpers
 
   let(:instance) { described_class.new(journal) }
   let(:id) { 1 }
@@ -184,6 +183,24 @@ RSpec.describe OpenProject::JournalFormatter::CustomField do
     end
   end
 
+  context "with admin only custom field" do
+    let(:values) { [nil, "1"] }
+
+    before { custom_field.admin_only = true }
+
+    context "as a non admin user" do
+      current_user { build_stubbed(:user) }
+
+      it { expect(rendered).to be_nil }
+    end
+
+    context "as an admin" do
+      current_user { build_stubbed(:admin) }
+
+      it { expect(rendered).to be_a(String) }
+    end
+  end
+
   context "for a multi-select custom field" do
     let(:custom_field) { build_stubbed(:user_wp_custom_field) }
 
@@ -317,14 +334,14 @@ RSpec.describe OpenProject::JournalFormatter::CustomField do
     let(:custom_field) { build_stubbed(:text_wp_custom_field) }
 
     let(:path) do
-      url_helper.diff_journal_path(id: journal.id,
-                                   field: key.downcase)
+      diff_journal_path(id: journal.id,
+                        field: key.downcase)
     end
     let(:url) do
-      url_helper.diff_journal_url(id: journal.id,
-                                  field: key.downcase,
-                                  protocol: Setting.protocol,
-                                  host: Setting.host_name)
+      diff_journal_url(id: journal.id,
+                       field: key.downcase,
+                       protocol: Setting.protocol,
+                       host: Setting.host_name)
     end
     let(:link) { link_to(I18n.t(:label_details), path, class: "diff-details", target: "_top") }
     let(:full_url_link) { link_to(I18n.t(:label_details), url, class: "diff-details", target: "_top") }

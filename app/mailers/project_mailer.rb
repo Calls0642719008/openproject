@@ -29,6 +29,8 @@
 #++
 
 class ProjectMailer < ApplicationMailer
+  include Exports::PDF::Common::Macro
+
   def delete_project_completed(project, user:, dependent_projects: [])
     open_project_headers Project: project.identifier,
                          Author: user.login
@@ -82,6 +84,22 @@ class ProjectMailer < ApplicationMailer
 
     send_localized_mail(user) do
       I18n.t("copy_project.succeeded", target_project_name: target_project.name)
+    end
+  end
+
+  def project_created(project, user:)
+    open_project_headers Project: project.identifier,
+                         Author: user.login
+
+    message_id project, user
+    @project = project
+    @user = user
+    notification_text = Setting.new_project_notification_text.presence ||
+                        I18n.t("admin.settings.new_project.notification_text_default")
+    @notification_text = apply_markdown_field_macros(notification_text, { project:, user: })
+
+    send_localized_mail(user) do
+      I18n.t("projects.create.notification_email_subject", project_name: project.name)
     end
   end
 end

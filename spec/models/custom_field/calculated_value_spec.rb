@@ -30,23 +30,52 @@
 
 require "spec_helper"
 
-RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_project_attribute: true } do
+RSpec.describe CustomField::CalculatedValue,
+               with_ee: %i[calculated_values weighted_item_lists],
+               with_flag: { calculated_value_project_attribute: true } do
+  using CustomFieldFormulaReferencing
+
   subject(:custom_field) { create(:calculated_value_project_custom_field, formula: "1 + 1") }
+
+  describe ".with_formula_referencing", :aggregate_failures do
+    shared_let(:cf_a) { create(:integer_project_custom_field, default_value: 1) }
+    shared_let(:cf_b) { create(:integer_project_custom_field, default_value: 2) }
+    shared_let(:cf_c) { create(:integer_project_custom_field, default_value: 3) }
+
+    shared_let(:cf1) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_a} + #{cf_b}") }
+    shared_let(:cf2) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_b} + #{cf1}") }
+
+    let(:scope) { CustomField }
+
+    it "finds all fields referencing given id" do
+      expect(scope.with_formula_referencing(cf_a.id)).to contain_exactly(cf1)
+      expect(scope.with_formula_referencing(cf_b.id)).to contain_exactly(cf1, cf2)
+      expect(scope.with_formula_referencing(cf_c.id)).to be_empty
+      expect(scope.with_formula_referencing(cf1.id)).to contain_exactly(cf2)
+      expect(scope.with_formula_referencing(cf2.id)).to be_empty
+    end
+
+    it "finds all fields referencing given custom field" do
+      expect(scope.with_formula_referencing(cf_a)).to contain_exactly(cf1)
+      expect(scope.with_formula_referencing(cf_b)).to contain_exactly(cf1, cf2)
+      expect(scope.with_formula_referencing(cf_c)).to be_empty
+      expect(scope.with_formula_referencing(cf1)).to contain_exactly(cf2)
+      expect(scope.with_formula_referencing(cf2)).to be_empty
+    end
+  end
 
   describe ".affected_calculated_fields", :aggregate_failures do
     let(:scope) { CustomField }
-
-    def ref(custom_field) = "{{cf_#{custom_field.id}}}"
 
     context "given simple formulas" do
       shared_let(:cf_a) { create(:integer_project_custom_field, default_value: 1) }
       shared_let(:cf_b) { create(:integer_project_custom_field, default_value: 2) }
       shared_let(:cf_c) { create(:integer_project_custom_field, default_value: 3) }
       shared_let(:cf_d) { create(:integer_project_custom_field, default_value: 4) }
-      shared_let(:cf1) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf_a} * 2") }
-      shared_let(:cf2) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf_a} + #{ref cf_b}") }
-      shared_let(:cf3) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf_b} * 2") }
-      shared_let(:cf4) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf_c} * 2") }
+      shared_let(:cf1) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_a} * 2") }
+      shared_let(:cf2) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_a} + #{cf_b}") }
+      shared_let(:cf3) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_b} * 2") }
+      shared_let(:cf4) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_c} * 2") }
 
       it "returns an empty array if argument is empty" do
         expect(scope.affected_calculated_fields([])).to eq([])
@@ -114,9 +143,9 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
       shared_let(:cf_c) { create(:integer_project_custom_field, default_value: 3) }
       shared_let(:cf_d) { create(:integer_project_custom_field, default_value: 4) }
 
-      shared_let(:cf1) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf_a} + #{ref cf_b}") }
-      shared_let(:cf2) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf1} * #{ref cf_c}") }
-      shared_let(:cf3) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{ref cf2} * #{ref cf_d}") }
+      shared_let(:cf1) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf_a} + #{cf_b}") }
+      shared_let(:cf2) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf1} * #{cf_c}") }
+      shared_let(:cf3) { create(:calculated_value_project_custom_field, :skip_validations, formula: "#{cf2} * #{cf_d}") }
 
       it "returns referencing fields when passing referenced constant field ids" do
         expect(scope.affected_calculated_fields([cf_a.id])).to contain_exactly(cf1, cf2, cf3)
@@ -166,9 +195,9 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
 
       before do
         {
-          cf1 => "#{ref cf_a} + #{ref cf2}",
-          cf2 => "#{ref cf_b} + #{ref cf3}",
-          cf3 => "#{ref cf_c} + #{ref cf1}"
+          cf1 => "#{cf_a} + #{cf2}",
+          cf2 => "#{cf_b} + #{cf3}",
+          cf3 => "#{cf_c} + #{cf1}"
         }.each do |cf, formula|
           cf.formula = formula
           cf.save!(validate: false)
@@ -189,13 +218,15 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
   describe "#usable_custom_field_references_for_formula" do
     let!(:int) { create(:project_custom_field, :integer, default_value: 4, is_for_all: true) }
     let!(:float) { create(:project_custom_field, :float, default_value: 5.5, is_for_all: true) }
+    let!(:weighted_item_list) { create(:project_custom_field, :weighted_item_list, is_for_all: true) }
     let!(:other_calculated_value) { create(:calculated_value_project_custom_field, formula: "2 + 2", is_for_all: true) }
 
     current_user { create(:admin) }
 
     context "with permission to see all custom fields" do
       it "returns custom fields with formats that can be used in formulas" do
-        expect(subject.usable_custom_field_references_for_formula).to contain_exactly(int, float, other_calculated_value)
+        expected = [int, float, other_calculated_value, weighted_item_list]
+        expect(subject.usable_custom_field_references_for_formula).to match_array(expected)
       end
 
       it "excludes custom field formats that are not usable in formulas" do
@@ -217,6 +248,9 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
       let!(:float) { create(:project_custom_field, :float, default_value: 5.5, projects: [project_with_permission]) }
       let!(:other_calculated_value) do
         create(:calculated_value_project_custom_field, formula: "2 + 2", projects: [project_without_permission])
+      end
+      let!(:weighted_item_list) do
+        create(:project_custom_field, :weighted_item_list, projects: [project_without_permission])
       end
 
       current_user { user }
@@ -553,7 +587,7 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
     let(:formula) { "" }
 
     context "with an empty formula" do
-      it_behaves_like "invalid formula", "can't be blank."
+      it_behaves_like "invalid formula", "Formula can't be blank."
     end
 
     context "with a formula containing only allowed characters" do
@@ -583,25 +617,29 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
     context "when omitting trailing decimals after a decimal point" do
       let(:formula) { "1.5 + 1. - 3.25" }
 
-      it_behaves_like "invalid formula", "is invalid."
+      it_behaves_like "invalid formula", "Formula is invalid."
     end
 
     context "with a formula containing forbidden characters" do
       let(:formula) { "abc + 2" }
 
-      it_behaves_like "invalid formula", "contains invalid characters."
+      it_behaves_like "invalid formula",
+                      "Only numeric values, mathematical operators and project attributes of type integer, float, " \
+                      "calculated value and weighted list are allowed."
     end
 
     context "with a formula containing references to custom fields without pattern-mustaches" do
       let(:formula) { "100 * cf_3" }
 
-      it_behaves_like "invalid formula", "contains invalid characters."
+      it_behaves_like "invalid formula",
+                      "Only numeric values, mathematical operators and project attributes of type integer, float, " \
+                      "calculated value and weighted list are allowed."
     end
 
     context "with a formula that is not a valid equation" do
       let(:formula) { "1 / + - 3" }
 
-      it_behaves_like "invalid formula", "is invalid."
+      it_behaves_like "invalid formula", "Formula is invalid."
     end
 
     context "with a formula that contains custom fields that are not visible to the user" do
@@ -623,7 +661,8 @@ RSpec.describe CustomField::CalculatedValue, with_flag: { calculated_value_proje
 
       current_user { user }
 
-      it_behaves_like "invalid formula", "contains custom fields that are not allowed: int, float."
+      it_behaves_like "invalid formula",
+                      /The attribute (int, float|float, int) cannot be used because it leads to a circular reference/
     end
   end
 end

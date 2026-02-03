@@ -58,7 +58,7 @@ class SharesController < ApplicationController
 
     find_or_create_users(send_notification: send_notification?) do |member_params|
       user = User.find_by(id: member_params[:user_id])
-      if user.present? && user.locked?
+      if user.present? && (user.locked? || user.deleted?)
         @errors.add(:base, I18n.t("sharing.warning_locked_user", user: user.name))
       else
         service_call = create_or_update_share(member_params[:user_id], [params[:member][:role_id]])
@@ -289,6 +289,7 @@ class SharesController < ApplicationController
   def load_entity # rubocop:disable Metrics/AbcSize
     if params["work_package_id"]
       @entity = WorkPackage.visible.find(params["work_package_id"])
+      @project = @entity.project
       @sharing_strategy = SharingStrategies::WorkPackageStrategy.new(@entity, user: current_user, query_params:)
     elsif params["project_query_id"]
       @entity = ProjectQuery.visible.find(params["project_query_id"])

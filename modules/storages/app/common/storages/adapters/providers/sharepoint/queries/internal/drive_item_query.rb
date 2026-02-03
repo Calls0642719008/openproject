@@ -35,17 +35,21 @@ module Storages
         module Queries
           module Internal
             class DriveItemQuery < Base
-              def call(http:, drive_id:, item_id:, fields: [])
-                select_url_query = if fields.empty?
-                                     ""
-                                   else
-                                     "?$select=#{fields.join(',')}"
-                                   end
-
-                handle_response http.get("#{request_uri(drive_id:, item_id:)}#{select_url_query}")
+              def call(http:, drive_id:, item_id:, fields: [], expand: [])
+                handle_response http.get("#{request_uri(drive_id:, item_id:)}#{query_string(fields:, expand:)}")
               end
 
               private
+
+              def query_string(fields:, expand:)
+                params = []
+                params << "$select=#{fields.join(',')}" if fields.any?
+                params << "$expand=#{expand.join(',')}" if expand.any?
+
+                return "" if params.empty?
+
+                "?#{params.join('&')}"
+              end
 
               def handle_response(response)
                 error = Results::Error.new(payload: response, source: self.class)

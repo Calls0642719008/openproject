@@ -74,12 +74,4 @@ RSpec.describe OpenProject::MimeType do
       end
     end
   end
-
-  it "equals the main type for the narrow type" do
-    expect(described_class.narrow_type("rubyfile.rb", "text/plain")).to eq "text/x-ruby"
-  end
-
-  it "uses original type if main type differs" do
-    expect(described_class.narrow_type("rubyfile.rb", "application/zip")).to eq "application/zip"
-  end
 end

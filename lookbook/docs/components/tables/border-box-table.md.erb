@@ -4,21 +4,23 @@
 
 ## Anatomy
 
-**Note:** The BorderBoxTable is based on the `Primer::Beta::BorderBox` with a CSS grid applied inside to align the individual rows and make it look like a table. Please note, that it is technically not a table and has therefore none of the benefits a normal HTML table would have (e.g  automatic column width adjustments or accessibility short cuts).
+**Note:** The BorderBoxTable is based on the `Primer::Beta::BorderBox` with a CSS grid applied inside to align individual rows and make it look like a table.
 
-If you want or need that, please use the [TableComponent docs](./tables)
+It [implements WAI-ARIA table semantics](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/) to provide basic support for users of Assistive Technologies (AT). However, since it doesn't use a native HTML table element, there may be usability limitations (e.g., automatic column width adjustment) that developers should consider.
+
+For full table functionality without these limitations, please use the [TableComponent docs](./tables)
 
 ## Best practices
 
 **Do**
 
-- Use a BorderBoxTable if you have a *few* entries of unsorted data that does not require pagination
+- Use a BorderBoxTable if you have a *few* entries of unsorted data
 - Use up to two actions using the `:secondary` scheme of `Primer::Beta::Button` and `Primer::Beta::IconButton`.
 - OR: Use an action menu with `:invisible` scheme
 
 **Don't**
 
-- Don't use the BorderBoxTable when the table consists of a large number of items that require sorting or pagination
+- Don't use the BorderBoxTable when the table consists of a large number of items that require sorting
 
 ## Uses
 

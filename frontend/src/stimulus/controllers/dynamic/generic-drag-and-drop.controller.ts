@@ -28,11 +28,12 @@
  * ++
  */
 
-import * as Turbo from '@hotwired/turbo';
 import { Controller } from '@hotwired/stimulus';
-import dragula, { Drake } from 'dragula';
+import * as Turbo from '@hotwired/turbo';
 import { debugLog } from 'core-app/shared/helpers/debug_output';
+import dragula, { Drake } from 'dragula';
 import { useMeta } from 'stimulus-use';
+import invariant from 'tiny-invariant';
 
 interface TargetConfig {
   container:Element;
@@ -41,47 +42,86 @@ interface TargetConfig {
 }
 
 export default class GenericDragAndDropController extends Controller {
+  static targets = ['container'];
+
+  containerTargets:HTMLElement[];
+
   static metaNames = ['csrf-token'];
   declare readonly csrfToken:string;
 
-  drake:Drake|undefined;
-  targetConfigs:TargetConfig[];
+  static values = { handleSelector: { type: String, default: '.DragHandle' } };
+  declare readonly handleSelectorValue:string;
 
-  containerTargets:Element[];
-
-  observer:MutationObserver|null = null;
+  private drake:Drake|null = null;
+  private containers:HTMLElement[] = [];
+  private targetConfigs:TargetConfig[] = [];
 
   connect() {
     useMeta(this, { suffix: false });
+
+    this.drake?.destroy();
     this.initDrake();
-    this.startMutationObserver();
+  }
+
+  disconnect() {
+    this.drake?.destroy();
+    this.drake = null;
+  }
+
+  containerTargetConnected(target:HTMLElement) {
+    const container = this.resolveContainerElement(target);
+    const targetConfig:TargetConfig = {
+      container,
+      allowedDragType: target.getAttribute('data-target-allowed-drag-type'),
+      targetId: target.getAttribute('data-target-id'),
+    };
+
+    // we need to save the targetConfigs separately as we need to pass the pure container elements to drake
+    // but need the configuration of the targets when dropping elements
+    this.targetConfigs.push(targetConfig);
+    this.containers.push(container);
+  }
+
+  containerTargetDisconnected(target:HTMLElement) {
+    const container = this.resolveContainerElement(target);
+    const index = this.containers.indexOf(container);
+    if (index !== -1) {
+      this.containers.splice(index, 1);
+      this.targetConfigs.splice(index, 1);
+    }
+  }
+
+  cancel() {
+    this.drake?.cancel(true);
   }
 
   initDrake() {
-    this.setContainerTargetsAndConfigs();
-
-    // reinit drake if it already exists
-    if (this.drake) {
-      this.drake.destroy();
-    }
-
+    // Note: dragula stores a reference to this.containers, so mutations
+    // from containerTargetConnected/Disconnected automatically propagate
     this.drake = dragula(
-      this.containerTargets,
+      this.containers,
       {
-        moves: (_el, _source, handle, _sibling) => !!handle?.classList.contains('octicon-grabber'),
+        moves: (_el, _source, handle, _sibling) => !!handle && !!handle.closest(this.handleSelectorValue),
         accepts: (el:Element, target:Element, source:Element, sibling:Element) => this.accepts(el, target, source, sibling),
         revertOnSpill: true, // enable reverting of elements if they are dropped outside of a valid target
       },
     )
+      .on('drag', (el) => {
+        const handle = el.querySelector(this.handleSelectorValue)!;
+        handle.setAttribute('aria-pressed', 'true');
+      })
+      .on('dragend', (el) => {
+        const handle = el.querySelector(this.handleSelectorValue)!;
+        handle.setAttribute('aria-pressed', 'false');
+       })
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       .on('drop', this.drop.bind(this));
 
     // Setup autoscroll
     void window.OpenProject.getPluginContext().then((pluginContext) => {
-      // eslint-disable-next-line no-new
       new pluginContext.classes.DomAutoscrollService(
         [
-          document.getElementById('content-body') as HTMLElement,
+          document.getElementById('content-body')!,
         ],
         {
           margin: 25,
@@ -91,46 +131,6 @@ export default class GenericDragAndDropController extends Controller {
         },
       );
     });
-  }
-
-  reInitDrakeContainers() {
-    this.setContainerTargetsAndConfigs();
-    if (this.drake) {
-      this.drake.containers = this.containerTargets;
-    }
-  }
-
-  setContainerTargetsAndConfigs():void {
-    const rawTargets = Array.from(
-      this.element.querySelectorAll('[data-is-drag-and-drop-target="true"]'),
-    );
-    this.targetConfigs = [];
-    let processedTargets:Element[] = [];
-
-    rawTargets.forEach((target:Element) => {
-      const targetConfig:TargetConfig = {
-        container: target,
-        allowedDragType: target.getAttribute('data-target-allowed-drag-type'),
-        targetId: target.getAttribute('data-target-id'),
-      };
-
-      // if the target has a container accessor, use that as the container instead of the element itself
-      // we need this e.g. in Primer's borderbox component as we cannot add required data attributes to the ul element there
-      const containerAccessor = target.getAttribute('data-target-container-accessor');
-
-      if (containerAccessor) {
-        target = target.querySelector(containerAccessor) as Element;
-        targetConfig.container = target;
-      }
-
-      // we need to save the targetConfigs separately as we need to pass the pure container elements to drake
-      // but need the configuration of the targets when dropping elements
-      this.targetConfigs.push(targetConfig);
-
-      processedTargets = processedTargets.concat(target);
-    });
-
-    this.containerTargets = processedTargets;
   }
 
   accepts(el:Element, target:Element, _source:Element|null, _sibling:Element|null) {
@@ -170,17 +170,7 @@ export default class GenericDragAndDropController extends Controller {
       }
     }
 
-    if (this.drake) {
-      this.drake.cancel(true); // necessary to prevent "copying" behaviour
-    }
-  }
-
-  disconnect() {
-    if (this.drake) {
-      this.drake.destroy();
-    }
-
-    this.stopMutationObserver();
+    this.cancel();
   }
 
   protected buildData(el:Element, target:Element):FormData {
@@ -206,32 +196,15 @@ export default class GenericDragAndDropController extends Controller {
     return data;
   }
 
-  private startMutationObserver() {
-    this.observer = new MutationObserver((mutations) => {
-      const addedNodes = mutations
-        .filter((mutation:MutationRecord) => mutation.type === 'childList')
-        .map((mutation:MutationRecord) => Array.from(mutation.addedNodes))
-        .reduce((acc, val) => acc.concat(val), []);
-
-      const newTarget = addedNodes.some((node) =>
-        node instanceof Element
-        && node.matches('[data-is-drag-and-drop-target="true"], [data-is-drag-and-drop-target="true"] *'));
-
-      if (newTarget) {
-        this.reInitDrakeContainers();
-      }
-    });
-
-    this.observer.observe(this.element, {
-      childList: true,
-      subtree: true,
-    });
-  }
-
-  private stopMutationObserver() {
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
+  // if the target has a container accessor, use that as the container instead of the element itself
+  // we need this e.g. in Primer's borderbox component as we cannot add required data attributes to the ul element there
+  private resolveContainerElement(target:HTMLElement):HTMLElement {
+    const accessor = target.getAttribute('data-target-container-accessor');
+    if (!accessor) {
+      return target;
     }
+    const container = target.querySelector<HTMLElement>(accessor);
+    invariant(container, `Expected container element matching "${accessor}"`);
+    return container;
   }
 }

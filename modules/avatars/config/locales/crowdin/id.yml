@@ -3,7 +3,7 @@ id:
   plugin_openproject_avatars:
     name: "Avatar"
     description: >-
-      This plugin allows OpenProject users to upload a picture to be used as an avatar or use registered images from Gravatar.
+      Plugin ini memungkinkan pengguna OpenProject untuk mengunggah gambar yang akan digunakan sebagai avatar atau menggunakan gambar yang terdaftar di Gravatar.
   label_avatar: "Avatar"
   label_avatar_plural: "Avatar"
   label_current_avatar: "Avatar saat ini"
@@ -17,7 +17,7 @@ id:
   wrong_file_format: "Format yang diperbolehkan adalah jpg, png, gif"
   empty_file_error: "Unggah gambar yang valid (jpg, png, gif)"
   avatars:
-    label_avatar: "Foto Profil"
+    label_avatar: "Avatar"
     label_gravatar: 'Gravatar'
     label_current_avatar: 'Avatar saat ini'
     label_local_avatar: 'Avatar khusus'

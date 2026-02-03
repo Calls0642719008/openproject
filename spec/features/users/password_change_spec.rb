@@ -166,7 +166,7 @@ RSpec.describe "random password generation", :js do
   end
 
   context "as a user on his my page" do
-    let(:user_page) { Pages::My::PasswordPage.new }
+    let(:user_page) { Pages::My::Password.new }
     let(:third_password) { "third_Password!123" }
 
     before do

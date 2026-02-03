@@ -1,13 +1,10 @@
+$pattern-input-height: calc(3*var(--control-medium-lineBoxHeight) + var(--control-medium-paddingInline-condensed))
+
 .op-pattern-input
   &--text-field
-    white-space: nowrap
+    white-space: pre-wrap
     overflow: hidden
-    height: var(--control-medium-size)
-
-    .-browser-firefox &
-      // Must be set to prevent Firefox from displaying the caret in incorrect places.
-      // See https://bugzilla.mozilla.org/show_bug.cgi?id=904846
-      white-space: pre-wrap
+    height: $pattern-input-height
 
     &:focus,
     &:focus-visible
@@ -17,7 +14,7 @@
 
   &--suggestions-dropdown
     position: absolute
-    top: var(--control-medium-size)
+    top: $pattern-input-height
     background: var(--body-background)
     z-index: 1
     width: 100%

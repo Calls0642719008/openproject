@@ -21,7 +21,7 @@ export interface EffectClass {
 
 const EffectHandlers = Symbol('EffectHandlers');
 
-type EffectHandlerItem = { callback:(action:Action) => void, action:ActionCreator };
+interface EffectHandlerItem { callback:(action:Action) => void, action:ActionCreator }
 
 interface DecoratedEffectClass {
   [EffectHandlers]:Map<string, EffectHandlerItem>
@@ -30,7 +30,6 @@ interface DecoratedEffectClass {
 export function registerEffectCallbacks(instance:EffectClass, untilDestroyed:(source:Observable<unknown>) => Observable<unknown>):void {
   // Access the handlers registered in the @EffectCallback method decorator
   // We're accessing a separate symbol on the base class that is not present
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const handlers = (instance as unknown as DecoratedEffectClass)[EffectHandlers];
   if (handlers) {
     handlers.forEach((item:EffectHandlerItem, key:string) => {
@@ -71,7 +70,7 @@ export function registerEffectCallbacks(instance:EffectClass, untilDestroyed:(so
 /* The class decorator requires any[] args to it to function */
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-export function EffectHandler<T extends { new(...args:any[]):EffectClass }>(constructor:T):any {
+export function EffectHandler<T extends new(...args:any[]) => EffectClass>(constructor:T):any {
   return class extends constructor {
     private serviceDestroyed = false;
 
@@ -112,17 +111,14 @@ export function EffectHandler<T extends { new(...args:any[]):EffectClass }>(cons
  * }
  */
 export function EffectCallback(action:ActionCreator) {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   return (service:unknown, property:string, descriptor:PropertyDescriptor):void => {
     const target = service as { [EffectHandlers]:Map<string, EffectHandlerItem> };
     if (!target[EffectHandlers]) {
       // We're assigning the symbol property in the base class
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,no-param-reassign
       target[EffectHandlers] = new Map();
     }
 
     // Here we just add some information that class decorator will use
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     target[EffectHandlers].set(property, { action, callback: descriptor.value as (action:Action) => void });
   };
 }

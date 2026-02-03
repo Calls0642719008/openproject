@@ -28,18 +28,14 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-# rubocop:disable OpenProject/AddPreviewForViewComponent
 class Projects::ProjectsFiltersComponent < Filter::FilterComponent
-  # rubocop:enable OpenProject/AddPreviewForViewComponent
   def allowed_filters
     super
       .select { |f| allowed_filter?(f) }
       .sort_by(&:human_name)
   end
 
-  def turbo_requests?
-    true
-  end
+  def turbo_requests? = true
 
   private
 
@@ -48,7 +44,7 @@ class Projects::ProjectsFiltersComponent < Filter::FilterComponent
       Queries::Filters::Shared::CustomFields::Base,
       Queries::Projects::Filters::ActiveFilter,
       Queries::Projects::Filters::CreatedAtFilter,
-      Queries::Projects::Filters::FavoredFilter,
+      Queries::Projects::Filters::FavoritedFilter,
       Queries::Projects::Filters::IdFilter,
       Queries::Projects::Filters::LatestActivityAtFilter,
       Queries::Projects::Filters::ProjectPhaseAnyFilter,
@@ -59,9 +55,16 @@ class Projects::ProjectsFiltersComponent < Filter::FilterComponent
       Queries::Projects::Filters::ProjectStatusFilter,
       Queries::Projects::Filters::PublicFilter,
       Queries::Projects::Filters::TemplatedFilter,
-      Queries::Projects::Filters::TypeFilter
+      Queries::Projects::Filters::TypeFilter,
+      Queries::Projects::Filters::UpdatedAtFilter
     ]
 
-    allowlist.any? { |clazz| filter.is_a? clazz }
+    # FavoritedFilter used to be called favored. The filter should not break for stored queries. Therefore,
+    # the filter is instantiated twice, once for "favorited", once for "favored".
+    # At the same time, the "Favorite" filter should not be displayed twice in the filter list.
+    # Removing it here has the drawback of a stored "favored" filter not showing up in the component.
+    # This is accepted.
+
+    allowlist.any? { |clazz| filter.is_a? clazz } && filter.name != :favored
   end
 end

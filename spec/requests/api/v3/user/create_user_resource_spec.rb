@@ -251,4 +251,215 @@ RSpec.describe API::V3::Users::UsersAPI do
       expect(last_response).to have_http_status(:forbidden)
     end
   end
+
+  describe "custom fields" do
+    let(:current_user) { create(:admin) }
+
+    context "with a required custom field" do
+      let!(:required_custom_field) do
+        create(:user_custom_field,
+               :text,
+               name: "Department",
+               is_required: true)
+      end
+
+      context "when no custom field value is provided" do
+        let(:parameters) do
+          {
+            status: "active",
+            login: "testuser",
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.org",
+            password: "admin!admin!"
+          }
+        end
+
+        it "responds with 422 and explains the custom field error" do
+          send_request
+          expect(last_response).to have_http_status(:unprocessable_entity)
+
+          response_body = parse_json(last_response.body)
+
+          expect(response_body.dig("_embedded", "details", "attribute"))
+            .to eq("customField#{required_custom_field.id}")
+          expect(response_body["message"]).to eq("Department can't be blank.")
+        end
+      end
+
+      context "when the custom field is provided but empty" do
+        let(:parameters) do
+          {
+            status: "active",
+            login: "testuser",
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.org",
+            password: "admin!admin!",
+            required_custom_field.attribute_name(:camel_case) => {
+              raw: ""
+            }
+          }
+        end
+
+        it "responds with 422 and explains the custom field error" do
+          send_request
+          expect(last_response).to have_http_status(:unprocessable_entity)
+
+          response_body = parse_json(last_response.body)
+
+          expect(response_body.dig("_embedded", "details", "attribute"))
+            .to eq("customField#{required_custom_field.id}")
+          expect(response_body["message"]).to eq("Department can't be blank.")
+        end
+      end
+
+      context "when the custom field value is provided and valid" do
+        let(:parameters) do
+          {
+            status: "active",
+            login: "testuser",
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.org",
+            password: "admin!admin!",
+            required_custom_field.attribute_name(:camel_case) => {
+              raw: "Engineering"
+            }
+          }
+        end
+
+        it "responds with 201" do
+          send_request
+          expect(last_response).to have_http_status(:created)
+        end
+
+        it "returns the newly created user" do
+          send_request
+          expect(last_response.body)
+            .to be_json_eql("User".to_json)
+            .at_path("_type")
+
+          expect(last_response.body)
+            .to be_json_eql("Test".to_json)
+            .at_path("firstName")
+        end
+
+        it "creates a user with the custom field value" do
+          send_request
+          user = User.last
+          expect(user.typed_custom_value_for(required_custom_field))
+            .to eq("Engineering")
+        end
+      end
+    end
+
+    context "with a visible custom field" do
+      let!(:custom_field) do
+        create(:user_custom_field, :text)
+      end
+
+      let(:parameters) do
+        {
+          status: "active",
+          login: "testuser",
+          firstName: "Test",
+          lastName: "User",
+          email: "test@example.org",
+          password: "admin!admin!",
+          custom_field.attribute_name(:camel_case) => {
+            raw: "CF text"
+          }
+        }
+      end
+
+      it "responds with 201" do
+        send_request
+        expect(last_response).to have_http_status(:created)
+      end
+
+      it "sets the cf value" do
+        send_request
+        expect(User.last.typed_custom_value_for(custom_field))
+          .to eq("CF text")
+      end
+    end
+
+    context "with an admin only custom field" do
+      let(:is_required) { false }
+      let!(:admin_only_custom_field) do
+        create(:user_custom_field, :text, admin_only: true, is_required:)
+      end
+
+      context "with admin permissions" do
+        let(:current_user) { create(:admin) }
+        let(:parameters) do
+          {
+            status: "active",
+            login: "testuser",
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.org",
+            password: "admin!admin!",
+            admin_only_custom_field.attribute_name(:camel_case) => {
+              raw: "CF text"
+            }
+          }
+        end
+
+        it "responds with 201" do
+          send_request
+          expect(last_response).to have_http_status(:created)
+        end
+
+        it "sets the cf value" do
+          send_request
+          expect(User.last.typed_custom_value_for(admin_only_custom_field))
+            .to eq("CF text")
+        end
+      end
+
+      context "with non-admin permissions" do
+        let(:current_user) { create(:user, global_permissions: [:create_user]) }
+        let(:parameters) do
+          {
+            status: "invited",
+            email: "test@example.org",
+            admin_only_custom_field.attribute_name(:camel_case) => {
+              raw: "CF text"
+            }
+          }
+        end
+
+        it "responds with 201" do
+          send_request
+          expect(last_response).to have_http_status(:created)
+        end
+
+        it "does not set the cf value" do
+          send_request
+          expect(User.last.custom_values.where(custom_field: admin_only_custom_field))
+            .to be_empty
+        end
+
+        context "and when the custom field is required" do
+          let(:is_required) { true }
+          let(:parameters) do
+            { status: "invited", email: "test@example.org" }
+          end
+
+          it "responds with 201" do
+            send_request
+            expect(last_response).to have_http_status(:created)
+          end
+
+          it "does not set the cf value" do
+            send_request
+            expect(User.last.custom_values.where(custom_field: admin_only_custom_field))
+              .to be_empty
+          end
+        end
+      end
+    end
+  end
 end

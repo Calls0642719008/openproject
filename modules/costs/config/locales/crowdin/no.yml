@@ -31,9 +31,9 @@
         spent: "Brukt"
         spent_on: "Dato"
         logged_by: "Logget av"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Logget for
+        entity_id: Logget for
+        entity_gid: Logget for
       cost_type:
         unit: "Enhetsnavn"
         unit_plural: "Flertallsnavn på enhet"
@@ -61,9 +61,9 @@
         start_time: Starttid
         end_time: Finish time
         time: Tidspunkt
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Logget for
+        entity_id: Logget for
+        entity_gid: Logget for
     models:
       time_entry:
         one: "Timeføring"

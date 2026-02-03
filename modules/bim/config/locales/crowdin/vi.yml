@@ -20,11 +20,11 @@ vi:
     x_bcf_issues:
       zero: 'Không có vấn đề BCF'
       one: 'Một vấn đề BCF'
-      other: '%{count} vấn đề BCF'
+      other: '%{count} vấn đề trong BCF'
     bcf_xml:
       xml_file: 'Tệp BCF XML'
       import_title: 'Nhập khẩu'
-      export: 'Xuất khẩu'
+      export: 'Xuất'
       import_update_comment: '(Cập nhật từ file BCF)'
       import_failed: 'Không thể nhập file BCF: %{error}'
       import_failed_unsupported_bcf_version: 'Không thể đọc tệp BCF: Phiên bản BCF không được hỗ trợ. Vui lòng đảm bảo phiên bản ít nhất là %{minimal_version} hoặc cao hơn.'
@@ -95,21 +95,21 @@ vi:
         bim/ifc_models/ifc_model:
           attributes:
             base:
-              ifc_attachment_missing: "Không có tệp IFC đính kèm."
+              ifc_attachment_missing: "Không có tập tin ifc đính kèm."
               invalid_ifc_file: "Tệp được cung cấp không phải là tệp IFC hợp lệ."
         bim/bcf/viewpoint:
-          bitmaps_not_writable: "bitmaps không thể ghi được vì nó chưa được triển khai."
-          index_not_integer: "index không phải là số nguyên."
-          invalid_clipping_planes: "clipping_planes không hợp lệ."
-          invalid_components: "components không hợp lệ."
-          invalid_lines: "lines không hợp lệ."
-          invalid_orthogonal_camera: "orthogonal_camera không hợp lệ."
-          invalid_perspective_camera: "perspective_camera không hợp lệ."
-          mismatching_guid: "Guid trong json_viewpoint không khớp với guid của mô hình."
-          no_json: "Không phải là json được cấu trúc tốt."
+          bitmaps_not_writable: "hình ảnh không thể ghi được vì nó chưa được thực hiện."
+          index_not_integer: "chỉ số(index) không phải là một số nguyên."
+          invalid_clipping_planes: "clipping_planes không hợp lệ"
+          invalid_components: "các thành phần không hợp lệ"
+          invalid_lines: "dòng không hợp lệ."
+          invalid_orthogonal_camera: "orthogonal_camera không hợp lệ"
+          invalid_perspective_camera: "perspective_camera không hợp lệ"
+          mismatching_guid: "Hướng dẫn trong json_viewpoint không khớp với hướng dẫn của mô hình."
+          no_json: "Không phải là một json có cấu trúc tốt."
           snapshot_type_unsupported: "snapshot_type cần phải là 'png' hoặc 'jpg'."
-          snapshot_data_blank: "snapshot_data cần phải được cung cấp."
-          unsupported_key: "Một thuộc tính json không được hỗ trợ đã được bao gồm."
+          snapshot_data_blank: "snapshot_data không được để trống."
+          unsupported_key: "Một thuộc tính json không được hỗ trợ được bao gồm."
         bim/bcf/issue:
           uuid_already_taken: "Không thể nhập khẩu vấn đề BCF này vì đã có một vấn đề khác với GUID giống nhau. Có thể vấn đề BCF này đã được nhập khẩu vào một dự án khác?"
   ifc_models:
@@ -124,7 +124,7 @@ vi:
       check_2: 'Kiểm tra xem ít nhất một mô hình IFC được đặt thành "Mặc định".'
     no_results: "Không có mô hình IFC đã được tải lên trong dự án này."
     conversion_status:
-      label: 'Đang xử lý?'
+      label: 'Đang xử lý…'
       pending: 'Đang chờ'
       processing: 'Đang xử lý'
       completed: 'Đã hoàn tất'

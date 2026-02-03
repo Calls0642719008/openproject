@@ -108,8 +108,7 @@ module Versions
 
       helpers.link_to_if_authorized "",
                                     { controller: "/versions", action: "destroy", id: version },
-                                    data: { confirm: t(:text_are_you_sure) },
-                                    method: :delete,
+                                    data: { turbo_method: :delete, turbo_confirm: t(:text_are_you_sure) },
                                     class: "icon icon-delete",
                                     title: t(:button_delete)
     end

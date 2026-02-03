@@ -23,7 +23,7 @@ export interface IFCModelData {
   models:IfcModelDefinition[];
   shown_models:number[];
   projects:IfcProjectDefinition[];
-  xkt_attachment_ids:{ [id:number]:number };
+  xkt_attachment_ids:Record<number, number>;
   permissions:IFCPermissionMap;
 }
 
@@ -58,7 +58,7 @@ export class IfcModelsDataService {
     return this.data.projects;
   }
 
-  public get xktAttachmentIds():{ [id:number]:number } {
+  public get xktAttachmentIds():Record<number, number> {
     return this.data.xkt_attachment_ids;
   }
 
@@ -73,7 +73,7 @@ export class IfcModelsDataService {
   public isDefaults():boolean {
     return !this
       .models
-      .find((item) => item.default && this.shownModels.indexOf(item.id) === -1);
+      .find((item) => item.default && !this.shownModels.includes(item.id));
   }
 
   public get manageIFCPath() {

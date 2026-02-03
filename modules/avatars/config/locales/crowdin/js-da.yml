@@ -2,7 +2,7 @@
 da:
   js:
     label_preview: 'Forhåndsvisning'
-    button_update: 'Opdatér'
+    button_update: 'Opdater'
     avatars:
       label_choose_avatar: "Vælg avatar fra fil"
       uploading_avatar: "Uploader valgte avatar."

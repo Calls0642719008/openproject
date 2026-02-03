@@ -37,7 +37,7 @@ import { HttpClient } from '@angular/common/http';
 import { filter, map, startWith, switchMap, throttleTime } from 'rxjs/operators';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
-import { TurboStreamElement } from 'core-typings/turbo';
+import { type FrameElement, type TurboBeforeStreamRenderEvent, type TurboFrameRenderEvent } from "@hotwired/turbo";
 
 export function workPackageMeetingsCount(
   workPackage:WorkPackageResource,
@@ -51,13 +51,13 @@ export function workPackageMeetingsCount(
     fromEvent(document, 'turbo:before-stream-render'),
   )
     .pipe(
-      filter((event:CustomEvent) => {
+      filter((event:TurboFrameRenderEvent|TurboBeforeStreamRenderEvent) => {
         if (event.type === 'turbo:frame-render') {
-          return (event.target as HTMLElement).id?.includes('work-package-meetings-tab');
+          return (event.target as FrameElement).id?.includes('work-package-meetings-tab');
         }
 
         if (event.type === 'turbo:before-stream-render') {
-          const stream:TurboStreamElement = (event.detail as { newStream:TurboStreamElement }).newStream;
+          const stream = (event as TurboBeforeStreamRenderEvent).detail.newStream;
           return stream.target?.includes('work-package-meetings-tab');
         }
 
@@ -67,7 +67,7 @@ export function workPackageMeetingsCount(
       throttleTime(1000),
       switchMap(() => {
         return http
-          .get(`${pathHelperService.workPackagePath(workPackage.id as string)}/meetings/tab/count`)
+          .get(`${pathHelperService.projectWorkPackagePath(workPackage.project.id as string, workPackage.id as string)}/meetings/tab/count`)
           .pipe(
             map((res:{ count:number }) => res.count),
           );
@@ -78,13 +78,16 @@ export function workPackageMeetingsCount(
 export function initializeMeetingPlugin(injector:Injector) {
   const wpTabService = injector.get(WorkPackageTabsService);
   const I18n = injector.get(I18nService);
-  wpTabService.register({
-    component: MeetingsTabComponent,
-    name: I18n.t('js.label_meetings'),
-    id: 'meetings',
-    displayable: (workPackage) => !!workPackage.meetings,
-    count: workPackageMeetingsCount,
-  });
+  wpTabService.registerAfter(
+    'relations',
+    {
+      component: MeetingsTabComponent,
+      name: I18n.t('js.label_meetings'),
+      id: 'meetings',
+      displayable: (workPackage) => !!workPackage.meetings,
+      count: workPackageMeetingsCount,
+    },
+  );
 }
 
 @NgModule({

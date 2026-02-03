@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -30,6 +31,7 @@
 module RecurringMeetings
   class CreateContract < BaseContract
     attribute :uid
+    attribute :current_schedule_start
 
     validate :user_allowed_to_add
     validate :project_is_present

@@ -26,14 +26,14 @@ vi:
   activerecord:
     attributes:
       cost_entry:
-        work_package: "Gói công việc"
+        work_package: "Work Package"
         overridden_costs: "Chi phí ghi đè"
         spent: "Đã chi"
         spent_on: "Ngày"
         logged_by: "Đã ghi bởi"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Ghi lại cho
+        entity_id: Ghi lại cho
+        entity_gid: Ghi lại cho
       cost_type:
         unit: "Tên đơn vị"
         unit_plural: "Tên đơn vị đa năng"
@@ -61,9 +61,9 @@ vi:
         start_time: Thời gian bắt đầu
         end_time: Thời gian hoàn thành
         time: Thời gian
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Ghi lại cho
+        entity_id: Ghi lại cho
+        entity_gid: Ghi lại cho
     models:
       time_entry:
         other: "Time entries"
@@ -73,7 +73,7 @@ vi:
         other: "Loại chi phí"
       time_entry_activity:
         other: "Theo dõi hoạt động"
-      rate: "Tỉ giá"
+      rate: "Tỷ lệ"
     errors:
       models:
         time_entry:
@@ -103,7 +103,7 @@ vi:
   caption_default_rate_history_for: "Lịch sử tỷ lệ mặc định cho %{user}"
   caption_locked_on: "Đã khóa vào"
   caption_materials: "Đơn vị"
-  caption_rate_history: "Lịch sử tỷ lệ"
+  caption_rate_history: "Lịch sử đánh giá"
   caption_rate_history_for: "Lịch sử tỷ lệ cho %{user}"
   caption_rate_history_for_project: "Lịch sử tỷ lệ cho %{user} trong dự án %{project}"
   caption_save_rate: "Lưu tỷ lệ"
@@ -118,7 +118,7 @@ vi:
   label_cost_filter_add: "Thêm bộ lọc mục chi phí"
   label_costlog: "Chi phí đơn vị đã ghi"
   label_cost_plural: "Chi phí"
-  label_cost_type_plural: "Các loại chi phí"
+  label_cost_type_plural: "Loại chi phí"
   label_cost_type_specific: "Loại chi phí #%{id}: %{name}"
   label_costs_per_page: "Chi phí trên mỗi trang"
   label_current_default_rate: "Tỷ lệ mặc định hiện tại"
@@ -136,14 +136,14 @@ vi:
   label_hourly_rate: "Tỷ lệ theo giờ"
   label_include_deleted: "Bao gồm các mục đã xóa"
   label_work_package_filter_add: "Thêm bộ lọc gói công việc"
-  label_kind: "Loại"
+  label_kind: "Kiểu"
   label_less_or_equal: "<="
   label_log_costs: "Ghi lại chi phí đơn vị"
   label_new_time_entry_activity: "New time entry activity"
   label_time_entry_activity_form_description: "Changes to this time entry activity will be reflected in all projects where it is enabled."
   label_no: "Không"
-  label_option_plural: "Tùy chọn"
-  label_overall_costs: "Chi phí tổng cộng"
+  label_option_plural: "Tuỳ chọn"
+  label_overall_costs: "Tổng chi phí"
   label_rate: "Tỉ giá"
   label_rate_plural: "Các tỷ lệ"
   label_status_finished: "Hoàn thành"

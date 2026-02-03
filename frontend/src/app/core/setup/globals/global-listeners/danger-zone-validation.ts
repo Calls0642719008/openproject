@@ -30,22 +30,19 @@
 // Make the whole danger zone a component the next time this needs changes!
 
 export function dangerZoneValidation() {
-  // This will only work iff there is a single danger zone on the page
-  const dangerZoneVerification = jQuery('.danger-zone--verification');
-  const expectedValue = jQuery('.danger-zone--expected-value');
+  // This will only work if there is a single danger zone on the page
+  const dangerZoneVerification = document.querySelector<HTMLElement>('.danger-zone--verification')!;
+  const expectedValue = document.querySelector<HTMLElement>('.danger-zone--expected-value')?.textContent;
 
   // When no expected value is set up, do not disable button
-  if (!expectedValue[0]) {
+  if (!expectedValue) {
     return;
   }
 
-  const expectedText = expectedValue.text();
-  dangerZoneVerification.find('input').on('input', () => {
-    const actualValue = dangerZoneVerification.find('input').val() as string;
-    if (expectedText.toLowerCase() === actualValue.toLowerCase()) {
-      dangerZoneVerification.find('button').prop('disabled', false);
-    } else {
-      dangerZoneVerification.find('button').prop('disabled', true);
-    }
+  const input = dangerZoneVerification.querySelector('input')!;
+  const button = dangerZoneVerification.querySelector('button')!;
+  input.addEventListener('input', () => {
+    const actualValue = input.value;
+    button.disabled = expectedValue.toLowerCase() !== actualValue.toLowerCase();
   });
 }

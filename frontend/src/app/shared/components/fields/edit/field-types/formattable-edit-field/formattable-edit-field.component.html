@@ -1,19 +1,18 @@
 <div class="textarea-wrapper">
   <div class="op-ckeditor--wrapper op-ckeditor-element">
     <op-ckeditor [context]="ckEditorContext"
-                 [content]="initialContent"
-                 (contentChanged)="onContentChange($event)"
-                 (initializationFailed)="initializationError = true"
-                 (initializeDone)="onCkeditorSetup($event)"
-                 (saveRequested)="handleUserSubmit()"
-                 >
-    </op-ckeditor>
+      [content]="initialContent"
+      (contentChanged)="onContentChange($event)"
+      (initializationFailed)="initializationError = true"
+      (initializeDone)="onCkeditorSetup($event)"
+      (saveRequested)="handleUserSubmit()"
+       />
   </div>
-  <edit-field-controls *ngIf="!(handler.inEditMode || initializationError)"
-                       [fieldController]="field"
-                       (onSave)="handleUserSubmit()"
-                       (onCancel)="handleUserCancel()"
-                       [saveTitle]="text.save"
-                       [cancelTitle]="text.cancel">
-  </edit-field-controls>
+  @if (!(handler.inEditMode || initializationError)) {
+    <edit-field-controls [fieldController]="field"
+      (onSave)="handleUserSubmit()"
+      (onCancel)="handleUserCancel()"
+      [saveTitle]="text.save"
+      [cancelTitle]="text.cancel" />
+  }
 </div>

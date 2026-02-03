@@ -104,7 +104,7 @@ From time to time an Enterprise add-on is released for the free Community versio
 
 The work package graph widgets display information about the work packages within a project and can be shown in different views, such as bar graphs or pie charts.
 
-[Learn more about this feature in our user guide](../../user-guide/project-overview/#work-package-graph-widgets).
+[Learn more about this feature in our user guide](../../user-guide/project-home/project-widgets/#work-package-graph-widgets).
 
 ![Different graphs displayed on a project overview page in OpenProject: Work package status in a pie chart, work packages progress in a graph with percentages, closed + open work packages sorted by type and number of assignees.](openproject-project-reports.png)
 

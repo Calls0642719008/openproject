@@ -45,8 +45,9 @@ RSpec.describe CustomFieldFormBuilder do
   describe "#custom_field" do
     let(:options) { { class: "custom-class" } }
 
+    let(:field_format) { "bool" }
     let(:custom_field) do
-      build_stubbed(:custom_field)
+      build_stubbed(:custom_field, field_format:)
     end
     let(:custom_value) do
       build_stubbed(:custom_value, customized: resource, custom_field:)
@@ -95,9 +96,7 @@ RSpec.describe CustomFieldFormBuilder do
     end
 
     context "for a date custom field" do
-      before do
-        custom_field.field_format = "date"
-      end
+      let(:field_format) { "date" }
 
       it_behaves_like "wrapped in container", "field-container" do
         let(:container_count) { 2 }
@@ -109,7 +108,7 @@ RSpec.describe CustomFieldFormBuilder do
             <opce-basic-single-date-picker
               class="custom-class"
               data-value="null"
-              data-input-id='"user_custom_field_#{custom_field.id}"'
+              data-id='"user_custom_field_#{custom_field.id}"'
               data-name='"user[#{custom_field.id}]"'
             ></opce-basic-single-date-picker>
           HTML
@@ -118,9 +117,7 @@ RSpec.describe CustomFieldFormBuilder do
     end
 
     context "for a text custom field" do
-      before do
-        custom_field.field_format = "text"
-      end
+      let(:field_format) { "text" }
 
       it_behaves_like "wrapped in container", "text-area-container" do
         let(:container_count) { 2 }
@@ -140,9 +137,7 @@ RSpec.describe CustomFieldFormBuilder do
     end
 
     context "for a string custom field" do
-      before do
-        custom_field.field_format = "string"
-      end
+      let(:field_format) { "string" }
 
       it_behaves_like "wrapped in container", "text-field-container" do
         let(:container_count) { 2 }
@@ -153,15 +148,14 @@ RSpec.describe CustomFieldFormBuilder do
           <input class="custom-class form--text-field"
                  id="user#{custom_field.id}"
                  name="user[#{custom_field.id}]"
-                 type="text" />
+                 type="text"
+                 value="" />
         }).at_path("input")
       end
     end
 
     context "for an int custom field" do
-      before do
-        custom_field.field_format = "int"
-      end
+      let(:field_format) { "int" }
 
       it_behaves_like "wrapped in container", "text-field-container" do
         let(:container_count) { 2 }
@@ -178,9 +172,7 @@ RSpec.describe CustomFieldFormBuilder do
     end
 
     context "for a float custom field" do
-      before do
-        custom_field.field_format = "float"
-      end
+      let(:field_format) { "float" }
 
       it_behaves_like "wrapped in container", "text-field-container" do
         let(:container_count) { 2 }
@@ -256,6 +248,8 @@ RSpec.describe CustomFieldFormBuilder do
     end
 
     context "for a user custom field" do
+      let(:field_format) { "user" }
+
       let(:project) { build_stubbed(:project) }
       let(:user1) { build_stubbed(:user) }
       let(:user2) { build_stubbed(:user) }
@@ -263,8 +257,6 @@ RSpec.describe CustomFieldFormBuilder do
       let(:resource) { project }
 
       before do
-        custom_field.field_format = "user"
-
         without_partial_double_verification do
           allow(project)
             .to receive(custom_field.attribute_getter)
@@ -320,6 +312,8 @@ RSpec.describe CustomFieldFormBuilder do
     end
 
     context "for a version custom field" do
+      let(:field_format) { "version" }
+
       let(:project) { build_stubbed(:project) }
       let(:version1) { build_stubbed(:version) }
       let(:version2) { build_stubbed(:version) }
@@ -327,8 +321,6 @@ RSpec.describe CustomFieldFormBuilder do
       let(:resource) { project }
 
       before do
-        custom_field.field_format = "version"
-
         without_partial_double_verification do
           allow(project)
             .to receive(custom_field.attribute_getter)

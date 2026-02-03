@@ -6,4 +6,4 @@ tr:
       title: 'Takvim'
       too_many: 'Toplamda %{count} iş paketi var, ancak sadece %{max} gösterilebilir.'
       unsaved_title: 'İsimsiz takvim'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'Takvimler'

@@ -113,7 +113,7 @@ ms:
         bim/bcf/issue:
           uuid_already_taken: "Tidak dapat mengimport isu BCF ini kerana isu yang mempunyai GUID yang sama telah ada. Mungkinkah isu BCF ini telah diimport ke dalam projek lain?"
   ifc_models:
-    label_ifc_models: 'Model-model IFC'
+    label_ifc_models: 'Model IFC'
     label_new_ifc_model: 'Model IFC baharu'
     label_show_defaults: 'Paparkan default'
     label_default_ifc_models: 'Model default IFC '

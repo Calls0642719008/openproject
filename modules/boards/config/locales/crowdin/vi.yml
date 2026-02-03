@@ -19,7 +19,7 @@ vi:
       free: Cơ bản
       action: "Bảng hành động (%{attribute})"
     board_type_attributes:
-      assignee: Người được phân công
+      assignee: Người được giao
       status: Trạng thái
       version: Phiên bản
       subproject: Dự án con

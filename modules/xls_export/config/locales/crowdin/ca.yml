@@ -1,7 +1,7 @@
 ca:
   plugin_openproject_xls_export:
-    name: "OpenProject XLS Export"
-    description: "Export issue lists as Excel spreadsheets (.xls)."
+    name: "Exportació XLS d'OpenProject"
+    description: "Exporta llistes de problemes com a fulls de càlcul d'Excel (.xls)."
   export_to_excel: "Exporta a XLS"
   print_with_description: "Previsualització d'impressió amb descripció"
   sentence_separator_or: "o"

@@ -31,7 +31,7 @@
           description: Kopier git snippets til utklippstavle
         git_actions:
           branch_name: Navn på filial
-          commit_message: Commit-melding
+          commit_message: Send inn meldingen
           cmd: Opprett gren med tom commit
           title: Quick snippets for Git
           copy_success: '✅ Kopiert!'

@@ -36,13 +36,13 @@ export interface FormResourceLinks<T = HalResource> {
 
 export interface FormResourceEmbedded {
   schema:SchemaResource;
-  validationErrors:{ [attribute:string]:ErrorResource };
+  validationErrors:Record<string, ErrorResource>;
 }
 
 export class FormResource<T = HalResource> extends HalResource {
   public schema:SchemaResource;
 
-  public validationErrors:{ [attribute:string]:ErrorResource };
+  public validationErrors:Record<string, ErrorResource>;
 
   public getErrors():ErrorResource|null {
     const errors = _.values(this.validationErrors);

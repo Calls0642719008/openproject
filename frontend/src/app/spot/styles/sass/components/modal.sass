@@ -17,7 +17,7 @@
   max-width: calc(100vw - 2rem)
   max-height: calc(#{var(--app-height)} - 2rem)
 
-  @media #{$spot-mq-mobile}
+  @media screen and (max-width: $breakpoint-sm)
     width: calc(100vw - 2rem)
     max-height: calc(#{var(--app-height)} - 5rem)
     overflow-y: auto
@@ -31,9 +31,17 @@
     min-height: 40vh
 
   &_auto-size
-    @media #{$spot-mq-desktop}
+    @media screen and (min-width: $breakpoint-sm)
       width: auto
       min-height: auto
+
+  &_full-screen-when-narrow
+    @media screen and (max-width: $breakpoint-sm)
+      width: 100dvw
+      height: 100dvh
+      max-height: unset
+      max-width: unset
+      border-radius: 0
 
   &--header
     @include spot-subheader-big
@@ -45,9 +53,6 @@
 
     + .spot-divider
       margin-top: $spot-spacing-1
-
-    > .spot-icon
-      margin-right: $spot-spacing-0-5
 
     &-title
       flex-grow: 1

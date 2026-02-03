@@ -30,8 +30,7 @@
 
 class Favorite < ApplicationRecord
   belongs_to :user
-  belongs_to :favored, polymorphic: true
+  belongs_to :favorited, polymorphic: true
 
-  validates :user, presence: true
-  validates :favored, presence: true
+  validates :favorited_id, uniqueness: { scope: %i[favorited_type user_id], message: :already_favorited }
 end

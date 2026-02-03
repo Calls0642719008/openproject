@@ -21,7 +21,7 @@
 #++
 eo:
   js:
-    label_meetings: 'Meetings'
+    label_meetings: 'Renkontiĝoj'
     work_packages:
       tabs:
-        meetings: 'Meetings'
+        meetings: 'Renkontiĝoj'

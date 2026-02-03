@@ -347,7 +347,7 @@ module SortHelper
     data = options.delete(:data) || {}
 
     options[:title] = sort_header_title(column, caption, options) if with_title
-    options[:icon_only_header] = column == :favored
+    options[:icon_only_header] = column == :favorited
 
     within_sort_header_tag_hierarchy(options, sort_class(column)) do
       yield(column, caption, default_order, allowed_params:, param:, lang:, title: options[:title],
@@ -401,7 +401,7 @@ module SortHelper
     content_args = html_options.merge(rel: :nofollow, param: nil)
 
     render Primer::Alpha::ActionMenu.new(menu_id: "menu-#{attribute}") do |menu|
-      action_button(menu, column, caption, favorite: column == :favored)
+      action_button(menu, column, caption, favorite: column == :favorited)
 
       # Some columns are not sortable or do not offer a suitable filter. Omit those actions for them.
       sort_actions(menu, attribute, default_order, content_args:, allowed_params:, **html_options) if sortable

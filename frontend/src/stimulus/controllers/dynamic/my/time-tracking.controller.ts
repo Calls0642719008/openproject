@@ -275,7 +275,7 @@ export default class MyTimeTrackingController extends Controller {
     document
       .querySelectorAll('.fc-timegrid-cols .fc-day')
       .forEach((dayElement) => {
-        days.push(dayElement.getAttribute('data-date') as string);
+        days.push(dayElement.getAttribute('data-date')!);
       });
 
     calendarScrollGridWrapper.appendChild(this.buildHtmlFooter(days));
@@ -292,7 +292,7 @@ export default class MyTimeTrackingController extends Controller {
       // Format event date for comparison
       const eventDateStr = toMoment(eventStart, this.calendar).format('YYYY-MM-DD');
 
-      if (eventDateStr === dayStr && event.extendedProps && event.extendedProps.hours) {
+      if (eventDateStr === dayStr && event.extendedProps?.hours) {
         totalHours += event.extendedProps.hours as number;
       }
     });
@@ -482,7 +482,7 @@ export default class MyTimeTrackingController extends Controller {
     // list view replaces only the updated date
     if (this.viewModeValue === 'list') {
       // we don't know what date we clicked, so we need to reload the whole page
-      if (additional && additional.spent_on) {
+      if (additional?.spent_on) {
         void this.turboRequests.request(this.pathHelper.myTimeTrackingRefresh(additional.spent_on, this.viewModeValue, this.modeValue), { method: 'GET' });
       } else {
         window.location.reload();

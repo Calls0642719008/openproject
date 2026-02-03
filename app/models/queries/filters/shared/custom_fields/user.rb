@@ -41,6 +41,30 @@ module Queries::Filters::Shared
       def allowed_values
         @allowed_values ||= me_allowed_value + super
       end
+
+      def values_replaced
+        vals = super
+        vals += group_members_added(vals)
+        vals + user_groups_added(vals)
+      end
+
+      private
+
+      def group_members_added(vals)
+        ::User
+          .joins(:groups)
+          .where(groups_users: { id: vals })
+          .pluck(:id)
+          .map(&:to_s)
+      end
+
+      def user_groups_added(vals)
+        Group
+          .joins(:users)
+          .where(users_users: { id: vals })
+          .pluck(:id)
+          .map(&:to_s)
+      end
     end
   end
 end

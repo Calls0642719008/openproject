@@ -30,11 +30,13 @@
 
 class CustomStylesController < ApplicationController
   include EnterpriseHelper
+  include CustomStylesControllerHelper
 
   layout "admin"
   menu_item :custom_style
 
   UNGUARDED_ACTIONS = %i[logo_download
+                         logo_mobile_download
                          favicon_download
                          touch_icon_download].freeze
 
@@ -75,10 +77,12 @@ class CustomStylesController < ApplicationController
   def update
     flash.clear
     @custom_style = get_or_create_custom_style
-    if @custom_style.update(custom_style_params)
+    parameters = custom_style_params
+    error = validate_font_uploads(parameters)
+    if !error && @custom_style.update(parameters)
       redirect_to custom_style_path
     else
-      flash[:error] = @custom_style.errors.full_messages
+      flash[:error] = error || @custom_style.errors.full_messages
       render action: :show, status: :unprocessable_entity
     end
   end
@@ -97,6 +101,10 @@ class CustomStylesController < ApplicationController
 
   def logo_download
     file_download(:logo_path)
+  end
+
+  def logo_mobile_download
+    file_download(:logo_mobile_path)
   end
 
   def export_logo_download
@@ -121,6 +129,10 @@ class CustomStylesController < ApplicationController
 
   def logo_delete
     file_delete(:remove_logo)
+  end
+
+  def logo_mobile_delete
+    file_delete(:remove_logo_mobile)
   end
 
   def export_logo_delete
@@ -221,6 +233,7 @@ class CustomStylesController < ApplicationController
   def custom_style_params
     params.expect(custom_style: %i[
                     logo remove_logo
+                    logo_mobile remove_logo_mobile
                     export_logo remove_export_logo
                     export_cover remove_export_cover
                     export_footer remove_export_footer
@@ -251,6 +264,6 @@ class CustomStylesController < ApplicationController
     end
 
     @custom_style.send(remove_method)
-    redirect_to custom_style_path
+    redirect_to custom_style_path, status: :see_other
   end
 end

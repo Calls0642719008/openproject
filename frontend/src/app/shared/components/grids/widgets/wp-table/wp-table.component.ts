@@ -1,29 +1,19 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector, OnInit } from '@angular/core';
 import { AbstractWidgetComponent } from 'core-app/shared/components/grids/widgets/abstract-widget.component';
 import { QueryFormResource } from 'core-app/features/hal/resources/query-form-resource';
 import { QueryResource } from 'core-app/features/hal/resources/query-resource';
-import { WorkPackageTableConfiguration } from 'core-app/features/work-packages/components/wp-table/wp-table-configuration';
 import {
-  Observable,
-  switchMap,
-} from 'rxjs';
+  WorkPackageTableConfiguration,
+} from 'core-app/features/work-packages/components/wp-table/wp-table-configuration';
+import { Observable, switchMap } from 'rxjs';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
-import { UrlParamsHelperService } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
 import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
-import { StateService } from '@uirouter/core';
-import {
-  map,
-  skip,
-} from 'rxjs/operators';
+import { map, skip } from 'rxjs/operators';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import {
   WorkPackageIsolatedQuerySpaceDirective,
 } from 'core-app/features/work-packages/directives/query-space/wp-isolated-query-space.directive';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 
 @Component({
   selector: 'widget-wp-table',
@@ -49,14 +39,11 @@ export class WidgetWpTableComponent extends AbstractWidgetComponent implements O
     contextMenuEnabled: false,
   };
 
-  constructor(protected i18n:I18nService,
-    protected readonly injector:Injector,
-    protected urlParamsHelper:UrlParamsHelperService,
-    protected readonly state:StateService,
-    protected readonly querySpace:IsolatedQuerySpace,
-    protected readonly apiV3Service:ApiV3Service) {
-    super(i18n, injector);
-  }
+  protected i18n = inject(I18nService);
+  protected injector = inject(Injector);
+  protected querySpace = inject(IsolatedQuerySpace);
+  protected apiV3Service = inject(ApiV3Service);
+  protected currentProjectService = inject(CurrentProjectService);
 
   ngOnInit():void {
     if (!this.resource.options.queryId) {
@@ -127,8 +114,8 @@ export class WidgetWpTableComponent extends AbstractWidgetComponent implements O
   }
 
   private createInitial():Observable<QueryResource> {
-    const projectIdentifier = this.state.params.projectPath as string;
-    const initializationProps = this.resource.options.queryProps as { [key:string]:unknown };
+    const projectIdentifier = this.currentProjectService.id;
+    const initializationProps = this.resource.options.queryProps as Record<string, unknown>;
     const queryProps = {
       pageSize: 0,
       ...initializationProps,
@@ -164,7 +151,7 @@ export class WidgetWpTableComponent extends AbstractWidgetComponent implements O
     // On the MyPage, the queries should be non public, on a project dashboard, they should be public.
     // This will not longer work, when global dashboards are implemented as the tables then need to
     // be public as well.
-    const projectIdentifier = this.state.params.projectPath;
+    const projectIdentifier = this.currentProjectService.path;
 
     return {
       hidden: true,

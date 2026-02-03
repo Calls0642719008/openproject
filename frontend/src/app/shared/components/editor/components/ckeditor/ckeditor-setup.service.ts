@@ -61,7 +61,7 @@ export class CKEditorSetupService {
     const editorClass = type === 'constrained' ? window.OPConstrainedEditor : window.OPClassicEditor;
     wrapper.classList.add(`ckeditor-type-${type}`);
 
-    const toolbarWrapper = wrapper.querySelector('.document-editor__toolbar') as HTMLElement;
+    const toolbarWrapper = wrapper.querySelector('.document-editor__toolbar')!;
     const contentWrapper = wrapper.querySelector('.document-editor__editable') as HTMLElement;
     const config = this.createConfig(context, initialData);
 
@@ -73,12 +73,18 @@ export class CKEditorSetupService {
         toolbarWrapper.appendChild(editor.ui.view.toolbar.element);
 
         // Allow custom events on wrapper to set/get data for debugging
-        jQuery(wrapper)
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-return
-          .on('op:ckeditor:autosave', () => editor.config.get('autosave').save(editor))
-          .on('op:ckeditor:setData', (_, data:string) => editor.setData(data))
-          .on('op:ckeditor:clear', () => editor.setData(' '))
-          .on('op:ckeditor:getData', (_, cb:(data:string) => void) => cb(editor.getData({ trim: false })));
+        wrapper.addEventListener('op:ckeditor:autosave', () => {
+          editor.config.get('autosave').save(editor);
+        });
+        wrapper.addEventListener('op:ckeditor:setData', (event:CustomEvent<string>) => {
+          editor.setData(event.detail);
+        });
+        wrapper.addEventListener('op:ckeditor:clear', () => {
+          editor.setData(' ');
+        });
+        wrapper.addEventListener('op:ckeditor:getData', (event:CustomEvent<(data:string) => void>) => {
+          event.detail(editor.getData({ trim: false }));
+        });
 
         return watchdog;
       });
@@ -86,7 +92,7 @@ export class CKEditorSetupService {
 
   private createConfig(context:ICKEditorContext, initialData:string|null) {
     const uiLocale = this.loadedLocale;
-    const contentLanguage = context.options && context.options.rtl ? 'ar' : 'en';
+    const contentLanguage = context.options?.rtl ? 'ar' : 'en';
 
     const config = {
       openProject: this.createContext(context),

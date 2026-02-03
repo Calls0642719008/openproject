@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send mail
-        uses: dawidd6/action-send-mail@v6
+        uses: dawidd6/action-send-mail@v7
         with:
           subject: ${{ inputs.subject }}
           body: ${{ inputs.body }}

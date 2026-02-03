@@ -36,6 +36,7 @@ module Components
       include Capybara::DSL
       include Capybara::RSpecMatchers
       include RSpec::Matchers
+
       # include Toasts::Expectations
 
       JS_FIELD_NAME_MAP = {
@@ -58,11 +59,19 @@ module Components
         work: :estimated_hours
       }.freeze
 
-      attr_reader :container, :create_form
+      attr_reader :create_form
 
       def initialize(container: page, create_form: false)
-        @container = container
+        @container_or_lambda_to_get_container = container
         @create_form = create_form
+      end
+
+      def container
+        if @container_or_lambda_to_get_container.respond_to?(:call)
+          @container_or_lambda_to_get_container.call
+        else
+          @container_or_lambda_to_get_container
+        end
       end
 
       def open

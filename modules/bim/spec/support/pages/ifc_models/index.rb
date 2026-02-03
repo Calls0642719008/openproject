@@ -91,9 +91,9 @@ module Pages
       end
 
       def delete_model(model_name)
-        click_table_icon model_name, ".icon-delete"
-
-        page.driver.browser.switch_to.alert.accept
+        accept_alert do
+          click_table_icon model_name, ".icon-delete"
+        end
 
         model_listed false, model_name
         expect(page).to have_current_path bcf_project_ifc_models_path(project), ignore_query: true
@@ -108,7 +108,7 @@ module Pages
       end
 
       def expect_model_active(model, active = true)
-        expect(page).to have_field(model.id.to_s, checked: active, wait: 30)
+        expect(page).to have_field("input-#{model.id}", checked: active, wait: 30)
       end
 
       def show_defaults(models = [])

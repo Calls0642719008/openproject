@@ -93,6 +93,10 @@ class RecurringMeeting < ApplicationRecord
   has_one :template, -> { where(template: true) },
           class_name: "Meeting"
 
+  has_many :recurring_meeting_interim_responses,
+           inverse_of: :recurring_meeting,
+           dependent: :destroy
+
   scope :visible, ->(*args) {
     includes(:project)
       .references(:projects)
@@ -153,6 +157,10 @@ class RecurringMeeting < ApplicationRecord
     super&.in_time_zone(time_zone)
   end
 
+  def current_schedule_end
+    start_time + template.duration.hours
+  end
+
   def time_zone_differs?
     time_zone != User.current.time_zone
   end
@@ -167,6 +175,13 @@ class RecurringMeeting < ApplicationRecord
   def schedule
     @schedule ||= IceCube::Schedule.new(start_time, duration: template&.duration).tap do |s|
       s.add_recurrence_rule count_rule(frequency_rule)
+      exclude_non_working_days(s) if frequency_working_days?
+    end
+  end
+
+  def ical_schedule
+    @ical_schedule ||= IceCube::Schedule.new(current_schedule_start, duration: template&.duration).tap do |s|
+      s.add_recurrence_rule count_rule(frequency_rule, only_upcoming_iterations: true)
       exclude_non_working_days(s) if frequency_working_days?
     end
   end
@@ -241,18 +256,34 @@ class RecurringMeeting < ApplicationRecord
     schedule.next_occurrence(from_time)&.to_time
   end
 
+  def first_non_cancelled_occurrence(from_time: Time.current)
+    skipped = []
+    time = from_time
+
+    while (occurrence = next_occurrence(from_time: time))
+      if scheduled_meetings.cancelled.exists?(start_time: occurrence)
+        skipped << occurrence
+        time = occurrence
+      else
+        return { occurrence:, skipped: }
+      end
+    end
+
+    nil
+  end
+
   def previous_occurrence(from_time: Time.current)
     schedule.previous_occurrence(from_time)&.to_time
   end
 
   delegate :occurs_at?, to: :schedule
 
-  def remaining_occurrences
+  def remaining_occurrences(after_time: Time.current)
     case end_after
     when "specific_date"
-      schedule.occurrences_between(Time.current, end_date.to_time(:utc).end_of_day)
+      schedule.occurrences_between(after_time, end_date.to_time(:utc).end_of_day)
     when "iterations"
-      schedule.remaining_occurrences(Time.current)
+      schedule.remaining_occurrences(after_time)
     end
   end
 
@@ -305,10 +336,6 @@ class RecurringMeeting < ApplicationRecord
   def end_date_constraints
     return if end_date.nil?
 
-    if end_date < Date.current
-      errors.add(:end_date, :after_today)
-    end
-
     if parsed_start_date.present? && end_date < parsed_start_date
       errors.add(:end_date, :after, date: format_date(parsed_start_date))
     end
@@ -319,7 +346,7 @@ class RecurringMeeting < ApplicationRecord
       .where(date: start_date...)
       .pluck(:date)
       .each do |date|
-      schedule.add_exception_time(date.to_time(:utc))
+        schedule.add_exception_time(date.to_time(:utc))
     end
   end
 
@@ -338,14 +365,22 @@ class RecurringMeeting < ApplicationRecord
     end
   end
 
-  def count_rule(rule)
+  def count_rule(rule, only_upcoming_iterations: false)
     case end_after
     when "specific_date"
       rule.until((end_date + 1.day).to_time(:utc))
     when "iterations"
-      rule.count(iterations)
+      rule.count(iterations_for_schedule(only_upcoming_iterations: only_upcoming_iterations))
     else
       rule
+    end
+  end
+
+  def iterations_for_schedule(only_upcoming_iterations:)
+    if only_upcoming_iterations
+      remaining_occurrences(after_time: current_schedule_start).size
+    else
+      iterations
     end
   end
 

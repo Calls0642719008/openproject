@@ -41,7 +41,7 @@ export default class extends Controller {
       section.hidden = true;
     }
 
-    const name = section.dataset.name as string;
+    const name = (section as HTMLElement).dataset.name!;
     this.toggleOption(name);
   }
 

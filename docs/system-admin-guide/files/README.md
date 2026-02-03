@@ -8,12 +8,12 @@ keywords: files, file storages, Nextcloud integration, OneDrive setup, OneDrive,
 
 # Files 
 
-Under *Administration -> Files* you can add external file storages, such as Nextcloud or OneDrive and manage settings
+Under *Administration -> Files* you can add external file storages, such as Nextcloud, OneDrive or SharePoint and manage settings
 for attachments to work packages.
 
 ## External file storages
 
-Under [external file storages](./external-file-storages) you can add Nextcloud or OneDrive integration to OpenProject. 
+Under [external file storages](./external-file-storages) you can add Nextcloud, OneDrive or SharePoint integration to OpenProject. 
 
 ## Attachments
 
@@ -21,5 +21,9 @@ Under [attachments](./attachments) you can manage settings for attachments in wo
 
 ## Categories
 
-Under [categories](./categories) you can create and manage documentation categories in OpenProject.
+Under categories you can create and manage documentation categories in OpenProject.
+
+>  [!NOTE]
+>
+> With 17.0 the *Documents* module was enhanced with live-collaboration features, resulting in a dedicated area in system adminstration. From then on documentation of Categories was moved [here](../documents).
 

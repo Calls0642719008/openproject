@@ -30,14 +30,14 @@
 
 module Admin
   module Settings
-    class DocumentCategoriesController < EnumerationsControllerBase
+    class DocumentCategoriesController < ApplicationController
+      layout "admin"
+
+      before_action :require_admin
+
       menu_item :document_categories
 
-      private
-
-      def enumeration_class
-        DocumentCategory
-      end
+      def index; end
     end
   end
 end

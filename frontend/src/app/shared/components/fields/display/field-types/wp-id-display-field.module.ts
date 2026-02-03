@@ -31,13 +31,19 @@ import { StateService } from '@uirouter/core';
 import { UiStateLinkBuilder } from 'core-app/features/work-packages/components/wp-fast-table/builders/ui-state-link-builder';
 import { IdDisplayField } from 'core-app/shared/components/fields/display/field-types/id-display-field.module';
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 
 export class WorkPackageIdDisplayField extends IdDisplayField {
   @InjectField() $state!:StateService;
 
   @InjectField() keepTab!:KeepTabService;
 
-  private uiStateBuilder:UiStateLinkBuilder = new UiStateLinkBuilder(this.$state, this.keepTab);
+  @InjectField() currentProject!:CurrentProjectService;
+
+  @InjectField() pathHelper!:PathHelperService;
+
+  private uiStateBuilder:UiStateLinkBuilder = new UiStateLinkBuilder(this.$state, this.keepTab, this.currentProject, this.pathHelper);
 
   public render(element:HTMLElement, displayText:string):void {
     if (!this.value) {

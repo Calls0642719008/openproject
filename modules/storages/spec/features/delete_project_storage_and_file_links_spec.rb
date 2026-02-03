@@ -70,25 +70,32 @@ RSpec.describe "Delete ProjectStorage with FileLinks", :js, :webmock do
 
     # The list of enabled file storages should now contain Storage 1
     expect(page).to have_heading "Files"
-    expect(page).to have_text("Storage 1")
+    expect(page).to have_text(storage.name)
 
     # Press Delete icon to remove the storage from the project
     page.find(".icon.icon-delete").click
 
-    # Danger zone confirmation flow
-    expect(page).to have_css(".form--section-title", text: "DELETE FILE STORAGE")
-    expect(page).to have_css(".danger-zone--warning", text: "Deleting a file storage is an irreversible action.")
-    expect(page).to have_button("Delete", disabled: true)
+    # Danger dialog confirmation flow
+    within_test_selector("op-project-storages--delete-dialog") do
+      expect(page).to have_text("Delete file storage")
+      expect(page).to have_unchecked_field("I understand that this removal cannot be reversed")
+      expect(page).to have_button("Remove permanently", disabled: true)
 
-    # Cancel Confirmation
-    page.click_link("Cancel")
+      # Cancel Confirmation
+      page.click_button("Cancel")
+    end
+
     expect(page).to have_current_path external_file_storages_project_settings_project_storages_path(project)
+    expect(page).to have_text(storage.name)
 
+    # Press Delete icon to remove the storage from the project
     page.find(".icon.icon-delete").click
 
-    # Approve Confirmation
-    page.fill_in "delete_confirmation", with: storage.name
-    page.click_button("Delete")
+    within_test_selector("op-project-storages--delete-dialog") do
+      # Approve Confirmation
+      page.check "I understand that this removal cannot be reversed"
+      page.click_button("Remove permanently")
+    end
 
     # List of ProjectStorages empty again
     expect(page).to have_current_path external_file_storages_project_settings_project_storages_path(project)
@@ -97,5 +104,6 @@ RSpec.describe "Delete ProjectStorage with FileLinks", :js, :webmock do
     # Also check in the database that ProjectStorage and dependent FileLinks are gone
     expect(Storages::ProjectStorage.count).to be 0
     expect(Storages::FileLink.count).to be 0
+    expect(Storages::Storage.where(id: storage.id).count).to be 1
   end
 end

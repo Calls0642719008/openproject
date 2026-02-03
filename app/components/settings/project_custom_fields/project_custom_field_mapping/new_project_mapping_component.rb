@@ -32,10 +32,6 @@ module Settings
   module ProjectCustomFields
     module ProjectCustomFieldMapping
       class NewProjectMappingComponent < Admin::CustomFields::CustomFieldProjects::NewCustomFieldProjectsModalComponent
-        def render?
-          !custom_field.required?
-        end
-
         private
 
         def form_modal_component

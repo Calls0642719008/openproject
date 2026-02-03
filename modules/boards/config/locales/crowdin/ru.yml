@@ -19,7 +19,7 @@ ru:
       free: Базовый
       action: "Доска действий (%{attribute})"
     board_type_attributes:
-      assignee: Назначенный
+      assignee: Исполнитель
       status: Статус
       version: Версия 
       subproject: Подпроект

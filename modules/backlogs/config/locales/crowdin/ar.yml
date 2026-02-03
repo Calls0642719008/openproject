@@ -40,6 +40,8 @@ ar:
               task_version_must_be_the_same_as_story_version: "يجب أن يكون نفس نسخة القصة الأصلية."
         sprint:
           cannot_end_before_it_starts: "لا يمكن أن ينتهي السباق قبل أن يبدأ."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "قصة جديدة"
     any: "أي"
@@ -75,7 +77,7 @@ ar:
     task_color: "لون المهمّة"
     unassigned: "غير المعيّنة"
     user_preference:
-      header_backlogs: "Backlogs module"
+      header_backlogs: ""
       button_update_backlogs: "Update backlogs module"
     x_more: "%{count} أكثر..."
   backlogs_active: "نشِط"
@@ -100,7 +102,10 @@ ar:
   backlogs_empty_title: "لا توجد إصدارات محددة لاستخدامها في  قائمة الأعمال"
   backlogs_empty_action_text: "للبدء مع قائمة الأعمال ، قم بإنشاء إصدار جديد و تعيينه إلى عمود  قائمة الأعمال."
   button_edit_wiki: "عدّل صفحة ويكي wiki"
-  error_backlogs_task_cannot_be_story: "الإعدادات غير صالحة. نوع المهمة المحدد لا يمكن أن يكون أيضا نوع قصة."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "تم مصادفة الأخطاء التالية:"
   error_intro_singular: "تمت مصادفة الخطأ التالي:"
   error_outro: "من فضلك صحح الأخطاء في الأعلى قبل التقديم مرة أخرى."
@@ -124,6 +129,10 @@ ar:
   label_points_burn_up: "الأعلى"
   label_product_backlog: "منتج متراكم غير منجز"
   label_select_all: "اختر الجميع"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "سباق متراكم غير منجز"
   label_sprint_cards: "بطاقات التصدير"
   label_sprint_impediments: "عوائق السباق"
@@ -160,3 +169,7 @@ ar:
   version_settings_display_option_left: "اليسار"
   version_settings_display_option_none: "لا شيء"
   version_settings_display_option_right: "اليمين"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

@@ -33,11 +33,12 @@ module MeetingAgendaItems
     include ApplicationHelper
     include OpTurbo::Streamable
 
-    def initialize(agenda_item:, datetime:)
+    def initialize(agenda_item:, datetime:, skipped: nil)
       super
 
       @agenda_item = agenda_item
       @datetime = datetime
+      @skipped = skipped
     end
 
     private
@@ -45,11 +46,25 @@ module MeetingAgendaItems
     def title = I18n.t(:label_agenda_item_move_to_next_title)
 
     def confirmation_message
-      I18n.t(
+      base_message = I18n.t(
         :text_agenda_item_move_next_meeting,
         date: format_date(@datetime),
         time: format_time(@datetime, include_date: false)
       )
+
+      if @skipped.present?
+        "#{base_message}\n\n#{skipped_message}"
+      else
+        base_message
+      end
+    end
+
+    def skipped_message
+      if @skipped.one?
+        I18n.t(:text_agenda_item_dialog_skipping_cancelled_one, date: format_date(DateTime.iso8601(@skipped.first)))
+      else
+        I18n.t(:text_agenda_item_dialog_skipping_cancelled_many, count: @skipped.size)
+      end
     end
   end
 end

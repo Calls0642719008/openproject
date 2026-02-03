@@ -73,7 +73,7 @@ See COPYRIGHT and LICENSE files for more details.
   if display_security_badge_graphic?
     content = content_tag :object, nil, data: security_badge_url, type: "image/svg+xml"
     content += link_to "",
-                       ::OpenProject::Static::Links[:security_badge_documentation][:href],
+                       ::OpenProject::Static::Links.url_for(:security_badge_documentation),
                        title: t(:label_what_is_this),
                        class: "security-badge--help-icon icon-context icon-help1",
                        target: "_blank"

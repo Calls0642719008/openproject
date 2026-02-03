@@ -35,10 +35,12 @@ import { IToast, ToastService } from './toast.service';
   template: `
     <div class="op-toast--wrapper">
       <div class="op-toast--casing">
-        <op-toast [toast]="toast" *ngFor="let toast of stack"></op-toast>
+        @for (toast of stack; track toast) {
+          <op-toast [toast]="toast" />
+        }
       </div>
     </div>
-  `,
+    `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'opce-toasts-container',
   standalone: false,

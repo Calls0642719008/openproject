@@ -12,8 +12,8 @@ delete:
   responses:
     '204':
       description: |-
-        Returned if the project was successfully deleted. There is currently no end point to query for the actual deletion status.
-        Such an end point _might_ be added in the future.
+        Returned if the project was successfully deleted. There is currently no endpoint to query for the actual deletion status.
+        Such an endpoint _might_ be added in the future.
       headers: {}
     '403':
       content:
@@ -46,7 +46,7 @@ delete:
         Returned if the project does not exist or the client does not have sufficient permissions
         to see it.
 
-        **Required permission:** view project
+        **Required permission:** any permission in the project
 
         *Note: A client without sufficient permissions shall not be able to test for the existence of
         a version. That's why a 404 is returned here, even if a 403 might be more appropriate.*
@@ -71,7 +71,7 @@ delete:
                 message: Work packages in non descendant projects reference versions
                   of the project or its descendants.
       description: |-
-        Returned if the project cannot be deleted. This can happen when there are still references to the project in other projects
+        Returned if the project cannot be deleted. This can happen when there are still references to the project in other workspaces
         that need to be severed at first.
       headers: {}
   tags:

@@ -2,20 +2,53 @@
 <%=
   component_wrapper do
     primer_form_with(
-      id: "project-section-edit-form",
+      id: "project-custom-field-edit-form",
       model: @project,
       method: :put,
       data: { turbo: true, turbo_stream: true, "test-selector": "async-dialog-content" },
-      url: update_project_custom_values_path(project_id: @project.id, section_id: @project_custom_field_section.id)
+      url: project_custom_field_path(project_id: @project.id, id: @project_custom_field.id)
     ) do |f|
-      render(
-        Projects::CustomFields::Form.new(
-          f,
-          project: @project,
-          custom_field_section: @project_custom_field_section,
-          wrapper_id: "#edit-project-custom-fields-dialog-#{@project_custom_field_section.id}"
+      if @project_custom_field.hierarchical_list?
+        form_field_name = "project[custom_field_values][]"
+        concat(
+          render_inline_form(f) do |hidden_form|
+            hidden_form.hidden(name: form_field_name, value: "", scope_name_to_model: false)
+          end
         )
-      )
+
+        concat(
+          render(
+            Primer::OpenProject::FilterableTreeView.new(
+              form_arguments: { builder: f, name: "custom_field_values" },
+              include_sub_items_check_box_arguments: { hidden: true },
+              filter_mode_control_arguments: { hidden: true }
+            )
+          ) do |tree_view|
+            current_values = Array(@project.custom_value_for(@project_custom_field)).map(&:value)
+            checked_fn = lambda { |item| current_values.include?(item.id.to_s) }
+            item_formatter = standard_tree_view_item_formatter
+            label_fn = lambda { |item| item_formatter.format(item:) }
+
+            item_options = {
+              expanded_fn: ->(*) { true },
+              label_fn:,
+              checked_fn:,
+              select_variant: @project_custom_field.multi_value? ? :multiple : :single
+            }
+
+            populate_tree_view(tree_view, @project_custom_field, item_options:)
+          end
+        )
+      else
+        render(
+          Projects::CustomFields::Form.new(
+            f,
+            project: @project,
+            custom_field: @project_custom_field,
+            wrapper_id:
+          )
+        )
+      end
     end
   end
 %>

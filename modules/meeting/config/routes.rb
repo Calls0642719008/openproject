@@ -29,11 +29,31 @@
 #++
 
 Rails.application.routes.draw do
+  # Global route to show recurring meetings over all projects and create form from the global view
+  resources :recurring_meetings, only: %i[index show new create] do
+    collection do
+      get :humanize_schedule, controller: "recurring_meetings/schedule", action: :humanize_schedule
+    end
+  end
+
+  # Global route to show meetings over all projects and create form from the global view
+  resources :meetings, only: %i[index show new create] do
+    collection do
+      get :new_dialog
+      get "menu" => "meetings/menus#show"
+      get :fetch_timezone
+
+      get "ical/:token", controller: "meetings/ical", action: :index, as: "ical_feed"
+    end
+  end
+
+  # All other routes are project scoped for correct permission handling
   resources :projects, only: %i[] do
     resources :meetings do
       collection do
         get :new_dialog
         get "menu" => "meetings/menus#show"
+        get :fetch_timezone
       end
 
       member do
@@ -51,6 +71,69 @@ Rails.application.routes.draw do
         get :generate_pdf_dialog
         get :toggle_notifications_dialog
         post :toggle_notifications
+        get :exit_draft_mode_dialog
+        post :exit_draft_mode
+      end
+
+      resources :agenda_items, controller: "meeting_agenda_items" do
+        collection do
+          get :cancel_new
+        end
+
+        member do
+          get :cancel_edit
+          put :drop
+          put :move
+          get :move_to_next_dialog, action: :move_to_next_meeting_dialog
+          post :move_to_next, action: :move_to_next_meeting
+          get :duplicate_in_next_dialog, action: :duplicate_in_next_meeting_dialog
+          post :duplicate_in_next, action: :duplicate_in_next_meeting
+          put :move_to_section_dialog
+          post :move_to_section
+        end
+
+        resources :outcomes, controller: "meeting_outcomes", except: %i[index show] do
+          collection do
+            get :cancel_new
+            get :create_work_package_dialog
+            post :create_work_package
+          end
+
+          member do
+            get :cancel_edit
+          end
+        end
+      end
+
+      resources :sections, controller: "meeting_sections" do
+        collection do
+          post :clear_backlog
+          get :clear_backlog_dialog
+        end
+
+        member do
+          post :cancel_edit
+          put :drop
+          put :move
+        end
+      end
+
+      resources :participants, controller: "meeting_participants" do
+        collection do
+          get :manage_participants_dialog
+          post :mark_all_attended
+        end
+
+        member do
+          post :toggle_attendance
+        end
+      end
+
+      resource :presentation, only: %i[show edit], controller: "meeting_presentation" do
+        collection do
+          get :check_for_updates
+          post :start
+        end
       end
     end
 
@@ -68,115 +151,23 @@ Rails.application.routes.draw do
         get :end_series_dialog
       end
     end
-  end
 
-  resources :work_packages, only: %i[] do
-    resources :meetings, only: %i[] do
-      collection do
-        resources :tab, only: %i[index], controller: "work_package_meetings_tab", as: "meetings_tab" do
-          get :count, on: :collection
+    resources :work_packages, only: %i[] do
+      resources :meetings, only: %i[] do
+        collection do
+          resources :tab, only: %i[index], controller: "work_package_meetings_tab", as: "meetings_tab" do
+            get :count, on: :collection
+          end
         end
       end
-    end
-    resources :meeting_agenda_items, only: %i[] do
-      collection do
-        get :dialog, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting_dialog
-        post :create, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting
-      end
-    end
-  end
 
-  resources :recurring_meetings, only: %i[index show new create] do
-    collection do
-      get :humanize_schedule, controller: "recurring_meetings/schedule", action: :humanize_schedule
-    end
-  end
-
-  resources :meetings, only: %i[index show new create] do
-    collection do
-      get :new_dialog
-      get "menu" => "meetings/menus#show"
-      get :fetch_timezone
-
-      get "ical/:token", controller: "meetings/ical", action: :index, as: "ical_feed"
-    end
-
-    resources :agenda_items, controller: "meeting_agenda_items" do
-      collection do
-        get :new, action: :new, as: :new
-        get :cancel_new
+      resources :meeting_agenda_items, only: %i[] do
+        collection do
+          get :dialog, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting_dialog
+          post :create, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting
+          get :refresh_form, controller: "work_package_meetings_tab", action: :refresh_form
+        end
       end
-      member do
-        get :cancel_edit
-        put :drop
-        put :move
-        get :move_to_next_dialog, action: :move_to_next_meeting_dialog
-        post :move_to_next, action: :move_to_next_meeting
-      end
-    end
-    resources :sections, controller: "meeting_sections" do
-      collection do
-        post :clear_backlog
-        get :clear_backlog_dialog
-      end
-      member do
-        get :cancel_edit
-        put :drop
-        put :move
-      end
-    end
-    resources :outcomes, controller: "meeting_outcomes" do
-      collection do
-        get :new, action: :new, as: :new
-        get :cancel_new
-      end
-      member do
-        get :cancel_edit
-      end
-    end
-    resources :participants, controller: "meeting_participants" do
-      collection do
-        get :manage_participants_dialog
-        post :mark_all_attended
-      end
-      member do
-        post :toggle_attendance
-      end
-    end
-
-    resource :agenda, controller: "meeting_agendas", only: [:update] do
-      member do
-        get :history
-        get :diff
-        put :close
-        put :open
-        post :preview
-      end
-
-      resources :versions, only: [:show],
-                           controller: "meeting_agendas"
-    end
-
-    resource :contents, controller: "meeting_contents", only: %i[show update] do
-      member do
-        get :history
-        get :diff
-      end
-    end
-
-    resource :minutes, controller: "meeting_minutes", only: [:update] do
-      member do
-        get :history
-        get :diff
-        post :preview
-      end
-
-      resources :versions, only: [:show],
-                           controller: "meeting_minutes"
-    end
-
-    member do
-      get "/:tab" => "meetings#show", :constraints => { tab: /(agenda|minutes)/ }, :as => "tab"
     end
   end
 end

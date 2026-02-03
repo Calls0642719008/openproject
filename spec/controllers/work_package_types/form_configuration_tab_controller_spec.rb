@@ -79,49 +79,59 @@ RSpec.describe WorkPackageTypes::FormConfigurationTabController do
       }
     end
 
-    context "with an unauthorized account" do
-      let(:user) { create(:user) }
+    context "without enterprise feature enabled" do
+      describe "form is not updated" do
+        before { put :update, params: params }
 
-      describe "the access should be restricted" do
-        before { post "update", params: { type_id: "123" } }
-
-        it { expect(response).to have_http_status(:forbidden) }
+        it { expect(response).to have_http_status(:unprocessable_entity) }
       end
     end
 
-    it "updates the work package type" do
-      put :update, params: params
+    context "with enterprise feature enabled", with_ee: %i[edit_attribute_groups] do
+      context "with an unauthorized account" do
+        let(:user) { create(:user) }
 
-      expect(response).to redirect_to(edit_type_form_configuration_path(type))
+        describe "the access should be restricted" do
+          before { post "update", params: { type_id: "123" } }
 
-      type.reload
-      expect(type.attribute_groups.count).to eq(1)
-      expect(type.attribute_groups.first.key).to eql("People")
-    end
-
-    context "with invalid parameters" do
-      let(:params) do
-        {
-          type_id: type.id,
-          type: {
-            attribute_groups: [
-              {
-                type: "attribute",
-                name: "",
-                attributes: [
-                  { key: "assignee", is_cf: nil, is_required: nil, translation: "Assignee" }
-                ],
-                query: nil
-              }
-            ].to_json
-          }
-        }
+          it { expect(response).to have_http_status(:forbidden) }
+        end
       end
 
-      it "renders the edit tab" do
+      it "updates the work package type" do
         put :update, params: params
 
-        expect(response).to render_template(:edit)
+        expect(response).to redirect_to(edit_type_form_configuration_path(type))
+
+        type.reload
+        expect(type.attribute_groups.count).to eq(1)
+        expect(type.attribute_groups.first.key).to eql("People")
+      end
+
+      context "with invalid parameters" do
+        let(:params) do
+          {
+            type_id: type.id,
+            type: {
+              attribute_groups: [
+                {
+                  type: "attribute",
+                  name: "",
+                  attributes: [
+                    { key: "assignee", is_cf: nil, is_required: nil, translation: "Assignee" }
+                  ],
+                  query: nil
+                }
+              ].to_json
+            }
+          }
+        end
+
+        it "renders the edit tab" do
+          put :update, params: params
+
+          expect(response).to render_template(:edit)
+        end
       end
     end
   end

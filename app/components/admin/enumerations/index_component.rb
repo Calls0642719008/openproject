@@ -51,8 +51,8 @@ module Admin
 
       def drop_target_config
         {
-          "is-drag-and-drop-target": true,
-          "target-container-accessor": "& > ul",
+          generic_drag_and_drop_target: "container",
+          "target-container-accessor": ":scope > ul",
           "target-allowed-drag-type": "enumeration"
         }
       end

@@ -36,7 +36,7 @@ module OpPrimer
 
       @system_arguments[:datetime] = datetime
       @system_arguments[:lang] ||= I18n.locale
-      @system_arguments[:prefix] ||= I18n.t(:label_on)
+      @system_arguments[:prefix] = I18n.t(:label_on) unless @system_arguments.key?(:prefix)
     end
 
     def call

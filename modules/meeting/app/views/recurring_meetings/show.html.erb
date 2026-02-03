@@ -37,13 +37,13 @@ See COPYRIGHT and LICENSE files for more details.
 <% else -%>
   <% if @direction == "past" -%>
     <%= render RecurringMeetings::TableComponent.new(
-      recurring_meeting: @recurring_meeting,
-      rows: @meetings,
-      current_project: @project,
-      count: @count,
-      direction: @direction,
-      max_count: @max_count
-    ) %>
+          recurring_meeting: @recurring_meeting,
+          rows: @meetings,
+          current_project: @project,
+          count: @count,
+          direction: @direction,
+          max_count: @max_count
+        ) %>
   <% else -%>
     <%= render partial: "show_upcoming" %>
   <% end -%>

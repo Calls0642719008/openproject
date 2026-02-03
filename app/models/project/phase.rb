@@ -111,4 +111,6 @@ class Project::Phase < ApplicationRecord
   def following_phases
     @following_phases ||= project.available_phases.select { it.position > position }
   end
+
+  def to_s; name end
 end

@@ -55,13 +55,25 @@ module WorkPackagesControllerHelper
   end
 
   def load_and_validate_query
+    # rubocop:disable Rails/HelperInstanceVariable
     @query ||= retrieve_query(@project)
     @query.name = params[:title] if params[:title].present?
+    respond_query_error(@query.errors.full_messages.join(". ")) unless @query.valid?
+    # rubocop:enable Rails/HelperInstanceVariable
+  end
 
-    unless @query.valid?
-      # Ensure outputting an html response
-      request.format = "html"
-      render_400(message: @query.errors.full_messages.join(". "))
+  def respond_query_error(message)
+    respond_to do |format|
+      format.turbo_stream do
+        render_error_flash_message_via_turbo_stream(message:)
+        response.status = :unprocessable_entity
+        respond_with_turbo_streams
+      end
+
+      format.any do
+        request.format = "html"
+        render_400(message:)
+      end
     end
   end
 

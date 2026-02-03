@@ -35,6 +35,7 @@ class Tables::GoodJobProcesses < Tables::Base
     create_table migration, id: :uuid do |t|
       t.timestamps
       t.jsonb :state
+      t.integer :lock_type, limit: 2
     end
   end
 end

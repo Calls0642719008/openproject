@@ -34,7 +34,7 @@ RSpec.describe API::V3::Users::UsersAPI do
   include API::V3::Utilities::PathHelper
 
   let(:path) { api_v3_paths.user(user.id) }
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
   let(:parameters) { {} }
 
   before do
@@ -69,14 +69,14 @@ RSpec.describe API::V3::Users::UsersAPI do
     end
 
     describe "attribute change" do
-      let(:parameters) { { email: "foo@example.org", language: "de" } }
+      let(:parameters) { { login: "new.login", language: "de" } }
 
-      it_behaves_like "successful update", mail: "foo@example.org", language: "de"
+      it_behaves_like "successful update", login: "new.login", language: "de"
     end
 
     describe "attribute collision" do
-      let(:parameters) { { email: "foo@example.org" } }
-      let(:collision) { create(:user, mail: "foo@example.org") }
+      let(:parameters) { { login: "new.login" } }
+      let(:collision) { create(:user, login: "new.login") }
 
       before do
         collision
@@ -88,12 +88,185 @@ RSpec.describe API::V3::Users::UsersAPI do
         expect(last_response).to have_http_status(:unprocessable_entity)
 
         expect(last_response.body)
-          .to be_json_eql("email".to_json)
+          .to be_json_eql("login".to_json)
                 .at_path("_embedded/details/attribute")
 
         expect(last_response.body)
           .to be_json_eql("urn:openproject-org:api:v3:errors:PropertyConstraintViolation".to_json)
                 .at_path("errorIdentifier")
+      end
+    end
+
+    describe "updating name attribute" do
+      let(:parameters) { { name: "Bobnelda Bobbit" } }
+
+      it "responds with an error" do
+        send_request
+
+        expect(last_response).to have_http_status(:unprocessable_entity)
+
+        expect(last_response.body)
+          .to be_json_eql("name".to_json)
+                .at_path("_embedded/details/attribute")
+
+        expect(last_response.body)
+          .to be_json_eql("urn:openproject-org:api:v3:errors:PropertyIsReadOnly".to_json)
+                .at_path("errorIdentifier")
+      end
+    end
+
+    describe "custom fields" do
+      let!(:required_custom_field) do
+        create(:user_custom_field,
+               :text,
+               name: "Department",
+               is_required: true)
+      end
+
+      context "with a required custom field" do
+        context "when no custom field value is provided" do
+          let(:parameters) do
+            {
+              login: "new.login"
+            }
+          end
+
+          it_behaves_like "successful update", login: "new.login"
+
+          it "keeps the custom field value empty" do
+            send_request
+            expect(user.reload.typed_custom_value_for(required_custom_field))
+              .to be_empty
+          end
+        end
+
+        context "when the custom field is provided but empty" do
+          let(:parameters) do
+            {
+              login: "new.login",
+              required_custom_field.attribute_name(:camel_case) => {
+                raw: ""
+              }
+            }
+          end
+
+          it "responds with 422 and explains the custom field error" do
+            send_request
+            expect(last_response).to have_http_status(:unprocessable_entity)
+
+            response_body = parse_json(last_response.body)
+
+            expect(response_body.dig("_embedded", "details", "attribute"))
+              .to eq("customField#{required_custom_field.id}")
+            expect(response_body["message"]).to eq("Department can't be blank.")
+          end
+        end
+
+        context "when the custom field value is provided and valid" do
+          let(:parameters) do
+            {
+              login: "new.login",
+              required_custom_field.attribute_name(:camel_case) => {
+                raw: "Engineering"
+              }
+            }
+          end
+
+          it_behaves_like "successful update", login: "new.login"
+
+          it "updates the user with the custom field value" do
+            send_request
+            expect(user.reload.typed_custom_value_for(required_custom_field))
+              .to eq("Engineering")
+          end
+        end
+      end
+
+      context "with a visible custom field" do
+        let!(:custom_field) do
+          create(:user_custom_field, :text)
+        end
+
+        let(:parameters) do
+          {
+            login: "new.login",
+            custom_field.attribute_name(:camel_case) => {
+              raw: "CF text"
+            }
+          }
+        end
+
+        it_behaves_like "successful update", login: "new.login"
+
+        it "sets the cf value" do
+          send_request
+          expect(user.reload.typed_custom_value_for(custom_field))
+            .to eq("CF text")
+        end
+      end
+
+      context "with an admin only custom field" do
+        let(:is_required) { false }
+        let!(:admin_only_custom_field) do
+          create(:user_custom_field, :text, admin_only: true, is_required:)
+        end
+
+        context "with admin permissions" do
+          let(:current_user) { create(:admin) }
+          let(:parameters) do
+            {
+              login: "new.login",
+              admin_only_custom_field.attribute_name(:camel_case) => {
+                raw: "CF text"
+              }
+            }
+          end
+
+          it_behaves_like "successful update", login: "new.login"
+
+          it "sets the cf value" do
+            send_request
+            expect(user.reload.typed_custom_value_for(admin_only_custom_field))
+              .to eq("CF text")
+          end
+        end
+
+        context "with non-admin permissions" do
+          let(:current_user) { create(:user, global_permissions: %i[manage_user view_all_principals]) }
+          let(:parameters) do
+            {
+              login: "new.login",
+              admin_only_custom_field.attribute_name(:camel_case) => {
+                raw: "CF text"
+              }
+            }
+          end
+
+          it_behaves_like "successful update", login: "new.login"
+
+          it "does not set the cf value" do
+            send_request
+            expect(user.reload.custom_values.where(custom_field: admin_only_custom_field))
+              .to be_empty
+          end
+
+          context "and when the custom field is required" do
+            let(:is_required) { true }
+            let(:parameters) do
+              {
+                login: "new.login"
+              }
+            end
+
+            it_behaves_like "successful update", login: "new.login"
+
+            it "does not set the cf value" do
+              send_request
+              expect(user.reload.custom_values.where(custom_field: admin_only_custom_field))
+                .to be_empty
+            end
+          end
+        end
       end
     end
   end
@@ -117,8 +290,21 @@ RSpec.describe API::V3::Users::UsersAPI do
       end
     end
 
+    describe "email update" do
+      let(:email) { "this.is.a.new@email.address" }
+      let(:parameters) { { email:  email } }
+
+      it "updates the users email correctly" do
+        send_request
+        expect(last_response).to have_http_status(:ok)
+
+        updated_user = User.find(user.id)
+        expect(updated_user.mail).to eq(email)
+      end
+    end
+
     describe "unknown user" do
-      let(:parameters) { { email: "foo@example.org" } }
+      let(:parameters) { { login: "new.login" } }
       let(:path) { api_v3_paths.user(666) }
 
       it "responds with 404" do
@@ -129,7 +315,7 @@ RSpec.describe API::V3::Users::UsersAPI do
   end
 
   describe "user with global manage_user permission" do
-    shared_let(:global_manage_user) { create(:user, global_permissions: :manage_user) }
+    shared_let(:global_manage_user) { create(:user, global_permissions: %i[manage_user view_all_principals]) }
     let(:current_user) { global_manage_user }
 
     it_behaves_like "update flow"
@@ -151,6 +337,24 @@ RSpec.describe API::V3::Users::UsersAPI do
                 .at_path("errorIdentifier")
       end
     end
+
+    describe "email update" do
+      let(:email) { "this.is.a.new@email.address" }
+      let(:parameters) { { email: email } }
+
+      it "rejects the users email update" do
+        send_request
+        expect(last_response).to have_http_status(:unprocessable_entity)
+
+        expect(last_response.body)
+          .to be_json_eql("email".to_json)
+                .at_path("_embedded/details/attribute")
+
+        expect(last_response.body)
+          .to be_json_eql("urn:openproject-org:api:v3:errors:PropertyIsReadOnly".to_json)
+                .at_path("errorIdentifier")
+      end
+    end
   end
 
   describe "unauthorized user" do
@@ -159,7 +363,7 @@ RSpec.describe API::V3::Users::UsersAPI do
 
     it "returns an erroneous response" do
       send_request
-      expect(last_response).to have_http_status(:forbidden)
+      expect(last_response).to have_http_status(:not_found)
     end
   end
 end

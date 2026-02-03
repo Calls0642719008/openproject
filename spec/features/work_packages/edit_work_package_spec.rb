@@ -275,14 +275,12 @@ RSpec.describe "edit work package", :js do
         completer = wp_page.edit_field field_name
         completer.activate!
 
-        options = visible_user_auto_completer_options
-
         expected_options = [
           { name: manager.name, email: nil },  # Manager's email should not be visible
           { name: dev.name, email: dev.mail }  # Developer's email should be visible
         ]
 
-        expect(options).to eq(expected_options)
+        expect_visible_user_auto_completer_options(expected_options)
       end
     end
 
@@ -290,8 +288,6 @@ RSpec.describe "edit work package", :js do
       it "does show you the email of other users" do
         completer = wp_page.edit_field field_name
         completer.activate!
-
-        options = visible_user_auto_completer_options
 
         expected_options = [
           # With the right permissions, you can see other users email address
@@ -302,7 +298,7 @@ RSpec.describe "edit work package", :js do
             email: dev.mail }
         ]
 
-        expect(options).to eq(expected_options)
+        expect_visible_user_auto_completer_options(expected_options)
       end
     end
 

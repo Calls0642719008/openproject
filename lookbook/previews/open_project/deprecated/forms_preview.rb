@@ -38,8 +38,6 @@ module OpenProject
 
       def bordered_compressed; end
 
-      def collapsible; end
-
       def controls; end
 
       def field_types; end

@@ -38,6 +38,8 @@ module Projects
 
         attr_reader :project, :current_user
 
+        delegate :parent_allowed?, to: :project
+
         def initialize(project:, current_user:)
           super()
 

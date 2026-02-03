@@ -9,15 +9,15 @@ value:
     project:
       _type: Project
       id: 3
-      _hint: Project resource shortened for brevity
+      _abbreviated: Project resource shortened for brevity
     principal:
       _type: User
       id: 5
-      _hint: User resource shortened for brevity
+      _abbreviated: User resource shortened for brevity
     roles:
       - _type: Role
         id: 4
-        _hint: Roles resource shortened for brevity
+        _abbreviated: Roles resource shortened for brevity
   _links:
     self:
       href: '/api/v3/memberships/11'

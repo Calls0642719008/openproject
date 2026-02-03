@@ -57,19 +57,11 @@ module Storages
 
               case response
               in { status: 200..299 }
-                verify_successful_response(response.json(symbolize_keys: true), error)
+                fail_on_ocs_error(response.json(symbolize_keys: true), error)
               in { status: 404 }
                 Failure(error.with(code: :not_found))
               in { status: 401 }
                 Failure(error.with(code: :unauthorized))
-              else
-                Failure(error.with(code: :error))
-              end
-            end
-
-            def verify_successful_response(json, error)
-              if json.dig(:ocs, :meta, :status) == "ok"
-                Success(json)
               else
                 Failure(error.with(code: :error))
               end

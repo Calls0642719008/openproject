@@ -116,8 +116,8 @@ export class TimelineCellRenderer {
     labels:WorkPackageCellLabels,
     dates:CellDateMovement,
   ):void {
-    this.assignDate(change, 'startDate', dates.startDate as Moment);
-    this.assignDate(change, 'dueDate', dates.dueDate as Moment);
+    this.assignDate(change, 'startDate', dates.startDate!);
+    this.assignDate(change, 'dueDate', dates.dueDate!);
 
     this.updateLabels(true, labels, change);
   }
@@ -187,8 +187,10 @@ export class TimelineCellRenderer {
     const projection = renderInfo.change.projectedResource;
     let direction:Exclude<MouseDirection, 'create'>;
 
+    const target = ev.target as HTMLElement;
+
     // Update the cursor and maybe set start/due values
-    if (jQuery(ev.target!).hasClass(classNameLeftHandle)) {
+    if (target.classList.contains(classNameLeftHandle)) {
       // only left
       direction = 'left';
       this.mouseDirection = 'left';
@@ -196,7 +198,7 @@ export class TimelineCellRenderer {
       if (projection.startDate === null) {
         projection.startDate = projection.dueDate;
       }
-    } else if (jQuery(ev.target!).hasClass(classNameRightHandle) || dateForCreate) {
+    } else if (target.classList.contains(classNameRightHandle) || dateForCreate) {
       // only right
       direction = 'right';
       this.mouseDirection = 'right';
@@ -286,7 +288,7 @@ export class TimelineCellRenderer {
       element.style.backgroundImage = ''; // required! unable to disable "fade out bar" with css
 
       if (renderInfo.viewParams.selectionModeStart === `${renderInfo.workPackage.id!}`) {
-        jQuery(element).addClass(timelineMarkerSelectionStartClass);
+        element.classList.add(timelineMarkerSelectionStartClass);
         element.style.background = 'none';
       }
     }

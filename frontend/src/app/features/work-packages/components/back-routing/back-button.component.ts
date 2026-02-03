@@ -40,21 +40,17 @@ import { I18nService } from 'core-app/core/i18n/i18n.service';
 export class BackButtonComponent {
   @Input() public linkClass:string;
 
-  @Input() public customBackMethod:() => unknown;
-
   public text = {
     goBack: this.I18n.t('js.button_back'),
   };
 
-  constructor(readonly backRoutingService:BackRoutingService,
-    readonly I18n:I18nService) {
+  constructor(
+    readonly backRoutingService:BackRoutingService,
+    readonly I18n:I18nService,
+  ) {
   }
 
   public goBack():void {
-    if (this.customBackMethod) {
-      this.customBackMethod();
-    } else {
-      this.backRoutingService.goBack();
-    }
+    this.backRoutingService.goBack();
   }
 }

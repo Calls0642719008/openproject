@@ -77,7 +77,7 @@ get:
               value:
                 _links:
                   availableInProjects:
-                    href: "/api/v3/versions/11/projects"
+                    href: "/api/v3/versions/11/workspaces"
                   customField4:
                     href: "/api/v3/custom_options/5"
                     title: Custom field option

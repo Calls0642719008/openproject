@@ -41,33 +41,37 @@ module Components
       expect_open
 
       expect(submit_button).to be_disabled
-      fill_in "request_for_confirmation_password", with: password
+      fill_in password_confirmation_field, with: password
 
       expect(submit_button).not_to be_disabled
       submit(should_fail:, with_keyboard:)
     end
 
     def expect_open
-      expect(page).to have_selector(selector)
+      expect(page).to have_test_selector(test_selector)
     end
 
     def expect_closed
-      expect(page).to have_no_selector(selector)
+      expect(page).to have_no_test_selector(test_selector)
     end
 
     def submit_button
-      page.find('[data-test-selector="confirmation-modal--confirmed"]')
+      page.find('[data-test-selector="op-my--password-confirmation-dialog--submit-button"]')
     end
 
     private
 
-    def selector
-      ".password-confirm-dialog--modal"
+    def test_selector
+      "op-my--password-confirmation-dialog"
+    end
+
+    def password_confirmation_field
+      "password_confirmation"
     end
 
     def submit(should_fail:, with_keyboard:)
       if with_keyboard
-        find_field("request_for_confirmation_password").send_keys :enter
+        find_field(password_confirmation_field).send_keys :enter
       else
         submit_button.click
       end

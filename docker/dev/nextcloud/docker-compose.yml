@@ -11,7 +11,7 @@ services:
       # - ../nextcloud_apps:/var/www/html/custom_apps
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.local`)"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
       - "traefik.http.routers.nextcloud.entrypoints=websecure"
 
   cron:

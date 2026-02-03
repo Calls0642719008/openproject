@@ -48,23 +48,41 @@ VCR.configure do |config|
     i.response.body.force_encoding("UTF-8")
   end
 
-  config.filter_sensitive_data "<BASIC_AUTH>" do |interaction|
-    header = interaction.request.headers["Authorization"]&.first&.split
+  config.filter_sensitive_data "<SECRET>" do |interaction|
+    _type, secret = interaction.request.headers["Authorization"]&.first&.split(" ", 2)
 
-    header.last if header&.first == "Basic"
+    secret
   end
 
-  config.filter_sensitive_data "<BEARER TOKEN>" do |interaction|
-    header = interaction.request.headers["Authorization"]&.first&.split
+  config.filter_sensitive_data "<CLIENT_SECRET>" do |interaction|
+    content_type = interaction.request.headers["Content-Type"]&.first
 
-    header.last if header&.first == "Bearer"
+    if content_type&.include?("application/x-www-form-urlencoded")
+      URI.decode_www_form(interaction.request.body).to_h["client_secret"]
+    end
+  end
+
+  config.filter_sensitive_data "<REFRESH_TOKEN>" do |interaction|
+    content_type = interaction.request.headers["Content-Type"]&.first
+
+    if content_type&.include?("application/x-www-form-urlencoded")
+      URI.decode_www_form(interaction.request.body).to_h["refresh_token"]
+    end
   end
 
   config.filter_sensitive_data "<ACCESS_TOKEN>" do |interaction|
-    header_value = interaction.response.headers["Content-Type"]&.first
+    content_type = interaction.response.headers["Content-Type"]&.first
 
-    if header_value&.include?("application/json")
+    if content_type&.include?("application/json")
       MultiJson.load(interaction.response.body)["access_token"]
+    end
+  end
+
+  config.filter_sensitive_data "<REFRESH_TOKEN>" do |interaction|
+    content_type = interaction.response.headers["Content-Type"]&.first
+
+    if content_type&.include?("application/json")
+      MultiJson.load(interaction.response.body)["refresh_token"]
     end
   end
 

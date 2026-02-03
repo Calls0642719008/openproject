@@ -37,7 +37,7 @@ class Tables::TimeEntries < Tables::Base
       t.bigint :user_id, null: false
       t.belongs_to :work_package, index: false
       t.float :hours, null: true
-      t.string :comments
+      t.text :comments
       t.bigint :activity_id, null: true
       t.date :spent_on, null: false
       t.integer :tyear, null: false
@@ -49,6 +49,8 @@ class Tables::TimeEntries < Tables::Base
       t.bigint :rate_id
       t.references :logged_by, foreign_key: { to_table: :users }, index: true, null: false
       t.boolean :ongoing, null: false, default: false, index: true
+      t.integer :start_time, null: true
+      t.string :time_zone, null: true
 
       t.index :activity_id, name: "index_time_entries_on_activity_id"
       t.index :created_at, name: "index_time_entries_on_created_at"

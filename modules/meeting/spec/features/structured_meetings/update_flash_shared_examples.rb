@@ -51,7 +51,6 @@ RSpec.shared_examples "no flash appears when interacting with backlog in multipl
       item = MeetingAgendaItem.find_by(title: "Backlog agenda item")
       show_page.edit_agenda_item(item) do
         fill_in "Title", with: "Edited title"
-        click_on "Save"
       end
 
       show_page.trigger_change_poll

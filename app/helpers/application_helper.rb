@@ -99,8 +99,7 @@ module ApplicationHelper
 
   def delete_link(url, options = {})
     options = {
-      method: :delete,
-      data: { confirm: I18n.t(:text_are_you_sure) },
+      data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) },
       class: "icon icon-delete"
     }.merge(options)
 
@@ -199,10 +198,10 @@ module ApplicationHelper
 
   def time_tag(time)
     text = distance_of_time_in_words(Time.now, time)
-    if @project and @project.module_enabled?("activity")
+    if @project&.module_enabled?("activity") # rubocop:disable Rails/HelperInstanceVariable
       link_to(text, { controller: "/activities",
                       action: "index",
-                      project_id: @project,
+                      project_id: @project, # rubocop:disable Rails/HelperInstanceVariable
                       from: time.to_date },
               title: format_time(time))
     else
@@ -272,30 +271,26 @@ module ApplicationHelper
   end
 
   def lang_options_for_select(blank = true)
-    auto =
-      if blank && (valid_languages - all_languages) == (all_languages - valid_languages)
-        [["(auto)", ""]]
-      else
-        []
-      end
+    options = valid_languages.map { |lang| [*translate_language(lang), { lang: }] }
+    options.sort_by!(&:first)
 
-    mapped_languages = valid_languages.map { |lang| translate_language(lang) }
+    if blank && valid_languages.to_set == all_languages.to_set
+      options.unshift([I18n.t(:label_auto_option), ""])
+    end
 
-    auto + mapped_languages.sort_by(&:last)
+    options
   end
 
   def all_lang_options_for_select
     all_languages
       .map { |lang| translate_language(lang) }
-      .sort_by(&:last)
+      .sort_by(&:first)
   end
 
   def theme_options_for_select
     [
       [I18n.t("themes.light"), "light"],
-      [I18n.t("themes.light_high_contrast"), "light_high_contrast"],
       [I18n.t("themes.dark"), "dark"],
-      [I18n.t("themes.dark_high_contrast"), "dark_high_contrast"],
       [I18n.t("themes.sync_with_os"), "sync_with_os"]
     ]
   end
@@ -307,7 +302,7 @@ module ApplicationHelper
 
   def body_data_attributes(local_assigns)
     {
-      controller: "application auto-theme-switcher hover-card-trigger beforeunload",
+      controller: "application auto-theme-switcher hover-card-trigger beforeunload external-links highlight-target-element",
       relative_url_root: root_path,
       overflowing_identifier: ".__overflowing_body",
       rendered_at: Time.zone.now.iso8601,
@@ -317,28 +312,25 @@ module ApplicationHelper
   end
 
   def user_theme_data_attributes
-    if User.current.pref.sync_with_os_theme?
-      # Theme will be set by inline script before body renders to prevent flickering
-      { auto_theme_switcher_mode_value: User.current.pref.theme,
-        auto_theme_switcher_desktop_light_high_contrast_logo_class: "op-logo--link_high_contrast",
-        auto_theme_switcher_mobile_white_logo_class: "op-logo--icon_white" }
-    else
-      mode, _theme_suffix = User.current.pref.theme.split("_", 2)
-      {
-        color_mode: mode,
-        "#{mode}_theme": User.current.pref.theme
-      }
-    end
-  end
+    pref = User.current.pref
+    theme = pref.theme
 
-  def highlight_default_language(lang_options)
-    lang_options.map do |(language_name, code)|
-      if code == Setting.default_language
-        [I18n.t("settings.language_name_being_default", language_name:), code, { disabled: true, checked: true }]
-      else
-        [language_name, code]
-      end
+    theme_options = {
+      auto_theme_switcher_theme_value: theme,
+      auto_theme_switcher_desktop_light_high_contrast_logo_class: "op-logo--link_high_contrast",
+      auto_theme_switcher_mobile_white_logo_class: "op-logo--icon_white"
+    }
+
+    if pref.sync_with_os_theme?
+      theme_options[:auto_theme_switcher_force_light_contrast_value] = pref.force_light_theme_contrast?
+      theme_options[:auto_theme_switcher_force_dark_contrast_value] = pref.force_dark_theme_contrast?
+    else
+      theme_options[:color_mode] = theme
+      theme_options[:"#{theme}_theme"] = theme
+      theme_options[:auto_theme_switcher_increase_contrast_value] = pref.increase_theme_contrast?
     end
+
+    theme_options
   end
 
   def labelled_tabular_form_for(record, options = {}, &)
@@ -359,21 +351,19 @@ module ApplicationHelper
     hidden_field_tag("back_url", CGI.escape(back_url), id: nil) if back_url.present?
   end
 
-  def back_url_to_current_page_hidden_field_tag
-    back_url = params[:back_url]
+  def back_url_to_current_page
+    back_url = params[:back_url] if params.present?
     if back_url.present?
       back_url = back_url.to_s
-    elsif request.get? and params.present?
+    elsif request.get? && params.present?
       back_url = request.url
     end
 
-    hidden_field_tag("back_url", back_url) if back_url.present?
+    back_url
   end
 
-  def check_all_links(form_name)
-    link_to_function(t(:button_check_all), "OpenProject.helpers.checkAll('#{form_name}', true)") +
-      " | " +
-      link_to_function(t(:button_uncheck_all), "OpenProject.helpers.checkAll('#{form_name}', false)")
+  def check_all_links(form_id = nil, &)
+    render(OpenProject::Common::CheckAllComponent.new(checkable_id: form_id), &)
   end
 
   def current_layout
@@ -450,10 +440,10 @@ module ApplicationHelper
     end
   end
 
-  # To avoid the menu flickering, disable it
-  # by default unless we're in test mode
-  def initial_menu_styles(side_displayed)
-    Rails.env.test? || !side_displayed ? "" : "display:none"
+  # To avoid FOUC (menu flickering / dark mode on logout), hide page
+  # wrapper on load except in test environment.
+  def initial_menu_styles
+    Rails.env.test? || "display:none"
   end
 
   def initial_menu_classes(side_displayed, show_decoration)
@@ -474,21 +464,6 @@ module ApplicationHelper
 
   def permitted_params
     PermittedParams.new(params, current_user)
-  end
-
-  # Returns the language name in its own language for a given locale
-  #
-  # @param lang_code [String] the locale for the desired language, like `en`,
-  #   `de`, `fil`, `zh-CN`, and so on.
-  # @return [String] the language name translated in its own language
-  def translate_language(lang_code)
-    # rename in-context translation language name for the language select box
-    if lang_code.to_sym == Redmine::I18n::IN_CONTEXT_TRANSLATION_CODE &&
-      ::I18n.locale != Redmine::I18n::IN_CONTEXT_TRANSLATION_CODE
-      [Redmine::I18n::IN_CONTEXT_TRANSLATION_NAME, lang_code.to_s]
-    else
-      [I18n.t("cldr.language_name", locale: lang_code), lang_code.to_s]
-    end
   end
 
   def link_to_content_update(name, options = {}, html_options = {}, &)

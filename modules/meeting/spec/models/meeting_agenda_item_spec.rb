@@ -30,8 +30,6 @@
 
 require_relative "../spec_helper"
 
-RSpec::Matchers.define_negated_matcher :not_change, :change
-
 RSpec.describe MeetingAgendaItem do
   let(:meeting_attributes) { {} }
   let(:meeting) { build_stubbed(:meeting, **meeting_attributes) }
@@ -285,44 +283,6 @@ RSpec.describe MeetingAgendaItem do
             it { is_expected.to be false }
           end
         end
-      end
-    end
-  end
-
-  describe "#modifiable?" do
-    subject { meeting_agenda_item.modifiable? }
-
-    let(:attributes) { { work_package_id: nil, item_type: :work_package } }
-
-    context "when meeting is closed" do
-      let(:meeting_attributes) { { state: :closed } }
-
-      it { is_expected.to be false }
-    end
-
-    context "when the work package is not deleted" do
-      before do
-        allow(meeting_agenda_item).to receive(:deleted_work_package?).and_return(false)
-      end
-
-      it { is_expected.to be true }
-    end
-
-    context "when work package is deleted" do
-      before do
-        allow(meeting_agenda_item).to receive(:deleted_work_package?).and_return(true)
-      end
-
-      context "and the current value is not modified" do
-        it { is_expected.to be true }
-      end
-
-      context "and the current value is modified" do
-        before do
-          meeting_agenda_item.work_package_id = 1
-        end
-
-        it { is_expected.to be false }
       end
     end
   end

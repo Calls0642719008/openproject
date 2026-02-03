@@ -60,6 +60,7 @@ module OpenProject::GitlabIntegration
              work_package.gitlab_merge_requests.count +
                work_package.gitlab_issues.count
            },
+           before: :watchers,
            caption: :project_module_github
     end
 

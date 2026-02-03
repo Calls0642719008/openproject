@@ -56,19 +56,19 @@ module WikiHelper
   private
 
   def project_breadcrumb(project)
-    { href: project_overview_path(project.id), text: project.name }
+    { href: project_overview_path(project), text: project.name }
   end
 
   def wiki_module_breadcrumb(project, page)
     {
-      href: url_for({ controller: "/wiki", action: "index", project_id: project.identifier, id: page }),
-      text: t("activerecord.models.wiki")
+      href: toc_project_wiki_path(project, page),
+      text: Wiki.human_model_name
     }
   end
 
   def wiki_page_breadcrumb(page)
     {
-      href: project_wiki_path(page, page.project),
+      href: project_wiki_path(page.project, page),
       text: page.breadcrumb_title
     }
   end
@@ -78,13 +78,11 @@ module WikiHelper
 
     page.ancestors.reverse.map do |parent|
       {
-        href: project_wiki_path(parent, parent.project),
+        href: project_wiki_path(page.project, parent),
         text: parent.breadcrumb_title
       }
     end
   end
-
-  private
 
   def wiki_page_options_for_select_of_level(pages,
                                             parent: nil,
@@ -100,8 +98,8 @@ module WikiHelper
   end
 
   def wiki_page_option(page, level, ids)
-    indent = level.positive? ? (("&nbsp;" * level * 2) + "&#187; ") : ""
+    indent = level.positive? ? "#{"\u00A0" * level * 2}» " : ""
     id = ids ? page.id : page.title
-    [(indent + h(page.title)).html_safe, id]
+    [indent + h(page.title), id]
   end
 end

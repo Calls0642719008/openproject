@@ -47,7 +47,7 @@ module Members
     def principal_assignable
       return if principal.nil?
 
-      if principal.builtin? || principal.locked?
+      if principal.builtin? || principal.locked? || principal.deleted?
         errors.add(:principal, :unassignable)
       end
     end

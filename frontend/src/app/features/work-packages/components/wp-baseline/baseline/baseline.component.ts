@@ -300,6 +300,6 @@ export class OpBaselineComponent extends UntilDestroyedMixin implements OnInit {
 
   private buildFilterString(i:number):string {
     const timeWithOffset = `${this.selectedTimes[i]}${this.selectedOffsets[i]}`;
-    return `${this.selectedFilter as string}@${timeWithOffset}`;
+    return `${this.selectedFilter!}@${timeWithOffset}`;
   }
 }

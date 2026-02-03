@@ -51,10 +51,10 @@ RSpec.describe Meetings::CopyService, "integration", type: :model do
   end
 
   context "when the meeting is closed" do
-    it "reopens the meeting" do
+    it "creates the copy in draft mode" do
       meeting.update! state: "closed"
       expect(service_result).to be_success
-      expect(copy.state).to eq("open")
+      expect(copy.state).to eq("draft")
     end
   end
 
@@ -64,8 +64,9 @@ RSpec.describe Meetings::CopyService, "integration", type: :model do
     let(:invalid_user) { create(:user) }
 
     it "copies applicable participants, resetting attended status" do
-      meeting.participants.create!(user: invited_user, invited: true, attended: false)
-      meeting.participants.create!(user: attending_user, invited: true, attended: true)
+      meeting.participants.create!(user: invited_user, invited: true, attended: false, participation_status: :accepted)
+      meeting.participants.create!(user: attending_user, invited: true, attended: true, participation_status: :tentative,
+                                   comment: "Test Comment")
       meeting.participants.create!(user: invalid_user, invited: true, attended: true)
 
       expect(service_result).to be_success
@@ -74,9 +75,13 @@ RSpec.describe Meetings::CopyService, "integration", type: :model do
       attending = copy.participants.find_by(user: attending_user)
       expect(invited).to be_invited
       expect(invited).not_to be_attended
+      expect(invited).to be_participation_accepted
+      expect(invited.comment).to be_nil
 
       expect(attending).to be_invited
       expect(attending).not_to be_attended
+      expect(attending).to be_participation_tentative
+      expect(attending.comment).to be_nil
 
       invalid = copy.participants.find_by(user: invalid_user)
       expect(invalid).to be_nil

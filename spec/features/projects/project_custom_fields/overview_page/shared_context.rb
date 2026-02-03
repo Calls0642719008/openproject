@@ -275,6 +275,14 @@ RSpec.shared_context "with seeded projects, members and project custom fields" d
     field
   end
 
+  let!(:sections) do
+    [
+      section_for_input_fields,
+      section_for_select_fields,
+      section_for_multi_select_fields
+    ]
+  end
+
   let!(:input_fields) do
     [
       boolean_project_custom_field,

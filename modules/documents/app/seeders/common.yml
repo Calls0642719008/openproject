@@ -35,3 +35,23 @@ modules_permissions:
   - role: :default_role_reader
     add:
     - :view_documents
+
+document_types:
+  - reference: doc_type_note
+    t_name: Note
+    is_default: true
+  - reference: doc_type_idea
+    t_name: Idea
+    is_default: false
+  - reference: doc_type_proposal
+    t_name: Proposal
+    is_default: false
+  - reference: doc_type_specification
+    t_name: Specification
+    is_default: false
+  - reference: doc_type_report
+    t_name: Report
+    is_default: false
+  - reference: doc_type_documentation
+    t_name: Documentation
+    is_default: false

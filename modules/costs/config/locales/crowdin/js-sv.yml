@@ -23,7 +23,7 @@ sv:
   js:
     text_are_you_sure: "Är du säker?"
     myTimeTracking:
-      noSpecificTime: "No specific time"
+      noSpecificTime: "Ingen specifik tid"
     work_packages:
       property_groups:
         costs: "Kostnader"

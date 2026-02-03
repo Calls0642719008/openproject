@@ -31,30 +31,20 @@ class BacklogsSettingsController < ApplicationController
   menu_item :admin_backlogs
 
   before_action :require_admin
-  before_action :check_valid_settings, only: :update
 
-  def show; end
-
-  def update
-    Setting["plugin_openproject_backlogs"] = update_settings
-    flash[:notice] = I18n.t(:notice_successful_update)
-
-    redirect_to action: :show
+  def show
+    @settings = Admin::Settings::BacklogsSettingsModel.new(Setting.plugin_openproject_backlogs)
   end
 
-  private
-
-  def check_valid_settings
-    story_types = update_settings[:story_types]
-    task_type = update_settings[:task_type]
-
-    if story_types.include?(task_type)
-      flash[:error] = I18n.t(:error_backlogs_task_cannot_be_story)
+  def update # rubocop:disable Metrics/AbcSize
+    @settings = Admin::Settings::BacklogsSettingsModel.new(permitted_params.backlogs_admin_settings)
+    if @settings.valid?
+      Setting.plugin_openproject_backlogs = @settings.to_h
+      flash[:notice] = I18n.t(:notice_successful_update)
       redirect_to action: :show
+    else
+      flash.now[:error] = I18n.t(:notice_unsuccessful_update_with_reason, reason: @settings.errors.full_messages.to_sentence)
+      render :show, status: :unprocessable_entity
     end
-  end
-
-  def update_settings
-    @update_settings ||= permitted_params.backlogs_admin_settings.to_h
   end
 end

@@ -370,10 +370,10 @@ RSpec.describe Project, "acts_as_journalized" do
         create(:project_phase, project_id: project.id)
       end
 
-      it "fails when using save_journals" do
+      it "succeeds when using save_journals" do
         expect do
           project.save_journals
-        end.to raise_error(ActiveRecord::StatementInvalid)
+        end.to change { project.journals.count }.from(1).to(2)
       end
 
       it "succeeds when using touch_and_save_journals" do

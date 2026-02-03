@@ -44,10 +44,11 @@ module OpenProject
             h[:retain_from_session] = %w[saml_uid saml_session_index saml_transaction_id]
 
             # remember the origin in RelayState
-            h[:idp_sso_target_url_runtime_params] = { origin: :RelayState }
+            h[:idp_sso_service_url_runtime_params] = { origin: :RelayState } # omniauth-saml 2.x
+            h[:idp_sso_target_url_runtime_params] = { origin: :RelayState } # omniauth-saml 1.10
 
             h[:single_sign_out_callback] = Proc.new do |prev_session, _prev_user|
-              next unless h[:idp_slo_target_url]
+              next unless h[:idp_slo_service_url]
               next unless prev_session[:saml_uid] && prev_session[:saml_session_index]
 
               # Set the uid and index for the logout in this session again

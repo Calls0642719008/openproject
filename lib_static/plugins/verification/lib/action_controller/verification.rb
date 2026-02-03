@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionController # :nodoc:
   module Verification # :nodoc:
     extend ActiveSupport::Concern

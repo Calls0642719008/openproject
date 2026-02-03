@@ -5,6 +5,7 @@ export interface IProjectAutocompleteItem {
   id:ID;
   href:string;
   name:string;
+  _type?:string;
   disabled:boolean;
   disabledReason?:string;
   ancestors:IHalResourceLink[];

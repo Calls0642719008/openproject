@@ -47,7 +47,7 @@ module Storages
 
           step :redirect_uri,
                section: :oauth_configuration,
-               completed_if: ->(storage) {
+               completed_if: lambda { |storage|
                  # Working around the fact that there is nothing changed on the storage after showing
                  # the redirect url. The redirect URL step only exists to show the oauth client's redirect
                  # URL to the user right after the client was created.
@@ -57,17 +57,6 @@ module Storages
           private
 
           def prepare_storage_for_access_management_form(storage)
-            ::Storages::Storages::SetProviderFieldsAttributesService
-              .new(user:, model: storage, contract_class: EmptyContract)
-              .call
-          end
-
-          def prepare_oauth_application(storage)
-            persist_service_result = ::Storages::OAuthApplications::CreateService.new(storage:, user:).call
-            storage.oauth_application = persist_service_result.result if persist_service_result.success?
-          end
-
-          def prepare_storage_for_automatic_management_form(storage)
             ::Storages::Storages::SetProviderFieldsAttributesService
               .new(user:, model: storage, contract_class: EmptyContract)
               .call

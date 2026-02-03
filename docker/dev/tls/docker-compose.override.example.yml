@@ -1,14 +1,20 @@
 services:
   traefik:
-    networks:
-      external:
-        aliases:
-          # Traefik is aliased to all the services that run behind it here.
-          # The reason to do this is that step-ca tries to validate the domains
-          # by connecting to them, and we'd like it to go through traefik, instead
-          # of calling the service containers directly.
-          - openproject.local
-          - openproject-assets.local
-          - nextcloud.local
-          - gitlab.local
-          - keycloak.local
+    # Overwrite to enable Let's encrypt instead of using Step CA for certificate generation
+    # command: >
+    #   --entryPoints.websecure.http.tls.certresolver=letsencrypt
+    #   --certificatesresolvers.letsencrypt.acme.email=you@example.com
+
+    # For step CA only: Overwrite trusted CA certificates with Step root CA (not needed for Let's encrypt)
+    environment:
+      - LEGO_CA_CERTIFICATES=/step/certs/root_ca.crt
+
+    # Necessary for certificates via Step CA only
+    depends_on:
+      step:
+        condition: service_healthy
+
+    # Enabling traefik for the traefik container itself will give you access to the Traefik Dashboard, which can be a useful
+    # tool to inspect whether everything is working fine. It's not advised to publicly expose this dashboard.
+    labels:
+      - "traefik.enable=true"

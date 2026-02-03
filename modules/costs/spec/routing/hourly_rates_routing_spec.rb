@@ -56,12 +56,5 @@ RSpec.describe HourlyRatesController do
                                                                 project_id: "blubs",
                                                                 id: "5")
     }
-
-    it {
-      expect(post("/projects/blubs/hourly_rates/5/set_rate")).to route_to(controller: "hourly_rates",
-                                                                          action: "set_rate",
-                                                                          project_id: "blubs",
-                                                                          id: "5")
-    }
   end
 end

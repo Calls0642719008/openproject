@@ -31,7 +31,7 @@
 require Rails.root.join("db/migrate/tables/base").to_s
 
 class Tables::TimeEntryJournals < Tables::Base
-  def self.table(migration)
+  def self.table(migration) # rubocop:disable Metrics/AbcSize
     create_table migration do |t|
       t.bigint :project_id, null: false, index: true
       t.bigint :user_id, null: false
@@ -47,6 +47,8 @@ class Tables::TimeEntryJournals < Tables::Base
       t.decimal :costs, precision: 15, scale: 2, null: true
       t.bigint :rate_id
       t.references :logged_by, foreign_key: { to_table: :users }, index: true, null: false
+      t.integer :start_time, null: true
+      t.string :time_zone, null: true
     end
   end
 end

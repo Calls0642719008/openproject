@@ -32,16 +32,18 @@ import { IfcModelsDataService } from 'core-app/features/bim/ifc_models/pages/vie
 
 @Component({
   template: `
-    <a *ngIf="manageAllowed"
-       class="button"
-       [href]="manageIFCPath">
-      <op-icon icon-classes="button--icon icon-settings2"></op-icon>
-      <span class="button--text"
-            [textContent]="text.manage"
-            aria-hidden="true"></span>
-    </a>
-
-  `,
+    @if (manageAllowed) {
+      <a
+        class="button"
+        [href]="manageIFCPath">
+        <op-icon icon-classes="button--icon icon-settings2" />
+        <span class="button--text"
+          [textContent]="text.manage"
+        aria-hidden="true"></span>
+      </a>
+    }
+    
+    `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'op-bcf-manage-ifc-button',
   standalone: false,

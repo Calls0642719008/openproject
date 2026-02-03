@@ -131,7 +131,7 @@ export default class ProjectLifeCycleFormController extends FormPreviewControlle
   preventValueMorphingActiveElement(event:CustomEvent<{ attributeName:string }>) {
     const target = event.target as HTMLInputElement;
     const { attributeName } = event.detail;
-    const isActiveElement = this.highlightedField && this.highlightedField.id === target?.id;
+    const isActiveElement = this.highlightedField?.id === target?.id;
 
     if (isActiveElement && ['value', 'class'].includes(attributeName)) {
       event.preventDefault();
@@ -165,7 +165,7 @@ export default class ProjectLifeCycleFormController extends FormPreviewControlle
     return field;
   }
 
-  private highlightField(field:HTMLInputElement, clearIfInvalid:boolean=false) {
+  private highlightField(field:HTMLInputElement, clearIfInvalid=false) {
     this.clearHighLight();
 
     if (field.disabled || !this.dateInputFields.includes(field)) {

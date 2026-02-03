@@ -36,6 +36,14 @@ See COPYRIGHT and LICENSE files for more details.
       title: @meeting.title
     ) %>
 
+<% if @changes[:old_title] != @changes[:new_title] %>
+<%= t("meeting.email.updated.old_title") %>:
+<%= @changes[:old_title] %>
+
+<%= t("meeting.email.updated.new_title") %>:
+<%= @changes[:new_title] %>
+<% end %>
+
 <% if @changes[:old_start] != @changes[:new_start] || @changes[:old_duration] != @changes[:new_duration] %>
 <%= t("meeting.email.updated.old_date_time") %>:
 <%= format_date @changes[:old_start] %> <%= format_time @changes[:old_start], include_date: false %> - <%= format_time (@changes[:old_start] + @changes[:old_duration].hours), include_date: false %> (<%= formatted_time_zone_offset %>}

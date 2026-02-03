@@ -60,6 +60,11 @@ module Storages
         end
 
         context "with empty username and password" do
+          before do
+            storage.username = ""
+            storage.password = ""
+          end
+
           it "must return error" do
             result = Authentication[strategy_data].call(storage:, http_options:) { |http| make_request(http) }
             expect(result).to be_failure

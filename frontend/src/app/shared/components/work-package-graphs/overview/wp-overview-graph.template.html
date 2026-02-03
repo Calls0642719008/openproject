@@ -1,23 +1,29 @@
 <select [(ngModel)]="groupBy"
-        (ngModelChange)="setQueryProps()">
-    <option [ngValue]="option.key" *ngFor="let option of availableGroupBy">{{option.label}}</option>
+  (ngModelChange)="setQueryProps()">
+  @for (option of availableGroupBy; track option) {
+    <option [ngValue]="option.key">{{option.label}}</option>
+  }
 </select>
 
-<div *ngIf="error"
+@if (error) {
+  <div
     class="op-toast -error">
     <div class="op-toast--content"
-         [textContent]="error">
+      [textContent]="error">
     </div>
-</div>
+  </div>
+}
 
-<op-wp-embedded-graph #wpEmbeddedGraphMulti
-                 [datasets]="datasets"
-                 [chartOptions]="chartOptions"
-                 *ngIf="displayMulti">
-</op-wp-embedded-graph>
+@if (displayMulti) {
+  <op-wp-embedded-graph #wpEmbeddedGraphMulti
+    [datasets]="datasets"
+    [chartOptions]="chartOptions"
+     />
+}
 
-<op-wp-embedded-graph #wpEmbeddedGraphSingle
-                 [datasets]="datasets"
-                 [chartOptions]="chartOptions"
-                 *ngIf="displaySingle">
-</op-wp-embedded-graph>
+@if (displaySingle) {
+  <op-wp-embedded-graph #wpEmbeddedGraphSingle
+    [datasets]="datasets"
+    [chartOptions]="chartOptions"
+     />
+}

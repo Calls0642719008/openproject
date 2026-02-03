@@ -84,7 +84,7 @@ module WorkPackages
           classes: "op-datepicker-modal--date-field #{FOCUSED_CLASS if focused?(name)}",
           validation_message: validation_message(name),
           type: field_type(name),
-          placeholder: placeholder(name)
+          readonly: readonly?
         )
 
         if duration_field?(name)
@@ -118,6 +118,11 @@ module WorkPackages
 
       def duration_field?(name)
         name == :duration
+      end
+
+      def show_duration?
+        # On mobile, we want to hide the duration field to gain some space
+        !!helpers.browser.device.mobile?
       end
 
       def start_date_label
@@ -182,22 +187,7 @@ module WorkPackages
       end
 
       def field_type(name)
-        return :number if duration_field?(name)
-
-        # Do not show the native datepicker on iOS safari because it
-        # behaves totally different than all other browsers and destroys the behavior of the datepicker
-        # Given a date field with no value: When Safari opens its native datepicker, the first thing it does is to
-        # set the date to Today. And not only in the datepicker but directly in the field.
-        # This behaviour has however consequences:
-        # * The "reset" button in the datepicker does not clear the input (as the other browsers do it) but it resets
-        #   it to the original value it had when you opened it. So if the value was empty, it sets it back to empty.
-        #   If the value was set before, you cannot clear it, but only set it back to that value.
-        # * Since the input changes, the whole datepicker updates without the user even knowing about it,
-        #   since the form is hidden behind the datepicker. That leads to this:
-        #     when you enter a start date after today, and then open the datepicker for finish date,
-        #     it will reset the start date because the finish date is set automatically to today,
-        #     but the finish date can't be before the start date.
-        helpers.browser.device.mobile? && !helpers.browser.safari? ? :date : :text
+        duration_field?(name) ? :number : :text
       end
 
       def validation_message(name)
@@ -270,8 +260,22 @@ module WorkPackages
         !disabled?(name) && !duration_field?(name)
       end
 
-      def placeholder(name)
-        helpers.browser.device.mobile? && !duration_field?(name) ? "yyyy-mm-dd" : nil
+      def readonly?
+        # On mobile, the fields are readonly because of iOS Safari
+        # Do not show the native datepicker on iOS safari because it
+        # behaves totally different than all other browsers and destroys the behavior of the datepicker
+        # Given a date field with no value: When Safari opens its native datepicker, the first thing it does is to
+        # set the date to Today. And not only in the datepicker but directly in the field.
+        # This behaviour has however consequences:
+        # * The "reset" button in the datepicker does not clear the input (as the other browsers do it) but it resets
+        #   it to the original value it had when you opened it. So if the value was empty, it sets it back to empty.
+        #   If the value was set before, you cannot clear it, but only set it back to that value.
+        # * Since the input changes, the whole datepicker updates without the user even knowing about it,
+        #   since the form is hidden behind the datepicker. That leads to this:
+        #     - when you enter a start date after today, and then open the datepicker for finish date,
+        #       it will reset the start date because the finish date is set automatically to today,
+        #       but the finish date can't be before the start date.
+        helpers.browser.device.mobile?
       end
     end
   end

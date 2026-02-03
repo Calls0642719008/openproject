@@ -122,14 +122,13 @@ RSpec.describe "BIM navigation spec", :js, with_config: { edition: "bim" } do
         details_view.expect_closed
       end
 
-      it "after deleting an WP in full view it returns to the model and list view (see #33317)" do
+      it "after deleting an WP in split view it returns to the model and list view (see #33317)" do
         # Go to full single view
         card_view.open_split_view_by_info_icon(work_package)
-        details_view.switch_to_fullscreen
-        full_view.expect_tab "Activity"
+        details_view.expect_tab "Overview"
 
         # Delete via the context menu
-        find("#action-show-more-dropdown-menu .button").click
+        page.find_test_selector("wp-details-toolbar--show-more-button").click
         find(".menu-item", text: "Delete").click
 
         destroy_modal.expect_listed(work_package)

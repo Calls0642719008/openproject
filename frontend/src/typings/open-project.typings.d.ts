@@ -74,11 +74,6 @@ interface Function {
   _type:string;
 }
 
-interface JQuery {
-  topShelf:any;
-  mark:any;
-}
-
 declare let Factory:any;
 
 declare namespace op {

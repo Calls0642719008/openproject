@@ -13,7 +13,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { TabDefinition } from 'core-app/shared/components/tabs/tab.interface';
-import { trackByProperty } from 'core-app/shared/helpers/angular/tracking-functions';
 import {
   RawParams,
   StateService,
@@ -53,8 +52,6 @@ export class ScrollableTabsComponent extends UntilDestroyedMixin implements Afte
   @Output() public tabSelected = new EventEmitter<TabDefinition>();
 
   @InjectField() uiRouterGlobals:UIRouterGlobals;
-
-  trackById = trackByProperty('id');
 
   counters:Record<string, Observable<number>> = {};
 
@@ -121,10 +118,11 @@ export class ScrollableTabsComponent extends UntilDestroyedMixin implements Afte
     this.currentTabId = tab.id;
     this.tabSelected.emit(tab);
 
-    // If the tab does not provide its own link,
-    // avoid propagation
-    if (!tab.path) {
-      event.preventDefault();
+    event.preventDefault();
+
+    // Override history to avoid that browser back leads you to a different tab instead of the page you originated from
+    if (tab.path) {
+      Turbo.visit(tab.path, { action: document.referrer != '' ? 'replace' : 'advance' });
     }
   }
 
@@ -194,13 +192,23 @@ export class ScrollableTabsComponent extends UntilDestroyedMixin implements Afte
   }
 
   private scrollIntoVisibleArea(tabId:string) {
-    const tab:JQuery<Element> = jQuery(this.pane).find(`[data-tab-id=${tabId}]`);
-    const position:JQueryCoordinates = tab.position();
-
-    const tabRightBorderAt:number = position.left + Number(tab.outerWidth());
+    const tab = this.pane.querySelector<HTMLElement>(`[data-tab-id=${tabId}]`)!;
+    const position = getPosition(tab);
+    const tabRightBorderAt = position.left + tab.offsetWidth;
 
     if (this.pane.scrollLeft + this.container.clientWidth < tabRightBorderAt) {
       this.pane.scrollLeft = tabRightBorderAt - this.container.clientWidth + 40; // 40px to not overlap by buttons
     }
   }
+}
+
+function getPosition(el:HTMLElement) {
+  const offsetParent = el.offsetParent || document.body;
+  const elRect = el.getBoundingClientRect();
+  const parentRect = offsetParent.getBoundingClientRect();
+
+  return {
+    top: elRect.top - parentRect.top - parseFloat(getComputedStyle(offsetParent).borderTopWidth),
+    left: elRect.left - parentRect.left - parseFloat(getComputedStyle(offsetParent).borderLeftWidth)
+  };
 }

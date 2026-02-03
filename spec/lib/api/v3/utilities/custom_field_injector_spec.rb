@@ -294,6 +294,47 @@ RSpec.describe API::V3::Utilities::CustomFieldInjector do
       end
     end
 
+    {
+      hierarchy: { with_ee: [:custom_field_hierarchies] },
+      weighted_item_list: { with_ee: [:weighted_item_lists] }
+    }.each do |format, tags|
+      describe "#{format} custom field", **tags do
+        let(:custom_field) do
+          create(
+            :"#{format}_wp_custom_field",
+            is_required: true
+          )
+        end
+
+        it_behaves_like "has basic schema properties" do
+          let(:path) { cf_path }
+          let(:type) { "CustomField::Hierarchy::Item" }
+          let(:name) { custom_field.name }
+          let(:required) { true }
+          let(:writable) { true }
+          let(:location) { "_links" }
+        end
+
+        context "with schema not writable" do
+          let(:schema_writable) { false }
+
+          it_behaves_like "has basic schema properties" do
+            let(:path) { cf_path }
+            let(:type) { "CustomField::Hierarchy::Item" }
+            let(:name) { custom_field.name }
+            let(:required) { true }
+            let(:writable) { false }
+            let(:location) { "_links" }
+          end
+        end
+
+        it_behaves_like "links to allowed values via collection link" do
+          let(:path) { cf_path }
+          let(:href) { api_v3_paths.custom_field_items(custom_field.id) }
+        end
+      end
+    end
+
     describe "user custom field on new project" do
       let(:schema) do
         instance_double(API::V3::WorkPackages::Schema::SpecificWorkPackageSchema,
@@ -464,6 +505,54 @@ RSpec.describe API::V3::Utilities::CustomFieldInjector do
           expect(subject)
             .to be_json_eql(typed_value.to_json)
             .at_path("_links/#{cf_path}/title")
+        end
+      end
+    end
+
+    %w[hierarchy weighted_item_list].each do |format|
+      context "for #{format} custom field" do
+        let(:value) { build_stubbed(:hierarchy_item) }
+        let(:raw_value) { value.id.to_s }
+        let(:typed_value) { value }
+        let(:field_format) { format }
+        let(:formatted_value) { value.to_s }
+
+        before do
+          allow(custom_value).to receive_messages(formatted_value:)
+        end
+
+        it_behaves_like "has a titled link" do
+          let(:link) { cf_path }
+          let(:href) { api_v3_paths.custom_field_item(value.id) }
+          let(:title) { formatted_value }
+        end
+
+        context "when value is nil" do
+          let(:value) { nil }
+          let(:raw_value) { "" }
+          let(:typed_value) { "" }
+
+          it_behaves_like "has an empty link" do
+            let(:link) { cf_path }
+          end
+        end
+
+        context "when value is some invalid string" do
+          let(:value) { "some invalid string" }
+          let(:raw_value) { "some invalid string" }
+          let(:typed_value) { "some invalid string not found" }
+
+          it "has an empty href" do
+            expect(subject)
+              .to be_json_eql(nil.to_json)
+              .at_path("_links/#{cf_path}/href")
+          end
+
+          it "has the invalid value as title" do
+            expect(subject)
+              .to be_json_eql(formatted_value.to_json)
+              .at_path("_links/#{cf_path}/title")
+          end
         end
       end
     end

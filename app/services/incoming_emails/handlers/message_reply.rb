@@ -30,8 +30,8 @@
 module IncomingEmails::Handlers
   class MessageReply < Base
     # Override in subclasses to determine if this handler can process the email
-    def self.handles?(_email, reference:)
-      reference[:klass] == "message"
+    def self.handles?(_email, reference:, automated_email:)
+      !automated_email && reference[:klass] == "message"
     end
 
     # Override in subclasses to process the email

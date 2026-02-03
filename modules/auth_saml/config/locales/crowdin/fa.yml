@@ -56,6 +56,7 @@ fa:
       label_mapping: نگاشت
       label_requested_attribute_for: "ویژگی درخواست شده برای: %{attribute}"
       no_results_table: هیچ ارائه دهنده سخت‌افزار احراز هویتی تعریف نشده است.
+      notice_created: A new SAML identity provider was successfully created.
       plural: ارائه دهنده های سخت‌افزار احراز هویت
       singular: ارائه دهنده سخت‌افزار احراز هویت
       requested_attributes: ویژگی های درخواستی
@@ -110,7 +111,7 @@ fa:
       idp_sso_service_url: >
         آدرس سرور ارائه دهنده احراز هویت.
       idp_slo_service_url: >
-        آدرس سرور ارائه دهنده احراز هویت.
+        The URL of the identity provider logout endpoint.
       idp_cert: >
         گواهی عمومی ارائه دهنده هویت با قالب X509 PEM را وارد کنید. می توانید چندین گواهی را با جدا کردن آنها با یک خط جدید وارد کنید.
       name_identifier_format: >

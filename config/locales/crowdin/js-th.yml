@@ -88,6 +88,8 @@ th:
     button_list_view: "มุมมองรายการ"
     button_show_view: "มุมมองแบบเต็มหน้าจอ"
     button_log_time: "เวลาที่ถูกบันทึก"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "เพิ่มเติม"
     button_open_details: "Open details view"
     button_close_details: "Close details view"
@@ -201,6 +203,8 @@ th:
         add_table: "Add table of related work packages"
         edit_query: "Edit query"
         new_group: "กลุ่มใหม่"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Reset to defaults"
       working_days:
         calendar:
@@ -288,17 +292,6 @@ th:
         format:
           date: "%{attribute} is no valid date - YYYY-MM-DD expected."
         general: "An error has occurred."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Read about new features and product updates."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Subscribe to calendar"
       inital_setup_error_message: "An error occured while fetching data."
@@ -306,12 +299,13 @@ th:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Where will you be using this?"
       token_name_placeholder: 'Type a name, e.g. "Phone"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Copy URL"
       ical_generation_error_text: "An error occured while generating the calendar URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "เปิดใช้งาน"
     label_assignee: "ผู้ได้รับมอบหมาย"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Add column after"
     label_add_column_before: "Add column before"
     label_add_columns: "Add columns"
@@ -353,6 +347,7 @@ th:
     label_collapse: "ยุบ"
     label_collapsed: "ยุบ"
     label_collapse_all: "ยุบทั้งหมด"
+    label_collapse_text: "Collapse text"
     label_comment: "ความคิดเห็น"
     label_committed_at: "%{committed_revision_link} at %{date}"
     label_committed_link: "committed revision %{revision_identifier}"
@@ -365,6 +360,7 @@ th:
     label_expand: "ขยาย"
     label_expanded: "ขยาย"
     label_expand_all: "ขยายทั้งหมด"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Expand project menu"
     label_export: "Export"
     label_export_preparing: "The export is being prepared and will be downloaded shortly."
@@ -397,8 +393,6 @@ th:
     label_me: "ฉัน"
     label_meeting_agenda: "Agenda"
     label_meeting_minutes: "Minutes"
-    label_menu_collapse: "ยุบ"
-    label_menu_expand: "ขยาย"
     label_more_than_ago: "มากกว่าวันที่ผ่านมา"
     label_moderate_comment: "Moderate comment"
     label_next: "ถัดไป"
@@ -432,6 +426,7 @@ th:
     label_remove_row: "Remove row"
     label_report: "รายงาน"
     label_repository_plural: "ที่เก็บ"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "บันทึกเป็น"
     label_search_columns: "Search a column"
     label_select_watcher: "เลือกผู้ดูข้อมูล..."
@@ -444,7 +439,7 @@ th:
     label_sort_lower: "เลื่อนลง"
     label_sorting: "การเรียงลำดับ"
     label_spent_time: "เวลาที่ใช้"
-    label_star_query: "Favored"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Press enter to save."
     label_public_query: "สาธารณะ"
     label_sum: "Sum"
@@ -563,7 +558,7 @@ th:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -637,9 +632,6 @@ th:
           add: "Add setting for project"
           already_selected: "This project is already selected"
           remove: "Remove project settings"
-    password_confirmation:
-      field_description: "You need to enter your account password to confirm this change."
-      title: "Confirm your password to continue"
     pagination:
       no_other_page: "You are on the only page."
       pages_skipped: "Pages skipped."
@@ -781,7 +773,7 @@ th:
     autocompleter:
       placeholder: "Type to search"
       notFoundText: "ไม่พบรายการ "
-      search: "Search"
+      search: "ค้นหา"
       project:
         placeholder: "Select project"
     repositories:
@@ -1111,6 +1103,7 @@ th:
         other: "work packages"
       child_work_packages:
         other: "%{count} work package children"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1127,9 +1120,12 @@ th:
     global_search:
       all_projects: "In all projects"
       close_search: "Close search"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "In this project + subprojects"
       current_project: "In this project"
       recently_viewed: "Recently viewed"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "all projects"
         project_and_subprojects: "and all subprojects"
@@ -1139,71 +1135,8 @@ th:
       list: "Table"
       timeline: "Gantt"
     invite_user_modal:
-      back: "ย้อนกลับ"
       invite: "เชิญ"
-      title:
-        invite: "Invite user"
-        invite_to_project: "เชิญ %{type} ไปที่ %{project} "
-        User: "ผู้ใช้งาน"
-        Group: "กลุ่ม"
-        PlaceholderUser: "ผู้ใช้งาน Placeholder"
-        invite_principal_to_project: "เชิญ %{principal} ไปที่ %{project}"
-      project:
-        label: "โครงการ"
-        required: "กรุณาเลือกโครงการ"
-        lacking_permission: "โปรดเลือกโครงการอื่น เนื่องจากคุณไม่มีสิทธิ์มอบหมายผู้ใช้ให้กับโครงการที่เลือกในปัจจุบัน "
-        lacking_permission_info: "คุณไม่มีสิทธิ์มอบหมายผู้ใช้ให้กับโครงการที่คุณอยู่ คุณต้องเลือกโครงการอื่น"
-        next_button: "ถัดไป"
-        no_results: "ไม่พบโครงการ"
-        no_invite_rights: "คุณไม่ได้รับอนุญาตให้เชิญสมาชิกเข้าร่วมโครงการนี้ "
-      type:
-        required: "กรุณาเลือกประเภทที่จะเชิญ"
-        user:
-          title: "ผู้ใช้"
-          description: "สิทธิ์ตามบทบาทที่ได้รับมอบหมายในโครงการที่เลือก"
-        group:
-          title: "กลุ่ม"
-          description: "สิทธิ์ตามบทบาทที่ได้รับมอบหมายในโครงการที่เลือก"
-        placeholder:
-          title: "Placeholder user"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "ไม่มีสิทธิ์เข้าถึงโครงการและไม่มีการส่งอีเมล"
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "ชื่อหรือที่อยู่อีเมล"
-          name: "ชื่อ"
-        already_member_message: "เป็นสมาชิกของ %{project} แล้ว"
-        no_results_user: "ไม่พบผู้ใช้"
-        invite_user: "เชิญ:"
-        no_results_placeholder: "ไม่พบตัวยึดตำแหน่ง"
-        create_new_placeholder: "สร้างตัวยึดตำแหน่งใหม่:"
-        no_results_group: "ไม่พบกลุ่ม"
-        next_button: "ถัดไป"
-        required:
-          user: "กรุณาเลือกผู้ใช้"
-          placeholder: "โปรดเลือกตัวยึดตำแหน่ง"
-          group: "กรุณาเลือกกลุ่ม"
-      role:
-        label: "บทบาทใน %{project}"
-        no_roles_found: "ไม่พบบทบาท"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "กรุณาเลือกบทบาท"
-        next_button: "ถัดไป"
-      message:
-        label: "ข้อความเชิญ"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "ถัดไป"
-      summary:
-        next_button: "Send invitation"
-      success:
-        title: "%{principal} ได้รับคำเชิญแล้ว!"
-        description:
-          user: "ขณะนี้ผู้ใช้สามารถเข้าสู่ระบบเพื่อเข้าถึง %{project}, คุณสามารถวางแผนกับผู้ใช้รายนั้นและกำหนดแพ็คเกจงานได้"
-          placeholder: "ขณะนี้ Placeholder สามารถใช้งานใน %{project} ได้แล้ว, คุณสามารถวางแผนกับผู้ใช้รายนั้นและกำหนดแพ็คเกจงานได้"
-          group: "ตอนนี้กลุ่มนี้เป็นส่วนหนึ่งของ %{project}, คุณสามารถวางแผนกับกลุ่มนั้นและกำหนดแพ็คเกจงานได้"
-        next_button: "Continue"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1220,7 +1153,7 @@ th:
       selected_filter:
         all: "All projects"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:
@@ -1229,6 +1162,11 @@ th:
         does_not_match_search: "Project does not match the search criteria."
       no_results: "No project matches your search criteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "ล้างข้อมูล"

@@ -26,6 +26,4 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-export interface WorkPackageViewRelationColumns {
-  [workPackageId:string]:string;
-}
+export type WorkPackageViewRelationColumns = Record<string, string>;

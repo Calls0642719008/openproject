@@ -51,7 +51,10 @@ properties:
       actor:
         $ref: './user_model.yml'
       project:
-        $ref: './project_model.yml'
+        oneOf:
+          - $ref: './project_model.yml'
+          - $ref: './program_model.yml'
+          - $ref: './portfolio_model.yml'
       activity:
         $ref: './activity_model.yml'
       resource:
@@ -65,14 +68,13 @@ properties:
       - actor
       - activity
       - resource
-      - details
     properties:
       self:
         allOf:
           - "$ref": "./link.yml"
           - description: |-
               This notification
-              
+
               **Resource**: Notification
       readIAN:
         allOf:
@@ -88,16 +90,16 @@ properties:
         allOf:
           - "$ref": "./link.yml"
           - description: |-
-              The project the notification originated in
-              
-              **Resource**: Project
+              The workspace the notification originated in
+
+              **Resource**: Workspace
       actor:
         allOf:
           - "$ref": "./link.yml"
           - description: |-
               The user that caused the notification. This might be null in
               case no user triggered the notification.
-              
+
               **Resource**: User
       resource:
         allOf:
@@ -114,13 +116,3 @@ properties:
               case no activity triggered the notification.
 
               **Resource**: Activity
-      details:
-        type: array
-        items:
-          allOf:
-            - "$ref": "./link.yml"
-            - description: |-
-                A list of objects including detailed information about the notification. The contents of
-                and type of this can vary widely between different notification reasons.
-
-                **Resource**: Polymorphic (e.g. Values::Property)

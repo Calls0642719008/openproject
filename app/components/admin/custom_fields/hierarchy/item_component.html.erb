@@ -38,18 +38,25 @@ See COPYRIGHT and LICENSE files for more details.
             render(Primer::OpenProject::DragHandle.new(draggable: true))
           end
           item_information.with_column(mr: 2) do
-            render(Primer::Beta::Link.new(href: custom_field_item_path(@root.custom_field_id, model), underline: false)) do
+            render(
+              Primer::Beta::Link.new(
+                href: item_link,
+                underline: false,
+                data: { turbo_frame: Admin::CustomFields::Hierarchy::ItemsComponent.wrapper_key }
+              )
+            ) do
               render(Primer::Beta::Text.new(font_weight: :bold)) { model.label }
             end
           end
 
-          if model.short.present?
+          label_addition = secondary_text
+          if label_addition.present?
             item_information.with_column(mr: 2) do
-              render(Primer::Beta::Text.new(color: :subtle)) { short_text }
+              render(Primer::Beta::Text.new(color: :subtle)) { label_addition }
             end
           end
 
-          if model.children.any?
+          if model.children_count > 0
             item_information.with_column(mr: 2) do
               render(Primer::Beta::Text.new) { children_count }
             end
@@ -57,13 +64,18 @@ See COPYRIGHT and LICENSE files for more details.
         end
 
         item_container.with_column do
-          render(Primer::Alpha::ActionMenu.new(test_selector: "op-hierarchy-item--action-menu")) do |menu|
+          render(
+            Primer::Alpha::ActionMenu.new(
+              menu_id:,
+              src: item_actions_href,
+              test_selector: "op-hierarchy-item--action-menu"
+            )
+          ) do |menu|
             menu.with_show_button(
               icon: "kebab-horizontal",
               scheme: :invisible,
               "aria-label": I18n.t("custom_fields.admin.items.actions")
             )
-            menu_items(menu)
           end
         end
       end

@@ -8,8 +8,7 @@ keywords: Nextcloud file storage integration
 
 # Set up Single Sign-On through OpenID Connect Identity Provider (Enterprise add-on)
 
-> [!NOTE]
-> This advanced feature is an Enterprise add-on and can only be used with [Enterprise cloud](../../../../enterprise-guide/enterprise-cloud-guide) or [Enterprise on-premises](../../../../enterprise-guide/enterprise-on-premises-guide). It is available for all installations under the Enterprise Corporate plan. An upgrade from the free community edition is easy and helps support OpenProject.
+[feature: nextcloud_sso ]
 
 This authentication mode will use access tokens provided by an identity provider shared among Nextcloud and OpenProject to authenticate requests performed in the name of users.
 
@@ -190,7 +189,7 @@ on the command line:
 occ config:system:set user_oidc --type boolean --value="true" oidc_provider_bearer_validation
 ```
 
-General information about running OCC commands [can be found in the Nextcloud documentation](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/occ_command.html).
+General information about running OCC commands [can be found in the Nextcloud documentation](https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html).
 
 This wraps up the configuration of this authentication method using Nextcloud Hub. For details on the next step continue with the [general setup instructions](../#4-automatically-managed-project-folders).
 

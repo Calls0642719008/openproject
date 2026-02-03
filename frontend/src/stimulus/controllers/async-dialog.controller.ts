@@ -34,34 +34,41 @@ import { TurboHelpers } from 'core-turbo/helpers';
 
 export default class AsyncDialogController extends ApplicationController {
   connect() {
+    // Only bind events if we have an href to work with
+    if (this.href) {
+      this.bindEventListeners();
+    }
+  }
+
+  private bindEventListeners() {
     this.element.addEventListener('click', (event:MouseEvent) => {
       event.preventDefault();
-      this.triggerTurboStream();
+      this.triggerTurboStream(this.href);
     });
 
     this.element.addEventListener('keydown', (event:KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        this.triggerTurboStream();
+        this.triggerTurboStream(this.href);
       }
     });
   }
 
-  private triggerTurboStream():void {
+  private triggerTurboStream(url:string):void {
     TurboHelpers.showProgressBar();
 
-    void fetch(this.href, {
+    void fetch(url, {
       method: this.method,
       headers: {
         Accept: 'text/vnd.turbo-stream.html',
         'X-Authentication-Scheme': 'Session',
       },
     }).then((response) => {
-      const contentType = response.headers.get('Content-Type') || '';
+      const contentType = response.headers.get('Content-Type') ?? '';
       const isTurboStream = contentType.includes('text/vnd.turbo-stream.html');
 
       if (!isTurboStream) {
-        return Promise.reject();
+        return Promise.reject(new Error('Response is not a Turbo Stream'));
       }
 
       return response.text();
@@ -72,11 +79,16 @@ export default class AsyncDialogController extends ApplicationController {
     });
   }
 
+  handleOpenDialog(event:CustomEvent<{ url:string }>):void {
+    // Trigger the dialog with custom URL
+    this.triggerTurboStream(event.detail.url);
+  }
+
   get href() {
     return (this.element as HTMLLinkElement).href;
   }
 
   get method() {
-    return (this.element as HTMLLinkElement).dataset.turboMethod || 'GET';
+    return (this.element as HTMLLinkElement).dataset.turboMethod ?? 'GET';
   }
 }

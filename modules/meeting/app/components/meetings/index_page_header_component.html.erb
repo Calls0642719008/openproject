@@ -5,7 +5,7 @@
       header.with_title { page_title }
       header.with_breadcrumbs(breadcrumb_items, selected_item_font_weight: section_present? ? :normal : :bold)
 
-      if Setting.ical_enabled? && OpenProject::FeatureDecisions.meeting_ical_subscription_active?
+      if Setting.ical_enabled?
         header.with_action_menu(
           menu_arguments: { anchor_align: :end },
           button_arguments: { icon: "kebab-horizontal", "aria-label": t(:label_more), data: { "test-selector": "meeting-more" } }

@@ -49,6 +49,6 @@ export class MeetingsTabComponent implements OnInit, TabComponent {
   ) {}
 
   ngOnInit():void {
-    this.turboFrameSrc = `${this.PathHelper.staticBase}/work_packages/${this.workPackage.id}/meetings/tab`;
+    this.turboFrameSrc = `${this.PathHelper.projectWorkPackagePath(this.workPackage.project.id as string, this.workPackage.id as string)}/meetings/tab`;
   }
 }

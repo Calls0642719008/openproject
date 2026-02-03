@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -36,7 +36,7 @@ module CustomField::OrderStatements
     "list" => :join_for_order_by_list_sql,
     "user" => :join_for_order_by_user_sql,
     "version" => :join_for_order_by_version_sql,
-    "hierarchy" => :join_for_order_by_hierarchy_sql
+    %w[hierarchy weighted_item_list] => :join_for_order_by_hierarchy_sql
   ).freeze
 
   # Returns the expression to use in ORDER BY clause to sort objects by their
@@ -70,7 +70,7 @@ module CustomField::OrderStatements
   # Returns the expression to use in SELECT clause if it differs from one used
   # to group by
   def group_by_select_statement
-    return unless ["list", "hierarchy"].include?(field_format)
+    return unless %w[list hierarchy weighted_item_list].include?(field_format)
 
     # MIN needed to not add this column to group by, ANY_VALUE can be used when
     # minimum required PostgreSQL becomes 16

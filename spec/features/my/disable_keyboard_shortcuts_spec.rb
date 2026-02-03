@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe "My account disable keyboard shortcuts setting", :js, :selenium do
+RSpec.describe "My account disable keyboard shortcuts setting", :js do
   let(:user) { create(:user) }
   let(:global_search) { Components::GlobalSearch.new }
 
@@ -44,7 +44,7 @@ RSpec.describe "My account disable keyboard shortcuts setting", :js, :selenium d
 
     # Per default, the keyboard short cuts are enabled
     expect(page).to have_unchecked_field("Disable keyboard shortcuts", visible: :visible)
-    page.driver.browser.switch_to.active_element.send_keys("s")
+    page.driver.send_keys("s")
     global_search.expect_open
 
     # Check the checkbox
@@ -57,14 +57,14 @@ RSpec.describe "My account disable keyboard shortcuts setting", :js, :selenium d
     expect(page).to have_checked_field("Disable keyboard shortcuts", visible: :visible)
 
     # Directly try to trigger the keyboard short cut again (which should not work any more)
-    page.driver.browser.switch_to.active_element.send_keys("s")
+    page.driver.send_keys("s")
     global_search.expect_closed
 
     # After a hard reload, the setting is still remembered and turned off
     page.refresh
     wait_for_network_idle
     expect(page).to have_checked_field("Disable keyboard shortcuts", visible: :visible)
-    page.driver.browser.switch_to.active_element.send_keys("s")
+    page.driver.send_keys("s")
     global_search.expect_closed
   end
 end

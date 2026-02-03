@@ -35,6 +35,9 @@ module OpenProject
         system_arguments[:tag] = :hr
         system_arguments[:mt] = system_arguments.fetch(:mt, 3)
         system_arguments[:mb] = system_arguments.fetch(:mb, 3)
+        system_arguments[:role] = system_arguments.fetch(:role, :presentation)
+        system_arguments[:aria] = system_arguments.fetch(:aria, { hidden: true })
+
         super(**system_arguments) # rubocop:disable Style/SuperArguments
       end
     end

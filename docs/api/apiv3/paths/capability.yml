@@ -27,7 +27,7 @@ get:
                     href: "/api/v3/users/567"
                     title: Some user
                   self:
-                    href: "/api/v3/capabilities/work_packages/create/p123-567"
+                    href: "/api/v3/capabilities/work_packages/create/w123-567"
                 _type: Capability
                 id: work_packages/create/p123-567
           schema:

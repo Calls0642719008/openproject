@@ -1,12 +1,12 @@
 ---
 sidebar_navigation:
-  title: Resource Management
-  priority: 700
+  title: Resource management
+  priority: 980
 description: Step-by-step instruction about resource management
 keywords: use-case, resource management
 ---
 
-# Use Case: Resource management
+# Resource management with OpenProject
 
 **Note:**  OpenProject does not have the automated functionality to provide detailed resource management or employee work capacity calculations. However, there is a workaround that you can use to configure a visual estimate of task distribution and plan accordingly.
 

@@ -37,7 +37,7 @@ module MeetingSections
     with_collection_parameter :meeting_section
 
     def initialize(meeting_section:, first_and_last: [], form_hidden: true, form_type: :simple, insert_target_modified: true,
-                   force_wrapper: false, state: :show, collapsed: nil, current_meeting: nil)
+                   force_wrapper: false, state: :show, collapsed: nil, current_occurrence: nil)
       super
 
       @meeting = meeting_section.meeting
@@ -50,7 +50,7 @@ module MeetingSections
       @force_wrapper = force_wrapper
       @state = state
       @collapsed = collapsed
-      @current_meeting = current_meeting
+      @current_occurrence = current_occurrence
     end
 
     private
@@ -85,13 +85,13 @@ module MeetingSections
       {
         "draggable-id": @meeting_section.id,
         "draggable-type": "section",
-        "drop-url": drop_meeting_section_path(@meeting, @meeting_section)
+        "drop-url": drop_project_meeting_section_path(@meeting.project, @meeting, @meeting_section)
       }
     end
 
     def drag_and_drop_target_config
       {
-        "is-drag-and-drop-target": true,
+        meetings__drag_and_drop_target: "container",
         "target-container-accessor": ".Box > ul", # the accessor of the container that contains the drag and drop items
         "target-id": @meeting_section.id, # the id of the target
         "target-allowed-drag-type": "agenda-item" # the type of dragged items which are allowed to be dropped in this target

@@ -91,6 +91,12 @@ RSpec.describe "Work package sharing",
   end
 
   context "when having share permission" do
+    current_user do
+      create(:user,
+             firstname: "Signed in",
+             lastname: "User",
+             global_permissions: %i[view_all_principals])
+    end
     it "allows seeing and administrating sharing" do
       work_package_page.visit!
 
@@ -456,8 +462,8 @@ RSpec.describe "Work package sharing",
     end
 
     describe "filtering and displaying user email addresses" do
-      context "when having view email permissions" do
-        let(:global_permissions) { %i[manage_user create_user view_user_email] }
+      context "when having view and invite email permissions" do
+        let(:global_permissions) { %i[view_all_principals manage_user create_user view_user_email] }
 
         it "allows filtering by and displaying user emails" do
           share_modal.search_user(richard.mail)

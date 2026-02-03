@@ -51,7 +51,9 @@ See COPYRIGHT and LICENSE files for more details.
 
             if new_record?
               flex.with_row(mb: 3) do
-                render(Storages::Admin::Storages::AddProjectsAutocompleterForm.new(form, project_storage:))
+                render(Storages::Admin::Storages::AddProjectsAutocompleterForm.new(form,
+                                                                                   dialog_id:,
+                                                                                   project_storage:))
               end
 
               flex.with_row(mb: 3) do

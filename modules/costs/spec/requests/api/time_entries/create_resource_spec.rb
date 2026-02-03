@@ -152,5 +152,89 @@ RSpec.describe "API v3 Time Entries resource",
         end
       end
     end
+
+    describe "custom fields" do
+      let(:base_parameters) do
+        {
+          _links: {
+            entity: { href: api_v3_paths.work_package(work_package.id) },
+            project: { href: api_v3_paths.project(project.id) },
+            activity: { href: api_v3_paths.time_entries_activity(active_activity.id) }
+          },
+          spentOn: "2024-12-24",
+          hours: "PT2H"
+        }
+      end
+
+      context "with a required custom field" do
+        let!(:required_custom_field) do
+          create(:time_entry_custom_field, :string,
+                 name: "Department",
+                 is_required: true)
+        end
+
+        context "when no custom field value is provided" do
+          let(:parameters) { base_parameters }
+
+          it "responds with 422 and explains the custom field error" do
+            post path, parameters.to_json
+
+            expect(response).to have_http_status(:unprocessable_entity)
+
+            expect(response.body)
+              .to be_json_eql("Department can't be blank.".to_json)
+              .at_path("message")
+          end
+        end
+
+        context "when the custom field is provided but empty" do
+          let(:parameters) do
+            base_parameters.merge(
+              "customField#{required_custom_field.id}" => ""
+            )
+          end
+
+          it "responds with 422 and explains the custom field error" do
+            post path, parameters.to_json
+
+            expect(response).to have_http_status(:unprocessable_entity)
+
+            expect(response.body)
+              .to be_json_eql("Department can't be blank.".to_json)
+              .at_path("message")
+          end
+        end
+
+        context "when the custom field value is provided and valid" do
+          let(:parameters) do
+            base_parameters.merge(
+              "customField#{required_custom_field.id}" => "Engineering"
+            )
+          end
+
+          it "responds with 201" do
+            post path, parameters.to_json
+
+            expect(response).to have_http_status(:created)
+          end
+
+          it "returns the newly created time entry" do
+            post path, parameters.to_json
+
+            expect(response.body)
+              .to be_json_eql("TimeEntry".to_json)
+              .at_path("_type")
+          end
+
+          it "creates a time entry with the custom field value" do
+            post path, parameters.to_json
+
+            time_entry = TimeEntry.last
+            expect(time_entry.typed_custom_value_for(required_custom_field))
+              .to eq("Engineering")
+          end
+        end
+      end
+    end
   end
 end

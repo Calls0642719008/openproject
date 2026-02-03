@@ -55,10 +55,10 @@ module Calendar
         link_to(
           "",
           project_calendar_path(project, query.id),
-          method: :delete,
           class: "icon icon-delete",
           data: {
-            confirm: I18n.t(:text_are_you_sure),
+            turbo_method: :delete,
+            turbo_confirm: I18n.t(:text_are_you_sure),
             "test-selector": "calendar-remove-#{query.id}"
           },
           title: t(:button_delete)

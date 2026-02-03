@@ -88,6 +88,8 @@ nl:
     button_list_view: "Lijstweergave"
     button_show_view: "Fullscreen weergave"
     button_log_time: "Gelogde tijd"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "Meer"
     button_open_details: "Open detailweergave"
     button_close_details: "Sluit detailweergave"
@@ -201,6 +203,8 @@ nl:
         add_table: "Tabel van verwante werkpakketten toevoegen"
         edit_query: "Zoekopdracht bewerken"
         new_group: "Nieuwe groep"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Standaardinstellingen herstellen"
       working_days:
         calendar:
@@ -288,17 +292,6 @@ nl:
         format:
           date: "%{attribute} is geen geldige datum - JJJJ-MM-DD verwacht."
         general: "Er is een fout opgetreden."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Lees over nieuwe functies en product-updates."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Abonneren op agenda"
       inital_setup_error_message: "Er is een fout opgetreden tijdens het ophalen van gegevens."
@@ -306,12 +299,13 @@ nl:
       warning: "Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password."
       token_name_label: "Waar gaat u dit gebruiken?"
       token_name_placeholder: 'Typ een naam, bijv. "Telefoon"'
-      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="my/access_token", target="_blank">access tokens</a> list.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "URL kopiëren"
       ical_generation_error_text: "Er is een fout opgetreden tijdens het genereren van de agenda-URL."
       success_message: 'The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.'
     label_activate: "Activeren"
     label_assignee: "Toegewezene"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Kolom toevoegen"
     label_add_column_before: "Kolom invoegen"
     label_add_columns: "Kolommen toevoegen"
@@ -324,7 +318,7 @@ nl:
     label_added_time_by: 'Toegevoegd door <a href="%{authorLink}">%{author}</a> op %{age}'
     label_ago: "dagen geleden"
     label_all: "alle"
-    label_all_projects: "All projects"
+    label_all_projects: "Alle projecten"
     label_all_uppercase: "Alle"
     label_all_work_packages: "alle werkpakketten"
     label_and: "en"
@@ -353,6 +347,7 @@ nl:
     label_collapse: "Samenvouwen"
     label_collapsed: "samengevouwen"
     label_collapse_all: "Alles inklappen"
+    label_collapse_text: "Collapse text"
     label_comment: "Commentaar"
     label_committed_at: "%{committed_revision_link} op %{date}"
     label_committed_link: "gepleegde herziening %{revision_identifier}"
@@ -365,6 +360,7 @@ nl:
     label_expand: "Uitbreiden"
     label_expanded: "uitgebreid"
     label_expand_all: "Alles uitklappen"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Menu project uitvouwen"
     label_export: "Exporteren"
     label_export_preparing: "De export wordt voorbereid en wordt binnenkort gedownload."
@@ -397,8 +393,6 @@ nl:
     label_me: "ik"
     label_meeting_agenda: "Agenda"
     label_meeting_minutes: "Notulen"
-    label_menu_collapse: "samenvouwen"
-    label_menu_expand: "uitbreiden"
     label_more_than_ago: "meer dan dagen geleden"
     label_moderate_comment: "Moderate comment"
     label_next: "Volgende"
@@ -432,6 +426,7 @@ nl:
     label_remove_row: "Rij verwijderen"
     label_report: "Rapport"
     label_repository_plural: "Repositories"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "Opslaan als"
     label_search_columns: "Search a column"
     label_select_watcher: "Kies een toezichter..."
@@ -444,7 +439,7 @@ nl:
     label_sort_lower: "Omlaag"
     label_sorting: "Sortering"
     label_spent_time: "Bestede tijd"
-    label_star_query: "Favoriet"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Druk op Enter om te bewaren."
     label_public_query: "Publiek"
     label_sum: "Som"
@@ -563,7 +558,7 @@ nl:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Te laat"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -638,9 +633,6 @@ nl:
           add: "Instelling voor project toevoegen"
           already_selected: "Dit project is al geselecteerd"
           remove: "Projectinstellingen verwijderen"
-    password_confirmation:
-      field_description: "U moet uw wachtwoord invoeren om deze wijziging te bevestigen."
-      title: "Voer uw wachtwoord in om door te gaan"
     pagination:
       no_other_page: "U bent op de enige pagina."
       pages_skipped: "Pages skipped."
@@ -782,7 +774,7 @@ nl:
     autocompleter:
       placeholder: "Typ om te zoeken"
       notFoundText: "Geen items gevonden"
-      search: "Search"
+      search: "Zoeken"
       project:
         placeholder: "Select project"
     repositories:
@@ -1114,6 +1106,7 @@ nl:
       child_work_packages:
         one: "één onderliggend werkpakket"
         other: "%{count} werkpakket kinderen"
+      hour_string: "%{hours} h"
       hour:
         one: "1 u"
         other: "%{count} u"
@@ -1131,9 +1124,12 @@ nl:
     global_search:
       all_projects: "Voor alle projecten"
       close_search: "Sluit zoekopdracht"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "In dit project + subprojecten"
       current_project: "In dit project"
       recently_viewed: "Recent bekeken"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "alle projecten"
         project_and_subprojects: "en alle subprojecten"
@@ -1143,71 +1139,8 @@ nl:
       list: "Tabel"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Terug"
       invite: "Uitnodigen"
-      title:
-        invite: "Gebruiker uitnodigen"
-        invite_to_project: "Nodig %{type} uit voor %{project}"
-        User: "gebruiker"
-        Group: "Groep"
-        PlaceholderUser: "Tijdelijke gebruiker"
-        invite_principal_to_project: "Nodig %{principal} uit voor %{project}"
-      project:
-        label: "Project"
-        required: "Selecteer een project"
-        lacking_permission: "Selecteer een ander project omdat u geen rechten heeft om gebruikers toe te wijzen aan de geselecteerde projecten."
-        lacking_permission_info: "U heeft geen toestemming om gebruikers toe te wijzen aan het project waar u zich momenteel in bevindt. U moet een andere selecteren."
-        next_button: "Volgende"
-        no_results: "Er zijn geen projecten gevonden"
-        no_invite_rights: "U bent niet bevoegd om deelnemers uit te nodigen voor dit project"
-      type:
-        required: "Selecteer het type om uit te nodigen"
-        user:
-          title: "Gebruiker"
-          description: "Permissies gebaseerd op de toegewezen rol in het geselecteerde project"
-        group:
-          title: "Groep"
-          description: "Permissies gebaseerd op de toegewezen rol in het geselecteerde project"
-        placeholder:
-          title: "Tijdelijke gebruiker"
-          title_no_ee: "Placeholder user (Enterprise edition only add-on)"
-          description: "Heeft geen toegang tot het project en er worden geen e-mails verstuurd."
-          description_no_ee: 'Has no access to the project and no emails are sent out. <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
-      principal:
-        label:
-          name_or_email: "Naam of e-mailadres"
-          name: "Naam"
-        already_member_message: "Al lid van %{project}"
-        no_results_user: "Geen gebruikers gevonden"
-        invite_user: "Uitnodigen:"
-        no_results_placeholder: "Geen tijdelijke gebruikers gevonden"
-        create_new_placeholder: "Maak een nieuwe tijdelijke gebruiker:"
-        no_results_group: "Er zijn geen groepen gevonden."
-        next_button: "Volgende"
-        required:
-          user: "Selecteer een gebruiker"
-          placeholder: "Selecteer een tijdelijke gebruiker"
-          group: "Selecteer een groep"
-      role:
-        label: "Rol in %{project}"
-        no_roles_found: "Geen rollen gevonden"
-        description: >-
-          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Learn more about roles and permissions. </a>
-        required: "Selecteer een rol"
-        next_button: "Volgende"
-      message:
-        label: "Uitnodigings bericht"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "Volgende"
-      summary:
-        next_button: "Verstuur uitnodiging"
-      success:
-        title: "%{principal} is uitgenodigd!"
-        description:
-          user: "De gebruiker kan nu inloggen om toegang te krijgen tot %{project}. Ondertussen kan je met die gebruiker al plannen en werkpakketten toewijzen, bijvoorbeeld."
-          placeholder: "De tijdelijke gebruiker kan nu worden gebruikt in %{project}. Ondertussen kunt u deze gebruiker al plannen en werkpakketten toewijzen, bijvoorbeeld."
-          group: "De groep is nu een deel van %{project}. Ondertussen kun je al plannen maken met die groep en werkpakketten toewijzen, bijvoorbeeld."
-        next_button: "Ga verder"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status excluded from hierarchy totals"
@@ -1224,7 +1157,7 @@ nl:
       selected_filter:
         all: "Alle projecten"
         selected: "Alleen geselecteerd"
-      search_placeholder: "Zoek project"
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Inclusief alle sub-projecten"
       tooltip:
@@ -1233,6 +1166,11 @@ nl:
         does_not_match_search: "Het project komt niet overeen met de zoekcriteria."
       no_results: "Geen enkel project komt overeen met uw zoekcriteria."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Baseline"
       clear: "Wissen"

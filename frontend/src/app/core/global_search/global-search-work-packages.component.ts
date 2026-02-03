@@ -59,8 +59,7 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
   hostDirectives: [WorkPackageIsolatedQuerySpaceDirective],
   template: `
     <wp-embedded-table [queryProps]="queryProps"
-                       [configuration]="tableConfiguration">
-    </wp-embedded-table>
+                       [configuration]="tableConfiguration" />
   `,
   standalone: false,
 })

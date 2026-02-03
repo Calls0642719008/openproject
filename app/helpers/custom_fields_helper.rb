@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -81,7 +81,7 @@ module CustomFieldsHelper
       angular_component_tag "opce-basic-single-date-picker",
                             inputs: {
                               required: custom_field.required?,
-                              inputId: field_id,
+                              id: field_id,
                               name: field_name
                             }
     when "text"
@@ -99,7 +99,7 @@ module CustomFieldsHelper
                         id: field_id,
                         multiple: custom_field.multi_value?,
                         include_blank: I18n.t(:label_no_change_option))
-    when "hierarchy"
+    when "hierarchy", "weighted_item_list"
       base_options = []
       result = CustomFields::Hierarchy::HierarchicalItemService.new
         .get_descendants(item: custom_field.hierarchy_root, include_self: false)

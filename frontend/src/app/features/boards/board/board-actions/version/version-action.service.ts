@@ -169,7 +169,7 @@ export class BoardVersionActionService extends CachedBoardActionService {
         // Show link
         linkText: this.I18n.t('js.boards.version.show_version'),
         href: this.pathHelper.versionShowPath(id),
-        onClick: (evt:JQuery.TriggeredEvent) => {
+        onClick: (evt) => {
           if (!isClickedWithModifier(evt)) {
             window.open(this.pathHelper.versionShowPath(id), '_blank');
             return true;
@@ -183,7 +183,7 @@ export class BoardVersionActionService extends CachedBoardActionService {
         hidden: !version.$links.update,
         linkText: this.I18n.t('js.boards.version.edit_version'),
         href: this.pathHelper.versionEditPath(id),
-        onClick: (evt:JQuery.TriggeredEvent) => {
+        onClick: (evt) => {
           if (!isClickedWithModifier(evt)) {
             window.open(this.pathHelper.versionEditPath(id), '_blank');
             return true;

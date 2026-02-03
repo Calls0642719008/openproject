@@ -58,6 +58,9 @@ module CustomFields::Inputs::Base::Autocomplete::UserQueryUtils
       { name: "status", operator: "!", values: [Principal.statuses["locked"].to_s] }
     ]
 
+    # We do not want to add a membership filter if the custom field will give a role assignment
+    return filters if user_field_with_role_assignment?
+
     if @object.is_a?(Project)
       filters << { name: "member", operator: "=", values: [@object.id.to_s] }
     elsif @object.respond_to?(:project_id)
@@ -65,5 +68,9 @@ module CustomFields::Inputs::Base::Autocomplete::UserQueryUtils
     end
 
     filters
+  end
+
+  def user_field_with_role_assignment?
+    @custom_field.is_a?(ProjectCustomField) && @custom_field.user? && @custom_field.role.present?
   end
 end

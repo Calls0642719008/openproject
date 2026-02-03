@@ -79,11 +79,11 @@ module API
             v3_path = API::V3::TimeEntries::EntityRepresenterFactory.representer_type(represented.send(name))
             title_attribute = API::V3::TimeEntries::EntityRepresenterFactory.title_attribute(represented.send(name))
 
-            instance_exec(&self.class.associated_resource_default_link(name,
-                                                                       v3_path:,
-                                                                       skip_link: -> { false },
-                                                                       title_attribute:,
-                                                                       getter:))
+            instance_exec(&self.class.associated_resource_default_link_lambda(name,
+                                                                              v3_path:,
+                                                                              skip_link: -> { false },
+                                                                              title_attribute:,
+                                                                              getter:))
           }
         end
 

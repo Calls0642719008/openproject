@@ -33,9 +33,19 @@ require "spec_helper"
 RSpec.describe "Work package show page", :selenium do
   let(:user) { create(:admin) }
   let(:project) { create(:project) }
+  let(:grand_parent) do
+    build(:work_package,
+          project:)
+  end
+  let(:parent) do
+    build(:work_package,
+          project:,
+          parent: grand_parent)
+  end
   let(:work_package) do
     build(:work_package,
           project:,
+          parent:,
           assigned_to: user,
           responsible: user)
   end
@@ -55,5 +65,25 @@ RSpec.describe "Work package show page", :selenium do
                               priority: work_package.priority.name,
                               assignee: work_package.assigned_to.name,
                               responsible: work_package.responsible.name
+  end
+
+  it "navigates the breadcrumb (#69640)", :js do
+    wp_page = Pages::FullWorkPackage.new(work_package)
+
+    wp_page.visit!
+
+    # Navigate to parent element
+    page.find_test_selector("op-wp-breadcrumb-parent", text: parent.subject).click
+    expect(page).to have_test_selector "op-wp-breadcrumb-parent", text: grand_parent.subject, wait: 10
+
+    expect(page).to have_current_path project_work_packages_path(project) + "/#{parent.id}/activity"
+
+    # Go back
+    page.go_back
+    expect(page).to have_test_selector "op-wp-breadcrumb-parent", text: parent.subject, wait: 10
+
+    # Navigate to Grandparent
+    page.find_test_selector("op-wp-breadcrumb--hierarchy-element", text: grand_parent.subject).click
+    expect(page).to have_current_path project_work_packages_path(project) + "/#{grand_parent.id}/activity", wait: 10
   end
 end

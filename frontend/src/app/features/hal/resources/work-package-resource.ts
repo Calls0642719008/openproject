@@ -59,9 +59,7 @@ export interface WorkPackageResourceEmbedded {
   author:HalResource|any;
   availableWatchers:HalResource|any;
   category:HalResource|any;
-  // eslint-disable-next-line no-use-before-define
   children:WorkPackageResource[];
-  // eslint-disable-next-line no-use-before-define
   parent:WorkPackageResource|null;
   priority:HalResource|any;
   project:HalResource|any;
@@ -137,7 +135,6 @@ export class WorkPackageBaseResource extends HalResource {
 
   public attachments:AttachmentCollectionResource;
 
-  // eslint-disable-next-line no-use-before-define
   private ancestors?:this[];
 
   public attributesByTimestamp?:IWorkPackageTimestamp[];
@@ -176,10 +173,8 @@ export class WorkPackageBaseResource extends HalResource {
    * Return "<type name>: <subject> (#<id>)" if type and id are known.
    */
   public subjectWithType(truncateSubject = 40):string {
-    const type = this.type ? `${this.type.name}: ` : '';
-    const subject = this.subjectWithId(truncateSubject);
-
-    return `${type}${subject}`;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return `${this.type.name}: ${this.subjectWithId(truncateSubject)}`;
   }
 
   /**
@@ -187,9 +182,12 @@ export class WorkPackageBaseResource extends HalResource {
    */
   public subjectWithId(truncateSubject = 40):string {
     const id = isNewResource(this) ? '' : ` (#${this.id || ''})`;
-    const subject = truncateSubject <= 0 ? this.subject : _.truncate(this.subject, { length: truncateSubject });
 
-    return `${subject}${id}`;
+    return `${this.truncatedSubject(truncateSubject)}${id}`;
+  }
+
+  public truncatedSubject(length = 40):string {
+    return length <= 0 ? this.subject : _.truncate(this.subject, { length: length });
   }
 
   public get isLeaf():boolean {
@@ -224,7 +222,7 @@ export class WorkPackageBaseResource extends HalResource {
    * Return a rejected promise, if the resource is not a property of the work package.
    */
   public updateLinkedResources(...resourceNames:string[]):Promise<any> {
-    const resources:{ [id:string]:Promise<HalResource> } = {};
+    const resources:Record<string, Promise<HalResource>> = {};
 
     resourceNames.forEach((name) => {
       const linked = this[name];

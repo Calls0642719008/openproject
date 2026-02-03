@@ -40,6 +40,11 @@ module Overviews
 
         @project = project
       end
+
+      def render?
+        User.current.allowed_in_project?(:view_project_phases, @project) &&
+          @project.phases.active.any?
+      end
     end
   end
 end

@@ -27,24 +27,32 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+require Rails.root.join("db/migrate/migration_utils/permission_renamer")
 
 class RenameCommentPermissions < ActiveRecord::Migration[8.0]
-  def change
-    rename_permissions("add_work_package_notes", "add_work_package_comments")
-    rename_permissions("edit_own_work_package_notes", "edit_own_work_package_comments")
-    rename_permissions("edit_work_package_notes", "edit_work_package_comments")
+  def up
+    ::Migration::MigrationUtils::PermissionRenamer.rename("add_work_package_notes", "add_work_package_comments")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_own_work_package_notes", "edit_own_work_package_comments")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_work_package_notes", "edit_work_package_comments")
 
-    rename_permissions("view_comments_with_restricted_visibility", "view_internal_comments")
-    rename_permissions("add_comments_with_restricted_visibility", "add_internal_comments")
-    rename_permissions("edit_own_comments_with_restricted_visibility", "edit_own_internal_comments")
-    rename_permissions("edit_others_comments_with_restricted_visibility", "edit_others_internal_comments")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("view_comments_with_restricted_visibility", "view_internal_comments")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("add_comments_with_restricted_visibility", "add_internal_comments")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_own_comments_with_restricted_visibility",
+                                                          "edit_own_internal_comments")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_others_comments_with_restricted_visibility",
+                                                          "edit_others_internal_comments")
   end
 
-  def rename_permissions(old, new)
-    execute <<-SQL.squish
-      UPDATE role_permissions
-      SET permission = '#{new}'
-      WHERE permission = '#{old}'
-    SQL
+  def down
+    ::Migration::MigrationUtils::PermissionRenamer.rename("add_work_package_comments", "add_work_package_notes")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_own_work_package_comments", "edit_own_work_package_notes")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_work_package_comments", "edit_work_package_notes")
+
+    ::Migration::MigrationUtils::PermissionRenamer.rename("view_internal_comments", "view_comments_with_restricted_visibility")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("add_internal_comments", "add_comments_with_restricted_visibility")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_own_internal_comments",
+                                                          "edit_own_comments_with_restricted_visibility")
+    ::Migration::MigrationUtils::PermissionRenamer.rename("edit_others_internal_comments",
+                                                          "edit_others_comments_with_restricted_visibility")
   end
 end

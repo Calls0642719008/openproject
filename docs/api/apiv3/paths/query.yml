@@ -60,7 +60,7 @@ get:
   tags:
   - Queries
   description: Retrieve an individual query as identified by the id parameter. Then
-    end point accepts a number of parameters that can be used to override the resources'
+    endpoint accepts a number of parameters that can be used to override the resources'
     persisted parameters.
   parameters:
     - name: id

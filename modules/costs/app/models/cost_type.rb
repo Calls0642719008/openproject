@@ -31,8 +31,8 @@ class CostType < ApplicationRecord
   has_many :cost_entries, dependent: :destroy
   has_many :rates, class_name: "CostRate", dependent: :destroy
 
-  validates_presence_of :name, :unit, :unit_plural
-  validates_uniqueness_of :name
+  validates :unit, :unit_plural, presence: true
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
 
   after_update :save_rates
 

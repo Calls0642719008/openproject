@@ -35,45 +35,38 @@ RSpec.describe EnterpriseEdition::TrialTeaserComponent, type: :component do
     instance_double(
       EnterpriseToken,
       days_left: 7,
-      plan: :mocked
+      plan: :mocked,
+      trial?: true
     )
   end
 
   before do
-    allow(EnterpriseToken).to receive(:active_trial_token).and_return(mock_token)
+    allow(EnterpriseToken).to receive(:active_tokens).and_return([mock_token])
   end
 
   context "for an admin user" do
-    before do
-      admin_user = instance_double(User, admin?: true)
-      allow(User).to receive(:current).and_return(admin_user)
-    end
+    current_user { build(:admin) }
 
     it "renders the trial teaser" do
       render_inline(described_class.new)
 
       component = find_test_selector("op-enterprise-banner")
 
-      within(component) do
-        expect(page).to have_no_css(".op-enterprise-banner--close_icon")
+      expect(component).to have_no_css(".op-enterprise-banner--close_icon")
 
-        expect(page).to have_text("Buy now")
-        expect(page).to have_text("7 days left of mocked trial token")
-        expect(page).to have_text("You have access to all Mocked enterprise plan features.")
+      expect(component).to have_text("Buy now")
+      expect(component).to have_text("7 days left of mocked trial token")
+      expect(component).to have_text("You have access to all Mocked enterprise plan features.")
 
-        expect(page).to have_no_text("Start free trial")
-        expect(page).to have_no_text("Book now")
-        expect(page).to have_no_text("Upgrade now")
-        expect(page).to have_no_text("More information")
-      end
+      expect(component).to have_no_text("Start free trial")
+      expect(component).to have_no_text("Book now")
+      expect(component).to have_no_text("Upgrade now")
+      expect(component).to have_no_text("More information")
     end
   end
 
   context "for a non-admin user" do
-    before do
-      admin_user = instance_double(User, admin?: false)
-      allow(User).to receive(:current).and_return(admin_user)
-    end
+    current_user { build(:user) }
 
     it "nothing is rendered" do
       render_inline(described_class.new)

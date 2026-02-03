@@ -3,6 +3,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { getMetaContent } from 'core-app/core/setup/globals/global-helpers';
 
 export const EXTERNAL_REQUEST_HEADER = 'X-External-Request';
 
@@ -29,14 +30,14 @@ export class OpenProjectHeaderInterceptor implements HttpInterceptor {
   }
 
   private handleAuthenticatedRequest(req:HttpRequest<any>, next:HttpHandler):Observable<HttpEvent<any>> {
-    const csrf_token:string|undefined = jQuery('meta[name=csrf-token]').attr('content');
+    const csrfToken = getMetaContent('csrf-token');
 
     let newHeaders = req.headers
       .set('X-Authentication-Scheme', 'Session')
       .set('X-Requested-With', 'XMLHttpRequest');
 
-    if (csrf_token) {
-      newHeaders = newHeaders.set('X-CSRF-TOKEN', csrf_token);
+    if (csrfToken) {
+      newHeaders = newHeaders.set('X-CSRF-TOKEN', csrfToken);
     }
 
     // Clone the request to add the new header

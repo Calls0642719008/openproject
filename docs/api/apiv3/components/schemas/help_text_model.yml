@@ -67,6 +67,7 @@ example:
   id: 1
   attribute: id
   scope: WorkPackage
+  caption: "Some plain text caption"
   helpText:
     format: markdown
     raw: Help text for id attribute.
@@ -79,6 +80,6 @@ example:
       type: text/html
     attachments:
       href: '/api/v3/help_texts/1/attachments'
-    addAttachments:
+    addAttachment:
       href: '/api/v3/help_texts/1/attachments'
       method: post

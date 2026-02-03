@@ -22,73 +22,73 @@
 #++
 id:
   attributes:
-    commit: "Commit"
-    gitlab: "GitLab identifier"
-    gitlab_avatar_url: "Avatar URL"
-    gitlab_email: "GitLab Email"
-    gitlab_html_url: "GitLab HTML URL"
-    gitlab_merge_request: "Merge Request"
-    gitlab_name: "GitLab name"
-    gitlab_updated_at: "Updated at"
-    gitlab_user_avatar_url: "GitLab avatar URL"
-    gitlab_username: "GitLab username"
+    commit: "Tetapkan"
+    gitlab: "Tanda pengenal GitLab"
+    gitlab_avatar_url: "URL avatar"
+    gitlab_email: "Email GitLab"
+    gitlab_html_url: "URL HTML GitLab"
+    gitlab_merge_request: "Permintaan penggabungan"
+    gitlab_name: "Nama GitLab"
+    gitlab_updated_at: "Diperbarui pada"
+    gitlab_user_avatar_url: "URL avatar GitLab"
+    gitlab_username: "Nama pengguna GitLab"
   activerecord:
     attributes:
       gitlab_pipeline:
-        ci_details: "CI Details"
+        ci_details: "Rincian CI"
       gitlab_merge_request:
-        labels: "Labels"
+        labels: "Label"
     errors:
       models:
         gitlab_issue:
           attributes:
             labels:
-              invalid_schema: "must be an array of hashes with keys: color, title"
+              invalid_schema: "harus berupa array dari hash dengan kunci: warna, judul"
         gitlab_merge_request:
           attributes:
             labels:
-              invalid_schema: "must be an array of hashes with keys: color, title"
+              invalid_schema: "harus berupa array dari hash dengan kunci: warna, judul"
   project_module_gitlab: "GitLab"
-  permission_show_gitlab_content: "Show GitLab content"
+  permission_show_gitlab_content: "Tampilkan konten GitLab"
   gitlab_integration:
     merge_request_opened_comment: >
-      **MR Opened:** Merge request %{mr_number} [%{mr_title}](%{mr_url}) for [%{repository}](%{repository_url}) has been opened by [%{gitlab_user}](%{gitlab_user_url}).
+      **MR Terbuka:** Permintaan penggabungan %{mr_number} [%{mr_title}](%{mr_url}) untuk [%{repository}](%{repository_url}) telah dibuka oleh [%{gitlab_user}](%{gitlab_user_url}).
     merge_request_closed_comment: >
-      **MR Closed:** Merge request %{mr_number} [%{mr_title}](%{mr_url}) for [%{repository}](%{repository_url}) has been closed by [%{gitlab_user}](%{gitlab_user_url}).
+      **MR Tertutup:** Permintaan penggabungan %{mr_number} [%{mr_title}](%{mr_url}) untuk [%{repository}](%{repository_url}) telah ditutup oleh [%{gitlab_user}](%{gitlab_user_url}).
     merge_request_merged_comment: >
-      **MR Merged:** Merge request %{mr_number} [%{mr_title}](%{mr_url}) for [%{repository}](%{repository_url}) has been merged by [%{gitlab_user}](%{gitlab_user_url}).
+      **MR Tergabung:** Permintaan penggabungan %{mr_number} [%{mr_title}](%{mr_url}) untuk [%{repository}](%{repository_url}) telah digabung oleh [%{gitlab_user}](%{gitlab_user_url}).
     merge_request_reopened_comment: >
-      **MR Reopened:** Merge request %{mr_number} [%{mr_title}](%{mr_url}) for [%{repository}](%{repository_url}) has been reopened by [%{gitlab_user}](%{gitlab_user_url}).
+      **MR Terbuka Kembali:** Permintaan penggabungan %{mr_number} [%{mr_title}](%{mr_url}) untuk [%{repository}](%{repository_url}) telah dibuka kembali oleh [%{gitlab_user}](%{gitlab_user_url}).
     note_commit_referenced_comment: >
-      **Referenced in Commit:** [%{gitlab_user}](%{gitlab_user_url}) referenced this WP in a Commit Note [%{commit_id}](%{commit_url}) on [%{repository}](%{repository_url}):
+      **Dirujuk dalam Commit:** [%{gitlab_user}](%{gitlab_user_url}) merujuk WP ini di dalam Commit Note [%{commit_id}](%{commit_url}) di [%{repository}](%{repository_url}):
       %{commit_note}
     note_mr_referenced_comment: >
-      **Referenced in MR:** [%{gitlab_user}](%{gitlab_user_url}) referenced this WP in Merge Request %{mr_number} [%{mr_title}](%{mr_url}) on [%{repository}](%{repository_url}):
+      **Dirujuk dalam MR:** [%{gitlab_user}](%{gitlab_user_url}) merujuk WP ini di dalam Permintaan Penggabungan %{mr_number} [%{mr_title}](%{mr_url}) di [%{repository}](%{repository_url}):
       %{mr_note}
     note_mr_commented_comment: >
-      **Commented in MR:** [%{gitlab_user}](%{gitlab_user_url}) commented this WP in Merge Request %{mr_number} [%{mr_title}](%{mr_url}) on [%{repository}](%{repository_url}):
+      **Dikomentari dalam MR:** [%{gitlab_user}](%{gitlab_user_url}) memberikan komentar pada WP di dalam Permintaan Penggabungan %{mr_number} [%{mr_title}](%{mr_url}) di [%{repository}](%{repository_url}):
       %{mr_note}
     note_issue_referenced_comment: >
-      **Referenced in Issue:** [%{gitlab_user}](%{gitlab_user_url}) referenced this WP in Issue %{issue_number} [%{issue_title}](%{issue_url}) on [%{repository}](%{repository_url}):
+      **Dirujuk dalam Isu:** [%{gitlab_user}](%{gitlab_user_url}) merujuk pada WP ini dalam Isu %{issue_number} [%{issue_title}](%{issue_url}) di [%{repository}](%{repository_url}):
       %{issue_note}
     note_issue_commented_comment: >
-      **Commented in Issue:** [%{gitlab_user}](%{gitlab_user_url}) commented this WP in Issue %{issue_number} [%{issue_title}](%{issue_url}) on [%{repository}](%{repository_url}):
+      *Dikomentar dalam Isu:** [%{gitlab_user}](%{gitlab_user_url}) memberikan komentar terhadap WP ini dalam Isu %{issue_number} [%{issue_title}](%{issue_url}) di [%{repository}](%{repository_url}):
       %{issue_note}
     note_snippet_referenced_comment: >
-      **Referenced in Snippet:** [%{gitlab_user}](%{gitlab_user_url}) referenced this WP in Snippet %{snippet_number} [%{snippet_title}](%{snippet_url}) on [%{repository}](%{repository_url}):
+      **Dirujuk dalam Cuplikan:** [%{gitlab_user}](%{gitlab_user_url}) merujuk pada WP ini dalam Cuplikan %{snippet_number} [%{snippet_title}](%{snippet_url}) di [%{repository}](%{repository_url}):
       %{snippet_note}
     issue_opened_referenced_comment: >
-      **Issue Opened:** Issue %{issue_number} [%{issue_title}](%{issue_url}) for [%{repository}](%{repository_url}) has been opened by [%{gitlab_user}](%{gitlab_user_url}).
+      **Isu Terbuka:** Isu %{issue_number} [%{issue_title}](%{issue_url}) untuk [%{repository}](%{repository_url}) telah dibuka oleh [%{gitlab_user}](%{gitlab_user_url}).
     issue_closed_referenced_comment: >
-      **Issue Closed:** Issue %{issue_number} [%{issue_title}](%{issue_url}) for [%{repository}](%{repository_url}) has been closed by [%{gitlab_user}](%{gitlab_user_url}).
+      **Isu Ditutup:** Isu %{issue_number} [%{issue_title}](%{issue_url}) untuk [%{repository}](%{repository_url}) telah ditutup oleh [%{gitlab_user}](%{gitlab_user_url}).
     issue_reopened_referenced_comment: >
-      **Issue Reopened:** Issue %{issue_number} [%{issue_title}](%{issue_url}) for [%{repository}](%{repository_url}) has been reopened by [%{gitlab_user}](%{gitlab_user_url}).
+      **Isu Dibuka Kembali:** Isu %{issue_number} [%{issue_title}](%{issue_url}) untuk [%{repository}](%{repository_url}) telah dibuka kembali oleh [%{gitlab_user}](%{gitlab_user_url}).
     push_single_commit_comment: >
-      **Pushed in MR:** [%{gitlab_user}](%{gitlab_user_url}) pushed [%{commit_number}](%{commit_url}) to [%{repository}](%{repository_url}) at %{commit_timestamp}:
+      **Didorong di MR:** [%{gitlab_user}](%{gitlab_user_url}) mendorong [%{commit_number}](%{commit_url}) ke [%{repository}](%{repository_url}) pada %{commit_timestamp}:
       %{commit_note}
     push_single_commit_comment_with_ref: >
-      **Pushed in %{reference}:** [%{gitlab_user}](%{gitlab_user_url}) pushed [%{commit_number}](%{commit_url}) to [%{repository}](%{repository_url}) at %{commit_timestamp}:
+      **Didorong di %{reference}:** [%{gitlab_user}](%{gitlab_user_url}) mendorong [%{commit_number}](%{commit_url}) ke [%{repository}](%{repository_url}) pada %{commit_timestamp}:
       %{commit_note}
     push_multiple_commits_comment: >
-      **Pushed in MR:** [%{gitlab_user}](%{gitlab_user_url}) pushed multiple commits [%{commit_number}](%{commit_url}) to [%{repository}](%{repository_url}) at %{commit_timestamp}:
+      **Didorong di MR:** [%{gitlab_user}](%{gitlab_user_url}) mendorong beberapa komit [%{commit_number}](%{commit_url}) ke [%{repository}](%{repository_url}) pada %{commit_timestamp}:
       %{commit_note}

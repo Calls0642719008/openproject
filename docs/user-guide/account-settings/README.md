@@ -10,19 +10,19 @@ keywords: my account, account settings, change language
 
 Change your personal settings under Account settings (earlier called My account). Here you can adapt, e.g. the language, edit notifications, or add an avatar. Moreover you can manage access tokens and sessions.
 
-| Topic                                                        | Content                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [Open account settings](#open-account-settings)              | How to open your personal settings in OpenProject            |
-| [Edit your user information](#edit-your-user-information)    | How to change the name or email address in OpenProject       |
-| [Profile settings: change your language, time zone or display of comments](#profile-settings) | How to change the language, time zone or display of comments in OpenProject |
-| [Change password](#change-password)                          | How to change my password                                    |
-| [Two-factor authentication](#two-factor-authentication)      | How to set up a two-factor authentication                    |
-| [Access tokens](#access-tokens)                              | How to set up access tokens in OpenProject                   |
-| [Session management](#sessions-management)                   | How to manage your OpenProject sessions                      |
-| [Notifications settings](#notifications-settings)            | How to change in-app notifications in OpenProject            |
-| [Email reminders](#email-reminders)                          | How to change email reminders sent by OpenProject            |
-| [Set an Avatar](#set-an-avatar)                              | How to set an avatar in OpenProject and change the profile picture |
-| [Delete account](#delete-account)                            | How to delete my own account                                 |
+| Topic                                                     | Content                                                      |
+| --------------------------------------------------------- | ------------------------------------------------------------ |
+| [Open account settings](#open-account-settings)           | How to open your personal settings in OpenProject            |
+| [Edit your user information](#edit-your-user-information) | How to change the name or email address in OpenProject       |
+| [Language and region](#language-and-region-settings)      | How to change the language and the time zone in OpenProject  |
+| [Change password](#change-password)                       | How to change my password                                    |
+| [Two-factor authentication](#two-factor-authentication)   | How to set up a two-factor authentication                    |
+| [Access tokens](#access-tokens)                           | How to set up access tokens in OpenProject                   |
+| [Session management](#sessions-management)                | How to manage your OpenProject sessions                      |
+| [Notifications settings](#notifications-settings)         | How to change in-app notifications in OpenProject            |
+| [Email reminders](#email-reminders)                       | How to change email reminders sent by OpenProject            |
+| [Set an Avatar](#set-an-avatar)                           | How to set an avatar in OpenProject and change the profile picture |
+| [Delete account](#delete-account)                         | How to delete my own account                                 |
 
 ## Open account settings
 
@@ -36,10 +36,9 @@ Choose **Account settings**.
 
 To change your email address or your name, navigate to **Profile** on the left side menu of **Account settings** page.
 
-Here you can update the information and **save** your changes. If you're changing the email address of your account, you will be requested to confirm your account password before you can continue. 
+Here you can **update** or delete your profile. If you're changing the email address of your account, you will be requested to confirm your account password before you can continue. 
 
 > [!NOTE] 
->
 > This applies only to internal accounts where OpenProject can verify the password.
 
 > [!TIP]
@@ -47,16 +46,29 @@ Here you can update the information and **save** your changes. If you're changin
 
 ![Profile settings in OpenProject](openproject_account_settings_profile.png)
 
-## Profile settings
+## Delete account
 
-Within the **Settings** on **Account settings** page you can change the language of OpenProject and adapt the time zone.
+You can delete your own account in **Account settings**.
 
-![OpenProject personal account settings](openproject_account_settings_settings.png)
+To delete your account, navigate to *Account settings* -> *Account* and click the **Delete** button in the top right corner.  You will be asked to confirm that you understand that this deletion is permanent. 
+
+![Confirmation dialog to delete account under OpenProject account settings](openproject_account_settings_delete_account.png)
+
+> [!WARNING]
+> Deleting a user account is permanent and cannot be reversed.
+
+If you cannot see the entry **Delete** button under your **Account settings**, make sure the option "Users allowed to delete their account" is [activated in the administration](../../system-admin-guide/users-permissions/settings/#user-deletion).
+
+## Language and region settings
+
+Within the **Language and region** section of **Account settings** page you can change the language of OpenProject and adapt the time zone.
+
+![OpenProject personal account settings](openproject_account_settings_language_and_regions.png)
 
 
 ### Change your language
 
-To change the language in OpenProject, navigate to the **Account settings** and choose the menu point **Settings**.
+To change the language in OpenProject, navigate to the **Account settings** and choose the menu point **Language and region**.
 
 Here you can choose between multiple languages.
 
@@ -64,7 +76,7 @@ OpenProject is translated to more than 30 languages, like German, Chinese, Frenc
 
 Pressing the **Save** button will save your changes.
 
-If you want to help us to add further languages or to add the translations in your language, you can contribute to the CrowdIn translations project [here](https://crowdin.com/project/openproject).
+If you want to help us to add further languages or to add the translations in your language, you can contribute to the Crowdin translations project [here](https://crowdin.com/project/openproject).
 
 ### Change your time zone
 
@@ -74,11 +86,11 @@ Pressing the **Save** button will save your changes.
 
 ## Interface
 
-Under **Interface** section of project settings you can adjust the color mode, activate alerts and adjust backlog settings. Settings here are grouped into three sections: *Look and feel*, *Alerts* and *Backlogs module*.
+Under the **Interface** section of project settings you can adjust the color mode, activate alerts and adjust backlog settings. Settings here are grouped into three sections: *Look and feel*, *Alerts* and *Backlogs module*.
 
 ### Look and feel
 
-In the **Look and feel** section under **Interface** in your profile settings (accessible via the left-hand menu), you can select your preferred display mode and adjust the order in which comments appear in the **Activity list** for work packages.
+In the **Look and feel** section under **Interface** in your profile settings (accessible via the left-hand menu), you can select your preferred display color mode and adjust the order in which comments appear in the **Activity list** for work packages.
 
 You can also **disable keyboard shortcuts** . This is useful if you rely on a screen reader or want to avoid triggering actions by accident.
 
@@ -88,20 +100,33 @@ Click **Update look and feel** to save your changes.
 
 #### Select the high contrast color mode
 
-In the dropdown menu **Color mode** you can pick the color mode. The default setting is the **Light mode**. You can also select the **Light high contrast mode**, which will significantly increase the contrast and override the color theme of the OpenProject instance for you.
+In the dropdown menu **Color mode** you can pick the color mode. The default setting is the **Light mode**. You can increase the contrast by activating the **Increase contrast** setting, which will significantly increase the contrast and override the color theme of the OpenProject instance for you.
 
 This mode is recommended for users with visuals impairment.
 
-![High contrast mode in OpenProject account settings](openproject_account_settings_settings_light_high_contrast_mode.png)
+![Light mode with increased contrast selected in OpenProject account settings](openproject_account_settings_settings_light_high_contrast_mode.png)
 
 #### Select the dark mode
 
-In the dropdown menu **Mode** you can pick the color mode. The default setting is the **Light mode**. You can also select the **Dark mode**, which will change the color theme of the OpenProject instance for you.
+In the dropdown menu **Color mode** you can pick the color mode. The default setting is **Light mode**. You can also alternatively select **Dark** mode and activate the **Increase contrast** setting for the **Dark high contrast** mode.
 
 > [!NOTE]
-> The dark mode ignores parts of the configured design. Top header and side menu colors are entirely overridden for this  mode. Only the accent color and the primary button color are kept, but are calculated to brighter variants.
+> Custom colors and themes are only supported in Light mode and changing color modes may override most or all custom configuration. Only some colors (accent and primary button color) are kept but adapted for appropriate contrast in certain modes like dark mode.
 
 ![Dark mode in OpenProject account settings](openproject_account_settings_dark_mode.png)
+
+#### Select automatic color mode
+
+In the dropdown menu Color mode, you can now also select the **Automatic option, which will match the color mode of your operating system**. 
+
+![Automatic color mode in OpenProject account settings](openproject_account_settings_automatic_os_mode.png)
+
+If this option is selected, OpenProject will automatically match your operating system’s light or dark theme, including the system's contrast settings. You will also see additional settings to force high-contrast when Light or Dark mode is selected — this would ensure that OpenProject always increases contrast in automatic mode, regardless of the system contrast settings.
+
+If your operating system is set to high contrast mode, OpenProject will also automatically switch to the corresponding high contrast mode (light or dark).
+
+> [!NOTE]
+> This is a user-specific preference and only affects your own account.
 
 #### Change the order to display comments
 
@@ -225,6 +250,31 @@ You will then see a message informing you that the the token und the iCal URL ar
 
 ![OpenProject calendar access token is invalid](openproject_account_settings_access_tokens_calendar_invalid.png)
 
+### iCalendar for meetings
+iCalendar meeting tokens allow users to subscribe to all their meetings and view up-to-date meeting information in external clients. 
+
+This list will be empty if you have no calendar subscriptions yet. Once you subscribe to a meetings calendar, a list of all the iCalendar meeting tokens will appear here. 
+
+To subscribe click the **Subscribe to calendar** button directly in your account settings or in the [meetings module](../meetings/#subscribe-to-meetings). 
+
+![A "subscribe to calendar" button to subscribe to OpenProject meetings under account settings](openproject_account_settings_access_tokens_subscribe_button.png)
+
+You can then name the subscription meeting token and click **Create subscription**.
+
+![Form to create a new iCal subscription token for meetings in OpenProject account settings](openproject_account_settings_access_tokens_subscribe_meetings_form.png)
+
+You will then see the newly generated token. 
+
+> [!IMPORTANT]
+>
+> This is the only time that it will be displayed. Make sure that you copy it and safely save it. 
+
+![A newly generated iCal meeting subscription token in OpenProject account settings](openproject_account_settings_access_tokens_subscribe_meetings_form_confirmation.png)
+
+To delete an iCal meeting token under Account settings click the *Delete* icon next to the respective token name. 
+
+![Delete icon to remove a meeting iCal token under OpenProject account settings](openproject_account_settings_access_tokens_meetings_delete.png)
+
 ### OAUTH
 
 OAuth tokens allow third-party applications to connect with this OpenProject instance, for example Nextcloud (see [here](../../user-guide/file-management/nextcloud-integration/) how to set up Nextcloud integration).  OAuth tokens can be created under [*Administration-> Authentication*](../../system-admin-guide/authentication/).
@@ -257,8 +307,11 @@ To view and manage your OpenProject sessions navigate to **Account settings** an
 
 ![Sessions management in OpenProject account settings](openproject_account_settings_sessions_management.png)
 
-- **Current sessions**: here you can see all of your sessions. If for example you are logged into OpenProject from different browsers or devices, all will be shown in the list. Current session is the one you are currently using. You can terminate the sessions that are no longer in use. Inactive sessions will be removed from the list after 7 days (depending on the authentication settings they may become invalid earlier).
-- **Remembered devices**: here you can see a list of all devices that you are logged into using the "Stay logged in" option. You will have selected that option when [logging in](../../getting-started/sign-in-registration/). Whether or not that option is available and the duration of time for which you can stay logged in depends on the authentication settings of your instance.
+Here you can view and manage all of your active and remembered sessions in one place. Each row shows the browser, device, expiration date and last connection timestamp. For your current session the “Last connection” column displays **“Current (this device)”**.
+
+You can revoke a session at any time by clicking the **×** icon at the end of the row. Hover over the icon to see the **“Revoke”** tooltip. When you click, a confirmation message appears.
+
+Sessions expire automatically according to your instance’s authentication settings. Remembered sessions show their expiration in relative time (for example “in 5 days”).
 
 > [!NOTE]
 > Closing a browser does not necessarily terminate the session. It might still be displayed in the list and will be reactivated if you open the browser. This depends on both your browser's and the OpenProject instance's settings.
@@ -310,17 +363,4 @@ OpenProject uses Gravatar as default profile image. It displays a preview of you
 Also, you can upload a **Custom Avatar** by choosing a Avatar to be uploaded from a file. Press the blue **Update** button to change your profile picture.
 
 > [!TIP]
-> The optimum size to upload a new profile picture is 128 by 128 pixel. Larger files will be cropped.
-
-## Delete account
-
-You can delete your own account in **Account settings**.
-
-To delete your account, select **Delete account** from the side menu and enter your login to confirm the deletion.
-
-![Delete account under OpenProject account settings](openproject_account_settings_delete_account.png)
-
-> [!WARNING]
-> Deleting a user account is permanent and cannot be reversed.
-
-If you cannot see the entry **Delete account** in the **Account settings** side menu, make sure the option "Users allowed to delete their account" is [activated in the administration](../../system-admin-guide/users-permissions/settings/#user-deletion).
+> The optimum size to upload a new profile picture is 128 by 128 pixels. Larger files will be cropped.

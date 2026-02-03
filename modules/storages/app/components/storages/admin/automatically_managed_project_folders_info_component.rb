@@ -30,7 +30,6 @@
 #
 module Storages::Admin
   class AutomaticallyManagedProjectFoldersInfoComponent < StorageInfoComponent
-
     def self.wrapper_key = :automatically_managed_project_folders_section
 
     def edit_button_path

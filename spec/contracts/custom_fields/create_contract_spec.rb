@@ -29,15 +29,32 @@
 #++
 
 require "spec_helper"
-require "contracts/shared/model_contract_shared_context"
+require_relative "shared_contract_examples"
 
 RSpec.describe CustomFields::CreateContract do
-  include_context "ModelContract shared context"
+  it_behaves_like "custom_field contract" do
+    let(:custom_field) do
+      CustomField.new(name: custom_field_name,
+                      type: custom_field_type,
+                      field_format: custom_field_field_format,
+                      editable: custom_field_editable,
+                      is_filter: custom_field_is_filter,
+                      is_for_all: custom_field_is_for_all,
+                      is_required: custom_field_is_required,
+                      max_length: custom_field_max_length,
+                      min_length: custom_field_min_length,
+                      possible_values: custom_field_possible_values,
+                      regexp: custom_field_regexp,
+                      formula: custom_field_formula,
+                      searchable: custom_field_searchable,
+                      admin_only: custom_field_admin_only,
+                      default_value: custom_field_default_value,
+                      multi_value: custom_field_multi_value,
+                      content_right_to_left: custom_field_right_to_left,
+                      custom_field_section_id: custom_field_custom_field_section_id,
+                      allow_non_open_versions: custom_field_allow_non_open_versions)
+    end
 
-  let(:cf) { build_stubbed(:project_custom_field) }
-  let(:contract) do
-    described_class.new(cf, current_user, options: {})
+    subject(:contract) { described_class.new(custom_field, current_user) }
   end
-
-  it_behaves_like "contract is valid for active admins and invalid for regular users"
 end

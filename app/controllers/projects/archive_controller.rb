@@ -29,8 +29,10 @@
 #++
 
 class Projects::ArchiveController < ApplicationController
+  include OpTurbo::ComponentStream
+
   before_action :find_project_by_project_id
-  before_action :authorize, only: [:create]
+  before_action :authorize, only: %i[create dialog]
   before_action :require_admin, only: [:destroy]
 
   def create
@@ -41,17 +43,22 @@ class Projects::ArchiveController < ApplicationController
     change_status_action(:unarchive)
   end
 
+  def dialog
+    respond_with_dialog Projects::ArchiveDialogComponent.new(project: @project)
+  end
+
   private
 
   def change_status_action(status)
     service_call = change_status(status)
 
     if service_call.success?
-      redirect_to(projects_path)
+      redirect_to(projects_path, status: :see_other)
     else
       flash[:error] = t(:"error_can_not_#{status}_project",
                         errors: service_call.errors.full_messages.join(", "))
-      redirect_back fallback_location: projects_path
+      redirect_back fallback_location: projects_path,
+                    status: :see_other
     end
   end
 

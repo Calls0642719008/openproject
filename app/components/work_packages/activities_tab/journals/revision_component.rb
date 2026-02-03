@@ -81,9 +81,8 @@ module WorkPackages
 
         def revision_url
           repository = changeset.repository
-          project = repository.project
 
-          show_revision_project_repository_path(project_id: project.id, rev: changeset.revision)
+          show_revision_project_repository_path(project_id: repository.project_id, rev: changeset.revision)
         end
 
         def short_revision

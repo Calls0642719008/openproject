@@ -50,8 +50,14 @@ The more icon (⋯) next to a comment gives you a number of additional functions
 
 You can:
 
-- Copy a link to the comment on your clipboard if you want to paste a link to it elsewhere  
-- You can edit the comment if you are the author  
+- Copy a link to the comment on your clipboard if you want to paste a link to it elsewhere.
+> [!TIP]
+> Following a deep link automatically scrolls the page so the linked comment appears near the top and is briefly highlighted with a blue border. After the next interaction, the highlight disappears and the URL reverts to its normal form.
+
+![An OpenProject work package opened via a direct link, opened for the first time, highlighted with a blue border](openproject_user_guide_work_package_comment_highlighted.png)
+
+- You can edit the comment if you are the author. 
+
 - You can quote someone else's comment in a new comment. This is useful if you want to respond to a certain part of a comment.
 
 ### Internal comments (Enterprise add-on)

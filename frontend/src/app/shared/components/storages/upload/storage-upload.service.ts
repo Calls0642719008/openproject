@@ -36,6 +36,7 @@ import { IUploadStrategy } from 'core-app/shared/components/storages/upload/uplo
 import { NextcloudUploadStrategy } from 'core-app/shared/components/storages/upload/nextcloud-upload.strategy';
 import { nextcloud, oneDrive, sharepoint } from 'core-app/shared/components/storages/storages-constants.const';
 import { OneDriveUploadStrategy } from 'core-app/shared/components/storages/upload/one-drive-upload.strategy';
+import { SharepointUploadStrategy } from 'core-app/shared/components/storages/upload/sharepoint-upload.strategy';
 
 export interface IStorageFileUploadResponse {
   id:ID;
@@ -74,7 +75,7 @@ export class StorageUploadService extends OpUploadService {
         this.uploadStrategy = new OneDriveUploadStrategy(this.http);
         break;
       case sharepoint:
-        this.uploadStrategy = new OneDriveUploadStrategy(this.http);
+        this.uploadStrategy = new SharepointUploadStrategy(this.http);
         break;
       default:
         throw new Error('unknown storage type');

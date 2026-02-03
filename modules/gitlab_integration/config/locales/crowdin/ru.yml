@@ -47,7 +47,7 @@ ru:
         gitlab_merge_request:
           attributes:
             labels:
-              invalid_schema: "должен представлять собой массив хэшей с ключами: color и title"
+              invalid_schema: "должен быть массив хэшей с помощью ключей: цвет, заголовок"
   project_module_gitlab: "GitLab"
   permission_show_gitlab_content: "Показать содержимое GitLab"
   gitlab_integration:

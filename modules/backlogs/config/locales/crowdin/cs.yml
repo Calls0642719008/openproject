@@ -40,6 +40,8 @@ cs:
               task_version_must_be_the_same_as_story_version: "musí být stejná jako verze nadřazeného příběhu."
         sprint:
           cannot_end_before_it_starts: "Sprint nemůže končit dříve, než začne."
+  attributes:
+    task_type: "Typ úlohy"
   backlogs:
     add_new_story: "Nový příběh"
     any: "jakákoliv"
@@ -55,7 +57,7 @@ cs:
     hours: "Hodiny"
     impediment: "Impediment"
     label_versions_default_fold_state: " Verze zobrazit srolovaně"
-    caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."
+    caption_versions_default_fold_state: "Verze se při prohlížení nevyřízených žádostí ve výchozím nastavení nerozbalují. Každou z nich je třeba rozbalit ručně."
     work_package_is_closed: "Pracovní balíček je hotov, když"
     label_is_done_status: "Stav %{status_name} znamená hotovo"
     no_burndown_data: "Nejsou k dispozici žádná data o vypálení. Je nutné mít nastavena data zahájení a ukončení sprintu."
@@ -100,7 +102,10 @@ cs:
   backlogs_empty_title: "Nejsou definovány žádné verze pro použití v neuzavřených záznamech"
   backlogs_empty_action_text: "Chcete-li začít s nevyřízené položky, vytvořte novou verzi a přiřaďte ji do sloupce nevyřízené položky."
   button_edit_wiki: "Upravit wiki stránku"
-  error_backlogs_task_cannot_be_story: "Nastavení jsou neplatná. Vybraný typ úlohy nemůže být zároveň typem příběhu."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Došlo k následujícím chybám:"
   error_intro_singular: "Došlo k následující chybě:"
   error_outro: "Před dalším odesláním opravte výše uvedené chyby."
@@ -124,6 +129,10 @@ cs:
   label_points_burn_up: "Nahoru"
   label_product_backlog: "nevyřízené produkty"
   label_select_all: "Vybrat vše"
+  label_select_type: "Vyberte typ"
+  label_select_types: "Vyberte typy"
+  label_selected_type: "Vybraný typ"
+  label_selected_types: "Vybrané typy"
   label_sprint_backlog: "nevyřízené sprint"
   label_sprint_cards: "Exportovat karty"
   label_sprint_impediments: "Běh impedimenty"
@@ -160,3 +169,7 @@ cs:
   version_settings_display_option_left: "vlevo"
   version_settings_display_option_none: "žádný"
   version_settings_display_option_right: "vpravo"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    .
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

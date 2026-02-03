@@ -48,7 +48,10 @@ See COPYRIGHT and LICENSE files for more details.
         </div>
 
         <%= styled_button_tag t(:button_save),
-                              data: { test_selector: "color-theme-button", confirm: (t("admin.custom_styles.theme_warning") if @current_theme.blank?) } %>
+                              data: {
+                                test_selector: "color-theme-button",
+                                turbo_confirm: (t("admin.custom_styles.theme_warning") if @current_theme.blank?)
+                              } %>
       </fieldset>
     </section>
   <% end %>

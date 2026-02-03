@@ -78,7 +78,6 @@ module Components
         within_modal(I18n.t("js.modals.destroy_work_package.title", label: "work package")) do
           click_button "Delete"
         end
-        expect_and_dismiss_toaster
       end
 
       def expect_no_options(*options)

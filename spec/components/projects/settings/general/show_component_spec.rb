@@ -53,7 +53,7 @@ RSpec.describe Projects::Settings::General::ShowComponent, type: :component do
     it "renders a form" do
       render_component
 
-      expect(page.find(:heading, heading)).to have_ancestor "form"
+      expect(page.find(:section, heading)).to have_element :form
     end
   end
 
@@ -67,8 +67,8 @@ RSpec.describe Projects::Settings::General::ShowComponent, type: :component do
     end
   end
 
-  describe "Project status" do
-    it_behaves_like "section with heading", "Project status"
+  describe "Status" do
+    it_behaves_like "section with heading", "Status"
 
     it "renders field" do
       expect(render_component).to have_element "opce-ckeditor-augmented-textarea",

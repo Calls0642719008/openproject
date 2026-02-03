@@ -101,7 +101,7 @@ Please note: You can't change the default view "All open", clicking Save will ha
 
 ### How can I set certain filters and columns in the work package tables for my colleagues?
 
-Tick the box next to "Public" when saving the work package view. We suggest ticking the box next to "Favored", too.
+Tick the box next to "Public" when saving the work package view. We suggest ticking the box next to "Favorited", too.
 
 ### How can I remove or change the pre-set filter "open" in the work package view?
 
@@ -135,7 +135,7 @@ Please make sure you [activated](../../projects/project-settings/work-packages/#
 
 ### When I change the work package type of an existing work package, all attributes that are not part of the new work package type will be removed. What will happen to their values? Will the values be displayed again when I switch back to the original type?
 
-The original values will be deleted when the work package type is changed. When the type is changed, the values of the attributes of the previous type, which the new type does not have, are deleted. This is also shown in the work package activity. If you change the back to the original/former type, the original attributes (which are configured for the work package type in the form configuration) are displayed again, but the original values are not assigned/restored. One should therefore be very careful when changing work package types (e.g. from Task to Milestone).
+When changing a work package type, attributes that are not part of the new type are hidden, but their values are kept. If you switch back to the original type, the attributes are shown again with their previous values restored.
 
 ### I created a new work package status, why can I not choose it?
 

@@ -259,7 +259,7 @@ RSpec.describe WorkPackages::BulkController, with_settings: { journal_aggregatio
 
           subject do
             WorkPackage.where(id: work_package_ids)
-              .map { |w| w.custom_value_for(custom_field1.id).value }
+              .map { |w| w.custom_value_for(custom_field1).value }
               .uniq
           end
 
@@ -438,7 +438,7 @@ RSpec.describe WorkPackages::BulkController, with_settings: { journal_aggregatio
           end
 
           subject do
-            work_packages.map { |w| w.custom_value_for(custom_field1.id).value }
+            work_packages.map { |w| w.custom_value_for(custom_field1).value }
                          .uniq
           end
 
@@ -534,6 +534,38 @@ RSpec.describe WorkPackages::BulkController, with_settings: { journal_aggregatio
             end
           end
         end
+
+        describe "#done_ratio" do
+          before do
+            put :update,
+                params: {
+                  ids: work_package_ids,
+                  work_package: { done_ratio: }
+                }
+          end
+
+          context "with a valid done_ratio" do
+            let(:done_ratio) { 55 }
+
+            subject { work_packages.map(&:done_ratio).uniq }
+
+            it { is_expected.to contain_exactly(55) }
+          end
+
+          context "with an invalid done_ratio" do
+            let(:done_ratio) { 150 }
+
+            subject { work_packages.map(&:done_ratio).uniq }
+
+            it "does not succeed" do
+              expect(flash[:error])
+                .to include(I18n.t(:"work_packages.bulk.none_could_be_saved",
+                                   total: 2))
+
+              expect(subject).to contain_exactly(nil)
+            end
+          end
+        end
       end
     end
 
@@ -621,11 +653,11 @@ RSpec.describe WorkPackages::BulkController, with_settings: { journal_aggregatio
                                 .and_return false
       end
 
-      it "does not delete the work packages and renders the destroy template" do
+      it "does not delete the work packages and redirects to the reassign action" do
         send_destroy_request
         expect(WorkPackage.find_by(id: work_package1.id)).to be_present
         expect(WorkPackage.find_by(id: work_package2.id)).to be_present
-        expect(response).to render_template("destroy")
+        expect(response).to redirect_to(reassign_work_packages_bulk_path(ids: [work_package1.id, work_package2.id]))
       end
     end
 

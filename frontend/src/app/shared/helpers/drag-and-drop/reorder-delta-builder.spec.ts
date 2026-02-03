@@ -56,12 +56,14 @@ describe('ReorderDeltaBuilder', () => {
 
   it('Empty, inserting at beginning sets the delta for wpId 1 to the default value', () => {
     const delta = buildSpecDelta('1', {});
+
     expect(Object.keys(delta)).toEqual(['1']);
     expect(delta['1']).toEqual(DEFAULT_ORDER);
   });
 
   it('Empty, inserting at end sets the delta for all predecessors', () => {
     const delta = buildSpecDelta('10', {});
+
     expect(Object.keys(delta).length).toEqual(work_packages.length);
     expect(delta).toEqual({
       1: 0,
@@ -79,6 +81,7 @@ describe('ReorderDeltaBuilder', () => {
 
   it('Empty, inserting at end middle the delta for all predecessors', () => {
     const delta = buildSpecDelta('5', {});
+
     expect(Object.keys(delta).length).toEqual(5);
     expect(delta).toEqual({
       1: 0,
@@ -171,6 +174,7 @@ describe('ReorderDeltaBuilder', () => {
     };
 
     const delta = buildSpecDelta('3', positions, ['1', '2', '3', '4']);
+
     expect(Object.keys(delta).length).toEqual(4);
     expect(delta).toEqual({
       // 1 remains at DEFAULT_ORDER
@@ -192,6 +196,7 @@ describe('ReorderDeltaBuilder', () => {
     };
 
     const delta = buildSpecDelta('3', positions, ['1', '2', '3']);
+
     expect(Object.keys(delta).length).toEqual(3);
     expect(delta).toEqual({
       1: MAX_ORDER - 4,

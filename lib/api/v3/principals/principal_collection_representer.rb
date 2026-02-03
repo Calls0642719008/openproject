@@ -24,7 +24,7 @@
 #
 #  See COPYRIGHT and LICENSE files for more details.
 
-# Exists to satisfy the expectations of the default end points.
+# Exists to satisfy the expectations of the default endpoints.
 module API
   module V3
     module Principals

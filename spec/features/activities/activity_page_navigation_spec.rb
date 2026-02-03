@@ -142,6 +142,19 @@ RSpec.describe "Activity page navigation", :js do
       expect(page).to have_heading("#{user.name}'s activity")
       expect(page).to have_link(user.name)
       expect(page).to have_no_link(another_user.name)
+
+      # Applying filters should keep the user filter applied
+      click_button "Apply"
+
+      expect(page).to have_link(user.name)
+      expect(page).to have_no_link(another_user.name)
+
+      # Navigating to the previous/next pages should keep the user filter applied
+      click_link("Previous")
+      click_link("Next")
+
+      expect(page).to have_link(user.name)
+      expect(page).to have_no_link(another_user.name)
     end
   end
 
@@ -236,7 +249,7 @@ RSpec.describe "Activity page navigation", :js do
         ensure_project_details_filter_is_checked
 
         expect(page).to have_link(text: "Details")
-        expect(page.text).to include("Project status description set (Details)")
+        expect(page.text).to include("Status description set (Details)")
         within ".op-activity-list" do
           click_link("Details")
         end
@@ -293,13 +306,6 @@ RSpec.describe "Activity page navigation", :js do
         ].each do |activity_page|
           assert_navigating_to_diff_page_and_back_comes_back_to_the_same_page(activity_page)
         end
-      end
-
-      # work package activity page is rendered by Angular, so it needs js: true
-      it "Back button navigates to the previously seen work package page", :js do
-        pending "The back button is not rendered on the work package activity page anymore for some reason -> relevant?"
-        activity_page = work_package_path(project_work_package)
-        assert_navigating_to_diff_page_and_back_comes_back_to_the_same_page(activity_page, is_work_package: true)
       end
     end
   end

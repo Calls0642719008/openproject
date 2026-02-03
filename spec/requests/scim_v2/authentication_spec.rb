@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -38,7 +38,7 @@ RSpec.describe "SCIM API Authentication" do
   let(:scim_client) { create(:scim_client, authentication_method: :oauth2_token, auth_provider_id: oidc_provider.id) }
 
   describe "GET /scim_v2/ServiceProviderConfig" do
-    context "with the feature flag and enterprise enabled", with_ee: [:scim_api], with_flag: { scim_api: true } do
+    context "with enterprise feature enabled", with_ee: [:scim_api] do
       context "with static token" do
         let(:oauth_access_token) { create(:oauth_access_token, resource_owner: service_account, scopes: ["scim_v2"]) }
         let!(:token) { oauth_access_token.plaintext_token }
@@ -125,16 +125,27 @@ RSpec.describe "SCIM API Authentication" do
 
         context "when scim_v2 scope is missing in token" do
           let(:token_scope) { "api_v3" }
+          let(:expected_www_auth_header) do
+            'Bearer realm="OpenProject API", resource_metadata="http://test.host/.well-known/oauth-protected-resource", ' \
+              'scope="scim_v2", error="insufficient_scope", ' \
+              'error_description="Requires scope scim_v2 to access this resource."'
+          end
 
           it do
             get "/scim_v2/ServiceProviderConfig", {}, headers
             expect(last_response.body).to eq("insufficient_scope")
-            expect(last_response.headers["WWW-Authenticate"]).to eq("Bearer realm=\"OpenProject API\", error=\"insufficient_scope\", error_description=\"Requires scope scim_v2 to access this resource.\"")
+            expect(last_response.headers["WWW-Authenticate"]).to eq(expected_www_auth_header)
             expect(last_response).to have_http_status(401)
           end
         end
 
         context "when token_sub does not match a service_account" do
+          let(:expected_www_auth_header) do
+            'Bearer realm="OpenProject API", resource_metadata="http://test.host/.well-known/oauth-protected-resource", ' \
+              'scope="scim_v2", error="invalid_token", ' \
+              'error_description="The user identified by the token is not known"'
+          end
+
           before { service_account.user_auth_provider_links.delete_all }
 
           it do
@@ -142,13 +153,13 @@ RSpec.describe "SCIM API Authentication" do
 
             expect(last_response).to have_http_status(401)
             expect(last_response.body).to eq("invalid_token")
-            expect(last_response.headers["WWW-Authenticate"]).to eq("Bearer realm=\"OpenProject API\", error=\"invalid_token\", error_description=\"The user identified by the token is not known\"")
+            expect(last_response.headers["WWW-Authenticate"]).to eq(expected_www_auth_header)
           end
         end
       end
     end
 
-    context "with the feature flag disabled", with_ee: [:scim_api], with_flag: { scim_api: false } do
+    context "with the enterprise feature missing" do
       let(:oauth_access_token) { create(:oauth_access_token, resource_owner: service_account, scopes: ["scim_v2"]) }
       let!(:token) { oauth_access_token.plaintext_token }
 
@@ -157,26 +168,11 @@ RSpec.describe "SCIM API Authentication" do
 
         response_body = JSON.parse(last_response.body)
         expect(response_body).to eq(
-          { "detail" => "Requires authentication", "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-            "status" => "401" }
+          { "detail" => "This endpoint requires an enterprise subscription of at least corporate",
+            "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
+            "status" => "403" }
         )
-        expect(last_response).to have_http_status(401)
-      end
-    end
-
-    context "with the enterprise feature missing", with_flag: { scim_api: true } do
-      let(:oauth_access_token) { create(:oauth_access_token, resource_owner: service_account, scopes: ["scim_v2"]) }
-      let!(:token) { oauth_access_token.plaintext_token }
-
-      it do
-        get "/scim_v2/ServiceProviderConfig", {}, headers
-
-        response_body = JSON.parse(last_response.body)
-        expect(response_body).to eq(
-          { "detail" => "Requires authentication", "schemas" => ["urn:ietf:params:scim:api:messages:2.0:Error"],
-            "status" => "401" }
-        )
-        expect(last_response).to have_http_status(401)
+        expect(last_response).to have_http_status(403)
       end
     end
   end

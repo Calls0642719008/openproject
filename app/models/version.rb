@@ -59,6 +59,7 @@ class Version < ApplicationRecord
     user = args.first || User.current
     joins(:project)
       .merge(Project.allowed_to(user, :view_work_packages))
+      .or(Project.allowed_to(user, :manage_versions))
       .or(Version.systemwide)
       .or(Version.shared_via_work_packages(user))
   }
@@ -78,6 +79,7 @@ class Version < ApplicationRecord
   def visible?(user = User.current)
     systemwide? ||
       user.allowed_in_project?(:view_work_packages, project) ||
+      user.allowed_in_project?(:manage_versions, project) ||
       work_packages.visible(user).exists?
   end
 

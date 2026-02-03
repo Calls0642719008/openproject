@@ -31,6 +31,9 @@
 module Storages
   module Adapters
     module AdapterTypes
+      # Disabling cop enforcing SCREAMING_SNAKE_CASE for constants, since those constants are used in a
+      # way comparable to class names
+      # rubocop:disable Naming/ConstantName
       include Dry.Types()
 
       # We need to move the definition of ParentFolder to mean something like Folder
@@ -38,7 +41,11 @@ module Storages
       StorageFileInstance = AdapterTypes.Instance(Results::StorageFile)
       FileAncestorInstance = AdapterTypes.Instance(Results::StorageFileAncestor)
       SemanticVersionType = AdapterTypes.Constructor(SemanticVersion, SemanticVersion.method(:parse))
-      HTTPVerb = AdapterTypes::Nominal::Symbol.constrained(included_in: %i(post put))
+      HTTPVerb = AdapterTypes::Symbol.enum(:post, :put)
+
+      # Type requirements for an IO passed to HTTPX
+      HttpxIO = (AdapterTypes.Interface(:read) | AdapterTypes.Interface(:each))
+      # rubocop:enable Naming/ConstantName
     end
   end
 end

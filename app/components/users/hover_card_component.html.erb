@@ -28,67 +28,59 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-    if @user.present?
-      flex_layout(classes: "op-user-hover-card", data: { test_selector: "user-hover-card-#{@user.id}" }) do |flex|
-        flex.with_row do
-          render(Users::AvatarComponent.new(user: @user, show_name: false, link: false, hover_card: { active: false }))
-        end
+  flex_layout(classes: "op-user-hover-card", data: { test_selector: "user-hover-card-#{@user.id}" }) do |flex|
+    flex.with_row do
+      render(Users::AvatarComponent.new(user: @user, show_name: false, link: false, hover_card: { active: false }))
+    end
 
-        flex.with_row do
-          flex_layout(classes: "op-user-hover-card--info") do |f|
-            f.with_column(classes: "op-user-hover-card--name") do
-              render(Primer::Beta::Text.new(font_weight: :semibold, data: { test_selector: "user-hover-card-name" })) do
-                @user.name
-              end
-            end
-
-            if show_email?
-              f.with_column(classes: "op-user-hover-card--email") do
-                render(
-                  Primer::Beta::Text.new(
-                    font_size: :small,
-                    color: :muted,
-                    data: { test_selector: "user-hover-card-email" }
-                  )
-                ) do
-                  @user.mail
-                end
-              end
-            end
+    flex.with_row do
+      flex_layout(classes: "op-user-hover-card--info") do |f|
+        f.with_column(classes: "op-user-hover-card--name") do
+          render(Primer::Beta::Text.new(font_weight: :semibold, data: { test_selector: "user-hover-card-name" })) do
+            @user.name
           end
         end
 
-        flex.with_row do
-          flex_layout(classes: "op-user-hover-card--group-list") do |f|
-            f.with_column do
-              render(Primer::Beta::Octicon.new(icon: :people))
-            end
-
-            f.with_column do
-              render(Primer::Beta::Text.new(color: :muted, data: { test_selector: "user-hover-card-groups" })) do
-                group_membership_summary
-              end
+        if show_email?
+          f.with_column(classes: "op-user-hover-card--email") do
+            render(
+              Primer::Beta::Text.new(
+                font_size: :small,
+                color: :muted,
+                data: { test_selector: "user-hover-card-email" }
+              )
+            ) do
+              @user.mail
             end
           end
         end
-
-        flex.with_row do
-          render(
-            Primer::Beta::Button.new(
-              tag: :a,
-              href: helpers.allowed_management_user_profile_path(@user),
-              data: { test_selector: "user-hover-card-profile-btn" }
-            )
-          ) do
-            I18n.t("users.open_profile")
-          end
-        end
-      end
-    else
-      render Primer::Beta::Blankslate.new(border: false, narrow: true) do |component|
-        component.with_visual_icon(icon: "x-circle")
-        # Show a generic error message to avoid leaking information
-        component.with_heading(tag: :h3).with_content(I18n.t("http.response.unexpected"))
       end
     end
+
+    flex.with_row do
+      flex_layout(classes: "op-user-hover-card--group-list") do |f|
+        f.with_column do
+          render(Primer::Beta::Octicon.new(icon: :people))
+        end
+
+        f.with_column do
+          render(Primer::Beta::Text.new(color: :muted, data: { test_selector: "user-hover-card-groups" })) do
+            group_membership_summary
+          end
+        end
+      end
+    end
+
+    flex.with_row do
+      render(
+        Primer::Beta::Button.new(
+          tag: :a,
+          href: helpers.allowed_management_user_profile_path(@user),
+          data: { test_selector: "user-hover-card-profile-btn" }
+        )
+      ) do
+        I18n.t("users.open_profile")
+      end
+    end
+  end
 %>

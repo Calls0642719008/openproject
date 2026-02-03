@@ -76,7 +76,7 @@ export class ApiV3TimeEntriesPaths
    * Create a time entry resource from the given payload
    * @param payload
    */
-  public post(payload:Object):Observable<TimeEntryResource> {
+  public post(payload:object):Observable<TimeEntryResource> {
     return this
       .halResourceService
       .post<TimeEntryResource>(this.path, payload)

@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class RenameFileContract < Dry::Validation::Contract
+      class RenameFileContract < DryApplicationContract
         params do
           required(:new_name).filled(:string)
           required(:location).filter(:filled?, :str?).value(AdapterTypes::Location)

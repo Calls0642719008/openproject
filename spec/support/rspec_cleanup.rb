@@ -16,6 +16,11 @@ RSpec.configure do |config|
     RequestStore.clear!
   end
 
+  config.append_after(:all) do
+    # Ensure models don't leak between test through RequestStore if it is used in after(:all)
+    RequestStore.clear!
+  end
+
   # We don't want this to be reported on CI as it breaks the build
   unless ENV["CI"]
     config.append_after(:suite) do

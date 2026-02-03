@@ -125,7 +125,7 @@ OpenProject's [(Dynamic) Meetings](../../../user-guide/meetings/) have been upda
 
 With OpenProject 14.0, admins now get email notifications when a file storage (e.g. Nextcloud) is unhealthy. To avoid sending unwanted messages, we also added the option to deactivate these health status notifications for a storage.
 
-Read more about file storage troubleshooting in our [documentation](https://www.openproject.com/docs/system-admin-guide/file-storages/file-storage-troubleshooting/).
+Read more about file storage troubleshooting in our [documentation](../../../system-admin-guide/files/external-file-storages/health-status/).
 
 ### OneDrive/SharePoint: Copying template projects including automatically managed project folders
 

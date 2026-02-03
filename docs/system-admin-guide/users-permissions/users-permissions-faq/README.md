@@ -33,3 +33,66 @@ When a user is deleted his/her change history is preserved. All actions made by 
 ## Can I give users the ability to change work package status only?
 
 It is possible to give users the ability to change status without that user having the rights to edit the rest of the work package. To do that you need to grant the **Change work package status** permission to the role this user is assigned.
+
+
+
+### Can Administrators delegate the task to delete users?
+
+No, only Administrators can delete other users.
+
+### Can a user with "Edit users" global permission change administrators attributes?
+
+No, only Administrators can update other Administrators attributes like name or email. This is to prevent the possibility of a user with "Edit users" global permission impersonating an Administrator by changing the email address to match theirs.
+
+### Can I set a default role for a user that creates a new project?
+
+You can set a [default role](../../projects/new-project) that users with this permission will have in a project they created.
+
+### Users do not see the action *Create project* in the main navigation even though they have the create project permission?
+
+This is UX bug tracked in [#50123](https://community.openproject.org/wp/50123).
+
+### What is the difference between a project permission and a global permission?
+
+Project permissions controls what a user can see and do within a project scope. Project permissions are attached to **project roles**. You can grant a user a permission in a specific project by giving the user one or more project roles in a specific project.
+
+Examples for project permissions:
+
+* Create work packages
+* Add comments to a work package
+
+Global permissions are system wide. They are attached to **global roles** and controls what a user can do and see independent of a specific project memberships.
+
+### Can I convert a project role to a global role?
+
+No this is not possible. You need to create a new role instead.
+
+### What permissions exist for file storages?
+
+Permissions related to the external file storages are part of the *Projects* and *Work packages and Gantt charts*:
+
+![Files storages permissions in OpenProject](openproject_user_guide_file_storages_permissions.png)
+
+Following are the permissions for file storages within OpenProject:
+
+- **View file links**: Allows a user to see file links to external storages in the Files tab of work packages
+- **Manage file links**: Allows a user to create and edit file links to work packages
+- **Manage files in project**: Allows a user to add or edit file storages for a project
+
+Following user permissions are set on files and folder in **External Storages**:
+
+- **Automatically managed folders: Read files (Nextcloud, OneDrive)**
+
+- **Automatically managed folders: Write files (Nextcloud, OneDrive)**
+
+- **Automatically managed folders: Create files (Nextcloud)**
+
+- **Automatically managed folders: Delete files (Nextcloud)**
+
+- **Automatically managed folders: Share files (Nextcloud)**
+
+  
+
+> [!NOTE]
+>
+> Please note that not all file permissions are applicable to all storage providers.

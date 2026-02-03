@@ -1,4 +1,5 @@
 sl:
   overviews:
-    label: 'Pregled'
-  permission_manage_overview: 'Uredi pregledno stran'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "Nadzorna plošča"
+    label_overview: "Pregled"

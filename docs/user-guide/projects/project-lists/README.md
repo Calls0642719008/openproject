@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Project lists
   priority: 800
 description: Manage project lists in OpenProject
-keywords: project lists, project filters, project overview, favorite project list, share project list
+keywords: project lists, project filters, project overview, favorite project list, share project list, portfolio, program, portfolios
 
 ---
 
@@ -18,44 +18,37 @@ Your projects can be available publicly or internally. OpenProject does not limi
 | [Select project lists](#select-project-lists)                | Get an overview of all your projects in the project lists.   |
 | [Filter project lists](#project-lists-filters)               | Adjust filters in the project lists.                         |
 | [Favorite project lists](#favorite-project-lists)            | Mark project lists as favorite.                              |
-| [Share project lists with individual users and groups (Enterprise add-on)](#share-project-lists-with-individual-users-and-groups-enterprise-add-on) | Share project lists with individual users and groups.                   |
+| [Share project lists with individual users and groups (Enterprise add-on)](#share-project-lists-with-individual-users-and-groups-enterprise-add-on) | Share project lists with individual users and groups.        |
 | [Share project lists with everyone](#share-with-everyone-at-openproject) | Share project lists with everyone within your OpenProject instance. |
-| [Export project list](#export-project-lists)                 | You can export the project list to XLS or CSV.               |
-| [Project overarching reports](#project-overarching-reports)  | How to create project overarching reports across multiple projects. |
+| [Export project list](#export-project-lists)                 | Export project lists as XLS, CSV or PDF.                     |
+| [Project overarching reports](#project-overarching-reports)  | Create project overarching reports across multiple projects. |
 
 ## Select project lists
 
-There are several ways to get an overview of all your projects. You can press the **Project lists** button at the bottom of the **Select a project** menu in the top left header navigation. You can search through the projects or use the **Favorites** button to find your projects quicker.
+To get an overview of all your projects use the [**Global modules menu**](../../home/global-modules/#projects) and select *Projects*. You can access that menu either on the left side of the OpenProject application homepage or by using the grid menu icon in the top right corner.
 
-!["Project lists" button at the bottom of the All projects dropdown menu in the header navigation of OpenProject](openproject_userguide_projects_project_lists_button.png)
-
-> [!TIP]
-> If you have already selected a project, the **x** icon next to that project will navigate you away from that selected project. 
-
-![Icon to close an already selected project in the All projects dropdown menu in OpenProject](openproject_user_guide_project_project_list_x.png)
-
-Alternatively, you can use the [**Global modules menu**](../../home/global-modules/#projects) and select *Projects*. You can access that menu either on the left side of the OpenProject application homepage or by using the grid menu icon in the top right corner.
+Alternatively click the *View all projects* button in the *Projects* widget on the application home page. 
 
 ![Select all projects from the global modules menu on the left side menu in OpenProject](openproject_user_guide_project_project_lists_project_global_module.png)
 
-You will then get a list of all your active projects in OpenProject.
+You will then get a list of all your active projects. If you are using [Portfolios (Enterprise add-on)](../../portfolios), programs and portfolios will also be displayed alongside the projects. Portfolios and programs are visually distinguished by dedicated icons next to their names in the list.
 
 ![A list of all projects in OpenProject](openproject_user_guide_project_project_lists_overview.png)
+
+Click the **+ Add** button to directly add a new project, program or portfolio. 
+
+![Add a portfolio, program or a project on a projects lists overview page in OpenProject](add-portfolio-program-project-button.png)
 
 ### Project lists view explained
 
 You can use the Project overview page to **create a multi-project status dashboard** if you include your own [project attributes](../../../system-admin-guide/projects/project-attributes) or [project life cycle phases](../../../system-admin-guide/projects/project-life-cycle), e.g. custom status options, project duration or any relevant project information.
 
-Each project is displayed in a single line, starting with the **Favorite** column, marking favorite projects. For the the fields where the text is too long to be displayed completely, please use the **Expand** icon.
+Each workspace (project, program or portfolio) is displayed in a single line, starting with the **Favorite** column, marking favorite workspaces. For the the fields where the text is too long to be displayed completely, please use the **Expand** icon.
 
 ![Open a project description in the project lists view in OpenProject](expand-link-project-description.png)
 
 With the horizontal **three dots** icon on the right side of the list you can open **further features**, 
-such as [creating a new subproject](../#create-a-subproject), [project settings](../project-settings), 
-[add a project to favorites](../../project-overview/#mark-a-project-as-favorite), 
-[archiving a project](../project-settings/project-information/#archive-a-project), 
-[copying](../project-settings/project-information/#copy-a-project) and 
-[deleting a project](../project-settings/project-information/#delete-a-project). 
+such as [creating a new subproject](../#create-a-subproject), [project settings](../project-settings), [project activity](../../activity/#project-activity), [add a project to favorites](../../project-home/#mark-a-project-as-favorite), [archiving a project](../project-settings/project-information/#archive-a-project), [copying](../project-settings/project-information/#copy-a-project) and [deleting a project](../project-settings/project-information/#delete-a-project). 
 Please note that you have to be a System Administrator in OpenProject to access these features. 
 Find out how to un-archive projects [here](../project-settings/project-information/#archive-a-project).
 
@@ -210,7 +203,7 @@ You can mark project lists as favorites, both shared and private, but not the st
 
 ![Mark project list as favorite in OpenProject](star-project-list.png)
 
-The star will turn yellow and the favorite project list will move to the top of the list within the respective sidebar section. If multiple project lists are favored, they will be listed alphabetically.
+The star will turn yellow and the favorite project list will move to the top of the list within the respective sidebar section. If multiple project lists are favorited, they will be listed alphabetically.
 
 ![Favorite project list in OpenProject](star-yellow-project-list.png)
 
@@ -238,8 +231,7 @@ You can reverse the action by unselecting the *Share with everyone* toggle. The 
 
 ### Share project lists with individual users and groups (Enterprise add-on)
 
-> [!NOTE] 
-> Sharing project lists with users and groups is an Enterprise add-on and will only be displayed here for Enterprise on-premises and Enterprise cloud.
+[feature: project_list_sharing ]
 
 You can share non-static project lists with specific users or groups in OpenProject. To do that navigate to a project list and click the **Share** icon. Then specify a user or a group using the search field, define whether they can only view or edit a project list and finally click the **Share** button. That user or group will see that shared project list under **Shared project lists**.  
 
@@ -252,13 +244,13 @@ If a project list has already been shared, you will see the list of users that h
 
 ## Export project lists
 
-You can export a project list by clicking on the three dots in the upper right hand corner and selecting > **Export**.
+You can export a project list by clicking on the three dots in the upper right hand corner and selecting **Export**.
 
 ![Export projects in OpenProject](export-projects.png)
 
 Next, you can select the format in which you want to export the project list.
 
-It can be exported as .xls or .csv.
+It can be exported as XLS, CSV or PDF file.
 
 ![Export project list formats](export-project-list-formats.png)
 
@@ -272,6 +264,7 @@ Click on the **Modules** icon with the nine squares in the header navigation. Th
 
 Here you will find global (project overarching) overviews of the following modules, including:
 
+- The global portfolios list
 - The global project lists
 - The global activity module
 - The global work package tables (see below)
@@ -285,7 +278,7 @@ Here you will find global (project overarching) overviews of the following modul
 
 ### Global work package tables
 
-Select **Work packages** from the drop down menu **Global modules** in the upper right (nine squares). Now, you will see all work packages in the projects for which you have the required [permissions](../../../system-admin-guide/users-permissions/roles-permissions/).
+Select **Work packages** from the drop down menu **Global modules** in the upper left corner of the header navigation (nine squares). Now, you will see all work packages in the projects for which you have the required [permissions](../../../system-admin-guide/users-permissions/roles-permissions/).
 
 In this project overarching list, you can search, filter, group by, sort, highlight and save views the same way as in the [work package table](../../work-packages/work-package-table-configuration) in each project.
 

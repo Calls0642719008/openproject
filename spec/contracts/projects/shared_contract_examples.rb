@@ -95,7 +95,7 @@ RSpec.shared_examples_for "project contract" do
   context "if the parent is not in the set of assignable_parents" do
     let(:assignable_parents) { [] }
 
-    it_behaves_like "contract is invalid", parent: %i(does_not_exist)
+    it_behaves_like "contract is invalid", parent: %i(invalid)
   end
 
   context "if active is nil" do

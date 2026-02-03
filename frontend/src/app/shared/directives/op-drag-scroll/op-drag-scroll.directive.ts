@@ -27,17 +27,22 @@
 //++
 import { Directive, ElementRef, OnInit } from '@angular/core';
 
+declare global {
+  interface GlobalEventHandlersEventMap {
+    'op:dragscroll':CustomEvent<{x:number, y:number}>;
+  }
+}
+
 @Directive({
   selector: 'op-drag-scroll',
   standalone: false,
 })
 export class OpDragScrollDirective implements OnInit {
-  constructor(readonly elementRef:ElementRef) {
+  constructor(readonly elementRef:ElementRef<HTMLElement>) {
   }
 
   ngOnInit() {
-    const element = jQuery(this.elementRef.nativeElement);
-    const eventName = 'op:dragscroll';
+    const element = this.elementRef.nativeElement;
 
     // Is mouse down?
     let mousedown = false;
@@ -47,7 +52,7 @@ export class OpDragScrollDirective implements OnInit {
       mousedownY:number;
 
     // Mousedown: Potential drag start
-    element.on('mousedown', (evt) => {
+    element.addEventListener('mousedown', (evt) => {
       setTimeout(() => {
         mousedown = true;
         mousedownX = evt.clientX;
@@ -56,21 +61,25 @@ export class OpDragScrollDirective implements OnInit {
     });
 
     // Mouseup: Potential drag stop
-    element.on('mouseup', () => {
+    element.addEventListener('mouseup', () => {
       mousedown = false;
     });
 
     // Mousemove: Report movement if mousedown
-    element.on('mousemove', (evt) => {
+    element.addEventListener('mousemove', (evt) => {
       if (!mousedown) {
         return;
       }
 
       // Trigger drag scroll event
-      element.trigger(eventName, {
-        x: evt.clientX - mousedownX,
-        y: evt.clientY - mousedownY,
-      });
+      element.dispatchEvent(
+        new CustomEvent('op:dragscroll', {
+          detail: {
+            x: evt.clientX - mousedownX,
+            y: evt.clientY - mousedownY,
+          },
+        }),
+      );
 
       // Update last mouse position
       mousedownX = evt.clientX;

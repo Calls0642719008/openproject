@@ -40,6 +40,8 @@ bg:
               task_version_must_be_the_same_as_story_version: "трябва да бъде същата като версията на родителската история."
         sprint:
           cannot_end_before_it_starts: "Спринтът не може да приключи, преди да започне."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Нова история"
     any: "всяко"
@@ -92,7 +94,7 @@ bg:
   backlogs_sprints: "Спринтове"
   backlogs_story: "История"
   backlogs_story_type: "Типове истории"
-  backlogs_task: "Задача"
+  backlogs_task: "Задачата"
   backlogs_task_type: "Тип задача"
   backlogs_velocity_missing: "Не може да се изчисли скорост за този проект"
   backlogs_velocity_varies: "Скоростта варира значително при спринтове"
@@ -100,7 +102,10 @@ bg:
   backlogs_empty_title: "Не са дефинирани версии, които да се използват в неизпълнени задачи"
   backlogs_empty_action_text: "За да започнете с неизпълнени задачи, създайте нова версия и я присвоете на колона с натрупани документи."
   button_edit_wiki: "Редактиране на wiki страници"
-  error_backlogs_task_cannot_be_story: "Настройките са невалидни. Избраният тип задача също не може да бъде тип история."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Бяха открити следните грешки:"
   error_intro_singular: "Възникна следната грешка:"
   error_outro: "Please correct the above errors before submitting again."
@@ -109,7 +114,7 @@ bg:
   ideal: "идеален"
   inclusion: "не е включен в списъка"
   label_back_to_project: "Назад към страницата на проекта"
-  label_backlog: "Неизпълнена задача"
+  label_backlog: "Backlog"
   label_backlogs: "Backlogs"
   label_backlogs_unconfigured: "Все още не сте конфигурирали Неизпълнени задачи. Моля, отидете на %{administration} > %{plugins}, след което щракнете върху връзката %{configure} за този плъгин. След като зададете полетата, върнете се на тази страница, за да започнете да използвате инструмента."
   label_blocks_ids: "ID на блокирани работни пакети"
@@ -124,6 +129,10 @@ bg:
   label_points_burn_up: "Нагоре"
   label_product_backlog: "Натрупване на продукти"
   label_select_all: "Избери всички"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "списък с неизпълнени работи в  спринта"
   label_sprint_cards: "Експорт карти"
   label_sprint_impediments: "Пречки за спринт"
@@ -160,3 +169,7 @@ bg:
   version_settings_display_option_left: "left"
   version_settings_display_option_none: "none"
   version_settings_display_option_right: "right"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

@@ -47,12 +47,5 @@ module MeetingSections
     def show?
       !@meeting.closed? && !@meeting.template? && @backlog
     end
-
-    def wrapper_data_attributes
-      {
-        "meetings--add-params-target": "container",
-        meeting: @meeting.id
-      }
-    end
   end
 end

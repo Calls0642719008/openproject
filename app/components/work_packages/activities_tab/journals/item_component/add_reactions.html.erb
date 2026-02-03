@@ -1,47 +1,33 @@
 <%=
-  component_wrapper do
-    render(
-      Primer::Alpha::Overlay.new(
-        title: I18n.t("reactions.action_title"),
-        padding: :condensed,
-        anchor_side: :outside_top,
-        visually_hide_title: true
-      )
-    ) do |overlay|
-      overlay.with_show_button(
-        icon: "smiley",
-        "aria-label": I18n.t("reactions.add_reaction"),
-        name: I18n.t("reactions.add_reaction"),
-        mr: 1,
-        test_selector: "add-reactions-button"
-      )
-
-      overlay.with_body(pt: 2, test_selector: "emoji-reactions-overlay") do
-        flex_layout(flex_wrap: :wrap, classes: "op-add-reactions-overlay") do |add_reactions_container|
-          EmojiReaction.available_emoji_reactions.each do |emoji, reaction|
-            add_reactions_container.with_column(mr: 1) do
-              render(
-                Primer::Beta::Button.new(
-                  scheme: button_scheme(reaction),
-                  color: :default,
-                  bg: counter_color(reaction),
-                  id: "overlay-#{journal.id}-#{reaction}",
-                  test_selector: "overlay-reaction-#{reaction}",
-                  tag: :a,
-                  href: href(reaction:),
-                  data: {
-                    turbo_stream: true,
-                    turbo_method: :put,
-                    "#{polling_stimulus_controller}-target": "reactionButton"
-                  },
-                  aria: { label: I18n.t("reactions.react_with", reaction: reaction.to_s.humanize(capitalize: false)) },
-                  font_size: 4,
-                  classes: "op-add-reactions-button"
-                )
-              ) do
-                emoji
-              end
-            end
+  component_wrapper(menu_id:) do
+    flex_layout(
+      flex_wrap: :wrap,
+      test_selector: "emoji-reactions-overlay",
+      classes: "op-add-reactions-overlay",
+      p: 2
+    ) do |add_reactions_container|
+      EmojiReaction.available_emoji_reactions.each do |emoji, reaction|
+        add_reactions_container.with_column(mr: 1) do
+          render(
+            Primer::Beta::Button.new(
+              scheme: button_scheme(reaction),
+              color: :default,
+              bg: counter_color(reaction),
+              id: "overlay-#{journal.id}-#{reaction}",
+              test_selector: "overlay-reaction-#{reaction}",
+              tag: :a,
+              href: href(reaction:),
+              data: {
+                turbo_stream: true,
+                turbo_method: :put,
+                "#{polling_stimulus_controller}-target": "reactionButton"
+              },
+              aria: { label: I18n.t("reactions.react_with", reaction: reaction.to_s.humanize(capitalize: false)) },
+              font_size: 4,
+              classes: "op-add-reactions-button"
+            )
+          ) do
+            emoji
           end
         end
       end

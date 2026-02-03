@@ -1,4 +1,5 @@
 da:
   overviews:
-    label: 'Overblik'
-  permission_manage_overview: 'Manage overview page'
+    label_home: "%{workspace_type} hjem"
+    label_dashboard: "Oversigtspanel"
+    label_overview: "Overblik"

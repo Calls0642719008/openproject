@@ -40,7 +40,13 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<%= styled_form_tag(admin_settings_mail_notifications_path, method: :patch) do %>
+<%=
+  styled_form_tag(
+    admin_settings_mail_notifications_path,
+    method: :patch,
+    data: { controller: "show-when-value-selected" }
+  ) do
+%>
   <% if @deliveries %>
     <section class="form--section">
       <div class="form--field"><%= setting_text_field :mail_from, size: 60, container_class: "-middle" %></div>
@@ -72,10 +78,26 @@ See COPYRIGHT and LICENSE files for more details.
     email_methods = %i[smtp sendmail]
     email_methods << :letter_opener if Rails.env.development?
   %>
-  <%= content_tag :fieldset, id: "mail_configuration", class: "form--fieldset" do %>
+  <%= content_tag :fieldset, class: "form--fieldset" do %>
     <legend class="form--fieldset-legend"><%= t(:text_setup_mail_configuration) %></legend>
-    <div class="form--field"><%= setting_select(:email_delivery_method, email_methods, id: "email_delivery_method_switch", container_class: "-slim") %></div>
-    <div id="email_delivery_method_smtp" class="email_delivery_method_settings">
+    <div class="form--field">
+      <%=
+        setting_select(
+          :email_delivery_method,
+          email_methods,
+          container_class: "-slim",
+          data: {
+            show_when_value_selected_target: "cause",
+            target_name: "email_delivery_method_settings"
+          }
+        )
+      %>
+    </div>
+    <div
+      data-show-when-value-selected-target="effect"
+      data-target-name="email_delivery_method_settings"
+      data-value="smtp"
+      <%= "hidden" unless Setting.email_delivery_method == :smtp %>>
       <div class="form--field"><%= setting_text_field :smtp_address, container_class: "-middle" %></div>
       <div class="form--field"><%= setting_text_field :smtp_port, size: 6, container_class: "-xslim" %></div>
       <div class="form--field"><%= setting_text_field :smtp_domain, container_class: "-middle" %></div>
@@ -85,10 +107,19 @@ See COPYRIGHT and LICENSE files for more details.
       <div class="form--field"><%= setting_check_box :smtp_enable_starttls_auto %></div>
       <div class="form--field"><%= setting_check_box :smtp_ssl %></div>
     </div>
-    <div id="email_delivery_method_sendmail" class="email_delivery_method_settings">
+    <div
+      data-show-when-value-selected-target="effect"
+      data-target-name="email_delivery_method_settings"
+      data-value="sendmail"
+      <%= "hidden" unless Setting.email_delivery_method == :sendmail %>>
       <div class="form--field"><%= setting_text_field :sendmail_location %></div>
+      <div class="form--field"><%= setting_text_field :sendmail_arguments %></div>
     </div>
-    <div id="email_delivery_method_letter_opener" class="email_delivery_method_settings">
+    <div
+      data-show-when-value-selected-target="effect"
+      data-target-name="email_delivery_method_settings"
+      data-value="letter_opener"
+      <%= "hidden" unless Setting.email_delivery_method == :letter_opener %>>
       <p>Letter opener is used to render emails as a file in your Rails tmp folder. Mails will automatically open in
         your browser if supported.</p>
     </div>
@@ -100,7 +131,7 @@ See COPYRIGHT and LICENSE files for more details.
     <div style="float:none;display:inline-block;font-weight:bold;">
       <%= link_to t(:label_send_test_email),
                   { controller: "/admin", action: "test_email" },
-                  method: :post %>
+                  data: { turbo_method: :post } %>
     </div>
   <% end %>
 <% end %>

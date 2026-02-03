@@ -34,12 +34,14 @@ module Projects::Exports
     include Exports::PDF::Common::Logo
     include Exports::PDF::Common::Attachments
     include Exports::PDF::Common::Markdown
+    include Exports::PDF::Common::Macro
     include Exports::PDF::Components::Page
     include Exports::PDF::Components::Cover
     include Projects::Exports::PDFExport::TableOfContent
     include Projects::Exports::PDFExport::Report
     include Projects::Exports::PDFExport::InfoMap
     include Projects::Exports::PDFExport::Styles
+    include Project::PDFExport::Common::ProjectAttributes
 
     attr_accessor :pdf
 
@@ -58,8 +60,7 @@ module Projects::Exports
       file = render_pdf(all_projects)
       success(file)
     rescue StandardError => e
-      Rails.logger.error "Failed to generate PDF export:  #{e.message}:\n#{e.backtrace.join("\n")}"
-      error(I18n.t(:error_pdf_failed_to_export, error: e.message))
+      error(e)
     end
 
     def title
@@ -112,6 +113,10 @@ module Projects::Exports
     end
 
     def with_images?
+      true
+    end
+
+    def hide_empty_attributes?
       true
     end
 

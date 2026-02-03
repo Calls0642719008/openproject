@@ -42,7 +42,7 @@ module API
             if filter.project.nil?
               "#{api_v3_paths.versions}?#{query_params}"
             else
-              "#{api_v3_paths.versions_by_project(filter.project.id)}?#{query_params}"
+              "#{api_v3_paths.versions_by_workspace(filter.project.id)}?#{query_params}"
             end
           end
 

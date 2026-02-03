@@ -40,6 +40,8 @@ sl:
               task_version_must_be_the_same_as_story_version: "mora biti enako različici nadrejene zgodbe."
         sprint:
           cannot_end_before_it_starts: "Tek se ne mora končati preden se začne"
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Nova zgodba"
     any: "katerikoli"
@@ -100,7 +102,10 @@ sl:
   backlogs_empty_title: "Za zaostanke ni definirana nobena različica"
   backlogs_empty_action_text: "Če želite začeti z vtičnikom za zaostanke, ustvarite novo različico in jo dodelite stolpcu zaostanki."
   button_edit_wiki: "Uredi wiki stran"
-  error_backlogs_task_cannot_be_story: "Nastavitve niso veljavne. Izbran tip opravila ne more biti hkrati tip zgodbe"
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Prišlo je do naslednjih napak:"
   error_intro_singular: "Prišlo je do naslednje napake:"
   error_outro: "Odpravite napake pred ponovno potrditvijo"
@@ -124,6 +129,10 @@ sl:
   label_points_burn_up: "Navzgor"
   label_product_backlog: "zaostanek produkta"
   label_select_all: "Izberi vse"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "zaostanek sprinta"
   label_sprint_cards: "Izvozi"
   label_sprint_impediments: "Motnje sprinta"
@@ -160,3 +169,7 @@ sl:
   version_settings_display_option_left: "levo"
   version_settings_display_option_none: "brez"
   version_settings_display_option_right: "desno"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

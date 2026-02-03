@@ -30,13 +30,17 @@
 
 class CustomFields::Inputs::Text < CustomFields::Inputs::Base::Input
   form do |custom_value_form|
-    custom_value_form.rich_text_area(**input_attributes.merge(rich_text_options:))
+    custom_value_form.rich_text_area(**input_attributes, rich_text_options:)
   end
 
   def rich_text_options
     {
       resource: nil,
-      macros: "none"
+      macros: "none",
+      data: {
+        "custom-field-id": @custom_field.id,
+        "qa-field-name": qa_field_name
+      }
     }
   end
 end

@@ -27,6 +27,7 @@
 //++
 
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { slideDown, slideUp } from 'es6-slide-up-down';
 
 
 @Component({
@@ -42,53 +43,56 @@ export class PersistentToggleComponent implements OnInit {
   private isHidden = false;
 
   /** Element reference */
-  private $element:JQuery;
+  private element:HTMLElement;
 
-  private $targetNotification:JQuery;
+  private targetNotification:HTMLElement|null;
 
-  constructor(private elementRef:ElementRef) {
+  constructor(private elementRef:ElementRef<HTMLElement>) {
   }
 
   ngOnInit():void {
-    this.$element = jQuery(this.elementRef.nativeElement);
-    this.$targetNotification = this.getTargetNotification();
+    this.element = this.elementRef.nativeElement;
+    this.targetNotification = this.getTargetNotification();
 
-    this.identifier = this.$element.data('identifier');
+    this.identifier = this.element.dataset.identifier!;
     this.isHidden = window.OpenProject.guardedLocalStorage(this.identifier) === 'true';
 
     // Set initial state
-    this.$targetNotification.prop('hidden', !!this.isHidden);
+    if (this.targetNotification) {
+      this.targetNotification.hidden = !!this.isHidden;
 
-    // Register click handler
-    this.$element
-      .parent()
-      .find('.persistent-toggle--click-handler')
-      .on('click', () => this.toggle(!this.isHidden));
+      // Register click handler
+      this.element
+        .parentElement
+        ?.querySelector('.persistent-toggle--click-handler')
+        ?.addEventListener('click', () => this.toggle(!this.isHidden));
 
-    // Register target toaster close icon
-    this.$targetNotification
-      .find('.op-toast--close')
-      .on('click', () => this.toggle(true));
+      // Register target toaster close icon
+      this.targetNotification
+        .querySelector('.op-toast--close')
+        ?.addEventListener('click', () => this.toggle(true));
+    }
   }
 
   private getTargetNotification() {
-    return this.$element
-      .parent()
-      .find('.persistent-toggle--toaster');
+    return this.element
+      .parentElement!
+      .querySelector<HTMLElement>('.persistent-toggle--toaster');
   }
 
   private toggle(isNowHidden:boolean) {
     this.isHidden = isNowHidden;
     window.OpenProject.guardedLocalStorage(this.identifier, (!!isNowHidden).toString());
 
+    const targetNotification = this.targetNotification;
+    if (!targetNotification) return; 
+
     if (isNowHidden) {
-      this.$targetNotification.slideUp(400, () => {
-        // Set hidden only after animation completed
-        this.$targetNotification.prop('hidden', true);
-      });
+      slideUp(targetNotification, 400);
+      setTimeout(() => { targetNotification.hidden = true; }, 400);
     } else {
-      this.$targetNotification.slideDown(400);
-      this.$targetNotification.prop('hidden', false);
+      targetNotification.hidden = false;
+      slideDown(targetNotification, 400);
     }
   }
 }

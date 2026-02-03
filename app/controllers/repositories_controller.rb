@@ -129,7 +129,8 @@ class RepositoriesController < ApplicationController
     else
       flash[:error] = repository.errors.full_messages
     end
-    redirect_to project_settings_repository_path(@project)
+    redirect_to project_settings_repository_path(@project),
+                status: :see_other
   end
 
   alias_method :browse, :show
@@ -232,7 +233,7 @@ class RepositoriesController < ApplicationController
       end
 
       filename = "changeset_r#{@rev}"
-      filename << "_r#{@rev_to}" if @rev_to
+      filename += "_r#{@rev_to}" if @rev_to
       send_data @diff.join,
                 filename: "#{filename}.diff",
                 type: "text/x-patch",

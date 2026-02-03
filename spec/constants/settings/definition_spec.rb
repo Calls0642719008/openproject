@@ -38,7 +38,7 @@ RSpec.describe Settings::Definition, :settings_reset do
 
       described_class.add_all
 
-      expect(described_class.all.keys).to eq(described_class::DEFINITIONS.keys)
+      expect(described_class.all.keys).to match_array(described_class::DEFINITIONS.keys)
     end
 
     it "does not add any plugin/feature settings if they were removed for some reason" do

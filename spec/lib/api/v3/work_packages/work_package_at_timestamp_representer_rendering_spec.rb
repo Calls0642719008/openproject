@@ -56,7 +56,13 @@ RSpec.describe API::V3::WorkPackages::WorkPackageAtTimestampRepresenter, "render
         .and_return(true)
     end
   end
-  let(:project) { build_stubbed(:project) }
+  let(:project) do
+    build_stubbed(:project) do |project|
+      allow(project)
+        .to receive(:visible?)
+              .and_return(true)
+    end
+  end
   let(:custom_field) do
     build_stubbed(:string_wp_custom_field,
                   name: "String CF",

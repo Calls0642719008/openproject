@@ -27,21 +27,30 @@
 //++
 
 import {
-  StateService, Transition, TransitionService, UIRouterGlobals,
+  StateService,
+  Transition,
+  TransitionService,
+  UIRouterGlobals,
 } from '@uirouter/core';
 import { ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { splitViewRoute } from 'core-app/features/work-packages/routing/split-view-routes.helper';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 
 @Injectable({ providedIn: 'root' })
 export class KeepTabService {
   protected currentTab = 'overview';
 
-  protected subject = new ReplaySubject<{ [tab:string]:string; }>(1);
+  protected subject = new ReplaySubject<Record<string, string>>(1);
 
-  constructor(protected $state:StateService,
+  constructor(
+    protected $state:StateService,
     protected uiRouterGlobals:UIRouterGlobals,
-    protected $transitions:TransitionService) {
+    protected $transitions:TransitionService,
+    protected pathHelper:PathHelperService,
+    protected currentProject:CurrentProjectService,
+    ) {
     this.updateTabs();
     $transitions.onSuccess({}, (transition:Transition) => {
       this.updateTabs(transition.params('to').tabIdentifier);
@@ -63,15 +72,13 @@ export class KeepTabService {
     return this.currentDetailsTab;
   }
 
-  public goCurrentShowState(params:Record<string, unknown> = {}):void {
-    this.$state.go(
-      'work-packages.show.tabs',
-      {
-        ...this.uiRouterGlobals.params,
-        ...params,
-        tabIdentifier: this.currentShowTab,
-      },
-    );
+  public goCurrentShowState(workPackageId:string):void {
+    window.location.href = this.currentShowHref(workPackageId);
+  }
+
+  public currentShowHref(workPackageId:string):string {
+    const projectIdentifier = this.currentProject.identifier;
+    return this.pathHelper.genericWorkPackagePath(projectIdentifier, workPackageId, this.currentShowTab) + window.location.search;
   }
 
   public goCurrentDetailsState(params:Record<string, unknown> = {}):void {

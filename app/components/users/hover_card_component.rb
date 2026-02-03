@@ -34,8 +34,11 @@ class Users::HoverCardComponent < ApplicationComponent
   def initialize(id:)
     super
 
-    @id = id
-    @user = User.find_by(id: @id)
+    @user = User.find_by(id:)
+  end
+
+  def render?
+    @user&.visible?(User.current)
   end
 
   def show_email?

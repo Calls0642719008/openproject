@@ -1,4 +1,4 @@
-<% html_title(t(:label_administration), t("storages.upsell.title")) -%>
+<% html_title(t(:label_administration), t("storages.upsell.#{@provider_type.short_provider_name}.title")) -%>
 
 <% label_new_file_storage = t("storages.label_new_storage") %>
 <% html_title t(:label_administration), t("project_module_storages"), label_new_file_storage %>
@@ -20,5 +20,5 @@
   :one_drive_sharepoint_file_storage,
   variant: :large,
   video: "enterprise/one_drive_sharepoint_integration.mp4",
-  i18n_scope: "storages.upsell"
+  i18n_scope: "storages.upsell.#{@provider_type.short_provider_name}"
 ) %>

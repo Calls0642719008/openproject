@@ -85,14 +85,14 @@ export class WorkPackageReminderModalComponent extends OpModalComponent implemen
   }
 
   onClose():boolean {
-    this.actions$.dispatch(reminderModalUpdated({ workPackageId: this.workPackage.id as string }));
+    this.actions$.dispatch(reminderModalUpdated({ workPackageId: this.workPackage.id! }));
 
     return super.onClose();
   }
 
   private updateFrameSrc():void {
     const url = new URL(
-      this.pathHelper.workPackageReminderModalBodyPath(this.workPackage.id as string),
+      this.pathHelper.workPackageReminderModalBodyPath(this.workPackage.id!),
       window.location.origin,
     );
     if (this.preset) {
@@ -120,7 +120,7 @@ export class WorkPackageReminderModalComponent extends OpModalComponent implemen
     return this
       .apiV3Service
       .work_packages
-      .id(this.workPackage.id as string)
+      .id(this.workPackage.id!)
       .reminders
       .get()
       .pipe(

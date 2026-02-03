@@ -175,8 +175,7 @@ class Widget::Table::EntryTable < Widget::Table
           icons << link_to(icon_wrapper("icon-context icon-delete", I18n.t(:button_delete)),
                            action_for(result, action: "destroy")
                              .reverse_merge(authenticity_token: form_authenticity_token),
-                           data: { confirm: I18n.t(:text_are_you_sure) },
-                           method: :delete,
+                           data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) },
                            class: "no-decoration-on-hover",
                            title: I18n.t(:button_delete))
         else

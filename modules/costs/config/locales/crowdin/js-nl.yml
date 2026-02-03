@@ -23,7 +23,7 @@ nl:
   js:
     text_are_you_sure: "Weet u het zeker?"
     myTimeTracking:
-      noSpecificTime: "No specific time"
+      noSpecificTime: "Geen specifieke tijd"
     work_packages:
       property_groups:
         costs: "Kosten"

@@ -2,12 +2,8 @@
   component_wrapper do
     primer_form_with(**form_config) do |f|
       component_collection do |collection|
-        collection.with_component(Primer::BaseComponent.new(tag: :div)) do
-          flex_layout(mb: 3) do |modal_body|
-            modal_body.with_row do
-              render(ProjectCustomFieldSections::NameForm.new(f))
-            end
-          end
+        collection.with_component(Primer::Alpha::Dialog::Body.new) do
+          render(ProjectCustomFieldSections::NameForm.new(f))
         end
 
         collection.with_component(Primer::Alpha::Dialog::Footer.new) do

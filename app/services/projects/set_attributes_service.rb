@@ -30,16 +30,30 @@
 
 module Projects
   class SetAttributesService < ::BaseServices::SetAttributes
-    prepend Projects::Concerns::SetCalculatedCustomFieldValues
-
     private
 
     def set_attributes(params)
-      ret = super(params.except(:status_code))
+      super(set_attributes_params(params)).tap do
+        set_status_code(params[:status_code]) if status_code_provided?(params)
+      end
+    end
 
-      set_status_code(params[:status_code]) if status_code_provided?(params)
+    def set_attributes_params(params)
+      # Remove fields that cannot be directly set
+      filtered = params.except(:status_code)
 
-      ret
+      custom_field_value_params = filtered[:custom_field_values]
+      return filtered unless custom_field_value_params
+
+      calculated_field_ids = model.all_available_custom_fields
+                                  .field_format_calculated_value
+                                  .pluck(:id)
+
+      filtered_cf_values = custom_field_value_params.reject do |id, _|
+        id.to_s.to_i.in?(calculated_field_ids)
+      end
+
+      filtered.merge(custom_field_values: filtered_cf_values)
     end
 
     def set_default_attributes(attributes)
@@ -95,6 +109,16 @@ module Projects
 
     def first_not_set_code
       (Project.status_codes.keys - [model.status_code]).first
+    end
+
+    def set_custom_values_to_validate(params)
+      # In case of new records, validate custom fields that are enabled for all projects
+      # and also required.
+      if model.new_record? && !contract_options[:skip_custom_field_validation]
+        set_custom_field_ids_to_validate(model.available_custom_fields.for_all.required.pluck(:id))
+      else
+        super
+      end
     end
   end
 end

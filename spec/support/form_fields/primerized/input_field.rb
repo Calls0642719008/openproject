@@ -19,6 +19,10 @@ module FormFields
         input_element.send_keys(*)
       end
 
+      def clear
+        fill_in(with: "")
+      end
+
       # expectations
 
       def expect_error(string = nil)
@@ -29,6 +33,10 @@ module FormFields
       def expect_value(value)
         scroll_to_element(field_container)
         expect(field_container).to have_css("input") { |el| el.value == value }
+      end
+
+      def expect_blank
+        expect_value("")
       end
     end
   end

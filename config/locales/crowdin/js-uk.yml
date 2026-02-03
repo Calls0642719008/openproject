@@ -88,6 +88,8 @@ uk:
     button_list_view: "Подання списком"
     button_show_view: "Повноекранний режим"
     button_log_time: "Записування часу"
+    button_start_timer: "Запустити таймер"
+    button_stop_timer: "Зупинити таймер"
     button_more: "Більше"
     button_open_details: "Відкрити докладне подання"
     button_close_details: "Закрити подання деталей"
@@ -201,6 +203,8 @@ uk:
         add_table: "Додати таблицю пов'язаних пакетів робіт"
         edit_query: "Редагувати запит"
         new_group: "Нова група"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Скинути на типові значення"
       working_days:
         calendar:
@@ -255,7 +259,7 @@ uk:
       labels:
         title: "Конфігурація мітки"
         bar: "смуга міток"
-        left: "Зліва"
+        left: "Ліворуч"
         right: "Зправа"
         farRight: "Далі вправо"
         description: >
@@ -288,17 +292,6 @@ uk:
         format:
           date: "%{attribute} не є дійсною датою - очікується YYYY-MM-DD."
         general: "Сталася помилка."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Читайте про нові функції та оновлення продуктів."
-          learn_about: "Докладніше про всі нові функції"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                Випуск містить різні нові функції і покращення, зокрема: <br> <ul class="%{list_styling_class}"> <li>вдосконалення UX/UI для сучаснішого вигляду;</li> <li>можливість тимчасово вимкнути надсилання електронних листів зі сповіщеннями й ICS для нарад;</li> <li>поточні таймери, що відображаються в модулі «Мій облік часу»;</li> <li>відображення «% завершення» в підсумках звітів про перебіг виконання також у режимі «На основі статусу»;</li> <li>виявлення відсутньої можливості обміну маркерами при перевірці стану Nextcloud (у доповненні версії Enterprise).</li> </ul>
     ical_sharing_modal:
       title: "Підписатися на календар"
       inital_setup_error_message: "Під час отримання даних сталася помилка."
@@ -306,12 +299,13 @@ uk:
       warning: "Не передавайте нікому цю URL-адресу. Будь-хто із цим посиланням зможе переглянути інформацію про пакети робіт без облікового запису або пароля."
       token_name_label: "Де ви використовуватимете його?"
       token_name_placeholder: 'Введіть ім’я, наприклад «Телефон»'
-      token_name_description_text: 'Якщо ви підписані на цей календар із кількох пристроїв, це ім’я допоможе вам розрізняти їх у своєму списку <a href="my/access_token", target="_blank">маркерів доступу</a>.'
+      token_name_description_text: 'Якщо ви підписані на цей календар на кількох пристроях, це ім’я допоможе вам розрізняти їх у списку <a href="%{myAccessTokensUrl}" target="_blank">маркерів доступу</a>.'
       copy_url_label: "Копіювати URL"
       ical_generation_error_text: "Під час створення URL-адреси календаря сталася помилка."
       success_message: 'URL-адресу «%{name}» скопійовано в буфер обміну. Вставте її в клієнт свого календаря, що завершити створення підписки.'
     label_activate: "Активувати"
     label_assignee: "Виконавець"
+    label_assignee_alt_text: "Пакет робіт призначено цьому користувачу: %{name}"
     label_add_column_after: "Додати стовпець після"
     label_add_column_before: "Додати стовпець перед"
     label_add_columns: "Додати стовпці"
@@ -346,13 +340,14 @@ uk:
     label_deactivate: "Деактивувати"
     label_descending: "За спаданням"
     label_description: "Опис"
-    label_details: "Детальніше"
+    label_details: "Деталі"
     label_display: "Вигляд"
     label_cancel_comment: "Скасувати додавання коментаря"
     label_closed_work_packages: "закрито"
     label_collapse: "Згорнути"
     label_collapsed: "згорнуто"
     label_collapse_all: "Згорнути все"
+    label_collapse_text: "Згорнути текст"
     label_comment: "Коментар"
     label_committed_at: "%{committed_revision_link}, %{date}"
     label_committed_link: "зафіксовано редакцію %{revision_identifier}"
@@ -365,6 +360,7 @@ uk:
     label_expand: "Розгорнути"
     label_expanded: "розгорнуто"
     label_expand_all: "Розгорнути все"
+    label_expand_text: "Показати весь текст"
     label_expand_project_menu: "Розгорніть меню проекту"
     label_export: "Експорт"
     label_export_preparing: "Файл готується для експорту, і невдовзі його буде завантажено."
@@ -388,7 +384,7 @@ uk:
     label_import: "Імпортувати"
     label_latest_activity: "Останні дії"
     label_last_updated_on: "Останнє оновлення"
-    label_learn_more_link: "Докладніше"
+    label_learn_more_link: "Дізнатися більше"
     label_less_or_equal: "<="
     label_less_than_ago: "менше, ніж день тому"
     label_loading: "Завантаження..."
@@ -397,8 +393,6 @@ uk:
     label_me: "мені"
     label_meeting_agenda: "Порядок денний"
     label_meeting_minutes: "Хвилини"
-    label_menu_collapse: "згорнути"
-    label_menu_expand: "розгорнути"
     label_more_than_ago: "більш ніж днів(я) назад"
     label_moderate_comment: "Модерувати коментар"
     label_next: "Далі"
@@ -414,7 +408,7 @@ uk:
     label_on: "на"
     label_open_menu: "Відкрити меню"
     label_open_context_menu: "Відкрийте контекстне меню"
-    label_open_work_packages: "відкрити"
+    label_open_work_packages: "відкрито"
     label_password: "Пароль"
     label_previous: "Попередній"
     label_per_page: "К-сть на сторінку:"
@@ -432,6 +426,7 @@ uk:
     label_remove_row: "Видалити рядок"
     label_report: "Звіт"
     label_repository_plural: "Репозиторії"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "Зберегти як"
     label_search_columns: "Пошук стовпця"
     label_select_watcher: "Виберіть спостерігача..."
@@ -440,11 +435,11 @@ uk:
     label_show_in_menu: "Показати вигляд у меню"
     label_sort_by: "Сортувати за"
     label_sorted_by: "відсортовано за"
-    label_sort_higher: "Рухатися вгору"
-    label_sort_lower: "Пересунути нижче"
+    label_sort_higher: "Перемістити вгору"
+    label_sort_lower: "Перемістити вниз"
     label_sorting: "Сортування"
     label_spent_time: "Витрачений час"
-    label_star_query: "Улюблений"
+    label_star_query: "Вибране"
     label_press_enter_to_save: "Натисніть enter, щоб зберегти."
     label_public_query: "Публічні"
     label_sum: "Сума"
@@ -563,7 +558,7 @@ uk:
       date_alerts:
         milestone_date: "Дата віхи"
         overdue: "Прострочено"
-        overdue_since: "%{difference_in_days}."
+        overdue_since: "протягом %{difference_in_days}."
         property_today: "сьогодні."
         property_is: "через %{difference_in_days}."
         property_was: "%{difference_in_days} тому."
@@ -640,9 +635,6 @@ uk:
           add: "Додати налаштування для проєкту"
           already_selected: "Цей проєкт уже вибрано"
           remove: "Вилучити налаштування проєкту"
-    password_confirmation:
-      field_description: "Вам необхідно ввести пароль облікового запису, щоб підтвердити цю зміну."
-      title: "Підтвердіть ваш пароль щоб продовжити"
     pagination:
       no_other_page: "Ви знаходитесь на єдиній сторінці."
       pages_skipped: "Сторінки пропущено."
@@ -734,7 +726,7 @@ uk:
       label_discard: Скасувати вибір
       typeahead_placeholder: Пошук можливих спостерігачів
     relation_labels:
-      parent: "Батьківський"
+      parent: "Батьківський об’єкт"
       child: "Дочірній"
       children: "Дочірні елементи"
       relates: "Пов'язано з"
@@ -750,7 +742,7 @@ uk:
       required: "Необхідний для"
       relation_type: "Тип зв'язку"
     relations_hierarchy:
-      parent_headline: "Батьківський"
+      parent_headline: "Батьківський об’єкт"
       hierarchy_headline: "Ієрархія"
       children_headline: "Дочірні елементи"
     relation_buttons:
@@ -791,7 +783,7 @@ uk:
       select_tag: "Виберіть мітку"
       select_branch: "Виберіть гілку"
     field_value_enter_prompt: "Введіть значення для «%{field}»"
-    project_menu_details: "Детальніше"
+    project_menu_details: "Деталі"
     sort:
       sorted_asc: "Застосовується сортування за зростанням,"
       sorted_dsc: "Застосовується сортування за спаданням,"
@@ -1082,8 +1074,8 @@ uk:
     notice_successful_delete: "Видалення успішно завершене."
     notice_successful_update: "Успішно оновлено."
     notice_job_started: "завдання почато."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "Сервер не повернув ідентифікатор завдання."
+    invalid_job_response: "Недійсна відповідь сервера."
     notice_bad_request: "Неправильний Запит."
     relations:
       empty: Немає жодних зв'язків
@@ -1120,6 +1112,7 @@ uk:
         few: "%{count} робочий пакет дітей"
         many: "%{count} робочий пакет дітей"
         other: "%{count} робочий пакет дітей"
+      hour_string: "%{hours} год"
       hour:
         one: "1 год"
         other: "%{count} год"
@@ -1139,9 +1132,12 @@ uk:
     global_search:
       all_projects: "У всіх проектах"
       close_search: "Закрити пошук"
+      items_available: "Доступно стільки елементів: %{count}"
+      direct_hit_available: "Знайдено пакет робіт із точним ідентифікатором. Натисніть Enter, щоб відкрити його."
       current_project_and_all_descendants: "У цьому проекті + підпроекти"
       current_project: "У цьому проекті"
       recently_viewed: "Нещодавно переглянуті"
+      search_placeholder_expanded: "Шукайте пакети робіт за темою, проєктом, типом, статусом або ідентифікатором"
       title:
         all_projects: "всі проекти"
         project_and_subprojects: "і всі підпроекти"
@@ -1151,71 +1147,8 @@ uk:
       list: "Таблиця"
       timeline: "Таблиця"
     invite_user_modal:
-      back: "Назад"
       invite: "Запросити"
-      title:
-        invite: "Запросити користувача"
-        invite_to_project: "Запросити користувача «%{type}» у проєкт «%{project}» "
-        User: "користувач"
-        Group: "група"
-        PlaceholderUser: "прототип користувача"
-        invite_principal_to_project: "Запросити користувача «%{principal}» у проєкт «%{project}»"
-      project:
-        label: "Проєкт"
-        required: "Виберіть проєкт"
-        lacking_permission: "Виберіть інший проєкт, оскільки вам бракує прав, щоб призначати користувачам цей проєкт."
-        lacking_permission_info: "У вас немає дозволу призначати користувачів проєкту, який зараз відкрито. Виберіть інший."
-        next_button: "Далі"
-        no_results: "Жодних проєктів не знайдено"
-        no_invite_rights: "Ви не можете запрошувати учасників до цього проєкту"
-      type:
-        required: "Виберіть тип користувача, якого потрібно запросити"
-        user:
-          title: "Користувач"
-          description: "Дозволи, що ґрунтуються на призначеній ролі у вибраному проєкті"
-        group:
-          title: "Група"
-          description: "Дозволи, що ґрунтуються на призначеній ролі у вибраному проєкті"
-        placeholder:
-          title: "Прототип користувача"
-          title_no_ee: "Прототип користувача (лише у версії Enterprise)"
-          description: "Немає доступу до проєкту; електронні листи не відправляються."
-          description_no_ee: 'Немає доступу до проєкту; електронні листи не відправляються. <br>Ознайомтеся з перевагами <a href="%{eeHref}" target="_blank">версії Enterprise</a>.'
-      principal:
-        label:
-          name_or_email: "Ім‘я або електронна адреса"
-          name: "Назва"
-        already_member_message: "Уже учасник проєкту «%{project}»"
-        no_results_user: "Користувачів не знайдено"
-        invite_user: "Запросити:"
-        no_results_placeholder: "Прототипів не знайдено"
-        create_new_placeholder: "Створити новий прототип:"
-        no_results_group: "Груп не знайдено"
-        next_button: "Далі"
-        required:
-          user: "Виберіть користувача"
-          placeholder: "Виберіть прототип"
-          group: "Виберіть групу"
-      role:
-        label: "Ролі у проєкті «%{project}»"
-        no_roles_found: "Ролей не знайдено"
-        description: >-
-          Це роль, яку користувач отримає в разі приєднання до вашого проєкту. Роль визначає, які дії йому дозволено та яку інформацію він може бачити. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Дізнатися більше про ролі й дозволи. </a>
-        required: "Виберіть роль"
-        next_button: "Далі"
-      message:
-        label: "Повідомлення із запрошенням"
-        description: "Ми надішлемо електронний лист користувачу, у яке ви можете додати особисте повідомлення. Радимо додати пояснення про запрошення або, можливо, деяку інформацію про проєкт, щоб спростити користувачу початок роботи."
-        next_button: "Далі"
-      summary:
-        next_button: "Надіслати запрошення"
-      success:
-        title: "Користувача %{principal} запрошено!"
-        description:
-          user: "Користувач тепер може ввійти, щоб отримати доступ до проєкту %{project}. Тим часом ви вже можете включати цього користувача в план і призначати йому пакети робіт."
-          placeholder: "Прототип тепер може ввійти, щоб отримати доступ до проєкту «%{project}». Тим часом ви вже можете включати цього користувача в план і призначати йому пакети робіт."
-          group: "Ця група тепер входить у проєкт «%{project}». Тим часом ви вже можете включати її в план і призначати їй пакети робіт."
-        next_button: "Продовжити"
+      placeholder_add_tag: "Створити прототип користувача"
     exclusion_info:
       modal:
         title: "Статус виключено з підсумків ієрархії"
@@ -1232,15 +1165,20 @@ uk:
       selected_filter:
         all: "Усі проєкти"
         selected: "Тільки вибране"
-      search_placeholder: "Пошук у проєкті…"
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Пошук проєктів…"
+      search_placeholder_favorites: "Пошук серед вибраного…"
       include_subprojects: "Включити всі підпроєкти"
       tooltip:
         include_all_selected: "Проєкт уже включено, оскільки ввімкнено параметр «Включати всі вкладені проєкти»."
         current_project: "Це поточний проєкт, який зараз відкрито."
         does_not_match_search: "Проєкт не відповідає критеріям пошуку."
       no_results: "Жоден проєкт не відповідає вашим критеріям пошуку."
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Немає вибраних проєктів, які відповідають критеріям пошуку."
+    include_workspaces:
+      search_placeholder: "Пошук…"
+      types:
+        program: "Програма"
+        portfolio: "Портфель"
     baseline:
       toggle_title: "Вихідний рівень"
       clear: "Очистити"

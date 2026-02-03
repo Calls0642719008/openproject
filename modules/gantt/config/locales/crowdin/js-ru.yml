@@ -3,4 +3,4 @@ ru:
     work_packages:
       label_gantt_chart_plural: "Диаграммы Ганта"
       default_queries:
-        milestones: 'Контрольные точки'
+        milestones: 'Вехи'

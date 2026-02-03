@@ -40,6 +40,7 @@ module Storages
               visually_hide_label: true,
               validation_message: project_ids_error_message,
               autocomplete_options: {
+                appendTo: "##{@dialog_id}",
                 with_search_icon: true,
                 openDirectly: false,
                 focusDirectly: false,
@@ -59,9 +60,10 @@ module Storages
           end
         end
 
-        def initialize(project_storage:)
+        def initialize(project_storage:, dialog_id:)
           super()
           @project_storage = project_storage
+          @dialog_id = dialog_id
         end
 
         private

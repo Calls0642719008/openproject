@@ -42,13 +42,13 @@ module OpenProject
       # @display min_height 450px
       # @param searchable [Boolean]
       # @param with_create_button [Boolean]
-      # @param favored [Boolean]
+      # @param favorited [Boolean]
       # @param count [Integer]
       # @param show_enterprise_icon [Boolean]
       # @param icon [Symbol] octicon
       def playground(searchable: false,
                      with_create_button: false,
-                     favored: false,
+                     favorited: false,
                      count: nil,
                      show_enterprise_icon: false,
                      icon: nil)
@@ -56,7 +56,7 @@ module OpenProject
                              locals: {
                                searchable:,
                                create_btn_options: with_create_button ? { href: "/#", module_key: "user" } : nil,
-                               favored:,
+                               favorited:,
                                count:,
                                show_enterprise_icon:,
                                icon:

@@ -88,6 +88,8 @@ es:
     button_list_view: "Vista de lista"
     button_show_view: "Pantalla completa"
     button_log_time: "Registro de tiempo"
+    button_start_timer: "Iniciar temporizador"
+    button_stop_timer: "Detener temporizador"
     button_more: "Más"
     button_open_details: "Abrir vista detallada"
     button_close_details: "Cerrar vista detallada"
@@ -201,6 +203,8 @@ es:
         add_table: "Agregar tabla de paquetes de trabajo relacionados"
         edit_query: "Editar consulta"
         new_group: "Nuevo grupo"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Restablecer valores predeterminados"
       working_days:
         calendar:
@@ -288,17 +292,6 @@ es:
         format:
           date: "%{attribute} no es una fecha válida -se espera YYYY-MM-DD."
         general: "Ha ocurrido un error."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Obtenga información sobre nuevas funciones y actualizaciones de productos."
-          learn_about: "Más información sobre todas las nuevas funciones"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                La versión contiene varias funciones nuevas y mejoras, como <br>. <ul class="%{list_styling_class}"> <li>mejoras de UX/UI para tener un aspecto más moderno.</li> <li>Reuniones: Opción para silenciar las notificaciones por correo electrónico y de ICS.</li> <li>Temporizadores en curso mostrados en el módulo Mi seguimiento del tiempo.</li> <li>Informes de progreso: La suma de % completado también se muestra en el modo basado en el estado.</li> <li>Comprobación de salud de Nextcloud: Indica la ausencia de la función de intercambio de tokens (complemento de Enterprise).</li> </ul>
     ical_sharing_modal:
       title: "Suscribirse al calendario"
       inital_setup_error_message: "Se ha producido un error al obtener los datos."
@@ -306,12 +299,13 @@ es:
       warning: "No comparta esta URL con otros usuarios. Cualquiera que tenga este enlace podrá ver los detalles del paquete de trabajo sin necesidad de una cuenta o contraseña."
       token_name_label: "¿Dónde lo utilizará?"
       token_name_placeholder: 'Escriba un nombre, por ejemplo «Teléfono».'
-      token_name_description_text: 'Si se suscribe a este calendario desde varios dispositivos, este nombre le ayudará a distinguirlos en su lista de <a href="my/access_token", target="_blank">tokens de acceso</a>.'
+      token_name_description_text: 'Si se suscribe a este calendario desde varios dispositivos, este nombre le ayudará a distinguirlos en su lista de <a href="%{myAccessTokensUrl}" target="_blank">tokens de acceso</a>.'
       copy_url_label: "Copiar URL"
       ical_generation_error_text: "Se ha producido un error al generar la URL del calendario."
       success_message: 'La URL «%{name}» se ha copiado correctamente en su portapapeles. Péguela en su cliente de calendario para completar la suscripción.'
     label_activate: "Activar"
     label_assignee: "Asignado a"
+    label_assignee_alt_text: "Este paquete de trabajo está asignado a %{name}"
     label_add_column_after: "Añadir columna a la derecha"
     label_add_column_before: "Añadir columna a la izquierda"
     label_add_columns: "Añadir columnas"
@@ -353,6 +347,7 @@ es:
     label_collapse: "Colapsar"
     label_collapsed: "colapsado"
     label_collapse_all: "Colapsar todo"
+    label_collapse_text: "Colapsar texto"
     label_comment: "Comentario"
     label_committed_at: "%{committed_revision_link} el %{date}"
     label_committed_link: "revisión confirmada %{revision_identifier}"
@@ -365,6 +360,7 @@ es:
     label_expand: "Expandir"
     label_expanded: "expandido"
     label_expand_all: "Expandir todos"
+    label_expand_text: "Mostrar texto completo"
     label_expand_project_menu: "Expandir menú de proyecto"
     label_export: "Exportar"
     label_export_preparing: "La exportación se está preparando y se descargará en breve."
@@ -397,8 +393,6 @@ es:
     label_me: "yo"
     label_meeting_agenda: "Agenda"
     label_meeting_minutes: "Minutos"
-    label_menu_collapse: "colapsar"
-    label_menu_expand: "expandir"
     label_more_than_ago: "más que hace unos días"
     label_moderate_comment: "Moderar comentario"
     label_next: "Siguiente"
@@ -432,6 +426,7 @@ es:
     label_remove_row: "Eliminar fila"
     label_report: "Reportar"
     label_repository_plural: "Repositorios"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "Guardad como"
     label_search_columns: "Buscar una columna"
     label_select_watcher: "Selecciona un observador..."
@@ -444,7 +439,7 @@ es:
     label_sort_lower: "Mover hacia abajo"
     label_sorting: "Orden"
     label_spent_time: "Tiempo invertido"
-    label_star_query: "Favorecido"
+    label_star_query: "Favoritos"
     label_press_enter_to_save: "Presione enter para guardar los cambios."
     label_public_query: "Público"
     label_sum: "Suma"
@@ -563,7 +558,7 @@ es:
       date_alerts:
         milestone_date: "Fecha de hito"
         overdue: "Vencido"
-        overdue_since: "desde %{difference_in_days}."
+        overdue_since: "durante %{difference_in_days}."
         property_today: "es hoy."
         property_is: "está en %{difference_in_days}."
         property_was: "fue hace %{difference_in_days}."
@@ -638,9 +633,6 @@ es:
           add: "Añadir configuración para el proyecto"
           already_selected: "Este proyecto ya está seleccionado"
           remove: "Eliminar configuración del proyecto"
-    password_confirmation:
-      field_description: "Necesitas introducir la contraseña de tu cuenta para confirmar este cambio."
-      title: "Confirma tu contraseña para continuar"
     pagination:
       no_other_page: "Usted está en la única página."
       pages_skipped: "Páginas omitidas."
@@ -1080,8 +1072,8 @@ es:
     notice_successful_delete: "Eliminación exitosa."
     notice_successful_update: "Actualización exitosa."
     notice_job_started: "trabajo iniciado."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "No se ha devuelto ningún ID de trabajo desde el servidor."
+    invalid_job_response: "Respuesta invalida de el servidor."
     notice_bad_request: "Petición incorrecta."
     relations:
       empty: No existen relaciones
@@ -1114,6 +1106,7 @@ es:
       child_work_packages:
         one: "un sub-paquete de trabajo"
         other: "%{count} paquetes de trabajo secundarios"
+      hour_string: "%{hours} h"
       hour:
         one: "1 h"
         other: "%{count} h"
@@ -1131,9 +1124,12 @@ es:
     global_search:
       all_projects: "En todos los proyectos"
       close_search: "Cerrar búsqueda"
+      items_available: "%{count} elementos disponibles"
+      direct_hit_available: "Se ha encontrado el paquete de trabajo con el ID exacto. Pulsa «Intro» para abrirlo."
       current_project_and_all_descendants: "En este proyecto + subproyectos"
       current_project: "En este proyecto"
       recently_viewed: "Vistos recientemente"
+      search_placeholder_expanded: "Buscar paquetes de trabajo por asunto, proyecto, tipo, estado o ID"
       title:
         all_projects: "todos los proyectos"
         project_and_subprojects: "y todos los subproyectos"
@@ -1143,71 +1139,8 @@ es:
       list: "Tabla"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Atrás"
       invite: "Invitar"
-      title:
-        invite: "Invitar usuario"
-        invite_to_project: "Invitar a %{type} a %{project}"
-        User: "usuario"
-        Group: "grupo"
-        PlaceholderUser: "usuario de marcador de posición"
-        invite_principal_to_project: "Invitar a %{principal} a %{project}"
-      project:
-        label: "Proyecto"
-        required: "Por favor, seleccione un proyecto"
-        lacking_permission: "Por favor, seleccione otro proyecto, ya que no tiene permisos para asignar usuarios al proyecto actual."
-        lacking_permission_info: "No tiene permisos para asignar usuarios al proyecto actual. Necesita seleccionar otro proyecto."
-        next_button: "Siguiente"
-        no_results: "No se encontraron proyectos"
-        no_invite_rights: "No tiene permiso para invitar a miembros a este proyecto"
-      type:
-        required: "Por favor, seleccione el tipo de miembro al que invitará"
-        user:
-          title: "Usuario"
-          description: "Permisos basados en el rol asignado en el proyecto seleccionado"
-        group:
-          title: "Grupo"
-          description: "Permisos basados en el rol asignado en el proyecto seleccionado"
-        placeholder:
-          title: "Usuario de marcador de posición"
-          title_no_ee: "Usuario de marcador de posición (extensión solo para Enterprise)"
-          description: "No tiene acceso al proyecto y no se enviarán correos electrónicos."
-          description_no_ee: 'No tiene acceso al proyecto y no se enviarán correos electrónicos. <br>Consulte <a href="%{eeHref}" target="_blank">Enterprise</a>'
-      principal:
-        label:
-          name_or_email: "Nombre o dirección de correo electrónico"
-          name: "Nombre"
-        already_member_message: "Ya es miembro de %{project}"
-        no_results_user: "No se encontraron usuarios"
-        invite_user: "Invitar:"
-        no_results_placeholder: "No se encontraron marcadores de posición"
-        create_new_placeholder: "Crear marcador de posición:"
-        no_results_group: "No se encontraron grupos"
-        next_button: "Siguiente"
-        required:
-          user: "Seleccione un usuario"
-          placeholder: "Seleccione un marcador de posición"
-          group: "Por favor, seleccione un grupo"
-      role:
-        label: "Rol en %{project}"
-        no_roles_found: "No se encontraron roles"
-        description: >-
-          Este es el role que el usuario recibirá al unirse al proyecto. El role define las acciones que són permitidas y que información pueden ver. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Obtén más información sobre roles y permisos. </a>
-        required: "Por favor, seleccione un rol"
-        next_button: "Siguiente"
-      message:
-        label: "Mensaje de invitación"
-        description: "Enviaremos un correo electrónico al usuario, al cual puede añadir un mensaje personal aquí. Una explicación sobre la invitación podría ser útil, o bien información básica sobre el proyecto para ayudarles a empezar."
-        next_button: "Siguiente"
-      summary:
-        next_button: "Enviar invitación"
-      success:
-        title: "Se envió la invitación a %{principal}"
-        description:
-          user: "El usuario ya puede iniciar sesión para acceder a %{project}. Mientras tanto, puede crear planes con ese usuario y asignarle paquetes de trabajo."
-          placeholder: "El marcador de posición ya puede usarse en %{project}. Mientras tanto, puede crear planes con ese usuario y asignarle paquetes de trabajo."
-          group: "El grupo ya forma parte de %{project}. Mientras tanto, puede crear planes con ese grupo y asignar paquetes de trabajo a este."
-        next_button: "Continuar"
+      placeholder_add_tag: "Crear usuario de marcador de posición"
     exclusion_info:
       modal:
         title: "Estado excluido de los totales de jerarquía"
@@ -1224,15 +1157,20 @@ es:
       selected_filter:
         all: "Todos los proyectos"
         selected: "Solo seleccionados"
-      search_placeholder: "Buscar proyecto…"
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder: "Buscar proyectos..."
+      search_placeholder_favorites: "Buscar favoritos..."
       include_subprojects: "Incluir todos los subproyectos"
       tooltip:
         include_all_selected: "Proyecto ya incluido, ya que \"Incluir todos los subproyectos\" está activada."
         current_project: "Este es el proyecto actual."
         does_not_match_search: "El proyecto no coincide con los criterios de búsqueda."
       no_results: "Ningún producto coincide con tu criterio de búsqueda"
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "Ningún proyecto favorito coincide con sus criterios de búsqueda."
+    include_workspaces:
+      search_placeholder: "Buscar…"
+      types:
+        program: "Programa"
+        portfolio: "Cartera"
     baseline:
       toggle_title: "Referencia"
       clear: "Despejar"

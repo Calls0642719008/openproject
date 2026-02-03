@@ -165,10 +165,10 @@ You can now run a new OpenProject container connected to your upgraded PostgreSQ
 ```bash
 docker run -d -p 8080:80 --name openproject \
   -e OPENPROJECT_HOST__NAME=openproject.example.com \
-  -e OPENPROJECT_SECRET_KEY_BASE=secret \
+  -e SECRET_KEY_BASE=secret \
   -v /var/lib/openproject/pgdata17:/var/openproject/pgdata \
   -v /var/lib/openproject/assets:/var/openproject/assets \
-  openproject/openproject:16
+  openproject/openproject:17
 ```
 
 Make sure the environment variables and version match your setup.

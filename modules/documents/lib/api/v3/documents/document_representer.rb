@@ -35,6 +35,7 @@ module API
         include API::Decorators::DateProperty
         include API::Decorators::FormattableProperty
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Caching::CachedRepresenter
         include ::API::V3::Attachments::AttachableRepresenterMixin
 
@@ -43,22 +44,26 @@ module API
 
         self_link title_getter: ->(*) { represented.title }
 
+        link :update,
+             cache_if: -> { current_user.allowed_in_project?(:manage_documents, represented.project) } do
+          {
+            href: api_v3_paths.document(represented.id),
+            method: :patch
+          }
+        end
+
         property :id
 
         property :title
 
         formattable_property :description
 
+        property :content_binary
+
         date_time_property :created_at
         date_time_property :updated_at
 
-        associated_resource :project,
-                            link: ->(*) do
-                              {
-                                href: api_v3_paths.project(represented.project.id),
-                                title: represented.project.name
-                              }
-                            end
+        associated_project
 
         def _type
           "Document"

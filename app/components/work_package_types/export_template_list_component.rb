@@ -48,8 +48,8 @@ module WorkPackageTypes
 
     def drag_and_drop_target_config
       {
-        "is-drag-and-drop-target": true,
-        "target-container-accessor": "& > ul",
+        generic_drag_and_drop_target: "container",
+        "target-container-accessor": ":scope > ul",
         "target-allowed-drag-type": "template",
         test_selector: "pdf-export-template-rows"
       }

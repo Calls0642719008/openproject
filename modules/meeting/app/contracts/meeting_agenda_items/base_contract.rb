@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -29,11 +30,13 @@
 
 module MeetingAgendaItems
   class BaseContract < ::ModelContract
-    include ModifiableItem
+    include EditableItem
 
     def self.model
       MeetingAgendaItem
     end
+
+    validate :presenter_can_participate
 
     attribute :meeting
     attribute :work_package
@@ -44,5 +47,15 @@ module MeetingAgendaItems
     attribute :duration_in_minutes
     attribute :notes
     attribute :presenter
+
+    private
+
+    def presenter_can_participate
+      return if model.meeting.nil?
+      return if model.presenter.nil?
+      return if model.presenter.allowed_in_project?(:view_meetings, model.meeting.project)
+
+      errors.add(:presenter, :invalid_user)
+    end
   end
 end

@@ -14,7 +14,7 @@ ru:
         display_name: Отображаемое имя
         client_id: Идентификатор клиента
         client_secret: Закрытый ключ клиента
-        groups_claim: Groups claim
+        groups_claim: Требования для групп
         group_regexes: Шаблон (регулярное выражение)
         secret: Закрытый ключ
         scope: Масштаб
@@ -43,6 +43,10 @@ ru:
               response_is_not_successful: " отвечает %{status}."
               response_is_not_json: " не возвращает тело JSON."
               response_misses_required_attributes: " не возвращает необходимые атрибуты. Недостающими атрибутами являются: %{missing_attributes}."
+          invalid_claims_essential: "не определяет логическое значение %{attribute}."
+          invalid_claims_location: "содержат неподдерживаемые местоположения: %{invalid}. К поддерживаемым местоположениям относятся: %{supported}."
+          invalid_claims_values: "не определяет массив значений в %{attribute}."
+          non_object_attribute: "не определяет JSON объект в %{attribute}."
   provider:
     delete_warning:
       input_delete_confirmation: Введите имя провайдера %{name} для подтверждения удаления.
@@ -57,16 +61,27 @@ ru:
   openid_connect:
     menu_title: Провайдеры OpenID
     delete_title: "Удалить провайдера OpenID Connect"
-    group_links_heading: OpenID Connect group links
+    group_links_heading: Ссылки на группу OpenID Connect
+    groups:
+      match_preview_component:
+        title: Извлеченные имена групп
+        placeholder_none: В настоящее время нет групп, соответствующих шаблону.
+      match_preview_dialog_component:
+        description: Это позволяет протестировать регулярное выражение на примерных данных, чтобы убедиться, что имена групп, которые вы хотите извлечь, действительно извлекаются. Здесь вы можете изменить ваш шаблон, но тестовая строка не будет сохранена с конфигурацией.
+        group_names_label: Имена тестовых групп
+        group_names_description: Введите одно название группы в строку, как оно будет отображаться в формуле OIDC, чтобы увидеть, как Ваши шаблоны регулярных выражений влияют на них.
+        show_button: Тестовый шаблон
+        title: Тестовое регулярное выражение
     instructions:
       endpoint_url: URL-адрес конечной точки, указанный поставщиком OpenID Connect
       group_regexes: По одному регулярному выражению на строку. Пожалуйста, прочитайте [документацию](docs_url) для получения дополнительной информации о том, как это сделать.
-      group_regexes_detail: Optionally define patterns using regular expressions to match group names from the groups claim. For example, entering a pattern like <code>^Level1/Level2/([\w/]+)$</code> will extract the group “Groupname/SubGroup” from a response including “Level1/Level2/GroupName/SubGroup”. If no pattern matches, the group is ignored. Leave empty to synchronize all groups using their full group name.
+      group_regexes_detail: В качестве опции задайте шаблоны с помощью регулярных выражений для сопоставления имен групп из формулы групп. Например, если ввести шаблон <code>^Level1/Level2/([\w/]+)$</code>, то из ответа, включающего "Level1/Level2/GroupName/SubGroup", будет извлечена группа "Groupname/SubGroup". Если шаблон не совпадает, группа игнорируется. Оставьте пустым, чтобы синхронизировать все группы, используя их полное групповое имя.
+      group_regexes_testing: "Нажмите на кнопку 'Тест шаблона' для проверки шаблона регулярных выражений на примере пользовательской информации OIDC."
       group_sync: Автоматически извлекать и синхронизировать информацию о членстве в группах от поставщика идентификационных данных.
-      groups_claim: Specify the name of the claim that's expected to indicate the group names that the user is a member of.
+      groups_claim: Укажите имя формулы, которая, как ожидается, будет указывать на имена групп, членом которых является пользователь.
       metadata_none: У меня нет этой информации
       metadata_url: У меня есть URL конечной точки обнаружения
-      oidc_information: These values are needed to configure the OpenID Connect provider.
+      oidc_information: Эти значения необходимы для настройки провайдера OpenID Connect.
       client_id: Это идентификатор клиента, присвоенный вам провайдером OpenID Connect
       client_secret: Это ключ клиента, предоставленный вам провайдером OpenID Connect
       limit_self_registration: Если эта опция включена, пользователи смогут регистрироваться у этого провайдера только в том случае, если конфигурация провайдера позволяет это делать.
@@ -102,7 +117,7 @@ ru:
       custom:
         name: Пользовательский
       upsell:
-        title: "Технология единого входа (SSO) с использованием OpenID connect"
+        title: "Single Sign-On (SSO) с подключением OpenID"
         description: Подключить OpenProject к провайдеру идентификации OpenID connect
       label_add_new: Добавить нового провайдера OpenID
       label_edit: Редактировать провайдера OpenID %{name}
@@ -116,12 +131,13 @@ ru:
       label_configuration_details: Метаданные
       label_client_details: Информация о клиенте
       label_attribute_mapping: Привязки атрибутов
+      notice_created: Новый провайдер OpenID был успешно создан.
       client_details_description: Информация о настройке OpenProject в качестве клиента OIDC
       no_results_table: Ни один провайдер еще не был определен.
       plural: Провайдеры OpenID
       singular: Провайдер OpenID
       section_texts:
-        group_mapping: Map group names provided by the identity provider to groups in OpenProject.
+        group_mapping: Сопоставьте имена групп, предоставленные поставщиком идентификационных данных, с группами в OpenProject.
         metadata: Предварительно заполните конфигурацию, используя URL обнаружения OpenID Connect
         metadata_form_banner: Редактирование URL может перезаписать ранее заполненные значения метаданных.
         metadata_form_title: Конечная точка обнаружения OpenID Connect
@@ -133,7 +149,7 @@ ru:
         claims: Запросите дополнительные требования к ID-токену или ответу userinfo.
       side_panel:
         information_component:
-          backchannel_logout_url: Backchannel logout URL
+          backchannel_logout_url: URL-адрес выхода из обратного канала
     setting_instructions:
       limit_self_registration: >
         Если эта опция включена, пользователи могут регистрироваться с помощью этого провайдера только в том случае, если настройка саморегистрации позволяет это сделать.

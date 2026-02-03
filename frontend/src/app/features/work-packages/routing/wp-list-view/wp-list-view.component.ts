@@ -30,10 +30,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Injector,
-  OnInit,
   ElementRef,
+  inject,
+  Injector,
   NgZone,
+  OnInit,
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { CausedUpdatesService } from 'core-app/features/boards/board/caused-updates/caused-updates.service';
@@ -56,6 +57,7 @@ import { StateService } from '@uirouter/core';
 import { KeepTabService } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
 import { WorkPackageViewBaselineService } from '../wp-view-base/view-services/wp-view-baseline.service';
 import { combineLatest } from 'rxjs';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 
 @Component({
   selector: 'wp-list-view',
@@ -71,6 +73,21 @@ import { combineLatest } from 'rxjs';
   standalone: false,
 })
 export class WorkPackageListViewComponent extends UntilDestroyedMixin implements OnInit {
+  readonly I18n = inject(I18nService);
+  readonly injector = inject(Injector);
+  readonly $state = inject(StateService);
+  readonly keepTab = inject(KeepTabService);
+  readonly querySpace = inject(IsolatedQuerySpace);
+  readonly wpViewFilters = inject(WorkPackageViewFiltersService);
+  readonly deviceService = inject(DeviceService);
+  readonly CurrentProject = inject(CurrentProjectService);
+  readonly wpDisplayRepresentation = inject(WorkPackageViewDisplayRepresentationService);
+  readonly cdRef = inject(ChangeDetectorRef);
+  readonly elementRef = inject(ElementRef);
+  readonly ngZone = inject(NgZone);
+  readonly wpTableBaseline = inject(WorkPackageViewBaselineService);
+  readonly pathHelper = inject(PathHelperService);
+
   text = {
     jump_to_pagination: this.I18n.t('js.work_packages.jump_marks.pagination'),
     text_jump_to_pagination: this.I18n.t('js.work_packages.jump_marks.label_pagination'),
@@ -95,24 +112,6 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
   readonly wpTableConfiguration:WorkPackageTableConfigurationObject = {
     dragAndDropEnabled: true,
   };
-
-  constructor(
-    readonly I18n:I18nService,
-    readonly injector:Injector,
-    readonly $state:StateService,
-    readonly keepTab:KeepTabService,
-    readonly querySpace:IsolatedQuerySpace,
-    readonly wpViewFilters:WorkPackageViewFiltersService,
-    readonly deviceService:DeviceService,
-    readonly CurrentProject:CurrentProjectService,
-    readonly wpDisplayRepresentation:WorkPackageViewDisplayRepresentationService,
-    readonly cdRef:ChangeDetectorRef,
-    readonly elementRef:ElementRef,
-    private ngZone:NgZone,
-    readonly wpTableBaseline:WorkPackageViewBaselineService,
-  ) {
-    super();
-  }
 
   ngOnInit() {
     // Mark tableInformationLoaded when initially loading done
@@ -145,7 +144,7 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
 
         // The header of the table hides the scrolledIntoView element
         // so we scrollIntoView the previous element, if any
-        if (selectedRow && selectedRow.previousSibling) {
+        if (selectedRow?.previousSibling) {
           selectedRow.previousSibling.scrollIntoView({ block: 'start' });
         }
 
@@ -192,7 +191,7 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
     if (event.requestedState === 'split') {
       this.keepTab.goCurrentDetailsState(params);
     } else {
-      this.keepTab.goCurrentShowState(params);
+      this.openInFullView(event.workPackageId);
     }
   }
 
@@ -209,9 +208,7 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
   }
 
   private openInFullView(workPackageId:string) {
-    this.$state.go(
-      'work-packages.show',
-      { workPackageId },
-    );
+    const projectIdentifier = this.CurrentProject.identifier;
+    window.location.href = this.pathHelper.genericWorkPackagePath(projectIdentifier, workPackageId) + window.location.search;
   }
 }

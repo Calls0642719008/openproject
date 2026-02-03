@@ -80,7 +80,7 @@ RSpec.describe Queries::Capabilities::CapabilityQuery do
 
     context "with a context filter having the `=` operator" do
       before do
-        instance.where("context", "=", ["p1"])
+        instance.where("context", "=", ["w1"])
       end
 
       it "is valid" do

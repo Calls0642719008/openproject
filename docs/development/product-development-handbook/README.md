@@ -223,7 +223,7 @@ Ideally the preparation of both QA and development happen at the same time so th
 4. Developer hands over "Implementation" work package upon completion to another developer for review (status: “In review”).
 5. Developer (different from the one implementing the code) performs a review and, if changes are accepted according to the points mentioned below merges the pull request and closes the "Implementation" work package.
    1. [Secure coding guidelines](../concepts/secure-coding/) have been evaluated for the proposed changes.
-   2. New or changed functionality is covered following the [Writing and Running Tests guide](../running-tests/) to ensure the entire required spectrum of tests were added.
+   2. New or changed functionality is covered following the [Writing and Running Tests guide](../testing/) to ensure the entire required spectrum of tests were added.
    3. [Code review guidelines](../code-review-guidelines/) are followed by the submitter and reviewer
    4. [Pull request targets the correct version](../git-workflow/#create-a-pull-request), and has a related work package that will form the changelog.
 7. The feature lead developer updates the status of the feature to "merged" once the feature is fully implemented. This can be done even with bugs still open that QA has already identified.
@@ -243,7 +243,7 @@ Changes to the technical documentation, e.g API documentation, are done in paral
 | - QA     | Tested feature                                                                                                                         |
 
 1. Tester adapts test plan if acceptance criteria was altered since the original creation of the test plan.
-2. Tester performs and verifies additional tests according to the  [Writing and Running Tests guide](../../development/running-tests/) to ensure the application has been tested according to specifications and requirements.
+2. Tester performs and verifies additional tests according to the  [Writing and Running Tests guide](../../development/testing/) to ensure the application has been tested according to specifications and requirements.
 3. Tester tests feature (based on test plan)
    1. Tester adjusts status when no errors in feature (status: “tested”).
    2. Tester adjusts status when errors occur (status: “test failed”) and notifies developer (move back to phase 2 - Implementation)

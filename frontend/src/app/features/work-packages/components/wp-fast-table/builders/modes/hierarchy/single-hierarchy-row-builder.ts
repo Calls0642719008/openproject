@@ -25,7 +25,7 @@ export class SingleHierarchyRowBuilder extends SingleRowBuilder {
 
   // Retain a map of hierarchy elements present in the table
   // with at least a visible child
-  public parentsWithVisibleChildren:{ [id:string]:boolean };
+  public parentsWithVisibleChildren:Record<string, boolean>;
 
   public text:{
     leaf:(level:number) => string;
@@ -50,10 +50,10 @@ export class SingleHierarchyRowBuilder extends SingleRowBuilder {
    * Refresh a single row after structural changes.
    * Remembers and re-adds the hierarchy indicator if necessary.
    */
-  public refreshRow(workPackage:WorkPackageResource, jRow:JQuery):JQuery {
+  public refreshRow(workPackage:WorkPackageResource, row:HTMLTableRowElement) {
     // Remove any old hierarchy
-    const newRow = super.refreshRow(workPackage, jRow);
-    newRow.find('.wp-table--hierarchy-span').remove();
+    const newRow = super.refreshRow(workPackage, row);
+    newRow.querySelector('.wp-table--hierarchy-span')?.remove();
     this.appendHierarchyIndicator(workPackage, newRow);
 
     return newRow;
@@ -67,7 +67,7 @@ export class SingleHierarchyRowBuilder extends SingleRowBuilder {
     const [classes, hidden] = this.ancestorRowData(workPackage);
     element.classList.add(...classes);
 
-    this.appendHierarchyIndicator(workPackage, jQuery(element));
+    this.appendHierarchyIndicator(workPackage, element);
     return [element, hidden];
   }
 
@@ -114,28 +114,32 @@ export class SingleHierarchyRowBuilder extends SingleRowBuilder {
   /**
    * Append to the row of hierarchy level <level> a hierarchy indicator.
    * @param workPackage
-   * @param jRow jQuery row element
+   * @param row row element
    * @param level Indentation level
    */
-  private appendHierarchyIndicator(workPackage:WorkPackageResource, jRow:JQuery, level?:number):void {
+  private appendHierarchyIndicator(workPackage:WorkPackageResource, row:HTMLTableRowElement, level?:number):void {
     const ancestors = workPackage.getAncestors();
     const hierarchyLevel = level === undefined || null ? ancestors.length : level;
-    const hierarchyElement = this.buildHierarchyIndicator(workPackage, jRow, hierarchyLevel);
+    const hierarchyElement = this.buildHierarchyIndicator(workPackage, row, hierarchyLevel);
 
-    jRow.find('td.subject')
-      .addClass('-with-hierarchy')
-      .prepend(hierarchyElement);
+    const subjectCell = row.querySelector<HTMLTableCellElement>('td.subject');
+    if (!subjectCell) return;
+
+    subjectCell.classList.add('-with-hierarchy');
+    subjectCell.prepend(hierarchyElement);
 
     // Assure that the content is still visible when the hierarchy indentation is very large
-    jRow.find('td.subject').css('minWidth', `${125 + (hierarchyIndentation * hierarchyLevel)}px`);
-    jRow.find('td.subject .wp-table--cell-container')
-      .css('width', `calc(100% - ${hierarchyBaseIndentation}px - ${hierarchyIndentation * hierarchyLevel}px)`);
+    subjectCell.style.minWidth = `${125 + (hierarchyIndentation * hierarchyLevel)}px`;
+    const container = subjectCell.querySelector<HTMLElement>('.wp-table--cell-container');
+    if (container) {
+      container.style.width = `calc(100% - ${hierarchyBaseIndentation}px - ${hierarchyIndentation * hierarchyLevel}px)`;
+    }
   }
 
   /**
    * Build the hierarchy indicator at the given indentation level.
    */
-  private buildHierarchyIndicator(workPackage:WorkPackageResource, jRow:JQuery|null, level:number):HTMLElement {
+  private buildHierarchyIndicator(workPackage:WorkPackageResource, row:HTMLTableRowElement, level:number):HTMLElement {
     const hierarchyIndicator = document.createElement('span');
     const collapsed = this.wpTableHierarchies.collapsed(workPackage.id!);
     const indicatorWidth = `${hierarchyBaseIndentation + (hierarchyIndentation * level)}px`;

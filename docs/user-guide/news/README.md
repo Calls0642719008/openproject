@@ -75,10 +75,10 @@ Clicking on the title of a news will bring you to the news details in the corres
 
 ![news-widget-landing-page](news-widget-landing-page.png)
 
-## Latest news section on the project overview page
+## Latest news section on the project home page
 
-You can also include your latest news from a project on the Project overview page.
+You can also include your latest news from a project on the Project home page.
 
-Find out how to [configure your Project overview](../project-overview/#news-widget) page.
+Find out how to [configure your project home](../project-home/project-widgets/#news-widget) page.
 
 ![latest-news-project-overview](latest-news-project-overview.png)

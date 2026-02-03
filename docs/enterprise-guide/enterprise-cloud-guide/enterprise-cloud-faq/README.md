@@ -133,7 +133,7 @@ Please note: For the OpenProject Enterprise cloud we currently have two SaaS inf
 
 **OpenProject.com**
 
-This infrastructure is hosted at AWS in Dublin. For sending transactional emails we use the service Postmark which is based in the US.
+This infrastructure is hosted at AWS in Frankfurt, Germany. For sending transactional emails we use the service Postmark which is based in the US.
 
 **OpenProject.eu**
 

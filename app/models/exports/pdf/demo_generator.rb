@@ -65,8 +65,7 @@ module Exports::PDF
       render_demo
       success(pdf.render)
     rescue StandardError => e
-      Rails.logger.error "Failed to generate demo PDF: #{e.message}:\n#{e.backtrace.join("\n")}"
-      error(I18n.t(:error_pdf_failed_to_export, error: e.message))
+      error(e)
     ensure
       delete_all_resized_images
     end

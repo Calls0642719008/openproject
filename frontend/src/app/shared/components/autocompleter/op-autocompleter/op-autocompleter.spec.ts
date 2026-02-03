@@ -12,7 +12,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 describe('autocompleter', () => {
   let fixture:ComponentFixture<OpAutocompleterComponent>;
-  let getOptionsFnSpy: jasmine.Spy;
+  let getOptionsFnSpy:jasmine.Spy;
   const workPackagesStub = [
     {
       id: 1,
@@ -61,10 +61,10 @@ describe('autocompleter', () => {
 }).compileComponents();
 
     fixture = TestBed.createComponent(OpAutocompleterComponent);
-    getOptionsFnSpy = jasmine.createSpy("getOptionsFn").and.callFake((searchTerm:string) => {
+    getOptionsFnSpy = jasmine.createSpy('getOptionsFn').and.callFake((searchTerm:string) => {
       return of(workPackagesStub).pipe(
-        map((wps) => wps.filter((wp) => searchTerm !== "" && wp.subject.includes(searchTerm)))
-      )
+        map((wps) => wps.filter((wp) => searchTerm !== '' && wp.subject.includes(searchTerm)))
+      );
     });
 
     fixture.componentInstance.resource = 'work_packages' as TOpAutocompleterResource;
@@ -84,6 +84,7 @@ describe('autocompleter', () => {
     tick();
 
     const autocompleter = document.querySelector('.ng-select-container');
+
     expect(document.contains(autocompleter)).toBeTruthy();
   }));
 
@@ -95,9 +96,11 @@ describe('autocompleter', () => {
       tick(1000);
       fixture.detectChanges();
       const select = fixture.componentInstance.ngSelectInstance;
+
       expect(select.isOpen).toBeFalse();
       select.open();
       select.focus();
+
       expect(select.isOpen).toBeTrue();
 
       expect(select.itemsList.items.length).toEqual(0);
@@ -107,24 +110,29 @@ describe('autocompleter', () => {
 
       fixture.detectChanges();
       tick();
-      expect(getOptionsFnSpy).toHaveBeenCalledWith("");
 
-      inputElement.value = "Wor";
+      expect(getOptionsFnSpy).toHaveBeenCalledWith('');
+
+      inputElement.value = 'Wor';
       inputElement.dispatchEvent(new Event('input'));
       fixture.detectChanges();
       tick();
-      expect(getOptionsFnSpy).toHaveBeenCalledWith("Wor");
+
+      expect(getOptionsFnSpy).toHaveBeenCalledWith('Wor');
 
       fixture.detectChanges();
+
       expect(select.itemsList.items.length).toEqual(2);
 
-      inputElement.value = "package 2";
+      inputElement.value = 'package 2';
       inputElement.dispatchEvent(new Event('input'));
       fixture.detectChanges();
       tick();
-      expect(getOptionsFnSpy).toHaveBeenCalledWith("package 2");
+
+      expect(getOptionsFnSpy).toHaveBeenCalledWith('package 2');
 
       fixture.detectChanges();
+
       expect(select.itemsList.items.length).toEqual(1);
     }));
   });
@@ -141,9 +149,11 @@ describe('autocompleter', () => {
       tick(1000);
       fixture.detectChanges();
       const select = fixture.componentInstance.ngSelectInstance;
+
       expect(select.isOpen).toBeFalse();
       select.open();
       select.focus();
+
       expect(select.isOpen).toBeTrue();
 
       expect(select.itemsList.items.length).toEqual(0);
@@ -152,16 +162,19 @@ describe('autocompleter', () => {
       const inputElement = inputDebugElement.nativeElement as HTMLInputElement;
 
       fixture.detectChanges();
-      expect(getOptionsFnSpy).toHaveBeenCalledWith("");
+
+      expect(getOptionsFnSpy).toHaveBeenCalledWith('');
       getOptionsFnSpy.calls.reset();
 
-      inputElement.value = "Wor";
+      inputElement.value = 'Wor';
       inputElement.dispatchEvent(new Event('input'));
       fixture.detectChanges();
       tick();
+
       expect(getOptionsFnSpy).not.toHaveBeenCalled();
       tick(50);
-      expect(getOptionsFnSpy).toHaveBeenCalledWith("Wor");
+
+      expect(getOptionsFnSpy).toHaveBeenCalledWith('Wor');
     }));
   });
 });

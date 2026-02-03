@@ -171,5 +171,11 @@ module Projects::Hierarchy
       end
       stmt
     end
+
+    def allowed_parent_workspace_types = Project::ALLOWED_PARENT_WORKSPACE_TYPES[workspace_type] || []
+
+    def parent_allowed?
+      allowed_parent_workspace_types.any?
+    end
   end
 end

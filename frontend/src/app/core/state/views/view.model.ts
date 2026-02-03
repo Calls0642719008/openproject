@@ -16,9 +16,5 @@ export interface IView {
 }
 
 export interface IViewCreatePayload {
-  _links:{
-    [P in 'query']:{
-      [Q in 'href']:string
-    }
-  }
+  _links:Record<'query', Record<'href', string>>
 }

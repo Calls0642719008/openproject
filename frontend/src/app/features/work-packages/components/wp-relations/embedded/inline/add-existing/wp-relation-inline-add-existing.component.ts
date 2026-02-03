@@ -114,7 +114,6 @@ export class WpRelationInlineAddExistingComponent {
 
   public onSelected(workPackage?:WorkPackageResource) {
     if (workPackage) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.selectedWpId = workPackage.id!;
       this.addExisting();
     }
@@ -142,7 +141,7 @@ export class WpRelationInlineAddExistingComponent {
     const relationTypes = RelationResource.RELATION_TYPES(true);
     const filters = query.filters.filter((filter) => {
       const id = this.urlParamsHelper.buildV3GetFilterIdFromFilter(filter);
-      return relationTypes.indexOf(id) === -1;
+      return !relationTypes.includes(id);
     });
 
     const iApiFilters:IAPIFilter[] = [];
@@ -151,7 +150,7 @@ export class WpRelationInlineAddExistingComponent {
       iApiFilters.push({
         name: filter.id,
         operator: filter.operator.id as FilterOperator,
-        values: filter.values.map((f) => (typeof f === 'string' ? f : f.id as string)),
+        values: filter.values.map((f) => (typeof f === 'string' ? f : f.id!)),
       });
     });
 

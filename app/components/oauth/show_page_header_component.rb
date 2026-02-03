@@ -41,6 +41,6 @@ class OAuth::ShowPageHeaderComponent < ApplicationComponent
     [{ href: admin_index_path, text: t(:label_administration) },
      { href: admin_settings_authentication_path, text: t(:label_authentication) },
      { href: oauth_applications_path, text: t("oauth.application.plural") },
-     h(@application.name)]
+     @application.name]
   end
 end

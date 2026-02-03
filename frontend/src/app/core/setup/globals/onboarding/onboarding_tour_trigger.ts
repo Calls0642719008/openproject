@@ -6,6 +6,7 @@ import {
   waitForElement,
 } from 'core-app/core/setup/globals/onboarding/helpers';
 import { debugLog } from 'core-app/shared/helpers/debug_output';
+import { getMetaContent } from '../global-helpers';
 
 async function triggerTour(name:OnboardingTourNames):Promise<void> {
   debugLog(`Loading and triggering onboarding tour ${name}`);
@@ -25,7 +26,7 @@ export function detectOnboardingTour():void {
   // ------------------------------- Global -------------------------------
   const url = new URL(window.location.href);
   const isMobile = document.body.classList.contains('-browser-mobile');
-  const demoProjectsAvailable = jQuery('meta[name=demo_projects_available]').attr('content') === 'true';
+  const demoProjectsAvailable = getMetaContent('demo_projects_available') === 'true';
   let currentTourPart = sessionStorage.getItem(onboardingTourStorageKey);
   let tourCancelled = false;
 
@@ -49,7 +50,7 @@ export function detectOnboardingTour():void {
             }
           });
 
-          jQuery('[data-tour-selector="modal-close-button"]')[0].addEventListener('click', () => {
+          document.querySelector('[data-tour-selector="modal-close-button"]')?.addEventListener('click', () => {
             tourCancelled = true;
             void triggerTour('homescreen');
           });
@@ -76,8 +77,13 @@ export function detectOnboardingTour():void {
       void triggerTour('workPackages');
     }
 
-    // ------------------------------- Tutorial Gantt module -------------------------------
+    // ------------------------------- Tutorial WP Full page -------------------------------
     if (currentTourPart === 'wpTourFinished') {
+      void triggerTour('workPackagesFullView');
+    }
+
+    // ------------------------------- Tutorial Gantt module -------------------------------
+    if (currentTourPart === 'wpFullViewTourFinished') {
       void triggerTour('gantt');
       return;
     }

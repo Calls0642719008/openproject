@@ -26,78 +26,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
-<div class="attributes-group" id="icalendar-token-section">
-  <div class="attributes-group--header">
-    <div class="attributes-group--header-container">
-      <h3 class="attributes-group--header-text"><%= t("my_account.access_tokens.ical.title") %></h3>
-    </div>
-  </div>
-  <div>
-    <p>
-      <%= t("my_account.access_tokens.ical.text_hint", path: "https://www.openproject.org/docs/").html_safe %>
-    </p>
-    <% if Setting.ical_enabled? %>
-      <% if ical_tokens_grouped_by_query.any? %>
-        <div class="generic-table--container">
-          <div class="generic-table--results-container">
-            <table class="generic-table" data-controller="table-highlighting">
-              <%= render  partial: "token_table_header",
-                          locals: {
-                            column_headers: [
-                              t("attributes.name"),
-                              Token::ICal.human_attribute_name(:calendar),
-                              WorkPackage.human_attribute_name(:project),
-                              User.human_attribute_name(:created_at),
-                              t("my_account.access_tokens.headers.expiration")
-                            ]
-                          } %>
-              <tbody>
-                <% ical_tokens_grouped_by_query.each do |query_id, tokens| %>
-                  <% tokens.sort_by(&:created_at).each do |token| %>
-                    <tr>
-                      <td class="-w-rel-20 -mw-abs-200" data-test-selector="ical-token-row-<%= token.id %>-name"><%= token.ical_token_query_assignment.name %></td>
-                      <td class="-w-rel-20 -mw-abs-200" data-test-selector="ical-token-row-<%= token.id %>-query-name">
-                        <%= link_to token.query.name,
-                                    project_calendar_url(
-                                      id: query_id,
-                                      project_id: token.query.project_id
-                                    ) %>
-                      </td>
-                      <td class="-w-rel-20 -mw-abs-200" data-test-selector="ical-token-row-<%= token.id %>-project-name">
-                        <%= token.query.project.name %>
-                      </td>
-                      <td>
-                        <span title="<%= format_time(token.created_at) %>">
-                          <%= format_time(token.created_at.to_s) %>
-                        </span>
-                      </td>
-                      <td><%= t("my_account.access_tokens.indefinite_expiration") %></td>
-                      <td class="buttons">
-                        <%= link_to "",
-                                    { action: "revoke_ical_token", access_token_id: token.id },
-                                    data: { confirm: t("my_account.access_tokens.simple_revoke_confirmation"), test_selector: "ical-token-row-#{token.id}-revoke" },
-                                    method: :delete,
-                                    class: "icon icon-delete" %>
-                      </td>
-                    </tr>
-                  <% end %>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <% else %>
-        <span class="spot-icon spot-icon_inline spot-icon_info1"></span>
-        <i><%= t("my_account.access_tokens.ical.empty_text_hint") %></i>
-      <% end %>
-    <% else %>
-      <div tabindex="0" class="-info op-toast">
-        <div role="alert" aria-atomic="true" class="op-toast--content">
-          <p>
-            <span><%= t("my_account.access_tokens.ical.disabled_text") %></span>
-          </p>
-        </div>
-      </div>
-    <% end %>
-  </div>
+
+<%# locals: (ical_tokens_grouped_by_query:) -%>
+
+<div id="icalendar-token-section" class="mb-4">
+  <%= render(Primer::Beta::Subhead.new) do |component|
+    component.with_heading(tag: :h3, size: :medium) do
+      t("my_account.access_tokens.ical.title")
+    end
+    component.with_description do
+      link_translate(
+        "my_account.access_tokens.ical.text_hint_link",
+        links: {
+          docs_url: %i[user_guide access_tokens]
+        }
+      )
+    end
+  end %>
+  <% if Setting.ical_enabled? %>
+    <%= render(My::AccessToken::ICal::TableComponent.new(rows: ical_tokens_grouped_by_query.values.flatten)) %>
+  <% else %>
+    <%= render(Primer::Alpha::Banner.new(icon: :info)) { t("my_account.access_tokens.ical.disabled_text") } %>
+  <% end %>
 </div>

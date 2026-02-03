@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class CopyTemplateFolderContract < Dry::Validation::Contract
+      class CopyTemplateFolderContract < DryApplicationContract
         params do
           required(:source).filled(:string)
           required(:destination).filled(:string)

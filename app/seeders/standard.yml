@@ -91,6 +91,7 @@ projects:
       - board_view
       - team_planner_view
       - meetings
+      - documents
     news:
       - t_title: Welcome to your demo project
         t_summary: |
@@ -389,6 +390,7 @@ projects:
       - work_package_tracking
       - gantt
       - board_view
+      - documents
     news:
       - t_title: Welcome to your Scrum demo project
         t_summary: |

@@ -26,7 +26,7 @@
     end
     @meeting_agenda_items.each do |meeting_agenda_item|
       border_box.with_row do
-        render(WorkPackageMeetingsTab::MeetingAgendaItemComponent.new(meeting_agenda_item:))
+        render(WorkPackageMeetingsTab::MeetingAgendaItemComponent.new(work_package: @work_package, meeting_agenda_item:))
       end
     end
   end

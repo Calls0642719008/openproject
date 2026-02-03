@@ -1,3 +1,7 @@
+---
+sidebar_navigation:
+  title: Meetings PDF Styling
+---
 
 # Meetings PDF
 

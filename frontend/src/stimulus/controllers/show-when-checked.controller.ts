@@ -28,6 +28,7 @@
  * ++
  */
 
+import { toggleElement, toggleElementByClass, toggleElementByVisibility } from 'core-app/shared/helpers/dom-helpers';
 import { ApplicationController } from 'stimulus-use';
 
 // can show OR hide items by default (with "reversed" set to hide on checking)
@@ -39,9 +40,14 @@ export default class OpShowWhenCheckedController extends ApplicationController {
     reversed: Boolean,
   };
 
+  static classes = ['visibility'];
+
   declare reversedValue:boolean;
   declare readonly hasReversedValue:boolean;
   declare readonly effectTargets:HTMLElement[];
+
+  declare readonly visibilityClass:string;
+  declare readonly hasVisibilityClass:boolean;
 
   private boundListener = this.toggle.bind(this);
 
@@ -77,11 +83,13 @@ export default class OpShowWhenCheckedController extends ApplicationController {
         }
 
         if (el.dataset.setVisibility === 'true') {
-          el.style.setProperty('visibility', shouldShow ? 'visible' : 'hidden');
-        } else if (el.dataset.visibilityClass) {
-          el.classList.toggle(el.dataset.visibilityClass, !shouldShow);
+          toggleElementByVisibility(el, shouldShow);
+        } else if (this.hasVisibilityClass) {
+          toggleElementByClass(el, this.visibilityClass, shouldShow);
+        } else if ('visibilityClass' in el.dataset) {
+          toggleElementByClass(el, el.dataset.visibilityClass!, shouldShow);
         } else {
-          el.hidden = !shouldShow;
+          toggleElement(el, shouldShow);
         }
       });
   }

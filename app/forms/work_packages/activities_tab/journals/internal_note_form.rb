@@ -36,7 +36,7 @@ module WorkPackages::ActivitiesTab::Journals
         checked: false,
         data: {
           "work-packages--activities-tab--internal-comment-target": "internalCheckbox",
-          action: "input->work-packages--activities-tab--internal-comment#toggleInternal"
+          action: "input->work-packages--activities-tab--internal-comment#updateInternalState"
         }
       )
     end

@@ -68,7 +68,7 @@ RSpec.describe EmojiReactions::GroupedQueries do
       expect(result[1].reacting_users).to eq([[user2.id, user2.name]])
     end
 
-    context "when the current user is allowed to view internal comments" do
+    context "when the current user is allowed to view internal comments", with_ee: [:internal_comments] do
       let(:current_user) do
         create(:user, member_with_permissions: { work_package.project => %i[view_work_packages view_internal_comments] })
       end
@@ -124,7 +124,7 @@ RSpec.describe EmojiReactions::GroupedQueries do
       )
     end
 
-    context "when the current user is allowed to view internal comments" do
+    context "when the current user is allowed to view internal comments", with_ee: [:internal_comments] do
       let(:current_user) do
         create(:user, member_with_permissions: { work_package.project => %i[view_work_packages view_internal_comments] })
       end

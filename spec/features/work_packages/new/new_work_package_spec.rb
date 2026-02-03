@@ -162,56 +162,56 @@ RSpec.describe "new work package", :js do
         wp_page.expect_attributes(subject:)
         wp_page.expect_attributes type: type_bug.name.upcase
       end
+    end
 
-      context "custom fields" do
-        let(:custom_field1) do
-          create(
-            :work_package_custom_field,
-            field_format: "string",
-            is_required: true,
-            is_for_all: true
-          )
-        end
-        let(:custom_field2) do
-          create(
-            :work_package_custom_field,
-            field_format: "list",
-            possible_values: %w(foo bar xyz),
-            is_required: false,
-            is_for_all: true
-          )
-        end
-        let(:custom_fields) do
-          [custom_field1, custom_field2]
-        end
-        let(:type_task) { create(:type_task, custom_fields:) }
-        let(:project) do
-          create(:project,
-                 types:,
-                 work_package_custom_fields: custom_fields)
-        end
+    describe "custom fields" do
+      let(:custom_field1) do
+        create(
+          :work_package_custom_field,
+          field_format: "string",
+          is_required: true,
+          is_for_all: true
+        )
+      end
+      let(:custom_field2) do
+        create(
+          :work_package_custom_field,
+          field_format: "list",
+          possible_values: %w(foo bar xyz),
+          is_required: false,
+          is_for_all: true
+        )
+      end
+      let(:custom_fields) do
+        [custom_field1, custom_field2]
+      end
+      let(:type_task) { create(:type_task, custom_fields:) }
+      let(:project) do
+        create(:project,
+               types:,
+               work_package_custom_fields: custom_fields)
+      end
 
-        it do
-          custom_fields.map(&:id)
-          cf1 = find(".#{custom_fields.first.attribute_name(:camel_case)} input")
-          expect(cf1).not_to be_nil
+      it "saves and validates the custom field values" do
+        custom_fields.map(&:id)
+        cf1 = find(".#{custom_fields.first.attribute_name(:camel_case)} input")
+        expect(cf1).not_to be_nil
 
-          expect(page).to have_css(".#{custom_fields.last.attribute_name(:camel_case)} ng-select")
+        expect(page).to have_css(".#{custom_fields.last.attribute_name(:camel_case)} ng-select")
 
-          cf = wp_page.edit_field custom_fields.last.attribute_name(:camel_case)
-          cf.field_type = "create-autocompleter"
-          cf.openSelectField
-          cf.set_value "foo"
-          save_work_package!(false)
+        cf = wp_page.edit_field custom_fields.last.attribute_name(:camel_case)
+        cf.field_type = "create-autocompleter"
+        cf.openSelectField
+        cf.set_value "foo"
+        save_work_package!(false)
 
-          toaster.expect_error("#{custom_field1.name} can't be blank.")
+        toaster.expect_error("#{custom_field1.name} can't be blank.")
 
-          cf1.set "Custom field content"
-          save_work_package!(true)
+        cf1.set "Custom field content"
+        save_work_package!(true)
 
-          wp_page.expect_attributes "customField#{custom_field1.id}" => "Custom field content",
-                                    "customField#{custom_field2.id}" => "foo"
-        end
+        wp_page.expect_attributes "customField#{custom_field1.id}" => "Custom field content",
+                                  "customField#{custom_field2.id}" => "foo"
       end
     end
   end
@@ -290,12 +290,23 @@ RSpec.describe "new work package", :js do
 
       # Set date
       date_field.click_to_open_datepicker
-      date = Time.zone.today.iso8601
+      date = Date.current.iso8601
       date_field.set_milestone_date date
       date_field.save!
 
       # Expect date to be displayed
       date_field.expect_value date
+
+      # Save work package
+      wp_page.subject_field.set(subject)
+      wp_page.save!
+      wp_page.expect_and_dismiss_toaster(message: "Successful creation.")
+
+      # Expect date to be saved
+      expect(WorkPackage.last).to have_attributes(
+        start_date: Date.current,
+        is_milestone?: true
+      )
     end
 
     it_behaves_like "work package creation workflow" do
@@ -374,6 +385,21 @@ RSpec.describe "new work package", :js do
       date_field.expect_value "no start date - no finish date"
     end
 
+    it "Keeps 'Working days only' value upon saving (Bug #68380)" do
+      create_work_package_globally(type_task, project.name)
+      expect(page).to have_selector(safeguard_selector, wait: 10)
+
+      datepicker = wp_page.edit_field(:combinedDate).click_to_open_datepicker
+
+      datepicker.uncheck_working_days_only
+      datepicker.save!
+
+      wp_page.save!
+      wp_page.expect_and_dismiss_toaster(message: "Successful creation.")
+
+      expect(WorkPackage.last).to have_attributes(ignore_non_working_days: true)
+    end
+
     context "with a project without type_bug" do
       let!(:project_without_bug) do
         create(:project, name: "Unrelated project", types: [type_task])
@@ -395,20 +421,18 @@ RSpec.describe "new work package", :js do
     let(:user) { create(:user, member_with_roles: { project => role }) }
     let(:wp_page) { Pages::Page.new }
 
-    let(:paths) do
-      [
-        new_work_packages_path,
-        new_split_work_packages_path,
-        new_project_work_packages_path(project),
-        new_split_project_work_packages_path(project)
-      ]
-    end
-
     it "shows a 403 error on creation paths" do
-      paths.each do |path|
-        visit path
-        wp_page.expect_toast(type: :error, message: I18n.t("api_v3.errors.code_403"))
-      end
+      visit new_work_package_path
+      wp_page.expect_flash(type: :error, message: I18n.t(:notice_not_authorized))
+
+      visit new_project_work_packages_path(project)
+      wp_page.expect_flash(type: :error, message: I18n.t(:notice_not_authorized))
+
+      visit new_split_work_packages_path
+      wp_page.expect_toast(type: :error, message: I18n.t("api_v3.errors.code_403"))
+
+      visit new_split_project_work_packages_path(project)
+      wp_page.expect_toast(type: :error, message: I18n.t("api_v3.errors.code_403"))
     end
   end
 
@@ -444,7 +468,7 @@ RSpec.describe "new work package", :js do
 
     let(:paths) do
       [
-        new_work_packages_path,
+        new_work_package_path,
         new_split_work_packages_path,
         new_project_work_packages_path(project),
         new_split_project_work_packages_path(project)
@@ -496,22 +520,6 @@ RSpec.describe "new work package", :js do
       split_create_page.expect_attributes(combinedDate: "no start date - #{parent.due_date.strftime('%m/%d/%Y')}")
 
       expect(split_create_page).to have_test_selector("op-wp-breadcrumb", text: "Parent:\n#{parent.subject}")
-    end
-
-    it "can navigate to the fullscreen page (Regression #49565)" do
-      work_packages_page.visit_index
-
-      context_menu.open_for(parent)
-      context_menu.choose("Create new child")
-
-      subject_field = split_create_page.edit_field(:subject)
-      subject_field.set_value "My subtask"
-
-      find(".work-packages-show-view-button").click
-
-      expect(split_create_page).not_to have_alert_dialog
-      subject_field = wp_page_create.edit_field(:subject)
-      subject_field.expect_value "My subtask"
     end
   end
 end

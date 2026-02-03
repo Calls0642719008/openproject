@@ -47,7 +47,7 @@ module API
         self_link
 
         link :showUser do
-          next if represented.new_record? || represented.locked?
+          next if represented.new_record? || represented.locked? || represented.deleted?
 
           {
             href: api_v3_paths.show_user(represented.id),
@@ -120,6 +120,10 @@ module API
                  },
                  setter: ->(fragment:, represented:, **) { represented.admin = fragment },
                  cache_if: -> { current_user_is_admin? }
+
+        property :name,
+                 render_nil: true,
+                 setter: ->(*) { raise API::Errors::UnwritableProperty.new(:name, I18n.t("api_v3.errors.user.name_readonly")) }
 
         property :firstname,
                  as: :firstName,

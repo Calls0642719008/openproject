@@ -68,7 +68,7 @@ module WorkPackageTypes
 
       it "adds an error on the patterns attribute" do
         result = service.call(params)
-        expect(result.errors.details).to eq(patterns: [{ error: "Enabled is missing" }])
+        expect(result.errors.details).to eq(patterns: [{ error: "Enabled is missing." }])
       end
 
       it "does not override the already existing value on the model" do

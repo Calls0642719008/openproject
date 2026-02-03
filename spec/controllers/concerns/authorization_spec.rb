@@ -167,19 +167,42 @@ RSpec.describe ApplicationController, "enforcement of authorization" do # ruboco
     it_behaves_like "is prevented", :index
   end
 
-  context "with authorization checked with load_and_authorize_with_permission_in_optional_project" do
+  context "with authorization checked with authorize_with_global_permission" do
     controller do
       include Accounts::Authorization
       include controller_setup
 
-      load_and_authorize_with_permission_in_optional_project :view_project
+      authorize_with_global_permission :view_project
 
       def do_authorize(*)
         true
       end
     end
 
-    it "loads the project if present" do
+    it "does not load the project and calls global authorization" do
+      allow(controller).to receive(:do_authorize)
+      allow(Project).to receive(:find)
+
+      get :index, params: { project_id: "1" }
+
+      expect(Project).not_to have_received(:find)
+      expect(controller).to have_received(:do_authorize).with(:view_project, global: true)
+    end
+  end
+
+  context "with authorization checked with load_and_authorize_with_permission_in_project" do
+    controller do
+      include Accounts::Authorization
+      include controller_setup
+
+      load_and_authorize_with_permission_in_project :view_project
+
+      def do_authorize(*)
+        true
+      end
+    end
+
+    it "loads the project and calls project authorization" do
       allow(controller).to receive(:do_authorize)
       allow(Project).to receive(:find)
 
@@ -189,42 +212,14 @@ RSpec.describe ApplicationController, "enforcement of authorization" do # ruboco
       expect(controller).to have_received(:do_authorize).with(:view_project, global: false)
     end
 
-    it "uses the global call if not present" do
+    it "renders 404 if project_id is missing" do
       allow(controller).to receive(:do_authorize)
-      allow(Project).to receive(:find)
 
       get :index
 
-      expect(Project).not_to have_received(:find)
-      expect(controller).to have_received(:do_authorize).with(:view_project, global: true)
+      expect(response).to have_http_status :not_found
+      expect(controller).not_to have_received(:do_authorize)
     end
-  end
-
-  context "with authorization checked on single action with load_and_authorize_with_permission_in_optional_project" do
-    controller do
-      include Accounts::Authorization
-      include controller_setup
-
-      load_and_authorize_with_permission_in_optional_project :view_project, only: %i[test]
-
-      def test
-        render plain: "OK"
-      end
-
-      def do_authorize(*)
-        true
-      end
-    end
-
-    before do
-      @routes.draw do # rubocop:disable RSpec/InstanceVariable
-        get "/anonymous/index"
-        get "/anonymous/test"
-      end
-    end
-
-    it_behaves_like "succeeds", :test
-    it_behaves_like "is prevented", :index
   end
 
   context "with authorization checked with load_and_authorize_in_optional_project" do

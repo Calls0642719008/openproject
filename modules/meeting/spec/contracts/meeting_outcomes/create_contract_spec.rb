@@ -85,6 +85,40 @@ RSpec.describe MeetingOutcomes::CreateContract do
 
       it_behaves_like "contract is invalid", base: I18n.t(:text_outcome_not_editable_anymore)
     end
+
+    context "when work_package_id is set" do
+      let(:user) do
+        create(:user, member_with_permissions: { project => %i[view_meetings manage_outcomes view_work_packages] })
+      end
+      let(:other_project) { create(:project) }
+      let(:work_package) { create(:work_package, project:) }
+      let(:other_work_package) { create(:work_package, project: other_project) }
+      let(:outcome) { build(:meeting_outcome, meeting_agenda_item:, work_package:, kind: :work_package) }
+
+      before do
+        meeting.update_column(:state, :in_progress)
+      end
+
+      context "when user can view the work package" do
+        it_behaves_like "contract is valid"
+      end
+
+      context "when user cannot view the work package" do
+        let(:outcome) { build(:meeting_outcome, meeting_agenda_item:, work_package: other_work_package, kind: :work_package) }
+
+        it_behaves_like "contract is invalid", work_package: :error_not_found
+      end
+
+      context "when the referenced work package doesn't exist" do
+        let(:outcome) { build(:meeting_outcome, meeting_agenda_item:, work_package: nil, kind: :work_package) }
+
+        before do
+          outcome.work_package_id = 999999
+        end
+
+        it_behaves_like "contract is invalid", work_package: %i[blank error_not_found]
+      end
+    end
   end
 
   context "without permission" do

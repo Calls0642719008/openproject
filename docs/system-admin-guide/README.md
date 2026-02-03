@@ -37,6 +37,7 @@ Click on one of the categories in order to proceed with the configuration.
 | [Enterprise edition](../enterprise-guide/)                   | Upgrading and managing OpenProject Enterprise and other administrative topics. |
 | [Time and costs](./time-and-costs)                           | Configure your currency and create cost types in OpenProject. |
 | [Backlogs](./backlogs)                                       | Configure your backlogs settings in OpenProject, e.g. story types to be displayed in the backlogs, task types, and more. |
+| [Documents](./documents)                                     | Settings for document types and real-time collaboration in OpenProject. |
 | [Files](./files)                                             | Settings for attachments and virus scanning functionality in OpenProject. Manage external file storages. |
 | [External file storages - Nextcloud](./integrations/nextcloud/) | Set up external file storages with Nextcloud.                |
 | [External file storages - One Drive](./integrations/one-drive/) | Set up external file storages with One Drive.                |

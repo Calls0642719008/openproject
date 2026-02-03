@@ -40,7 +40,7 @@ module API
             end
 
             def get_attachment_self_path
-              api_v3_paths.attachments_by_meeting_content @meeting.id
+              api_v3_paths.attachments_by_meeting @meeting.id
             end
           end
 

@@ -57,6 +57,7 @@ class CostReportsController < ApplicationController
   helper_method :allowed_in_report?
 
   include ReportingHelper
+
   helper ReportingHelper
   helper { def engine; @report_engine; end }
 
@@ -128,6 +129,19 @@ class CostReportsController < ApplicationController
   end
 
   ##
+  # Show a saved record, if found. Raises RecordNotFound if the specified query
+  # at :id does not exist
+  def show
+    if @query
+      store_query
+      table
+      render action: "index", locals: { menu_name: project_or_global_menu } unless performed?
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+  end
+
+  ##
   # Create a new saved query. Returns the redirect url to an XHR or redirects directly
   def create
     @query.name = params[:query_name].presence || ::I18n.t(:label_default)
@@ -143,31 +157,6 @@ class CostReportsController < ApplicationController
     else # Redirect to the new record
       redirect_to **redirect_params
     end
-  end
-
-  ##
-  # Show a saved record, if found. Raises RecordNotFound if the specified query
-  # at :id does not exist
-  def show
-    if @query
-      store_query
-      table
-      render action: "index", locals: { menu_name: project_or_global_menu } unless performed?
-    else
-      raise ActiveRecord::RecordNotFound
-    end
-  end
-
-  ##
-  # Delete a saved record, if found. Redirects to index on success, raises a
-  # RecordNotFound if the query at :id does not exist
-  def destroy
-    if @query
-      @query.destroy if allowed_in_report?(:destroy, @query)
-    else
-      raise ActiveRecord::RecordNotFound
-    end
-    redirect_to action: "index", default: 1, id: nil
   end
 
   ##
@@ -193,6 +182,18 @@ class CostReportsController < ApplicationController
   end
 
   ##
+  # Delete a saved record, if found. Redirects to index on success, raises a
+  # RecordNotFound if the query at :id does not exist
+  def destroy
+    if @query
+      @query.destroy if allowed_in_report?(:destroy, @query)
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+    redirect_to action: "index", default: 1, id: nil
+  end
+
+  ##
   # Rename a record and update its publicity. Redirects to the updated record or
   # renders the updated name on XHR
   def rename
@@ -212,7 +213,7 @@ class CostReportsController < ApplicationController
   end
 
   # renders option tags for each available value for a single filter
-  def available_values
+  def available_values # rubocop:disable Metrics/AbcSize
     name = params[:filter_name]
 
     return unless name
@@ -221,9 +222,9 @@ class CostReportsController < ApplicationController
     filter = f_cls.new.tap do |f|
       f.values = JSON.parse(params[:values].tr("'", '"')) if params[:values].present? && params[:values]
     end
-    render_widget Widget::Filters::Option, filter, to: canvas = +""
+    render_widget Widget::Filters::Option, filter, to: canvas = +"".html_safe
 
-    render plain: canvas, layout: !request.xhr?
+    render html: canvas, layout: !request.xhr?
   end
 
   ##

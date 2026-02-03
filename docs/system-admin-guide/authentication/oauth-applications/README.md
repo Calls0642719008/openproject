@@ -181,7 +181,7 @@ and you will have to click on "Request Token" again. Otherwise your
 API request will return an error message.
 
 ## Performing a request to the OpenProject API with OAuth2 access token
-  
+
 With the token that you obtained above you can now make API calls to the OpenProject instance on behalf of the current user.
 
 For example, the following cURL command fetches all projects from the API V3. Please replace:

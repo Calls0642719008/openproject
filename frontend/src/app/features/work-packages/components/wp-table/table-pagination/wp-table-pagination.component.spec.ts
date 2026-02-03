@@ -62,8 +62,8 @@ function setupMocks(paginationService:PaginationService) {
   spyOn(paginationService, 'getPaginationOptions').and.callFake(() => options);
 }
 
-function pageString(element:JQuery) {
-  return element.find('.op-pagination--range').text().trim();
+function pageString(element:HTMLElement) {
+  return element.querySelector('.op-pagination--range')?.textContent?.trim() || '';
 }
 
 describe('wpTablePagination Directive', () => {
@@ -103,16 +103,18 @@ describe('wpTablePagination Directive', () => {
         setupMocks(paginationService);
         const fixture = TestBed.createComponent(WorkPackageTablePaginationComponent);
         const app:WorkPackageTablePaginationComponent = fixture.debugElement.componentInstance;
-        const element = jQuery(fixture.elementRef.nativeElement);
+        const element = fixture.elementRef.nativeElement;
 
         app.pagination = new PaginationInstance(1, 0, 10);
         app.update();
         fixture.detectChanges();
+
         expect(pageString(element)).toEqual('');
 
         app.pagination = new PaginationInstance(1, 11, 10);
         app.update();
         fixture.detectChanges();
+
         expect(pageString(element)).toEqual('(1 - 10/11)');
       }));
 
@@ -122,14 +124,17 @@ describe('wpTablePagination Directive', () => {
           setupMocks(paginationService);
           const fixture = TestBed.createComponent(WorkPackageTablePaginationComponent);
           const app:WorkPackageTablePaginationComponent = fixture.debugElement.componentInstance;
-          const element = jQuery(fixture.elementRef.nativeElement);
+          const element = fixture.elementRef.nativeElement;
 
           app.pagination = new PaginationInstance(2, 11, 10);
           app.update();
           fixture.detectChanges();
 
-          const liWithNextLink = element.find('.op-pagination--item-link_next').parent('li');
-          const attrHidden = liWithNextLink.attr('hidden');
+          const liWithNextLink = element.querySelector('.op-pagination--item-link_next')?.parentElement;
+
+          expect(liWithNextLink?.matches('li')).toBeTrue();
+          const attrHidden = liWithNextLink.getAttribute('hidden');
+
           expect(attrHidden).toBeDefined();
         }));
     });
@@ -139,25 +144,28 @@ describe('wpTablePagination Directive', () => {
         setupMocks(paginationService);
         const fixture = TestBed.createComponent(WorkPackageTablePaginationComponent);
         const app:WorkPackageTablePaginationComponent = fixture.debugElement.componentInstance;
-        const element = jQuery(fixture.elementRef.nativeElement);
+        const element = fixture.elementRef.nativeElement;
 
         function numberOfPageNumberLinks() {
-          return element.find('button[data-rel="next"]').length;
+          return element.querySelectorAll('button[data-rel="next"]').length;
         }
 
         app.pagination = new PaginationInstance(1, 1, 10);
         app.update();
         fixture.detectChanges();
+
         expect(numberOfPageNumberLinks()).toEqual(1);
 
         app.pagination = new PaginationInstance(1, 11, 10);
         app.update();
         fixture.detectChanges();
+
         expect(numberOfPageNumberLinks()).toEqual(2);
 
         app.pagination = new PaginationInstance(1, 59, 10);
         app.update();
         fixture.detectChanges();
+
         expect(numberOfPageNumberLinks()).toEqual(6);
       }));
   });

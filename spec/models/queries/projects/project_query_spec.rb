@@ -36,7 +36,7 @@ RSpec.describe ProjectQuery do
   shared_let(:user) { create(:user) }
   shared_let(:admin) { create(:admin) }
 
-  it_behaves_like "acts_as_favorable included" do
+  it_behaves_like "acts_as_favoritable included" do
     let(:instance) { create(:project_query) }
   end
 
@@ -137,18 +137,20 @@ RSpec.describe ProjectQuery do
                             id
                             identifier
                             name
-                            favored
+                            favorited
                             public
                             description
                             hierarchy
                             project_status
                             status_explanation
+                            created_at
                             cf_23
                             cf_42
                             budget_available
                             budget_planned
                             budget_spent
                             budget_spent_ratio
+                            updated_at
                           ])
       end
     end
@@ -162,7 +164,7 @@ RSpec.describe ProjectQuery do
                             id
                             identifier
                             name
-                            favored
+                            favorited
                             public
                             description
                             hierarchy
@@ -177,6 +179,7 @@ RSpec.describe ProjectQuery do
                             budget_planned
                             budget_spent
                             budget_spent_ratio
+                            updated_at
                           ])
       end
     end
@@ -238,7 +241,7 @@ RSpec.describe ProjectQuery do
 
         before do
           instance.where("active", "=", OpenProject::Database::DB_VALUE_TRUE)
-          instance.where("created_at", ">t-", ["6"])
+          instance.where("latest_activity_at", ">t-", ["6"])
 
           instance.valid_subset!
         end
@@ -337,8 +340,8 @@ RSpec.describe ProjectQuery do
       end
 
       context "with them being invalid" do
-        # No admin, hence no created_at column. CF column does not exist.
-        let(:selects) { %i(bogus created_at cf_1) } # rubocop:disable Naming/VariableNumber
+        # No admin, hence no latest_activity_at column. CF column does not exist.
+        let(:selects) { %i(bogus latest_activity_at cf_1) } # rubocop:disable Naming/VariableNumber
 
         it "removes the values" do
           expect(instance.selects.map(&:attribute))
@@ -348,11 +351,11 @@ RSpec.describe ProjectQuery do
 
       context "with them being partially invalid" do
         let(:current_user) { admin }
-        let(:selects) { %i(bogus name created_at cf_1 description) } # rubocop:disable Naming/VariableNumber
+        let(:selects) { %i(bogus name latest_activity_at cf_1 description) } # rubocop:disable Naming/VariableNumber
 
         it "removes only the offending values" do
           expect(instance.selects.map(&:attribute))
-            .to eq %i(name created_at description)
+            .to eq %i(name latest_activity_at description)
         end
       end
     end

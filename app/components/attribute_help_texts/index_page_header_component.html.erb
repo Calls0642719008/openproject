@@ -28,7 +28,7 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { I18n.t(:"attribute_help_texts.label_plural") }
+    header.with_title { AttributeHelpText.human_plural_model_name }
     header.with_breadcrumbs(breadcrumb_items, selected_item_font_weight: :normal)
 
     helpers.render_tab_header_nav(header, @tabs)

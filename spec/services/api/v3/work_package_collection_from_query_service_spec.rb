@@ -220,12 +220,12 @@ RSpec.describe API::V3::WorkPackageCollectionFromQueryService,
           end
         end
 
-        context "if the project is set" do
+        context "if the project/workspace is set" do
           let(:query) { build_stubbed(:query, project:) }
 
-          it "is the global work_package link" do
+          it "is the workspace work_package link" do
             expect(subject.self_link)
-              .to eq(api_v3_paths.work_packages_by_project(project.id))
+              .to eq(api_v3_paths.work_packages_by_workspace(project.id))
           end
         end
       end

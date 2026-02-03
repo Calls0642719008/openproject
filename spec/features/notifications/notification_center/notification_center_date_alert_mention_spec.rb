@@ -42,7 +42,7 @@ RSpec.describe "Notification center date alert and mention",
       center.within_item(notification_date_alert) do
         expect(page).to have_text("##{work_package.id}\n- #{project.name} -\nDate alert, Mentioned")
         expect(page).to have_no_text("Actor User")
-        expect(page).to have_text("Overdue since 1 day.")
+        expect(page).to have_text("Overdue for 1 day.")
       end
     end
   end

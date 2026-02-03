@@ -48,9 +48,9 @@ module My
                                :generate_rss_key,
                                :revoke_rss_key,
                                :generate_api_key,
+                               :remove_oauth_client_token,
                                :revoke_api_key,
                                :revoke_ical_token,
-                               :revoke_storage_token,
                                :revoke_ical_meeting_token
 
     def dialog
@@ -58,40 +58,31 @@ module My
     end
 
     def index
-      @ical_meeting_tokens = current_user.ical_meeting_tokens
-
-      @storage_tokens = OAuthClientToken
-                          .preload(:oauth_client)
-                          .joins(:oauth_client)
-                          .where(user: @user, oauth_client: { integration_type: "Storages::Storage" })
+      @oauth_client_tokens = OAuthClientToken.includes(:oauth_client).where(user: @user)
     end
 
-    def revoke_storage_token
-      token = OAuthClientToken
-                .preload(:oauth_client)
-                .joins(:oauth_client)
-                .where(user: @user, oauth_client: { integration_type: "Storages::Storage" }).find_by(id: params[:access_token_id])
+    def remove_oauth_client_token
+      token = OAuthClientToken.includes(:oauth_client).where(user: @user).find_by(id: params[:access_token_id])
 
       if token&.destroy
-        flash[:info] = I18n.t("my_account.access_tokens.storages.removed")
+        flash[:info] = I18n.t("my_account.access_tokens.oauth_client.removed")
       else
-        flash[:error] = I18n.t("my_account.access_tokens.storages.failed")
+        flash[:error] = I18n.t("my_account.access_tokens.oauth_client.failed")
       end
-      redirect_to action: :index
+      redirect_to action: :index, tab: :client, status: :see_other
     end
 
     def generate_rss_key # rubocop:disable Metrics/AbcSize
       token = Token::RSS.create!(user: current_user)
-      flash[:info] = [
-        t("my.access_token.notice_reset_token", type: "RSS").html_safe,
-        helpers.content_tag(:strong, helpers.content_tag(:code, token.plain_value)),
-        t("my.access_token.token_value_warning")
-      ]
+
+      update_via_turbo_stream(
+        component: My::AccessToken::APITokensSectionComponent.new(tokens: [token], token_type: Token::RSS)
+      )
+      respond_with_dialog(My::AccessToken::AccessTokenCreatedDialogComponent.new(token:))
     rescue StandardError => e
       Rails.logger.error "Failed to reset user ##{current_user.id} RSS key: #{e}"
       flash[:error] = t("my.access_token.failed_to_reset_token", error: e.message)
-    ensure
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def revoke_rss_key
@@ -101,7 +92,7 @@ module My
       Rails.logger.error "Failed to revoke rss token ##{current_user.id}: #{e}"
       flash[:error] = t("my.access_token.failed_to_reset_token", error: e.message)
     ensure
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def generate_api_key
@@ -139,7 +130,7 @@ module My
       end
       # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def revoke_ical_meeting_token # rubocop:disable Metrics/AbcSize
@@ -158,7 +149,7 @@ module My
       end
       # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     def revoke_ical_token
@@ -169,7 +160,7 @@ module My
       Rails.logger.error "Failed to revoke all ical tokens for ##{current_user.id}: #{e}"
       flash[:error] = t("my.access_token.failed_to_reset_token", error: e.message)
     ensure
-      redirect_to action: :index
+      redirect_to action: :index, status: :see_other
     end
 
     private

@@ -31,7 +31,7 @@
 module Storages
   module Adapters
     module Input
-      class SetPermissionsContract < Dry::Validation::Contract
+      class SetPermissionsContract < DryApplicationContract
         params do
           required(:file_id).filled(:string)
           required(:user_permissions).array(:hash) do

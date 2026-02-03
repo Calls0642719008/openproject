@@ -17,6 +17,7 @@ A form may be composed of these elements:
 - Checkbox group
 - Radio button
 - Radio groups
+- Fieldset group
 
 Additional elements like Banners might also be used.
 
@@ -507,7 +508,7 @@ end
 
 It is easier to write and read.
 
-Under the hood, the form object is decorated with `Settings::FormDecorator`.
+Under the hood, the form object is decorated with `Settings::FormObjectDecorator`.
 That's where all the helper methods are defined. There aren't many for now, but
 this is intended to grow to support more advanced form features for
 administration pages.
@@ -526,6 +527,12 @@ So far, the following helpers are available:
     a radio button group for the setting called `name` and radio button for each
     element of `values`, automatically setting the label, checked state, html
     caption, and disabled state from the setting's attributes.
+
+  * `fieldset_group(title:, **options) { |group| ... }`: groups multiple related
+    form inputs under a shared heading and semantic `<fieldset>`. The block yields
+    a group builder that supports the same input helpers (`text_field`,
+    `check_box`, `select_list`, etc.). Fieldset groups improve readability and
+    accessibility for longer or more complex forms. For an example implementation, see the [Fieldset Group preview](/lookbook/inspect/primer/forms/fieldset_group_form).
 
   * `submit`: renders a submit button with the label "Save" and the primary
     scheme.

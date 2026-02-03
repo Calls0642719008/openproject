@@ -150,10 +150,10 @@ export class GridAreaService {
   // But as scrollIntoView will always readjust the viewport, the result would be an unbearable flicker
   // which causes e.g. dragging to be impossible.
   public scrollPlaceholderIntoView() {
-    const placeholder = jQuery('.grid--area.-placeholder');
+    const placeholder = document.querySelector<HTMLElement>('.grid--area.-placeholder');
 
-    if ((placeholder[0] as any).scrollIntoViewIfNeeded) {
-      setTimeout(() => (placeholder[0] as any).scrollIntoViewIfNeeded());
+    if ((placeholder as any).scrollIntoViewIfNeeded) {
+      setTimeout(() => (placeholder as any).scrollIntoViewIfNeeded());
     }
   }
 

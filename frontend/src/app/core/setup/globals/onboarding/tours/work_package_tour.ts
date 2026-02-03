@@ -4,28 +4,6 @@ import { OnboardingStep } from 'core-app/core/setup/globals/onboarding/onboardin
 export function wpOnboardingTourSteps():OnboardingStep[] {
   return [
     {
-      'next .wp-table--row': I18n.t('js.onboarding.steps.wp.list'),
-      showSkip: false,
-      nextButton: { text: I18n.t('js.onboarding.buttons.next') },
-      onNext() {
-        jQuery('.inline-edit--display-field.id a ')[0].click();
-      },
-    },
-    {
-      'next .work-packages-full-view--split-left': I18n.t('js.onboarding.steps.wp.full_view'),
-      showSkip: false,
-      nextButton: { text: I18n.t('js.onboarding.buttons.next') },
-      containerClass: '-dark -hidden-arrow',
-    },
-    {
-      'next .work-packages-back-button': I18n.t('js.onboarding.steps.wp.back_button'),
-      showSkip: false,
-      nextButton: { text: I18n.t('js.onboarding.buttons.next') },
-      onNext() {
-        jQuery('.work-packages-back-button')[0].click();
-      },
-    },
-    {
       'next .add-work-package': I18n.t('js.onboarding.steps.wp.create_button'),
       showSkip: false,
       nextButton: { text: I18n.t('js.onboarding.buttons.next') },
@@ -37,24 +15,16 @@ export function wpOnboardingTourSteps():OnboardingStep[] {
         waitForElement('#work-packages-filter-toggle-button .badge', '#content', () => {
           resolve(undefined);
         });
-      }),
-      onNext() {
-        jQuery('.main-menu--arrow-left-to-project')[0].click();
-      },
+      })
     },
     {
-      'next #main-menu-gantt': I18n.t('js.onboarding.steps.wp.gantt_menu'),
+      'next .wp-table--row': I18n.t('js.onboarding.steps.wp.list'),
       showSkip: false,
       nextButton: { text: I18n.t('js.onboarding.buttons.next') },
       onNext() {
-        jQuery('#main-menu-gantt')[0].click();
+        const firstId = document.querySelectorAll('.inline-edit--display-field.id a ')[0].innerHTML;
+        window.location.href = `${window.location.origin}/projects/demo-project/work_packages/${firstId}/activity`;
       },
-    },
-    {
-      containerClass: '-dark -hidden-arrow',
-      onBeforeStart() {
-        window.location.href = `${window.location.origin}/projects/demo-project/gantt`;
-      },
-    },
+    }
   ];
 }

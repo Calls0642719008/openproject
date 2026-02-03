@@ -35,149 +35,66 @@ module Admin
         include OpTurbo::Streamable
         include OpPrimer::ComponentHelpers
 
-        def initialize(item:, show_edit_form: false)
+        class << self
+          def menu_id(item:)
+            "op-custom-field-hierarchy-item-#{item.id}-action-menu"
+          end
+        end
+
+        def initialize(item:, custom_field:, show_edit_form: false)
           super(item)
           @show_edit_form = show_edit_form
-          @root = item.root || item.parent.root
+          @custom_field = custom_field
         end
 
         def wrapper_uniq_by
           model.id
         end
 
-        def short_text
-          "(#{model.short})"
+        def menu_id
+          self.class.menu_id(item: model)
+        end
+
+        def secondary_text
+          ::CustomFields::Hierarchy::HierarchicalItemFormatter
+            .new(label: false,
+                 number_length_limit: 42,
+                 number_integer_digit_limit: 40,
+                 number_precision: 40)
+            .format(item: model)
+        end
+
+        def item_link
+          if project_custom_field_context?
+            admin_settings_project_custom_field_item_path(custom_field_id, model)
+          else
+            custom_field_item_path(custom_field_id, model)
+          end
+        end
+
+        def item_actions_href
+          if project_custom_field_context?
+            item_actions_admin_settings_project_custom_field_item_path(custom_field_id, model)
+          else
+            item_actions_custom_field_item_path(custom_field_id, model)
+          end
         end
 
         def show_form? = @show_edit_form || model.new_record?
 
         def children_count
-          I18n.t("custom_fields.admin.hierarchy.subitems", count: model.children.count)
+          I18n.t("custom_fields.admin.hierarchy.subitems", count: model.children_count)
         end
 
-        def first_item?
-          model.sort_order == 0
-        end
-
-        def last_item?
-          model.sort_order == model.parent.children.length - 1
-        end
-
-        def menu_items(menu)
-          edit_action_item(menu)
-          menu.with_divider
-          add_above_action_item(menu)
-          add_below_action_item(menu)
-          add_sub_item_action_item(menu)
-          menu.with_divider
-          if !first_item?
-            move_to_top_action_item(menu)
-            move_up_action_item(menu)
-          end
-          if !last_item?
-            move_down_action_item(menu)
-            move_to_bottom_action_item(menu)
-          end
-          menu.with_divider
-          deletion_action_item(menu)
-        end
+        def label_addition = model.suffix
 
         private
 
-        def edit_action_item(menu)
-          menu.with_item(label: I18n.t(:button_edit),
-                         tag: :a,
-                         href: edit_custom_field_item_path(@root.custom_field_id, model)) do |item|
-            item.with_leading_visual_icon(icon: :pencil)
-          end
+        def project_custom_field_context?
+          @project_custom_field_context ||= @custom_field.is_a?(ProjectCustomField)
         end
 
-        def add_above_action_item(menu)
-          menu.with_item(
-            label: I18n.t(:button_add_item_above),
-            tag: :a,
-            content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-            href: new_child_custom_field_item_path(@root.custom_field_id, model.parent, position: model.sort_order)
-          ) { it.with_leading_visual_icon(icon: "fold-up") }
-        end
-
-        def add_below_action_item(menu)
-          menu.with_item(
-            label: I18n.t(:button_add_item_below),
-            tag: :a,
-            content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-            href: new_child_custom_field_item_path(@root.custom_field_id, model.parent, position: model.sort_order + 1)
-          ) { it.with_leading_visual_icon(icon: "fold-down") }
-        end
-
-        def add_sub_item_action_item(menu)
-          position = model.children.any? ? model.children.maximum(:sort_order) + 1 : 0
-
-          menu.with_item(
-            label: I18n.t(:button_add_sub_item),
-            tag: :a,
-            content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-            href: new_child_custom_field_item_path(@root.custom_field_id, model, position:)
-          ) { it.with_leading_visual_icon(icon: "op-arrow-in") }
-        end
-
-        def move_to_top_action_item(menu)
-          form_inputs = [{ name: "new_sort_order", value: 0 }]
-
-          menu.with_item(label: I18n.t(:label_sort_highest),
-                         tag: :button,
-                         href: move_custom_field_item_path(@root.custom_field_id, model),
-                         content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-                         form_arguments: { method: :post, inputs: form_inputs }) do |item|
-            item.with_leading_visual_icon(icon: "move-to-top")
-          end
-        end
-
-        def move_up_action_item(menu)
-          form_inputs = [{ name: "new_sort_order", value: model.sort_order - 1 }]
-
-          menu.with_item(label: I18n.t(:label_sort_higher),
-                         tag: :button,
-                         href: move_custom_field_item_path(@root.custom_field_id, model),
-                         content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-                         form_arguments: { method: :post, inputs: form_inputs }) do |item|
-            item.with_leading_visual_icon(icon: "chevron-up")
-          end
-        end
-
-        def move_down_action_item(menu)
-          form_inputs = [{ name: "new_sort_order", value: model.sort_order + 2 }]
-
-          menu.with_item(label: I18n.t(:label_sort_lower),
-                         tag: :button,
-                         href: move_custom_field_item_path(@root.custom_field_id, model),
-                         content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-                         form_arguments: { method: :post, inputs: form_inputs }) do |item|
-            item.with_leading_visual_icon(icon: "chevron-down")
-          end
-        end
-
-        def move_to_bottom_action_item(menu)
-          form_inputs = [{ name: "new_sort_order", value: model.parent.children.length + 1 }]
-
-          menu.with_item(label: I18n.t(:label_sort_lowest),
-                         tag: :button,
-                         href: move_custom_field_item_path(@root.custom_field_id, model),
-                         content_arguments: { data: { turbo_frame: ItemsComponent.wrapper_key } },
-                         form_arguments: { method: :post, inputs: form_inputs }) do |item|
-            item.with_leading_visual_icon(icon: "move-to-bottom")
-          end
-        end
-
-        def deletion_action_item(menu)
-          menu.with_item(label: I18n.t(:button_delete),
-                         scheme: :danger,
-                         tag: :a,
-                         href: deletion_dialog_custom_field_item_path(custom_field_id: @root.custom_field_id, id: model.id),
-                         content_arguments: { data: { controller: "async-dialog" } }) do |item|
-            item.with_leading_visual_icon(icon: :trash)
-          end
-        end
+        def custom_field_id = @custom_field.id
       end
     end
   end

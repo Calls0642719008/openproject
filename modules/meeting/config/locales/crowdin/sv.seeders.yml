@@ -9,21 +9,21 @@ sv:
         demo-project:
           meeting_series:
             item_0:
-              title: Weekly
+              title: Veckovis
           meeting_agenda_items:
             item_0:
-              title: Good news
+              title: Goda nyheter
             item_1:
-              title: Updates from development team
+              title: Uppdateringar från utvecklingsteamet
             item_2:
-              title: Updates from product team
+              title: Uppdateringar från produktteamet
             item_3:
-              title: Updates from marketing team
+              title: Uppdateringar från marknadsföringsteamet
             item_5:
-              title: Updates from sales team
+              title: Uppdateringar från säljteamet
             item_6:
-              title: Review of quarterly goals
+              title: Granskning av kvartalsmålen
             item_7:
-              title: Core values feedback
+              title: Återkoppling av kärnvärden
             item_8:
-              title: General topics
+              title: Allmänna ämnen

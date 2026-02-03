@@ -10,7 +10,7 @@
   },
   "private": true,
   "engines": {
-    "node": "^22.15.0",
+    "node": "^22.21.0",
     "npm": "^10.1.0"
   },
   "devDependencies": {

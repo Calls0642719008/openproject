@@ -31,6 +31,7 @@
 import * as Turbo from '@hotwired/turbo';
 import { Controller } from '@hotwired/stimulus';
 import { useMeta } from 'stimulus-use';
+import { appendCollapsedState } from '../../../helpers/meetings-helpers';
 
 export default class extends Controller {
   static values = {
@@ -55,8 +56,11 @@ export default class extends Controller {
   }
 
   async cancel() {
-    const response = await fetch(this.cancelUrlValue, {
-      method: 'GET',
+    const url = new URL(this.cancelUrlValue, window.location.origin);
+    appendCollapsedState(url.searchParams);
+
+    const response = await fetch(url.toString(), {
+      method: 'POST',
       headers: {
         'X-CSRF-Token': this.csrfToken,
         Accept: 'text/vnd.turbo-stream.html',

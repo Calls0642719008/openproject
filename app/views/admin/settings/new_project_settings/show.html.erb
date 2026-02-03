@@ -28,31 +28,11 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 <% html_title t(:label_administration), t(:label_project_new) %>
 
-<%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { t(:label_project_new) }
-    header.with_breadcrumbs(
-      [{ href: admin_index_path, text: t(:label_administration) },
-       { href: admin_settings_project_custom_fields_path, text: t(:label_project_plural) },
-       t(:label_project_new)]
-    )
-  end
-%>
+<%= render Admin::Settings::NewProjectSettings::PageHeaderComponent.new %>
 
-<%= styled_form_tag(admin_settings_new_project_path, method: :patch) do %>
-  <fieldset class="form--fieldset">
-    <div class="form--field"><%= setting_check_box :default_projects_public %></div>
-    <div class="form--field">
-      <%= setting_multiselect(
-            :default_projects_modules,
-            OpenProject::AccessControl.available_project_modules(sorted: true).collect { |m| [l_or_humanize(m, prefix: "project_module_"), m.to_s] }
-          ) %>
-    </div>
-    <div class="form--field"><%= setting_select :new_project_user_role_id,
-                                                ProjectRole.givable.collect { |r| [r.name, r.id.to_s] },
-                                                blank: "--- #{t(:actionview_instancetag_blank_option)} ---",
-                                                container_class: "-middle" %></div>
-  </fieldset>
-
-  <%= styled_button_tag t(:button_save), class: "-primary -with-icon icon-checkmark" %>
+<% case params.fetch(:tab, "settings") %>
+<% when "settings" %>
+  <%= render partial: "settings" %>
+<% when "notifications" %>
+  <%= render partial: "notifications" %>
 <% end %>

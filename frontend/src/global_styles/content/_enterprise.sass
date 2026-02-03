@@ -17,7 +17,7 @@
   .widget-box.upsell
     padding: 0
     flex-basis: 100%
-    border: var(--borderWidth-thin) solid var(--borderColor-severe-muted)
+    border: var(--borderWidth-thin) solid var(--enterprise-upsell-color)
     border-radius: var(--borderRadius-medium)
     background: var(--body-background)
     container-name: upsellContainer
@@ -25,7 +25,7 @@
 
 .widget-box--upsell-block
   margin-bottom: 1rem
-  border: var(--borderWidth-thin) solid var(--borderColor-severe-muted)
+  border: var(--borderWidth-thin) solid var(--enterprise-upsell-color)
   border-radius: var(--borderRadius-medium)
   background: var(--body-background)
   // Ensure the image does not overflow the container on the borders
@@ -40,10 +40,13 @@
 .upsell-colored
   color: var(--enterprise-upsell-color) !important
 
+.upsell-colored-text
+  color: var(--enterprise-upsell-text-color) !important
+
 .upsell-colored-background
   background: var(--enterprise-upsell-color) !important
   color: white !important
-  border-color: var(--enterprise-upsell-border-color) !important
+  border-color: var(--enterprise-upsell-color) !important
 
 .widget-box--blocks--upsell-title
   font-weight: 400

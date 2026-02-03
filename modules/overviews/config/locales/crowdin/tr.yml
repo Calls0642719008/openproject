@@ -1,4 +1,5 @@
 tr:
   overviews:
-    label: 'Genel bakış'
-  permission_manage_overview: 'Genel bakış sayfasını yönet'
+    label_home: "%{workspace_type} ev"
+    label_dashboard: "Gösterge paneli"
+    label_overview: "Genel Bakış"

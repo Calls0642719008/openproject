@@ -113,7 +113,7 @@ module DevelopmentData
         identifier:,
         enabled_module_names: project_modules,
         types: Type.all,
-        workspace_type: Project.workspace_types[:project]
+        workspace_type: "project"
       }
     end
 

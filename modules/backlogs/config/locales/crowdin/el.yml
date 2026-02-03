@@ -40,6 +40,8 @@ el:
               task_version_must_be_the_same_as_story_version: "πρέπει να είναι το ίδιο με την έκδοση ιστορίας του γονέα."
         sprint:
           cannot_end_before_it_starts: "Το sprint δεν μπορεί να λήξει πριν αρχίσει."
+  attributes:
+    task_type: "Task type"
   backlogs:
     add_new_story: "Νέα Ιστορία"
     any: "οποιoδήποτε"
@@ -65,8 +67,8 @@ el:
     properties: "Ιδιότητες"
     rebuild: "Ανοικοδόμηση"
     rebuild_positions: "Ανοικοδόμηση θέσεων"
-    remaining_hours: "Remaining work"
-    remaining_hours_ideal: "Remaining work (ideal)"
+    remaining_hours: "Υπολειπόμενες Ώρες"
+    remaining_hours_ideal: "Υπολειπόμενες Ώρες (ιδανικά)"
     show_burndown_chart: "Διάγραμμα Burndown"
     story: "Ιστορία"
     story_points: "Πόντοι Ιστορίας"
@@ -100,7 +102,10 @@ el:
   backlogs_empty_title: "Δεν έχουν οριστεί εκδόσεις που μπορούν να χρησιμοποιηθούν σε backlogs"
   backlogs_empty_action_text: "Για να ξεκινήσετε με τα backlogs, δημιουργήστε μια καινούργια έκδοση και αναθέστε την σε μια στήλη backlog."
   button_edit_wiki: "Επεξεργασία σελίδας wiki"
-  error_backlogs_task_cannot_be_story: "Οι ρυθμίσεις δεν είναι έγκυρες. Ο επιλεγμένος τύπος εργασίας δεν μπορεί να είναι επίσης ένας τύπος ιστορίας."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "can not also be a story type"
   error_intro_plural: "Παρουσιάστηκαν τα ακόλουθα σφάλματα:"
   error_intro_singular: "Συναντήθηκε το ακόλουθο σφάλμα:"
   error_outro: "Παρακαλούμε διορθώστε τα παραπάνω σφάλματα πριν το ξαναυποβάλλετε."
@@ -124,6 +129,10 @@ el:
   label_points_burn_up: "Πάνω"
   label_product_backlog: "backlog προϊόντος"
   label_select_all: "Επιλογή όλων"
+  label_select_type: "Select a type"
+  label_select_types: "Select types"
+  label_selected_type: "Selected type"
+  label_selected_types: "Selected types"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Εξαγωγή καρτών"
   label_sprint_impediments: "Εμπόδια Sprint"
@@ -160,3 +169,7 @@ el:
   version_settings_display_option_left: "αριστερά"
   version_settings_display_option_none: "κανένα"
   version_settings_display_option_right: "δεξιά"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Type used for story tasks. Must differ from story types.

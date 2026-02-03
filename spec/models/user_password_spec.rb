@@ -36,20 +36,20 @@ RSpec.describe UserPassword do
   let(:password) { create(:user_password, user:, plain_password: "adminAdmin!") }
 
   describe "#expired?" do
-    context "with expiry value set",
+    context "with expiration value set",
             with_settings: { password_days_valid: 30 } do
-      it "is true for an old password when password expiry is activated" do
+      it "is true for an old password when password expiration is activated" do
         expect(old_password.expired?).to be_truthy
       end
 
-      it "is false when password expiry is enabled and the password was changed recently" do
+      it "is false when password expiration is enabled and the password was changed recently" do
         expect(password.expired?).to be_falsey
       end
     end
 
-    context "with expiry value disabled",
+    context "with expiration value disabled",
             with_settings: { password_days_valid: 0 } do
-      it "is false for an old password when password expiry is disabled" do
+      it "is false for an old password when password expiration is disabled" do
         expect(old_password.expired?).to be_falsey
       end
     end

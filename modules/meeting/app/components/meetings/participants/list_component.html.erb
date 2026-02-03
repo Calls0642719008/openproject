@@ -17,18 +17,12 @@
               render(Primer::Beta::Blankslate.new) do |blankslate|
                 blankslate.with_visual_icon(icon: :people, size: :medium)
                 blankslate.with_heading(tag: :h2).with_content(I18n.t("meeting.participants.blankslate.heading"))
-                blankslate.with_description do
-                  flex_layout do |flex|
-                    flex.with_row(mb: 4) do
-                      render(Primer::Beta::Text.new(color: :subtle)) { I18n.t("meeting.participants.blankslate.description") }
-                    end
-                  end
-                end
+                blankslate.with_description_content(I18n.t("meeting.participants.blankslate.description"))
               end
             end
           else
             render(Primer::BaseComponent.new(tag: :div, classes: "participants-list")) do
-              @meeting_participants.sort.each do |participant|
+              @meeting_participants.each do |participant|
                 box.with_row do
                   render(Meetings::Participants::BoxRowComponent.new(meeting: @meeting, participant:))
                 end

@@ -1,8 +1,12 @@
-ARG RUBY_VERSION="3.4.5"
-FROM ruby:${RUBY_VERSION}-bookworm AS base
+ARG RUBY_VERSION="3.4.7"
+ARG DEBIAN_BASE="trixie"
+# Add SBOM scan context for intermediate steps
+ARG BUILDKIT_SBOM_SCAN_CONTEXT=true
+ARG BUILDKIT_SBOM_SCAN_STAGE=true
+FROM ruby:${RUBY_VERSION}-slim-${DEBIAN_BASE} AS base
 LABEL maintainer="operations@openproject.com"
 
-ARG NODE_VERSION="22.15.0"
+ARG NODE_VERSION="22.21.0"
 ARG BIM_SUPPORT=true
 ENV USE_JEMALLOC=false
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,6 +39,11 @@ ENV OPENPROJECT_INSTALLATION__TYPE=docker
 ENV OPENPROJECT_ATTACHMENTS__STORAGE__PATH=$APP_DATA_PATH/files
 ENV OPENPROJECT_RAILS__CACHE__STORE=file_store
 ENV OPENPROJECT_ANGULAR_UGLIFY=true
+
+# set the following to an empty string if you don't want to automatically use the bundled hocuspocus
+# (or set an external hocuspocus directly - if empty you can set it in the UI)
+ENV OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL=auto
+ENV OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET=
 
 RUN useradd -d /home/$APP_USER -m $APP_USER && \
   mkdir -p $APP_PATH && chown $APP_USER:$APP_USER $APP_PATH && \
@@ -81,6 +90,18 @@ ENTRYPOINT ["./docker/prod/entrypoint-slim.sh"]
 VOLUME ["$APP_DATA_PATH"]
 
 # -------------------------------------
+# slim-bim (public)
+# same as slim but with BIM support enabled
+# -------------------------------------
+FROM base AS slim-bim
+
+USER $APP_USER
+EXPOSE 8080
+CMD ["./docker/prod/web"]
+ENTRYPOINT ["./docker/prod/entrypoint-slim.sh"]
+VOLUME ["$APP_DATA_PATH"]
+ENV OPENPROJECT_EDITION=bim
+# -------------------------------------
 # all-in-one (public)
 # -------------------------------------
 FROM base AS all-in-one
@@ -91,6 +112,8 @@ ENV PGDATA=/var/openproject/pgdata
 
 COPY --from=openproject/gosu /go/bin/gosu /usr/local/bin/gosu
 RUN chmod +x /usr/local/bin/gosu && gosu nobody true
+
+COPY --from=openproject/hocuspocus:release-38128805 --chown=$APP_USER:$APP_USER /app /opt/hocuspocus
 
 RUN ./docker/prod/setup/postinstall-onprem.sh && \
   ln -s /app/docker/prod/setup/.irbrc /root/

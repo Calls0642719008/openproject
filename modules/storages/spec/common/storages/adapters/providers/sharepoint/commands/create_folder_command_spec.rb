@@ -42,11 +42,11 @@ module Storages
             let(:base_drive) { "b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW" }
             let(:input_data) { Input::CreateFolder.build(folder_name:, parent_location:).value! }
 
-            it_behaves_like "adapter create_folder_command: basic command setup"
+            it_behaves_like "storage adapter: command call signature", "create_folder"
 
             context "when creating a folder in the root", vcr: "sharepoint/create_folder_root" do
               let(:folder_name) { "Földer CreatedBy Çommand" }
-              let(:parent_location) { composite_identifier(nil) }
+              let(:parent_location) { SharepointSpecHelper.composite_identifier(base_drive, nil) }
               let(:path) { "/Marcello%20VCR/F%C3%B6lder%20CreatedBy%20%C3%87ommand" }
 
               it_behaves_like "adapter create_folder_command: successful folder creation"
@@ -54,7 +54,9 @@ module Storages
 
             context "when creating a folder in a parent folder", vcr: "sharepoint/create_folder_parent" do
               let(:folder_name) { "Földer CreatedBy Çommand" }
-              let(:parent_location) { composite_identifier("01ANJ53W7TITEF4WCHRBDKR7VMNUWZ33WD") }
+              let(:parent_location) do
+                SharepointSpecHelper.composite_identifier(base_drive, "01ANJ53W7TITEF4WCHRBDKR7VMNUWZ33WD")
+              end
               let(:path) { "/Marcello%20VCR/Folder%20with%20spaces/F%C3%B6lder%20CreatedBy%20%C3%87ommand" }
 
               it_behaves_like "adapter create_folder_command: successful folder creation"
@@ -62,16 +64,20 @@ module Storages
 
             context "when creating a folder in a non-existing parent folder", vcr: "sharepoint/create_folder_parent_not_found" do
               let(:folder_name) { "Földer CreatedBy Çommand" }
-              let(:parent_location) { composite_identifier("01AZJL5PKU2WV3U3RKKFF4A7ZCWVBXRTEU") }
+              let(:parent_location) do
+                SharepointSpecHelper.composite_identifier(base_drive, "01AZJL5PKU2WV3U3RKKFF4A7ZCWVBXRTEU")
+              end
+              let(:error_source) { described_class }
 
-              it_behaves_like "adapter create_folder_command: parent not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
 
             context "when folder already exists", vcr: "sharepoint/create_folder_already_exists" do
               let(:folder_name) { "data" }
-              let(:parent_location) { composite_identifier(nil) }
+              let(:parent_location) { SharepointSpecHelper.composite_identifier(base_drive, nil) }
+              let(:error_source) { described_class }
 
-              it_behaves_like "adapter create_folder_command: folder already exists"
+              it_behaves_like "storage adapter: error response", :conflict
             end
 
             context "when trying to create a folder under the root of the site",
@@ -91,8 +97,6 @@ module Storages
             end
 
             private
-
-            def composite_identifier(item_id) = "#{base_drive}#{SharepointStorage::IDENTIFIER_SEPARATOR}#{item_id}"
 
             def delete_created_folder(folder)
               Input::DeleteFolder.build(location: folder.id).bind do |input_data|

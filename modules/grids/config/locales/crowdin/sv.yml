@@ -1,6 +1,24 @@
 sv:
   grids:
-    label_widget_in_grid: "Widget som finns i rutnät %{grid_name}"
+    label_widget_in_grid: "Widget som finns i Grid %{grid_name}"
+    widgets:
+      empty: "Denna widget är för närvarande tom."
+      not_available: "Denna widget är inte tillgänglig."
+      subitems:
+        title: "Underpunkter"
+        no_results: "Det finns inga synliga barn."
+        view_all_subitems: "Visa alla underobjekt"
+        button_text: "Underobjekt"
+      members:
+        title: "Medlemmar"
+        no_results: "Inga synliga medlemmar."
+        view_all_members: "Visa alla medlemmar"
+        show_members_count: "Visa alla %{count} medlemmar"
+        x_more:
+          one: "och ytterligare en medlem."
+          other: "och %{count} fler medlemmar."
+      news:
+        no_results: "Inget nytt att rapportera."
   activerecord:
     attributes:
       grids/grid:

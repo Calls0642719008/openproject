@@ -2,8 +2,8 @@
 da:
   js:
     calendar:
-      create_new: 'Create new calendar'
+      create_new: 'Opret en ny kalender'
       title: 'Kalender'
-      too_many: 'There are %{count} work packages in total, but only %{max} can be shown.'
-      unsaved_title: 'Unnamed calendar'
-      label_calendar_plural: 'Calendars'
+      too_many: 'Der er %{count} arbejdspakker i alt, men kun %{max} kan vises.'
+      unsaved_title: 'Unavngiven kalender'
+      label_calendar_plural: 'Kalendere'

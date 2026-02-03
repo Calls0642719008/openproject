@@ -1,4 +1,5 @@
 ar:
   overviews:
-    label: 'نظرة عامة'
-  permission_manage_overview: 'إدارة صفحة النظرة العامة'
+    label_home: "%{workspace_type} home"
+    label_dashboard: " لوحة القيادة"
+    label_overview: "نظرة عامة"

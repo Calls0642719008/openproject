@@ -59,6 +59,10 @@ ro:
       tab_interface: "Interfață"
       tab_branding: "Elemente de marcă"
       tab_pdf_export_styles: "PDF export styles"
+      tab_pdf_export_font: "PDF export font"
+      fonts:
+        file_too_large: "is too large (maximum size is %{count} MB)."
+        file_is_invalid: "is not a valid TTF font file."
       colors:
         primary-button-color: "Butonul principal"
         accent-color: "Accent"
@@ -105,6 +109,23 @@ ro:
       explanation:
         text: "Acțiunile individuale ale unui utilizator (de exemplu, actualizarea de două ori a unui pachet de lucru) sunt agregate într-o singură acțiune dacă diferența de vechime dintre ele este mai mică decât intervalul de timp specificat. Acestea vor fi afișate ca o singură acțiune în cadrul aplicației. De asemenea, acest lucru va întârzia notificările cu aceeași perioadă de timp, reducând numărul de e-mailuri trimise și va afecta, de asemenea, întârzierea %{webhook_link}."
         link: "webhook"
+    mcp_configurations:
+      index:
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance."
+        resources_heading: "Resources"
+        resources_description: "OpenProject implements the following tools. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
+        resources_submit: "Update resources"
+        tools_heading: "Tools"
+        tools_description: "OpenProject implements the following tools. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP tools](docs_url)."
+        tools_submit: "Update tools"
+      multi_update:
+        success: "MCP configurations were updated successfully."
+      server_form:
+        description_caption: "How the MCP server will be described to other applications who connect to it."
+        title_caption: "A short title shown to applicatons that connect to the MCP server."
+      update:
+        failure: "MCP configuration could not be updated."
+        success: "MCP configuration was updated successfully."
     scim_clients:
       authentication_methods:
         sso: "JWT from identity provider"
@@ -137,7 +158,7 @@ ro:
       new:
         title: "New SCIM client"
       revoke_static_token_dialog_component:
-        confirm_button: "Revoke"
+        confirm_button: "Revocă"
         title: "Revoke static token"
         heading: "Are you sure you want to revoke this token?"
         description: "The SCIM client that uses this token will no longer be able to access OpenProject's SCIM server API."
@@ -158,6 +179,16 @@ ro:
         expired: "Expired on %{date}"
         revoked: "Revoked on %{date}"
         title: "Access token table"
+    settings:
+      new_project:
+        project_creation: "Crearea proiectului"
+        notification_text_default: >
+          <p>Hello,</p> <p>A new project has been created: projectValue:name</p> <p>Thank you</p>
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "Login and registration"
   announcements:
@@ -176,12 +207,12 @@ ro:
       title: "Quarantined attachments"
       error_cannot_act_self: "Cannot perform actions on your own uploaded files."
   attribute_help_texts:
-    note_public: "Orice text și imagini pe care le adaugi în acest câmp sunt vizibile public pentru toți utilizatorii conectați!"
+    caption: "This short version will be displayed as caption of the attribute."
+    note_public: "Any text and images you add to this field are publicly visible to all logged in users."
     text_overview: "În această vizualizare, poți crea texte de ajutor personalizate pentru vizualizarea atributelor. Atunci când sunt definite, aceste texte pot fi afișate făcând clic pe pictograma de ajutor de lângă atributul care îi aparține."
-    label_plural: "Texte de ajutor pentru atribute"
     show_preview: "Previzualizare text"
     add_new: "Adaugă text de ajutor"
-    edit: "Editați textul de ajutor pentru %{attribute_caption}"
+    edit_field_name: "Edit help text for %{attribute_field_name}"
   background_jobs:
     status:
       error_requeue: "Lucrarea a avut o eroare, dar încearcă din nou. Eroarea a fost: %{message}"
@@ -191,10 +222,9 @@ ro:
     ldap_auth_failed: "Nu a putut fi realizată autentificarea pe serverul LDAP."
     sync_failed: "Failed to synchronize from LDAP: %{message}."
     back_to_index: "Click here to go back to the list of connection."
-    technical_warning_html: |
+    technical_warning: |
       This LDAP form requires technical knowledge of your LDAP / Active Directory setup.
-      <br>
-      <a href="https://www.openproject.org/help/administration/manage-ldap-authentication/">Please visit our documentation for detailed instructions</a>.
+      [Please visit our documentation for detailed instructions](docs_url).
     attribute_texts:
       name: Numele arbitrar al conexiunii LDAP
       host: Numele gazdei LDAP sau adresa IP
@@ -286,10 +316,10 @@ ro:
         blankslate:
           root:
             title: "Your list of items is empty"
-            description: "Start by adding items to the custom field of type hierarchy. Each item can be used to create a hierarchy bellow it. To navigate and create sub-items inside a hierarchy click on the created item."
+            description: "Începe prin a adăuga elemente la câmpul personalizat de tip ierarhie. Fiecare element poate fi utilizat pentru a crea o ierarhie sub acesta. Pentru a naviga și a crea subpuncte în cadrul unei ierarhii, dă clic pe elementul creat."
           item:
             title: This item doesn't have any hierarchy level below
-            description: Add items to this list to create sub-items inside another one
+            description: Adaugă elemente la această listă pentru a crea subelemente în interiorul altuia
         delete_dialog:
           title: "Delete custom field item"
           heading: "Delete custom field item?"
@@ -297,14 +327,33 @@ ro:
         placeholder:
           label: "Etichetă element"
           short: "Nume scurt"
-          score: "Score"
+          weight: "Weight"
       notice:
         remember_items_and_projects: "Remember to set items and projects in the respective tabs for this custom field."
       hierarchy:
         subitems:
-          zero: no sub-items
-          one: 1 sub-item
-          other: "%{count} sub-items"
+          zero: fără subelemente
+          one: 1 subelement
+          other: "%{count} subelemente"
+      role_assignment:
+        title: Role Assignment
+        description: You can automatically grant a certain project role to any user assigned to this project attribute, regardless of that user’s original role in that project.
+        warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
+        role_field_label: "Rol proiect"
+        role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
+        review_hint: >
+          There are %{user_count} who are already assigned to this project attribute in various projects. They might get additional permissions and be added to projects they did not previously have access to.
+        review_button: Review users and permissions
+        dialog:
+          title: "Overview of users and permissions"
+          change: Change
+          changes:
+            new_member: Will be added as a member
+            remove_member: Will be removed as a member
+            gain_and_lose_role: Will lose role ‘%{old_role}’ and gain role ‘%{new_role}’
+            gain_role: Will gain role ‘%{new_role}’
+            lose_role: Will lose role ‘%{old_role}’
+            no_change: No changes
     text_add_new_custom_field: >
       Dacă vrei să adaugi noi câmpuri personalizate în cadrul unui proiect va trebui, mai întâi, să le creezi.
     is_enabled_globally: "Este activat/ă la nivel global"
@@ -314,30 +363,66 @@ ro:
     reorder_alphabetical: "Reordonează valorile alfabetic"
     reorder_confirmation: "Avertisment: Ordinea curentă a valorilor disponibile se va pierde. Continuați?"
     placeholder_version_select: "Work package or project selection is required first"
+    calculated_field_not_editable: "Non-editable attribute. This value is calculated automatically."
+    no_role_assigment: "No role assignment"
     instructions:
-      is_required: "Marchează câmpul personalizat ca obligatoriu. Acest lucru va face obligatorie completarea câmpului atunci când se creează resurse noi sau se actualizează resursele existente."
-      is_required_for_project: "Bifează pentru a activa acest atribut și a-l face obligatoriu în toate proiectele. Nu poate fi dezactivat pentru proiecte individuale."
-      is_for_all: "Marcați câmpul personalizat ca disponibil în toate proiectele existente și noi."
-      multi_select: "Permite utilizatorului să atribuie valori multiple acestui câmp personalizat."
-      searchable: "Include valorile câmpului atunci când utilizezi funcționalitatea globală de căutare."
-      searchable_for_project: "Bifează pentru a face acest atribut disponibil sub formă de filtru în listele de proiecte."
-      editable: "Permite câmpului să fie editat de către utilizatorii înșiși."
-      admin_only: "Bifează pentru a face acest atribut vizibil doar administratorilor. Utilizatorii fără drepturi de administrator nu vor putea vedea sau edita acest atribut"
-      is_filter: >
-        Permite ca, câmpul personalizat să fie utilizat într-un filtru în vizualizările pachetului de lucru. Ține cont că numai cu 'Pentru toate proiectele' selectate, câmpul personalizat va apărea în vizualizări globale.
-      formula: "Add numeric values or type / to search for an attribute or a mathematical operator."
+      is_required:
+        all: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
+        project: "Required attributes need to be filled out by the user on project creation if the field is active ('For all projects' set or copying from a project/template in which the field is active). Existing projects will not require a value when being updated."
+      is_for_all:
+        all: "Mark the custom field as available in all existing and new projects."
+        project: "Mark the attribute as available in all existing and new projects."
+      multi_select:
+        all: "Allows the user to assign multiple values to this custom field."
+        project: "Allows the user to assign multiple values to this attribute."
+      searchable:
+        all: "Include the field values when using the global search functionality."
+        project: "Check to make this attribute available as a filter in project lists."
+      editable:
+        all: "Allow the field to be editable by users themselves."
+      admin_only:
+        all: "Check to make this custom field only visible to administrators. Users without admin rights will not be able to view or edit it."
+        project: "Check to make this attribute only visible to administrators. Users without admin rights will not be able to view or edit it."
+      is_filter:
+        all: >
+          Allow the custom field to be used in a filter in work package views. Note that only with 'For all projects' selected, the custom field will show up in global views.
+      formula:
+        project: "Add numeric values or type / to search for an attribute or a mathematical operator."
     tab:
       no_results_title_text: În acest moment nu există câmpuri personalizate.
       no_results_content_text: Creează câmp personalizat nou
+  calculated_values:
+    error_dialog:
+      title: "Error with Calculated value"
+    errors:
+      unknown: "An unknown error occurred. Please review the formula for this Calculated value."
+      mathematical: "The mathematical formula leads to an error. Please review the project calculation attribute and try again."
+      missing_value: The attribute "%{custom_field_name}" is required by this Calculated value, but is empty.
+      disabled_value: The attribute "%{custom_field_name}" is required by this Calculated value, but is disabled for the project.
   concatenation:
     single: "sau"
-  dry_validation:
+  danger_dialog:
+    confirmation_live_message_checked: "The button to proceed is now active."
+    confirmation_live_message_unchecked: "The button to proceed is now inactive. You need to tick the checkbox to continue."
+  op_dry_validation:
+    or: "sau"
     errors:
+      array?: "must be an array."
+      decimal?: "must be a decimal."
       defined: "must not be defined."
-      int?: "trebuie să fie un număr întreg."
+      eql?: "must be equal to %{left}."
       filled?: "trebuie completat"
       greater_or_equal_zero: "trebuie să fie mai mare sau egal cu 0."
+      gteq?: "must be greater than or equal to %{num}."
+      hash?: "must be a hash."
+      included_in?:
+        arg:
+          default: "must be one of: %{list}."
+          range: "must be one of: %{list_left} - %{list_right}."
+      int?: "trebuie să fie un întreg."
+      key?: "is missing."
       not_found: "nu a fost găsit."
+      respond_to?: "does not implement required method."
       rules:
         copy_workflow_from:
           workflow_missing: "nu are un flux de lucru propriu."
@@ -352,20 +437,23 @@ ro:
           not_unique: "must be unique within the same hierarchy level."
         parent:
           not_descendant: "must be a descendant of the hierarchy root."
+      str?: "must be a string."
+      type?: "must be %{type}."
     rules:
       copy_workflow_from: "Type for workflow copy"
       enabled: "Activat"
       depth: "Adâncime"
       item: "Element"
       label: "Etichetă"
+      weight: "Weight"
       short: "Nume scurt"
       parent: "Părinte"
       blueprint: "Pattern blueprint"
   global_search:
     title:
-      all_projects: 'Search for "%{search_term}" in all projects'
-      current_project: 'Search for "%{search_term}" in %{project_name}'
-      project_and_subprojects: 'Search for "%{search_term}" in %{project_name} and all subprojects'
+      all_projects: 'Caută "%{search_term}" în toate proiectele'
+      current_project: 'Caută "%{search_term}" în %{project_name}'
+      project_and_subprojects: 'Caută "%{search_term}" în %{project_name} și toate subproiectele'
     placeholder: "Caută în %{app_title}"
     overwritten_tabs:
       all: "Toate"
@@ -387,12 +475,26 @@ ro:
       no_results_title_text: În acest moment nu există proiecte care să facă parte din acest grup.
     synchronized_groups:
       blankslate:
-        action: Authentication settings
+        action: Setări autentificare
         description: When this group is automatically synced with groups in external identity providers like OpenID, they will appear here. You can set this up in your Authentication settings.
         title: No synchronized groups yet
   incoming_mails:
     ignore_filenames: >
       Specifică o listă de nume care trebuie ignorate la procesarea atașamentelor pentru mesajele primite (de exemplu, semnături sau pictograme). Introdu un nume de fișier pe linie.
+  portfolios:
+    index:
+      search:
+        label: Portfolio name filter
+        placeholder: Search portfolios
+      sub_items_html:
+        one: "<strong>1</strong> sub-item"
+        few: "<strong>%{count}</strong> sub-items"
+        other: "<strong>%{count}</strong> sub-items"
+    lists:
+      active: "Active portfolios"
+      my: "My portfolios"
+      favorited: "Favorite portfolios"
+      archived: "Archived portfolios"
   projects:
     copy:
       #Contains custom strings for options when copying a project that cannot be found elsewhere.
@@ -404,12 +506,15 @@ ro:
       work_package_categories: "Pachete de lucru: categorii"
       work_package_file_links: "Pachete de lucru: legături de fișiere"
       work_package_shares: "Pachete de lucru: partajări"
+    create:
+      notification_email_subject: "Your project '%{project_name}' has been created"
+      complete_wizard_link: "Complete the %{artefact_name}"
     delete:
       scheduled: "Ștergerea a fost programată și se efectuează în fundal. Veți fi notificat cu privire la rezultat."
       schedule_failed: "Proiectul nu poate fi șters: %{errors}"
-      failed: "Ștergerea proiectului %{name} a eșuat"
-      failed_text: "Solicitarea de ștergere a proiectului %{name} a eșuat. Proiectul a rămas arhivat."
-      completed: "Ștergerea proiectului %{name} finalizată"
+      failed: "Deletion of project '%{name}' has failed"
+      failed_text: "The request to delete project '%{name}' has failed. The project was left archived."
+      completed: "Deletion of project '%{name}' completed"
       completed_text: "Cererea de ștergere a proiectului \"%{name}\" a fost finalizată."
       completed_text_children: "În plus, următoarele subproiecte au fost eliminate:"
     index:
@@ -422,7 +527,7 @@ ro:
     lists:
       active: "Proiecte active"
       my: "Proiectele mele"
-      favored: "Proiecte favorite"
+      favorited: "Proiecte favorite"
       archived: "Proiecte arhivate"
       shared: "Listă proiecte partajate"
       my_lists: "Listele mele de proiecte"
@@ -434,7 +539,7 @@ ro:
         text: "This action will not delete any project the list contains. Are you sure you want to delete this project list?"
     settings:
       header_details: Informații de bază
-      header_status: Stare proiect
+      header_status: Status
       header_relations: Relații proiect
       button_update_details: Actualizează detalii
       button_update_status_description: Actualizează descrierea stării
@@ -452,6 +557,22 @@ ro:
         description: >
           The project will only be visible to project members depending on their role and associated permissions. Sub-projects are not affected and have their own settings.
       change_identifier: Schimbă identificatorul
+      subitems:
+        template_section: >
+          Selectează șabloanele care vor fi utilizate la crearea de subelemente noi.
+        project_template_label: "Șablon pentru proiecte"
+        project_template_caption: "Selectează un proiect șablon pentru a fi folosit ca implicit pentru subelemente noi de acest tip."
+        program_template_label: "Șablon pentru programe"
+        program_template_caption: "Selectează un program șablon pentru a fi folosit ca implicit pentru subelemente noi de acest tip."
+        no_template: "Niciun șablon predefinit"
+      template:
+        menu_title: "Template"
+        title: "Template settings"
+        enable_failed: "Failed to enable template mode."
+        members:
+          excluded_roles_label: "Roles to exclude when template is applied"
+          excluded_roles_caption: >
+            When creating a new project from this template, the roles selected above will be omitted. This allows you to select which members will be excluded based on their project roles. Users can then access the template for viewing purposes without being granted access to new projects created from it.
       actions:
         label_enable_all: "Activează tot"
         label_disable_all: "Dezactivează tot"
@@ -485,9 +606,9 @@ ro:
           label_enable_single: "Active in this project, click to disable"
           label_disable_single: "Inactive in this project, click to enable"
           remove_from_project: "Elimină din proiect"
-        is_required_blank_slate:
-          heading: Obligatoriu în toate proiectele
-          description: Acest atribut de proiect este activat în toate proiectele deoarece opțiunea "Obligatoriu în toate proiectele" este bifată. Acesta nu poate fi dezactivat pentru proiecte individuale.
+        is_for_all_blank_slate:
+          heading: For all projects
+          description: This project attribute is enabled in all projects since the "For all projects" option is checked. It cannot be deactivated for individual projects.
       types:
         no_results_title_text: În acest moment nu există tipuri disponibile.
         form:
@@ -495,12 +616,37 @@ ro:
       versions:
         no_results_title_text: În acest moment nu există versiuni pentru acest proiect.
         no_results_content_text: Creează versiune nouă
+        work_packages_graph: Grafic pachete de lucru
+        show_work_packages: Show work packages
       storage:
         no_results_title_text: Acest proiect nu consumă spațiu suplimentar pe disc.
       work_package_priorities:
         new_label: "Prioritate nouă"
+      creation_wizard:
+        export:
+          description_attachment_export: "The generated artifact will be saved as a PDF attachment to the artifact work package."
+          description_file_link_export: "The artifact work package will have a file link to a PDF stored in an external file storage. Requires a working file storage with automatically-managed project folders for this project. At the moment only Nextcloud file storages are supported."
+          description_file_storage_selection: "Select which of the configured external file storages should be used."
+          external_file_storage: "External file storage"
+          label_artifact_export: "Artifact export"
+          label_attachment_export: "Save as work package file attachment"
+          label_file_link_export: "Upload file to external file storage and add file link to work package"
+          pdf_file_storage: "PDF file storage"
+          unavailable: "unavailable"
+        label_request_submission: "Request submission"
+        project_attributes_description: >
+          Select which project attributes should be included in the project initiation request. This list only includes [project attributes](project_attributes_url) enabled for for this project.
     status:
-      button_edit: Edit project status
+      button_edit: Edit status
+    wizard:
+      sidebar_content_title: "Content"
+      sections: "Sections"
+      title: "Project initiation request"
+      no_help_text: "This attribute has no help text defined."
+      success: "Project attributes saved and artifact work package created successfully."
+      progress_label: "%{current} of %{total}"
+      create_artifact_work_package_error: "Failed to create artifact work package"
+      create_artifact_storage_error: "Failed to store artifact in file storage"
   lists:
     create:
       success: "The modified list has been saved as a new list"
@@ -588,15 +734,14 @@ ro:
           dialog_title: "Create new API token"
           attention_text: "Treat API tokens like passwords. Anyone with this token will have access to information from this instance, share it only with trusted users."
           dialog_body: "This token will allow third-party applications to communicate with your instance. To differentiate the new API token, please give it a name."
-          create_button: "Create"
+          create_button: "Creează"
           name_label: "Token name"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "The API token has been generated"
-          warning: "This is the only time you will see this token. Make sure to copy it now."
-      errors:
-        token_name_blank: "Please provide an API token name"
-        token_name_in_use: "This API token name is already in use, please select a different one"
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "Resetarea tokenului de acces nu a reușit: %{error}"
       failed_to_create_token: "Failed to create access token: %{error}"
       failed_to_revoke_token: "Failed to revoke access token: %{error}"
@@ -606,25 +751,42 @@ ro:
       notice_api_token_revoked: "Token-ul API a fost șters. Pentru a crea un nou token, foloște butonul din secțiunea API."
       notice_rss_token_revoked: "The RSS token has been deleted. To create a new token please use the link in the RSS section."
       notice_ical_token_revoked: 'iCalendar token "%{token_name}" for calendar "%{calendar_name}" of project "%{project_name}" has been revoked. The iCalendar URL with this token is now invalid.'
+    password_confirmation_dialog:
+      confirmation_required: "You need to enter your account password to confirm this change."
+      title: "Confirm your password to continue"
   news:
     index:
       no_results_title_text: În acest moment nu există știri de raportat.
       no_results_content_text: Adaugă știre nouă
+  roles:
+    permissions:
+      section_check_all_label: "Assign all %{module} permissions"
+      section_uncheck_all_label: "Unassign all %{module} permissions"
+    report:
+      matrix_caption: "Permissions matrix for %{module} module"
+      matrix_checkbox_label: "Assign %{permission} permission to %{role} role"
+      matrix_check_all_label: "Assign all %{module} permissions to all roles"
+      matrix_uncheck_all_label: "Unassign all %{module} permissions from all roles"
+      matrix_check_uncheck_all_in_row_label_html: "Toggle <em>%{permission}</em> permission for all roles"
+      matrix_check_uncheck_all_in_col_label_html: "Toggle all %{module} permissions for <em>%{role}</em> role"
   users:
     autologins:
       prompt: "Rămâi conectat pentru %{num_days}"
     sessions:
-      remembered_devices: "Dispozitive amintite"
-      remembered_devices_caption: "O listă cu toate dispozitivele care s-au conectat la acest cont folosind opțiunea \"Rămâi conectat\"."
       session_name: "%{browser_name} %{browser_version} pe %{os_name}"
       browser: "Browser"
+      expires: "Expiră"
+      last_connection: "Last connection"
       device: "Dispozitiv / OS"
       unknown_browser: "browser necunoscut"
       unknown_os: "unknown operating system"
-      current: "Sesiune curentă"
+      unknown: "(unknown)"
+      browser_session: "(Browser session)"
+      current: "Current (this device)"
       title: "Gestionarea sesiunii"
-      instructions: "Aceasta este o listă de dispozitive care s-au conectat la contul tău. Revocă orice sesiune pe care nu o recunoști sau la care nu mai ai acces."
+      instructions: "You are logged in to your account through the following devices. Revoke sessions that you do not recognise or from devices you do not control."
       may_not_delete_current: "Nu poți șterge sesiunea curentă."
+      deletion_warning: "Are you sure you want to revoke this session? You will be logged out on this device."
     groups:
       member_in_these_groups: "Acest utilizator este în prezent membru al următoarelor grupuri:"
       no_results_title_text: Acest utilizator nu este în prezent membru în niciun grup.
@@ -634,6 +796,57 @@ ro:
     memberships:
       no_results_title_text: Acest utilizator nu este în acest moment participant în vreun proiect.
     open_profile: "Open profile"
+    invite_user_modal:
+      invite: "Invită"
+      title:
+        invite: "Invită utilizator"
+        invite_to_project: "Invită %{type} la %{project}"
+        invite_principal_to_project: "Invită %{principal} la %{project}"
+      project:
+        label: "Proiect"
+        required: "Te rog selectează un proiect"
+        next_button: "Înainte"
+        no_results: "Nu au fost găsite proiecte"
+        no_invite_rights: "Nu ai voie să inviți membrii în acest proiect"
+      type:
+        required: "Te rog selectează tipul de invitat"
+        user:
+          title: "Invite user to %{project_name}"
+          description: "Permisiuni bazate pe rolul atribuit în proiectul selectat"
+        group:
+          title: "Invite group to %{project_name}"
+          description: "Permisiuni bazate pe rolul atribuit în proiectul selectat"
+        placeholder_user:
+          title: "Add placeholder user to %{project_name}"
+          title_no_ee: "Utilizator de tip Placeholder (add-on numai pentru ediția Enterprise)"
+          description: "Nu are acces la proiect și nu se trimite niciun e-mail."
+        already_member_message: "Deja membru al %{project}"
+      principal:
+        no_results_user: "Nu au fost găsiți utilizatori"
+        invite_user: "Invită"
+        no_results_placeholder: "Nu au fost găsiți placeholder-i"
+        create_new_placeholder: "Creează un nou substituent:"
+        no_results_group: "Nu au fost găsite grupuri"
+        invite_to_project: "Invite to %{project_name}"
+        required:
+          user: "Te rog selectează un utilizator"
+          placeholder: "Te rog selectează un substituent"
+          group: "Te rog selectează un grup"
+      role:
+        label: "Rolul în %{project}"
+        no_roles_found: "Nu au fost găsite roluri"
+        description: >
+          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. [Learn more about roles and permissions.](docs_url)
+        required: "Te rog selectează un rol"
+      message:
+        label: "Mesaj invitație"
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
+      summary:
+        next_button: "Trimite invitație"
+      success_message:
+        user: "Utilizatorul se poate autentifica acum pentru a accesa %{project}. Între timp, poți deja să planifici cu acel utilizator și să atribui pachete de lucru, de exemplu."
+        placeholder_user: "Placeholder-ul poate fi utilizat acum în %{project}. Între timp, poți deja să planifici cu acel utilizator și să atribui pachete de lucru, de exemplu."
+        group: "Grupul este acum o parte din %{project}. Între timp, poți deja să planifici cu acest grup și să atribui pachete de lucru, de exemplu."
   page:
     text: "Text"
   placeholder_users:
@@ -697,10 +910,8 @@ ro:
         excluded_from_totals: "Exclus din totaluri"
   themes:
     dark: "Dark"
-    dark_high_contrast: "Dark high contrast"
     light: "Luminos"
-    light_high_contrast: "Luminos contrast mare"
-    sync_with_os: "Automat (potrivește modul de culoare OS)"
+    sync_with_os: "Automatic (match OS color mode)"
   types:
     index:
       no_results_title_text: În acest moment nu există tipuri.
@@ -715,7 +926,7 @@ ro:
         select_projects_description: Select the projects in which you would like to use this type.
       settings:
         tab: "Setări"
-        type_color_text: The selected color distinguishes different types in Gantt charts or work packages tables. It is therefore recommended to use a strong color.
+        type_color_text: "Culoarea selectată distinge diferite tipuri \nîn graficele Gantt sau tabelele pachetelor de lucru. Prin urmare, este recomandat să folosești o culoare puternică."
       subject_configuration:
         tab: "Subject configuration"
         manually_editable_subjects:
@@ -752,6 +963,16 @@ ro:
     print_hint: Aceasta va afișa conținutul acestei pagini wiki fără bare de navigare.
     index:
       no_results_content_text: Adaugă pagină wiki nouă
+  workflows:
+    form:
+      matrix_caption: "Workflow matrix"
+      matrix_caption_assignee: "Workflow matrix for assignee"
+      matrix_caption_author: "Workflow matrix for author"
+      matrix_checkbox_label: "Allow transition from %{old_status} to %{new_status}"
+      matrix_check_all_label: "Allow all transitions"
+      matrix_uncheck_all_label: "Disallow all transitions"
+      matrix_check_uncheck_all_in_row_label_html: "Toggle transitions from <em>%{old_status}</em> to all new statuses"
+      matrix_check_uncheck_all_in_col_label_html: "Toggle transitions from all old statuses to <em>%{new_status}</em>"
   work_flows:
     index:
       no_results_title_text: În acest moment nu există fluxuri de lucru.
@@ -766,13 +987,13 @@ ro:
           manual_overlap_with_predecessors: "Overlaps with at least one predecessor."
           manual_with_children: "This has child work packages but their start dates are ignored."
         title:
-          automatic_mobile: "Automatically scheduled."
+          automatic_mobile: "Programat automat."
           automatic_with_children: "The dates are determined by child work packages."
           automatic_with_predecessor: "The start date is set by a predecessor."
           manual_mobile: "Manually scheduled."
           manually_scheduled: "Manually scheduled. Dates not affected by relations."
       blankslate:
-        title: "No predecessors"
+        title: "Fără predecesori"
         description: "To enable automatic scheduling, this work package needs to have at least one predecessor. It will then automatically be scheduled to start after the closest predecessor."
       ignore_non_working_days:
         title: "Numai în zilele lucrătoare"
@@ -793,7 +1014,7 @@ ro:
             title: "Fără predecesori"
             description: "This work package does not have any predecessors."
           successors:
-            title: "No successors"
+            title: "Niciun succesor"
             description: "This work package does not have any successors."
           children:
             title: "Fără copii"
@@ -919,21 +1140,15 @@ ro:
   account:
     delete: "Ştergere cont"
     delete_confirmation: "Sunteţi sigur că doriţi să ştergeţi contul?"
-    deletion_pending: "Contul a fost blocat și a fost programat pentru ștergere. Reține că acest proces are loc în fundal. Poate dura câteva momente până când utilizatorul este complet șters."
+    deletion_pending: "Account has been scheduled for deletion. Note that this process takes place in the background. It might take a few moments until the user is fully deleted."
     deletion_info:
       data_consequences:
-        other: 'Vor fi șterse cât mai multe din datele create de utilizator (e.g. email, preferințe, pachete de lucru, contribuții wiki). De reținut, totuși, că date precum pachete de lucru și contribuții wiki nu pot fi șterse fără a afecta activitatea altor utilizatori. Prin urmare, astfel de date sunt realocate la un cont numit "Utilizator șters". Deoarece datele fiecărui cont șters sunt realocate acestui cont, nu va mai fi posibil să se facă distincția între datele create de utilizator și datele altui cont șters.'
-        self: 'Vor fi șterse cât mai multe din datele create de tine (e.g. email, preferințe, pachete de lucru, contribuții wiki). De reținut, totuși, că date precum pachete de lucru și contribuții wiki nu pot fi șterse fără a afecta activitatea altor utilizatori. Prin urmare, astfel de date sunt realocate la un cont numit "Utilizator șters". Deoarece datele fiecărui cont șters sunt realocate acestui cont, nu va mai fi posibil să se facă distincția între datele create de tine și datele altui cont șters.'
-      heading: "Ştergere cont %{name}"
-      info:
-        other: "Ştergerea contului de utilizator este o acţiune ireversibilă."
-        self: "Stergerea contului tău de utilizator este o acţiune ireversibilă."
+        other: "All user-specific data will be deleted. The user's activity in shared views such as work packages and meetings will not be deleted but instead be associated with a generic 'Deleted user' that cannot be linked to the original account."
+        self: "All user-specific data will be deleted. Your activity in shared views such as work packages and meetings will not be deleted but instead be associated with a generic 'Deleted user' that cannot be linked to your original account."
+      heading: "Delete %{name}'s account?"
       login_consequences:
-        other: "Contul va fi şters din sistem. Prin urmare, utilizatorul nu va mai putea accesa aplicația cu credențialele curente. El poate să devină din nou utilizator al aplicației prin mijloacele permise de sistem."
-        self: "Contul dumneavoatră va fi şters din sistem. Prin urmare, nu veți mai putea accesa aplicația cu credențialele curente. Puteți deveni din nou utilizator al aplicației prin mijloacele permise de sistem."
-      login_verification:
-        other: "Introdu numele de utilizator %{name} pentru a verifica ștergerea. Odată trimisă, ți se va cere să confirmi parola."
-        self: "Introdu numele de utilizator %{name} pentru a verifica ștergerea. Odată trimisă, ți se va cere să confirmi parola."
+        other: "This account will immediately be removed from the system and the user will no longer be able to log in with their credentials."
+        self: "Your account will immediately be removed from the system and you will no longer be able to log in using your credentials."
     error_inactive_activation_by_mail: >
       Contul nu a fost încă activat. Pentru a activa contul dumneavoastră, dați click pe link-ul care v-a fost trimis prin e-mail.
     error_inactive_manual_activation: >
@@ -950,7 +1165,7 @@ ro:
   activemodel:
     attributes:
       projects/copy_options:
-        dependencies: "Dependencies"
+        dependencies: "Dependenţe"
   activerecord:
     attributes:
       announcements:
@@ -958,7 +1173,7 @@ ro:
       attachment:
         attachment_content: "Conținutul anexei"
         attachment_file_name: "Numele fișierului atașat"
-        content_type: "Content-type"
+        content_type: "Tip conținut"
         downloads: "Descărcări"
         file: "Fișier"
         filename: "Fișier"
@@ -966,8 +1181,14 @@ ro:
       attribute_help_text:
         attribute_name: "Atribut"
         help_text: "Text de ajutor"
+        caption: "Caption"
       auth_provider:
-        scim_clients: "SCIM clients"
+        scim_clients: "Clienți SCIM"
+      calculated_value_error:
+        error_code: "Error code"
+        customized: "Customized"
+        customized_id: "Customized ID"
+        customized_type: "Customized type"
       capability:
         context: "Context"
       changeset:
@@ -981,7 +1202,7 @@ ro:
         default_value: "Valoare implicită"
         editable: "Editabil"
         field_format: "Format"
-        formula: "Formula"
+        formula: "Formulă"
         is_filter: "Folosit ca filtru"
         is_for_all: "Pentru toate proiectele"
         is_required: "Obligatoriu"
@@ -1018,6 +1239,8 @@ ro:
         active_user_count_restriction: "Utilizatori activi"
       enterprise_trial:
         company: "Companie"
+      favorite:
+        favorited: "Element"
       grids/grid:
         page: "Pagină"
         row_count: "Număr de rânduri"
@@ -1039,6 +1262,10 @@ ro:
         onthefly: "Crearea automată a utilizatorilor"
         port: "Port"
         tls_certificate_string: "Certificat SSL pentru serverul LDAP"
+      mcp_configuration:
+        enabled: Enabled
+        title: Title
+        description: Description
       member:
         roles: "Roluri"
       notification:
@@ -1050,18 +1277,20 @@ ro:
         active_value:
           true: "dezarhivat"
           false: "arhivat"
+        attribute_groups: "Attribute Groups"
         description: "Descriere"
         enabled_modules: "Module activate"
         identifier: "Identificator"
         latest_activity_at: "Ultima activitate la"
         parent: "Subproiect în"
+        project_creation_wizard_enabled: "Project initiation request"
         public_value:
           title: "Vizibilitate"
           true: "public"
           false: "privat"
         queries: "Interogări"
-        status_code: "Stare proiect"
-        status_explanation: "Descriere stadiu proiect"
+        status_code: "Status"
+        status_explanation: "Descrierea stării"
         status_codes:
           not_started: "Neînceput"
           on_track: "În lucru"
@@ -1069,6 +1298,13 @@ ro:
           off_track: "Întârziat"
           finished: "Finalizat"
           discontinued: "Anulat"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
+        template: "Template"
         templated: "Proiect șablon"
         templated_value:
           true: "marcat ca șablon"
@@ -1078,8 +1314,9 @@ ro:
         work_packages: "Pachete de lucru"
         workspace_type: "Workspace type"
       project_custom_field:
-        is_required: "Obligatoriu în toate proiectele"
         custom_field_section: Secțiune
+      subproject_template_assignment:
+        workspace_type: "Workspace type"
       project/phase:
         date_range: "Interval calendaristic"
         definition: "Definiţie"
@@ -1095,7 +1332,7 @@ ro:
         finish_gate: "Final poartă fază"
         finish_gate_name: "Nume final poartă fază"
       query:
-        sums: "Sums"
+        sums: "Sume"
         columns: "Coloane"
         column_names: "Coloane"
         relations_to_type_column: "Relații cu %{type}"
@@ -1112,9 +1349,9 @@ ro:
         highlighted_attributes: "Atribute evidențiate"
         highlighting_mode: "Mod evidențiere"
         display_representation: "Mod afişare"
-        show_hierarchies: "Display mode"
+        show_hierarchies: "Mod afişare"
         starred: "Favorit"
-        hidden: "Hidden"
+        hidden: "Ascuns"
         manual_sorting: "Manual sort order"
         ordered_work_packages: "Work packages order"
         include_subprojects: "Include subproiecte"
@@ -1123,7 +1360,7 @@ ro:
         lag: "Întârziere"
         from: "Pachet de lucru asociat"
         to: "Pachet de lucru asociat"
-        relation_type: "Relation type"
+        relation_type: "Tip relație"
       reminder:
         remindable: "Reminded object"
         remind_at: "Remind at"
@@ -1143,6 +1380,8 @@ ro:
         is_readonly: "Pachet de lucru numai pentru citire"
         excluded_from_totals: "Exclude din calculul totalurilor în ierarhie"
         default_done_ratio: "% Finalizat"
+      token/named:
+        token_name: "Token name"
       token/ical:
         calendar: "Calendar"
         ical_token_query_assignment: "Query assignment"
@@ -1151,10 +1390,10 @@ ro:
         hours: "Ore"
         spent_on: "Dată"
         type: "Tip"
-        ongoing: "Ongoing"
+        ongoing: "În desfășurare"
       type:
         description: "Text implicit pentru descriere"
-        attribute_groups: "Form configuration"
+        attribute_groups: "Configurare formular"
         is_in_roadmap: "Afișat în mod implicit în foaia de parcurs"
         is_default: "Activat în mod implicit pentru proiectele noi"
         is_milestone: "Este reper de etapă"
@@ -1187,6 +1426,7 @@ ro:
         header_alerts: "Alerts"
         button_update_look_and_feel: "Actualizează aspectul și simțul"
         button_update_alerts: "Actualizează alerte"
+        button_update_user_information: "Update profile"
         comments_sorting: "Afișează activitatea pachetelor de lucru sortate după"
         disable_keyboard_shortcuts: "Dezactivează comenzile rapide pentru tastatură"
         disable_keyboard_shortcuts_caption_html: |-
@@ -1196,11 +1436,21 @@ ro:
         auto_hide_popups: "Automatically hide success banners"
         auto_hide_popups_caption: "Când este activată, bannerele de succes verzi vor dispărea automat după 5 secunde."
         warn_on_leaving_unsaved: "Avertizează când părăsesc un pachet de lucru cu modificări nesalvate"
-        theme: "Mod culoare"
+        increase_theme_contrast: "Increase theme contrast"
+        increase_contrast: "Increase contrast"
+        increase_contrast_caption: "Enables high-contrast mode for the chosen colour mode."
+        force_light_theme_contrast: "Force high-contrast when in Light mode"
+        force_dark_theme_contrast: "Force high-contrast when in Dark mode"
+        force_light_theme_contrast_caption: "Uses the high-contrast version of Light mode when automatic color mode is selected."
+        force_dark_theme_contrast_caption: "Uses the high-contrast version of Dark mode when automatic color mode is selected."
+        theme: "Color mode"
         time_zone: "Fus orar"
-        mode_guideline: "Unele moduri vor suprascrie culori personalizate pentru accesibilitate si lizibilitate. Te rog selectează modul Lumină pentru suport complet pentru Teme."
+        mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
         daily_reminders: "Daily reminders"
         workdays: "Zile lucrătoare"
+      users/invitation/form_model:
+        principal_type: "Invitation type"
+        id_or_email: "Numele sau adresa e-mail"
       version:
         effective_date: "Dată finalizare"
         sharing: "Distribuire"
@@ -1228,7 +1478,7 @@ ro:
           false: "doar zile lucrătoare"
           true: "include zile nelucrătoare"
         journal_internal: Internal Journal
-        notify: "Notify" #used in custom actions
+        notify: "Notifică" #used in custom actions
         parent: "Părinte"
         parent_issue: "Părinte"
         parent_work_package: "Părinte"
@@ -1263,17 +1513,18 @@ ro:
         confirmation: "nu se potrivește cu %{attribute}."
         could_not_be_copied: "%{dependency} nu a putut fi copiat (integral)."
         does_not_exist: "nu există."
-        error_enterprise_only: "%{action} este disponibil doar în ediția OpenProject Enterprise"
+        error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition."
         error_unauthorized: "nu pot fi accesate."
         error_readonly: "a fost încercat să fie scris, dar nu este inscriptibil."
         error_conflict: "Informaţia a fost actualizată de cel puţin un alt utilizator între timp."
-        error_not_found: "not found."
+        error_not_found: "nu a fost găsit."
         email: "nu este o adresă de e-mail validă."
         empty: "nu poate fi gol."
         enterprise_plan_required: "requires at least the %{plan_name}."
         even: "trebuie să fie par."
         exclusion: "este rezervat."
         feature_disabled: is not available.
+        feature_disabled_for_project: is disabled for this project.
         file_too_large: "este prea mare (dimensiunea maximă este %{count} Octeți)."
         filter_does_not_exist: "filtrul nu există."
         format: "nu se potrivește cu formatul așteptat '%{expected}'."
@@ -1285,20 +1536,19 @@ ro:
         inclusion: "nu este setată la una din valorile permise."
         inclusion_nested: "nu este setată la una dintre valorile permise la calea '%{path}'."
         invalid: "este invalid."
-        invalid_characters: "contains invalid characters."
-        not_allowed_custom_fields_referenced: "contains custom fields that are not allowed: %{custom_fields}."
         invalid_url: "nu este o adresa URL validă."
         invalid_url_scheme: "nu este un protocol permis (allowed: %{allowed_schemes})."
         less_than_or_equal_to: "trebuie să fie mai mic sau egal cu %{count}."
         not_available: "nu este disponibil din cauza unei configurații a sistemului."
         not_deletable: "%s nu poate fi șters."
         not_current_user: "nu este utilizatorul curent."
-        not_found: "not found."
+        not_found: "nu a fost găsit."
         not_a_date: "Acest câmp trebuie să conțină o dată validă."
         not_a_datetime: "nu este o dată-ora validă."
         not_a_number: "nu este un număr."
         not_allowed: "nu este valabilă din cauza lipsei de permisiuni."
-        not_json: "is not a valid JSON object."
+        not_json: "is not parseable as JSON."
+        not_json_object: "is not a JSON object."
         not_an_integer: "nu este un întreg."
         not_an_iso_date: "nu este o dată validă. Formatul necesar: AAAA-MM-ZZ."
         not_same_project: "nu aparține aceluiași proiect."
@@ -1306,7 +1556,7 @@ ro:
         odd: "trebuie să fie impar."
         regex_match_failed: "does not match the regular expression %{expression}."
         regex_invalid: "nu a putut fi validată cu expresia regulată asociată."
-        regex_list_invalid: "could not be parsed as regular expression in lines %{invalid_lines}."
+        regex_list_invalid: "Lines %{invalid_lines} could not be parsed as regular expression."
         hexcode_invalid: "is not a valid 6-digit hexadecimal color code."
         smaller_than_or_equal_to_max_length: "trebuie să fie mai mic sau egal cu lungimea maximă."
         taken: "este deja utilizat"
@@ -1341,6 +1591,20 @@ ro:
               minimum: "trebuie să includeți cel puțin un filtru pentru principal, context sau id cu operatorul \"=\"."
         custom_field:
           at_least_one_custom_option: "Cel puțin o opțiune trebuie să fie disponibilă."
+          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet, please try again in a few minutes."
+          referenced_in_other_fields_html:
+            one: "%{name} is used in project attribute calculation %{links}."
+            few: "%{name} is used in project attribute calculations: %{links}."
+            other: "%{name} is used in project attribute calculations: %{links}."
+          attributes:
+            formula:
+              blank: "Formula can't be blank."
+              invalid: "Formula is invalid."
+              invalid_characters: "Only numeric values, mathematical operators and project attributes of type integer, float, calculated value and weighted list are allowed."
+              not_allowed_custom_fields_referenced: "The attribute %{custom_fields} cannot be used because it leads to a circular reference; one attribute depends on the other."
+              format: "%{message}"
+            required:
+              cannot_be_true: "cannot be set to true."
         custom_fields_project:
           attributes:
             project_ids:
@@ -1372,6 +1636,8 @@ ro:
           only_one_trial: "Only one trial token can be active. Please delete the previous trial token before adding another."
           unreadable: "nu poate fi citit. Sunteți sigur că este un jeton de suport?"
           already_added: "This token has already been added."
+        favorite:
+          already_favorited: "has already been favorited."
         grids/grid:
           overlaps: "suprapunere."
           outside: "se află în afara rețelei."
@@ -1408,9 +1674,11 @@ ro:
         project:
           archived_ancestor: "Proiectul are un strămoș arhivat."
           foreign_wps_reference_version: "Pachetele de lucru din proiectele care nu sunt descendente fac trimitere la versiuni ale proiectului sau la descendenți ai acestuia."
+          cannot_be_assigned_to_artifact_work_package: "The chosen user is not allowed to be assigned to work packages."
           attributes:
             base:
               archive_permission_missing_on_subprojects: "Nu ai permisiunile necesare pentru a arhiva toate sub-proiectele. Te rog să contactezi un administrator."
+              project_initiation_request_disabled: "Project initiation request is disabled. It must be enabled to create the artifact work package."
             types:
               in_use_by_work_packages: "încă în uz în pachetele de lucru: %{types}"
             enabled_modules:
@@ -1446,8 +1714,8 @@ ro:
               forbidden: "Timestamps contain forbidden values: %{values}"
               format: "%{message}"
             selects:
-              name_not_included: "The 'Name' column needs to be included"
-              nonexistent: "The column '%{column}' does not exist."
+              name_not_included: "Coloana \"Nume\" trebuie să fie inclusă"
+              nonexistent: "Coloana '%{column}' nu există."
               format: "%{message}"
           group_by_hierarchies_exclusive: "se exclude reciproc cu grupul de \"%{group_by}\". Nu le puteți activa pe amândouă."
           can_only_be_modified_by_owner: "The query can only be modified by its owner."
@@ -1468,10 +1736,19 @@ ro:
           typed_dag:
             circular_dependency: "Relația creează un cerc închis."
           attributes:
+            base:
+              error_not_deletable: "This relation cannot be deleted because you do not have edit permissions for the selected work package."
+              error_not_editable: "This relation cannot be edited because you do not have edit permissions for the selected work package."
             to_id:
+              format: "The selected work package %{message}"
+              error_not_found: "could not be found."
               error_readonly: "nu poate fi schimbat pentru relaţiile existente."
+              error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
             from_id:
+              format: "The selected work package %{message}"
+              error_not_found: "could not be found."
               error_readonly: "nu poate fi schimbat pentru relaţiile existente."
+              error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
         repository:
           not_available: "Nu este disponibil furnizorul de SCM"
           not_whitelisted: "nu este permisă de configurație."
@@ -1616,15 +1893,17 @@ ro:
           attributes:
             roles:
               ungrantable: "are un rol neatribuit."
-              more_than_one: "has more than one role."
+              more_than_one: "are mai mult de un rol."
             principal:
               unassignable: "nu poate fi atribuit unui proiect."
         version:
           undeletable_archived_projects: "Versiunea nu poate fi ștearsă, deoarece are atașate pachete de lucru."
           undeletable_work_packages_attached: "Versiunea nu poate fi ștearsă, deoarece are atașate pachete de lucru."
-        token/api:
+        token/named:
           attributes:
             token_name:
+              blank: "Please provide a token name"
+              in_use: "This token name is already in use, please select a different one"
               format: "%{message}"
       template:
         body: "Verificaţi următoarele câmpuri:"
@@ -1634,13 +1913,16 @@ ro:
           other: "%{count} de erori au împiedicat salvarea acestui %{model}"
     models:
       attachment: "Fișier"
-      attribute_help_text: "Text de ajutor pentru atribute"
+      attribute_help_text:
+        one: "Attribute help text"
+        few: "Attribute help texts"
+        other: "Attribute help texts"
       auth_provider:
         one: "Authentication provider"
         few: "Authentication providers"
         other: "Authentication providers"
       category: "Categorie"
-      color: "Color"
+      color: "Culoare"
       comment: "Comentariu"
       custom_action: "Adaugă acțiune personalizată"
       custom_field: "Câmp personalizat"
@@ -1654,8 +1936,9 @@ ro:
       group: "Grup"
       issue_priority:
         one: "Prioritate"
-        few: "Priorities"
-        other: "Priorities"
+        few: "Priorități"
+        other: "Priorități"
+      meeting_participant: "Meeting participant"
       member: "Membru"
       news: "Noutăţi"
       notification:
@@ -1672,21 +1955,28 @@ ro:
         few: "Listă proiecte"
         other: "Listă de proiecte"
       query: "Interogare personalizată"
-      reminder: "Reminder"
+      reminder: "Memento"
       role:
         one: "Rol"
         few: "Roluri"
         other: "Roluri"
       scim_client:
-        one: "SCIM client"
-        few: "SCIM clients"
-        other: "SCIM clients"
+        one: "Client SCIM"
+        few: "Clienți SCIM"
+        other: "Clienți SCIM"
       status: "Stare pachet de lucru"
       token/api:
         one: Token acces
         few: Token-uri de acces
         other: Token-uri de acces
-      type: "Tip"
+      token/rss:
+        one: "RSS token"
+        few: "RSS tokens"
+        other: "RSS tokens"
+      type:
+        one: "Type"
+        few: "Types"
+        other: "Types"
       user: "Utilizator"
       version: "Versiune"
       workflow: "Flux de lucru"
@@ -1703,6 +1993,11 @@ ro:
       few: "Additionally, there were problems with the following fields:"
       other: "Additionally, there were problems with the following fields:"
     field_erroneous_label: "Acest câmp este invalid: %{full_errors}\nTrebuie introdusă o valoare validă."
+    messages:
+      must_be_template: "must be template"
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "creat de %{user} în %{datetime}"
@@ -1730,8 +2025,8 @@ ro:
           one: "<i>%{count} hour</i>"
           few: "<i>%{count} hours</i>"
           other: "<i>%{count} hours</i>"
-        updated: "changed from %{old_value} to %{value}"
-        logged_for: "Logged for"
+        updated: "schimbat de la %{old_value} la %{value}"
+        logged_for: "Logat pentru"
     filter:
       changeset: "Seturi de modificări"
       message: "Forumuri"
@@ -1758,6 +2053,7 @@ ro:
     attachments: "Atașamente"
     actor: "Actor"
     action: "Acțiune"
+    api_key: "Cheie API"
     author: "Autor"
     avatar: "Avatar"
     base: "Eroare generală:"
@@ -1782,7 +2078,7 @@ ro:
     derived_start_date: "Dată început derivată"
     direction: "Direction"
     display_sums: "Afişare totaluri"
-    domain: "Domain"
+    domain: "Domeniu"
     due_date: "Dată finalizare"
     estimated_hours: "Muncă"
     estimated_time: "Muncă"
@@ -1832,11 +2128,12 @@ ro:
     subject: "Subiect"
     slug: "Slug"
     summary: "Rezumat"
+    template: "Template"
     time_zone: "Fus orar"
     text: "Text"
     title: "Titlu"
     type: "Tip"
-    typeahead: "Autocomplete"
+    typeahead: "Autocompletare"
     uid: "Unique identifier"
     updated_at: "Actualizat pe"
     updated_on: "Actualizat în"
@@ -1883,11 +2180,12 @@ ro:
   button_add_comment: "Adăugă comentariu"
   button_add_item_above: "Add item above"
   button_add_item_below: "Add item below"
-  button_add_sub_item: "Add sub-item"
+  button_add_sub_item: "Adaugă subelement"
   button_add_member: Adaugă participant
   button_add_watcher: "Adaugă observator"
   button_annotate: "Adnotare"
   button_apply: "Aplică"
+  button_apply_changes: "Aplică modificările"
   button_archive: "Arhivează"
   button_back: "Înapoi"
   button_cancel: "Anulează"
@@ -1899,8 +2197,10 @@ ro:
   button_click_to_reveal: "Clic pentru a dezvălui"
   button_close: "Închide"
   button_collapse_all: "Restrângere totală"
+  button_confirm: "Confirm"
   button_configure: "Configurare"
   button_continue: "Continuă"
+  button_complete: "Finalizează"
   button_copy: "Copiază"
   button_copy_to_clipboard: "Copiază în clipboard"
   button_copy_link_to_clipboard: "Copiază link-ul în clipboard"
@@ -1911,9 +2211,11 @@ ro:
   button_delete_permanently: "Delete permanently"
   button_delete_watcher: "Ștergere observator %{name}"
   button_download: "Descărcare"
+  button_disable: "Disable"
   button_duplicate: "Duplicare"
   button_duplicate_and_follow: "Duplicate and follow"
   button_edit: "Editare"
+  button_enable: "Enable"
   button_edit_associated_wikipage: "Edit associated wiki page: %{page_title}"
   button_expand_all: "Extindere totală"
   button_favorite: "Adaugă la favorite"
@@ -1928,6 +2230,7 @@ ro:
   button_print: "Tipărește"
   button_quote: "Citare"
   button_remove: Eliminare
+  button_remove_permanently: "Remove permanently"
   button_remove_reminder: "Remove reminder"
   button_rename: "Redenumește"
   button_replace: "Înlocuiește"
@@ -1937,8 +2240,8 @@ ro:
   button_rollback: "Revenire la această versiune"
   button_save: "Salvează"
   button_save_as: "Salvează ca"
-  button_apply_changes: "Aplică modificările"
   button_save_back: "Salvează și înapoi"
+  button_select: "Select"
   button_set_reminder: "Setează memento"
   button_show: "Afişare"
   button_sort: "Sortare"
@@ -1951,7 +2254,7 @@ ro:
   button_unwatch: "Nu mai urmări"
   button_update: "Actualizare"
   button_upgrade: "Actualizare"
-  button_buy_now: "Buy now"
+  button_buy_now: "Cumpără acum"
   button_upload: "Încarcă"
   button_view: "Vizualizare"
   button_watch: "Monitorizare"
@@ -2000,9 +2303,25 @@ ro:
     copy_options:
       dependencies_label: "Copy from project"
   create_project:
-    template_label: "Use template"
+    attributes_heading: "Fill in this mandatory information to work on your projects."
+    template_label: "Utilizează șablon"
+    template_heading: "Selectează un șablon de proiect pentru a lucra cu cele mai comune metode de gestionare a proiectului sau creează un proiect de la zero."
     copy_options:
       dependencies_label: "Copy from template"
+    blank_template:
+      label: "Proiect gol"
+      description: Începe de la zero. Adaugă manual atributele proiectului, membrii și modulele.
+    blank_description: Nicio descriere furnizată.
+  create_portfolio:
+    template_heading: "Selectează un șablon de portofoliu pentru a lucra cu cele mai comune metode de gestionare a proiectului sau creează un portofoliu de la zero."
+    blank_template:
+      label: "Blank portfolio"
+      description: Start from scratch. Manually add portfolio attributes, members and modules.
+  create_program:
+    template_heading: "Selectează un șablon de program pentru a lucra cu cele mai comune metode de gestionare a proiectului sau creează un program de la zero."
+    blank_template:
+      label: "Blank program"
+      description: Start from scratch. Manually add program attributes, members and modules.
   create_wiki_page: "Create new wiki page"
   create_wiki_page_button: "Pagină wiki"
   date:
@@ -2144,7 +2463,7 @@ ro:
         few: "ore"
         other: "ore"
       day:
-        one: "day"
+        one: "zi"
         few: "zile"
         other: "zile"
   description_active: "Activ?"
@@ -2182,60 +2501,65 @@ ro:
     features:
       baseline_comparison: Baseline Comparisons
       board_view: Advanced Boards
-      conditional_highlighting: Evidențiere condiționată
+      calculated_values: Calculated values
+      capture_external_links: Capture External Links
       internal_comments: Comentarii interne
       custom_actions: Custom Actions
-      custom_field_hierarchies: Custom fields of type hierarchy
+      custom_field_hierarchies: Hierarchies
       customize_life_cycle: Personalizează ciclul de viață
-      date_alerts: Date Alerts
+      date_alerts: Alerte dată
       define_custom_style: Custom theme and logo
       edit_attribute_groups: Edit Attribute Groups
       gantt_pdf_export: Gantt PDF Export
       ldap_groups: LDAP users and group sync
+      mcp_server: MCP Server
       nextcloud_sso: Single Sign-On for Nextcloud Storage
       one_drive_sharepoint_file_storage: OneDrive/SharePoint File Storage
       placeholder_users: Placeholder Users
+      portfolio_management: Portfolio management
+      project_creation_wizard: Project initiation request
       project_list_sharing: Project List Sharing
       readonly_work_packages: Readonly Work Packages
       scim_api: SCIM server API
       sso_auth_providers: Single Sign-On
       team_planner_view: Team Planner View
       virus_scanning: Antivirus Scanning
+      weighted_item_lists: Weighted item lists
       work_package_query_relation_columns: Work Package Query Relation Columns
       work_package_sharing: Share work packages with external users
       work_package_subject_generation: Work Package Subject Generation
     upsell:
-      buy_now_button: "Buy now"
+      buy_now_button: "Cumpără acum"
       plans_title: "Enterprise plans"
       title: "Enterprise add-on"
       plan_title: "Enterprise %{plan} add-on"
       plan_name: "%{plan} enterprise plan"
       plan_text_html: "Available starting with the %{plan_name}."
-      unlimited: "Unlimited"
+      unlimited: "Nelimitat"
       already_have_token: >
         Already have a token? Add it using the button below to upgrade to the booked Enterprise plan.
       hide_banner: "Hide this banner"
       homescreen_description: >
-        Enterprise plans extend the Community edition of OpenProject you are currently using. They include add-ons, additional features and professional support that enables organisations of all sizes to achieve great things together.
+        Enterprise plans extend the Community edition of OpenProject with additional [Enterprise add-ons](enterprise_url) and professional support, ideal for organizations running OpenProject in a mission-critical environment.
       homescreen_subline: By upgrading, you will also be supporting an open source project.
       baseline_comparison:
         description: Evidențiază modificările făcute la această listă de la orice punct din trecut.
       benefits:
-        description: "What are the benefits of the Enterprise on-premises edition?"
-        high_security: "Security features"
-        high_security_text: "Single sign on (SAML, OpenID Connect, CAS), LDAP groups."
+        description: "Care sunt avantajele ediției Enterprise on-premise?"
+        high_security: "Caracteristici de securitate"
+        high_security_text: "Autentificare unică (SAML, OpenID Connect, CAS), grupuri LDAP."
         installation: "Suport instalare"
-        installation_text: "Experienced software engineers guide you through the complete installation and setup process in your own infrastructure."
-        premium_features: "Enterprise add-ons"
-        premium_features_text: "Agile boards, custom theme and logo, graphs, intelligent workflows with custom actions, full text search for work package attachments and multi-select custom fields."
-        professional_support: "Professional support"
-        professional_support_text: "Get reliable, high-touch support from senior support engineers with expert knowledge about running OpenProject in business-critical environments."
+        installation_text: "Inginerii de software experimentați te ghidează prin procesul complet de instalare și configurare în propria infrastructură."
+        premium_features: "Enterprise add-on-uri"
+        premium_features_text: "Tablouri agile, temă și logo personalizate, grafice, fluxuri de lucru inteligente cu acțiuni personalizate, căutare în text complet pentru atașamentele pachetelor de lucru și câmpuri personalizate cu selectare multiplă."
+        professional_support: "Suport profesional"
+        professional_support_text: "Beneficiază de asistență fiabilă, de înaltă calitate, din partea unor ingineri de asistență seniori cu, cunoștințe de specialitate în ceea ce privește utilizarea OpenProject în medii critice pentru afaceri."
       work_package_subject_generation:
         description: "Create automatically generated subjects using referenced attributes and text."
       customize_life_cycle:
         description: "Creează și organizează diferite faze de proiect decât cele furnizate de planificarea ciclului proiectului PM2."
-      conditional_highlighting:
-        description: "Ai nevoie de anumite pachete de lucru pentru a ieși în evidență? Utilizează evidențierea condiționată în tabelul pachetelor de lucru."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "Need to see relations or child elements in the work package list?"
       edit_attribute_groups:
@@ -2247,13 +2571,17 @@ ro:
       readonly_work_packages:
         description: "Mark work packages as read-only for specific statuses."
       custom_field_hierarchies:
-        description: "Hierarchy custom fields allow organizing hierarchical structures in work packages by making use of multi-level select lists."
+        description: "Hierarchy custom fields allow organizing hierarchical structures in work packages and projects by making use of multi-level select lists."
       date_alerts:
         description: "Cu alertele de date, veți fi notificat cu privire la următoarele date de început sau de sfârșit, astfel încât să nu ratați sau să uitați niciodată un termen limită important."
+      weighted_item_lists:
+        description: "Weighted item lists allow you to create a list with underlying numeric values associated."
       work_package_sharing:
         description: "Share work packages with users who are not members of the project."
       project_list_sharing:
         description: "Share project lists with individual users."
+      calculated_values:
+        description: "Calculated values allow you to create a mathematical formula based attribute using numeric values and other project attributes and custom fields."
       define_custom_style:
         title: "Custom color theme and logo"
         more_info: "Notă: logo-ul utilizat va fi accesibil publicului."
@@ -2261,27 +2589,33 @@ ro:
       custom_actions:
         title: "Acțiuni personalizate"
         description: "Acțiunile personalizate sunt comenzi rapide cu un singur clic către un set de acțiuni predefinite pe care le puteți face disponibile pentru anumite pachete de lucru în funcție de statut, rol, tip sau proiect."
+      mcp_server:
+        description: "Integrate AI agents with your OpenProject instance through MCP."
       nextcloud_sso:
         title: "Single Sign-On for Nextcloud Storage"
         description: "Enable seamless and secure authentication for your Nextcloud storage with Single Sign-On. Simplify access management and enhance user convenience."
       scim_api:
-        title: "SCIM clients"
+        title: "Clienți SCIM"
         description: "Automate user management in OpenProject by seamlessly integrating external identity services like Microsoft Entra or Keycloak through our SCIM Server API. Available starting with the Enterprise corporate plan."
       sso_auth_providers:
         title: "Single Sign-On (SSO)"
         description: "Enable users to log in via external SSO providers using SAML or OpenID Connect for seamless access and integration with existing identity systems."
       virus_scanning:
         description: "Ensure uploaded files in OpenProject are scanned for viruses before being accessible by other users."
+      project_creation_wizard:
+        description: "Generate a step-by-step wizard to help project managers fill out a project initiation request."
       placeholder_users:
         title: Utilizatori Placeholder
         description: >
-          Utilizatorii de tip substituție sunt o modalitate de a atribui pachete de lucru utilizatorilor care nu fac parte din proiectul tău. Acesta poate fi utilă într-o serie de scenarii; de exemplu, dacă trebuie să urmărești sarcinile pentru o resursă care nu este încă numită sau disponibilă, sau dacă nu vrei să acorzi acestei persoane acces la OpenProject dar totuși vrei să urmărești sarcinile care le-au fost atribuite.
+          Utilizatorii de tip placeholder sunt o modalitate de a atribui pachete de lucru utilizatorilor care nu fac parte din proiectul tău. Acesta poate fi utilă într-o serie de scenarii; de exemplu, dacă trebuie să urmărești sarcinile pentru o resursă care nu este încă numită sau disponibilă, sau dacă nu vrei să acorzi acestei persoane acces la OpenProject dar totuși vrei să urmărești sarcinile care le-au fost atribuite.
       internal_comments:
         title: Comentarii interne
         description: "Comentariile interne permit unei echipe interne să comunice între ele în mod privat, acestea sunt vizibile doar pentru anumite roluri de proiect și nu vor fi niciodată vizibile public."
       internal_comments_inline:
         title: "Scrie comentarii interne pe care doar un grup restrâns le poate vedea"
         description: " "
+      portfolio_management:
+        description: Align your projects to your strategic goals by organizing them into portfolios and programs.
     teaser:
       title:
         one: "One day left of %{trial_plan} trial token"
@@ -2298,7 +2632,7 @@ ro:
       request_again: "Request again"
       resend_action: "Resend confirmation email"
       welcome_title: "Quick feature overview"
-      welcome_description: "Get a quick overview of project management and team collaboration with OpenProject Enterprise edition."
+      welcome_description: "Obține o imagine de ansamblu rapidă a gestionării proiectelor și a colaborării în echipă cu OpenProject Enterprise edition."
       confirmation_info: >
         We sent you an email on %{date} to %{email} with all the information to start the free trial of OpenProject Enterprise. Please check your inbox and click the confirmation link provided to start your 14-day free trial.
       confirmation_subline: >
@@ -2310,16 +2644,19 @@ ro:
         I agree with the <a target="_blank" href="https://www.openproject.org/terms-of-service/">terms of service</a> and the <a target="_blank" href="https://www.openproject.org/data-privacy-and-security/">privacy policy</a>.
   email_calendar_updates:
     state:
-      disabled: "Disabled."
-      enabled: "Enabled."
+      disabled: "Dezactivat."
+      enabled: "Activat."
     button:
-      disabled: "Enable"
-      enabled: "Disable"
+      disabled: "Activează"
+      enabled: "Dezactivează"
   enumeration_activities: "Activități de urmărire timp activate"
   enumeration_work_package_priorities: "Priorități pentru pachetele de lucru"
-  enumeration_reported_project_statuses: "Stările proiectului raportat"
+  enumeration_reported_project_statuses: "Stare raportată"
   enumeration_caption_order_changed: "Order successfully changed."
   enumeration_could_not_be_moved: "Enumeration could not be moved."
+  enterprise_trials:
+    dialog_component:
+      title: Enterprise Trial
   error_auth_source_sso_failed: "Autentificarea unică (SSO) pentru utilizatorul '%{value}' a eșuat"
   error_can_not_archive_project: "Acest proiect nu poate fi arhivat: %{errors}"
   error_can_not_delete_entry: "Nu se poate șterge intrarea"
@@ -2348,6 +2685,7 @@ ro:
   error_invalid_selected_value: "Valoare selectată invalidă."
   error_journal_attribute_not_present: "Jurnalul nu conține atributul %{attribute}."
   error_pdf_export_too_many_columns: "Prea multe coloane selectate pentru exportul PDF. Vă rugăm să reduceți numărul de coloane."
+  error_pdf_date_range_too_long: "The selected work package date range exceeds the allowable PDF export limit. Please condense the range to a maximum of %{years} years."
   error_pdf_failed_to_export: "Exportul pdf nu poate fi salvat: %{error}"
   error_token_authenticity: "Nu se poate verifica tokenul Cross-Site Request Forgery. Ați încercat să trimiteți datele pe mai multe browsere sau tab-uri? Vă rugăm să închideți toate filele și să încercați din nou."
   error_reminder_not_found: "The reminder was not found or was already notified about."
@@ -2400,7 +2738,7 @@ ro:
       save_export_settings:
         label: "Save settings"
       format:
-        label: "File format"
+        label: "Format fișier"
         options:
           csv:
             label: "CSV"
@@ -2411,7 +2749,7 @@ ro:
       columns:
         input_label_report: "Adaugă coloane la tabelul de atribute"
         input_caption_report: "În mod implicit, sunt selectate toate atributele adăugate ca și coloane în lista pachetelor de lucru. Câmpurile lungi de text nu sunt disponibile in tabelul atributului, dar pot fi afișate mai jos."
-        input_caption_table: "By default all attributes added as columns in the work package list are selected. Long text fields are not available in table based exports."
+        input_caption_table: "În mod implicit, sunt selectate toate atributele adăugate ca și coloane în lista pachetelor de lucru. Câmpurile lungi de text nu sunt disponibile in tabelul atributului, dar pot fi afișate mai jos."
         input_caption_required: "It is not possible to export the view without any column. Please add at least one column."
       pdf:
         export_type:
@@ -2419,13 +2757,13 @@ ro:
           options:
             table:
               label: "Tabel"
-              caption: "Export the work packages list in a table with the desired columns."
+              caption: "Exportă lista pachetelor de lucru într-un tabel cu coloanele dorite."
             report:
               label: "Raportare"
-              caption: "Export the work package on a detailed report of all work packages in the list."
+              caption: "Exportă pachetul de lucru pe un raport detaliat al tuturor pachetelor de lucru din listă."
             gantt:
               label: "Grafic Gantt"
-              caption: "Export the work packages list in a Gantt diagram view."
+              caption: "Exportă lista pachetelor de lucru într-o vizualizare Gantt diagramă."
         include_images:
           label: "Include images"
           caption: "Exclude images to reduce the size of the PDF export."
@@ -2450,7 +2788,7 @@ ro:
         long_text_fields:
           input_caption: "By default all long text fields are selected."
           input_label: "Add long text fields"
-          input_placeholder: "Search for long text fields"
+          input_placeholder: "Caută după câmpuri lungi cu text"
           drag_area_label: "Manage long text fields"
       xls:
         include_relations:
@@ -2461,8 +2799,12 @@ ro:
           caption: "This option will add a description column in raw format."
     your_work_packages_export: "Work packages are being exported"
     your_projects_export: "Projects are being exported"
-    succeeded: "Export completed"
+    succeeded: "Export finalizat"
     failed: "An error has occurred while trying to export the work packages: %{message}"
+    demo:
+      heading: "Demo PDF"
+      footer: "Generated by OpenProject"
+      button_text: Generate Demo PDF
     errors:
       embedded_table_with_too_many_columns: "This embedded work package table could not fit on the page, please reduce the number of columns."
     format:
@@ -2470,8 +2812,8 @@ ro:
       csv: "CSV"
       pdf: "PDF"
       pdf_overview_table: "PDF Table"
-      pdf_report_with_images: "PDF Report with images"
-      pdf_report: "PDF Report"
+      pdf_report_with_images: "Raport PDF cu imagini"
+      pdf_report: "Raport PDF"
       pdf_gantt: "PDF Gantt"
     image:
       omitted: "Imaginea nu a fost exportată."
@@ -2480,7 +2822,7 @@ ro:
       attribute_not_found: "attribute not found: %{attribute}"
       model_not_found: "invalid attribute model: %{model}"
       resource_not_found: "resource not found: %{resource}"
-      rich_text_unsupported: "Rich text embedding currently not supported in export"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: h
       days: d
@@ -2499,10 +2841,10 @@ ro:
         label: "Șablon"
         none_enabled: "No template has been enabled for this work package type"
       footer_center:
-        label: Footer text
-        caption: This text will appear on every page at the center of the footer.
+        label: Text subsol
+        caption: Acest text va apărea pe fiecare pagină în centrul subsolului.
       footer_right:
-        label: Footer text
+        label: Text subsol
         caption: This text will appear on every page at the right of the footer.
       hyphenation:
         label: Hyphenation
@@ -2525,11 +2867,14 @@ ro:
       tesseract: "Tesseract disponibil (opțional)"
   filterable_tree_view:
     filter_mode:
-      all: "All"
+      all: "Toate"
       label: "Filter mode"
       selected: "Selected"
     include_sub_items: "Include sub-items"
     no_results_text: "No results"
+  toggle_switch:
+    label_on: "On"
+    label_off: "Off"
   general_csv_decimal_separator: ","
   general_csv_encoding: "UTF-8"
   general_csv_separator: ";"
@@ -2552,6 +2897,22 @@ ro:
       community: "Comunitatea OpenProject"
       upsell:
         title: "Actualizează la ediția Enterprise"
+      new_features:
+        header: "Citește despre noile caracteristici și actualizări de produse."
+        learn_about: "Learn more about all new features"
+        missing: "There are no highlighted features yet."
+        #We need to include the version to invalidate outdated translations in other locales
+        "17_1":
+          new_features_title: >
+            The release contains various new features and improvements, such as:
+          new_features_list:
+            line_0: Automated project initiation (Enterprise add-on).
+            line_1: "Meetings: add new or existing work packages as outcomes."
+            line_2: "Meetings: show participant responses in iCal subscriptions."
+            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
+            line_4: "Release to Community: Attribute highlighting."
+            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
+            line_6: Improved performance and user experience, including the Activity tab and Documents module.
     links:
       upgrade_enterprise_edition: "Actualizează la ediția Enterprise"
       postgres_migration: "Migrarea instalației dvs. către PostgreSQL"
@@ -2562,7 +2923,8 @@ ro:
       shortcuts: "Scurtături"
       blog: "Blog-ul OpenProject"
       forums: "Forum comunitate"
-      newsletter: "Alerte de securitate / Buletin informativ"
+      security_alerts: "Security alerts"
+      newsletter: "Newsletter"
   image_conversion:
     imagemagick: "Imagemagick"
   journals:
@@ -2618,14 +2980,17 @@ ro:
   instructions_after_error: "Poţi încerca să te autentifici din nou dând click pe %{signin}. Dacă eroarea persistă, cere ajutorul administratorului."
   menus:
     admin:
-      mail_notification: "Notificări prin e-mail"
-      mails_and_notifications: "E-mailuri și notificări"
+      ai: "Artificial Intelligence (AI)"
       aggregation: "Agregare"
       api_and_webhooks: "API și webhook-uri"
+      mail_notification: "Notificări prin e-mail"
+      mails_and_notifications: "E-mailuri și notificări"
+      mcp_configurations: "Model Context Protocol (MCP)"
     quick_add:
       label: "Add…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Nu există tichete de acces de afișat"
         description: "Toate au fost dezactivate. Pot fi reactivate în meniul de administrare."
@@ -2635,34 +3000,56 @@ ro:
         expiration: "Expirare"
       indefinite_expiration: "Niciodată"
       simple_revoke_confirmation: "Are you sure you want to revoke this token?"
+      tabs:
+        client:
+          title: "Client tokens"
+        provider:
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "API tokens allow third-party applications to communicate with this OpenProject instance via REST APIs."
+        static_token_name: "API token"
         disabled_text: "API tokens are not enabled by the administrator. Please contact your administrator to use this feature."
         add_button: "API Token"
-      api:
-        static_token_name: "API token"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar"
-        text_hint: 'iCalendar tokens allow users to <a href="%{path}" target="_blank">subscribe to OpenProject calendars</a> and view up-to-date work package information from external clients.'
+        table_title: "iCalendar tokens"
+        text_hint_link: "iCalendar tokens allow users to [subscribe to OpenProject calendars](docs_url) and view up-to-date work package information from external clients."
         disabled_text: "iCalendar subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
-        empty_text_hint: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "OAuth tokens allow third-party applications to connect with this OpenProject instance."
-        empty_text_hint: "There is no third-party application access configured and active for you. Please contact your administrator to activate this feature."
-      rss:
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
         title: "RSS"
+        table_title: "RSS tokens"
         text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
         static_token_name: "RSS token"
         disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "File storages"
-        text_hint: "File Storage tokens connect this OpenProject instance with an external File Storage."
-        empty_text_hint: "There is no storage access linked to your account."
-        revoke_token: "Do you really want to remove this token? You will need to login again on %{storage}"
-        removed: "File Storage token successfully removed"
-        failed: "An error occurred and the token couldn't be removed. Please try again later."
         unknown_storage: "Unknown storage"
   notifications:
     reasons:
@@ -2727,6 +3114,7 @@ ro:
   label_api_access_key: "Cheie de acces API"
   label_api_access_key_created_on: "Cheia de acces creată acum %{value}"
   label_api_access_key_type: "API"
+  label_auto_option: "(auto)"
   label_ical_access_key_type: "iCalendar"
   label_ical_access_key_description: 'iCalendar token "%{token_name}" for "%{calendar_name}" in "%{project_name}"'
   label_ical_access_key_not_present: "iCalendar token(s) not present."
@@ -2772,6 +3160,7 @@ ro:
   label_board_plural: "Panouri"
   label_branch: "Ramură"
   label_browse: "Răsfoire"
+  label_builtin: "Built-in"
   label_bulk_edit_selected_work_packages: "Editare în masă a pachetelor de lucru selectate"
   label_bundled: "(la pachet)"
   label_calendar: "Calendar"
@@ -2785,6 +3174,7 @@ ro:
   label_required_disk_storage: "Spațiu pe disc necesar"
   label_send_invitation: Trimite invitație
   label_calculated_value: "Calculated value"
+  label_change_parent: "Modifică părinte"
   label_change_plural: "Modificări"
   label_change_properties: "Modificare proprietăţi"
   label_change_status: "Modificare stare"
@@ -2834,7 +3224,7 @@ ro:
   label_dashboard: "Panou de control"
   label_database_version: "Versiunea PostgreSQL"
   label_date: "Data"
-  label_dates: "Dates"
+  label_dates: "Date"
   label_date_and_time: "Data"
   label_date_format: "Format dată"
   label_date_from: "Din"
@@ -2873,6 +3263,7 @@ ro:
   label_duplicate: "duplicat"
   label_duplicates: "dublează"
   label_edit: "Editare"
+  label_edit_attribute: "Edit attribute"
   label_edit_x: "Editare: %{x}"
   label_enable_multi_select: "Comutare selecție multiplă"
   label_enabled_project_custom_fields: "Câmpuri personalizate activate"
@@ -2920,7 +3311,7 @@ ro:
   label_follows: "urmează după"
   label_force_user_language_to_default: "Setare limbă pentru utilizatorii care au o limbă implicită nepermisă"
   label_form_configuration: "Configurare formular"
-  label_formula: "Formula"
+  label_formula: "Formulă"
   label_gantt_chart: "Grafic Gantt"
   label_gantt_chart_plural: "Diagrame Gantt"
   label_general: "General"
@@ -2960,21 +3351,23 @@ ro:
   label_integer: "Număr întreg"
   label_interface: "Interfață"
   label_internal: "Intern"
-  label_introduction_video: "Video de introducere"
+  label_introduction_video: "Getting started video"
   label_invite_user: "Invită utilizator"
-  label_item: "Item"
+  label_item: "Element"
   label_item_plural: "Items"
-  label_scored_list: "Scored list"
+  label_weighted_item_list: "Weighted item list"
   label_share: "Distribuie"
   label_share_project_list: "Distribuie lista de proiecte"
   label_share_work_package: "Share work package"
   label_show_all_registered_users: "Afișați toți utilizatorii înregistrați"
   label_show_less: "Arată mai puţin"
-  label_show_more: "Show more"
+  label_show_more: "Arată mai multe"
   label_journal: "Jurnal"
   label_journal_diff: "Comparare descriere"
   label_language: "Limbă"
   label_languages: "Languages"
+  label_external_links: "External links"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Salt la un proiect..."
   label_keyword_plural: "Cuvinte cheie"
   label_language_based: "Bazat pe limba utilizatorului"
@@ -2994,13 +3387,19 @@ ro:
   label_link_url: "Link (URL)"
   label_list: "Listă"
   label_loading: "Se încarcă..."
+  label_locked: "blocat"
   label_lock_user: "Blocați utilizatorul"
   label_logged_as: "Autentificat ca"
   label_login: "Autentificare"
-  label_custom_logo: "Custom Logo"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "Custom export logo"
   label_custom_export_cover: "Custom export cover background"
   label_custom_export_footer: "Custom export footer image"
+  label_custom_export_font_regular: "Regular"
+  label_custom_export_font_bold: "Bold"
+  label_custom_export_font_italic: "Italic"
+  label_custom_export_font_bold_italic: "Bold Italic"
   label_custom_export_cover_overlay: "Custom export cover background overlay"
   label_custom_export_cover_text_color: "Text color"
   label_custom_pdf_export_settings: "Custom PDF export settings"
@@ -3018,7 +3417,7 @@ ro:
   label_member_new: "Membru nou"
   label_member_all_admin: "(Toate rolurile datorită statutului de administrator)"
   label_member_plural: "Membri"
-  label_membership_plural: "Memberships"
+  label_membership_plural: "Membri"
   label_membership_added: "Membru adăugat"
   label_membership_updated: "Membru actualizat"
   label_menu: "Meniu"
@@ -3088,6 +3487,8 @@ ro:
   label_operator_equals_or: "este (SAU)"
   label_operator_equals_all: "este (ȘI)"
   label_operator_shared_with_user_any: "oricare"
+  label_open: "deschis"
+  label_closed: "închis"
   label_open_menu: "Deschidere meniu"
   label_open_work_packages: "deschise"
   label_open_work_packages_plural: "deschise"
@@ -3111,11 +3512,12 @@ ro:
   label_permissions_report: "Raport drepturi"
   label_personalize_page: "Personalizare pagină"
   label_placeholder_user: "Utilizator placeholder"
-  label_placeholder_user_new: "Utilizator nou"
+  label_placeholder_user_new: "Utilizator placeholder nou"
   label_placeholder_user_plural: "Utilizatori de tip Placeholder"
   label_planning: "Planificare"
   label_please_login: "Te rog să te autentifici"
   label_plugins: "Module"
+  label_portfolio_plural: "Portfolios"
   label_modules_and_plugins: "Module și Plugin-uri"
   label_precedes: "precede"
   label_preferences: "Preferinţe"
@@ -3136,6 +3538,7 @@ ro:
   label_project_attribute_manage_link: "Gestionează atribute proiect"
   label_project_count: "Număr total de proiecte"
   label_project_copy_notifications: "Trimitere notificări e-mail în timpul copierii proiectului"
+  label_project_initiation_export_pdf: "Export PDF for %{project_creation_name}"
   label_project_latest: "Ultimele proiecte"
   label_project_default_type: "Tip gol permis"
   label_project_hierarchy: "Ierarhie de proiecte"
@@ -3148,7 +3551,7 @@ ro:
   label_project_custom_field_plural: "Atribute proiect"
   label_project_settings: "Setările proiectului"
   label_project_attributes_settings: "Project attributes settings"
-  label_project_storage_plural: "File storages"
+  label_project_storage_plural: "Stocuri de fișiere"
   label_project_storage_project_folder: "File storages: Project folders"
   label_projects_disk_usage_information: "%{count} proiecte care utilizează %{used_disk_space} spațiu pe disc"
   label_project_view_all: "Vizualizează toate proiectele"
@@ -3162,7 +3565,7 @@ ro:
   label_query_new: "Interogare nouă"
   label_query_plural: "Interogări personalizate"
   label_read: "Citeşte..."
-  label_read_documentation: "Read documentation"
+  label_read_documentation: "Citește documentația"
   label_register: "Creează cont nou"
   label_register_with_developer: "Înregistrare ca programator"
   label_registered_on: "Înregistrat pe"
@@ -3190,6 +3593,7 @@ ro:
   label_repository_remove: "Remove repository"
   label_repository_root: "Rădăcina repo-ului"
   label_repository_plural: "Repo-uri"
+  label_request_submission: "Request submission"
   label_required: "obligatoriu"
   label_requires: "Această caracteristică necesită un cont la"
   label_result_plural: "Rezultate"
@@ -3240,6 +3644,7 @@ ro:
   label_subproject: "Subproiect"
   label_subproject_new: "Subproiect nou"
   label_subproject_plural: "Subproiecte"
+  label_subitems: "Subelemente"
   label_subtask_plural: "Sub-activități"
   label_summary: "Rezumat"
   label_system: "Sistem"
@@ -3247,6 +3652,8 @@ ro:
   label_table_of_contents: "Cuprins"
   label_tag: "Etichetă"
   label_team_planner: "Planificare echipă"
+  label_template: "Șablon"
+  label_templates: "Templates"
   label_text: "Text lung"
   label_this_month: "luna curentă"
   label_this_week: "săptămâna curentă"
@@ -3291,6 +3698,7 @@ ro:
   label_user_search: "Căutare utilizator"
   label_user_settings: "Setări utilizator"
   label_users_settings: "Setări utilizatori"
+  label_value_x: "Value: %{x}"
   label_version_new: "Versiune nouă"
   label_version_edit: "Editați versiunea"
   label_version_plural: "Versiuni"
@@ -3434,7 +3842,7 @@ ro:
         prefix: "Primită din cauza setării de notificare: %{reason}"
         date_alert_start_date: "Alertă dată"
         date_alert_due_date: "Alertă de dată"
-        reminder: "Reminder"
+        reminder: "Memento"
       see_all: "Vezi tot"
       updated_at: "Actualizat în %{timestamp} de %{user}"
     reminder_notifications:
@@ -3478,8 +3886,8 @@ ro:
           since: "since"
           summary: "There is a problem with your %{storage_name} storage integration"
           troubleshooting:
-            text: "For more information, check file storages"
-            link_text: "troubleshooting documentation"
+            text: "Pentru mai multe informații, verifică fișierele de stocare"
+            link_text: "documentație depanare"
   mail_body_account_activation_request: "A fost înregistrat un nou user (%{value}). Activarea este în așteptarea aprobării:"
   mail_body_account_information: "Informații despre contul dumneavoastră"
   mail_body_account_information_external: "Puteți utiliza contul %{value} pentru autentificare."
@@ -3599,9 +4007,10 @@ ro:
   notice_not_authorized: "Nu sunteți autorizat să accesați această pagină."
   notice_not_authorized_archived_project: "Proiectul pe care încercați să îl accesați a fost arhivat."
   notice_requires_enterprise_token: "Enterprise token missing or doesn't allow access to this page."
-  notice_password_confirmation_failed: "Parola dvs. nu este corectă. Nu se poate continua."
+  notice_password_confirmation_failed: "The entered password is not correct."
   notice_principals_found_multiple: "S-au găsit %{number} rezultate\n Tab pentru a se concentra pe primul rezultat."
   notice_principals_found_single: "Există un singur rezultat\n Tab pentru a-l concentra."
+  notice_parent_item_not_found: "Parent item not found."
   notice_project_not_deleted: "Proiectul nu a fost şters."
   notice_project_not_found: "Project not found."
   notice_successful_connection: "Conectare reușită."
@@ -3664,7 +4073,7 @@ ro:
   permission_archive_project: "Arhivare proiect"
   permission_create_user: "Create users"
   permission_manage_user: "Editează utilizatori"
-  permission_manage_placeholder_user: "Creați, editați și ștergeți utilizatori de tip placeholder"
+  permission_manage_placeholder_user: "Creează, editează și șterge utilizatori de tip placeholder"
   permission_add_subprojects: "Creează subproiecte"
   permission_add_work_package_watchers: "Adaugă observatori"
   permission_assign_versions: "Atribuie versiuni"
@@ -3675,6 +4084,7 @@ ro:
   permission_comment_news: "Comentare noutăți"
   permission_commit_access: "Acces de citire/scriere la repo (încărcare)"
   permission_copy_projects: "Copiază proiecte"
+  permission_copy_projects_explanation: "In template projects, this permission has a secondary function, it allows the creation of new projects derived from the template."
   permission_copy_work_packages: "Duplicate work packages"
   permission_create_backup: "Creează copie de rezervă"
   permission_delete_work_package_watchers: "Eliminare observatori"
@@ -3703,7 +4113,11 @@ ro:
   permission_edit_timelines: "Editare linii de timp"
   permission_edit_wiki_pages: "Editare pagini wiki"
   permission_export_work_packages: "Export pachete de lucru"
+  permission_export_projects: "Export projects"
   permission_export_wiki_pages: "Export pagini wiki"
+  permission_invite_members_by_email: "Invite members by email"
+  permission_invite_members_by_email_explanation: >
+    Allows users to invite new members by email. Invited users will receive an email with a link to set their password and activate their account. Depends on the permission to manage members
   permission_list_attachments: "Listare atașamente"
   permission_log_own_time: "Înregistrare timp propriu"
   permission_log_time: "Înregistrare timp pentru alți utilizatori"
@@ -3733,6 +4147,9 @@ ro:
   permission_share_work_packages: "Partajare pachete de lucru"
   permission_manage_types: "Selectare tipuri"
   permission_manage_own_reminders: "Create own reminders"
+  permission_view_all_principals: "View all users and groups"
+  permission_view_all_principals_explanation: >
+    Allows users to see all users and groups in the system, even if they are not members of any joined projects or groups.
   permission_view_project: "Vezi proiecte"
   permission_view_changesets: "Vizualizare revizii repo în OpenProject"
   permission_view_internal_comments: "Vezi comentariile interne"
@@ -3763,8 +4180,19 @@ ro:
   permission_edit_project_query: "Edit project query"
   placeholders:
     default: "-"
+  portfolio:
+    count:
+      zero: "0 portfolios"
+      one: "1 portfolio"
+      other: "%{count} portfolios"
+  program:
+    count:
+      zero: "0 programs"
+      one: "1 program"
+      other: "%{count} programs"
   project:
     archive:
+      title: "Archive project"
       are_you_sure: "Sunteţi sigur că doriţi să arhivaţi proiectul '%{name}'?"
       archived: "Arhivat"
     count:
@@ -3772,13 +4200,15 @@ ro:
       one: "un proiect"
       other: "%{count} proiecte"
     destroy:
-      confirmation: "If you continue, the project %{identifier} will be permanently destroyed. To confirm this action please introduce the project name in the field below, this will:"
-      project_delete_result_1: "Delete all related data."
-      project_delete_result_2: "Delete all managed project folders in the attached storages."
-      info: "Ștergerea proiectului este o acțiune ireversibilă."
-      project_verification: "Completează numele proiectului %{name} spre a confirma ștergerea."
-      subprojects_confirmation: "Se vor șterge și sub-proiectul/sub-proiectele: %{value}."
-      title: "Ștergere proiect %{name}"
+      title: "Șterge proiectul"
+      heading: "Permanently delete this project?"
+      confirmation_message_for_subprojects_html:
+        zero: >
+          You are about to permanently delete all data relating to project <strong>%{name}</strong>.
+        one: >
+          You are about to permanently delete all data relating to project <strong>%{name}</strong> and this subproject:
+        other: >
+          You are about to permanently delete all data relating to project <strong>%{name}</strong> and these subprojects:
     filters:
       project_phase: "Fază proiect: %{phase}"
       project_phase_any: "Fază proiect: Oricare"
@@ -3789,6 +4219,7 @@ ro:
       title: Modificare identificator proiect
     not_available: "Project N/A"
     template:
+      copying_title: "Applying template"
       copying: >
         Proiectul dumneavoastră este creat din proiectul șablon selectat. Veți fi notificat prin e-mail imediat ce proiectul va fi disponibil.
       use_template: "Utilizează șablon"
@@ -3903,7 +4334,7 @@ ro:
       oauth_application_details: "Valoarea secretă a clientului nu va mai fi accesibilă după ce închizi această fereastră. Te rog să copiezi aceste valori în setările Nextcloud OpenProject Integration:"
       oauth_application_details_link_text: "Mergi la pagina setări"
       setup_documentation_details: "Dacă ai nevoie de ajutor pentru configurarea unui nou depozit de fișiere, consultă documentația: "
-      setup_documentation_details_link_text: "File storages setup"
+      setup_documentation_details_link_text: "Configurarea stocărilor de fișiere"
       show_warning_details: "Pentru a utiliza acest spațiu de stocare a fișierelor, nu uita să activezi modulul și spațiul de stocare specific în setările de proiect ale fiecărui proiect dorit."
     subversion:
       existing_title: "Repo Subversion existent"
@@ -3930,6 +4361,9 @@ ro:
   setting_allowed_link_protocols: "Allowed link protocols"
   setting_allowed_link_protocols_text_html: >-
     Allow these protocols to be rendered as links in work package descriptions, long text fields and comments. For example, %{tel_code} or %{element_code}. Enter one protocol per line. <br/> Protocols %{http_code}, %{https_code}, and %{mailto_code} are always allowed.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "First login redirect"
   setting_after_first_login_redirect_url_text_html: >
     Set a path to redirect users after their first login. If empty, redirects to the home page for the onboarding tour. <br/> Example: <code>/my/page</code>
@@ -3942,20 +4376,29 @@ ro:
   setting_apiv3_cors_origins_text_html: >
     Dacă CORS este activat, acestea sunt originile cărora li se permite accesul la OpenProject API. <br/> Vă rugăm să consultați <a href="%{origin_link}" target="_blank">documentația privind antetul Origin</a> pentru a specifica valorile așteptate.
   setting_apiv3_write_readonly_attributes: "Write access to read-only attributes"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author. <br/> <strong>Warning:</strong> This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author. </br> For more information on attributes and supported resources, please see the %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Dimensiunea maximă a paginii API"
-  setting_apiv3_max_page_instructions_html: >
-    Seteză dimensiunea maximă a paginii cu care API-ul va răspunde. Nu va fi posibil să efectuzi cereri API care returnează mai multe valori pe o singură pagină. <br/> <strong>Avertisment:</strong> Te rog să schimbi această valoare numai dacă ești sigur de ce ai nevoie. Stabilirea unei valori ridicate va avea ca rezultat un impact semnificativ asupra performanței; în timp ce o valoare mai mică decât opţiunile per pagină va cauza erori în vizualizările paginate.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Documentație"
   setting_apiv3_docs_enabled: "Activare pagină documente"
   setting_apiv3_docs_enabled_instructions_html: >
     Dacă pagina de documente este activată, poți obține o vizualizare interactivă a documentației APIv3 la adresa <a href="%{link}" target="_blank">%{link}</a>.
+  setting_apiv3_docs_enabled_instructions_warning: >
+    Please be aware that enabling the API docs on a production system may expose sensitive information or result in accidental loss of data when not being careful. We recommend to only enable this setting for development purposes.
   setting_attachment_whitelist: "Lista albă de încărcare a atașamentelor"
   setting_email_delivery_method: "Metoda de livrare e-mail"
   setting_emails_salutation: "Adresează utilizator în e-mailuri cu"
   setting_oauth_allow_remapping_of_existing_users: "Allow remapping of existing users"
   setting_sendmail_location: "Locația executabilului \"sendmail\""
+  setting_sendmail_arguments: "Arguments for sendmail"
   setting_smtp_enable_starttls_auto: "Utilizează automat STARTTLS dacă este disponibil"
   setting_smtp_ssl: "Utilizează conexiunea SSL"
   setting_smtp_address: "Server SMTP"
@@ -4013,6 +4456,8 @@ ro:
   setting_feeds_limit: "Limită conținut flux"
   setting_file_max_size_displayed: "Numărul maxim de linii afișat în text"
   setting_host_name: "Numele serverului"
+  setting_collaborative_editing_hocuspocus_url: "Hocuspocus server URL"
+  setting_collaborative_editing_hocuspocus_secret: "Hocuspocus server secret"
   setting_hours_per_day: "Hours per day"
   setting_hours_per_day_explanation: >-
     This defines what is considered a "day" when displaying duration in days and hours (for example, if a day is 8 hours, 32 hours would be 4 days).
@@ -4042,6 +4487,8 @@ ro:
   setting_mail_handler_body_delimiter_regex: "Trunchiază email-uri care se potrivesc cu acest regex"
   setting_mail_handler_ignore_filenames: "Atașamente de e-mail ignorate"
   setting_new_project_user_role_id: "Rol atribuit unui utilizator non-administrator care crează un proiect"
+  setting_new_project_send_confirmation_email: "Trimite notificare autorului la crearea unui proiect nou"
+  setting_new_project_notification_text: "Notification text"
   setting_password_active_rules: "Clase de caractere active"
   setting_password_count_former_banned: "Numărul celor mai recente parole folosite interzise spre a fi reutilizate"
   setting_password_days_valid: "Numărul de zile după care este obligatorie schimbarea parolei"
@@ -4058,7 +4505,7 @@ ro:
   setting_plain_text_mail: "Text e-mail simplu (fără HTML)"
   setting_protocol: "Protocol"
   setting_project_gantt_query: "Portofoliu de proiecte vedere Gantt"
-  setting_project_gantt_query_text: "Puteți modifica interogarea care este utilizată pentru a afișa diagrama Gantt din pagina de prezentare generală a proiectului."
+  setting_project_gantt_query_text: "Poți modifica interogarea care este utilizată pentru a afișa graficul Gantt din pagina de ansamblu a proiectului."
   setting_security_badge_displayed: "Afișarea legitimației de securitate"
   setting_registration_footer: "Footer de înregistrare"
   setting_registration_footer_caption: "This text is displayed in the footer of the registration page. Use the HTML editor to format the text for each selected language."
@@ -4088,7 +4535,7 @@ ro:
   setting_self_registration_manual_activation: "Manual account activation"
   setting_self_registration_manual_activation_caption: >
     Users can register on their own. Their accounts are in a pending state until an administrator or user with the global permission to create or manage users activates them.
-  setting_session_ttl: "Durata de inactivitate pentru expirarea sesiunii"
+  setting_session_ttl: "Session expiration time after inactivity"
   setting_session_ttl_hint: "O valoare sub 5 dezactivează expirarea sesiunii"
   setting_session_ttl_enabled: "Sesiunea expiră"
   setting_start_of_week: "Săptămâna începe pe"
@@ -4114,14 +4561,17 @@ ro:
   setting_work_package_list_default_highlighted_attributes: "Atributele evidențiate implicit în linie"
   setting_working_days: "Zile lucrătoare"
   settings:
+    errors:
+      not_writable: "The setting is not writable and can only be changed by a sysadmin."
+      failed_to_update: "Setting '%{name}' could not be updated: %{message}"
     authentication:
-      login: "Login"
+      login: "Autentificare"
       registration: "Registration"
       sso: "Single Sign-On (SSO)"
       omniauth_direct_login_hint_html: >
         Dacă această opțiune este activă, cererile de conectare vor fi redirecționate către furnizorul omniauth configurat. Pagina de autentificare verticală și pagina de autentificare vor fi dezactivate. <br/> <strong>Notă:</strong> Dacă nu dezactivezi și autentificarea cu parole, cu această opțiune activată, utilizatorii încă se pot autentifica intern vizitând pagina de autentificare <code>%{internal_path}</code>.
       remapping_existing_users_hint: >
-        If enabled, allows any configured identity provider to login existing users based on their email address, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
+        If enabled, allows any configured identity provider to login existing users based on their username, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
     attachments:
       whitelist_text_html: >
         Definește o listă validă de extensii de fișiere și/sau tipuri mime pentru fișierele încărcate. <br/> Introdu extensii de fișiere (de ex. <code>%{ext_example}</code>) sau tipuri mime (e. ., <code>%{mime_example}</code>). <br/> Lasă gol pentru a permite oricărui tip de fișier să fie încărcat. Valori multiple permise (o linie pentru fiecare valoare).
@@ -4174,6 +4624,7 @@ ro:
     passwords: "Parole"
     project_attributes:
       heading: "Atribute proiect"
+      label_for_all_projects: "All projects"
       label_new_attribute: "Atribut proiect"
       label_new_section: "Secțiune"
       label_edit_section: "Editează titlul"
@@ -4186,9 +4637,63 @@ ro:
       new:
         heading: "New attribute"
         description: "Modificările la acest atribut al proiectului se vor reflecta în toate proiectele în care este activată. Atributele necesare nu pot fi dezactivate pentru fiecare proiect."
+      sections:
+        display_representation:
+          overview:
+            label: "Project attribute shown in:"
+            main_area:
+              label: "Main area"
+              description: "Add all the project attributes as individual widgets in the main section of the project overview."
+            side_panel:
+              label: "Side panel"
+              description: "Add all the project attributes in a section inside the right side panel in the project overview."
+    project_initiation_request:
+      header_description: >
+        OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can choose which project attributes should be included and create a PDF artifact as a result.
+      status:
+        submitted: "%{wizard_name} has been submitted"
+        submitted_description: "Click the button below to go to the work package for the submission process."
+        submitted_button: "Open submission request"
+        not_completed: "%{wizard_name} not yet completed"
+        not_completed_description: "Provide the necessary information by filling the attributes and get the project started."
+      wizard_status_button:
+        project_initiation_request: "Open project initiation request"
+        project_creation_wizard: "Open project creation wizard"
+        project_mandate: "Open project mandate"
+      blankslate:
+        title: "Initiation request not enabled"
+        description: "OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can choose which project attributes should be included and what to do with the output document. Enable it here to start configuring the wizard."
+      disable_dialog:
+        title: "Disable project initiation request"
+        heading: "Disable this project initiation request?"
+        confirmation_message: "The initiation request wizard will no longer be available to new projects based on this template. Project managers and project owners will need to manually configure and fill out the relevant information in the Project overview."
+        checkbox_message: "I understand that this action is not reversible"
+      name:
+        artifact_name: "Artifact name"
+        artifact_name_caption: "Choose the name for this artifact that your project management framework recommends."
+        options:
+          project_initiation_request: "Project initiation request"
+          project_creation_wizard: "Project creation wizard"
+          project_mandate: "Project mandate"
+      submission:
+        description_template: >
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
+        description: "When a user submits a project initiation request, a new work package will be created with the request artifact attached as a PDF file. The settings below define the type, status and assignee for this new work package."
+        work_package_type: "Work package type"
+        work_package_type_caption: "The work package type that should be used to store the completed artifact."
+        status_when_submitted: "Status when submitted"
+        status_when_submitted_caption: "The status the generated work package will transition to once the request is submitted."
+        send_confirmation_email: "Send confirmation email to the user who submitted the project initiation request"
+        assignee: "Assignee when submitted"
+        assignee_caption_html: "The user or group assigned to this project attribute will also become the assignee of the new work package. This list includes active project attributes of type <i>User</i> only."
+        confirmation_email_text: "Confirmation email text"
+        confirmation_email_default: "Hello,\n\nYou submitted a project initiation request for **%{project_name}**. It is now awaiting review.\nClick the link below to access the work package with your request."
+        work_package_comment: "Work package comment"
+        work_package_comment_caption: "The assignee selected above will automatically be @mentioned in the comment."
+        work_package_comment_default: "A project initiation request for **%{project_name}** was submitted and is awaiting review."
     project_phase_definitions:
       heading: "Ciclul de viață proiect"
-      heading_description: "Ciclul de viață al proiectului definește fazele proiectului care pot fi utilizate pentru planificarea proiectului și vor apărea în pagina de ansamblu a fiecărui proiect. Aceste atribute pot fi activate sau dezactivate, dar nu pot fi reordonate la nivel de proiect."
+      heading_description: "Project life cycle defines the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
       label_add: "Adaugă"
       label_add_description: "Adaugă definiție fază proiect"
       filter:
@@ -4231,6 +4736,7 @@ ro:
   status_invited: invitat
   status_locked: blocat
   status_registered: înregistrat
+  status_deleted: șters
   #Used in array.to_sentence.
   support:
     array:
@@ -4240,6 +4746,7 @@ ro:
   text_access_token_hint: "Tichetele de acces permit aplicaţiilor externe accesul la resurse din OpenProject."
   text_analyze: "Continuare analiză: %{subject}"
   text_are_you_sure: "Sunteți sigur?"
+  open_link_in_a_new_tab: "Open link in a new tab"
   text_are_you_sure_continue: "Sigur dorești să continui?"
   text_are_you_sure_with_children: "Doriți ștergerea pachetului de lucru și a tuturor pachetelor fii?"
   text_are_you_sure_with_project_custom_fields: "Deleting this attribute will also delete its values in all projects. Are you sure you want to do this?"
@@ -4260,13 +4767,27 @@ ro:
   text_project_custom_field_html: >
     Ediția Enterprise va adăuga aceste add-on-uri suplimentare pentru câmpurile personalizate ale proiectelor: <br> <ul> <li><b>Adăugă câmpuri personalizate pentru proiecte la lista de proiecte pentru a crea o vizualizare a portofoliului de proiecte</b></li> </ul>
   text_custom_logo_instructions: >
-    Este recomandată utilizarea unui logo cu fundal transparent. Pentru a obține rezultate satisfăcătoare pe afișajele convenționale dar și pe cele de tipe retina, asigurați-vă că dimensiunea imaginii este de 460px pe 110px.
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×47px image. You can add as much spacing inside that image as you like.
+  text_custom_logo_mobile_instructions: >
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×33px image. You can add as much spacing inside that image as you like.
   text_custom_export_logo_instructions: >
     This is the logo that appears in your PDF exports. It needs to be a PNG or JPEG image file. A black or colored logo on transparent or white background is recommended.
   text_custom_export_cover_instructions: >
     This is the image that appears in the background of a cover page in your PDF exports. It needs to be an about 800px width by 500px height sized PNG or JPEG image file.
   text_custom_export_footer_instructions: >
     PDF exports will include a graphical element positioned to the left of the footer. This image must be a PNG or JPEG file with approximately 200 pixels in width.
+  label_custom_export_font_instructions: >
+    Upload and manage custom TrueType (.ttf) fonts used in your PDF exports. For best results, use matching files from the same font family. If no font is provided, the default NotoSans font will be used.
+  label_custom_export_images_instructions: >
+    Upload and manage custom image files used in your PDF exports.
+  text_custom_export_font_regular_instructions: >
+    Acesta este fișierul de font pentru textul obișnuit. Acesta trebuie să fie în format TTF și este necesar.
+  text_custom_export_font_bold_instructions: >
+    Acesta este fișierul font pentru text îngroșat. Trebuie să fie în format TTF.
+  text_custom_export_font_italic_instructions: >
+    Acesta este fișierul de font pentru textul italic. Trebuie să fie în format TTF.
+  text_custom_export_font_bold_italic_instructions: >
+    Acesta este fișierul font pentru text îngroșat și italic. Trebuie să fie în format TTF.
   text_custom_favicon_instructions: >
     Această pictogramă este afișată în fereastra/fila browserului lângă titlul site-ului. Aceasta trebuie să aibă dimensiunea de 32px pe 32px, să fie în format PNG și fundalul să fie transparent.
   text_custom_touch_icon_instructions: >
@@ -4324,6 +4845,7 @@ ro:
     Notă: dacă este activată, aceasta va afișa o insignă cu starea instalării în fereastra <a href="%{information_panel_path}">%{information_panel_label}</a> panoul de administrare și pe pagina principală. Aceasta este afișată numai pentru administratori. <br/> Insigna va verifica versiunea curentă a OpenProject în raport cu baza de date oficială a versiunilor OpenProject pentru a alerta cu privire la orice actualizări sau vulnerabilități cunoscute. Pentru mai multe informații despre ce oferă verificarea, ce date sunt necesare pentru a furniza actualizările disponibile și cum să dezactivezi această verificare, te rog să vizitezi <a href="%{more_info_url}">documentația de configurare</a>.
   text_own_membership_delete_confirmation: "Sunteţi cale de a elimina unele sau toate permisiunile şi e posibil să nu mai puteți edita acest proiect după aceea. \nSunteţi sigur că doriţi să continuaţi?"
   text_permanent_delete_confirmation_checkbox_label: "I understand that this deletion cannot be reversed"
+  text_permanent_remove_confirmation_checkbox_label: "I understand that this removal cannot be reversed"
   text_plugin_assets_writable: "Se poate scrie în directorul de resurse pentru module"
   text_powered_by: "Propulsat de %{link}"
   text_project_identifier_info: "Doar litere mici (a-z), numere, cratime şi linii de subliniere sunt permise, trebuie să înceapă cu o literă mică."
@@ -4386,8 +4908,8 @@ ro:
       heading: Configurează vizualizarea
       columns:
         input_label: "Adaugă coloane"
-        input_placeholder: "Select a column"
-        drag_area_label: "Manage and reorder columns"
+        input_placeholder: "Selectează o coloană"
+        drag_area_label: "Gestionează și reordonează coloanele"
       sort_by:
         automatic:
           heading: "Automat"
@@ -4415,6 +4937,8 @@ ro:
       other: "blocat temporar (%{count} tentative de autentificare eșuate)"
     confirm_status_change: "Sunteți pe cale să modificați statutul lui \"%{name}\". Sunteți sigur că doriți să continuați?"
     deleted: "Utilizator șters"
+    error_status_change_self: "You cannot change your own user status."
+    error_admin_change_on_non_admin: "Only administrators can change the status of administrator users."
     error_status_change_failed: "Modificarea stării utilizatorului a eșuat din cauza următoarelor erori: %{errors}"
     invite: Invită utilizator prin e-mail
     invited: invitat
@@ -4637,6 +5161,8 @@ ro:
       multiple_errors: "Au fost încălcate multiple constrângeri pentru câmpuri."
       unable_to_create_attachment: "Atașamentul nu a putut fi creat"
       unable_to_create_attachment_permissions: "Atașamentul nu a putut fi salvat din cauza lipsei permisiunilor sistemului de fișiere"
+      user:
+        name_readonly: "The name attribute is read-only. Changes can be written through the attributes firstname and lastname."
       render:
         context_not_parsable: "Contextul primit nu reprezintă un link la o resursă."
         unsupported_context: "Resursa furnizată nu este suportată ca și context."
@@ -4651,8 +5177,10 @@ ro:
     resources:
       schema: "Schemă"
     undisclosed:
-      parent: Nevăzut - Părintele selectat este invizibil din cauza lipsei de permisiuni.
+      parent: Undisclosed - The parent is invisible because of lacking permissions.
+      project: Undisclosed - The project is invisible because of lacking permissions.
       ancestor: Undisclosed - Strămoșul este invizibil din cauza lipsei de permisiuni.
+      definingProject: Undisclosed - The project is invisible because of lacking permissions.
   doorkeeper:
     pre_authorization:
       status: "Autorizare prealabilă"
@@ -4816,3 +5344,8 @@ ro:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

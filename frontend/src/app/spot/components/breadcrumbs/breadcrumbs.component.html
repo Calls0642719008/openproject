@@ -1,46 +1,56 @@
-<ng-container
-  *ngFor="let crumb of content.crumbs; let i = index; let last = last; let first = first"
->
-  <div
-    *ngIf="(first && !last) || i === content.crumbs.length - 2 || i === content.crumbs.length - 3"
-    class="spot-breadcrumbs--crumb"
-    data-test-selector="op-breadcrumb"
-    [ngClass]="{
-      'spot-breadcrumbs--crumb_root': first,
-      'spot-breadcrumbs--crumb_parent': i === content.crumbs.length - 2,
-      'spot-breadcrumbs--crumb_grandparent': i === content.crumbs.length - 3
-    }"
-  >
-    <button
-      type="button"
-      class="spot-link spot-breadcrumbs--crumb-action-item"
-      [title]="crumb.text"
-      (click)="crumb.navigate()"
+@for (crumb of content.crumbs; track crumb; let i = $index, first = $first, last = $last) {
+  @if ((first && !last) || i === content.crumbs.length - 2 || i === content.crumbs.length - 3) {
+    <div
+      class="spot-breadcrumbs--crumb"
+      data-test-selector="op-breadcrumb"
+      [ngClass]="{
+        'spot-breadcrumbs--crumb_root': first,
+        'spot-breadcrumbs--crumb_parent': i === content.crumbs.length - 2,
+        'spot-breadcrumbs--crumb_grandparent': i === content.crumbs.length - 3
+      }"
     >
-      <span *ngIf="crumb.icon" class="spot-icon spot-icon_{{crumb.icon}}"></span>
-      <span [textContent]="crumb.text" class="spot-breadcrumbs--crumb-action-item-text"></span>
-      <span class="spot-breadcrumbs--crumb-action-item-dots"></span>
-    </button>
+      <button
+        type="button"
+        class="spot-link spot-breadcrumbs--crumb-action-item"
+        [title]="crumb.text"
+        (click)="crumb.navigate()"
+      >
+        @if (crumb.icon) {
+          <ng-container [ngTemplateOutlet]="crumbIcon" [ngTemplateOutletContext]="{icon:crumb.icon}" />
+        }
 
-    <span class="spot-breadcrumbs--crumb-divider spot-icon spot-icon_arrow-right5"></span>
-  </div>
+        <span [textContent]="crumb.text" class="spot-breadcrumbs--crumb-action-item-text"></span>
+        <span class="spot-breadcrumbs--crumb-action-item-dots"></span>
+      </button>
 
-  <div
-    *ngIf="i === 1 && content.crumbs.length > 4"
-    class="spot-breadcrumbs--crumb spot-breadcrumbs--crumb_collapsed"
-  >
-    <span class="spot-breadcrumbs--crumb-divider spot-icon spot-icon_arrow-right5"></span>
-  </div>
+      <svg triangle-right-icon size="small" class="spot-breadcrumbs--crumb-divider"></svg>
+    </div>
+  }
 
-  <div
-    *ngIf="last"
-    class="spot-breadcrumbs--crumb spot-breadcrumbs--crumb_last"
-    data-test-selector="op-breadcrumb"
-  >
-    <span *ngIf="crumb.icon" class="spot-icon spot-icon_{{crumb.icon}}"></span>
-    <span
-      class="spot-breadcrumbs--crumb-action-item-text"
-      [textContent]="crumb.text"
-    ></span>
-  </div>
-</ng-container>
+  @if (i === 1 && content.crumbs.length > 4) {
+    <div class="spot-breadcrumbs--crumb spot-breadcrumbs--crumb_collapsed">
+      <svg triangle-right-icon size="small" class="spot-breadcrumbs--crumb-divider"></svg>
+    </div>
+  }
+
+  @if (last) {
+    <div class="spot-breadcrumbs--crumb spot-breadcrumbs--crumb_last" data-test-selector="op-breadcrumb">
+      @if (crumb.icon) {
+        <ng-container [ngTemplateOutlet]="crumbIcon" [ngTemplateOutletContext]="{icon:crumb.icon}" />
+      }
+
+      <span class="spot-breadcrumbs--crumb-action-item-text" [textContent]="crumb.text"></span>
+    </div>
+  }
+}
+
+<ng-template #crumbIcon let-iconClass="icon">
+  @switch (iconClass) {
+    @case ('nextcloud-circle') {
+      <svg op-mark-nextcloud-icon size="small"></svg>
+    }
+    @default {
+      <svg cloud-icon size="small"></svg>
+    }
+  }
+</ng-template>

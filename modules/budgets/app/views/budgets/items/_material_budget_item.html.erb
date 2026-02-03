@@ -106,12 +106,17 @@ See COPYRIGHT and LICENSE files for more details.
       </td>
     <% end %>
     <td class="delete form--td budget-table--fields buttons">
-      <a class="delete-budget-item no-decoration-on-hover"
-         title="<%= t(:button_delete) %>"
-         data-action="costs--budget-subform#deleteRow">
-        <%= op_icon("icon-context icon-delete") %>
-        <span class="sr-only"><%= t(:button_delete) %></span>
-      </a>
+      <%=
+        render(
+          Primer::Beta::IconButton.new(
+            scheme: :invisible,
+            icon: :trash,
+            tooltip_direction: :se,
+            aria: { label: t(:button_delete) },
+            data: { action: "costs--budget-subform#deleteRow" }
+          )
+        )
+      %>
     </td>
   </tr>
 <% end %>

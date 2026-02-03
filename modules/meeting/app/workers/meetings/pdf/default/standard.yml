@@ -243,8 +243,11 @@ outcome:
     styles: [ "bold" ]
     margin_top: 5
     margin_bottom: 5
+  work_package:
+    size: 10
+    margin_bottom: 3
   markdown_margin:
-    margin_bottom: 8
+    margin_bottom: 3
   markdown:
     font:
       size: 10

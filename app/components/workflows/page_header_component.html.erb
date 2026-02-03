@@ -28,34 +28,53 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-  render Primer::OpenProject::PageHeader.new do |header|
+  render Primer::OpenProject::PageHeader.new(classes: "workflows-page-header") do |header|
     header.with_title { title }
     header.with_breadcrumbs(breadcrumb_items)
 
-    header.with_action_button(
-      tag: :a,
-      mobile_icon: :copy,
-      mobile_label: t(:button_copy),
-      size: :medium,
-      href: copy_workflows_path,
-      aria: { label: I18n.t(:button_copy) },
-      title: I18n.t(:button_copy)
-    ) do |button|
-      button.with_leading_visual_icon(icon: :copy)
-      t(:button_copy)
+    if @state != :copy
+      header.with_action_button(
+        tag: :a,
+        mobile_icon: :copy,
+        mobile_label: t(:button_copy),
+        size: :medium,
+        href: copy_workflows_path,
+        aria: { label: I18n.t(:button_copy) },
+        title: I18n.t(:button_copy)
+      ) do |button|
+        button.with_leading_visual_icon(icon: :copy)
+        t(:button_copy)
+      end
     end
 
-    header.with_action_button(
-      tag: :a,
-      mobile_icon: :info,
-      mobile_label: t(:label_workflow_summary),
-      size: :medium,
-      href: workflows_path,
-      aria: { label: I18n.t(:label_workflow_summary) },
-      title: I18n.t(:label_workflow_summary)
-    ) do |button|
-      button.with_leading_visual_icon(icon: :info)
-      t(:label_workflow_summary)
+    if @state != :edit
+      header.with_action_button(
+        tag: :a,
+        mobile_icon: :pencil,
+        mobile_label: t(:button_edit),
+        size: :medium,
+        href: edit_workflows_path,
+        aria: { label: I18n.t(:button_edit) },
+        title: I18n.t(:button_edit)
+      ) do |button|
+        button.with_leading_visual_icon(icon: :pencil)
+        t(:button_edit)
+      end
+    end
+
+    if @state != :show
+      header.with_action_button(
+        tag: :a,
+        mobile_icon: :info,
+        mobile_label: t(:label_workflow_summary),
+        size: :medium,
+        href: workflows_path,
+        aria: { label: I18n.t(:label_workflow_summary) },
+        title: I18n.t(:label_workflow_summary)
+      ) do |button|
+        button.with_leading_visual_icon(icon: :info)
+        t(:label_workflow_summary)
+      end
     end
   end
 %>

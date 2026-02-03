@@ -38,7 +38,7 @@ export class PlaceholderUserResource extends HalResource {
   public showUser:HalResource;
 
   public get state():InputState<this> {
-    return this.states.placeholderUsers.get(this.href as string) as any;
+    return this.states.placeholderUsers.get(this.href!) as any;
   }
 
   public get showUserPath() {

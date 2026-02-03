@@ -45,8 +45,8 @@ hu:
   label_greater: ">"
   label_is_not_project_with_subprojects: "nem egyezik (alprojektekkel együtt)"
   label_is_project_with_subprojects: "egyezik (alprojektekkel együtt)"
-  label_is_work_package_with_descendants: "is (includes descendants)"
-  label_is_not_work_package_with_descendants: "is not (includes descendants)"
+  label_is_work_package_with_descendants: "az (beleértve a leszármazottakat is)"
+  label_is_not_work_package_with_descendants: "nem (beleértve a leszármazottakat is)"
   label_work_package_attributes: "Munkacsomag attribútumai"
   label_less: "<"
   label_logged_by_reporting: "Naplózta"
@@ -89,17 +89,17 @@ hu:
   validation_failure_integer: "nem érvényes egész szám"
   export:
     timesheet:
-      title: "Your PDF timesheet export"
-      button: "Export PDF timesheet"
-      timesheet: "Timesheet"
+      title: "Saját PDF munkaidő-nyilvántartás exportálása"
+      button: "PDF munkaidő-nyilvántartás exportálása"
+      timesheet: "Munkaidő-nyilvántartás"
       time: "Idő"
-      sums_hours: Sums
-      overview_per_user_total: "Overview: Total hours per user"
-      overview_per_user_day: "Overview: Hours per user per day"
+      sums_hours: Össz.
+      overview_per_user_total: "Áttekintés: Felhasználónkénti összes óraszám"
+      overview_per_user_day: "Áttekintés: Felhasználónként és naponta"
     cost_reports:
       title: "Költségjelentés készítése XLS formában"
       start_time: "Kezdés"
-      end_time: "End time"
+      end_time: "Befejezés ideje"
   reporting:
     group_by:
       selected_columns: "A kijelölt oszlopok"

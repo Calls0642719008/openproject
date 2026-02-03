@@ -42,7 +42,7 @@ class Widget::Filters::Date < Widget::Filters::Base
         text1 = angular_component_tag "opce-basic-single-date-picker",
                                       inputs: {
                                         value: filter.operator.forced == :integers ? "" : filter.values.first.to_s,
-                                        inputId: "#{id_prefix}arg_1_val",
+                                        id: "#{id_prefix}arg_1_val",
                                         name:
                                       }
         label1 + text1
@@ -56,7 +56,7 @@ class Widget::Filters::Date < Widget::Filters::Base
         text2 = angular_component_tag "opce-basic-single-date-picker",
                                       inputs: {
                                         value: filter.operator.forced == :integers ? "" : filter.values.second.to_s,
-                                        inputId: "#{id_prefix}arg_2_val",
+                                        id: "#{id_prefix}arg_2_val",
                                         name: name.to_s
                                       }
         label2 + text2

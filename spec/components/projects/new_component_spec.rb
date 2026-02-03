@@ -32,13 +32,53 @@ require "rails_helper"
 
 RSpec.describe Projects::NewComponent, type: :component do
   let(:project) { build_stubbed(:project) }
+  let(:params) { {} }
 
-  def render_component(**params)
-    render_inline(described_class.new(project:, **params))
-    page
-  end
+  subject(:rendered_component) { render_inline(described_class.new(project:, **params)) }
 
   it "renders a form" do
-    expect(render_component).to have_css "form"
+    expect(rendered_component).to have_css "form"
+  end
+
+  describe "action" do
+    let(:project) { Project.new(workspace_type:) }
+
+    [
+      ["not set",               nil,        "/projects"],
+      ["set to unknown value",  :unknown,   "/projects"],
+      ["set to project",        :project,   "/projects"],
+      ["set to program",        :program,   "/programs"],
+      ["set to portfolio",      :portfolio, "/portfolios"]
+    ].each do |condition, value, expected_path|
+      context "when workspace type is #{condition}" do
+        let(:workspace_type) { value }
+
+        it "sets action to create project" do
+          expect(rendered_component).to have_element :form do |form|
+            expect(form["action"]).to eq expected_path
+          end
+        end
+      end
+    end
+  end
+
+  context "when creating from scratch" do
+    it "renders custom fields form" do
+      allow(Projects::Settings::CustomFieldsForm).to receive(:new).and_call_original
+      rendered_component
+      expect(Projects::Settings::CustomFieldsForm).to have_received(:new)
+    end
+  end
+
+  context "when creating from template" do
+    let(:params) { { template:, copy_options: } }
+    let(:template) { build_stubbed(:template_project) }
+    let(:copy_options) { Projects::CopyOptions.new }
+
+    it "renders custom fields form" do
+      allow(Projects::Settings::CustomFieldsForm).to receive(:new).and_call_original
+      rendered_component
+      expect(Projects::Settings::CustomFieldsForm).to have_received(:new)
+    end
   end
 end

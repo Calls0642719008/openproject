@@ -29,22 +29,24 @@
 import { WorkPackagesListService } from 'core-app/features/work-packages/components/wp-list/wp-list.service';
 import { States } from 'core-app/core/states/states.service';
 import {
-  ChangeDetectorRef, Component, ElementRef, Inject, OnInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
 } from '@angular/core';
 import { OpModalComponent } from 'core-app/shared/components/modal/modal.component';
 import { OpModalLocalsToken } from 'core-app/shared/components/modal/modal.service';
 import { OpModalLocalsMap } from 'core-app/shared/components/modal/modal.types';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
-import {
-  WorkPackageViewFocusService,
-} from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-focus.service';
+import { WorkPackageViewFocusService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-focus.service';
 import { StateService } from '@uirouter/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
-import { BackRoutingService } from 'core-app/features/work-packages/components/back-routing/back-routing.service';
-import {
-  WorkPackageNotificationService,
-} from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
+import { WorkPackageNotificationService } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
 import { WorkPackageService } from 'core-app/features/work-packages/services/work-package.service';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { BackRoutingService } from 'core-app/features/work-packages/components/back-routing/back-routing.service';
 
 @Component({
   templateUrl: './wp-destroy.modal.html',
@@ -82,7 +84,8 @@ export class WpDestroyModalComponent extends OpModalComponent implements OnInit 
     deletesChildren: '',
   };
 
-  constructor(readonly elementRef:ElementRef,
+  constructor(
+    readonly elementRef:ElementRef,
     readonly workPackageService:WorkPackageService,
     @Inject(OpModalLocalsToken) public locals:OpModalLocalsMap,
     readonly I18n:I18nService,
@@ -92,7 +95,10 @@ export class WpDestroyModalComponent extends OpModalComponent implements OnInit 
     readonly wpTableFocus:WorkPackageViewFocusService,
     readonly wpListService:WorkPackagesListService,
     readonly notificationService:WorkPackageNotificationService,
-    readonly backRoutingService:BackRoutingService) {
+    readonly currentProject:CurrentProjectService,
+    readonly pathHelper:PathHelperService,
+    readonly backRoutingService:BackRoutingService,
+  ) {
     super(locals, cdRef, elementRef);
   }
 
@@ -154,10 +160,11 @@ export class WpDestroyModalComponent extends OpModalComponent implements OnInit 
         this.busy = false;
         this.closeMe($event);
         this.wpTableFocus.clear('Clearing after destroying work packages');
-
-        // Go back to a previous list state if we're in a split or full view
-        if (this.$state.current.data.baseRoute) {
+        if (this.$state.current.data?.baseRoute) {
           this.backRoutingService.goBack(true);
+        } else {
+          const projectIdentifier = this.currentProject.identifier;
+          window.location.href = this.pathHelper.workPackagesPath(projectIdentifier) + window.location.search;
         }
       })
       .catch(() => {

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -32,9 +33,12 @@ module API
     module Meetings
       class MeetingRepresenter < ::API::Decorators::Single
         include API::Decorators::LinkedResource
+        include API::V3::Workspaces::LinkedResource
         include API::Caching::CachedRepresenter
         include API::V3::Attachments::AttachableRepresenterMixin
         include API::Decorators::DateProperty
+
+        self.to_eager_load = [:author, { project: :enabled_modules }]
 
         self_link title_getter: ->(*) { represented.title }
 
@@ -57,15 +61,7 @@ module API
                             v3_path: :user,
                             representer: ::API::V3::Users::UserRepresenter
 
-        associated_resource :project,
-                            link: ->(*) do
-                              next if represented.project.blank?
-
-                              {
-                                href: api_v3_paths.project(represented.project.id),
-                                title: represented.project.name
-                              }
-                            end
+        associated_project
 
         date_time_property :created_at
 

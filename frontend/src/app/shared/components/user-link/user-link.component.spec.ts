@@ -71,7 +71,7 @@ describe('UserLinkComponent component test', () => {
           showUserPath: '/users/1',
         } as UserResource;
 
-        app.user = user;
+        fixture.componentRef.setInput('user', user);
         fixture.detectChanges();
       }));
 
@@ -91,7 +91,7 @@ describe('UserLinkComponent component test', () => {
           showUserPath: null,
         } as UserResource;
 
-        app.user = user;
+        fixture.componentRef.setInput('user', user);
         fixture.detectChanges();
       }));
 

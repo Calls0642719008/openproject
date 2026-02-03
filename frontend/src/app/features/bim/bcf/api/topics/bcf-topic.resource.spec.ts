@@ -33,7 +33,9 @@ describe('BcfTopicResource', () => {
     expect(subject).toBeInstanceOf(BcfTopicResource);
     ['guid', 'topic_type', 'topic_status', 'priority', 'reference_links', 'title',
       'index', 'labels', 'creation_author', 'modified_author', 'assigned_to', 'stage',
-      'description'].forEach((item) => expect((subject as any)[item]).toEqual((topic_object as any)[item]));
+      'description'].forEach((item) =>
+
+      expect((subject as any)[item]).toEqual((topic_object as any)[item]));
 
     // Expect dates
     expect(subject.creation_date).toEqual(moment(topic_object.creation_date));

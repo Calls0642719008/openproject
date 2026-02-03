@@ -41,7 +41,7 @@ module CustomFields
             value: @target_item.label,
             visually_hide_label: true,
             required: true,
-            autofocus: true,
+            autofocus: @target_item.errors.empty?,
             placeholder: I18n.t("custom_fields.admin.items.placeholder.label"),
             validation_message: validation_message_for(:label)
           )
@@ -49,8 +49,8 @@ module CustomFields
           case @secondary_input_format
           when :short
             short_input_field(input_group)
-          when :score
-            score_input_field(input_group)
+          when :weight
+            weight_input_field(input_group)
           else
             raise ArgumentError, "Unsupported secondary input format: #{secondary_input_format}"
           end
@@ -93,26 +93,34 @@ module CustomFields
         )
       end
 
-      def score_input_field(form_group)
+      def weight_input_field(form_group)
         form_group.text_field(
-          name: :score,
-          label: I18n.t("custom_fields.admin.items.placeholder.score"),
+          name: :weight,
+          label: I18n.t("custom_fields.admin.items.placeholder.weight"),
           type: :number,
           step: :any,
-          value: @target_item.score,
+          value: @target_item.weight,
           visually_hide_label: true,
           full_width: false,
           required: true,
-          placeholder: I18n.t("custom_fields.admin.items.placeholder.score"),
-          validation_message: validation_message_for(:score)
+          placeholder: I18n.t("custom_fields.admin.items.placeholder.weight"),
+          validation_message: validation_message_for(:weight)
         )
       end
 
-      def cancel_href
-        if @target_item.parent.root?
-          url_helpers.custom_field_items_path(root.custom_field_id)
+      def cancel_href # rubocop:disable Metrics/AbcSize
+        custom_field = root.custom_field
+        item_is_top_level = @target_item.parent.root?
+        if custom_field.is_a?(ProjectCustomField)
+          if item_is_top_level
+            url_helpers.admin_settings_project_custom_field_items_path(custom_field.id)
+          else
+            url_helpers.admin_settings_project_custom_field_item_path(custom_field.id, @target_item.parent)
+          end
+        elsif item_is_top_level
+          url_helpers.custom_field_items_path(custom_field.id)
         else
-          url_helpers.custom_field_item_path(root.custom_field_id, @target_item.parent)
+          url_helpers.custom_field_item_path(custom_field.id, @target_item.parent)
         end
       end
 

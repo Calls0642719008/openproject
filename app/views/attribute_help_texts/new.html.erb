@@ -34,18 +34,22 @@ See COPYRIGHT and LICENSE files for more details.
     header.with_title { t(:"attribute_help_texts.add_new") }
     header.with_breadcrumbs(
       [{ href: admin_index_path, text: t(:label_administration) },
-       { href: attribute_help_texts_path, text: t(:"attribute_help_texts.label_plural") },
+       { href: attribute_help_texts_path, text: AttributeHelpText.human_plural_model_name },
        { href: attribute_help_texts_path(tab: @attribute_help_text.attribute_scope), text: @attribute_help_text.type_caption },
        t(:"attribute_help_texts.add_new")]
     )
   end
 %>
 
-<%= labelled_tabular_form_for @attribute_help_text,
-                              as: "attribute_help_text",
-                              url: { action: :create },
-                              html: { id: "attribute_help_text_form" } do |f| %>
-  <%= render partial: "form", locals: { f: f } %>
-  <%= f.hidden_field :type, value: @attribute_help_text.type %>
-  <%= styled_button_tag t(:button_save), class: "-primary -with-icon icon-checkmark" %>
-<% end %>
+<div class="op-admin-settings-form-wrapper">
+<%=
+  primer_form_with(
+    model: @attribute_help_text,
+    scope: :attribute_help_text,
+    url: { action: :create },
+    method: :post,
+  ) do |f|
+    render AttributeHelpTexts::Form.new(f)
+  end
+%>
+</div>

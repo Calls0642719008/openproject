@@ -182,5 +182,55 @@ RSpec.describe Attachments::CreateService, "integration", with_settings: { journ
         end.not_to change { Attachment.count }
       end
     end
+
+    context "with SVG file uploaded with .png extension" do
+      shared_let(:container) { create(:work_package) }
+      shared_let(:user) do
+        create(:user,
+               member_with_permissions: { container.project => %i[view_work_packages edit_work_packages] })
+      end
+
+      let(:svg_content) do
+        <<~SVG
+          <?xml version="1.0" encoding="UTF-8"?>
+          <svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+          <image href="text:/etc/passwd" width="600" height="600" />
+          </svg>
+        SVG
+      end
+      let(:svg_file) { FileHelpers.mock_uploaded_file(name: "test.png", content: svg_content, binary: false) }
+
+      context "with attachment allowlist that excludes SVG", with_settings: { attachment_whitelist: %w[image/png image/jpeg image/gif] } do
+        it "rejects the SVG file even though it has a .png extension" do
+          result = subject.call(
+            container:,
+            file: svg_file,
+            filename: "test.png",
+            description: "malicious svg"
+          )
+
+          expect(result).to be_failure
+          expect(result.errors[:content_type]).to be_present
+          expect(result.errors[:content_type].first).to include("image/svg+xml")
+          expect(Attachment.count).to eq 0
+        end
+      end
+
+      context "with empty attachment allowlist" do
+        it "allows the SVG file but correctly identifies it as SVG" do
+          result = subject.call(
+            container:,
+            file: svg_file,
+            filename: "test.png",
+            description: "svg file"
+          )
+
+          expect(result).to be_success
+          attachment = Attachment.first
+          expect(attachment.content_type).to eq "image/svg+xml"
+          expect(attachment.filename).to eq "test.png"
+        end
+      end
+    end
   end
 end

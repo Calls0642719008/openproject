@@ -64,7 +64,7 @@ describe('WorkPackageViewIndentation service', () => {
       ['changeParent'],
     );
 
-    parentServiceSpy.changeParent.and.returnValue(Promise.resolve());
+    parentServiceSpy.changeParent.and.resolveTo();
 
     // noinspection JSIgnoredPromiseFromCall
     TestBed.configureTestingModule({
@@ -90,6 +90,7 @@ describe('WorkPackageViewIndentation service', () => {
   describe('canIndent', () => {
     it('Cannot indent without changeParent link', () => {
       const workPackage:any = { id: '1234' };
+
       expect(service.canIndent(workPackage)).toBeFalsy();
     });
 
@@ -100,6 +101,7 @@ describe('WorkPackageViewIndentation service', () => {
       ]);
 
       const workPackage:any = { id: '1234', changeParent: () => 'foo' };
+
       expect(service.canIndent(workPackage)).toBeFalsy();
     });
 
@@ -110,6 +112,7 @@ describe('WorkPackageViewIndentation service', () => {
       ]);
 
       const workPackage:any = { id: '1234', changeParent: () => 'foo', ancestorIds: [] };
+
       expect(service.canIndent(workPackage)).toBeTruthy();
     });
 
@@ -123,6 +126,7 @@ describe('WorkPackageViewIndentation service', () => {
         .and.returnValue(false);
 
       const workPackage:any = { id: '1234', changeParent: () => 'foo', ancestorIds: [] };
+
       expect(service.canIndent(workPackage)).toBeFalsy();
     });
 
@@ -133,6 +137,7 @@ describe('WorkPackageViewIndentation service', () => {
       ]);
 
       const workPackage:any = { id: '1234', changeParent: () => 'foo', ancestorIds: ['2345'] };
+
       expect(service.canIndent(workPackage)).toBeFalsy();
     });
 
@@ -144,6 +149,7 @@ describe('WorkPackageViewIndentation service', () => {
       ]);
 
       const workPackage:any = { id: '1234', changeParent: () => 'foo', ancestorIds: ['2345'] };
+
       expect(service.canIndent(workPackage)).toBeTruthy();
     });
   });
@@ -151,6 +157,7 @@ describe('WorkPackageViewIndentation service', () => {
   describe('canOutdent', () => {
     it('Cannot outdent without changeParent link', () => {
       const workPackage:any = { id: '1234' };
+
       expect(service.canOutdent(workPackage)).toBeFalsy();
     });
 
@@ -186,7 +193,7 @@ describe('WorkPackageViewIndentation service', () => {
       service.indent(workPackage).then(() => {
         expect(parentServiceSpy.changeParent).toHaveBeenCalledWith(workPackage, '2345');
         done();
-      });
+      }).catch(done.fail);
     });
 
     it('Can indent with a predecessor that shares an ancestor chain', (done) => {
@@ -204,7 +211,7 @@ describe('WorkPackageViewIndentation service', () => {
       service.indent(workPackage).then(() => {
         expect(parentServiceSpy.changeParent).toHaveBeenCalledWith(workPackage, '5555');
         done();
-      });
+      }).catch(done.fail);
     });
 
     it('Can indent with a predecessor that shares an ancestor chain', (done) => {
@@ -222,7 +229,7 @@ describe('WorkPackageViewIndentation service', () => {
       service.indent(workPackage).then(() => {
         expect(parentServiceSpy.changeParent).toHaveBeenCalledWith(workPackage, '2345');
         done();
-      });
+      }).catch(done.fail);
     });
   });
 
@@ -239,7 +246,7 @@ describe('WorkPackageViewIndentation service', () => {
       service.outdent(workPackage).then(() => {
         expect(parentServiceSpy.changeParent).toHaveBeenCalledWith(workPackage, '2345');
         done();
-      });
+      }).catch(done.fail);
     });
 
     it('will outdent to null in case of ancestorIds.length < 2', (done) => {
@@ -254,7 +261,7 @@ describe('WorkPackageViewIndentation service', () => {
       service.outdent(workPackage).then(() => {
         expect(parentServiceSpy.changeParent).toHaveBeenCalledWith(workPackage, null);
         done();
-      });
+      }).catch(done.fail);
     });
   });
 });

@@ -38,7 +38,6 @@ import {
 } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { DebouncedEventEmitter } from 'core-app/shared/helpers/rxjs/debounced-event-emitter';
-import { trackByName } from 'core-app/shared/helpers/angular/tracking-functions';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { WorkPackageViewFiltersService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-filters.service';
 import { WorkPackageFiltersService } from 'core-app/features/work-packages/components/filters/wp-filters/wp-filters.service';
@@ -76,8 +75,6 @@ export class QueryFiltersComponent extends UntilDestroyedMixin implements OnInit
   public focusElementIndex = 0;
 
   public baselineIncompatibleFilters:string[] = [];
-
-  public trackByName = trackByName;
 
   public text = {
     open_filter: this.I18n.t('js.filter.description.text_open_filter'),

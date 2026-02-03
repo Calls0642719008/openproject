@@ -124,7 +124,7 @@ export class TimelineMilestoneCellRenderer extends TimelineCellRenderer {
       return false;
     }
 
-    const diamond = jQuery('.diamond', element)[0];
+    const diamond = element.querySelector<HTMLElement>('.diamond')!;
 
     diamond.style.width = `${15}px`;
     diamond.style.height = `${15}px`;

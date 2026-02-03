@@ -36,7 +36,7 @@ RSpec.describe Queries::Capabilities::Filters::ContextFilter do
     let(:type) { :string }
     let(:model) { Capability }
     let(:attribute) { :context }
-    let(:values) { ["p3"] }
+    let(:values) { ["w3"] }
 
     describe "#available_operators" do
       it "supports = and !" do
@@ -50,8 +50,7 @@ RSpec.describe Queries::Capabilities::Filters::ContextFilter do
         let(:values) { [] }
 
         it "is invalid" do
-          expect(instance)
-            .to be_invalid
+          expect(instance).not_to be_valid
         end
       end
 
@@ -62,8 +61,17 @@ RSpec.describe Queries::Capabilities::Filters::ContextFilter do
         end
       end
 
+      context "with deprecated but still supported values" do
+        let(:values) { ["p3"] }
+
+        it "is valid" do
+          expect(instance)
+            .to be_valid
+        end
+      end
+
       context "with multiple valid values" do
-        let(:values) { ["p3", "g"] }
+        let(:values) { %w[w3 g] }
 
         it "is valid" do
           expect(instance)
@@ -75,8 +83,7 @@ RSpec.describe Queries::Capabilities::Filters::ContextFilter do
         let(:values) { ["a5"] }
 
         it "is invalid" do
-          expect(instance)
-            .to be_invalid
+          expect(instance).not_to be_valid
         end
       end
     end

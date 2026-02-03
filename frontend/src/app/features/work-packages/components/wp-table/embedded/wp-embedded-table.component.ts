@@ -33,9 +33,9 @@ import { QueryRequestParams } from 'core-app/features/work-packages/components/w
   standalone: false,
 })
 export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input('queryId') public queryId?:string;
+  @Input() public queryId?:string;
 
-  @Input('queryProps') public queryProps:Partial<QueryRequestParams> = {};
+  @Input() public queryProps:Partial<QueryRequestParams> = {};
 
   @Input() public tableActions:OpTableActionFactory[] = [];
 
@@ -181,10 +181,9 @@ export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseCo
 
   handleWorkPackageClicked(event:{ workPackageId:string; double:boolean }) {
     if (event.double) {
-      this.$state.go(
-        'work-packages.show',
-        { workPackageId: event.workPackageId },
-      );
+      const projectIdentifier = this.currentProject.identifier;
+      const link = this.pathHelper.genericWorkPackagePath(projectIdentifier, event.workPackageId) + window.location.search;
+      Turbo.visit(link, { action: 'advance' });
     }
   }
 
@@ -197,7 +196,7 @@ export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseCo
     if (event.requestedState === 'split') {
       this.keepTab.goCurrentDetailsState(params);
     } else {
-      this.keepTab.goCurrentShowState(params);
+      this.keepTab.goCurrentShowState(params.workPackageId);
     }
   }
 }

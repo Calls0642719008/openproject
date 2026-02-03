@@ -40,6 +40,8 @@ zh-TW:
               task_version_must_be_the_same_as_story_version: "必須與上層「使用者需求」(User Story)的版本相同。"
         sprint:
           cannot_end_before_it_starts: "進度不可以在開始前結束"
+  attributes:
+    task_type: "任務類型"
   backlogs:
     add_new_story: "新增使用者需求"
     any: "任何"
@@ -100,7 +102,10 @@ zh-TW:
   backlogs_empty_title: "未定義要在待辦事項中使用的版本"
   backlogs_empty_action_text: "要開始待辦事項, 請新增一個新版本並將其分配給待辦事項項欄位。"
   button_edit_wiki: "編輯 Wiki 頁面"
-  error_backlogs_task_cannot_be_story: "設定無效。所選任務類型不能同時為使用者需求類型。"
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "不能同時是故事類型"
   error_intro_plural: "發生以下的錯誤:"
   error_intro_singular: "發生以下的錯誤:"
   error_outro: "請在再次送出前更正前面的錯誤。"
@@ -124,6 +129,10 @@ zh-TW:
   label_points_burn_up: "增加"
   label_product_backlog: "產品待辦事項"
   label_select_all: "全選"
+  label_select_type: "選擇類型"
+  label_select_types: "選擇類型"
+  label_selected_type: "所選類型"
+  label_selected_types: "所選類型"
   label_sprint_backlog: "進度待辦事項"
   label_sprint_cards: "匯出卡片"
   label_sprint_impediments: "進度阻礙"
@@ -160,3 +169,7 @@ zh-TW:
   version_settings_display_option_left: "左"
   version_settings_display_option_none: "無"
   version_settings_display_option_right: "右"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    視為待辦清單（Backlog）故事的類型（例如：功能、使用者故事）。必須與任務類型不同。
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    用於故事任務的類型。必須與故事類型不同。

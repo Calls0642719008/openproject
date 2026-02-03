@@ -31,7 +31,7 @@ RSpec.describe "multi select custom values", :js do
   before do
     login_as current_user
     wp_page.visit!
-    wait_for_reload
+    wait_for_network_idle
   end
 
   describe "with mixed users, group, and placeholders" do
@@ -175,7 +175,7 @@ RSpec.describe "multi select custom values", :js do
 
         page.find(".inline-edit--display-field", text: "Billy Nobbler").click
 
-        wait_for_reload
+        wait_for_network_idle
 
         cf_edit_field.unset_value "Anton Lupin", multi: true
         cf_edit_field.set_value "Cooper Quatermaine"

@@ -31,7 +31,7 @@ A user can have one or more roles which grant permissions on different levels.
 
 ### Global role
 
-**Global roles** allow Administrators to delegate administrative tasks to individual users.
+**Global roles** allow aministrators to delegate administrative tasks to individual users.
 
 | Scope of the role                                            | Permission examples                                          | Customization options                                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -104,12 +104,20 @@ To create the new role, click on the grey *Create* button at the bottom of the p
 
 ### Create a new global role
 
-Administrators can create new global roles in *Administration* > *Users and permissions* > *Roles and permissions*. In the creation form check the box **Global role**. The form now shows the available global permissions which can be assigned to the new global role:
+Administrators can create new global roles in *Administration* > *Users and permissions* > *Roles and permissions*. In the creation form check the box **Global role**. 
+
+![Form to create a global role in OpenProject system administration](openproject_user_guide_global_role.png)
+
+The form shows the available global permissions which can be assigned to the new global role. They include:
 
 - [Create projects](../../../getting-started/projects/#create-a-new-project)
 
 > [!TIP]
-> To create a subproject for an existing project it also requires the project permission "Create subprojects".
+> To create a subproject for an existing project the project permission "Create subprojects" is also required.
+
+- Create portolios
+
+- Create programs
 
 - [Create backups](../../backup/)
 
@@ -118,12 +126,24 @@ Administrators can create new global roles in *Administration* > *Users and perm
 - [Edit users](../users/)
 
 > [!NOTE]
-> This allows the *Administrator* to delegate the administration of users to other people that should not have full control of the entire OpenProject installation (Administrator). These users can edit attributes of any users, except administrators. This means they are able to impersonate another user by changing email address to match theirs. This is a security risk and should be considered with caution.
+> This allows administrators to **delegate the administration of users to other people that should not have full control of the entire OpenProject installation (Administrator)**. These users can edit attributes of any users, except administrators. This means they are able to impersonate another user by changing email address to match theirs. This is a security risk and should be considered with caution.
+
+- View all users and groups
+
+> [!NOTE] 
+> This allows administrators to **allow the visibility of all users in the system**. When this global permission is *not* assigned, project administrators only see:
+> - users who share a project with them,
+> - users in the same groups as them, or
+> - users they explicitly invite by email (if permitted).
 
 - [Create, edit, and delete placeholder users](../placeholder-users/)
 
 > [!NOTE]
 > Users with this global permission cannot automatically see and edit all placeholder user in all projects. It is restricted to the placeholder users in projects in which the user has the respective permission to see or edit project member.
+
+- View all users' mail addresses
+- Edit attribute help texts
+- Manage public project lists
 
 ### Edit and delete roles
 
@@ -133,66 +153,3 @@ To delete an existing role click on the **delete icon** next to a role in the li
 
 > [!IMPORTANT]
 > Roles that are assigned to a user cannot be deleted.
-
-## FAQ for roles and permissions
-
-### Can Administrators delegate the task to delete users?
-
-No, only Administrators can delete other users.
-
-### Can a user with "Edit users" global permission change administrators attributes?
-
-No, only Administrators can update other Administrators attributes like name or email. This is to prevent the possibility of a user with "Edit users" global permission impersonating an Administrator by changing the email address to match theirs.
-
-### Can I set a default role for a user that creates a new project?
-
-You can set a [default role](../../projects/new-project) that users with this permission will have in a project they created.
-
-### Users do not see the action *Create project* in the main navigation even though they have the create project permission?
-
-This is UX bug tracked in [#50123](https://community.openproject.org/wp/50123).
-
-### What is the difference between a project permission and a global permission?
-
-Project permissions controls what a user can see and do within a project scope. Project permissions are attached to **project roles**. You can grant a user a permission in a specific project by giving the user one or more project roles in a specific project.
-
-Examples for project permissions:
-
-* Create work packages
-* Add comments to a work package
-
-Global permissions are system wide. They are attached to **global roles** and controls what a user can do and see independent of a specific project memberships.
-
-### Can I convert a project role to a global role?
-
-No this is not possible. You need to create a new role instead.
-
-### What permissions exist for file storages?
-
-Permissions related to the external file storages are part of the *Projects* and *Work packages and Gantt charts*:
-
-![Files storages permissions in OpenProject](openproject_user_guide_file_storages_permissions.png)
-
-Following are the permissions for file storages within OpenProject:
-
-- **View file links**: Allows a user to see file links to external storages in the Files tab of work packages
-- **Manage file links**: Allows a user to create and edit file links to work packages
-- **Manage files in project**: Allows a user to add or edit file storages for a project
-
-Following user permissions are set on files and folder in **External Storages**:
-
-- **Automatically managed folders: Read files (Nextcloud, OneDrive)**
-
-- **Automatically managed folders: Write files (Nextcloud, OneDrive)**
-
-- **Automatically managed folders: Create files (Nextcloud)**
-
-- **Automatically managed folders: Delete files (Nextcloud)**
-
-- **Automatically managed folders: Share files (Nextcloud)**
-
-  
-
-> [!NOTE]
->
-> Please note that not all file permissions are applicable to all storage providers.

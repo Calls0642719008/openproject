@@ -11,13 +11,13 @@ keywords: Enterprise on-premises FAQ, enterprise edition, self-hosted
 
 ## How can I test the OpenProject Enterprise on-premises?
 
-You can test the on-premises version 14 days for free by generating a free trial token on our [pricing site](https://www.openproject.org/pricing/). If you already have a Community edition installed, you can simply upgrade the existing installation with this token. It will automatically switch back to the Community version afterwards without any need for cancellation.
+You can test the on-premises version **14 days for free** by generating a free trial token on our [pricing site](https://www.openproject.org/pricing/). If you already have a Community edition installed, you can simply upgrade the existing installation with this token. It will automatically switch back to the Community version afterwards without any need for cancellation.
 
-If you do not yet have an own Community installation, the easiest way to test OpenProject is to create a 14 days free trial on our [Enterprise cloud](https://start.openproject.com/). If you want to proceed, you can then switch to a self-hosted version by choosing one of our [paid plans](https://www.openproject.org/pricing/).
+If you do not yet have your own Community installation, the easiest way to test OpenProject is to create a 14-day free trial on our [Enterprise cloud](https://start.openproject.com/). If you want to proceed, you can then switch to a self-hosted version by choosing one of our [paid plans](https://www.openproject.org/pricing/).
 
 ## I am currently on a lower Enterprise on-premises plan. How can I test the Enterprise add-ons of the higher plans?
 
-If you are currently on a lower plan for Enterprise on-premises and want to test any of the Enterprise add-ons from a higher plan, please [get in touch with our Sales team](https://www.openproject.org/contact/) in order to get a trial token for a higher plan.
+If you are currently on a lower plan for Enterprise on-premises edition and want to test any of the Enterprise add-ons from a higher plan, please [get in touch with our Sales team](https://www.openproject.org/contact/) in order to get a trial token for a higher plan.
 
 ## How can I upgrade from the Community to the Enterprise on-premises edition?
 
@@ -25,9 +25,9 @@ The Enterprise on-premises edition is an upgrade of the self-hosted Community ed
 
 1. Navigate to [www.openproject.org/enterprise-edition/](https://www.openproject.org/enterprise-edition/).
 2. Click on the "Book now" button.
-3. Follow the steps to purchase the Enterprise on-premises edition license. You will then receive an Enterprise on-premises edition license key by email which you can use to upgrade your Community edition to the Enterprise on-premises edition.
+3. Follow the steps to purchase the Enterprise on-premises edition license. You will then receive an Enterprise on-premises edition license key by email, which you can use to upgrade your Community edition to the Enterprise on-premises edition.
 
-If you prefer to test the Enterprise on-premises edition before purchasing, you can request a 14 day trial license from within your system (*Administration -> Enterprise edition*). Simply click on the green **Start free trial** button to receive a 14 day trial license. If you want to continue, you can navigate to our [pricing page](https://www.openproject.org/pricing/) and choose a plan. Otherwise, you will automatically be downgraded to the Community edition. There is no need to cancel the trial.
+If you prefer to test the Enterprise on-premises edition before purchasing, you can request a 14-day trial license from within your system (*Administration -> Enterprise edition*). Simply click on the green **Start free trial** button to receive a 14-day trial license. If you want to continue, you can navigate to our [pricing page](https://www.openproject.org/pricing/) and choose a plan. Otherwise, you will automatically be downgraded to the Community edition. There is no need to cancel the trial.
 
 Find more information [here](https://www.openproject.org/blog/enterprise-edition-upgrade-test-free/).
 
@@ -39,7 +39,7 @@ Please use the link "Manage subscription" in the email you received confirming y
 
 This is not possible, as the Enterprise add-ons affect the whole OpenProject instance and not the individual users.
 
-## I didn't receive my license key / Enterprise token
+## I didn't receive my License key / Enterprise token
 
 The Enterprise token is sent to the email address used to create the subscription. If you can't find it in the spam folder and if you already paid for the subscription please contact support.
 
@@ -53,7 +53,7 @@ Yes, all features, also the Enterprise add-ons, are developed under the GPL v3.
 
 ## Why do you not offer all features for free?
 
-The developers of OpenProject love this project. And they love open source development. They work hard to build powerful new features and fix bugs with every release. However, they also need to pay rent, taxes, health insurance and so on. To be able to work on OpenProject and keep the speed, they need funding.
+The developers of OpenProject love this project. And they love open source development. They work hard to build powerful new features and fix bugs with every release. However, they also need to pay rent, taxes, health insurance, and so on. To be able to work on OpenProject and keep the speed, they need sustainable funding.
 
 ## How can I change my payment details (e.g. new credit card)?
 
@@ -65,7 +65,7 @@ To downgrade to the Community edition you will simply need to cancel the paid En
 
 ## Can I migrate from the hosted Enterprise cloud edition to a self-hosted Community or Enterprise on-premises edition?
 
-Yes. If you want to switch from a hosted version of OpenProject (Enterprise cloud edition) to a self-hosted version (Community edition or Enterprise on-premises) we can provide you a full dump of your data. Since this requires manual effort for us, we may charge for this service . Please [contact us](https://www.openproject.org/contact/) to get a quotation.
+Yes. If you want to switch from a hosted version of OpenProject (Enterprise cloud edition) to a self-hosted version (Community edition or Enterprise on-premises) we can provide you a full dump of your data. Since this requires manual effort for us, we may charge for this service. Please [contact us](https://www.openproject.org/contact/) to get a quotation.
 
 ## I can't login via SSO to update my Enterprise on-premises token. What do I do?
 
@@ -78,8 +78,7 @@ sudo openproject run console
 ```
 
 Once in the console update the token like this:
-`EnterpriseToken.first.update encoded_token: "..."`
-Where `...` is the token you have copied earlier.
+`EnterpriseToken.first.update encoded_token: "..."` where `...` is the token you have copied earlier.
 After that you can quit the console by entering `exit`.
 
 ## Do you have a reseller program for OpenProject?

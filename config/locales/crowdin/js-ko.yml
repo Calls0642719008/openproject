@@ -88,6 +88,8 @@ ko:
     button_list_view: "목록 보기"
     button_show_view: "전체화면 보기"
     button_log_time: "작업시간 기록"
+    button_start_timer: "타이머 시작"
+    button_stop_timer: "타이머 중지"
     button_more: "기타"
     button_open_details: "자세히 보기"
     button_close_details: "디테일 닫기"
@@ -201,6 +203,8 @@ ko:
         add_table: "관련 작업 패키지의 테이블 추가"
         edit_query: "쿼리 편집"
         new_group: "새 그룹"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "기본값으로 초기화"
       working_days:
         calendar:
@@ -288,17 +292,6 @@ ko:
         format:
           date: "%{attribute}은(는) 유효한 날짜가 아닙니다. YYYY-MM-DD여야 합니다."
         general: "오류가 발생했습니다."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "새로운 기능 및 제품 업데이트에 대해 읽어보십시오."
-          learn_about: "새로운 모든 기능에 대해 자세히 알아보기"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                이 릴리스에는 다음과 같은 다양한 새로운 기능과 개선 사항이 포함되어 있습니다. <br> <ul class="%{list_styling_class}"> <li>더욱 현대적인 디자인의 UX/UI 개선.</li> <li>미팅: ICS 및 이메일 알림 음소거 옵션.</li> <li>내 시간 추적 모듈에 표시되는 진행 중인 타이머.</li> <li>진행률 보고: 상태 기반 모드에서도 표시되는 완료 %.</li> <li>Nextcloud 상태 확인: 누락된 토큰 교환 기능 표시(Enterprise 추가 기능).</li> </ul>
     ical_sharing_modal:
       title: "캘린더 구독"
       inital_setup_error_message: "데이터를 가져오는 중에 오류가 발생했습니다."
@@ -306,12 +299,13 @@ ko:
       warning: "다른 사용자와 이 URL을 공유하지 마세요. 이 링크가 있으면 누구든지 계정이나 암호 없이 작업 패키지 세부 정보를 볼 수 있습니다."
       token_name_label: "이 항목을 어디서 사용하실건가요?"
       token_name_placeholder: '이름을 입력하세요. 예: "휴대폰"'
-      token_name_description_text: '여러 장치에서 이 캘린더를 구독하는 경우 이 이름은 <a href="my/access_token", target="_blank">액세스 토큰</a> 목록에서 장치를 구분하는 데 도움이 됩니다.'
+      token_name_description_text: '여러 장치에서 이 캘린더를 구독하는 경우 이 이름은 <a href="%{myAccessTokensUrl}" target="_blank">액세스 토큰</a> 목록에서 장치를 구분하는 데 도움이 됩니다.'
       copy_url_label: "URL 복사"
       ical_generation_error_text: "캘린더 URL을 생성하는 중에 오류가 발생했습니다."
       success_message: '"%{name}" URL이 클립보드에 복사되었습니다. 구독을 완료하려면 캘린더 클라이언트에 붙여넣으세요.'
     label_activate: "활성화"
     label_assignee: "담당자"
+    label_assignee_alt_text: "이 작업 패키지는 %{name} 님에게 할당되었습니다"
     label_add_column_after: "다음 뒤에 열 추가"
     label_add_column_before: "다음 앞에 열 추가"
     label_add_columns: "열 추가"
@@ -353,6 +347,7 @@ ko:
     label_collapse: "축소"
     label_collapsed: "축소"
     label_collapse_all: "모두 축소"
+    label_collapse_text: "텍스트 축소"
     label_comment: "코멘트"
     label_committed_at: "%{date}에 %{committed_revision_link} "
     label_committed_link: " %{revision_identifier} 리비전이 커밋됨"
@@ -365,6 +360,7 @@ ko:
     label_expand: "확장"
     label_expanded: "확장됨"
     label_expand_all: "모두 확장"
+    label_expand_text: "전체 텍스트 표시"
     label_expand_project_menu: "프로젝트 메뉴 확장"
     label_export: "내보내기"
     label_export_preparing: "가져오기 준비 중이며 곧 다운로드됩니다."
@@ -397,8 +393,6 @@ ko:
     label_me: "나"
     label_meeting_agenda: "의제"
     label_meeting_minutes: "의사록"
-    label_menu_collapse: "축소"
-    label_menu_expand: "확장"
     label_more_than_ago: "일 이상 전"
     label_moderate_comment: "코멘트 조정"
     label_next: "다음"
@@ -432,6 +426,7 @@ ko:
     label_remove_row: "행 제거"
     label_report: "보고서"
     label_repository_plural: "리포지토리"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "다른 이름으로 저장"
     label_search_columns: "열 검색"
     label_select_watcher: "주시하는 사람을 선택"
@@ -444,7 +439,7 @@ ko:
     label_sort_lower: "아래로 이동"
     label_sorting: "정렬"
     label_spent_time: "소비한 시간"
-    label_star_query: "호감"
+    label_star_query: "즐겨찾기에 추가됨"
     label_press_enter_to_save: "저장하려면 Enter를 누르세요."
     label_public_query: "공용"
     label_sum: "합계"
@@ -563,7 +558,7 @@ ko:
       date_alerts:
         milestone_date: "마일스톤 날짜"
         overdue: "기한 지남"
-        overdue_since: "- %{difference_in_days} 이후."
+        overdue_since: "- %{difference_in_days} 동안."
         property_today: "- 오늘입니다."
         property_is: "- %{difference_in_days} 이내입니다."
         property_was: "- %{difference_in_days} 전이었습니다."
@@ -637,9 +632,6 @@ ko:
           add: "프로젝트에 대한 설정 추가"
           already_selected: "이 프로젝트는 이미 선택되었습니다."
           remove: "프로젝트 설정 제거"
-    password_confirmation:
-      field_description: "이 변경 내용을 확인하려면 계정 암호를 입력해야 합니다."
-      title: "계속하려면 암호 확인"
     pagination:
       no_other_page: "유일한 페이지에 있습니다."
       pages_skipped: "페이지를 건너뛰었습니다."
@@ -1079,8 +1071,8 @@ ko:
     notice_successful_delete: "삭제에 성공했습니다."
     notice_successful_update: "업데이트에 성공했습니다."
     notice_job_started: "작업이 시작되었습니다."
-    no_job_id: "No job ID returned from server."
-    invalid_job_response: "Invalid response from server."
+    no_job_id: "서버에서 반환된 작업 ID가 없습니다."
+    invalid_job_response: "서버의 잘못된 응답입니다."
     notice_bad_request: "잘못된 요청입니다."
     relations:
       empty: 관계가 없습니다.
@@ -1111,6 +1103,7 @@ ko:
         other: "작업 패키지"
       child_work_packages:
         other: "%{count}개의 작업 패키지 자식"
+      hour_string: "%{hours}시간"
       hour:
         one: "1시간"
         other: "%{count}시간"
@@ -1127,9 +1120,12 @@ ko:
     global_search:
       all_projects: "모든 프로젝트에서"
       close_search: "검색 닫기"
+      items_available: "%{count}개 항목 사용 가능"
+      direct_hit_available: "정확한 ID를 가진 작업 패키지를 찾았습니다. Enter 키를 눌러 여세요."
       current_project_and_all_descendants: "이 프로젝트 + 하위 프로젝트에서"
       current_project: "이 프로젝트에서"
       recently_viewed: "최근에 조회됨"
+      search_placeholder_expanded: "제목, 프로젝트, 유형, 상태 또는 ID로 작업 패키지 검색"
       title:
         all_projects: "모든 프로젝트"
         project_and_subprojects: "그리고 모든 하위 프로젝트"
@@ -1139,71 +1135,8 @@ ko:
       list: "테이블"
       timeline: "Gantt"
     invite_user_modal:
-      back: "뒤로"
       invite: "초대"
-      title:
-        invite: "사용자 초대"
-        invite_to_project: "%{type}을(를) %{project}에 초대"
-        User: "사용자"
-        Group: "그룹"
-        PlaceholderUser: "플레이스홀더 사용자"
-        invite_principal_to_project: "%{principal}을(를) %{project}에 초대"
-      project:
-        label: "프로젝트"
-        required: "프로젝트를 선택하십시오"
-        lacking_permission: "현재 선택한 프로젝트에는 사용자를 할당할 권한이 없으므로 다른 프로젝트를 선택하십시오."
-        lacking_permission_info: "현재 프로젝트에 사용자를 할당할 권한이 없습니다. 다른 프로젝트를 선택해야 합니다."
-        next_button: "다음"
-        no_results: "프로젝트가 없습니다"
-        no_invite_rights: "이 프로젝트에 멤버를 초대할 권한이 없습니다"
-      type:
-        required: "초대 유형을 선택해주십시오"
-        user:
-          title: "사용자"
-          description: "선택한 프로젝트 내 할당된 역할을 토대로 하는 권한"
-        group:
-          title: "그룹"
-          description: "선택한 프로젝트 내 할당된 역할을 토대로 하는 권한"
-        placeholder:
-          title: "플레이스홀더 사용자"
-          title_no_ee: "플레이스홀더 사용자(Enterprise Edition 전용 추가 기능)"
-          description: "프로젝트에 대한 접근 권한이 없으며 이메일이 보내지지 않았습니다."
-          description_no_ee: '프로젝트에 대한 접근 권한이 없으며 이메일이 전송되지 않았습니다.<br><a href="%{eeHref}" target="_blank">Enterprise Edition</a>에 대해 알아 보세요.'
-      principal:
-        label:
-          name_or_email: "이름 또는 이메일 주소"
-          name: "이름"
-        already_member_message: "이미 %{project}의 멤버입니다"
-        no_results_user: "사용자가 없습니다."
-        invite_user: "초대:"
-        no_results_placeholder: "플레이스홀더가 없습니다"
-        create_new_placeholder: "새 플레이스홀더 생성:"
-        no_results_group: "그룹이 없습니다"
-        next_button: "다음"
-        required:
-          user: "사용자를 선택하십시오"
-          placeholder: "플레이스홀더를 선택하십시오"
-          group: "그룹을 선택하십시오"
-      role:
-        label: "%{project} 내 역할"
-        no_roles_found: "역할이 없습니다"
-        description: >-
-          사용자가 프로젝트에 참여할 때 받게 되는 역할입니다. 역할은 수행할 수 있는 작업과 볼 수 있는 정보를 정의합니다. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> 역할과 권한에 대해 자세히 알아보세요. </a>
-        required: "역할을 선택하십시오"
-        next_button: "다음"
-      message:
-        label: "초대 메시지"
-        description: "사용자에게 이메일이 전송될 것입니다. 여기에 개인 메시지를 추가할 수도 있습니다. 초대에 관한 유용한 설명을 넣거나, 프로젝트를 시작하는 데 도움이 되는 정보를 넣을 수 있습니다."
-        next_button: "다음"
-      summary:
-        next_button: "초대장 보내기"
-      success:
-        title: "%{principal} 초대 완료!"
-        description:
-          user: "사용자는 로그인하여 %{project}에 접근할 수 있게 되었습니다. 한편 당신은 해당 사용자에 대한 계획을 세우거나 작업 패키지를 할당할 수 있습니다."
-          placeholder: "이제 %{project}에서 이 플레이스홀더를 사용할 수 있게 되었습니다. 한편 당신은 해당 사용자에 대한 계획을 세우거나 작업 패키지를 할당할 수 있습니다."
-          group: "이제 이 그룹은 %{project}의 일부입니다. 한편 당신은 해당 사용자에 대한 계획을 세우거나 작업 패키지를 할당할 수 있습니다."
-        next_button: "계속"
+      placeholder_add_tag: "플레이스홀더 사용자 만들기"
     exclusion_info:
       modal:
         title: "계층 합계에서 상태 제외됨"
@@ -1221,14 +1154,19 @@ ko:
         all: "모든 프로젝트"
         selected: "선택한 항목만"
       search_placeholder: "프로젝트 검색..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder_favorites: "즐겨찾기 검색..."
       include_subprojects: "모든 하위 프로젝트 포함"
       tooltip:
         include_all_selected: "'모든 하위 프로젝트 포함'이 활성화되어 있으므로 프로젝트가 이미 포함되어 있습니다."
         current_project: "작업 중인 현재 프로젝트입니다."
         does_not_match_search: "프로젝트가 검색 기준과 일치하지 않습니다."
       no_results: "검색 기준과 일치하는 프로젝트가 없습니다."
-      no_favorite_results: "No favorite project matches your search criteria."
+      no_favorite_results: "검색 기준과 일치하는 프로젝트 즐겨찾기가 없습니다."
+    include_workspaces:
+      search_placeholder: "검색..."
+      types:
+        program: "프로그램"
+        portfolio: "포트폴리오"
     baseline:
       toggle_title: "기준선"
       clear: "선택 취소"

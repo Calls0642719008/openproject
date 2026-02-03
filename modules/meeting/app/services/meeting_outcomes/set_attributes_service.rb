@@ -30,9 +30,27 @@
 
 module MeetingOutcomes
   class SetAttributesService < ::BaseServices::SetAttributes
+    def set_attributes(params)
+      super
+
+      set_work_package_and_kind(params)
+    end
+
     def set_default_attributes(_params)
       model.change_by_system do
         model.author = user
+      end
+    end
+
+    private
+
+    def set_work_package_and_kind(params) # rubocop:disable Metrics/AbcSize
+      if params[:work_package_id].present?
+        model.work_package_id = params[:work_package_id]
+        model.kind = params[:kind]
+      elsif params[:notes].present?
+        model.notes = params[:notes]
+        model.kind = params[:kind] if model.new_record?
       end
     end
   end

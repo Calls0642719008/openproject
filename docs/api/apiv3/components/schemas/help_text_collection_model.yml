@@ -17,7 +17,7 @@ allOf:
               - $ref: "./link.yml"
               - description: |-
                   This help text collection
-                  
+
                   **Resource**: HelpTextCollectionModel
       _embedded:
         type: object
@@ -39,6 +39,14 @@ example:
         _links:
           self:
             href: "/api/v3/help_texts/1"
+          editText:
+            href: '/admin/attribute_help_texts/1/edit'
+            type: text/html
+          attachments:
+            href: '/api/v3/help_texts/1/attachments'
+          addAttachment:
+            href: '/api/v3/help_texts/1/attachments'
+            method: post
         id: 1
         attribute: id
         attributeCaption: ID
@@ -51,6 +59,14 @@ example:
         _links:
           self:
             href: "/api/v3/help_texts/2"
+          editText:
+            href: '/admin/attribute_help_texts/2/edit'
+            type: text/html
+          attachments:
+            href: '/api/v3/help_texts/2/attachments'
+          addAttachment:
+            href: '/api/v3/help_texts/2/attachments'
+            method: post
         id: 2
         attribute: status
         attributeCaption: Status

@@ -109,6 +109,11 @@ module OpenIDConnect
       end
     end
 
+    def group_regexes
+      # handle legacy data, where group regexes where `nil`.
+      super || []
+    end
+
     def google?
       oidc_provider == "google"
     end

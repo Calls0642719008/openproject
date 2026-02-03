@@ -145,5 +145,60 @@ RSpec.describe "Datepicker logic on follow relationships", :js, with_settings: {
         end
       end
     end
+
+    context "if the predecessor has no dates" do
+      before_all do
+        predecessor.update_column(:start_date, nil)
+        predecessor.update_column(:due_date, nil)
+      end
+
+      let!(:follower) do
+        create(:work_package,
+               type:,
+               project:,
+               schedule_manually: false,
+               start_date: nil,
+               due_date: nil)
+      end
+      let!(:relation) { create(:follows_relation, from: follower, to: predecessor) }
+      let(:date_field) { work_packages_page.edit_field(:combinedDate) }
+
+      it "disables the start date and can pick any finish date or duration" do
+        datepicker.expect_start_date("", disabled: true)
+        datepicker.expect_due_date("", disabled: false)
+        datepicker.expect_duration("", disabled: false)
+        datepicker.expect_working_days_only true
+        datepicker.expect_automatic_scheduling_mode
+
+        datepicker.show_date "2024-02-01"
+        datepicker.expect_not_disabled Date.parse("2024-02-01")
+        datepicker.expect_not_disabled Date.parse("2024-02-02")
+        datepicker.expect_disabled Date.parse("2024-02-03") # Saturday is non-working day
+        datepicker.expect_disabled Date.parse("2024-02-04") # Sunday is non-working day
+        datepicker.expect_not_disabled Date.parse("2024-02-05")
+        datepicker.expect_not_disabled Date.parse("2024-02-06")
+        datepicker.expect_not_disabled Date.parse("2024-02-07")
+
+        datepicker.set_date "2024-02-14"
+        # dates before and after the selected date are still selectable
+        datepicker.expect_not_disabled Date.parse("2024-02-01")
+        datepicker.expect_not_disabled Date.parse("2024-02-02")
+        datepicker.expect_not_disabled Date.parse("2024-02-13")
+        datepicker.expect_not_disabled Date.parse("2024-02-14")
+        datepicker.expect_not_disabled Date.parse("2024-02-15")
+        datepicker.expect_not_disabled Date.parse("2024-02-28")
+        datepicker.expect_not_disabled Date.parse("2024-02-29")
+
+        # duration can be set, but it will remove the finish date as start date can't be set
+        datepicker.set_duration 3
+        datepicker.expect_due_date ""
+        datepicker.expect_duration "3"
+
+        # and setting finish date removes the duration too for the same reason
+        datepicker.set_due_date "2024-02-14"
+        datepicker.expect_due_date "2024-02-14"
+        datepicker.expect_duration ""
+      end
+    end
   end
 end

@@ -28,7 +28,7 @@ You can configure general system settings in OpenProject. Under System settings 
    - tel://number
    - sms://number
    - facetime://number
-    
+   
    One protocol should be entered per line.
 
 > [!NOTE]

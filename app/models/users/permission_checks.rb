@@ -68,9 +68,7 @@ module Users::PermissionChecks
   end
 
   def reload(*args)
-    @user_permissible_service = nil
-    @user_allowed_service = nil
-    @project_role_cache = nil
+    reset_permission_caches
 
     super
   end
@@ -158,6 +156,12 @@ module Users::PermissionChecks
         false
       end
     end
+  end
+
+  def reset_permission_caches
+    @user_permissible_service = nil
+    @user_allowed_service = nil
+    @project_role_cache = nil
   end
 
   private

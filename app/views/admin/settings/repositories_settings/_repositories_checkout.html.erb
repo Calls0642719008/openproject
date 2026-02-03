@@ -1,41 +1,19 @@
-<fieldset class="form--fieldset">
-  <legend class="form--fieldset-legend"><%= t("repositories.checkout.instructions") %></legend>
+<%# locals: (f:) %>
+
+<%=
+  render(Primer::Beta::Subhead.new(mt: 3)) do |component|
+    component.with_heading(tag: :h3, size: :medium) { t("repositories.checkout.instructions") }
+  end
+%>
+<%= f.fields_for(:repository_checkout_data) do |repository_checkout_fields| %>
   <% OpenProject::SCM::Manager.registered.each do |vendor, klass| %>
-      <% vendor = vendor.to_s %>
-      <% setting_base = "settings[repository_checkout_data][#{vendor}]" %>
-      <% enabled = Setting.repository_checkout_data[vendor]["enabled"].to_i > 0 %>
-      <fieldset class="form--fieldset -collapsible collapsed">
-        <legend class="form--fieldset-legend" title="<%= klass.vendor_name %>">
-          <a href="#"><%= klass.vendor_name %>
-          </a>
-        </legend>
-        <div class="form--field">
-          <% key = "#{setting_base}[enabled]" %>
-          <input type="hidden" name="<%= key %>" value="0" id="<% "#{key}_hidden" %>">
-          <%= setting_label key, label: :setting_repository_checkout_display %>
-          <div class="form--field-container">
-            <%= styled_check_box_tag key, 1, enabled, class: "settings-repositories--checkout-toggle" %>
-          </div>
-          <div class="form--field-instructions"><%= t("repositories.checkout.enable_instructions_text") %></div>
-        </div>
-        <div class="form--field">
-          <% key = "#{setting_base}[base_url]" %>
-          <%= setting_label key, label: :setting_repository_checkout_base_url %>
-          <div class="form--field-container">
-            <%= styled_text_field_tag key, Setting.repository_checkout_data[vendor]["base_url"],
-                                      type: "url", required: enabled %>
-          </div>
-          <div class="form--field-instructions"><%= simple_format t("repositories.checkout.base_url_text") %></div>
-        </div>
-        <div class="form--field">
-          <% key = "#{setting_base}[text]" %>
-          <%= setting_label key, label: :setting_repository_checkout_text %>
-          <div class="form--field-container">
-            <%= styled_text_area_tag key, Setting.repository_checkout_data[vendor]["text"],
-                                     placeholder: t("repositories.checkout.default_instructions.#{vendor}") %>
-          </div>
-          <div class="form--field-instructions"><%= t("repositories.checkout.text_instructions") %></div>
-        </div>
-      </fieldset>
+    <%= render Primer::OpenProject::CollapsibleSection.new(collapsed: true, display: :block, mb: 3) do |section| %>
+      <% section.with_title(tag: :h4, font_size: 5) { klass.vendor_name } %>
+      <% section.with_collapsible_content do %>
+        <%= repository_checkout_fields.fields_for(vendor) do |vendor_fields| %>
+          <%= render(Admin::Settings::RepositoriesSettings::CheckoutForm.new(vendor_fields, vendor:)) %>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
-</fieldset>
+<% end %>

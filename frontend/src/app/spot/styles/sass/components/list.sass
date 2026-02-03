@@ -1,5 +1,7 @@
 @use "sass:list"
 
+@import '../../../../../global_styles/content/_autocomplete.sass'
+
 .spot-list
   display: flex
   flex-direction: column
@@ -92,6 +94,24 @@
         overflow: hidden
         max-width: 100%
         width: 100%
+
+        &:has(.description),
+        &:has(.op-primer--star-icon)
+          display: flex
+          align-items: center
+
+          > span:first-child
+            text-overflow: ellipsis
+            white-space: nowrap
+            overflow: hidden
+
+        .description
+          @extend %autocomplete-description
+
+    &-remove
+      margin-left: $spot-spacing-0_5
+      display: flex
+      align-self: center
 
     &-action_disabled &-title
       opacity: 0.5

@@ -44,7 +44,7 @@ RSpec.describe "Rate limiting lost_password",
       post account_lost_password_path,
            params: { mail: "foo@example.com" },
            headers: { "Content-Type": "multipart/form-data" }
-      expect(response).to be_successful
+      expect(response).to be_redirect
     end
 
     post account_lost_password_path,
@@ -56,7 +56,7 @@ RSpec.describe "Rate limiting lost_password",
     post account_lost_password_path,
          params: { mail: "corrected@example.com" },
          headers: { "Content-Type": "multipart/form-data" }
-    expect(response).to be_successful
+    expect(response).to be_redirect
   end
 
   context "when disabled", with_config: { rate_limiting: { lost_password: false } } do
@@ -68,7 +68,7 @@ RSpec.describe "Rate limiting lost_password",
         post account_lost_password_path,
              params: { mail: "foo@example.com" },
              headers: { "Content-Type": "multipart/form-data" }
-        expect(response).to be_successful
+        expect(response).to be_redirect
       end
     end
   end

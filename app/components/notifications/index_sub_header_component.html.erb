@@ -21,7 +21,7 @@
       subheader.with_action_button(
         tag: :a,
         href: mark_all_read_notifications_path(**current_filters),
-        data: { method: :post, confirm: I18n.t("js.notifications.center.mark_all_read_confirmation") },
+        data: { turbo_method: :post, turbo_confirm: I18n.t("js.notifications.center.mark_all_read_confirmation") },
         size: :medium,
         leading_icon: :"op-read-all",
         label: I18n.t("js.notifications.center.mark_all_read"),

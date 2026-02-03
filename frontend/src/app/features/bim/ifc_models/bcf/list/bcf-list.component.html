@@ -1,37 +1,42 @@
-<div class="op-bcf-list--result-overlay"
-     *ngIf="(showResultOverlay$ | async) && showTableView"></div>
+@if ((showResultOverlay$ | async) && showTableView) {
+  <div class="op-bcf-list--result-overlay"
+  ></div>
+}
 
 <!-- TABLE representation of the WP -->
-<div class="op-bcf-list--work-packages-split-view--tabletimeline-container"
-     [ngClass]="{ '_with-resizer': showResizer }"
-     *ngIf="tableInformationLoaded && showTableView">
+@if (tableInformationLoaded && showTableView) {
+  <div class="op-bcf-list--work-packages-split-view--tabletimeline-container"
+    [ngClass]="{ '_with-resizer': showResizer }"
+    >
+    <wp-table [projectIdentifier]="CurrentProject.identifier"
+      [configuration]="wpTableConfiguration"
+      (itemClicked)="handleWorkPackageClicked($event)"
+      (stateLinkClicked)="openStateLink($event)"
+      class="work-packages-split-view--tabletimeline-content" />
+  </div>
+}
 
-  <wp-table [projectIdentifier]="CurrentProject.identifier"
-            [configuration]="wpTableConfiguration"
-            (itemClicked)="handleWorkPackageClicked($event)"
-            (stateLinkClicked)="openStateLink($event)"
-            class="work-packages-split-view--tabletimeline-content">
-  </wp-table>
-</div>
-
-<wp-resizer *ngIf="showResizer"
-            elementClass="work-packages-partitioned-page--content-right"
-            localStorageKey="openProject-splitViewFlexBasis">
-</wp-resizer>
+@if (showResizer) {
+  <wp-resizer elementClass="work-packages-partitioned-page--content-right"
+    localStorageKey="openProject-splitViewFlexBasis" />
+}
 
 <!-- GRID representation of the WP -->
-<div *ngIf="!showTableView"
-     class="op-bcf-list--work-packages--card-view-container"
-     [ngClass]="{ '_with-resizer': showResizer }">
-  <wp-grid [configuration]="wpTableConfiguration"
-           [showResizer]="false"
-           (itemClicked)="handleWorkPackageClicked($event)"
-           (stateLinkClicked)="openStateLink($event)">
-  </wp-grid>
-</div>
+@if (!showTableView) {
+  <div
+    class="op-bcf-list--work-packages--card-view-container"
+    [ngClass]="{ '_with-resizer': showResizer }">
+    <wp-grid [configuration]="wpTableConfiguration"
+      [showResizer]="false"
+      (itemClicked)="handleWorkPackageClicked($event)"
+      (stateLinkClicked)="openStateLink($event)" />
+  </div>
+}
 
 <!-- Footer -->
-<div class="work-packages-split-view--tabletimeline-footer hide-when-print"
-     *ngIf="tableInformationLoaded">
-  <wp-table-pagination></wp-table-pagination>
-</div>
+@if (tableInformationLoaded) {
+  <div class="work-packages-split-view--tabletimeline-footer hide-when-print"
+    >
+    <wp-table-pagination />
+  </div>
+}

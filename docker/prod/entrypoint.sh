@@ -84,7 +84,24 @@ if [ "$(id -u)" = '0' ]; then
 		exec "$@"
 	fi
 
-	if [ "$1" = "./docker/prod/supervisord" ] || [ "$1" = "./docker/prod/proxy" ]; then
+	if [ "$1" = "./docker/prod/supervisord" ]; then
+		if [ "$OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL" = "auto" ]; then
+			# If no hocuspocus config was defined, we generate one here to use the bundled hocuspocus
+			# which is started via supervisord along side everything else.
+			# Exporting the config here will apply to all services, though it's only needed by
+			# web and hocuspocus.
+			HP_PROTOCOL="wss"
+			if [ "$OPENPROJECT_HTTPS" = "false" ]; then
+				HP_PROTOCOL="ws"
+			fi
+
+			HP_HOST=${OPENPROJECT_HOST__NAME:="localhost"}
+			export OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL="${HP_PROTOCOL}://${HP_HOST}/hocuspocus"
+			export OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET="$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 32)"
+		fi
+
+		exec "$@"
+	elif [ "$1" = "./docker/prod/proxy" ]; then
 		exec "$@"
 	fi
 

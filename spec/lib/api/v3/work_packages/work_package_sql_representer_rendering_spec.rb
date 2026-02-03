@@ -48,11 +48,13 @@ RSpec.describe API::V3::WorkPackages::WorkPackageSqlRepresenter, "rendering" do
   let(:rendered_work_package) do
     create(:work_package,
            project:,
+           type:,
            assigned_to: assignee,
            author:,
            responsible:)
   end
-  let(:project) { create(:project, types: [create(:type, is_milestone:)]) }
+  let(:project) { create(:project, types: [type]) }
+  let(:type) { create(:type, is_milestone:) }
   let(:is_milestone) { false }
   let(:assignee) { nil }
   let(:author) { create(:user) }
@@ -91,6 +93,14 @@ RSpec.describe API::V3::WorkPackages::WorkPackageSqlRepresenter, "rendering" do
             author: {
               href: api_v3_paths.user(author.id),
               title: author.name
+            },
+            status: {
+              href: api_v3_paths.status(rendered_work_package.status.id),
+              title: rendered_work_package.status.name
+            },
+            type: {
+              href: api_v3_paths.type(type.id),
+              title: type.name
             }
           }
         }
@@ -128,6 +138,14 @@ RSpec.describe API::V3::WorkPackages::WorkPackageSqlRepresenter, "rendering" do
             author: {
               href: api_v3_paths.user(author.id),
               title: author.name
+            },
+            status: {
+              href: api_v3_paths.status(rendered_work_package.status.id),
+              title: rendered_work_package.status.name
+            },
+            type: {
+              href: api_v3_paths.type(type.id),
+              title: type.name
             }
           }
         }

@@ -1,6 +1,6 @@
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { WorkPackageViewGroupByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-group-by.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WpGraphConfigurationService } from 'core-app/shared/components/work-package-graphs/configuration/wp-graph-configuration.service';
 import { WorkPackageStatesInitializationService } from 'core-app/features/work-packages/components/wp-list/wp-states-initialization.service';
 import { TabComponent } from 'core-app/features/work-packages/components/wp-table/configuration-modal/tab-portal-outlet';
@@ -18,7 +18,7 @@ interface OpChartType {
   templateUrl: './settings-tab-inner.component.html',
   standalone: false,
 })
-export class WpGraphConfigurationSettingsTabInnerComponent extends QuerySpacedTabComponent implements TabComponent {
+export class WpGraphConfigurationSettingsTabInnerComponent extends QuerySpacedTabComponent implements TabComponent, OnInit {
   // Grouping
   public availableGroups:QueryGroupByResource[] = [];
 

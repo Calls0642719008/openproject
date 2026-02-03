@@ -1,5 +1,4 @@
-<% entries = @texts_by_type[tab[:name]] || [] %>
-<% if entries.any? %>
+<% if @attribute_help_texts.any? %>
   <div class="generic-table--container">
     <div class="generic-table--results-container">
       <table class="generic-table" data-controller="table-highlighting">
@@ -35,10 +34,10 @@
         </tr>
         </thead>
         <tbody>
-        <% entries.each do |attribute_help_text| -%>
+        <% @attribute_help_texts.each do |attribute_help_text| -%>
           <tr class="attribute-help-text--entry">
             <td>
-              <%= link_to h(attribute_help_text.attribute_caption),
+              <%= link_to h(attribute_help_text.attribute_field_name),
                           edit_attribute_help_text_path(attribute_help_text) %>
             </td>
             <td>
@@ -52,8 +51,10 @@
               <%= link_to(
                     op_icon("icon icon-delete"),
                     attribute_help_text_path(attribute_help_text),
-                    method: :delete,
-                    data: { confirm: I18n.t(:text_are_you_sure) },
+                    data: {
+                      turbo_method: :delete,
+                      turbo_confirm: I18n.t(:text_are_you_sure)
+                    },
                     title: t(:button_delete)
                   ) %>
             </td>

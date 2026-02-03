@@ -1,4 +1,5 @@
 de:
   overviews:
-    label: 'Übersicht'
-  permission_manage_overview: 'Übersichtsseite verwalten'
+    label_home: "%{workspace_type}-Startseite"
+    label_dashboard: "Dashboard"
+    label_overview: "Übersicht"

@@ -33,10 +33,9 @@ require "rails_helper"
 RSpec.describe Users::HoverCardComponent, type: :component do
   include Rails.application.routes.url_helpers
 
-  let(:project) { create(:project) }
-  let(:user) { create(:user) }
-  let(:another_user) { create(:user, member_with_permissions: { project => [:manage_members] }) }
-  let(:current_user) { another_user }
+  shared_let(:project) { create(:project) }
+  let(:user) { create(:user, firstname: "in my project", member_with_permissions: { project => [:view_project] }) }
+  let(:current_user) { create(:user, member_with_permissions: { project => [:manage_members] }) }
 
   let(:groups) { [] }
 
@@ -48,6 +47,14 @@ RSpec.describe Users::HoverCardComponent, type: :component do
     render_inline(subject)
   end
 
+  context "when user is not visible" do
+    let(:user) { create(:user, firstname: "not visible") }
+
+    it "renders nothing" do
+      expect(rendered_content).to eq ""
+    end
+  end
+
   it "renders successfully" do
     find_test_selector("user-hover-card-name", text: user.name)
   end
@@ -55,8 +62,8 @@ RSpec.describe Users::HoverCardComponent, type: :component do
   context "when the user does not exist" do
     let(:user) { instance_double(User, id: 9000) }
 
-    it "renders a generic error message" do
-      expect(page).to have_text(I18n.t("http.response.unexpected"))
+    it "renders nothing" do
+      expect(rendered_content).to eq ""
     end
   end
 
@@ -86,10 +93,29 @@ RSpec.describe Users::HoverCardComponent, type: :component do
         Array.new(2) { create(:group, members: user) }
       end
 
-      it "lists the group names for a user" do
-        g = find_test_selector("user-hover-card-groups")
+      context "and the current being a member in the group" do
+        let(:groups) do
+          [
+            create(:group, members: [current_user, user], lastname: "Group with current user"),
+            create(:group, members: user)
+          ]
+        end
 
-        expect(g).to have_text("Member of #{groups.first.lastname}, #{groups.last.lastname}.")
+        it "lists the one group" do
+          g = find_test_selector("user-hover-card-groups")
+
+          expect(g).to have_text("Member of Group with current user.")
+        end
+      end
+
+      context "and the current user seeing all groups" do
+        let(:current_user) { create(:user, global_permissions: %i[view_all_principals]) }
+
+        it "lists the group names for a user" do
+          g = find_test_selector("user-hover-card-groups")
+
+          expect(g).to have_text("Member of #{groups.first.lastname}, #{groups.last.lastname}.")
+        end
       end
 
       context "with no rights to manage members" do
@@ -104,8 +130,10 @@ RSpec.describe Users::HoverCardComponent, type: :component do
       end
     end
 
-    context "with the user being member of many groups" do
-      let(:groups) do
+    context "with the user being member of many groups and seeing them" do
+      let(:current_user) { create(:user, global_permissions: %i[view_all_principals]) }
+
+      let!(:groups) do
         ("A".."H").map { |char| create(:group, lastname: "Group #{char}", members: user) }
       end
 

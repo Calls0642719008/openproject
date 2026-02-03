@@ -40,9 +40,7 @@ Rails.application.routes.draw do
   scope "projects/:project_id", as: "projects" do
     resources :cost_entries, controller: "costlog", only: %i[new create]
 
-    resources :hourly_rates, only: %i[show edit update] do
-      post :set_rate, on: :member
-    end
+    resources :hourly_rates, only: %i[show edit update]
 
     get "/time_entries/dialog" => "time_entries#dialog"
   end

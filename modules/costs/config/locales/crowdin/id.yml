@@ -22,7 +22,7 @@
 id:
   plugin_costs:
     name: "Waktu dan biaya"
-    description: "This module adds features for planning and tracking costs of projects."
+    description: "Modul ini menambahkan fitur untuk perencanaan dan pelacakan biaya proyek."
   activerecord:
     attributes:
       cost_entry:
@@ -31,13 +31,13 @@ id:
         spent: "Dihabiskan"
         spent_on: "Tanggal"
         logged_by: "Dicatat oleh"
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Masuk untuk
+        entity_id: Masuk untuk
+        entity_gid: Masuk untuk
       cost_type:
         unit: "Nama unit"
         unit_plural: "Nama plural unit"
-        default: "Cost type by default"
+        default: "Jenis biaya secara default"
       work_package:
         costs_by_type: "Unit terpakai"
         labor_costs: "Biaya tenaga"
@@ -59,16 +59,16 @@ id:
         activity: Activity
         spent_on: Tanggal
         start_time: Waktu mulai
-        end_time: Finish time
+        end_time: Waktu penyelesaian
         time: Waktu
-        entity: Logged for
-        entity_id: Logged for
-        entity_gid: Logged for
+        entity: Masuk untuk
+        entity_id: Masuk untuk
+        entity_gid: Masuk untuk
     models:
       time_entry:
-        other: "Time entries"
+        other: "Entri waktu"
       cost_entry:
-        other: "Cost entries"
+        other: "Biaya masuk"
       cost_type:
         other: "Jenis biaya"
       time_entry_activity:
@@ -77,9 +77,9 @@ id:
     errors:
       models:
         time_entry:
-          invalid_time: "must be between 00:00 and 23:59."
-          cannot_log_for_this_work_package: "Cannot log time for this work package."
-          duplicate_ongoing: "An ongoing time entry already exists for this user."
+          invalid_time: "harus diantara pukul 00:00 dan 23:59."
+          cannot_log_for_this_work_package: "Tidak dapat mencatat waktu untuk paket kerja ini."
+          duplicate_ongoing: "Entri waktu yang sedang berlangsung sudah ada untuk pengguna ini."
         work_package:
           is_not_a_valid_target_for_cost_entries: "Reassign biaya tidak dapat dilakukan pada Work package #%{id}."
           nullify_is_not_valid_for_cost_entries: "Masukan biaya tidak dapat di-assign ke proyek."
@@ -97,7 +97,7 @@ id:
   button_log_time: "Log"
   button_add_activity: "Activity"
   button_add_time_entry: "Catatan waktu"
-  button_stop_timer: "Stop timer"
+  button_stop_timer: "Hentikan penghitung waktu"
   caption_booked_on_project: "Telah dipesan pada proyek"
   caption_default: "Default"
   caption_default_rate_history_for: "Default rate history for %{user}"
@@ -111,8 +111,8 @@ id:
   caption_show_locked: "Tampilkan tipe yang terkunci"
   caption_log_time_dialog: "Catatan waktu"
   description_date_for_new_rate: "Tanggal berlaku rate"
-  description_costs_settings: "Define the desired format for the costs in all projects."
-  description_time_settings: "Define which fields are mandatory to fill when logging time in all projects."
+  description_costs_settings: "Tentukan format yang diinginkan untuk biaya dalam semua proyek."
+  description_time_settings: "Tentukan bidang yang wajib diisi saat mencatat waktu di semua proyek."
   group_by_others: "tidak dalam grup manapun"
   label_between: "antara"
   label_cost_filter_add: "Tambahkan filter entri biaya"
@@ -139,52 +139,52 @@ id:
   label_kind: "Tipe"
   label_less_or_equal: "<="
   label_log_costs: "Log biaya unit"
-  label_new_time_entry_activity: "New time entry activity"
-  label_time_entry_activity_form_description: "Changes to this time entry activity will be reflected in all projects where it is enabled."
+  label_new_time_entry_activity: "Aktivitas baru pada entri waktu"
+  label_time_entry_activity_form_description: "Perubahan pada aktivitas entri waktu ini akan tercermin di semua proyek ketika fitur ini diaktifkan."
   label_no: "No"
   label_option_plural: "Opsi"
   label_overall_costs: "Biaya keseluruhan"
   label_rate: "Rate"
   label_rate_plural: "Rate"
   label_status_finished: "Selesai"
-  label_show: "Lihat"
+  label_show: "Tampilkan"
   label_units: "Biaya unit"
   label_user: "User"
   label_until: "hingga"
   label_valid_from: "Berlaku dari"
   label_yes: "Yes"
   label_time: "Waktu"
-  label_cost: "Cost"
+  label_cost: "Biaya"
   label_costs: "Biaya"
-  label_mandatory_fields: "Mandatory fields"
-  label_my_time_tracking: "My time tracking"
-  label_no_time: "No time tracked"
-  label_next_day: "Next day"
+  label_mandatory_fields: "Kolom wajib"
+  label_my_time_tracking: "Pelacakan waktu saya"
+  label_no_time: "Tidak ada waktu yang dilacak"
+  label_next_day: "Besok"
   label_next_week: "Minggu depan"
-  label_next_workweek: "Next work week"
-  label_next_month: "Next month"
-  label_previous_day: "Previous day"
-  label_previous_workweek: "Previous work week"
+  label_next_workweek: "Minggu kerja berikutnya"
+  label_next_month: "Bulan selanjutnya"
+  label_previous_day: "Kemarin"
+  label_previous_workweek: "Minggu kerja sebelumnya"
   label_previous_week: "Minggu sebelumnya"
-  label_previous_month: "Previous month"
-  label_specific_day: "Day %{day}"
-  label_specific_week: "Calendar week %{week}"
-  label_specific_month: "Month %{month}"
+  label_previous_month: "Bulan sebelumnya"
+  label_specific_day: "Hari %{day}"
+  label_specific_week: "Minggu kalender %{week}"
+  label_specific_month: "Bulan %{month}"
   label_list: "List"
   label_month: "Bulan"
-  label_workweek: "Work week"
+  label_workweek: "Minggu kerja"
   label_day: "Hari"
-  label_today_capitalized: "Today"
-  label_view_mode_switcher: "Change view"
-  label_timer_since: "Started at %{time}"
-  placeholder_activity_select_work_package_first: Work package selection is required first
+  label_today_capitalized: "Hari Ini"
+  label_view_mode_switcher: "Ubah tampilan"
+  label_timer_since: "Dimulai dari %{time}"
+  placeholder_activity_select_work_package_first: Pemilihan paket kerja harus dilakukan terlebih dahulu
   notice_something_wrong: "Terjadi suatu kesalahan. Silahkan coba lagi."
   notice_successful_restore: "Restore berhasil."
   notice_successful_lock: "Locked successfully."
   notice_cost_logged_successfully: "Unit cost logged successfully."
-  notice_different_time_zones: "This user has a different time zone (%{tz}). Time will be logged using their time zone."
-  notice_time_entry_update_failed: "Failed to update time entry. Errors: %{errors}"
-  notice_time_entry_delete_failed: "Failed to delete time entry. Errors: %{errors}"
+  notice_different_time_zones: "Pengguna ini berada di zona waktu yang berbeda (%{tz}). Waktu akan dicatat menggunakan zona waktu mereka."
+  notice_time_entry_update_failed: "Gagal memperbarui entri waktu. Kesalahan: %{errors}"
+  notice_time_entry_delete_failed: "Gagal menghapus entri waktu. Kesalahan: %{errors}"
   permission_edit_cost_entries: "Ubah booked biaya unit"
   permission_edit_own_cost_entries: "Edit booked biaya unit sendiri"
   permission_edit_hourly_rates: "Edit rate per jam"
@@ -199,13 +199,13 @@ id:
   permission_view_own_hourly_rate: "Tampilkan rate per-jam diri sendiri"
   permission_view_own_time_entries: "Tampilan jumlah waktu diri sendiri"
   project_module_costs: "Waktu dan biaya"
-  setting_allow_tracking_start_and_end_times: "Allow start and finish times"
+  setting_allow_tracking_start_and_end_times: "Izinkan waktu mulai dan waktu selesai"
   setting_costs_currency: "Mata Uang"
   setting_costs_currency_format: "Format mata uang"
-  setting_enforce_tracking_start_and_end_times: "Require start and finish times"
-  setting_enforce_without_allow: "Requiring start and finish times is not possible without allowing them"
-  setting_allow_tracking_start_and_end_times_caption: "Enables entering start and finish times when logging time."
-  setting_enforce_tracking_start_and_end_times_caption: "Makes entering start and finish times mandatory when logging time."
+  setting_enforce_tracking_start_and_end_times: "Butuh waktu mulai dan selesai"
+  setting_enforce_without_allow: "Membutuhkan waktu mulai dan selesai tidak mungkin dilakukan tanpa mengizinkannya"
+  setting_allow_tracking_start_and_end_times_caption: "Memungkinkan untuk memasukkan waktu mulai dan selesai saat mencatat waktu."
+  setting_enforce_tracking_start_and_end_times_caption: "Membuat pengisian waktu mulai dan selesai menjadi wajib saat mencatat waktu."
   text_assign_time_and_cost_entries_to_project: "Masukkan laporan per-jam dan laporan biaya ke proyek"
   text_destroy_cost_entries_question: "%{cost_entries} digunakan pada work package yang akan dihapus. Keputusan anda?"
   text_destroy_time_and_cost_entries: "Hapus jumlah jam dan biaya yang terlapor"
@@ -214,17 +214,17 @@ id:
   text_warning_hidden_elements: "Beberapa entri mungkin tidak dipakai oleh agregasi yang dilakukan."
   week: "minggu"
   total_times:
-    workweek: "Workweek Total: %{hours}"
-    week: "Week Total: %{hours}"
-    month: "Month Total: %{hours}"
-    day: "Day Total: %{hours}"
+    workweek: "Total minggu kerja: %{hours}"
+    week: "Total minggu: %{hours}"
+    month: "Total bulan: %{hours}"
+    day: "Total hari: %{hours}"
   api_v3:
     errors:
       validation:
-        start_time_different_date: "Date part of startTime (%{start_time}) must be the same as the spentOn (%{spent_on}) date."
+        start_time_different_date: "Bagian tanggal dari startTime (%{start_time}) harus sama dengan tanggal spentOn (%{spent_on})."
   ee:
     features:
-      time_entry_time_restrictions: Require exact time tracking
+      time_entry_time_restrictions: Memerlukan pelacakan waktu yang tepat
     upsell:
       time_entry_time_restrictions:
-        description: "Improve your time tracking by requiring exact start and finish times when logging time."
+        description: "Perbaiki pelacakan waktu Anda dengan mengharuskan pencatatan waktu yang tepat pada waktu mulai dan selesai saat mencatat waktu."

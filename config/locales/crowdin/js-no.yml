@@ -88,6 +88,8 @@
     button_list_view: "Listevisning"
     button_show_view: "Fullskjermvisning"
     button_log_time: "Logg tid"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "Mer"
     button_open_details: "Åpne detaljvisning"
     button_close_details: "Lukk detaljvisning"
@@ -201,6 +203,8 @@
         add_table: "Legg til tabell over tilknyttede arbeidspakker"
         edit_query: "Rediger spørring"
         new_group: "Ny gruppe"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Tilbakestill til standard"
       working_days:
         calendar:
@@ -288,17 +292,6 @@
         format:
           date: "%{attribute} er ingen gyldig dato - ÅÅÅÅ-MM-DD forventet."
         general: "En feil har oppstått."
-    homescreen:
-      blocks:
-        new_features:
-          text_new_features: "Les om nye funksjoner og produktoppdateringer."
-          learn_about: "Learn more about all new features"
-          #Include the version to invalidate outdated translations in other locales.
-          #Otherwise, e.g. Chinese might still have the translations for 10.0 in the 12.0 release.
-          "16_3":
-            standard:
-              new_features_html: >
-                The release contains various new features and improvements, such as <br> <ul class="%{list_styling_class}"> <li>UX/UI improvements for a more modern look.</li> <li>Meetings: Option to mute email notifications and ICS.</li> <li>Ongoing timers shown in the My time tracking module.</li> <li>Progress reporting: % Complete sum also shown in Status-based mode.</li> <li>Nextcloud Health check: Indicate missing token exchange capability (Enterprise add-on).</li> </ul>
     ical_sharing_modal:
       title: "Abonner på kalender"
       inital_setup_error_message: "En feil oppstod under henting av data."
@@ -306,12 +299,13 @@
       warning: "Ikke del denne URL-adressen med andre brukere. Alle med denne lenken vil kunne se arbeidspakkedetaljer uten konto eller passord."
       token_name_label: "Hvor kommer du til å bruke dette?"
       token_name_placeholder: 'Skriv inn et navn, f.eks. "Telefon"'
-      token_name_description_text: 'Hvis du abonnerer på denne kalenderen fra flere enheter, vil dette navnet hjelpe deg med å skille dem fra i listen <a href="my/access_token", target="_blank">tilgangsnøkkel</a> listen.'
+      token_name_description_text: 'If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.'
       copy_url_label: "Kopier URL"
       ical_generation_error_text: "Det oppstod en feil ved generering av kalenderURL."
       success_message: 'URL-adressen "%{name}" ble vellykket kopiert til utklippstavlen. Lim den inn i kalenderklienten for å fullføre abonnementet.'
     label_activate: "Aktiver"
-    label_assignee: "Utførende"
+    label_assignee: "Deltaker"
+    label_assignee_alt_text: "This work package is assigned to %{name}"
     label_add_column_after: "Legg til kolonne etter"
     label_add_column_before: "Legg til kolonne før"
     label_add_columns: "Legg til kolonner"
@@ -324,7 +318,7 @@
     label_added_time_by: 'Lagt til av <a href="%{authorLink}">%{author}</a> i %{age}'
     label_ago: "dager siden"
     label_all: "alle"
-    label_all_projects: "All projects"
+    label_all_projects: "Alle prosjekter"
     label_all_uppercase: "Alle"
     label_all_work_packages: "alle arbeidspakker"
     label_and: "og"
@@ -353,6 +347,7 @@
     label_collapse: "Skjul"
     label_collapsed: "skjult"
     label_collapse_all: "Skjul alle"
+    label_collapse_text: "Collapse text"
     label_comment: "Kommentar"
     label_committed_at: "%{committed_revision_link} den %{date}"
     label_committed_link: "engasjert revisjon %{revision_identifier}"
@@ -365,6 +360,7 @@
     label_expand: "Utvid"
     label_expanded: "utvidet"
     label_expand_all: "Utvid alle"
+    label_expand_text: "Show full text"
     label_expand_project_menu: "Utvid prosjektmeny"
     label_export: "Eksportèr"
     label_export_preparing: "Eksporten forberedes og lastes ned i løpet av kort tid."
@@ -397,8 +393,6 @@
     label_me: "meg"
     label_meeting_agenda: "Saksliste"
     label_meeting_minutes: "Referat"
-    label_menu_collapse: "skjul"
-    label_menu_expand: "utvid"
     label_more_than_ago: "mer enn dager siden"
     label_moderate_comment: "Moderate comment"
     label_next: "Neste"
@@ -432,6 +426,7 @@
     label_remove_row: "Slett rad"
     label_report: "Rapport"
     label_repository_plural: "Pakkebrønner"
+    label_resize_project_menu: "Resize project menu"
     label_save_as: "Lagre som"
     label_search_columns: "Søk i en kolonne"
     label_select_watcher: "Velg en overvåker..."
@@ -444,7 +439,7 @@
     label_sort_lower: "Flytt ned"
     label_sorting: "Sortering"
     label_spent_time: "Tid brukt"
-    label_star_query: "Favorittisert"
+    label_star_query: "Favorited"
     label_press_enter_to_save: "Trykk enter for å lagre."
     label_public_query: "Offentlig"
     label_sum: "Sum"
@@ -563,7 +558,7 @@
       date_alerts:
         milestone_date: "Milepæl dato"
         overdue: "Forfalt"
-        overdue_since: "since %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "is in %{difference_in_days}."
         property_was: "was %{difference_in_days} ago."
@@ -612,7 +607,7 @@
           mentioned:
             title: "Nevnt"
             description: "Motta en melding hver gang noen nevner meg hvor som helst"
-          assignee: "Utførende"
+          assignee: "Deltaker"
           responsible: "Ansvarlig"
           shared: "Delt"
           watched: "Overvåker"
@@ -624,13 +619,13 @@
         global:
           immediately:
             title: "Deltar"
-            description: "Varsler for alle aktiviteter i arbeidspakker du er involvert i (utførende, ansvarlig eller overvåker)."
+            description: "Varsler for alle aktiviteter i arbeidspakker du er involvert i (oppdragstaker, ansvarlig eller overvåker)."
           delayed:
             title: "Ikke-deltakende"
             description: "Melding om ytterligere aktiviteter i alle prosjekter."
           date_alerts:
             title: "Dato varsler"
-            description: "Automatiske varsler når viktige datoer nærmer seg for åpne arbeidspakker du er med i (utførende, ansvarlig eller overvåker)."
+            description: "Automatiske varsler når viktige datoer nærmer seg for åpne arbeidspakker du er med i (oppdragstaker, ansvarlig eller overvåker)."
           overdue: Når forfalt
         project_specific:
           title: "Prosjekt-spesifikke varslingsinnstillinger"
@@ -638,9 +633,6 @@
           add: "Legg til innstilling for prosjekt"
           already_selected: "Dette prosjektet er allerede valgt"
           remove: "Fjern prosjektinnstillinger"
-    password_confirmation:
-      field_description: "Du må skrive inn ditt passord for å bekrefte denne endringen."
-      title: "Bekreft ditt passord for å fortsette"
     pagination:
       no_other_page: "Du er på den eneste siden."
       pages_skipped: "Pages skipped."
@@ -697,7 +689,7 @@
           last_day: "Siste dag"
     text_are_you_sure: "Er du sikker?"
     text_are_you_sure_to_cancel: "You have unsaved changes on this page. Are you sure you want to discard them?"
-    breadcrumb: "Breadcrumb"
+    breadcrumb: "Brødsmule"
     text_data_lost: "Alle angitte data vil gå tapt."
     text_user_wrote: "%{value} skrev:"
     types:
@@ -782,7 +774,7 @@
     autocompleter:
       placeholder: "Skriv for å søke"
       notFoundText: "Ingen elementer funnet"
-      search: "Search"
+      search: "Søk"
       project:
         placeholder: "Velg prosjekt"
     repositories:
@@ -897,7 +889,7 @@
         estimatesAndTime: "Estimater og tid"
         other: "Øvrig"
       properties:
-        assignee: "Utførende"
+        assignee: "Deltaker"
         author: "Forfatter"
         createdAt: "Opprettet"
         description: "Beskrivelse"
@@ -1114,6 +1106,7 @@
       child_work_packages:
         one: "en underordnet arbeidspakke"
         other: "%{count} underordnet arbeidspakke"
+      hour_string: "%{hours} h"
       hour:
         one: "1 t"
         other: "%{count} t"
@@ -1131,9 +1124,12 @@
     global_search:
       all_projects: "I alle prosjekter"
       close_search: "Lukk søk"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "I dette prosjektet + underprosjekter"
       current_project: "I dette prosjektet"
       recently_viewed: "Nylig sett"
+      search_placeholder_expanded: "Search work packages by subject, project, type, status or ID"
       title:
         all_projects: "alle prosjekter"
         project_and_subprojects: "og alle underprosjekter"
@@ -1143,71 +1139,8 @@
       list: "Tabell"
       timeline: "Gantt"
     invite_user_modal:
-      back: "Tilbake"
       invite: "Inviter"
-      title:
-        invite: "Inviter bruker"
-        invite_to_project: "Inviter %{type} til %{project}"
-        User: "bruker"
-        Group: "gruppe"
-        PlaceholderUser: "plassholder bruker"
-        invite_principal_to_project: "Inviter %{principal} til %{project}"
-      project:
-        label: "Prosjekt"
-        required: "Velg et prosjekt"
-        lacking_permission: "Velg et annet prosjekt da du mangler tillatelser for å tildele brukere til de valgte alternativene."
-        lacking_permission_info: "Du mangler tillatelse til å tilordne brukere til prosjektet du er i. Du må velge et annet."
-        next_button: "Neste"
-        no_results: "Ingen prosjekter ble funnet"
-        no_invite_rights: "Du har ikke lov til å invitere medlemmer til dette prosjektet"
-      type:
-        required: "Velg typen som skal inviteres"
-        user:
-          title: "Bruker"
-          description: "Tillatelser basert på den tilordnede rollen i det valgte prosjektet"
-        group:
-          title: "Gruppe"
-          description: "Tillatelser basert på den tilordnede rollen i det valgte prosjektet"
-        placeholder:
-          title: "Plassholder bruker"
-          title_no_ee: "Midlertidig bruker (kun tillegg for Enterprise-utgave)"
-          description: "Har ikke tilgang til prosjektet og ingen e-poster blir sendt ut."
-          description_no_ee: 'Har ikke tilgang til prosjektet og ingen e-poster har blitt sendt ut. <br>Sjekk ut <a href="%{eeHref}" target="_blank">Enterprise-utgaven</a>'
-      principal:
-        label:
-          name_or_email: "Navn eller e-postadresse"
-          name: "Navn"
-        already_member_message: "Allerede et medlem av %{project}"
-        no_results_user: "Ingen brukere ble funnet"
-        invite_user: "Inviter:"
-        no_results_placeholder: "Ingen plassholdere ble funnet"
-        create_new_placeholder: "Opprett ny plassholder:"
-        no_results_group: "Ingen grupper ble funnet"
-        next_button: "Neste"
-        required:
-          user: "Vennligst velg en bruker"
-          placeholder: "Vennligst velg en plassholder"
-          group: "Velg en gruppe"
-      role:
-        label: "Rolle i %{project}"
-        no_roles_found: "Ingen roller ble funnet"
-        description: >-
-          Dette er rollen brukeren vil få når de blir med i prosjektet. Rollen definerer hvilke tiltak de har lov til å ta, og hvilken informasjon de har lov til å se. <a href="https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions" target="_blank"> Lær mer om roller og tillatelser. </a>
-        required: "Vennligst velg en rolle"
-        next_button: "Neste"
-      message:
-        label: "Melding i invitasjon"
-        description: "Vi vil sende en e-post til brukeren, som du kan skrive en personlig melding til her. En forklaring på invitasjonen kan være nyttig, eller kanskje en litt informasjon om prosjektet for å hjelpe dem i gang."
-        next_button: "Neste"
-      summary:
-        next_button: "Send invitasjon"
-      success:
-        title: "%{principal} ble invitert!"
-        description:
-          user: "Brukeren kan nå logge inn for å få tilgang til %{project}. Selv så kan du allerede planlegge med den brukeren og tilknytte arbeidspakker for forekomst."
-          placeholder: "Plassholderen kan nå brukes i %{project}. Samtidig kan du allerede planlegge med den brukeren og tilordne arbeidspakker i forekomsten."
-          group: "Gruppen er nå en del av %{project}. Dette betyr at du allerede kan planlegge med den gruppen og tildele arbeidspakker for forekomst."
-        next_button: "Fortsett"
+      placeholder_add_tag: "Create placeholder user"
     exclusion_info:
       modal:
         title: "Status ekskludert fra hierarkiske summer"
@@ -1224,7 +1157,7 @@
       selected_filter:
         all: "Alle prosjekter"
         selected: "Kun valgte"
-      search_placeholder: "Søk i prosjekt..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Inkluder alle underprosjekter"
       tooltip:
@@ -1233,6 +1166,11 @@
         does_not_match_search: "Prosjektet samsvarer ikke med søkekriteriene."
       no_results: "Ingen treff på dine søkekriterier."
       no_favorite_results: "No favorite project matches your search criteria."
+    include_workspaces:
+      search_placeholder: "Search..."
+      types:
+        program: "Program"
+        portfolio: "Portfolio"
     baseline:
       toggle_title: "Grunnlinje"
       clear: "Nullstill"

@@ -17,9 +17,9 @@
       display: inline-block
       .group-edit-in-place--input
         color: var(--fgColor-white)
-    .delete-group:before
-      vertical-align: bottom
-      color: var(--fgColor-white)
+    .delete-group
+      .Button-visual
+        color: var(--fgColor-white)
   .attributes
     min-height: 29px
 
@@ -34,24 +34,17 @@
       border-color: var(--borderColor-default)
       background: var(--control-bgColor-activ)
 
-  .delete-group,
-  .delete-attribute
-    cursor: pointer
-
   &.-error
     background: var(--content-form-error-color)
     .group-name
       border-color: var(--content-form-error-color)
-    .group-handle,
-    .delete-group:before
+    .group-handle
       color: var(--fgColor-white)
 
 
 #type-form-conf-inactive-group
   background: var(--fgColor-muted)
-  .visibility-check,
-  .delete-group,
-  .delete-attribute
+  .visibility-check
     visibility: hidden
   .group-head
     display: block

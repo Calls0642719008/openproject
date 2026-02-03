@@ -59,6 +59,9 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
+Lint/AmbiguousBlockAssociation:
+  AllowedMethods: [change]
+
 Lint/AmbiguousOperator:
   Enabled: false
 
@@ -98,19 +101,22 @@ Lint/UnderscorePrefixedVariableName:
 Lint/Void:
   Enabled: false
 
-Lint/AmbiguousBlockAssociation:
-  AllowedMethods: [change]
-
-Metrics/ClassLength:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Enabled: false
+Metrics/AbcSize:
+  Enabled: true
+  Exclude:
+    - "spec/**/*.rb"
+    - "modules/*/spec/**/*.rb"
 
 Metrics/BlockLength:
   Enabled: false
 
 Metrics/BlockNesting:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/MethodLength:
@@ -121,12 +127,6 @@ Metrics/ModuleLength:
 
 Metrics/ParameterLists:
   Enabled: false
-
-Metrics/AbcSize:
-  Enabled: true
-  Exclude:
-    - "spec/**/*.rb"
-    - "modules/*/spec/**/*.rb"
 
 Naming/AccessorMethodName:
   Enabled: false
@@ -150,64 +150,20 @@ Naming/VariableNumber:
     - '\w_20\d\d' # allow dates like christmas_2022 or date_2034_04_12
     - '\w\d++(_\d++)+' # allow hierarchical data like child1_2_5 (second + in regex is possessive qualifier)
     - 'custom_field_\d+' # allow custom field method names to be called with send :custom_field_1001
-# There are valid cases in which to use methods like:
-# * update_all
-# * touch_all
-Rails/SkipsModelValidations:
+
+OpenProject/AddPreviewForViewComponent:
+  Include:
+    - app/components/op_turbo/**.rb
+    - app/components/op_primer/**.rb
+    - app/components/open_project/**.rb
+    - app/components/concerns/**.rb
+
+Performance/Casecmp:
   Enabled: false
 
 # Don't force us to use tag instead of content_tag
 # as this breaks angular elements
 Rails/ContentTag:
-  Enabled: false
-
-# Disable I18n.locale = in specs, where it is reset
-# by us explicitly
-Rails/I18nLocaleAssignment:
-  Enabled: true
-  Exclude:
-    - "spec/**/*.rb"
-
-# Do not bother if `let` statements use an index in their name
-RSpec/IndexedLet:
-  Enabled: false
-
-# The http verbs in Rack::Test do not accept named parameters (params: params)
-Rails/HttpPositionalArguments:
-  Enabled: false
-
-# require_dependency is an obsolete method for Rails applications running in Zeitwerk mode.
-Rails/RequireDependency:
-  Enabled: true
-
-# For feature specs, we tend to have longer specs that cover a larger part of the functionality.
-# This is done for multiple reasons:
-# * performance, as setting up integration tests is costly
-# * following a scenario that is closer to how a user interacts
-RSpec/ExampleLength:
-  Max: 25
-  Enabled: true
-  Exclude:
-    - "spec/features/**/*.rb"
-    - "modules/*/spec/features/**/*.rb"
-
-# We have specs that have no expect(..) syntax,
-# but only helper classes that expect themselves
-RSpec/NoExpectationExample:
-  Enabled: false
-
-RSpec/DescribeClass:
-  Enabled: true
-  Exclude:
-    - "spec/features/**/*.rb"
-    - "modules/*/spec/features/**/*.rb"
-
-# Nothing wrong with `include_examples` when used properly.
-RSpec/IncludeExamples:
-  Enabled: false
-
-# Allow number HTTP status codes in specs
-RSpecRails/HttpStatus:
   Enabled: false
 
 # dynamic finders cop clashes with capybara ID cop
@@ -219,6 +175,7 @@ Rails/DynamicFindBy:
     - "modules/*/spec/features/**/*.rb"
   Whitelist:
     - find_by_login
+    - find_by_mail
 
 # Allow reorder to prevent find each cop triggering
 Rails/FindEach:
@@ -229,53 +186,43 @@ Rails/FindEach:
     - select
     - lock
 
+# The http verbs in Rack::Test do not accept named parameters (params: params)
+Rails/HttpPositionalArguments:
+  Enabled: false
+
+# Disable I18n.locale = in specs, where it is reset
+# by us explicitly
+Rails/I18nLocaleAssignment:
+  Enabled: true
+  Exclude:
+    - "spec/**/*.rb"
+
 # We have config.active_record.belongs_to_required_by_default = false ,
 # which means, we do have to declare presence validators on belongs_to relations.
 Rails/RedundantPresenceValidationOnBelongsTo:
   Enabled: false
 
-# See RSpec/ExampleLength for why feature specs are excluded
-RSpec/MultipleExpectations:
-  Max: 15
-  Enabled: true
-  Exclude:
-    - "spec/features/**/*.rb"
-    - "modules/*/spec/features/**/*.rb"
-
-RSpec/MultipleMemoizedHelpers:
-  Enabled: false
-
-RSpec/NestedGroups:
-  Enabled: false
-
-# Don't force the second argument of describe
-# to be .class_method or #instance_method
-RSpec/DescribeMethod:
-  Enabled: false
-
-# Don't force the second argument of describe
-# to match the exact file name
-RSpec/SpecFilePathFormat:
-  CustomTransform:
-    OpenIDConnect: openid_connect
-    OAuthClients: oauth_clients
-    OAuth: oauth
-    ICal: ical
-  IgnoreMethods: true
-
-# Prevent  "fit" or similar to be committed
-RSpec/Focus:
+# require_dependency is an obsolete method for Rails applications running in Zeitwerk mode.
+Rails/RequireDependency:
   Enabled: true
 
-# We use let!() to ensure dependencies are created
-# instead of let() and referencing them explicitly
-RSpec/LetSetup:
+# Require save! to prevent saving without validation when saving outside of a condition.
+Rails/SaveBang:
+  Enabled: true
+
+# There are valid cases in which to use methods like:
+# * update_all
+# * touch_all
+Rails/SkipsModelValidations:
   Enabled: false
 
-RSpec/LeadingSubject:
+# Allow number HTTP status codes in specs
+RSpecRails/HttpStatus:
   Enabled: false
 
-RSpec/NamedSubject:
+# expect not_to change is not working as expected
+# if you chain it with multiple expected changes
+RSpec/ChangeByZero:
   Enabled: false
 
 RSpec/ContextWording:
@@ -296,6 +243,79 @@ RSpec/ContextWording:
     - with
     - within
     - without
+
+RSpec/DescribeClass:
+  Enabled: true
+  Exclude:
+    - "spec/features/**/*.rb"
+    - "modules/*/spec/features/**/*.rb"
+
+# Don't force the second argument of describe
+# to be .class_method or #instance_method
+RSpec/DescribeMethod:
+  Enabled: false
+
+# For feature specs, we tend to have longer specs that cover a larger part of the functionality.
+# This is done for multiple reasons:
+# * performance, as setting up integration tests is costly
+# * following a scenario that is closer to how a user interacts
+RSpec/ExampleLength:
+  Max: 25
+  Enabled: true
+  Exclude:
+    - "spec/features/**/*.rb"
+    - "modules/*/spec/features/**/*.rb"
+
+# Prevent  "fit" or similar to be committed
+RSpec/Focus:
+  Enabled: true
+
+# Nothing wrong with `include_examples` when used properly.
+RSpec/IncludeExamples:
+  Enabled: false
+
+# Do not bother if `let` statements use an index in their name
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+# We use let!() to ensure dependencies are created
+# instead of let() and referencing them explicitly
+RSpec/LetSetup:
+  Enabled: false
+
+# We have specs that have no expect(..) syntax,
+# but only helper classes that expect themselves
+RSpec/NoExpectationExample:
+  Enabled: false
+
+# See RSpec/ExampleLength for why feature specs are excluded
+RSpec/MultipleExpectations:
+  Max: 15
+  Enabled: true
+  Exclude:
+    - "spec/features/**/*.rb"
+    - "modules/*/spec/features/**/*.rb"
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+# Don't force the second argument of describe
+# to match the exact file name
+RSpec/SpecFilePathFormat:
+  CustomTransform:
+    OpenIDConnect: openid_connect
+    OAuthClients: oauth_clients
+  EnforcedInflector: active_support
+  IgnoreMethods: true
+
+RSpec/NamedSubject:
+  Enabled: false
 
 Style/Alias:
   Enabled: false
@@ -361,6 +381,19 @@ Style/FormatString:
 Style/FormatStringToken:
   AllowedMethods: [redirect]
 
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always_true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
 Style/GlobalVars:
   Enabled: false
 
@@ -401,6 +434,13 @@ Style/NilComparison:
   Enabled: false
 
 Style/Not:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+# Avoid enforcing "positive?"
+Style/NumericPredicate:
   Enabled: false
 
 Style/OneLineConditional:
@@ -465,33 +505,3 @@ Style/WhileUntilModifier:
 
 Style/WordArray:
   Enabled: false
-
-Style/FrozenStringLiteralComment:
-  Enabled: true
-  EnforcedStyle: always_true
-
-Style/NumericLiterals:
-  Enabled: false
-
-# Avoid enforcing "positive?"
-Style/NumericPredicate:
-  Enabled: false
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Performance/Casecmp:
-  Enabled: false
-
-OpenProject/AddPreviewForViewComponent:
-  Include:
-    - app/components/op_turbo/**.rb
-    - app/components/op_primer/**.rb
-    - app/components/open_project/**.rb
-    - app/components/concerns/**.rb

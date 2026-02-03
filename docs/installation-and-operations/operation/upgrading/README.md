@@ -41,14 +41,14 @@ sudo openproject configure
 
 On Ubuntu 22.04., you might see warnings like these:
 
-> W: `https://dl.packager.io/srv/deb/opf/openproject/stable/16/ubuntu/dists/22.04/InRelease`: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+> W: `https://dl.packager.io/srv/deb/opf/openproject/stable/17/ubuntu/dists/22.04/InRelease`: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
 
 This message is due to Ubuntu 22.04 switching to a more secure way of adding repository sources, which is not yet supported by the repository provider. There is ongoing work on this item, the message is for information only.
 
 If you get an error like the following:
 
-> E: Repository '`https://dl.packager.io/srv/deb/opf/openproject/stable/16/ubuntu` 22.04 InRelease' changed its 'Origin' value from '' to '`https://packager.io/gh/opf/openproject`'
-> E: Repository '`https://dl.packager.io/srv/deb/opf/openproject/stable/16/ubuntu` 22.04 InRelease' changed its 'Label' value from '' to 'Ubuntu 22.04 packages for opf/openproject'
+> E: Repository '`https://dl.packager.io/srv/deb/opf/openproject/stable/17/ubuntu` 22.04 InRelease' changed its 'Origin' value from '' to '`https://packager.io/gh/opf/openproject`'
+> E: Repository '`https://dl.packager.io/srv/deb/opf/openproject/stable/17/ubuntu` 22.04 InRelease' changed its 'Label' value from '' to 'Ubuntu 22.04 packages for opf/openproject'
 
 These two messages messages are expected, due to a change in Origin and Label repository metadata, to better explain what the repository is about. You should allow the change, and/or run `sudo apt-get update --allow-releaseinfo-change` for the update to go through.
 
@@ -73,7 +73,27 @@ sudo openproject configure
 OpenProject uses a different package repository for each Major version of OpenProject.
 This means that if you want to switch from (e.g.) OpenProject 11.x to 12.x, you will need to explicitly update your package source to be able to install the newer versions.
 
-The necessary steps are the same as setting up the package source for the first time. You can also check the [installation guide](../../installation/packaged) for more information. Please follow the link below to see the appropriate steps for your Linux distribution.
+As in 17.0., also the package URL is changing, we recommend you remove the package repository information first, and then re-add it:
+
+**Debian / Ubuntu**
+
+```bash
+rm /etc/apt/sources.list.d/openproject.list
+```
+
+**Enterprise Linux / Centos**
+
+```bash
+rm /etc/yum.repos.d/openproject.repo
+```
+
+**SLES15**
+
+```bash
+rm /etc/zypp/repos.d/openproject.repo
+```
+
+Then follow the first steps of the [installation guide](../../installation/packaged) for adding the correct information. Please follow the link below to see the appropriate steps for your Linux distribution.
 
 | Distribution (64 bits only)                                              |
 |--------------------------------------------------------------------------|
@@ -86,7 +106,7 @@ The necessary steps are the same as setting up the package source for the first 
 
 After following the steps to update the package source, updating the openproject package and running `openproject configure`, your system will be up to date.
 
-In case you experience issues, please note the exact steps you took, copy the output of all commands you ran and open a post in our [installation support forum](https://community.openproject.org/projects/openproject/forums/9).
+In case you experience issues, please note the exact steps you took, copy the output of all commands you ran and open a post in our [installation support forum](https://community.openproject.org/projects/openproject/forums/9), or as an Enterprise customer, reaching out to [our customer support](mailto:support@openproject.org).
 
 ### Running openproject configure
 
@@ -121,7 +141,7 @@ When using the all-in-one docker container, you need to perform the following st
 
 ```shell
 docker pull openproject/openproject:VERSION
-# e.g. docker pull openproject/openproject:16
+# e.g. docker pull openproject/openproject:17
 ```
 
 Then stop and remove your existing container (we assume that you are running with the recommended production setup here):
@@ -168,6 +188,11 @@ as described in the [installation section](../../installation/docker/).
 ## Upgrade notes from 16.x
 
 Starting from 16.x OpenProject only supports migrating from one major version (and its minor and patch levels) to the next major version (and its minor and patch levels). So all installations need to migrate to any 16.x version before continuing.
+
+OpenProject 17.0 upgraded to a new major version of `good_job`, its underlying processor for background jobs. This upgrade was already prepared with
+OpenProject 15.3, so if you've had any version between 15.3 and 16.6 running in your environment, you should be safe to proceed to 17.0.
+However, if you directly upgraded from a version before 15.3, make sure to at least leave the background workers running on version 16.6 for a few minutes,
+so that they can process all pending jobs, before continuing the upgrade to 17.0.
 
 ## Upgrade notes from 10.5.x
 

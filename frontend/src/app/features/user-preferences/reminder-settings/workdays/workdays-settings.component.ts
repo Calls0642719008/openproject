@@ -63,7 +63,7 @@ export class WorkdaysSettingsComponent implements OnInit {
   static buildISOWeekdays():string[] {
     const days = moment.weekdays(false);
 
-    days.push(days.shift() as string);
+    days.push(days.shift()!);
 
     return days;
   }

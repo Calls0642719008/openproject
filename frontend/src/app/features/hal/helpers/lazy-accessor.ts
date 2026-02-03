@@ -31,8 +31,8 @@ import { HalResource } from 'core-app/features/hal/resources/hal-resource';
 export namespace OpenprojectHalModuleHelpers {
   export function lazy(obj:HalResource,
     property:string,
-    getter:{ ():any },
-    setter?:{ (value:any):void }):void {
+    getter:() => any,
+    setter?:(value:any) => void):void {
     if (_.isObject(obj)) {
       let done = false;
       let value:any;

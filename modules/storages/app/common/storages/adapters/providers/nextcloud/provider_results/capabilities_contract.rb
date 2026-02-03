@@ -33,7 +33,7 @@ module Storages
     module Providers
       module Nextcloud
         module ProviderResults
-          class CapabilitiesContract < Dry::Validation::Contract
+          class CapabilitiesContract < DryApplicationContract
             params do
               required(:app_enabled).filled(:bool)
               required(:group_folder_enabled).filled(:bool)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -175,6 +177,11 @@ module Pages
       target = page.find list_selector(to)
 
       drag_n_drop_element(from: source, to: target)
+      wait_for_lists_reload
+
+      # Wait a little more because the cards sorting order can still be changing
+      # after moving them
+      sleep 2
     end
 
     def move_card_by_name(text, from:, to:)
@@ -182,14 +189,20 @@ module Pages
       target = page.find list_selector(to)
 
       drag_n_drop_element(from: source, to: target)
+      wait_for_lists_reload
+
+      # Wait a little more because the cards sorting order can still be changing
+      # after moving them
+      sleep 2
     end
 
     def wait_for_lists_reload
       # wait for reload of lists to start and finish
       # Not sure if that's the most reliable way to do it, but there is nothing visible
       # about the PATCH request being sent and executed successfully after moving a card.
-      expect(page).to have_css(".op-loading-indicator", wait: 5)
-      expect(page).to have_no_css(".op-loading-indicator")
+      # Use has_css? to not fail if no loading indicator is present at all
+      has_css?(".op-loading-indicator", wait: 2)
+      expect(page).to have_no_css(".op-loading-indicator", wait: 5)
     end
 
     def add_list(option: nil, query: option)
@@ -217,8 +230,8 @@ module Pages
 
     def save
       page.find(".editable-toolbar-title--save").click
-      wait_for_lists_reload
       expect_and_dismiss_toaster message: "Successful update."
+      wait_for_lists_reload
     end
 
     def expect_changed
@@ -352,9 +365,9 @@ module Pages
 
     def expect_query(name, editable: true)
       if editable
-        expect(page).to have_field("editable-toolbar-title", with: name)
+        expect(page).to have_field("editable-toolbar-title", with: name, wait: 10)
       else
-        expect(page).to have_css(".editable-toolbar-title--fixed", text: name)
+        expect(page).to have_css(".editable-toolbar-title--fixed", text: name, wait: 10)
       end
     end
 

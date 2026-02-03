@@ -63,7 +63,17 @@ class Projects::StatusController < ApplicationController
 
   def respond_with_update_status_button
     message = t(:notice_successful_update)
-    update_via_turbo_stream(component: Projects::StatusButtonComponent.new(project: @project, user: current_user))
+
+    # Some views send a size parameter to adjust the status button size, keep that in
+    # mind when refreshing the component via turbo stream:
+    size = params[:status_size]&.to_sym
+    component_options = {
+      project: @project,
+      user: current_user,
+      size:
+    }.compact
+
+    update_via_turbo_stream(component: Projects::StatusButtonComponent.new(**component_options))
     render_success_flash_message_via_turbo_stream(message:)
     respond_with_turbo_streams do |format|
       fallback_responses_for(format, flash: { notice: message })

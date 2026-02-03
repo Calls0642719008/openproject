@@ -44,7 +44,8 @@ module OpenIDConnect
           ),
           disabled: provider.seeded_from_env?,
           required: false,
-          input_width: :large
+          input_width: :large,
+          value: pretty_claims
         )
 
         f.text_field(
@@ -58,6 +59,15 @@ module OpenIDConnect
           required: false,
           input_width: :large
         )
+      end
+
+      private
+
+      def pretty_claims
+        claims = model.claims || ""
+        JSON.pretty_generate(JSON.parse(claims))
+      rescue JSON::ParserError
+        claims
       end
     end
   end

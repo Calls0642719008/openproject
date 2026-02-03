@@ -15,6 +15,7 @@ require "pry"
 require "time"
 require "yaml"
 require "httpx"
+require "cgi"
 
 GITHUB_API_OPENPROJECT_PREFIX = "https://api.github.com/repos/opf/openproject"
 GITHUB_HTML_OPENPROJECT_PREFIX = "https://github.com/opf/openproject"
@@ -26,6 +27,12 @@ if !ENV["GITHUB_USERNAME"]
 elsif !ENV["GITHUB_TOKEN"]
   raise "Missing GITHUB_TOKEN env, go to https://github.com/settings/tokens and create one with 'repo' access"
 end
+
+# workaround an openssl 3.6.0 issue
+# https://github.com/ruby/openssl/issues/949#issuecomment-3367944960
+s = OpenSSL::X509::Store.new.tap(&:set_default_paths)
+OpenSSL::SSL::SSLContext.send(:remove_const, :DEFAULT_CERT_STORE) rescue nil # rubocop:disable Style/RescueModifier
+OpenSSL::SSL::SSLContext.const_set(:DEFAULT_CERT_STORE, s.freeze)
 
 class Options
   DEFAULTS = {
@@ -53,7 +60,7 @@ class Options
 
     Use this script with xargs to run failing specs locally:
 
-        #{$0} | xargs --no-run-if-empty bundle exec rspec
+        #{$0} | xargs --no-run-if-empty bin/rspec
 
 
     Options:
@@ -182,8 +189,8 @@ def get_http(path)
 
   response = http.get(url)
 
-  say_verbose("HTTP Response #{response.status}")
   response.raise_for_status
+  say_verbose("HTTP Response #{response.status}")
   response.to_s
 rescue HTTPX::HTTPError => e
   warn error_details(e)
@@ -522,7 +529,7 @@ class Formatter
   def display_errors_from_report(report)
     display_failures_explanation(report.failures_explanation)
     display_errors(report.errors)
-    display_checkout_test_commit_information(report) if Options.display_rerun_info
+    display_rerun_env_setup(report) if Options.display_rerun_info
   end
 
   def display_failures_explanation(failures_explanation)
@@ -543,14 +550,16 @@ class Formatter
     end
   end
 
-  def display_pull_request_info(workflow_run)
+  def display_pull_request_info(workflow_run) # rubocop:disable Metrics/AbcSize
     return unless workflow_run["event"] == "pull_request"
 
     if pr = workflow_run["pull_requests"].first
       pr_number = "##{pr['number']}"
       pr_html_url = "#{GITHUB_HTML_OPENPROJECT_PREFIX}/pull/#{pr['number']}"
-      pr_display_title = "#{workflow_run['display_title']} #{pr_number.white.dark} #{pr_html_url.white.dark}"
+      pr_display_title = "#{workflow_run['display_title'].bold} #{pr_number.white.dark} #{pr_html_url.white.dark}"
       warn "  Pull Request: #{pr_display_title} "
+      warn "    base branch: #{pr.dig('base', 'ref').bold}"
+      warn "    base SHA: #{pr.dig('base', 'sha').bold}"
     else
       warn "  Pull Request: not found; perhaps it is already merged or closed?"
     end
@@ -618,7 +627,8 @@ class Formatter
         end
       rescue Errno::ENOENT => e
         warn e
-        warn "To display image inline, you need to have a compatible terminal like iTerm2 or Konsole, and the 'imgcat' command installed."
+        warn "To display image inline, you need to have a compatible terminal like iTerm2 " \
+             "or Konsole, and the 'imgcat' command installed."
         warn "See https://iterm2.com/documentation-images.html to know more."
       end
     end
@@ -637,24 +647,36 @@ class Formatter
     ].join
   end
 
-  def display_checkout_test_commit_information(report)
-    if report.merge_branch_sha
-      warn <<~INSTRUCTIONS.white.dark
-        GitHub Action run merged #{report.merge_branch_sha} into #{report.head_sha} before running.
+  def display_rerun_env_setup(report)
+    warn <<~INSTRUCTIONS.white.dark
+      To be closer to CI conditions, run these commands first:
+      ```
+      #{checkout_test_commit_commands(report)}
+      #{reset_test_database_command}
+      #{precompile_assets_command}
+      ```
+      Then start a load-stress tool and run a test group using the rspec command above.
+    INSTRUCTIONS
+  end
 
-        To be with the exact same source files as CI, use these commands (warning: stash your modifications first):
-          git checkout -B repro_ci_failures #{report.head_sha}
-          git merge --no-edit --no-verify #{report.merge_branch_sha}
+  def checkout_test_commit_commands(report)
+    if report.merge_branch_sha
+      <<~INSTRUCTIONS
+        # GitHub Action run merged #{report.merge_branch_sha} into #{report.head_sha} (#{report.head_branch} branch)
+        git checkout -B repro_ci_failures #{report.head_sha}
+        git merge --no-edit --no-verify #{report.merge_branch_sha}
       INSTRUCTIONS
     else
-      warn <<~INSTRUCTIONS.white.dark
-        To be with the exact same source files as CI, use this command:
-          git checkout #{report.head_sha}
-      INSTRUCTIONS
+      "git checkout #{report.head_sha}"
     end
-    warn <<~INSTRUCTIONS.white.dark
-      Then run a test group with the rspec command above.
-    INSTRUCTIONS
+  end
+
+  def reset_test_database_command
+    "rm -f db/structure.sql; bin/rails db:drop db:create db:migrate RAILS_ENV=test"
+  end
+
+  def precompile_assets_command
+    "bin/rails assets:clobber openproject:plugins:register_frontend assets:precompile"
   end
 
   def display_tests_group_info(tests_group)
@@ -666,9 +688,14 @@ class Formatter
   def display_tests_group_rerun_commands(tests_group)
     return unless tests_group
 
-    warn "To run the tests group in the same order as CI, use this command:".white.dark
-    warn "CI=true TZ=UTC bundle exec rspec --seed #{tests_group.seed} #{tests_group.files.join(' ')}".white.dark
-    warn ""
+    warn <<~COMMANDS.white.dark
+      To run the tests group in conditions closer to CI, use this command:
+      ```
+      CI=true TZ=UTC OPENPROJECT_LOG__LEVEL=info CAPYBARA_PUMA_THREADS=0:4 \
+      DISABLE_SPRING=1 OPENPROJECT_DISABLE_DEV_ASSET_PROXY=1 \
+      bin/rspec --seed #{tests_group.seed} #{tests_group.files.join(' ')}
+      ```
+    COMMANDS
   end
 
   def status_icon(job)

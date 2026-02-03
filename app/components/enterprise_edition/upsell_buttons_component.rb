@@ -103,7 +103,7 @@ module EnterpriseEdition
     def more_info_button
       return if @feature_key == :teaser
 
-      render(Primer::Beta::Link.new(href: enterprise_link)) do |link|
+      render(Primer::Beta::Link.new(href: enterprise_link, target: "_blank")) do |link|
         link.with_trailing_visual_icon(icon: "link-external")
         link_title
       end

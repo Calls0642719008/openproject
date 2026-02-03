@@ -41,10 +41,6 @@ export class WorkPackageCopyFullViewComponent extends WorkPackageCopyController 
 
   breadcrumbItems() {
     const items = [];
-    items.push({
-      href: this.pathHelper.homePath(),
-      text: this.titleService.appTitle,
-    });
     if (this.currentProjectService?.identifier) {
       items.push({
         href: this.pathHelper.projectPath(this.currentProjectService.identifier),
@@ -52,11 +48,11 @@ export class WorkPackageCopyFullViewComponent extends WorkPackageCopyController 
       });
     }
     items.push({
-        href: this.pathHelper.workPackagesPath(this.currentProjectService.identifier as string),
+        href: this.pathHelper.workPackagesPath(this.currentProjectService.identifier),
         text: this.I18n.t('js.label_work_package_plural'),
       });
     items.push({
-        href: this.pathHelper.projectWorkPackagePath(this.currentProjectService.identifier as string, this.stateParams.copiedFromWorkPackageId as string),
+        href: this.pathHelper.projectWorkPackagePath(this.currentProjectService.identifier!, this.stateParams.copiedFromWorkPackageId as string),
         text: this.newWorkPackage.subject,
       });
     items.push(I18n.t('js.button_duplicate'));

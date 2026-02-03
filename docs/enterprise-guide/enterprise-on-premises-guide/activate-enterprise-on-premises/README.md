@@ -1,42 +1,40 @@
 ---
 sidebar_navigation:
-  title: Activate Enterprise on-premises
-  priority: 990
+title: Activate Enterprise on-premises
+priority: 990
 description: Activate the OpenProject Enterprise on-premises edition.
 keywords: activate, enterprise on-premises, token, license key
 ---
+
+
 # Activate the Enterprise on-premises edition
 
-The OpenProject Enterprise on-premises edition builds on top of the Community edition.
+The OpenProject **Enterprise on-premises edition** extends the Community edition with additional Enterprise features.
 
-In order to upgrade your OpenProject Community edition to the Enterprise on-premises edition, sign into your OpenProject environment with an administrator account.
+To upgrade your existing OpenProject Community edition, sign in to your OpenProject instance with an **administrator account**.
 
-**Click on your user avatar in the upper right corner** (1) and select **Administration** from the dropdown menu (2).
+1. Click your **user avatar** in the upper-right corner and select **Administration** from the dropdown menu.
 
-![Enterprise-Admin](Enterprise-Admin.png)
+![Dropdown menu behind the user avatar in the OpenProject header navigation, opened](openproject_enterprise_guide_navigate_to_administration.png)
 
-Next, select **Enterprise edition** from the menu items (3).
+2. In the administration menu, select **Enterprise edition**.
 
-![enterprise-select-menu](image-20210120113056133.png)
+![Enterprise edition menu option in OpenProject administration](openproject_enterprise_guide_administration_enterprise_edition_card.png)
 
-Do you already have an Enterprise on-premises token?
+3. If you already have an **Enterprise on-premises token**, click **+ Add enterprise token**, paste the **full token content** into the dialog, and click **Add** to save.
 
-Yes: Then you can proceed entering your token as described below.
+   ![Layover form to enter your enterprise support token in OpenProject administration](openproject_enterprise_guide_enterprise_token_form.png)
 
-No: Then you will need to [order your Enterprise on-premises token](#order-the-enterprise-on-premises-edition) or [request a trial token](../enterprise-on-premises-trial) first.
+If you do not yet have a token, you can either [order an Enterprise on-premises token](#order-the-enterprise-on-premises-edition) or [request a trial token](../enterprise-on-premises-trial).
 
-In the Enterprise on-premises edition section, copy and paste the full content of your Enterprise on-premises support token into the input field and press the blue **Save** button.
-
-![insert-enterprise-on-premises-token](activate-enterprise-on-premises-token.png)
-
-Your Enterprise on-premises edition is now active.
+Once the token is saved successfully, your **Enterprise on-premises edition is activated** and the Enterprise add-ons become available immediately.
 
 ## Order the Enterprise on-premises edition
 
-If you want to **order the Enterprise on-premises edition** click on the **+ Order Enterprise edition** button shown on the page. You can also [request a trial token](../enterprise-on-premises-trial) to test the Enterprise add-ons included in the Enterprise on-premises edition.
+To **upgrade to the Enterprise on-premises edition**, click the **Upgrade now** button displayed on the Enterprise edition page. Alternatively, you can [request a trial token](../enterprise-on-premises-trial) to evaluate the Enterprise add-ons before purchasing.
 
-![Order-Enterprise-on-premises](Upgrade-to-Enterprise-on-premises.png)
+![Upgrade button on the enterprise edition page in OpenProject administration](openproject_enterprise_guide_upgrade_now_button.png)
 
-Once you purchased an Enterprise on-premises edition token or received a trial token you can [activate it by pasting the token in the designated area of the Enterprise edition section](#activate-the-enterprise-on-premises-edition).
+After purchasing an Enterprise on-premises token or receiving a trial token, activate it by pasting the token into the Enterprise edition section as described above.
 
-You can find pricing options and FAQ regarding pricing, booking and billing on our [pricing website](https://www.openproject.org/pricing/#faq).
+For detailed information about pricing, booking, and billing, see our [pricing and FAQ page](https://www.openproject.org/pricing/#faq).

@@ -31,7 +31,7 @@
 module Redmine::MenuManager::TopMenu::HelpMenu
   def render_help_top_menu_node(item = help_menu_item)
     cache_key = ["help_top_menu_node",
-                 OpenProject::Static::Links.links,
+                 OpenProject::Static::Links.cache_key,
                  I18n.locale,
                  OpenProject::Static::Links.help_link,
                  EnterpriseToken.active?]
@@ -100,7 +100,11 @@ module Redmine::MenuManager::TopMenu::HelpMenu
       unless EnterpriseToken.hide_banners? && EnterpriseToken.active?
         menu_group.with_item(
           **link_options_for(:upsell,
-                             href_suffix: "/?utm_source=unknown&utm_medium=op-instance&utm_campaign=ee-upsell-help-menu")
+                             url_params: {
+                               utm_source: "unknown",
+                               utm_medium: "op-instance",
+                               utm_campaign: "ee-upsell-help-menu"
+                             })
         )
       end
       menu_group.with_item(**link_options_for(:user_guides))
@@ -131,11 +135,27 @@ module Redmine::MenuManager::TopMenu::HelpMenu
       menu_group.with_item(**link_options_for(:digital_accessibility))
       menu_group.with_item(**link_options_for(
         :website,
-        href_suffix: "/?utm_source=unknown&utm_medium=op-instance&utm_campaign=website-help-menu"
+        url_params: {
+          utm_source: "unknown",
+          utm_medium: "op-instance",
+          utm_campaign: "website-help-menu"
+        }
+      ))
+      menu_group.with_item(**link_options_for(
+        :security_alerts,
+        url_params: {
+          utm_source: "unknown",
+          utm_medium: "op-instance",
+          utm_campaign: "security-help-menu"
+        }
       ))
       menu_group.with_item(**link_options_for(
         :newsletter,
-        href_suffix: "/?utm_source=unknown&utm_medium=op-instance&utm_campaign=newsletter-help-menu"
+        url_params: {
+          utm_source: "unknown",
+          utm_medium: "op-instance",
+          utm_campaign: "newsletter-help-menu"
+        }
       ))
       menu_group.with_item(**link_options_for(:blog))
       menu_group.with_item(**link_options_for(:release_notes))
@@ -147,11 +167,11 @@ module Redmine::MenuManager::TopMenu::HelpMenu
   end
 
   def link_options_for(key, options = {})
-    link = OpenProject::Static::Links.links[key]
-    label = I18n.t(link[:label])
+    href = OpenProject::Static::Links.url_for(key, url_params: options[:url_params] || {})
+    label = OpenProject::Static::Links.label_for(key)
 
     {
-      href: "#{link[:href]}#{options[:href_suffix]}",
+      href: href,
       label: label,
       content_arguments: {
         target: "_blank",

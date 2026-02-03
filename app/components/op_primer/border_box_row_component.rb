@@ -42,18 +42,20 @@ module OpPrimer
       table.mobile_columns.include?(column)
     end
 
-    def grid_column_classes(column)
-      classes = ["op-border-box-grid--row-item"]
-      classes << column_css_class(column)
-      classes << "op-border-box-grid--main-column" if table.main_column?(column)
-      classes << "ellipsis" unless table.main_column?(column)
-      classes << "op-border-box-grid--no-mobile" unless visible_on_mobile?(column)
-
-      classes.compact.join(" ")
+    def cell_classes(column)
+      class_names(
+        "op-border-box-grid__row-item",
+        column_css_class(column),
+        {
+          "op-border-box-grid__row-item--main-column": table.main_column?(column),
+          ellipsis: !table.main_column?(column),
+          "op-border-box-grid__row-item--no-mobile": !visible_on_mobile?(column)
+        }
+      )
     end
 
-    def column_args(_column)
-      {}
+    def cell_role(column, colindex)
+      table.main_column?(column) && colindex.zero? ? :rowheader : :cell
     end
 
     def checkmark(condition)

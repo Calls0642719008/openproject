@@ -45,7 +45,7 @@ export function navigateToTeamPlannerStep():OnboardingStep {
     showSkip: false,
     nextButton: { text: I18n.t('js.onboarding.buttons.next') },
     onNext() {
-      jQuery('.team-planner-view-menu-item ~ .toggler')[0].click();
+      document.querySelector<HTMLElement>('.team-planner-view-menu-item ~ .toggler')?.click();
 
       waitForElement(
         '.op-submenu--item-action',

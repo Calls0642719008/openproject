@@ -5,17 +5,17 @@ el:
     description: "Provides team planner views."
   permission_view_team_planner: "View team planner"
   permission_manage_team_planner: "Manage team planner"
-  project_module_team_planner_view: "Team planners"
+  project_module_team_planner_view: "Προγράμματα ομάδων"
   ee:
     feature_names:
-      team_planner_view: "Team planner"
+      team_planner_view: "Προγραμματισμός Ομάδας"
     upsell:
       team_planner_view:
-        title: "Team planner"
+        title: "Προγραμματισμός Ομάδας"
         description: "Get a complete overview of your team’s planning with Team Planner. Stretch, shorten and drag-and-drop work packages to modify dates, move them or change assignees."
   team_planner:
-    label_team_planner: "Team planner"
-    label_new_team_planner: "New team planner"
-    label_create_new_team_planner: "Create new team planner"
-    label_team_planner_plural: "Team planners"
-    label_assignees: "Assignees"
+    label_team_planner: "Προγραμματισμός Ομάδας"
+    label_new_team_planner: "Νέος προγραμματισμός ομάδας"
+    label_create_new_team_planner: "Δημιουργία νέου προγραμματισμού ομάδας"
+    label_team_planner_plural: "Προγράμματα ομάδων"
+    label_assignees: "Ανάθεση σε"

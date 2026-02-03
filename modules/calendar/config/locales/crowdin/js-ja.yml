@@ -6,4 +6,4 @@ ja:
       title: 'カレンダー'
       too_many: '合計 %{count} のワークパッケージがありますが %{max} のみ表示されます。'
       unsaved_title: '新しいカレンダー'
-      label_calendar_plural: 'Calendars'
+      label_calendar_plural: 'カレンダー'

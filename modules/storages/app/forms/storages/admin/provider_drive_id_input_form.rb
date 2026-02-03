@@ -44,7 +44,7 @@ module Storages::Admin
     private
 
     def caption
-      href = ::OpenProject::Static::Links[:storage_docs][:one_drive_drive_id_guide][:href]
+      href = ::OpenProject::Static::Links.url_for(:storage_docs, :one_drive_drive_id_guide)
       I18n.t("storages.instructions.one_drive.drive_id",
              drive_id_link_text: render(Primer::Beta::Link.new(href:, underline: true, target: "_blank")) do
                I18n.t("storages.instructions.one_drive.documentation_link_text")

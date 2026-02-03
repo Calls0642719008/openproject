@@ -159,7 +159,7 @@ module Exports::PDF::Common::Markdown
 
     def handle_unknown_html_tag(tag, node, opts)
       if tag.name == "mention"
-        handle_mention_html_tag(tag, node, opts)
+        [handle_mention_html_tag(tag, node, opts), opts]
       else
         # unknown/unsupported html tags eg. <foo>hi</foo> are ignored
         # but scanned for supported or text children [true, ...]

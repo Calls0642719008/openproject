@@ -59,10 +59,6 @@ export class WorkPackageFormAttributeGroupComponent extends UntilDestroyedMixin 
     super();
   }
 
-  public trackByName(_index:number, elem:{ name:string }) {
-    return elem.name;
-  }
-
   /**
    * Hide read-only fields, but only when in the create mode
    * @param {FieldDescriptor} field

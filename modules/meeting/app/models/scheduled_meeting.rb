@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -28,7 +29,7 @@
 #++
 
 class ScheduledMeeting < ApplicationRecord
-  belongs_to :meeting
+  belongs_to :meeting, inverse_of: :scheduled_meeting
   belongs_to :recurring_meeting
 
   scope :upcoming, -> { where(start_time: Time.current..) }
@@ -40,8 +41,8 @@ class ScheduledMeeting < ApplicationRecord
   scope :cancelled, -> { where(cancelled: true) }
   scope :not_cancelled, -> { where(cancelled: false) }
 
-  validates_uniqueness_of :meeting, allow_nil: true
-  validates_presence_of :start_time
+  validates :meeting, uniqueness: { allow_nil: true }
+  validates :start_time, presence: true
 
   def previous_occurrence
     recurring_meeting.previous_occurrence(from_time: start_time)

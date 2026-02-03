@@ -13,7 +13,7 @@ export interface OpContextMenuItem {
   title?:string;
   divider?:boolean;
   isHeader?:boolean;
-  onClick?:($event:JQuery.TriggeredEvent|MouseEvent) => boolean;
+  onClick?:(event:MouseEvent) => boolean;
 }
 
 export interface OpContextMenuLocalsMap {

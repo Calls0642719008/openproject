@@ -92,7 +92,6 @@ export class ModalWithTurboContentDirective implements AfterViewInit, OnDestroy 
   }
 
   private contextBasedListener(event:CustomEvent) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (this.resource.id === 'new') {
       void this.propagateSuccessfulCreate(event);
     } else {
@@ -134,7 +133,7 @@ export class ModalWithTurboContentDirective implements AfterViewInit, OnDestroy 
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (fetchResponse.succeeded) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
       const JSONresponse:unknown = await this.extractJSONFromResponse(fetchResponse.response.body);
 
       this.successfulCreate.emit(JSONresponse);

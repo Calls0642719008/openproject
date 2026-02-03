@@ -36,6 +36,12 @@ RSpec.describe API::V3::Users::CreateFormAPI, content_type: :json do
 
   let(:path) { api_v3_paths.create_user_form }
   let(:body) { response.body }
+  let(:base_payload) do
+    {
+      email: "cfuser@example.com",
+      status: "invited"
+    }
+  end
 
   before do
     login_as(current_user)
@@ -95,12 +101,7 @@ RSpec.describe API::V3::Users::CreateFormAPI, content_type: :json do
     end
 
     describe "inviting a user" do
-      let(:payload) do
-        {
-          email: "foo@example.com",
-          status: "invited"
-        }
-      end
+      let(:payload) { base_payload }
 
       it "returns a valid payload", :aggregate_failures do
         expect(response).to have_http_status(:ok)
@@ -111,11 +112,11 @@ RSpec.describe API::V3::Users::CreateFormAPI, content_type: :json do
                 .at_path("_embedded/payload/status")
 
         expect(body)
-          .to be_json_eql("foo@example.com".to_json)
+          .to be_json_eql("cfuser@example.com".to_json)
                 .at_path("_embedded/payload/email")
 
         expect(body)
-          .to be_json_eql("foo".to_json)
+          .to be_json_eql("cfuser".to_json)
                 .at_path("_embedded/payload/firstName")
 
         expect(body)
@@ -139,8 +140,7 @@ RSpec.describe API::V3::Users::CreateFormAPI, content_type: :json do
 
       let(:payload) do
         {
-          email: "cfuser@example.com",
-          status: "invited",
+          **base_payload,
           custom_field.attribute_name(:camel_case) => "A custom value",
           _links: {
             list_custom_field.attribute_name(:camel_case) => {
@@ -181,6 +181,150 @@ RSpec.describe API::V3::Users::CreateFormAPI, content_type: :json do
         expect(body)
           .to have_json_size(0)
                 .at_path("_embedded/validationErrors")
+      end
+    end
+
+    context "with a required custom field" do
+      shared_let(:required_custom_field) do
+        create(:user_custom_field,
+               :text,
+               name: "Department",
+               is_required: true)
+      end
+
+      context "when no custom field value is provided" do
+        let(:payload) { base_payload }
+
+        it "has validation errors for the required custom field", :aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(body)
+            .to have_json_size(0)
+                  .at_path("_embedded/validationErrors")
+        end
+      end
+
+      context "when the custom field is provided but empty" do
+        let(:payload) do
+          {
+            **base_payload,
+            required_custom_field.attribute_name(:camel_case) => {
+              raw: ""
+            }
+          }
+        end
+
+        it "has validation errors for the required custom field", :aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(body)
+            .to have_json_size(0)
+                  .at_path("_embedded/validationErrors")
+        end
+      end
+
+      context "when the custom field value is provided and valid" do
+        let(:payload) do
+          {
+            **base_payload,
+            required_custom_field.attribute_name(:camel_case) => {
+              raw: "Engineering"
+            }
+          }
+        end
+
+        it "has no validation errors", :aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(body).to have_json_size(0).at_path("_embedded/validationErrors")
+          expect(body)
+            .to be_json_eql("Engineering".to_json)
+            .at_path("_embedded/payload/customField#{required_custom_field.id}/raw")
+          expect(body)
+            .to be_json_eql(api_v3_paths.users.to_json)
+            .at_path("_links/commit/href")
+        end
+      end
+    end
+
+    context "with a visible custom field" do
+      let(:visible_custom_field) do
+        create(:user_custom_field, :text)
+      end
+
+      let(:payload) do
+        {
+          **base_payload,
+          visible_custom_field.attribute_name(:camel_case) => {
+            raw: "CF text"
+          }
+        }
+      end
+
+      it "has no validation errors" do
+        expect(response).to have_http_status(:ok)
+        expect(body).to have_json_size(0).at_path("_embedded/validationErrors")
+        expect(body)
+          .to be_json_eql("CF text".to_json)
+          .at_path("_embedded/payload/customField#{visible_custom_field.id}/raw")
+        expect(body)
+          .to be_json_eql(api_v3_paths.users.to_json)
+          .at_path("_links/commit/href")
+      end
+    end
+
+    context "with an admin only custom field" do
+      let(:is_required) { false }
+      let!(:admin_only_custom_field) do
+        create(:user_custom_field, :text, admin_only: true, is_required:)
+      end
+
+      let(:payload) do
+        {
+          **base_payload,
+          admin_only_custom_field.attribute_name(:camel_case) => {
+            raw: "CF text"
+          }
+        }
+      end
+
+      context "with admin permissions" do
+        let(:current_user) { create(:admin) }
+
+        it "has no validation errors", :aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(body).to have_json_size(0).at_path("_embedded/validationErrors")
+          expect(body)
+            .to be_json_eql("CF text".to_json)
+            .at_path("_embedded/payload/customField#{admin_only_custom_field.id}/raw")
+          expect(body)
+            .to be_json_eql(api_v3_paths.users.to_json)
+            .at_path("_links/commit/href")
+        end
+      end
+
+      context "with non-admin permissions" do
+        it "ignores the invisible custom field", :aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(body)
+            .not_to have_json_path("_embedded/payload/customField#{admin_only_custom_field.id}/raw")
+          expect(body).to have_json_size(0).at_path("_embedded/validationErrors")
+          expect(body)
+            .to be_json_eql(api_v3_paths.users.to_json)
+            .at_path("_links/commit/href")
+        end
+
+        context "and when the custom field is required" do
+          let(:is_required) { true }
+          let(:payload) { base_payload }
+
+          it "ignores the invisible custom field", :aggregate_failures do
+            expect(response).to have_http_status(:ok)
+            expect(body)
+              .not_to have_json_path("_embedded/payload/customField#{admin_only_custom_field.id}/raw")
+            expect(body).to have_json_size(0).at_path("_embedded/validationErrors")
+            expect(body)
+              .to be_json_eql(api_v3_paths.users.to_json)
+              .at_path("_links/commit/href")
+          end
+        end
       end
     end
   end

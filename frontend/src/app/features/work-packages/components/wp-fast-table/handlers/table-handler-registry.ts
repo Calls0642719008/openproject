@@ -34,10 +34,8 @@ import {
   SharingTransformer,
 } from 'core-app/features/work-packages/components/wp-fast-table/handlers/state/sharing-transformer';
 
-type StateTransformers = {
-  // noinspection JSUnusedLocalSymbols
-  new(injector:Injector, table:WorkPackageTable):any;
-};
+// noinspection JSUnusedLocalSymbols
+type StateTransformers = new(injector:Injector, table:WorkPackageTable) => any;
 
 export interface TableEventComponent extends WorkPackageViewOutputs {
   // Reference to the fast table instance

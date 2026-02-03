@@ -52,9 +52,6 @@ export class TeamPlannerPageComponent extends PartitionedQuerySpacePageComponent
     unsaved_title: this.I18n.t('js.team_planner.unsaved_title'),
   };
 
-  /** Go back using back-button */
-  backButtonCallback:() => void;
-
   /** Current query title to render */
   selectedTitle = this.text.unsaved_title;
 
@@ -126,9 +123,8 @@ export class TeamPlannerPageComponent extends PartitionedQuerySpacePageComponent
 
   breadcrumbItems() {
     return [
-      { href: this.pathHelperService.homePath(), text: this.titleService.appTitle },
-      { href: this.pathHelperService.projectPath(this.currentProject.identifier as string), text: (this.currentProject.name) },
-      { href: this.pathHelperService.projectTeamplannerPath(this.currentProject.identifier as string), text: this.I18n.t('js.team_planner.label_team_planner_plural') },
+      { href: this.pathHelperService.projectPath(this.currentProject.identifier!), text: (this.currentProject.name) },
+      { href: this.pathHelperService.projectTeamplannerPath(this.currentProject.identifier!), text: this.I18n.t('js.team_planner.label_team_planner_plural') },
       this.selectedTitle?? '',
     ];
   }

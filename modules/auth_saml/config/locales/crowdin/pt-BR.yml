@@ -6,8 +6,8 @@ pt-BR:
         identifier: Identificador
         secret: Segredo
         scope: Escopo
-        assertion_consumer_service_url: URL do ACS (Serviço de consumidor de afirmação)
-        limit_self_registration: Restringir auto-registro
+        assertion_consumer_service_url: URL do ACS (Assertion Consumer Service)
+        limit_self_registration: Limitar auto registro
         sp_entity_id: ID da entidade do serviço
         metadata_url: URL de metadados do provedor de identidade
         name_identifier_format: Formato do identificador de nome
@@ -56,6 +56,7 @@ pt-BR:
       label_mapping: Mapeamento
       label_requested_attribute_for: "Atributo solicitado para: %{attribute}"
       no_results_table: Nenhum provedor de identidade SAML foi definido até o momento.
+      notice_created: Um novo provedor de identidade SAML foi criado com sucesso.
       plural: Provedores de identidade SAML
       singular: Provedor de identidade SAML
       requested_attributes: Atributos solicitados
@@ -110,7 +111,7 @@ pt-BR:
       idp_sso_service_url: >
         O URL do endpoint do login do provedor de identidade.
       idp_slo_service_url: >
-        O URL do endpoint do login do provedor de identidade.
+        A URL do ponto final de logout do provedor de identidade.
       idp_cert: >
         Digite o certificado público no formato PEM X509 do provedor de identidade. Você pode adicionar vários certificados, separando-os por uma nova linha.
       name_identifier_format: >

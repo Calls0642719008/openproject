@@ -96,7 +96,7 @@ module Storages
                 "Name: #{file.name}, ID: #{file.id}, Location: #{file.location}"
               end
 
-              warn "Unexpected files/folder found in group folder:\n\t#{file_representation.join("\n\t")}"
+              warn "Unexpected files/folder found in drive root folder:\n\t#{file_representation.join("\n\t")}"
             end
 
             def managed_project_folder_ids

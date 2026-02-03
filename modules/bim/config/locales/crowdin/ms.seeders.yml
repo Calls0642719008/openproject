@@ -144,7 +144,7 @@ ms:
                   name: Ahli-ahli
               item_5:
                 options:
-                  name: Pakej kerja
+                  name: Pakej pekerjaan
               item_6:
                 options:
                   name: Pencapaian
@@ -199,7 +199,7 @@ ms:
                   name: Ahli-ahli
               item_5:
                 options:
-                  name: Pakej kerja
+                  name: Pakej pekerjaan
               item_6:
                 options:
                   name: Pencapaian
@@ -421,7 +421,7 @@ ms:
             item_1:
               name: Pencapaian
             item_2:
-              name: Tugasan-tugasan
+              name: Tugasan
             item_3:
               name: Perancang pasukan
           project-overview:
@@ -731,4 +731,4 @@ ms:
                   name: Ahli-ahli
               item_5:
                 options:
-                  name: Pakej kerja
+                  name: Pakej pekerjaan

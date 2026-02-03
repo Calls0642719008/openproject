@@ -38,7 +38,7 @@ import waitForUploadsFinished from 'core-app/core/upload/wait-for-uploads-finish
 import { IHalErrorBase, IHalMultipleError, isHalError } from 'core-app/features/hal/resources/error-resource';
 
 export function removeSuccessFlashMessages():void {
-  jQuery('.op-toast.-success').remove();
+  document.querySelectorAll('.op-toast.-success').forEach((flashMessage) => flashMessage.remove());
 }
 
 export type ToastType = 'success'|'error'|'warning'|'info'|'upload'|'loading';
@@ -61,10 +61,9 @@ export class ToastService {
     readonly configurationService:ConfigurationService,
     readonly I18n:I18nService,
   ) {
-    jQuery(window).on(
-      OPToastEvent,
-      (event:JQuery.TriggeredEvent, toast:IToast) => { this.add(toast); },
-    );
+    window.addEventListener(OPToastEvent, ({ detail:toast }:CustomEvent<IToast>) => {
+      this.add(toast);
+    });
   }
 
   /**

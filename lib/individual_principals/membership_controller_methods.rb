@@ -44,7 +44,8 @@ module IndividualPrincipals
         flash[:error] = call.errors.full_messages.join("\n")
       end
 
-      redirect_to edit_polymorphic_path(@individual_principal, tab: redirected_to_tab(call.result))
+      redirect_to edit_polymorphic_path(@individual_principal, tab: redirected_to_tab(call.result)),
+                  status: :see_other
     end
   end
 end

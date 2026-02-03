@@ -60,9 +60,11 @@ export class OpAutocompleterService extends UntilDestroyedMixin {
       .get();
   }
 
-  protected createParams(resource:TOpAutocompleterResource):{ [p:string]:string } {
+  protected createParams(resource:TOpAutocompleterResource):Record<string, string> {
     if (resource === 'work_packages') {
       return {
+        // see op-autocompleter/op-autocompleter.component.html for required attributes
+        select: 'elements/id,elements/subject,elements/author,elements/type,elements/project,elements/status',
         sortBy: '[["updatedAt","desc"]]',
       };
     }
@@ -87,7 +89,7 @@ export class OpAutocompleterService extends UntilDestroyedMixin {
   // If you need to fetch our default date sources like work_packages or users,
   // you should use the default method (loadAvailable), otherwise you should implement a function for
   // your desired resource
-  public loadData(matching:string|null, resource:TOpAutocompleterResource, filters?:IAPIFilter[], searchKey?:string, allowEmpty:boolean = false) {
+  public loadData(matching:string|null, resource:TOpAutocompleterResource, filters?:IAPIFilter[], searchKey?:string, allowEmpty = false) {
     // Exit early if the query string is empty as there is no typeahead
     if (!allowEmpty && (matching === null || matching.length === 0)) {
       return of([]);
@@ -103,7 +105,7 @@ export class OpAutocompleterService extends UntilDestroyedMixin {
 
   // A method for returning data based on a custom URL (i.e. in time logging we have a special endpoint for retrieving
   // work packages)
-  public loadFromUrl(url:string, matching:string|null, resource:TOpAutocompleterResource, filters?:IAPIFilter[], searchKey?:string, allowEmpty:boolean = false) {
+  public loadFromUrl(url:string, matching:string|null, resource:TOpAutocompleterResource, filters?:IAPIFilter[], searchKey?:string, allowEmpty = false) {
     // Exit early if the query string is empty as there is no typeahead
     if (!allowEmpty && (matching === null || matching.length === 0)) {
       return of([]);

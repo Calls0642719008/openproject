@@ -36,31 +36,31 @@ module TableHelpers::ColumnType
 
     describe "#extract_data" do
       let(:attribute) { :hierarchy }
-      let(:subject_raw_header) { "Hierarchy    " }
+      let(:raw_header) { "Hierarchy    " }
       let(:work_packages_data) do
         [
           {
             index: 0,
-            row: { subject_raw_header => "Parent        " }
+            row: { raw_header => "Parent        " }
           },
           {
             index: 1,
-            row: { subject_raw_header => "  Child1      " }
+            row: { raw_header => "  Child1      " }
           },
           {
             index: 2,
-            row: { subject_raw_header => "  Child2      " }
+            row: { raw_header => "  Child2      " }
           },
           {
             index: 3,
-            row: { subject_raw_header => "     Grand Child" }
+            row: { raw_header => "     Grand Child" }
           }
         ]
       end
 
       it "extracts the identifier metadata along with the :subject attribute value" do
         # check first row only
-        expect(column_type.extract_data(attribute, subject_raw_header, work_packages_data.first, work_packages_data))
+        expect(column_type.extract_data(attribute, raw_header, work_packages_data.first, work_packages_data))
           .to include({ attributes: a_hash_including(subject: "Parent"),
                         identifier: :parent })
       end
@@ -69,14 +69,14 @@ module TableHelpers::ColumnType
          "and the :parent attribute value holding the identifier of the parent from previous rows" do
         # first row
         work_package_data = work_packages_data.first
-        row_extract = column_type.extract_data(attribute, subject_raw_header, work_package_data, work_packages_data)
+        row_extract = column_type.extract_data(attribute, raw_header, work_package_data, work_packages_data)
         expect(row_extract).to include({ attributes: a_hash_including(parent: nil),
                                          hierarchy_indent: 0 })
 
         # second row
         work_package_data.deep_merge!(row_extract)
         work_package_data = work_packages_data.second
-        row_extract = column_type.extract_data(attribute, subject_raw_header, work_package_data, work_packages_data)
+        row_extract = column_type.extract_data(attribute, raw_header, work_package_data, work_packages_data)
         expect(row_extract).to include({ attributes: a_hash_including(parent: :parent),
                                          hierarchy_indent: 2,
                                          identifier: :child1 })
@@ -84,7 +84,7 @@ module TableHelpers::ColumnType
         # third row
         work_package_data.deep_merge!(row_extract)
         work_package_data = work_packages_data.third
-        row_extract = column_type.extract_data(attribute, subject_raw_header, work_package_data, work_packages_data)
+        row_extract = column_type.extract_data(attribute, raw_header, work_package_data, work_packages_data)
         expect(row_extract).to include({ attributes: a_hash_including(parent: :parent),
                                          hierarchy_indent: 2,
                                          identifier: :child2 })
@@ -92,7 +92,7 @@ module TableHelpers::ColumnType
         # fourth row
         work_package_data.deep_merge!(row_extract)
         work_package_data = work_packages_data.fourth
-        row_extract = column_type.extract_data(attribute, subject_raw_header, work_package_data, work_packages_data)
+        row_extract = column_type.extract_data(attribute, raw_header, work_package_data, work_packages_data)
         expect(row_extract).to include({ attributes: a_hash_including(parent: :child2),
                                          hierarchy_indent: 5,
                                          identifier: :grand_child })

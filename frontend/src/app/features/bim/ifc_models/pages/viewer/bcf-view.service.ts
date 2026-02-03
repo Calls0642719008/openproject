@@ -43,7 +43,7 @@ export type BcfViewState = 'cards'|'viewer'|'splitTable'|'splitCards'|'table';
 
 @Injectable()
 export class BcfViewService extends WorkPackageQueryStateService<BcfViewState> {
-  public text:{ [key:string]:string } = {
+  public text:Record<string, string> = {
     cards: this.I18n.t('js.views.card'),
     viewer: this.I18n.t('js.ifc_models.views.viewer'),
     splitTable: this.I18n.t('js.ifc_models.views.split'),
@@ -51,7 +51,7 @@ export class BcfViewService extends WorkPackageQueryStateService<BcfViewState> {
     table: this.I18n.t('js.views.list'),
   };
 
-  public icon:{ [key:string]:string } = {
+  public icon:Record<string, string> = {
     cards: 'icon-view-card',
     viewer: 'icon-view-model',
     splitTable: 'icon-view-split-viewer-table',
@@ -72,7 +72,6 @@ export class BcfViewService extends WorkPackageQueryStateService<BcfViewState> {
   }
 
   applyToQuery(query:QueryResource):boolean {
-    // eslint-disable-next-line no-param-reassign
     query.displayRepresentation = this.current;
     return true;
   }

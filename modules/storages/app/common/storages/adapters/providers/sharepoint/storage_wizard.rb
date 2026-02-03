@@ -35,11 +35,6 @@ module Storages
         class StorageWizard < Wizard
           step :general_information, completed_if: ->(storage) { storage.name.present? }
 
-          step :access_management,
-               section: :access_management_section,
-               completed_if: ->(storage) { !storage.automatic_management_unspecified? },
-               preparation: :prepare_storage_for_access_management_form
-
           step :oauth_client,
                section: :oauth_configuration,
                completed_if: ->(storage) { storage.oauth_client.present? },
@@ -47,27 +42,19 @@ module Storages
 
           step :redirect_uri,
                section: :oauth_configuration,
-               completed_if: ->(storage) {
+               completed_if: lambda { |storage|
                  storage.oauth_client&.persisted? && storage.oauth_client.created_at < 10.seconds.ago
                }
+
+          step :access_management,
+               section: :access_management_section,
+               completed_if: ->(storage) { !storage.automatic_management_unspecified? },
+               preparation: :prepare_storage_for_access_management_form
 
           private
 
           def prepare_storage_for_access_management_form(storage)
-            ::Storages::Storages::SetProviderFieldsAttributesService
-              .new(user:, model: storage, contract_class: EmptyContract)
-              .call
-          end
-
-          def prepare_oauth_application(storage)
-            persist_service_result = ::Storages::OAuthApplications::CreateService.new(storage:, user:).call
-            storage.oauth_application = persist_service_result.result if persist_service_result.success?
-          end
-
-          def prepare_storage_for_automatic_management_form(storage)
-            ::Storages::Storages::SetProviderFieldsAttributesService
-              .new(user:, model: storage, contract_class: EmptyContract)
-              .call
+            Storages::SetProviderFieldsAttributesService.new(user:, model: storage, contract_class: EmptyContract).call
           end
         end
       end

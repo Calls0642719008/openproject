@@ -59,6 +59,10 @@ fa:
       tab_interface: "Interface"
       tab_branding: "Branding"
       tab_pdf_export_styles: "PDF export styles"
+      tab_pdf_export_font: "PDF export font"
+      fonts:
+        file_too_large: "is too large (maximum size is %{count} MB)."
+        file_is_invalid: "is not a valid TTF font file."
       colors:
         primary-button-color: "Primary button"
         accent-color: "Accent"
@@ -105,6 +109,23 @@ fa:
       explanation:
         text: "Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect %{webhook_link} delay."
         link: "webhook"
+    mcp_configurations:
+      index:
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance."
+        resources_heading: "Resources"
+        resources_description: "OpenProject implements the following tools. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
+        resources_submit: "Update resources"
+        tools_heading: "Tools"
+        tools_description: "OpenProject implements the following tools. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP tools](docs_url)."
+        tools_submit: "Update tools"
+      multi_update:
+        success: "MCP configurations were updated successfully."
+      server_form:
+        description_caption: "How the MCP server will be described to other applications who connect to it."
+        title_caption: "A short title shown to applicatons that connect to the MCP server."
+      update:
+        failure: "MCP configuration could not be updated."
+        success: "MCP configuration was updated successfully."
     scim_clients:
       authentication_methods:
         sso: "JWT from identity provider"
@@ -158,6 +179,16 @@ fa:
         expired: "Expired on %{date}"
         revoked: "Revoked on %{date}"
         title: "Access token table"
+    settings:
+      new_project:
+        project_creation: "Project creation"
+        notification_text_default: >
+          <p>Hello,</p> <p>A new project has been created: projectValue:name</p> <p>Thank you</p>
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "Login and registration"
   announcements:
@@ -176,12 +207,12 @@ fa:
       title: "Quarantined attachments"
       error_cannot_act_self: "Cannot perform actions on your own uploaded files."
   attribute_help_texts:
-    note_public: "Any text and images you add to this field is publicly visible to all logged in users!"
+    caption: "This short version will be displayed as caption of the attribute."
+    note_public: "Any text and images you add to this field are publicly visible to all logged in users."
     text_overview: "In this view, you can create custom help texts for attributes view. When defined, these texts can be shown by clicking the help icon next to its belonging attribute."
-    label_plural: "Attribute help texts"
     show_preview: "متن پیش نمایش"
     add_new: "Add help text"
-    edit: "Edit help text for %{attribute_caption}"
+    edit_field_name: "Edit help text for %{attribute_field_name}"
   background_jobs:
     status:
       error_requeue: "Job experienced an error but is retrying. The error was: %{message}"
@@ -191,10 +222,9 @@ fa:
     ldap_auth_failed: "Could not authenticate at the LDAP-Server."
     sync_failed: "Failed to synchronize from LDAP: %{message}."
     back_to_index: "Click here to go back to the list of connection."
-    technical_warning_html: |
+    technical_warning: |
       This LDAP form requires technical knowledge of your LDAP / Active Directory setup.
-      <br>
-      <a href="https://www.openproject.org/help/administration/manage-ldap-authentication/">Please visit our documentation for detailed instructions</a>.
+      [Please visit our documentation for detailed instructions](docs_url).
     attribute_texts:
       name: Arbitrary name of the LDAP connection
       host: LDAP host name or IP address
@@ -297,7 +327,7 @@ fa:
         placeholder:
           label: "Item label"
           short: "Short name"
-          score: "Score"
+          weight: "Weight"
       notice:
         remember_items_and_projects: "Remember to set items and projects in the respective tabs for this custom field."
       hierarchy:
@@ -305,6 +335,25 @@ fa:
           zero: no sub-items
           one: 1 sub-item
           other: "%{count} sub-items"
+      role_assignment:
+        title: Role Assignment
+        description: You can automatically grant a certain project role to any user assigned to this project attribute, regardless of that user’s original role in that project.
+        warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
+        role_field_label: "Project Role"
+        role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
+        review_hint: >
+          There are %{user_count} who are already assigned to this project attribute in various projects. They might get additional permissions and be added to projects they did not previously have access to.
+        review_button: Review users and permissions
+        dialog:
+          title: "Overview of users and permissions"
+          change: Change
+          changes:
+            new_member: Will be added as a member
+            remove_member: Will be removed as a member
+            gain_and_lose_role: Will lose role ‘%{old_role}’ and gain role ‘%{new_role}’
+            gain_role: Will gain role ‘%{new_role}’
+            lose_role: Will lose role ‘%{old_role}’
+            no_change: No changes
     text_add_new_custom_field: >
       To add new custom fields to a project you first need to create them before you can add them to this project.
     is_enabled_globally: "Is enabled globally"
@@ -314,30 +363,66 @@ fa:
     reorder_alphabetical: "Reorder values alphabetically"
     reorder_confirmation: "Warning: The current order of available values will be lost. Continue?"
     placeholder_version_select: "Work package or project selection is required first"
+    calculated_field_not_editable: "Non-editable attribute. This value is calculated automatically."
+    no_role_assigment: "No role assignment"
     instructions:
-      is_required: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new or updating existing resources."
-      is_required_for_project: "Check to enable this attribute and make it required in all projects. It cannot be deactived for individual projects."
-      is_for_all: "Mark the custom field as available in all existing and new projects."
-      multi_select: "Allows the user to assign multiple values to this custom field."
-      searchable: "Include the field values when using the global search functionality."
-      searchable_for_project: "Check to make this attribute available as a filter in project lists."
-      editable: "Allow the field to be editable by users themselves."
-      admin_only: "Check to make this attribute only visible to administrators. Users without admin rights will not be able to view or edit it."
-      is_filter: >
-        Allow the custom field to be used in a filter in work package views. Note that only with 'For all projects' selected, the custom field will show up in global views.
-      formula: "Add numeric values or type / to search for an attribute or a mathematical operator."
+      is_required:
+        all: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
+        project: "Required attributes need to be filled out by the user on project creation if the field is active ('For all projects' set or copying from a project/template in which the field is active). Existing projects will not require a value when being updated."
+      is_for_all:
+        all: "Mark the custom field as available in all existing and new projects."
+        project: "Mark the attribute as available in all existing and new projects."
+      multi_select:
+        all: "Allows the user to assign multiple values to this custom field."
+        project: "Allows the user to assign multiple values to this attribute."
+      searchable:
+        all: "Include the field values when using the global search functionality."
+        project: "Check to make this attribute available as a filter in project lists."
+      editable:
+        all: "Allow the field to be editable by users themselves."
+      admin_only:
+        all: "Check to make this custom field only visible to administrators. Users without admin rights will not be able to view or edit it."
+        project: "Check to make this attribute only visible to administrators. Users without admin rights will not be able to view or edit it."
+      is_filter:
+        all: >
+          Allow the custom field to be used in a filter in work package views. Note that only with 'For all projects' selected, the custom field will show up in global views.
+      formula:
+        project: "Add numeric values or type / to search for an attribute or a mathematical operator."
     tab:
       no_results_title_text: There are currently no custom fields.
       no_results_content_text: Create a new custom field
+  calculated_values:
+    error_dialog:
+      title: "Error with Calculated value"
+    errors:
+      unknown: "An unknown error occurred. Please review the formula for this Calculated value."
+      mathematical: "The mathematical formula leads to an error. Please review the project calculation attribute and try again."
+      missing_value: The attribute "%{custom_field_name}" is required by this Calculated value, but is empty.
+      disabled_value: The attribute "%{custom_field_name}" is required by this Calculated value, but is disabled for the project.
   concatenation:
     single: "یا"
-  dry_validation:
+  danger_dialog:
+    confirmation_live_message_checked: "The button to proceed is now active."
+    confirmation_live_message_unchecked: "The button to proceed is now inactive. You need to tick the checkbox to continue."
+  op_dry_validation:
+    or: "یا"
     errors:
+      array?: "must be an array."
+      decimal?: "must be a decimal."
       defined: "must not be defined."
-      int?: "must be an integer."
+      eql?: "must be equal to %{left}."
       filled?: "must be filled."
       greater_or_equal_zero: "must be greater or equal to 0."
+      gteq?: "must be greater than or equal to %{num}."
+      hash?: "must be a hash."
+      included_in?:
+        arg:
+          default: "must be one of: %{list}."
+          range: "must be one of: %{list_left} - %{list_right}."
+      int?: "must be an integer."
+      key?: "is missing."
       not_found: "not found."
+      respond_to?: "does not implement required method."
       rules:
         copy_workflow_from:
           workflow_missing: "has no own workflow."
@@ -352,12 +437,15 @@ fa:
           not_unique: "must be unique within the same hierarchy level."
         parent:
           not_descendant: "must be a descendant of the hierarchy root."
+      str?: "must be a string."
+      type?: "must be %{type}."
     rules:
       copy_workflow_from: "Type for workflow copy"
       enabled: "Enabled"
       depth: "Depth"
       item: "Item"
       label: "Label"
+      weight: "Weight"
       short: "Short name"
       parent: "بالادستی"
       blueprint: "Pattern blueprint"
@@ -393,6 +481,19 @@ fa:
   incoming_mails:
     ignore_filenames: >
       Specify a list of names to ignore when processing attachments for incoming mails (e.g., signatures or icons). Enter one filename per line.
+  portfolios:
+    index:
+      search:
+        label: Portfolio name filter
+        placeholder: Search portfolios
+      sub_items_html:
+        one: "<strong>1</strong> sub-item"
+        other: "<strong>%{count}</strong> sub-items"
+    lists:
+      active: "Active portfolios"
+      my: "My portfolios"
+      favorited: "Favorite portfolios"
+      archived: "Archived portfolios"
   projects:
     copy:
       #Contains custom strings for options when copying a project that cannot be found elsewhere.
@@ -404,12 +505,15 @@ fa:
       work_package_categories: "Work packages: categories"
       work_package_file_links: "Work packages: file links"
       work_package_shares: "Work packages: shares"
+    create:
+      notification_email_subject: "Your project '%{project_name}' has been created"
+      complete_wizard_link: "Complete the %{artefact_name}"
     delete:
       scheduled: "Deletion has been scheduled and is performed in the background. You will be notified of the result."
       schedule_failed: "Project cannot be deleted: %{errors}"
-      failed: "Deletion of project %{name} has failed"
-      failed_text: "The request to delete project %{name} has failed. The project was left archived."
-      completed: "Deletion of project %{name} completed"
+      failed: "Deletion of project '%{name}' has failed"
+      failed_text: "The request to delete project '%{name}' has failed. The project was left archived."
+      completed: "Deletion of project '%{name}' completed"
       completed_text: "The request to delete project '%{name}' has been completed."
       completed_text_children: "Additionally, the following subprojects have been deleted:"
     index:
@@ -422,7 +526,7 @@ fa:
     lists:
       active: "Active projects"
       my: "پروژه‌های من"
-      favored: "Favorite projects"
+      favorited: "Favorite projects"
       archived: "Archived projects"
       shared: "Shared project lists"
       my_lists: "My project lists"
@@ -434,7 +538,7 @@ fa:
         text: "This action will not delete any project the list contains. Are you sure you want to delete this project list?"
     settings:
       header_details: Basic details
-      header_status: وضعیت پروژه
+      header_status: Status
       header_relations: Project relations
       button_update_details: Update details
       button_update_status_description: Update status description
@@ -452,6 +556,22 @@ fa:
         description: >
           The project will only be visible to project members depending on their role and associated permissions. Sub-projects are not affected and have their own settings.
       change_identifier: تغییر شناسه
+      subitems:
+        template_section: >
+          Select templates to be used when creating new subitems.
+        project_template_label: "Template for projects"
+        project_template_caption: "Select a template project to be used as the default for new subitems of this type."
+        program_template_label: "Template for programs"
+        program_template_caption: "Select a template program to be used as the default for new subitems of this type."
+        no_template: "No predefined template"
+      template:
+        menu_title: "Template"
+        title: "Template settings"
+        enable_failed: "Failed to enable template mode."
+        members:
+          excluded_roles_label: "Roles to exclude when template is applied"
+          excluded_roles_caption: >
+            When creating a new project from this template, the roles selected above will be omitted. This allows you to select which members will be excluded based on their project roles. Users can then access the template for viewing purposes without being granted access to new projects created from it.
       actions:
         label_enable_all: "فعال کردن همه"
         label_disable_all: "Disable all"
@@ -485,9 +605,9 @@ fa:
           label_enable_single: "Active in this project, click to disable"
           label_disable_single: "Inactive in this project, click to enable"
           remove_from_project: "Remove from project"
-        is_required_blank_slate:
-          heading: Required in all projects
-          description: This project attribute is activated in all projects since the "Required in all projects" option is checked. It cannot be deactivated for individual projects.
+        is_for_all_blank_slate:
+          heading: For all projects
+          description: This project attribute is enabled in all projects since the "For all projects" option is checked. It cannot be deactivated for individual projects.
       types:
         no_results_title_text: There are currently no types available.
         form:
@@ -495,12 +615,37 @@ fa:
       versions:
         no_results_title_text: There are currently no versions for the project.
         no_results_content_text: Create a new version
+        work_packages_graph: Work packages graph
+        show_work_packages: Show work packages
       storage:
         no_results_title_text: هیچ فضای دیسک ضبط شده اضافی مصرف شده توسط این پروژه وجود ندارد.
       work_package_priorities:
         new_label: "New priority"
+      creation_wizard:
+        export:
+          description_attachment_export: "The generated artifact will be saved as a PDF attachment to the artifact work package."
+          description_file_link_export: "The artifact work package will have a file link to a PDF stored in an external file storage. Requires a working file storage with automatically-managed project folders for this project. At the moment only Nextcloud file storages are supported."
+          description_file_storage_selection: "Select which of the configured external file storages should be used."
+          external_file_storage: "External file storage"
+          label_artifact_export: "Artifact export"
+          label_attachment_export: "Save as work package file attachment"
+          label_file_link_export: "Upload file to external file storage and add file link to work package"
+          pdf_file_storage: "PDF file storage"
+          unavailable: "unavailable"
+        label_request_submission: "Request submission"
+        project_attributes_description: >
+          Select which project attributes should be included in the project initiation request. This list only includes [project attributes](project_attributes_url) enabled for for this project.
     status:
-      button_edit: Edit project status
+      button_edit: Edit status
+    wizard:
+      sidebar_content_title: "Content"
+      sections: "Sections"
+      title: "Project initiation request"
+      no_help_text: "This attribute has no help text defined."
+      success: "Project attributes saved and artifact work package created successfully."
+      progress_label: "%{current} of %{total}"
+      create_artifact_work_package_error: "Failed to create artifact work package"
+      create_artifact_storage_error: "Failed to store artifact in file storage"
   lists:
     create:
       success: "The modified list has been saved as a new list"
@@ -582,15 +727,14 @@ fa:
           dialog_title: "Create new API token"
           attention_text: "Treat API tokens like passwords. Anyone with this token will have access to information from this instance, share it only with trusted users."
           dialog_body: "This token will allow third-party applications to communicate with your instance. To differentiate the new API token, please give it a name."
-          create_button: "Create"
+          create_button: "ایجاد"
           name_label: "Token name"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "The API token has been generated"
-          warning: "This is the only time you will see this token. Make sure to copy it now."
-      errors:
-        token_name_blank: "Please provide an API token name"
-        token_name_in_use: "This API token name is already in use, please select a different one"
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "عدم موفقیت در تنظیم مجدد رمز دسترسی: %{error}"
       failed_to_create_token: "Failed to create access token: %{error}"
       failed_to_revoke_token: "Failed to revoke access token: %{error}"
@@ -600,25 +744,42 @@ fa:
       notice_api_token_revoked: "The API token has been deleted. To create a new token please use the button in the API section."
       notice_rss_token_revoked: "The RSS token has been deleted. To create a new token please use the link in the RSS section."
       notice_ical_token_revoked: 'iCalendar token "%{token_name}" for calendar "%{calendar_name}" of project "%{project_name}" has been revoked. The iCalendar URL with this token is now invalid.'
+    password_confirmation_dialog:
+      confirmation_required: "You need to enter your account password to confirm this change."
+      title: "Confirm your password to continue"
   news:
     index:
       no_results_title_text: There is currently no news to report.
       no_results_content_text: Add a news item
+  roles:
+    permissions:
+      section_check_all_label: "Assign all %{module} permissions"
+      section_uncheck_all_label: "Unassign all %{module} permissions"
+    report:
+      matrix_caption: "Permissions matrix for %{module} module"
+      matrix_checkbox_label: "Assign %{permission} permission to %{role} role"
+      matrix_check_all_label: "Assign all %{module} permissions to all roles"
+      matrix_uncheck_all_label: "Unassign all %{module} permissions from all roles"
+      matrix_check_uncheck_all_in_row_label_html: "Toggle <em>%{permission}</em> permission for all roles"
+      matrix_check_uncheck_all_in_col_label_html: "Toggle all %{module} permissions for <em>%{role}</em> role"
   users:
     autologins:
       prompt: "Stay logged in for %{num_days}"
     sessions:
-      remembered_devices: "Remembered devices"
-      remembered_devices_caption: "A list of all devices that logged into this account using the 'Stay logged in' option."
       session_name: "%{browser_name} %{browser_version} on %{os_name}"
       browser: "Browser"
+      expires: "Expires"
+      last_connection: "آخرین اتصال"
       device: "Device / OS"
       unknown_browser: "unknown browser"
       unknown_os: "unknown operating system"
-      current: "Current session"
+      unknown: "(unknown)"
+      browser_session: "(Browser session)"
+      current: "Current (this device)"
       title: "Session management"
-      instructions: "This is a list of devices that have logged into your account. Revoke any sessions that you do not recognize or you have no longer access to."
+      instructions: "You are logged in to your account through the following devices. Revoke sessions that you do not recognise or from devices you do not control."
       may_not_delete_current: "You cannot delete your current session."
+      deletion_warning: "Are you sure you want to revoke this session? You will be logged out on this device."
     groups:
       member_in_these_groups: "This user is currently a member of the following groups:"
       no_results_title_text: This user is currently not a member in any group.
@@ -628,6 +789,57 @@ fa:
     memberships:
       no_results_title_text: This user is currently not a member of a project.
     open_profile: "Open profile"
+    invite_user_modal:
+      invite: "دعوت"
+      title:
+        invite: "Invite user"
+        invite_to_project: "Invite %{type} to %{project}"
+        invite_principal_to_project: "دعوت %{principal} به %{project}"
+      project:
+        label: "پروژه"
+        required: "لطفا یک پروژه انتخاب شود"
+        next_button: "Next"
+        no_results: "No projects were found"
+        no_invite_rights: "You are not allowed to invite members to this project"
+      type:
+        required: "Please select the type to be invited"
+        user:
+          title: "Invite user to %{project_name}"
+          description: "Permissions based on the assigned role in the selected project"
+        group:
+          title: "Invite group to %{project_name}"
+          description: "Permissions based on the assigned role in the selected project"
+        placeholder_user:
+          title: "Add placeholder user to %{project_name}"
+          title_no_ee: "Placeholder کاربر (فقط برای نسخه حرفه ای)"
+          description: "Has no access to the project and no emails are sent out."
+        already_member_message: "Already a member of %{project}"
+      principal:
+        no_results_user: "No users were found"
+        invite_user: "دعوت:"
+        no_results_placeholder: "No placeholders were found"
+        create_new_placeholder: "Create new placeholder:"
+        no_results_group: "No groups were found"
+        invite_to_project: "Invite to %{project_name}"
+        required:
+          user: "لطفا یک کاربر را انتخاب کنید"
+          placeholder: "Please select a placeholder"
+          group: "لطفا یک گروه انتخاب کنید"
+      role:
+        label: "Role in %{project}"
+        no_roles_found: "No roles were found"
+        description: >
+          This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see. [Learn more about roles and permissions.](docs_url)
+        required: "Please select a role"
+      message:
+        label: "Invitation message"
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
+      summary:
+        next_button: "ارسال دعوت نامه"
+      success_message:
+        user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
+        placeholder_user: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
+        group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
   page:
     text: "متن"
   placeholder_users:
@@ -690,10 +902,8 @@ fa:
         excluded_from_totals: "Excluded from totals"
   themes:
     dark: "Dark"
-    dark_high_contrast: "Dark high contrast"
     light: "Light"
-    light_high_contrast: "Light high contrast"
-    sync_with_os: "Automatic (match OS colour mode)"
+    sync_with_os: "Automatic (match OS color mode)"
   types:
     index:
       no_results_title_text: There are currently no types.
@@ -745,6 +955,16 @@ fa:
     print_hint: This will print the content of this wiki page without any navigation bars.
     index:
       no_results_content_text: Add a new wiki page
+  workflows:
+    form:
+      matrix_caption: "Workflow matrix"
+      matrix_caption_assignee: "Workflow matrix for assignee"
+      matrix_caption_author: "Workflow matrix for author"
+      matrix_checkbox_label: "Allow transition from %{old_status} to %{new_status}"
+      matrix_check_all_label: "Allow all transitions"
+      matrix_uncheck_all_label: "Disallow all transitions"
+      matrix_check_uncheck_all_in_row_label_html: "Toggle transitions from <em>%{old_status}</em> to all new statuses"
+      matrix_check_uncheck_all_in_col_label_html: "Toggle transitions from all old statuses to <em>%{new_status}</em>"
   work_flows:
     index:
       no_results_title_text: There are currently no workflows.
@@ -911,21 +1131,15 @@ fa:
   account:
     delete: "حذف حساب کاربری"
     delete_confirmation: "مطمئن هستید که می خواهید حساب کاربری را حذف کنید؟"
-    deletion_pending: "Account has been locked and was scheduled for deletion. Note that this process takes place in the background. It might take a few moments until the user is fully deleted."
+    deletion_pending: "Account has been scheduled for deletion. Note that this process takes place in the background. It might take a few moments until the user is fully deleted."
     deletion_info:
       data_consequences:
-        other: 'Of the data the user created (e.g. email, preferences, work packages, wiki entries) as much as possible will be deleted. Note however, that data like work packages and wiki entries can not be deleted without impeding the work of the other users. Such data is hence reassigned to an account called "Deleted user". As the data of every deleted account is reassigned to this account it will not be possible to distinguish the data the user created from the data of another deleted account.'
-        self: 'Of the data you created (e.g. email, preferences, work packages, wiki entries) as much as possible will be deleted. Note however, that data like work packages and wiki entries can not be deleted without impeding the work of the other users. Such data is hence reassigned to an account called "Deleted user". As the data of every deleted account is reassigned to this account it will not be possible to distinguish the data you created from the data of another deleted account.'
-      heading: "حذف حساب %{name}"
-      info:
-        other: "حذف یک حساب کاربری عملیاتی غیرقابل برگشت است."
-        self: "حذف حساب کاربری عملیاتی غیرقابل برگشت است."
+        other: "All user-specific data will be deleted. The user's activity in shared views such as work packages and meetings will not be deleted but instead be associated with a generic 'Deleted user' that cannot be linked to the original account."
+        self: "All user-specific data will be deleted. Your activity in shared views such as work packages and meetings will not be deleted but instead be associated with a generic 'Deleted user' that cannot be linked to your original account."
+      heading: "Delete %{name}'s account?"
       login_consequences:
-        other: "حساب از سیستم حذف خواهد شد. بنابراین، کاربر دیگر قادر به ورود با اعتبار فعلی خود نخواهد بود. او می تواند دوباره به وسیله امکاناتی که نرم ازار در اختیار او قرار می دهد به عضویت این نرم افزار در آید."
-        self: "حساب کاربری شما از سیستم حذف خواهد شد. بنابراین، شما دیگر قادر به ورود با اعتبار فعلی خود نخواهد بود. شما می توانید دوباره به وسیله امکاناتی که نرم ازار در اختیار او قرار می دهد به عضویت این نرم افزار در آیید."
-      login_verification:
-        other: "Enter the login %{name} to verify the deletion. Once submitted, you will be asked to confirm your password."
-        self: "Enter your login %{name} to verify the deletion. Once submitted, you will be asked to confirm your password."
+        other: "This account will immediately be removed from the system and the user will no longer be able to log in with their credentials."
+        self: "Your account will immediately be removed from the system and you will no longer be able to log in using your credentials."
     error_inactive_activation_by_mail: >
       حساب شما هنوز فعال نشده است. برای فعال سازی حساب خود ، بر روی لینکی که به شما ایمیل شده کلیک کنید.
     error_inactive_manual_activation: >
@@ -958,8 +1172,14 @@ fa:
       attribute_help_text:
         attribute_name: "Attribute"
         help_text: "متن راهنما"
+        caption: "Caption"
       auth_provider:
         scim_clients: "SCIM clients"
+      calculated_value_error:
+        error_code: "Error code"
+        customized: "Customized"
+        customized_id: "Customized ID"
+        customized_type: "Customized type"
       capability:
         context: "Context"
       changeset:
@@ -1010,6 +1230,8 @@ fa:
         active_user_count_restriction: "Active users"
       enterprise_trial:
         company: "Company"
+      favorite:
+        favorited: "Item"
       grids/grid:
         page: "صفحه"
         row_count: "Number of rows"
@@ -1031,6 +1253,10 @@ fa:
         onthefly: "Automatic user creation"
         port: "پورت"
         tls_certificate_string: "LDAP server SSL certificate"
+      mcp_configuration:
+        enabled: Enabled
+        title: Title
+        description: Description
       member:
         roles: "نقش‌ها"
       notification:
@@ -1042,18 +1268,20 @@ fa:
         active_value:
           true: "unarchived"
           false: "بایگانی"
+        attribute_groups: "Attribute Groups"
         description: "توضیحات"
         enabled_modules: "Enabled modules"
         identifier: "شناسه"
         latest_activity_at: "Latest activity at"
         parent: "زیر پروژه ای از "
+        project_creation_wizard_enabled: "Project initiation request"
         public_value:
           title: "Visibility"
           true: "public"
           false: "private"
         queries: "پرس و جو ها"
-        status_code: "وضعیت پروژه"
-        status_explanation: "Project status description"
+        status_code: "Status"
+        status_explanation: "Status description"
         status_codes:
           not_started: "Not started"
           on_track: "On track"
@@ -1061,6 +1289,13 @@ fa:
           off_track: "Off track"
           finished: "پایان یافته"
           discontinued: "Discontinued"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
+        template: "Template"
         templated: "Template project"
         templated_value:
           true: "marked as template"
@@ -1070,13 +1305,14 @@ fa:
         work_packages: "بسته های کاری"
         workspace_type: "Workspace type"
       project_custom_field:
-        is_required: "Required for all projects"
         custom_field_section: Section
+      subproject_template_assignment:
+        workspace_type: "Workspace type"
       project/phase:
         date_range: "Date range"
         definition: "Definition"
         duration: "Duration"
-        start_date: "Start date"
+        start_date: "تاریخ شروع"
         start_date_caption: "Follows the previous phase."
         finish_date: "Finish date"
       project/phase_definition:
@@ -1097,7 +1333,7 @@ fa:
         sort_by: "Sort results by"
         filters: "فیلترها"
         timeline_labels: "برچسب های خط زمان"
-        timeline_visible: "نمایش نمودار گانت"
+        timeline_visible: "نمایش Gant chart"
         timeline_zoom_level: "Gantt chart zoom level"
         timestamps: "Baseline timestamps"
         sort_criteria: "Sort criteria"
@@ -1135,6 +1371,8 @@ fa:
         is_readonly: "Work package read-only"
         excluded_from_totals: "Exclude from calculation of totals in hierarchy"
         default_done_ratio: "% Complete"
+      token/named:
+        token_name: "Token name"
       token/ical:
         calendar: "تقویم‌ها"
         ical_token_query_assignment: "Query assignment"
@@ -1179,6 +1417,7 @@ fa:
         header_alerts: "Alerts"
         button_update_look_and_feel: "Update look and feel"
         button_update_alerts: "Update alerts"
+        button_update_user_information: "Update profile"
         comments_sorting: "Display work package activity sorted by"
         disable_keyboard_shortcuts: "Disable keyboard shortcuts"
         disable_keyboard_shortcuts_caption_html: |-
@@ -1188,11 +1427,21 @@ fa:
         auto_hide_popups: "Automatically hide success banners"
         auto_hide_popups_caption: "When enabled, the green success banners will automatically disappear after 5 seconds."
         warn_on_leaving_unsaved: "Warn me when leaving a work package with unsaved changes"
-        theme: "Colour mode"
+        increase_theme_contrast: "Increase theme contrast"
+        increase_contrast: "Increase contrast"
+        increase_contrast_caption: "Enables high-contrast mode for the chosen colour mode."
+        force_light_theme_contrast: "Force high-contrast when in Light mode"
+        force_dark_theme_contrast: "Force high-contrast when in Dark mode"
+        force_light_theme_contrast_caption: "Uses the high-contrast version of Light mode when automatic color mode is selected."
+        force_dark_theme_contrast_caption: "Uses the high-contrast version of Dark mode when automatic color mode is selected."
+        theme: "Color mode"
         time_zone: "منطقه زمانی"
-        mode_guideline: "Some modes will overwrite custom theme colours for accessibility and legibility. Please select Light mode for full custom theme support."
+        mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
         daily_reminders: "Daily reminders"
         workdays: "Working days"
+      users/invitation/form_model:
+        principal_type: "Invitation type"
+        id_or_email: "Name or email address"
       version:
         effective_date: "Finish date"
         sharing: "اشتراک گذاری"
@@ -1255,7 +1504,7 @@ fa:
         confirmation: "doesn't match %{attribute}."
         could_not_be_copied: "%{dependency} could not be (fully) copied."
         does_not_exist: "does not exist."
-        error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition"
+        error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition."
         error_unauthorized: "may not be accessed."
         error_readonly: "was attempted to be written but is not writable."
         error_conflict: "Information has been updated by at least one other user in the meantime."
@@ -1266,6 +1515,7 @@ fa:
         even: "must be even."
         exclusion: "is reserved."
         feature_disabled: is not available.
+        feature_disabled_for_project: is disabled for this project.
         file_too_large: "is too large (maximum size is %{count} Bytes)."
         filter_does_not_exist: "filter does not exist."
         format: "does not match the expected format '%{expected}'."
@@ -1277,8 +1527,6 @@ fa:
         inclusion: "is not set to one of the allowed values."
         inclusion_nested: "is not set to one of the allowed values at path '%{path}'."
         invalid: "is invalid."
-        invalid_characters: "contains invalid characters."
-        not_allowed_custom_fields_referenced: "contains custom fields that are not allowed: %{custom_fields}."
         invalid_url: "ساختار آدرس صحیح نیست."
         invalid_url_scheme: "این پروتکل مجاز نیست (موارد مجاز: %{allowed_schemes})."
         less_than_or_equal_to: "must be less than or equal to %{count}."
@@ -1290,7 +1538,8 @@ fa:
         not_a_datetime: "is not a valid date time."
         not_a_number: "is not a number."
         not_allowed: "is invalid because of missing permissions."
-        not_json: "is not a valid JSON object."
+        not_json: "is not parseable as JSON."
+        not_json_object: "is not a JSON object."
         not_an_integer: "is not an integer."
         not_an_iso_date: "is not a valid date. Required format: YYYY-MM-DD."
         not_same_project: "doesn't belong to the same project."
@@ -1298,7 +1547,7 @@ fa:
         odd: "must be odd."
         regex_match_failed: "does not match the regular expression %{expression}."
         regex_invalid: "could not be validated with the associated regular expression."
-        regex_list_invalid: "could not be parsed as regular expression in lines %{invalid_lines}."
+        regex_list_invalid: "Lines %{invalid_lines} could not be parsed as regular expression."
         hexcode_invalid: "is not a valid 6-digit hexadecimal color code."
         smaller_than_or_equal_to_max_length: "must be smaller than or equal to maximum length."
         taken: "has already been taken."
@@ -1333,6 +1582,19 @@ fa:
               minimum: "need to include at least one filter for principal, context or id with the '=' operator."
         custom_field:
           at_least_one_custom_option: "At least one option needs to be available."
+          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet, please try again in a few minutes."
+          referenced_in_other_fields_html:
+            one: "%{name} is used in project attribute calculation %{links}."
+            other: "%{name} is used in project attribute calculations: %{links}."
+          attributes:
+            formula:
+              blank: "Formula can't be blank."
+              invalid: "Formula is invalid."
+              invalid_characters: "Only numeric values, mathematical operators and project attributes of type integer, float, calculated value and weighted list are allowed."
+              not_allowed_custom_fields_referenced: "The attribute %{custom_fields} cannot be used because it leads to a circular reference; one attribute depends on the other."
+              format: "%{message}"
+            required:
+              cannot_be_true: "cannot be set to true."
         custom_fields_project:
           attributes:
             project_ids:
@@ -1364,6 +1626,8 @@ fa:
           only_one_trial: "Only one trial token can be active. Please delete the previous trial token before adding another."
           unreadable: "can't be read. Are you sure it is a support token?"
           already_added: "This token has already been added."
+        favorite:
+          already_favorited: "has already been favorited."
         grids/grid:
           overlaps: "overlap."
           outside: "is outside of the grid."
@@ -1400,9 +1664,11 @@ fa:
         project:
           archived_ancestor: "The project has an archived ancestor."
           foreign_wps_reference_version: "Work packages in non descendant projects reference versions of the project or its descendants."
+          cannot_be_assigned_to_artifact_work_package: "The chosen user is not allowed to be assigned to work packages."
           attributes:
             base:
               archive_permission_missing_on_subprojects: "You do not have the permissions required to archive all sub-projects. Please contact an administrator."
+              project_initiation_request_disabled: "Project initiation request is disabled. It must be enabled to create the artifact work package."
             types:
               in_use_by_work_packages: "still in use by work packages: %{types}"
             enabled_modules:
@@ -1460,10 +1726,19 @@ fa:
           typed_dag:
             circular_dependency: "رابطه دایره روابط ایجاد می کند."
           attributes:
+            base:
+              error_not_deletable: "This relation cannot be deleted because you do not have edit permissions for the selected work package."
+              error_not_editable: "This relation cannot be edited because you do not have edit permissions for the selected work package."
             to_id:
+              format: "The selected work package %{message}"
+              error_not_found: "could not be found."
               error_readonly: "cannot be changed for existing relations."
+              error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
             from_id:
+              format: "The selected work package %{message}"
+              error_not_found: "could not be found."
               error_readonly: "cannot be changed for existing relations."
+              error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
         repository:
           not_available: "SCM vendor is not available"
           not_whitelisted: "is not allowed by the configuration."
@@ -1613,9 +1888,11 @@ fa:
         version:
           undeletable_archived_projects: "The version cannot be deleted as it has work packages attached to it."
           undeletable_work_packages_attached: "The version cannot be deleted as it has work packages attached to it."
-        token/api:
+        token/named:
           attributes:
             token_name:
+              blank: "Please provide a token name"
+              in_use: "This token name is already in use, please select a different one"
               format: "%{message}"
       template:
         body: "Please check the following fields:"
@@ -1624,12 +1901,14 @@ fa:
           other: "%{count} خطا باعث می شود این %{model} ذخیره نشود."
     models:
       attachment: "فایل"
-      attribute_help_text: "Attribute help text"
+      attribute_help_text:
+        one: "Attribute help text"
+        other: "Attribute help texts"
       auth_provider:
         one: "Authentication provider"
         other: "Authentication providers"
       category: "Category"
-      color: "Color"
+      color: "رنگ"
       comment: "نظر"
       custom_action: "اقدام سفارشی"
       custom_field: "فیلدهای سفارشی"
@@ -1643,6 +1922,7 @@ fa:
       issue_priority:
         one: "اولويت"
         other: "Priorities"
+      meeting_participant: "Meeting participant"
       member: "عضو"
       news: "News"
       notification:
@@ -1667,7 +1947,12 @@ fa:
       token/api:
         one: Access token
         other: Access tokens
-      type: "نوع"
+      token/rss:
+        one: "RSS token"
+        other: "RSS tokens"
+      type:
+        one: "Type"
+        other: "Types"
       user: "کاربر"
       version: "نسخه"
       workflow: "Workflow"
@@ -1682,6 +1967,11 @@ fa:
       one: "Additionally, there was a problem with the following field:"
       other: "Additionally, there were problems with the following fields:"
     field_erroneous_label: "This field is invalid: %{full_errors}\nPlease enter a valid value."
+    messages:
+      must_be_template: "must be template"
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "created by %{user} on %{datetime}"
@@ -1708,7 +1998,7 @@ fa:
           one: "<i>%{count} hour</i>"
           other: "<i>%{count} hours</i>"
         updated: "changed from %{old_value} to %{value}"
-        logged_for: "Logged for"
+        logged_for: "گزارش شده برای"
     filter:
       changeset: "Changesets"
       message: "Forums"
@@ -1735,6 +2025,7 @@ fa:
     attachments: "Attachments"
     actor: "Actor"
     action: "Action"
+    api_key: "API key"
     author: "نویسنده"
     avatar: "چهرک"
     base: "General Error:"
@@ -1803,12 +2094,13 @@ fa:
     role: "Role"
     roles: "نقش‌ها"
     search: "Search"
-    start_date: "Start date"
+    start_date: "تاریخ شروع"
     status: "وضعیت"
     state: "State"
     subject: "موضوع"
     slug: "Slug"
     summary: "Summary"
+    template: "Template"
     time_zone: "منطقه زمانی"
     text: "متن"
     title: "عنوان"
@@ -1865,6 +2157,7 @@ fa:
   button_add_watcher: "Add watcher"
   button_annotate: "Annotate"
   button_apply: "درخواست"
+  button_apply_changes: "Apply changes"
   button_archive: "آرشیو"
   button_back: "برگشت"
   button_cancel: "لغو"
@@ -1876,8 +2169,10 @@ fa:
   button_click_to_reveal: "Click to reveal"
   button_close: "Close"
   button_collapse_all: "بستن همه"
+  button_confirm: "Confirm"
   button_configure: "ویرایش"
   button_continue: "Continue"
+  button_complete: "Complete"
   button_copy: "کپی"
   button_copy_to_clipboard: "Copy to clipboard"
   button_copy_link_to_clipboard: "Copy link to clipboard"
@@ -1888,9 +2183,11 @@ fa:
   button_delete_permanently: "Delete permanently"
   button_delete_watcher: "Delete watcher %{name}"
   button_download: "Download"
+  button_disable: "Disable"
   button_duplicate: "نسخه برداری"
   button_duplicate_and_follow: "Duplicate and follow"
   button_edit: "ویرایش"
+  button_enable: "Enable"
   button_edit_associated_wikipage: "Edit associated wiki page: %{page_title}"
   button_expand_all: "باز کردن همه"
   button_favorite: "Add to favorites"
@@ -1905,6 +2202,7 @@ fa:
   button_print: "چاپ کردن"
   button_quote: "نقل قول"
   button_remove: Remove
+  button_remove_permanently: "Remove permanently"
   button_remove_reminder: "Remove reminder"
   button_rename: "تغییر نام"
   button_replace: "Replace"
@@ -1914,8 +2212,8 @@ fa:
   button_rollback: "برگرداندن به این نسخه"
   button_save: "ذخیره"
   button_save_as: "ذخیره به عنوان"
-  button_apply_changes: "Apply changes"
   button_save_back: "Save and back"
+  button_select: "Select"
   button_set_reminder: "Set reminder"
   button_show: "نمایش"
   button_sort: "مرتب‌سازی"
@@ -1977,9 +2275,25 @@ fa:
     copy_options:
       dependencies_label: "Copy from project"
   create_project:
+    attributes_heading: "Fill in this mandatory information to work on your projects."
     template_label: "Use template"
+    template_heading: "Select a project template to work with the most common project management methods, or create a project from scratch."
     copy_options:
       dependencies_label: "Copy from template"
+    blank_template:
+      label: "Blank project"
+      description: Start from scratch. Manually add project attributes, members and modules.
+    blank_description: No description provided.
+  create_portfolio:
+    template_heading: "Select a portfolio template to work with the most common project management methods, or create a portfolio from scratch."
+    blank_template:
+      label: "Blank portfolio"
+      description: Start from scratch. Manually add portfolio attributes, members and modules.
+  create_program:
+    template_heading: "Select a program template to work with the most common project management methods, or create a program from scratch."
+    blank_template:
+      label: "Blank program"
+      description: Start from scratch. Manually add program attributes, members and modules.
   create_wiki_page: "Create new wiki page"
   create_wiki_page_button: "Wiki page"
   date:
@@ -2139,25 +2453,30 @@ fa:
     features:
       baseline_comparison: Baseline Comparisons
       board_view: Advanced Boards
-      conditional_highlighting: Conditional Highlighting
+      calculated_values: Calculated values
+      capture_external_links: Capture External Links
       internal_comments: Internal Comments
       custom_actions: Custom Actions
-      custom_field_hierarchies: Custom fields of type hierarchy
+      custom_field_hierarchies: Hierarchies
       customize_life_cycle: Customize Life Cycle
       date_alerts: Date Alerts
       define_custom_style: Custom theme and logo
       edit_attribute_groups: Edit Attribute Groups
       gantt_pdf_export: Gantt PDF Export
       ldap_groups: LDAP users and group sync
+      mcp_server: MCP Server
       nextcloud_sso: Single Sign-On for Nextcloud Storage
       one_drive_sharepoint_file_storage: OneDrive/SharePoint File Storage
       placeholder_users: Placeholder Users
+      portfolio_management: Portfolio management
+      project_creation_wizard: Project initiation request
       project_list_sharing: Project List Sharing
       readonly_work_packages: Readonly Work Packages
       scim_api: SCIM server API
       sso_auth_providers: Single Sign-On
       team_planner_view: Team Planner View
       virus_scanning: Antivirus Scanning
+      weighted_item_lists: Weighted item lists
       work_package_query_relation_columns: Work Package Query Relation Columns
       work_package_sharing: Share work packages with external users
       work_package_subject_generation: Work Package Subject Generation
@@ -2173,17 +2492,17 @@ fa:
         Already have a token? Add it using the button below to upgrade to the booked Enterprise plan.
       hide_banner: "Hide this banner"
       homescreen_description: >
-        Enterprise plans extend the Community edition of OpenProject you are currently using. They include add-ons, additional features and professional support that enables organisations of all sizes to achieve great things together.
+        Enterprise plans extend the Community edition of OpenProject with additional [Enterprise add-ons](enterprise_url) and professional support, ideal for organizations running OpenProject in a mission-critical environment.
       homescreen_subline: By upgrading, you will also be supporting an open source project.
       baseline_comparison:
         description: Highlight changes made to this list since any point in the past.
       benefits:
-        description: "What are the benefits of the Enterprise on-premises edition?"
+        description: "مزایای OpenProject اینترپرایز حرفه ای در نسخه قابل نصب بر روی سرور مجازی یا اختصاصی خودتان چیست؟"
         high_security: "Security features"
-        high_security_text: "Single sign on (SAML, OpenID Connect, CAS), LDAP groups."
+        high_security_text: "ورود یکباره (Single Sign-On) (SAML، OpenID Connect، CAS)، گروه‌های LDAP"
         installation: "Installation support"
         installation_text: "Experienced software engineers guide you through the complete installation and setup process in your own infrastructure."
-        premium_features: "Enterprise add-ons"
+        premium_features: "افزونه‌های نسخه حرفه ای"
         premium_features_text: "Agile boards, custom theme and logo, graphs, intelligent workflows with custom actions, full text search for work package attachments and multi-select custom fields."
         professional_support: "Professional support"
         professional_support_text: "Get reliable, high-touch support from senior support engineers with expert knowledge about running OpenProject in business-critical environments."
@@ -2191,8 +2510,8 @@ fa:
         description: "Create automatically generated subjects using referenced attributes and text."
       customize_life_cycle:
         description: "Create and organize different project phases than the ones provided by PM2 project cycle planning."
-      conditional_highlighting:
-        description: "Need certain work packages to stand out from the mass? Use conditional highlighting in the work packages table."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "Need to see relations or child elements in the work package list?"
       edit_attribute_groups:
@@ -2204,13 +2523,17 @@ fa:
       readonly_work_packages:
         description: "Mark work packages as read-only for specific statuses."
       custom_field_hierarchies:
-        description: "Hierarchy custom fields allow organizing hierarchical structures in work packages by making use of multi-level select lists."
+        description: "Hierarchy custom fields allow organizing hierarchical structures in work packages and projects by making use of multi-level select lists."
       date_alerts:
         description: "With date alerts, you will be notified of upcoming start or finish dates so that you never miss or forget an important deadline."
+      weighted_item_lists:
+        description: "Weighted item lists allow you to create a list with underlying numeric values associated."
       work_package_sharing:
         description: "Share work packages with users who are not members of the project."
       project_list_sharing:
         description: "Share project lists with individual users."
+      calculated_values:
+        description: "Calculated values allow you to create a mathematical formula based attribute using numeric values and other project attributes and custom fields."
       define_custom_style:
         title: "Custom color theme and logo"
         more_info: "Note: the used logo will be publicly accessible."
@@ -2218,6 +2541,8 @@ fa:
       custom_actions:
         title: "اقدامات سفارشی"
         description: "Custom actions are one-click shortcuts to a set of pre-defined actions that you can make available on certain work packages based on status, role, type or project."
+      mcp_server:
+        description: "Integrate AI agents with your OpenProject instance through MCP."
       nextcloud_sso:
         title: "Single Sign-On for Nextcloud Storage"
         description: "Enable seamless and secure authentication for your Nextcloud storage with Single Sign-On. Simplify access management and enhance user convenience."
@@ -2229,6 +2554,8 @@ fa:
         description: "Enable users to log in via external SSO providers using SAML or OpenID Connect for seamless access and integration with existing identity systems."
       virus_scanning:
         description: "Ensure uploaded files in OpenProject are scanned for viruses before being accessible by other users."
+      project_creation_wizard:
+        description: "Generate a step-by-step wizard to help project managers fill out a project initiation request."
       placeholder_users:
         title: Placeholder users
         description: >
@@ -2239,6 +2566,8 @@ fa:
       internal_comments_inline:
         title: "Write internal comments only a small group can see"
         description: " "
+      portfolio_management:
+        description: Align your projects to your strategic goals by organizing them into portfolios and programs.
     teaser:
       title:
         one: "One day left of %{trial_plan} trial token"
@@ -2254,7 +2583,7 @@ fa:
       request_again: "Request again"
       resend_action: "Resend confirmation email"
       welcome_title: "Quick feature overview"
-      welcome_description: "Get a quick overview of project management and team collaboration with OpenProject Enterprise edition."
+      welcome_description: "یک مرور سریع از مدیریت پروژه و همکاری تیمی با نسخه انترپرایز OpenProject را دریافت کنید."
       confirmation_info: >
         We sent you an email on %{date} to %{email} with all the information to start the free trial of OpenProject Enterprise. Please check your inbox and click the confirmation link provided to start your 14-day free trial.
       confirmation_subline: >
@@ -2273,9 +2602,12 @@ fa:
       enabled: "Disable"
   enumeration_activities: "Time tracking activities"
   enumeration_work_package_priorities: "Work package priorities"
-  enumeration_reported_project_statuses: "Reported project status"
+  enumeration_reported_project_statuses: "Reported status"
   enumeration_caption_order_changed: "Order successfully changed."
   enumeration_could_not_be_moved: "Enumeration could not be moved."
+  enterprise_trials:
+    dialog_component:
+      title: Enterprise Trial
   error_auth_source_sso_failed: "مشکل در سامانه ورود مرکزی (SSO) برای کاربر '%{value}' به وجود آمد"
   error_can_not_archive_project: "This project cannot be archived: %{errors}"
   error_can_not_delete_entry: "Unable to delete entry"
@@ -2304,6 +2636,7 @@ fa:
   error_invalid_selected_value: "Invalid selected value."
   error_journal_attribute_not_present: "Journal does not contain attribute %{attribute}."
   error_pdf_export_too_many_columns: "Too many columns selected for the PDF export. Please reduce the number of columns."
+  error_pdf_date_range_too_long: "The selected work package date range exceeds the allowable PDF export limit. Please condense the range to a maximum of %{years} years."
   error_pdf_failed_to_export: "The PDF export could not be saved: %{error}"
   error_token_authenticity: "Unable to verify Cross-Site Request Forgery token. Did you try to submit data on multiple browsers or tabs? Please close all tabs and try again."
   error_reminder_not_found: "The reminder was not found or was already notified about."
@@ -2419,6 +2752,10 @@ fa:
     your_projects_export: "Projects are being exported"
     succeeded: "Export completed"
     failed: "An error has occurred while trying to export the work packages: %{message}"
+    demo:
+      heading: "Demo PDF"
+      footer: "Generated by OpenProject"
+      button_text: Generate Demo PDF
     errors:
       embedded_table_with_too_many_columns: "This embedded work package table could not fit on the page, please reduce the number of columns."
     format:
@@ -2436,7 +2773,7 @@ fa:
       attribute_not_found: "attribute not found: %{attribute}"
       model_not_found: "invalid attribute model: %{model}"
       resource_not_found: "resource not found: %{resource}"
-      rich_text_unsupported: "Rich text embedding currently not supported in export"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: h
       days: d
@@ -2481,11 +2818,14 @@ fa:
       tesseract: "Tesseract available (optional)"
   filterable_tree_view:
     filter_mode:
-      all: "All"
+      all: "همه"
       label: "Filter mode"
       selected: "Selected"
     include_sub_items: "Include sub-items"
     no_results_text: "No results"
+  toggle_switch:
+    label_on: "On"
+    label_off: "Off"
   general_csv_decimal_separator: "."
   general_csv_encoding: "UTF-8"
   general_csv_separator: ","
@@ -2508,6 +2848,22 @@ fa:
       community: "OpenProject community"
       upsell:
         title: "Upgrade to Enterprise edition"
+      new_features:
+        header: "Read about new features and product updates."
+        learn_about: "Learn more about all new features"
+        missing: "There are no highlighted features yet."
+        #We need to include the version to invalidate outdated translations in other locales
+        "17_1":
+          new_features_title: >
+            The release contains various new features and improvements, such as:
+          new_features_list:
+            line_0: Automated project initiation (Enterprise add-on).
+            line_1: "Meetings: add new or existing work packages as outcomes."
+            line_2: "Meetings: show participant responses in iCal subscriptions."
+            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
+            line_4: "Release to Community: Attribute highlighting."
+            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
+            line_6: Improved performance and user experience, including the Activity tab and Documents module.
     links:
       upgrade_enterprise_edition: "Upgrade to Enterprise edition"
       postgres_migration: "Migrating your installation to PostgreSQL"
@@ -2518,7 +2874,8 @@ fa:
       shortcuts: "Shortcuts"
       blog: "OpenProject blog"
       forums: "Community forum"
-      newsletter: "هشدارهای امنیتی / عضویت در خبرنامه"
+      security_alerts: "Security alerts"
+      newsletter: "Newsletter"
   image_conversion:
     imagemagick: "Imagemagick"
   journals:
@@ -2574,14 +2931,17 @@ fa:
   instructions_after_error: "You can try to sign in again by clicking %{signin}. If the error persists, ask your admin for help."
   menus:
     admin:
-      mail_notification: "اعلان های ایمیل"
-      mails_and_notifications: "Emails and notifications"
+      ai: "Artificial Intelligence (AI)"
       aggregation: "Aggregation"
       api_and_webhooks: "API and webhooks"
+      mail_notification: "اعلان های ایمیل"
+      mails_and_notifications: "Emails and notifications"
+      mcp_configurations: "Model Context Protocol (MCP)"
     quick_add:
       label: "Add…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "No access tokens to display"
         description: "All of them have been disabled. They can be re-enabled in the administration menu."
@@ -2591,34 +2951,56 @@ fa:
         expiration: "Expires"
       indefinite_expiration: "Never"
       simple_revoke_confirmation: "Are you sure you want to revoke this token?"
+      tabs:
+        client:
+          title: "Client tokens"
+        provider:
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "API tokens allow third-party applications to communicate with this OpenProject instance via REST APIs."
+        static_token_name: "API token"
         disabled_text: "API tokens are not enabled by the administrator. Please contact your administrator to use this feature."
         add_button: "API Token"
-      api:
-        static_token_name: "API token"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar"
-        text_hint: 'iCalendar tokens allow users to <a href="%{path}" target="_blank">subscribe to OpenProject calendars</a> and view up-to-date work package information from external clients.'
+        table_title: "iCalendar tokens"
+        text_hint_link: "iCalendar tokens allow users to [subscribe to OpenProject calendars](docs_url) and view up-to-date work package information from external clients."
         disabled_text: "iCalendar subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
-        empty_text_hint: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "OAuth tokens allow third-party applications to connect with this OpenProject instance."
-        empty_text_hint: "There is no third-party application access configured and active for you. Please contact your administrator to activate this feature."
-      rss:
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
         title: "RSS"
+        table_title: "RSS tokens"
         text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
         static_token_name: "RSS token"
         disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "File storages"
-        text_hint: "File Storage tokens connect this OpenProject instance with an external File Storage."
-        empty_text_hint: "There is no storage access linked to your account."
-        revoke_token: "Do you really want to remove this token? You will need to login again on %{storage}"
-        removed: "File Storage token successfully removed"
-        failed: "An error occurred and the token couldn't be removed. Please try again later."
         unknown_storage: "Unknown storage"
   notifications:
     reasons:
@@ -2683,6 +3065,7 @@ fa:
   label_api_access_key: "API access key"
   label_api_access_key_created_on: "API access key created %{value} ago"
   label_api_access_key_type: "API"
+  label_auto_option: "(auto)"
   label_ical_access_key_type: "iCalendar"
   label_ical_access_key_description: 'iCalendar token "%{token_name}" for "%{calendar_name}" in "%{project_name}"'
   label_ical_access_key_not_present: "iCalendar token(s) not present."
@@ -2728,6 +3111,7 @@ fa:
   label_board_plural: "تابلو"
   label_branch: "Branch"
   label_browse: "Browse"
+  label_builtin: "Built-in"
   label_bulk_edit_selected_work_packages: "Bulk edit selected work packages"
   label_bundled: "(Bundled)"
   label_calendar: "تقویم‌ها"
@@ -2741,6 +3125,7 @@ fa:
   label_required_disk_storage: "Required disk storage"
   label_send_invitation: ارسال دعوت نامه
   label_calculated_value: "Calculated value"
+  label_change_parent: "تغییر والدین"
   label_change_plural: "Changes"
   label_change_properties: "Change properties"
   label_change_status: "Change status"
@@ -2829,6 +3214,7 @@ fa:
   label_duplicate: "duplicate"
   label_duplicates: "duplicates"
   label_edit: "ویرایش"
+  label_edit_attribute: "Edit attribute"
   label_edit_x: "Edit: %{x}"
   label_enable_multi_select: "Toggle multiselect"
   label_enabled_project_custom_fields: "Enabled custom fields"
@@ -2916,11 +3302,11 @@ fa:
   label_integer: "Integer"
   label_interface: "Interface"
   label_internal: "Internal"
-  label_introduction_video: "Introduction video"
+  label_introduction_video: "Getting started video"
   label_invite_user: "Invite user"
   label_item: "Item"
   label_item_plural: "Items"
-  label_scored_list: "Scored list"
+  label_weighted_item_list: "Weighted item list"
   label_share: "به اشتراک گذاری"
   label_share_project_list: "Share project list"
   label_share_work_package: "Share work package"
@@ -2931,6 +3317,8 @@ fa:
   label_journal_diff: "Description Comparison"
   label_language: "زبان"
   label_languages: "Languages"
+  label_external_links: "External links"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Jump to a project..."
   label_keyword_plural: "Keywords"
   label_language_based: "Based on user's language"
@@ -2950,13 +3338,19 @@ fa:
   label_link_url: "Link (URL)"
   label_list: "لیست"
   label_loading: "Loading..."
+  label_locked: "locked"
   label_lock_user: "کاربر قفل شده"
   label_logged_as: "Logged in as"
   label_login: "ورود"
-  label_custom_logo: "Custom logo"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "Custom export logo"
   label_custom_export_cover: "Custom export cover background"
   label_custom_export_footer: "Custom export footer image"
+  label_custom_export_font_regular: "Regular"
+  label_custom_export_font_bold: "Bold"
+  label_custom_export_font_italic: "مورب"
+  label_custom_export_font_bold_italic: "Bold Italic"
   label_custom_export_cover_overlay: "Custom export cover background overlay"
   label_custom_export_cover_text_color: "Text color"
   label_custom_pdf_export_settings: "Custom PDF export settings"
@@ -3044,6 +3438,8 @@ fa:
   label_operator_equals_or: "is (OR)"
   label_operator_equals_all: "is (AND)"
   label_operator_shared_with_user_any: "هرکدام"
+  label_open: "باز"
+  label_closed: "بسته"
   label_open_menu: "باز کردن منو"
   label_open_work_packages: "باز"
   label_open_work_packages_plural: "باز"
@@ -3061,7 +3457,7 @@ fa:
   label_password_rule_special: "Special Characters"
   label_password_rule_uppercase: "Uppercase"
   label_path_encoding: "Path encoding"
-  label_per_page: "Per page:"
+  label_per_page: "در هر صفحه:"
   label_people: "افراد"
   label_permissions: "Permissions"
   label_permissions_report: "Permissions report"
@@ -3072,6 +3468,7 @@ fa:
   label_planning: "Planning"
   label_please_login: "Please log in"
   label_plugins: "افزونه"
+  label_portfolio_plural: "Portfolios"
   label_modules_and_plugins: "Modules and Plugins"
   label_precedes: "precedes"
   label_preferences: "Preferences"
@@ -3092,6 +3489,7 @@ fa:
   label_project_attribute_manage_link: "Manage project attributes"
   label_project_count: "Total number of projects"
   label_project_copy_notifications: "Send email notifications during the project copy"
+  label_project_initiation_export_pdf: "Export PDF for %{project_creation_name}"
   label_project_latest: "Latest projects"
   label_project_default_type: "Allow empty type"
   label_project_hierarchy: "Project hierarchy"
@@ -3146,6 +3544,7 @@ fa:
   label_repository_remove: "Remove repository"
   label_repository_root: "Repository root"
   label_repository_plural: "Repositories"
+  label_request_submission: "Request submission"
   label_required: "required"
   label_requires: "requires"
   label_result_plural: "Results"
@@ -3196,6 +3595,7 @@ fa:
   label_subproject: "زیر پروژه"
   label_subproject_new: "New subproject"
   label_subproject_plural: "Subprojects"
+  label_subitems: "Subitems"
   label_subtask_plural: "Subtasks"
   label_summary: "Summary"
   label_system: "System"
@@ -3203,6 +3603,8 @@ fa:
   label_table_of_contents: "Table of contents"
   label_tag: "Tag"
   label_team_planner: "Team Planner"
+  label_template: "Template"
+  label_templates: "Templates"
   label_text: "Long text"
   label_this_month: "this month"
   label_this_week: "this week"
@@ -3247,6 +3649,7 @@ fa:
   label_user_search: "Search for user"
   label_user_settings: "User settings"
   label_users_settings: "Users settings"
+  label_value_x: "Value: %{x}"
   label_version_new: "New version"
   label_version_edit: "ویرایش نسخه"
   label_version_plural: "نسخه ها"
@@ -3555,9 +3958,10 @@ fa:
   notice_not_authorized: "You are not authorized to access this page."
   notice_not_authorized_archived_project: "The project you're trying to access has been archived."
   notice_requires_enterprise_token: "Enterprise token missing or doesn't allow access to this page."
-  notice_password_confirmation_failed: "رمز عبور شما درست نیست. لذا ادامه ممکن نیست."
+  notice_password_confirmation_failed: "The entered password is not correct."
   notice_principals_found_multiple: "There are %{number} results found. \n Tab to focus the first result."
   notice_principals_found_single: "There is one result. \n Tab to focus it."
+  notice_parent_item_not_found: "Parent item not found."
   notice_project_not_deleted: "The project wasn't deleted."
   notice_project_not_found: "Project not found."
   notice_successful_connection: "Successful connection."
@@ -3630,6 +4034,7 @@ fa:
   permission_comment_news: "Comment news"
   permission_commit_access: "Read/write access to repository (commit)"
   permission_copy_projects: "Copy projects"
+  permission_copy_projects_explanation: "In template projects, this permission has a secondary function, it allows the creation of new projects derived from the template."
   permission_copy_work_packages: "Duplicate work packages"
   permission_create_backup: "Create backups"
   permission_delete_work_package_watchers: "Delete watchers"
@@ -3658,7 +4063,11 @@ fa:
   permission_edit_timelines: "Edit timelines"
   permission_edit_wiki_pages: "Edit wiki pages"
   permission_export_work_packages: "Export work packages"
+  permission_export_projects: "Export projects"
   permission_export_wiki_pages: "Export wiki pages"
+  permission_invite_members_by_email: "Invite members by email"
+  permission_invite_members_by_email_explanation: >
+    Allows users to invite new members by email. Invited users will receive an email with a link to set their password and activate their account. Depends on the permission to manage members
   permission_list_attachments: "List attachments"
   permission_log_own_time: "Log own time"
   permission_log_time: "Log time for other users"
@@ -3688,6 +4097,9 @@ fa:
   permission_share_work_packages: "Share work packages"
   permission_manage_types: "Select types"
   permission_manage_own_reminders: "Create own reminders"
+  permission_view_all_principals: "View all users and groups"
+  permission_view_all_principals_explanation: >
+    Allows users to see all users and groups in the system, even if they are not members of any joined projects or groups.
   permission_view_project: "View projects"
   permission_view_changesets: "View repository revisions in OpenProject"
   permission_view_internal_comments: "View internal comments"
@@ -3718,8 +4130,19 @@ fa:
   permission_edit_project_query: "Edit project query"
   placeholders:
     default: "-"
+  portfolio:
+    count:
+      zero: "0 portfolios"
+      one: "1 portfolio"
+      other: "%{count} portfolios"
+  program:
+    count:
+      zero: "0 programs"
+      one: "1 program"
+      other: "%{count} programs"
   project:
     archive:
+      title: "Archive project"
       are_you_sure: "Are you sure you want to archive the project '%{name}'?"
       archived: "بایگانی"
     count:
@@ -3727,13 +4150,15 @@ fa:
       one: "1 پروژه"
       other: "%{count} پروژه"
     destroy:
-      confirmation: "If you continue, the project %{identifier} will be permanently destroyed. To confirm this action please introduce the project name in the field below, this will:"
-      project_delete_result_1: "Delete all related data."
-      project_delete_result_2: "Delete all managed project folders in the attached storages."
-      info: "Deleting the project is an irreversible action."
-      project_verification: "Enter the project's name %{name} to verify the deletion."
-      subprojects_confirmation: "Its subproject(s): %{value} will also be deleted."
-      title: "Delete the project %{name}"
+      title: "Delete project"
+      heading: "Permanently delete this project?"
+      confirmation_message_for_subprojects_html:
+        zero: >
+          You are about to permanently delete all data relating to project <strong>%{name}</strong>.
+        one: >
+          You are about to permanently delete all data relating to project <strong>%{name}</strong> and this subproject:
+        other: >
+          You are about to permanently delete all data relating to project <strong>%{name}</strong> and these subprojects:
     filters:
       project_phase: "Project phase: %{phase}"
       project_phase_any: "Project phase: Any"
@@ -3744,6 +4169,7 @@ fa:
       title: Change the project's identifier
     not_available: "Project N/A"
     template:
+      copying_title: "Applying template"
       copying: >
         Your project is being created from the selected template project. You will be notified by mail as soon as the project is available.
       use_template: "Use template"
@@ -3885,6 +4311,9 @@ fa:
   setting_allowed_link_protocols: "Allowed link protocols"
   setting_allowed_link_protocols_text_html: >-
     Allow these protocols to be rendered as links in work package descriptions, long text fields and comments. For example, %{tel_code} or %{element_code}. Enter one protocol per line. <br/> Protocols %{http_code}, %{https_code}, and %{mailto_code} are always allowed.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "First login redirect"
   setting_after_first_login_redirect_url_text_html: >
     Set a path to redirect users after their first login. If empty, redirects to the home page for the onboarding tour. <br/> Example: <code>/my/page</code>
@@ -3897,20 +4326,29 @@ fa:
   setting_apiv3_cors_origins_text_html: >
     If CORS is enabled, these are the origins that are allowed to access OpenProject API. <br/> Please check the <a href="%{origin_link}" target="_blank">Documentation on the Origin header</a> on how to specify the expected values.
   setting_apiv3_write_readonly_attributes: "Write access to read-only attributes"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author. <br/> <strong>Warning:</strong> This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author. </br> For more information on attributes and supported resources, please see the %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Maximum API page size"
-  setting_apiv3_max_page_instructions_html: >
-    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page. <br/> <strong>Warning:</strong> Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Documentation"
   setting_apiv3_docs_enabled: "Enable docs page"
   setting_apiv3_docs_enabled_instructions_html: >
     If the docs page is enabled you can get an interactive view of the APIv3 documentation under <a href="%{link}" target="_blank">%{link}</a>.
+  setting_apiv3_docs_enabled_instructions_warning: >
+    Please be aware that enabling the API docs on a production system may expose sensitive information or result in accidental loss of data when not being careful. We recommend to only enable this setting for development purposes.
   setting_attachment_whitelist: "Attachment upload whitelist"
   setting_email_delivery_method: "Email delivery method"
   setting_emails_salutation: "Address user in emails with"
   setting_oauth_allow_remapping_of_existing_users: "Allow remapping of existing users"
   setting_sendmail_location: "Location of the sendmail executable"
+  setting_sendmail_arguments: "Arguments for sendmail"
   setting_smtp_enable_starttls_auto: "Automatically use STARTTLS if available"
   setting_smtp_ssl: "Use SSL connection"
   setting_smtp_address: "SMTP server"
@@ -3968,6 +4406,8 @@ fa:
   setting_feeds_limit: "Feed content limit"
   setting_file_max_size_displayed: "Max size of text files displayed inline"
   setting_host_name: "Host name"
+  setting_collaborative_editing_hocuspocus_url: "Hocuspocus server URL"
+  setting_collaborative_editing_hocuspocus_secret: "Hocuspocus server secret"
   setting_hours_per_day: "Hours per day"
   setting_hours_per_day_explanation: >-
     This defines what is considered a "day" when displaying duration in days and hours (for example, if a day is 8 hours, 32 hours would be 4 days).
@@ -3997,6 +4437,8 @@ fa:
   setting_mail_handler_body_delimiter_regex: "Truncate emails matching this regex"
   setting_mail_handler_ignore_filenames: "Ignored mail attachments"
   setting_new_project_user_role_id: "Role given to a non-admin user who creates a project"
+  setting_new_project_send_confirmation_email: "Send notification to author when creating a new project"
+  setting_new_project_notification_text: "Notification text"
   setting_password_active_rules: "Active character classes"
   setting_password_count_former_banned: "Number of most recently used passwords banned for reuse"
   setting_password_days_valid: "Number of days, after which to enforce a password change"
@@ -4043,7 +4485,7 @@ fa:
   setting_self_registration_manual_activation: "Manual account activation"
   setting_self_registration_manual_activation_caption: >
     Users can register on their own. Their accounts are in a pending state until an administrator or user with the global permission to create or manage users activates them.
-  setting_session_ttl: "Session expiry time after inactivity"
+  setting_session_ttl: "Session expiration time after inactivity"
   setting_session_ttl_hint: "Value below 5 works like disabled"
   setting_session_ttl_enabled: "Session expires"
   setting_start_of_week: "Week starts on"
@@ -4069,6 +4511,9 @@ fa:
   setting_work_package_list_default_highlighted_attributes: "Default inline highlighted attributes"
   setting_working_days: "Working days"
   settings:
+    errors:
+      not_writable: "The setting is not writable and can only be changed by a sysadmin."
+      failed_to_update: "Setting '%{name}' could not be updated: %{message}"
     authentication:
       login: "Login"
       registration: "Registration"
@@ -4076,7 +4521,7 @@ fa:
       omniauth_direct_login_hint_html: >
         If this option is active, login requests will redirect to the configured omniauth provider. The login dropdown and sign-in page will be disabled. <br/> <strong>Note:</strong> Unless you also disable password logins, with this option enabled, users can still log in internally by visiting the <code>%{internal_path}</code> login page.
       remapping_existing_users_hint: >
-        If enabled, allows any configured identity provider to login existing users based on their email address, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
+        If enabled, allows any configured identity provider to login existing users based on their username, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
     attachments:
       whitelist_text_html: >
         Define a list of valid file extensions and/or mime types for uploaded files. <br/> Enter file extensions (e.g., <code>%{ext_example}</code>) or mime types (e.g., <code>%{mime_example}</code>). <br/> Leave empty to allow any file type to be uploaded. Multiple values allowed (one line for each value).
@@ -4129,6 +4574,7 @@ fa:
     passwords: "Passwords"
     project_attributes:
       heading: "Project attributes"
+      label_for_all_projects: "All projects"
       label_new_attribute: "Project attribute"
       label_new_section: "Section"
       label_edit_section: "Edit title"
@@ -4141,9 +4587,63 @@ fa:
       new:
         heading: "New attribute"
         description: "Changes to this project attribute will be reflected in all projects where it is enabled. Required attributes cannot be disabled on a per-project basis."
+      sections:
+        display_representation:
+          overview:
+            label: "Project attribute shown in:"
+            main_area:
+              label: "Main area"
+              description: "Add all the project attributes as individual widgets in the main section of the project overview."
+            side_panel:
+              label: "Side panel"
+              description: "Add all the project attributes in a section inside the right side panel in the project overview."
+    project_initiation_request:
+      header_description: >
+        OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can choose which project attributes should be included and create a PDF artifact as a result.
+      status:
+        submitted: "%{wizard_name} has been submitted"
+        submitted_description: "Click the button below to go to the work package for the submission process."
+        submitted_button: "Open submission request"
+        not_completed: "%{wizard_name} not yet completed"
+        not_completed_description: "Provide the necessary information by filling the attributes and get the project started."
+      wizard_status_button:
+        project_initiation_request: "Open project initiation request"
+        project_creation_wizard: "Open project creation wizard"
+        project_mandate: "Open project mandate"
+      blankslate:
+        title: "Initiation request not enabled"
+        description: "OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can choose which project attributes should be included and what to do with the output document. Enable it here to start configuring the wizard."
+      disable_dialog:
+        title: "Disable project initiation request"
+        heading: "Disable this project initiation request?"
+        confirmation_message: "The initiation request wizard will no longer be available to new projects based on this template. Project managers and project owners will need to manually configure and fill out the relevant information in the Project overview."
+        checkbox_message: "I understand that this action is not reversible"
+      name:
+        artifact_name: "Artifact name"
+        artifact_name_caption: "Choose the name for this artifact that your project management framework recommends."
+        options:
+          project_initiation_request: "Project initiation request"
+          project_creation_wizard: "Project creation wizard"
+          project_mandate: "Project mandate"
+      submission:
+        description_template: >
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
+        description: "When a user submits a project initiation request, a new work package will be created with the request artifact attached as a PDF file. The settings below define the type, status and assignee for this new work package."
+        work_package_type: "Work package type"
+        work_package_type_caption: "The work package type that should be used to store the completed artifact."
+        status_when_submitted: "Status when submitted"
+        status_when_submitted_caption: "The status the generated work package will transition to once the request is submitted."
+        send_confirmation_email: "Send confirmation email to the user who submitted the project initiation request"
+        assignee: "Assignee when submitted"
+        assignee_caption_html: "The user or group assigned to this project attribute will also become the assignee of the new work package. This list includes active project attributes of type <i>User</i> only."
+        confirmation_email_text: "Confirmation email text"
+        confirmation_email_default: "Hello,\n\nYou submitted a project initiation request for **%{project_name}**. It is now awaiting review.\nClick the link below to access the work package with your request."
+        work_package_comment: "Work package comment"
+        work_package_comment_caption: "The assignee selected above will automatically be @mentioned in the comment."
+        work_package_comment_default: "A project initiation request for **%{project_name}** was submitted and is awaiting review."
     project_phase_definitions:
       heading: "Project life cycle"
-      heading_description: "Project life cycle define the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
+      heading_description: "Project life cycle defines the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
       label_add: "ﺍﻓﺰﻭﺩﻥ"
       label_add_description: "Add project phase definition"
       filter:
@@ -4170,7 +4670,7 @@ fa:
       display_format: "Display format"
       deletion: "Deletion"
     working_days:
-      section_work_week: "Work week"
+      section_work_week: "هفته کاری"
       section_holidays_and_closures: "Holidays and closures"
     work_packages:
       not_allowed_text: "You do not have the necessary permissions to view this page."
@@ -4186,6 +4686,7 @@ fa:
   status_invited: مدعو
   status_locked: locked
   status_registered: registered
+  status_deleted: deleted
   #Used in array.to_sentence.
   support:
     array:
@@ -4195,6 +4696,7 @@ fa:
   text_access_token_hint: "Access tokens allow you to grant external applications access to resources in OpenProject."
   text_analyze: "Further analyze: %{subject}"
   text_are_you_sure: "آیا مطمئن هستید؟"
+  open_link_in_a_new_tab: "Open link in a new tab"
   text_are_you_sure_continue: "Are you sure you want to continue?"
   text_are_you_sure_with_children: "Delete work package and all child work packages?"
   text_are_you_sure_with_project_custom_fields: "Deleting this attribute will also delete its values in all projects. Are you sure you want to do this?"
@@ -4215,13 +4717,27 @@ fa:
   text_project_custom_field_html: >
     The Enterprise edition will add these additional add-ons for projects' custom fields: <br> <ul> <li><b>Add custom fields for projects to your Project list to create a project portfolio view</b></li> </ul>
   text_custom_logo_instructions: >
-    A white logo on transparent background is recommended. For best results on both, conventional and retina displays, make sure your image's dimensions are 460px by 60px.
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×47px image. You can add as much spacing inside that image as you like.
+  text_custom_logo_mobile_instructions: >
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×33px image. You can add as much spacing inside that image as you like.
   text_custom_export_logo_instructions: >
     This is the logo that appears in your PDF exports. It needs to be a PNG or JPEG image file. A black or colored logo on transparent or white background is recommended.
   text_custom_export_cover_instructions: >
     This is the image that appears in the background of a cover page in your PDF exports. It needs to be an about 800px width by 500px height sized PNG or JPEG image file.
   text_custom_export_footer_instructions: >
     PDF exports will include a graphical element positioned to the left of the footer. This image must be a PNG or JPEG file with approximately 200 pixels in width.
+  label_custom_export_font_instructions: >
+    Upload and manage custom TrueType (.ttf) fonts used in your PDF exports. For best results, use matching files from the same font family. If no font is provided, the default NotoSans font will be used.
+  label_custom_export_images_instructions: >
+    Upload and manage custom image files used in your PDF exports.
+  text_custom_export_font_regular_instructions: >
+    This is the font file for regular text. It needs to be in TTF format and is required.
+  text_custom_export_font_bold_instructions: >
+    This is the font file for bold text. It needs to be in TTF format.
+  text_custom_export_font_italic_instructions: >
+    This is the font file for italic text. It needs to be in TTF format.
+  text_custom_export_font_bold_italic_instructions: >
+    This is the font file for bold and italic text. It needs to be in TTF format.
   text_custom_favicon_instructions: >
     This is the tiny icon that appears in your browser window/tab next to the page's title. It needs to be a squared 32 by 32 pixels sized PNG image file with a transparent background.
   text_custom_touch_icon_instructions: >
@@ -4279,6 +4795,7 @@ fa:
     Note: if enabled, this will display a badge with your installation status in the <a href="%{information_panel_path}">%{information_panel_label}</a> administration panel, and on the home page. It is displayed to administrators only. <br/> The badge will check your current OpenProject version against the official OpenProject release database to alert you of any updates or known vulnerabilities. For more information on what the check provides, what data is needed to provide available updates, and how to disable this check, please visit <a href="%{more_info_url}">the configuration documentation</a>.
   text_own_membership_delete_confirmation: "You are about to remove some or all of your permissions and may no longer be able to edit this project after that.\nAre you sure you want to continue?"
   text_permanent_delete_confirmation_checkbox_label: "I understand that this deletion cannot be reversed"
+  text_permanent_remove_confirmation_checkbox_label: "I understand that this removal cannot be reversed"
   text_plugin_assets_writable: "Plugin assets directory writable"
   text_powered_by: "Powered by %{link}"
   text_project_identifier_info: "Only lower case letters (a-z), numbers, dashes and underscores are allowed, must start with a lower case letter."
@@ -4369,6 +4886,8 @@ fa:
       other: "موقتا قفل شده  (%{count}تلاش ناموفق برای ورود)"
     confirm_status_change: "شما در حال تغییر وضعیت '%{name}' هستید. آیا می خواهید ادامه دهید؟"
     deleted: "Deleted user"
+    error_status_change_self: "You cannot change your own user status."
+    error_admin_change_on_non_admin: "Only administrators can change the status of administrator users."
     error_status_change_failed: "Changing the user status failed due to the following errors: %{errors}"
     invite: Invite user via email
     invited: مدعو
@@ -4591,6 +5110,8 @@ fa:
       multiple_errors: "Multiple field constraints have been violated."
       unable_to_create_attachment: "امکان افزودن فایل پیوست وجود ندارد"
       unable_to_create_attachment_permissions: "The attachment could not be saved due to lacking file system permissions"
+      user:
+        name_readonly: "The name attribute is read-only. Changes can be written through the attributes firstname and lastname."
       render:
         context_not_parsable: "The context provided is not a link to a resource."
         unsupported_context: "The resource given is not supported as context."
@@ -4605,8 +5126,10 @@ fa:
     resources:
       schema: "Schema"
     undisclosed:
-      parent: Undisclosed - The selected parent is invisible because of lacking permissions.
+      parent: Undisclosed - The parent is invisible because of lacking permissions.
+      project: Undisclosed - The project is invisible because of lacking permissions.
       ancestor: Undisclosed - The ancestor is invisible because of lacking permissions.
+      definingProject: Undisclosed - The project is invisible because of lacking permissions.
   doorkeeper:
     pre_authorization:
       status: "Pre-authorization"
@@ -4769,3 +5292,8 @@ fa:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

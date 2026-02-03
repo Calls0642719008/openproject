@@ -108,7 +108,6 @@ RSpec.describe "OAuth authorization code flow with PKCE", :js do
     visit my_account_path
     click_on "Access token"
 
-    expect(page).to have_css("#oauth-application-grant-#{app.id}", text: app.name)
-    expect(page).to have_css("td", text: app.name)
+    expect(page).to have_test_selector("oauth-application-#{app.id}-name", text: app.name)
   end
 end

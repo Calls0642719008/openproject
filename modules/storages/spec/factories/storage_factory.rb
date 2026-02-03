@@ -114,7 +114,7 @@ FactoryBot.define do
     trait :as_automatically_managed do
       automatic_management_enabled { true }
       username { "OpenProject" }
-      password { ENV.fetch("NEXTCLOUD_LOCAL_GROUP_USER_PASSWORD", "Password123") }
+      password { "Password123" }
     end
   end
 
@@ -135,6 +135,7 @@ FactoryBot.define do
 
     name { "Nextcloud Local" }
     host { "https://nextcloud.local/" }
+    password { ENV.fetch("NEXTCLOUD_LOCAL_AMPF_PASSWORD", "MISSING_NEXTCLOUD_AMPF_PASSWORD") }
 
     initialize_with do
       Storages::NextcloudStorage.create_or_find_by(attributes.except(:oauth_client, :oauth_application))
@@ -168,6 +169,12 @@ FactoryBot.define do
              integration: storage,
              user: evaluator.oauth_client_token_user,
              origin_user_id: evaluator.origin_user_id)
+    end
+
+    trait :as_automatically_managed do
+      automatic_management_enabled { true }
+      username { "OpenProject" }
+      password { ENV.fetch("NEXTCLOUD_LOCAL_AMPF_PASSWORD", "AMPF_PASSWORD_NOT_SET") }
     end
   end
 

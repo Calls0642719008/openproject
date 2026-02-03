@@ -1,4 +1,5 @@
 ka:
   overviews:
-    label: 'მიმოხილვა'
-  permission_manage_overview: 'მიმოხილვის გვერდის მართვა'
+    label_home: "%{workspace_type} home"
+    label_dashboard: "სამუშაო დაფა"
+    label_overview: "მიმოხილვა"

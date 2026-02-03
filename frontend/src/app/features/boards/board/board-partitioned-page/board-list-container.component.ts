@@ -87,7 +87,7 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
 
   boardWidgets:GridWidgetResource[] = [];
 
-  showHiddenListWarning:boolean = false;
+  showHiddenListWarning = false;
 
   available = this.Banner.allowsTo('board_view');
 

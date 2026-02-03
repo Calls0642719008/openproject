@@ -44,7 +44,7 @@ class TimeEntry < ApplicationRecord
   MAX_TIME = (60 * 24) - 1 # => 23:59
   SECONDS_PER_HOUR = 3600.0
 
-  acts_as_customizable
+  acts_as_customizable validate_unless: ->(te) { te.new_record? && te.ongoing? }
 
   acts_as_journalized
 

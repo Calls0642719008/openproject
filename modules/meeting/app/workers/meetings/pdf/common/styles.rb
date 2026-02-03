@@ -92,6 +92,14 @@ module Meetings::PDF::Common::Styles
       @styles.dig(:outcome, :indent).presence || 15
     end
 
+    def outcome_work_package
+      resolve_font(@styles.dig(:outcome, :work_package))
+    end
+
+    def outcome_work_package_margin
+      resolve_margin(@styles.dig(:outcome, :work_package))
+    end
+
     def agenda_item_title
       resolve_font(@styles.dig(:agenda_item, :title))
     end

@@ -29,7 +29,6 @@
 #++
 
 require "spec_helper"
-require "support/pages/custom_fields/index_page"
 
 RSpec.describe "types", :js do
   let(:user) do

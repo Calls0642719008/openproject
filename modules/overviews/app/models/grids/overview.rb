@@ -31,8 +31,8 @@ module Grids
     belongs_to :project
 
     set_acts_as_attachable_options view_permission: :view_project,
-                                   delete_permission: :manage_overview,
-                                   add_permission: :manage_overview,
+                                   delete_permission: :manage_dashboards,
+                                   add_permission: :manage_dashboards,
                                    skip_permission_checks: false
 
     def to_s

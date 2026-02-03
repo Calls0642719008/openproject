@@ -135,7 +135,7 @@ export class CodeBlockMacroModalComponent extends OpModalComponent implements Af
 
   updateCodeMirrorMode(newLanguage:string) {
     const editor = this.codeMirrorInstance;
-    editor && editor.setOption('mode', newLanguage);
+    editor?.setOption('mode', newLanguage);
   }
 
   updateLanguage(newValue?:string) {

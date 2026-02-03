@@ -46,7 +46,7 @@ module Storages
             end
             let(:input_data) { Input::FilesInfo.build(file_ids:).value! }
 
-            it_behaves_like "adapter files_info_query: basic query setup"
+            it_behaves_like "storage adapter: query call signature", "files_info"
 
             context "with an empty array of file ids" do
               let(:file_ids) { [] }
@@ -115,6 +115,13 @@ module Storages
               end
 
               it_behaves_like "adapter files_info_query: successful list response"
+            end
+
+            context "with the integration app being disabled", vcr: "nextcloud/files_info_query_app_disabled" do
+              let(:file_ids) { %w[50 53] }
+              let(:error_source) { described_class }
+
+              it_behaves_like "storage adapter: error response", :error
             end
           end
         end

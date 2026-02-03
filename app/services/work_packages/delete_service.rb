@@ -74,13 +74,8 @@ class WorkPackages::DeleteService < BaseServices::Delete
     # There is an issue there: the parent can be saved twice: once for the
     # rescheduling and once for the ancestor update. Ideally, it should be
     # saved only once.
-    result_of_reschedule = reschedule_related(deleted_work_package, successors)
-    result.merge!(result_of_reschedule)
-
-    results_of_update_ancestors = update_ancestors_all_attributes([deleted_work_package])
-    results_of_update_ancestors.each do |ancestor_result|
-      result.merge!(ancestor_result)
-    end
+    result.merge!(reschedule_related(deleted_work_package, successors))
+    result.merge!(update_ancestors(deleted_work_package))
   end
 
   def reschedule_related(deleted_work_package, successors)

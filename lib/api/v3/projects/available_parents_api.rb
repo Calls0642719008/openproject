@@ -39,25 +39,26 @@ module API
             end
           end
 
-          get &::API::V3::Utilities::Endpoints::SqlFallbackedIndex.new(model: Project,
-                                                                       scope: -> do
-                                                                         project = if params[:of]
-                                                                                     Project.find(params[:of])
-                                                                                   else
-                                                                                     Project.new(workspace_type: "project")
-                                                                                   end
+          get &::API::V3::Utilities::Endpoints::SqlFallbackedIndex.new(
+            model: Project,
+            scope: -> do
+              project = if params[:of]
+                          Project.find(params[:of])
+                        else
+                          Project.new(workspace_type: params[:workspace_type] || "project")
+                        end
 
-                                                                         contract_class = if project.new_record?
-                                                                                            ::Projects::CreateContract
-                                                                                          else
-                                                                                            ::Projects::UpdateContract
-                                                                                          end
+              contract_class = if project.new_record?
+                                 ::Projects::CreateContract
+                               else
+                                 ::Projects::UpdateContract
+                               end
 
-                                                                         contract = contract_class.new(project, current_user)
+              contract = contract_class.new(project, current_user)
 
-                                                                         contract.assignable_parents.includes(:enabled_modules)
-                                                                       end)
-                                                                  .mount
+              contract.assignable_parents.includes(:enabled_modules)
+            end
+          ).mount
         end
       end
     end

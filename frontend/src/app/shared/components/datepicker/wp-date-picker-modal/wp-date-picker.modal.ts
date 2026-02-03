@@ -97,7 +97,7 @@ export class OpWpDatePickerModalComponent extends OpModalComponent implements On
       window.location.origin,
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     url.searchParams.set('field', this.locals.name);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
     url.searchParams.set('work_package[initial][start_date]', this.nullAsEmptyStringFormatter(this.locals.resource.startDate));
@@ -121,7 +121,6 @@ export class OpWpDatePickerModalComponent extends OpModalComponent implements On
       url.searchParams.set('work_package[start_date_touched]', 'true');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     this.turboFrameSrc = url.toString();
   }
 

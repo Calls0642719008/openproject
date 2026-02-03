@@ -86,6 +86,8 @@ RSpec.describe WorkPackages::CreateNoteContract do
       before do
         # Setting the journal_notes to not trigger a :blank error
         work_package.journal_notes = "blubs"
+        # Enable internal comments on project
+        allow(project).to receive(:enabled_internal_comments).and_return(true)
       end
 
       context "and journal_internal is true" do
@@ -102,6 +104,14 @@ RSpec.describe WorkPackages::CreateNoteContract do
             expect(contract.errors.full_messages)
               .to eq(["Internal Journal requires at least the Professional enterprise plan."])
           end
+        end
+
+        context "and the project setting does not allow internal comments" do
+          before do
+            allow(project).to receive(:enabled_internal_comments).and_return(false)
+          end
+
+          it_behaves_like "contract is invalid", journal_internal: :feature_disabled_for_project
         end
       end
 

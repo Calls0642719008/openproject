@@ -69,13 +69,13 @@ export class WorkPackageService {
           ids.forEach((id) => this.halEvents.push({ _type: 'WorkPackage', id }, { eventType: 'deleted' } as HalDeletedEvent));
 
           if (this.$state.includes('**.list.details.**')
-            && ids.indexOf(this.$state.params.workPackageId) > -1) {
+            && ids.includes(this.$state.params.workPackageId)) {
             this.$state.go('work-packages.partitioned.list', this.$state.params);
           }
         })
         .catch(() => {
           const urlParams = this.UrlParamsHelper.buildQueryString(params);
-          window.location.href = `${this.PathHelper.workPackagesBulkDeletePath()}?${urlParams}`;
+          window.location.href = `${this.PathHelper.workPackagesBulkReassignmentPath()}?${urlParams}`;
         });
     }
 

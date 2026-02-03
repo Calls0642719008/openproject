@@ -13,19 +13,13 @@ hr:
           no_results: 'No documents yet.'
         members:
           title: 'Članovi'
-          no_results: 'No visible members.'
-          view_all_members: 'Pogledaj sve članove'
-          add: 'Član'
-          too_many: 'Displaying %{count} of %{total} members.'
         news:
           title: 'Vijesti'
-          at: 'at'
-          no_results: 'Nema promjena za izvjestiti.'
         project_description:
-          title: 'Opis projekta'
+          title: 'Description'
           no_results: "No description has been written yet. One can be provided in the 'Project settings'."
         project_status:
-          title: 'Status projekta'
+          title: 'Status'
           not_started: 'Not started'
           on_track: 'On track'
           off_track: 'Off track'
@@ -33,9 +27,10 @@ hr:
           not_set: 'Not set'
           finished: 'Završeno'
           discontinued: 'Discontinued'
+        project_status_beta:
+          title: 'Status (BETA)'
         subprojects:
-          title: 'Potprojekti'
-          no_results: 'No subprojects.'
+          title: 'Subitems'
         project_favorites:
           title: 'Favorite projects'
           no_results: 'You currently have no favorite projects. Click on the star icon in the project dashboard to add one to your favorites.'
@@ -57,6 +52,7 @@ hr:
           title: 'Work packages table'
         work_packages_graph:
           title: 'Work packages graph'
+          summary: "%{chartType} chart showing work packages which are %{description}."
         work_packages_calendar:
           title: 'Kalendar'
         work_packages_overview:

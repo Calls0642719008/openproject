@@ -21,7 +21,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
@@ -32,25 +32,29 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
     header.with_title { I18n.t("my_account.access_tokens.access_tokens") }
+    header.with_description { I18n.t("my_account.access_tokens.description") }
     header.with_breadcrumbs(
       [{ href: my_account_path, text: t(:label_my_account) },
        I18n.t("my_account.access_tokens.access_tokens")]
     )
+
+    render_tab_header_nav(header, [
+      {
+        name: "provider",
+        path: my_access_tokens_path(tab: "provider"),
+        label: t("my_account.access_tokens.tabs.provider.title")
+      },
+      {
+        name: "client",
+        path: my_access_tokens_path(tab: "client"),
+        label: t("my_account.access_tokens.tabs.client.title")
+      }
+    ])
   end
 %>
 
-<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.api_tokens, token_type: Token::API) %>
-<%= render partial: "icalendar_tokens_section", locals: { ical_tokens_grouped_by_query: @ical_tokens_grouped_by_query } %>
-<% if OpenProject::FeatureDecisions.meeting_ical_subscription_active? %>
-  <%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.ical_meeting_tokens, token_type: Token::ICalMeeting) %>
+<% if params[:tab] == "client" %>
+  <%= render partial: "client_tokens_tab", locals: { oauth_client_tokens: @oauth_client_tokens } %>
+<% else %>
+  <%= render partial: "provider_tokens_tab", locals: { ical_tokens_grouped_by_query: @ical_tokens_grouped_by_query, granted_applications: granted_applications } %>
 <% end %>
-<%= render partial: "oauth_tokens_section", locals: { granted_applications: granted_applications } %>
-<%= render partial: "rss_tokens_section", locals: { rss_token: @user.rss_token } %>
-<%= render partial: "storage_tokens_section", locals: { storage_tokens: @storage_tokens } %>
-<div class="generic-table--container">
-  <div class="generic-table--results-container">
-    <table class="generic-table" data-controller="table-highlighting">
-      <%= call_hook(:view_access_tokens_table, user: @user) %>
-    </table>
-  </div>
-</div>

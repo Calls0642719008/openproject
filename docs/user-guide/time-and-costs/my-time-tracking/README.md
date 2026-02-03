@@ -105,7 +105,15 @@ To log time on the *My time tracking* page, click the **+ Log time** button. A m
 > These fields are only visible if the **Allow exact times tracking** option is enabled by an administrator.
 > If the **Require exact times** option is also enabled, these fields become mandatory in order to save the time entry.
 
-- **Hours** – Enter the number of hours you want to log for a specific work package.
+- **Hours** – Enter the number of hours you want to log for a specific work package. 
+
+> [!TIP]
+>  Duration can be entered both in hours and minutes. For example for logging 1,5 hours, you can enter:
+>  - 1.5h
+>  - 90m
+>  - 90min
+>  - 1:30
+
 
 - **Work package** – Type to search for a work package or select from the list of recently used ones.
 

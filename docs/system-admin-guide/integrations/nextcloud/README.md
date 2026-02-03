@@ -127,12 +127,12 @@ In case you want to use this functionality you will be requested to enter a pass
 ![Nextcloud Automatically managed folders](openproject_system_guide_nextcloud_integration_setup_step_9.png)
 
 > [!IMPORTANT]
-> You will need to install the [Group folder](https://apps.nextcloud.com/apps/groupfolders) app in Nextcloud in order to have OpenProject automatically managed your Nextcloud folders. Each storage can only have one group folder with the same name.
+> You will need to install the [Team folders](https://apps.nextcloud.com/apps/groupfolders) app in Nextcloud in order to have OpenProject automatically managed your Nextcloud folders. Each storage can only have one team folder with the same name.
 
 > [!NOTE]
 > When you use the **Terms of Service** app on the Nextcloud side, all terms also need to be accepted for the OpenProject user that gets created during the setup. This is set to happen automatically during the initial set-up. If you see an error message indicating otherwise or the integration does not behave as expected, please refer to the [Troubleshooting](#troubleshooting) section at the bottom of this page.
 
-At this point, you can click on **Done, complete setup** in both applications and your instance configuration will be completed.
+At this point, you can click on **Finish setup** in both applications and your instance configuration will be completed.
 
 ![Integration successfully completed on the OpenProject end](openproject_system_guide_nextcloud_integration_setup_step_10.png)
 
@@ -244,19 +244,19 @@ To fix this please log into Nextcloud, proceed to Administration and select Open
 
 #### While setting up Project folders
 
-While setting up the project folders we create a new user, group and group folder named `OpenProject`. At the time of set up the system expects either all of these entities to have been set up with proper permissions or none of them to be present. If one or more of these entities are present without required permissions, an error message will be displayed.
+While setting up the project folders we create a new user, group and team folder named `OpenProject`. At the time of set up the system expects either all of these entities to have been set up with proper permissions or none of them to be present. If one or more of these entities are present without required permissions, an error message will be displayed.
 
 ##### Error message "The user "OpenProject" already exists"
 
-On Nextcloud inside the _OpenProject Integration_ App, when setting up an OpenProject user, group and folder, it shows the error **"The user "OpenProject" already exists"**. This error occurs if user `OpenProject` exists but group `OpenProject` and/or group folder `OpenProject` doesn't exist, or they exist with broken permissions. To solve this problem refer to possible solutions in section [Possible solutions to Project folders setup error](#possible-solutions-to-project-folders-setup-error)
+On Nextcloud inside the _OpenProject Integration_ App, when setting up an OpenProject user, group and folder, it shows the error **"The user "OpenProject" already exists"**. This error occurs if user `OpenProject` exists but group `OpenProject` and/or team folder `OpenProject` doesn't exist, or they exist with broken permissions. To solve this problem refer to possible solutions in section [Possible solutions to Project folders setup error](#possible-solutions-to-project-folders-setup-error)
 
 ##### Error message "The group "OpenProject" already exists"
 
-On Nextcloud inside the _OpenProject Integration_ App, when setting up an OpenProject user, group and folder, it shows the error **"The group "OpenProject" already exists"**. This can occur if group or group folder `OpenProject` exists but the user `OpenProject` doesn't exist. To solve this problem refer to possible solutions in section [Possible solutions to Project folders setup error](#possible-solutions-to-project-folders-setup-error)
+On Nextcloud inside the _OpenProject Integration_ App, when setting up an OpenProject user, group and folder, it shows the error **"The group "OpenProject" already exists"**. This can occur if group or team folder `OpenProject` exists but the user `OpenProject` doesn't exist. To solve this problem refer to possible solutions in section [Possible solutions to Project folders setup error](#possible-solutions-to-project-folders-setup-error)
 
-##### Error message "The group folder name "OpenProject" already exists"
+##### Error message "The team folder name "OpenProject" already exists"
 
-On Nextcloud inside the _OpenProject Integration_ App, when setting up an OpenProject user, group and folder, it shows the error **"The group folder name "OpenProject" already exists"**. This can occur if both group and user `OpenProject` doesn't exist but the group folder `OpenProject` exists. To solve this problem refer to possible solutions in section [Possible solutions to Project folders setup error](#possible-solutions-to-project-folders-setup-error)
+On Nextcloud inside the _OpenProject Integration_ App, when setting up an OpenProject user, group and folder, it shows the error **"The team folder name "OpenProject" already exists"**. This can occur if both group and user `OpenProject` doesn't exist but the team folder `OpenProject` exists. To solve this problem refer to possible solutions in section [Possible solutions to Project folders setup error](#possible-solutions-to-project-folders-setup-error)
 
 ##### Possible solutions to Project folders setup error
 
@@ -267,7 +267,7 @@ If you are facing any of the aforementioned errors while trying to set up the `P
 
 - Remove user `OpenProject`
 - Remove group `OpenProject`
-- Inside the _Group folders_ App (*Administration settings → Administration → Group folders*), remove group folder `OpenProject`.
+- Inside the _Team folders_ App (*Administration settings → Administration → Team folders*), remove team folder `OpenProject`.
   **Caution: this step will delete all files in that folder. Make sure to make a copy if you want to keep these files!**
 
 - Enable the _OpenProject Integration_ App
@@ -279,10 +279,10 @@ If you do care about the `OpenProject` user/group/folder data then the condition
 - Group `OpenProject` doesn't exist. Please check if the group exists, if not create a group named `OpenProject`.
 - User `OpenProject` is not a member of group `OpenProject`. Please check the user is a member of the group, if not add the user `OpenProject` to the group `OpenProject`.
 - User `OpenProject` is not group admin of group `OpenProject`. Please check the user is admin of the group, if not make user `OpenProject` the group admin of group `OpenProject`
-- Group folder `OpenProject` doesn't exist. If you don't have the _Group folders_ App installed, please install and enable it. Inside the _Group folders_ App (*Administration settings → Administration → Group folders*) make a group folder named `OpenProject`. Add the group `OpenProject` to the group folder with all the permissions i.e. Write, Share, Delete. Add user `OpenProject` to advance permissions list.
-- Group folder `OpenProject` is not assigned to group `OpenProject`. Inside the _Group folders_ App (*Administration settings → Administration → Group folders*) check if the `OpenProject` group folder has group `OpenProject` assigned to it, if not add the group `OpenProject` with all the permissions i.e. Write, Share, Delete.
-- Group `OpenProject` doesn't have all the permissions for group folder `OpenProject`. Inside the _Group folders_ App (*Administration settings → Administration → Group folders*) check if the group `OpenProject` has all the permissions for group folder `OpenProject`, if not give group `OpenProject` all the permissions i.e. Write, Share, Delete.
-- User `OpenProject` doesn't have advanced permissions for group folder `OpenProject`.  Inside the _Group folders_ App (*Administration settings → Administration → Group folders*) check if the user `OpenProject` has advanced permissions for group folder `OpenProject`, if not add user `OpenProject` to advanced permissions list.
+- Team folder `OpenProject` doesn't exist. If you don't have the _Team folders_ App installed, please install and enable it. Inside the _Team folders_ App (*Administration settings → Administration → Team folders*) make a team folder named `OpenProject`. Add the group `OpenProject` to the team folder with all the permissions i.e. Write, Share, Delete. Add user `OpenProject` to advance permissions list.
+- Team folder `OpenProject` is not assigned to group `OpenProject`. Inside the _Team folders_ App (*Administration settings → Administration → Team folders*) check if the `OpenProject` team folder has group `OpenProject` assigned to it, if not add the group `OpenProject` with all the permissions i.e. Write, Share, Delete.
+- Group `OpenProject` doesn't have all the permissions for team folder `OpenProject`. Inside the _Team folders_ App (*Administration settings → Administration → Team folders*) check if the group `OpenProject` has all the permissions for team folder `OpenProject`, if not give group `OpenProject` all the permissions i.e. Write, Share, Delete.
+- User `OpenProject` doesn't have advanced permissions for team folder `OpenProject`.  Inside the _Team_ folders_ App (*Administration settings → Administration → Team folders*) check if the user `OpenProject` has advanced permissions for team folder `OpenProject`, if not add user `OpenProject` to advanced permissions list.
 
 > [!NOTE]
 > The name `OpenProject` is case-sensitive, so should be in exactly that format.
@@ -298,7 +298,7 @@ If you face an error while trying to delete or disable user/group "OpenProject" 
 
 2. Remove user `OpenProject`
 3. Remove group `OpenProject`
-4. Inside the _Group folders_ App (*Administration settings → Administration → Group folders*), remove group folder `OpenProject`.
+4. Inside the _Team folders_ App (*Administration settings → Administration → Team folders*), remove team folder `OpenProject`.
 
 > [!WARNING]
 > This step will delete all files in that folder. Make sure to make a copy if you want to keep these files!**

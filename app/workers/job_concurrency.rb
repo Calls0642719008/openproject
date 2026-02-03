@@ -38,7 +38,24 @@ module JobConcurrency
   ##
   # Run the concurrency check of good_job without actually trying to enqueue it
   # Will call the provided block in case the job would be cancelled
-  def check_concurrency(&block)
-    good_job_enqueue_concurrency_check(self, on_abort: block, on_enqueue: nil)
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/PerceivedComplexity
+  def check_concurrency
+    enqueue_limit = self.class.good_job_concurrency_config[:enqueue_limit]
+    enqueue_limit = instance_exec(&enqueue_limit) if enqueue_limit.respond_to?(:call)
+    enqueue_limit = nil unless enqueue_limit.present? && (0...Float::INFINITY).cover?(enqueue_limit)
+
+    unless enqueue_limit
+      total_limit = self.class.good_job_concurrency_config[:total_limit]
+      total_limit = instance_exec(&total_limit) if total_limit.respond_to?(:call)
+      total_limit = nil unless total_limit.present? && (0...Float::INFINITY).cover?(total_limit)
+    end
+
+    limit = enqueue_limit || total_limit
+    enqueued_jobs = GoodJob::Job.where(concurrency_key: good_job_concurrency_key).unfinished.advisory_unlocked.count
+
+    yield if limit.present? && enqueued_jobs + 1 > limit
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/AbcSize
 end

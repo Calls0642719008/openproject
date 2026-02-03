@@ -10,6 +10,7 @@ import { TableEventComponent, TableEventHandler } from '../table-handler-registr
 import { ClickOrEnterHandler } from '../click-or-enter-handler';
 import { WorkPackageTable } from '../../wp-fast-table';
 import { tableRowClassName } from '../../builders/rows/single-row-builder';
+import { EventType } from 'core-app/features/work-packages/routing/wp-view-base/event-handling/event-handler-registry';
 
 export class EditCellHandler extends ClickOrEnterHandler implements TableEventHandler {
   // Injections
@@ -19,8 +20,8 @@ export class EditCellHandler extends ClickOrEnterHandler implements TableEventHa
 
   // Keep a reference to all
 
-  public get EVENT() {
-    return 'click.table.cell, keydown.table.cell';
+  public get EVENT():EventType[] {
+    return ['click', 'keydown'];
   }
 
   public get SELECTOR() {
@@ -28,21 +29,21 @@ export class EditCellHandler extends ClickOrEnterHandler implements TableEventHa
   }
 
   public eventScope(view:TableEventComponent) {
-    return jQuery(view.workPackageTable.tableAndTimelineContainer);
+    return view.workPackageTable.tableAndTimelineContainer;
   }
 
   constructor(public readonly injector:Injector) {
     super();
   }
 
-  protected processEvent(table:WorkPackageTable, evt:JQuery.TriggeredEvent):void {
+  protected processEvent(table:WorkPackageTable, evt:MouseEvent|KeyboardEvent):void {
     debugLog('Starting editing on cell: ', evt.target);
     evt.preventDefault();
 
     // Locate the cell from event
-    const target = jQuery(evt.target).closest(`.${displayClassName}`);
+    const target = (evt.target as HTMLElement).closest<HTMLElement>(`.${displayClassName}`);
     // Get the target field name
-    const fieldName = target.data('fieldName');
+    const fieldName = target?.dataset.fieldName;
 
     if (!fieldName) {
       debugLog('Click handled by cell not a field? ', evt.target);
@@ -50,18 +51,21 @@ export class EditCellHandler extends ClickOrEnterHandler implements TableEventHa
     }
 
     // Locate the row
-    const rowElement = target.closest(`.${tableRowClassName}`);
+    const rowElement = target.closest<HTMLTableRowElement>(`.${tableRowClassName}`)!;
     // Get the work package we're editing
-    const workPackageId = rowElement.data('workPackageId');
+    const workPackageId = rowElement.dataset.workPackageId!;
     const workPackage = this.states.workPackages.get(workPackageId).value!;
     // Get the row context
-    const classIdentifier = rowElement.data('classIdentifier');
+    const classIdentifier = rowElement.dataset.classIdentifier!;
 
     // Get any existing edit state for this work package
     const form = table.editing.startEditing(workPackage, classIdentifier);
 
-    // Get the position where the user clicked.
-    const positionOffset = getPosition(evt);
+    let positionOffset = 0;    
+    if (evt.type === 'click') {
+      // Get the position where the user clicked.
+      positionOffset = getPosition(evt as MouseEvent);
+    }
 
     // Activate the field
     form.activate(fieldName)
@@ -69,6 +73,6 @@ export class EditCellHandler extends ClickOrEnterHandler implements TableEventHa
         handler.$onUserActivate.next();
         handler.focus(positionOffset);
       })
-      .catch(() => target.addClass(readOnlyClassName));
+      .catch(() => target.classList.add(readOnlyClassName));
   }
 }

@@ -64,21 +64,170 @@ RSpec.describe Redmine::MenuManager::MenuHelper, type: :helper do
 
   current_user { build_stubbed(:user) }
 
-  describe "#render_single_menu_node" do
-    let(:item) { Redmine::MenuManager::MenuItem.new(:testing, "/test", caption: "This is a test") }
-    let(:expected) do
-      <<~HTML
-        <a class="testing-menu-item op-menu--item-action" title="This is a test" data-test-selector="op-menu--item-action" href="/test">
-          <span class="op-menu--item-title">
-            <span class="ellipsis">This is a test</span>
-          </span>
-        </a>
-      HTML
+  describe "#render_menu" do
+    let(:project) { build_stubbed(:project) }
+    let(:allowed_projects) { [project] }
+    let(:allowed_urls) { ["/test"] }
+
+    let(:root_node) do
+      Redmine::MenuManager::MenuItem.new(:root_node, nil, {})
     end
 
-    it "renders" do
-      expect(render_single_menu_node(item))
-        .to be_html_eql(expected)
+    before do
+      allow(Redmine::MenuManager)
+        .to receive(:items)
+              .with(:test_menu, project)
+              .and_return(root_node)
+    end
+
+    context "with parent and children" do
+      before do
+        parent = Redmine::MenuManager::MenuItem.new(:parent_node, "/test", {})
+        root_node << parent
+
+        children.each do |child|
+          parent << child
+        end
+      end
+
+      context "when children are visible" do
+        let(:children) do
+          [
+            Redmine::MenuManager::MenuItem.new("test_child1", allowed_urls[0], {}),
+            Redmine::MenuManager::MenuItem.new("test_child2", allowed_urls[0], {}),
+            Redmine::MenuManager::MenuItem.new("test_child3", allowed_urls[0], {})
+          ]
+        end
+
+        let(:expected) do
+          <<~HTML.squish
+            <ul class="menu_root open" data-menus--main-target="root">
+              <li data-name="parent_node" data-menus--main-target="item">
+                <div class="main-item-wrapper" id="parent_node-wrapper">
+                  <a class="parent-node-menu-item op-menu--item-action" title="Parent node" data-test-selector="op-menu--item-action" href="/test">
+                    <span class="op-menu--item-title">
+                      <span class="ellipsis">Parent node</span>
+                    </span>
+                  </a>
+                  <button class="toggler main-menu-toggler" type="button" aria-label="Open Parent node sub-menu" data-action="menus--main#descend" data-test-selector="main-menu-toggler--parent_node">
+                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-arrow-right">
+                      <path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l2.97-2.97H3.75a.75.75 0 0 1 0-1.5h7.44L8.22 4.03a.75.75 0 0 1 0-1.06Z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="main-menu--children-menu-header">
+                  <a href="#" tabindex="0" aria-label="Go back one menu level" class="main-menu--arrow-left-to-project" data-action="menus--main#ascend keydown.enter-&gt;menus--main#ascend" data-tour-selector="main-menu--arrow-left_parent_node" data-test-selector="main-menu--arrow-left-to-project">
+                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-arrow-left">
+                      <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z"></path>
+                    </svg>
+                  </a>
+                  <a class="main-menu--parent-node ellipsis" href="/test">Parent node</a>
+                </div>
+                <ul class="main-menu--children">
+                  <li class="main-menu-item" data-name="test_child1">
+                    <a class="test-child1-menu-item op-menu--item-action" title="Test child1" data-test-selector="op-menu--item-action" href="/test">
+                      <span class="op-menu--item-title">
+                        <span class="ellipsis">Test child1</span>
+                      </span>
+                    </a>
+                  </li>
+                  <li class="main-menu-item" data-name="test_child2">
+                    <a class="test-child2-menu-item op-menu--item-action" title="Test child2" data-test-selector="op-menu--item-action" href="/test">
+                      <span class="op-menu--item-title">
+                        <span class="ellipsis">Test child2</span>
+                      </span>
+                    </a>
+                  </li>
+                  <li class="main-menu-item" data-name="test_child3">
+                    <a class="test-child3-menu-item op-menu--item-action" title="Test child3" data-test-selector="op-menu--item-action" href="/test">
+                      <span class="op-menu--item-title">
+                        <span class="ellipsis">Test child3</span>
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          HTML
+        end
+
+        it "returns only the allowed child items" do
+          expect(render_menu(:test_menu, project))
+            .to be_html_eql(expected)
+        end
+      end
+
+      context "when all children are not visible" do
+        let(:children) do
+          [
+            Redmine::MenuManager::MenuItem.new("test_child1", allowed_urls[0], if: proc { false }),
+            Redmine::MenuManager::MenuItem.new("test_child2", allowed_urls[0], if: proc { false }),
+            Redmine::MenuManager::MenuItem.new("test_child3", allowed_urls[0], if: proc { false })
+          ]
+        end
+
+        let(:expected) do
+          <<~HTML.squish
+            <ul class="menu_root open" data-menus--main-target="root">
+              <li class="main-menu-item" data-name="parent_node">
+                <a class="parent-node-menu-item op-menu--item-action" title="Parent node" data-test-selector="op-menu--item-action" href="/test">
+                  <span class="op-menu--item-title">
+                    <span class="ellipsis">Parent node</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          HTML
+        end
+
+        it "returns only the allowed child items" do
+          expect(render_menu(:test_menu, project))
+            .to be_html_eql(expected)
+        end
+      end
+    end
+  end
+
+  describe "#render_single_menu_node" do
+    let(:item) { Redmine::MenuManager::MenuItem.new(:testing, "/test", caption: "This is a test", badge:) }
+
+    context "without badge" do
+      let(:badge) { nil }
+
+      let(:expected) do
+        <<~HTML
+          <a class="testing-menu-item op-menu--item-action" title="This is a test" data-test-selector="op-menu--item-action" href="/test">
+            <span class="op-menu--item-title">
+              <span class="ellipsis">This is a test</span>
+            </span>
+          </a>
+        HTML
+      end
+
+      it "renders" do
+        expect(render_single_menu_node(item))
+          .to be_html_eql(expected)
+      end
+    end
+
+    context "with badge" do
+      let(:badge) { "label_me" }
+
+      let(:expected) do
+        <<~HTML
+          <a class="testing-menu-item op-menu--item-action" title="This is a test" data-test-selector="op-menu--item-action" href="/test">
+            <span class="op-menu--item-title op-menu--item-title_has-badge">
+              <span class="ellipsis">This is a test</span>
+              <span class="main-item--badge">me</span>
+            </span>
+          </a>
+        HTML
+      end
+
+      it "renders" do
+        expect(render_single_menu_node(item))
+          .to be_html_eql(expected)
+      end
     end
   end
 
@@ -106,13 +255,12 @@ RSpec.describe Redmine::MenuManager::MenuHelper, type: :helper do
 
     context "for a node with nested items" do
       let(:item) do
-        node = Redmine::MenuManager::MenuItem.new(:parent_node, "/test", {})
-        node << Redmine::MenuManager::MenuItem.new(:child_one_node, "/test", {})
-        node << Redmine::MenuManager::MenuItem.new(:child_two_node, "/test", {})
-        node << Redmine::MenuManager::MenuItem.new(:child_three_node, "/test", {})
-        node << Redmine::MenuManager::MenuItem.new(:child_three_inner_node, "/test", {})
-
-        node
+        Redmine::MenuManager::MenuItem.new(:parent_node, "/test", {}).tap do |parent|
+          parent << Redmine::MenuManager::MenuItem.new(:child_one_node, "/test", {})
+          parent << Redmine::MenuManager::MenuItem.new(:child_two_node, "/test", {})
+          parent << Redmine::MenuManager::MenuItem.new(:child_three_node, "/test", {})
+          parent << Redmine::MenuManager::MenuItem.new(:child_three_inner_node, "/test", {})
+        end
       end
 
       let(:expected) do
@@ -122,7 +270,7 @@ RSpec.describe Redmine::MenuManager::MenuHelper, type: :helper do
               <a class="parent-node-menu-item op-menu--item-action" title="Parent node" data-test-selector="op-menu--item-action"
                  href="/test">
                 <span class="op-menu--item-title">
-                <span class="ellipsis">Parent node</span>
+                  <span class="ellipsis">Parent node</span>
                 </span>
               </a>
               <button class="toggler main-menu-toggler" type="button" data-action="menus--main#descend" data-test-selector="main-menu-toggler--parent_node" aria-label="Open Parent node sub-menu">
@@ -187,6 +335,34 @@ RSpec.describe Redmine::MenuManager::MenuHelper, type: :helper do
       end
     end
 
+    context "for a node with nested disabled items" do
+      let(:item) do
+        Redmine::MenuManager::MenuItem.new(:parent_node, "/test", {}).tap do |parent|
+          parent << Redmine::MenuManager::MenuItem.new(:child_one_node, "/test", if: proc { false })
+          parent << Redmine::MenuManager::MenuItem.new(:child_two_node, "/test", if: proc { false })
+          parent << Redmine::MenuManager::MenuItem.new(:child_three_node, "/test", if: proc { false })
+          parent << Redmine::MenuManager::MenuItem.new(:child_three_inner_node, "/test", if: proc { false })
+        end
+      end
+
+      let(:expected) do
+        <<~HTML.squish
+          <li class="main-menu-item" data-name="parent_node">
+            <a class="parent-node-menu-item op-menu--item-action" title="Parent node" data-test-selector="op-menu--item-action" href="/test">
+              <span class="op-menu--item-title">
+                <span class="ellipsis">Parent node</span>
+              </span>
+            </a>
+          </li>
+        HTML
+      end
+
+      it "renders it as a single item" do
+        expect(render_menu_node(item, nil))
+          .to be_html_eql(expected)
+      end
+    end
+
     context "for a node with children" do
       let(:project) { build_stubbed(:project) }
 
@@ -198,14 +374,12 @@ RSpec.describe Redmine::MenuManager::MenuHelper, type: :helper do
           .new(:parent_node,
                allowed_urls[0],
                children: Proc.new do |_p|
-                 children = []
-                 3.times do |time|
-                   children << Redmine::MenuManager::MenuItem
-                                 .new("test_child_#{time}",
-                                      allowed_urls[0],
-                                      {})
+                 Array.new(3) do |time|
+                   Redmine::MenuManager::MenuItem
+                     .new("test_child_#{time}",
+                          allowed_urls[0],
+                          {})
                  end
-                 children
                end)
       end
 
@@ -263,28 +437,24 @@ RSpec.describe Redmine::MenuManager::MenuHelper, type: :helper do
                         .new(:parent_node,
                              allowed_urls[0],
                              children: Proc.new do |_p|
-                               children = []
-                               3.times do |time|
-                                 children << Redmine::MenuManager::MenuItem
-                                               .new("test_child_#{time}",
-                                                    allowed_urls[0],
-                                                    {})
+                               Array.new(3) do |time|
+                                 Redmine::MenuManager::MenuItem
+                                   .new("test_child_#{time}",
+                                        allowed_urls[0],
+                                        {})
                                end
-                               children
                              end)
 
         parent_node << Redmine::MenuManager::MenuItem
                          .new(:child_node,
                               allowed_urls[0],
                               children: Proc.new do |_p|
-                                children = []
-                                6.times do |time|
-                                  children << Redmine::MenuManager::MenuItem
-                                                .new("test_dynamic_child_#{time}",
-                                                     allowed_urls[0],
-                                                     {})
+                                Array.new(6) do |time|
+                                  Redmine::MenuManager::MenuItem
+                                    .new("test_dynamic_child_#{time}",
+                                         allowed_urls[0],
+                                         {})
                                 end
-                                children
                               end)
         parent_node
       end

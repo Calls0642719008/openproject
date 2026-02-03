@@ -38,7 +38,9 @@ module IncomingEmails::Handlers
       include WorkPackages::SkipAuthorizationChecks
     end
 
-    def self.handles?(_email, reference:)
+    def self.handles?(_email, reference:, automated_email:)
+      return false if automated_email
+
       # Handle work package replies if there's a references match
       # And handle defaults
       reference[:klass].nil? || %w[work_package journal].include?(reference[:klass])

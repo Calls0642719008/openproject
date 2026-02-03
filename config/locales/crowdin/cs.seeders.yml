@@ -43,13 +43,6 @@ cs:
           name: PM2 Magenta
         item_3:
           name: PM2 Zelená Žlutá
-      document_categories:
-        item_0:
-          name: Dokumentace
-        item_1:
-          name: Specifikace
-        item_2:
-          name: Ostatní
       project_query_roles:
         item_0:
           name: Prohlížeč dotazů na projekt

@@ -104,7 +104,7 @@ export default class BulkSelectionController extends Controller {
   }
 
   bulkUpdateRoleLabelValueChanged(current:string, _old:string) {
-    const label = this.bulkUpdateRoleLabelTarget.querySelector('.Button-label') as HTMLElement;
+    const label = this.bulkUpdateRoleLabelTarget.querySelector('.Button-label')!;
     label.textContent = current;
   }
 
@@ -158,8 +158,8 @@ export default class BulkSelectionController extends Controller {
       this.bulkUpdateRoleLabelValue = this.selectedPermissions[0];
       const bulkUpdateRoleForm = this.bulkUpdateRoleFormTargets.find((form) => {
         return form.getAttribute('data-role-name') === this.bulkUpdateRoleLabelValue.trim();
-      }) as HTMLFormElement;
-      const button = bulkUpdateRoleForm.querySelector('button[type=submit]') as HTMLButtonElement;
+      })!;
+      const button = bulkUpdateRoleForm.querySelector('button[type=submit]')!;
       button.setAttribute('aria-checked', 'true');
     }
   }
@@ -209,13 +209,13 @@ export default class BulkSelectionController extends Controller {
 
   private get bulkPermissionButtons():HTMLButtonElement[] {
     return this.bulkUpdateRoleFormTargets.map((bulkUpdateForm) => {
-      return bulkUpdateForm.querySelector('button[type=submit]') as HTMLButtonElement;
+      return bulkUpdateForm.querySelector('button[type=submit]')!;
     });
   }
 
   private get selectedPermissions() {
     return this.selectedRoleButtons.map((button) => {
-      const label = button.querySelector('.Button-label') as HTMLElement;
+      const label = button.querySelector('.Button-label')!;
 
       return label.textContent;
     }) as string[];
@@ -225,7 +225,7 @@ export default class BulkSelectionController extends Controller {
     const checkedShareIds = this.checked.map((checkbox) => checkbox.value);
 
     return this.userRowRoleTargets.filter((button) => {
-      const shareId = button.getAttribute('data-share-id') as string;
+      const shareId = button.getAttribute('data-share-id')!;
       return checkedShareIds.includes(shareId);
     });
   }

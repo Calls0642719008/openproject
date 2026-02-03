@@ -119,8 +119,8 @@ RSpec.describe Projects::Activity, "core" do
 
   describe ".with_latest_activity" do
     it "is the latest work_package update" do
-      work_package.update(updated_at: initial_time - 10.seconds)
-      work_package2.update(updated_at: initial_time - 20.seconds)
+      work_package.update_columns(updated_at: initial_time - 10.seconds)
+      work_package2.update_columns(updated_at: initial_time - 20.seconds)
       work_package.reload
       work_package2.reload
 
@@ -129,8 +129,8 @@ RSpec.describe Projects::Activity, "core" do
     end
 
     it "is the latest wiki_pages update" do
-      wiki_page.update(updated_at: initial_time - 10.seconds)
-      wiki_page2.update(updated_at: initial_time - 20.seconds)
+      wiki_page.update_columns(updated_at: initial_time - 10.seconds)
+      wiki_page2.update_columns(updated_at: initial_time - 20.seconds)
       wiki_page.reload
       wiki_page2.reload
 
@@ -138,8 +138,8 @@ RSpec.describe Projects::Activity, "core" do
     end
 
     it "is the latest news update" do
-      news.update(updated_at: initial_time - 10.seconds)
-      news2.update(updated_at: initial_time - 20.seconds)
+      news.update_columns(updated_at: initial_time - 10.seconds)
+      news2.update_columns(updated_at: initial_time - 20.seconds)
       news.reload
       news2.reload
 
@@ -147,8 +147,8 @@ RSpec.describe Projects::Activity, "core" do
     end
 
     it "is the latest changeset update" do
-      changeset.update(committed_on: initial_time - 10.seconds)
-      changeset2.update(committed_on: initial_time - 20.seconds)
+      changeset.update_columns(committed_on: initial_time - 10.seconds)
+      changeset2.update_columns(committed_on: initial_time - 20.seconds)
       changeset.reload
       changeset2.reload
 
@@ -156,8 +156,8 @@ RSpec.describe Projects::Activity, "core" do
     end
 
     it "is the latest message update" do
-      message.update(updated_at: initial_time - 10.seconds)
-      message2.update(updated_at: initial_time - 20.seconds)
+      message.update_columns(updated_at: initial_time - 10.seconds)
+      message2.update_columns(updated_at: initial_time - 20.seconds)
       message.reload
       message2.reload
 
@@ -165,9 +165,9 @@ RSpec.describe Projects::Activity, "core" do
     end
 
     it "is the latest time_entry update" do
-      work_package.update(updated_at: initial_time - 60.seconds)
-      time_entry.update(updated_at: initial_time - 10.seconds)
-      time_entry2.update(updated_at: initial_time - 20.seconds)
+      work_package.update_columns(updated_at: initial_time - 60.seconds)
+      time_entry.update_columns(updated_at: initial_time - 10.seconds)
+      time_entry2.update_columns(updated_at: initial_time - 20.seconds)
       time_entry.reload
       time_entry2.reload
 
@@ -175,19 +175,19 @@ RSpec.describe Projects::Activity, "core" do
     end
 
     it "is the latest project update" do
-      work_package.update(updated_at: initial_time - 60.seconds)
-      project.update(updated_at: initial_time - 10.seconds)
+      work_package.update_columns(updated_at: initial_time - 60.seconds)
+      project.update_columns(updated_at: initial_time - 10.seconds)
 
       expect(latest_activity).to equal_time_without_usec(project.updated_at)
     end
 
     it "takes the time stamp of the latest activity across models" do
-      work_package.update(updated_at: initial_time - 10.seconds)
-      wiki_page.update(updated_at: initial_time - 20.seconds)
-      news.update(updated_at: initial_time - 30.seconds)
-      changeset.update(committed_on: initial_time - 40.seconds)
-      message.update(updated_at: initial_time - 50.seconds)
-      project.update(updated_at: initial_time - 60.seconds)
+      work_package.update_columns(updated_at: initial_time - 10.seconds)
+      wiki_page.update_columns(updated_at: initial_time - 20.seconds)
+      news.update_columns(updated_at: initial_time - 30.seconds)
+      changeset.update_columns(committed_on: initial_time - 40.seconds)
+      message.update_columns(updated_at: initial_time - 50.seconds)
+      project.update_columns(updated_at: initial_time - 60.seconds)
 
       work_package.reload
       wiki_page.reload
@@ -205,7 +205,7 @@ RSpec.describe Projects::Activity, "core" do
 
       expect(latest_activity).to equal_time_without_usec(work_package.updated_at)
 
-      work_package.update(updated_at: project.updated_at - 10.seconds)
+      work_package.update_columns(updated_at: project.updated_at - 10.seconds)
 
       # Order:
       # wiki_page
@@ -217,7 +217,7 @@ RSpec.describe Projects::Activity, "core" do
 
       expect(latest_activity).to equal_time_without_usec(wiki_page.updated_at)
 
-      wiki_page.update(updated_at: work_package.updated_at - 10.seconds)
+      wiki_page.update_columns(updated_at: work_package.updated_at - 10.seconds)
 
       # Order:
       # news
@@ -229,7 +229,7 @@ RSpec.describe Projects::Activity, "core" do
 
       expect(latest_activity).to equal_time_without_usec(news.updated_at)
 
-      news.update(updated_at: wiki_page.updated_at - 10.seconds)
+      news.update_columns(updated_at: wiki_page.updated_at - 10.seconds)
 
       # Order:
       # changeset
@@ -241,7 +241,7 @@ RSpec.describe Projects::Activity, "core" do
 
       expect(latest_activity).to equal_time_without_usec(changeset.committed_on)
 
-      changeset.update(committed_on: news.updated_at - 10.seconds)
+      changeset.update_columns(committed_on: news.updated_at - 10.seconds)
 
       # Order:
       # message
@@ -253,7 +253,7 @@ RSpec.describe Projects::Activity, "core" do
 
       expect(latest_activity).to equal_time_without_usec(message.updated_at)
 
-      message.update(updated_at: changeset.committed_on - 10.seconds)
+      message.update_columns(updated_at: changeset.committed_on - 10.seconds)
 
       # Order:
       # project

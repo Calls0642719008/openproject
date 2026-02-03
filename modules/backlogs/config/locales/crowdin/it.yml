@@ -40,6 +40,8 @@ it:
               task_version_must_be_the_same_as_story_version: "deve essere uguale alla versione della storia del genitore."
         sprint:
           cannot_end_before_it_starts: "Uno sprint non può terminare prima che venga avviato."
+  attributes:
+    task_type: "Tipo di attività"
   backlogs:
     add_new_story: "Nuova storia"
     any: "qualsiasi"
@@ -100,7 +102,10 @@ it:
   backlogs_empty_title: "Non è stata definita nessuna versione per i backlog"
   backlogs_empty_action_text: "Per iniziare ad utilizzare i backlog, crea una nuova versione e assegnala ad una colonna nel backlog."
   button_edit_wiki: "Modifica la pagina wiki"
-  error_backlogs_task_cannot_be_story: "Le impostazioni non sono valide. Il tipo di attività selezionato non può essere un tipo di storia."
+  errors:
+    attributes:
+      task_type:
+        cannot_be_story_type: "non può essere anche un tipo di storia"
   error_intro_plural: "Si sono verificati i seguenti errori:"
   error_intro_singular: "È stato rilevato il seguente errore:"
   error_outro: "Si prega di correggere gli errori riportati prima di inviare nuovamente."
@@ -124,6 +129,10 @@ it:
   label_points_burn_up: "Verso l'alto"
   label_product_backlog: "backlog del prodotto"
   label_select_all: "Seleziona tutto"
+  label_select_type: "Seleziona un tipo"
+  label_select_types: "Seleziona i tipi"
+  label_selected_type: "Tipo selezionato"
+  label_selected_types: "Tipi selezionati"
   label_sprint_backlog: "backlog di sprint"
   label_sprint_cards: "Esporta schede"
   label_sprint_impediments: "Impedimenti allo sprint"
@@ -145,7 +154,7 @@ it:
   points_resolved: "punti risolti"
   points_to_accept: "punti non accettati"
   points_to_resolve: "punti non risolti"
-  project_module_backlogs: "Backlogs"
+  project_module_backlogs: "Backlog"
   rb_label_copy_tasks: "Copia i pacchetti di lavoro"
   rb_label_copy_tasks_all: "Tutti"
   rb_label_copy_tasks_none: "Nessuno"
@@ -160,3 +169,7 @@ it:
   version_settings_display_option_left: "sinistra"
   version_settings_display_option_none: "nessuno"
   version_settings_display_option_right: "destra"
+  setting_plugin_openproject_backlogs_story_types_caption: |
+    Tipi considerati come storie di backlog, ad esempio Feature o User story. Devono essere diversi dal tipo di attività.
+  setting_plugin_openproject_backlogs_task_type_caption: |
+    Tipo utilizzato per le attività delle storie. Deve essere diverso dai tipi di storia.
