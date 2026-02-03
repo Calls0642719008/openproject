@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#
+#add:0642719008.co
 # Deletes bundled javascript assets and rebuilds them.
 # Useful for when your frontend doesn't work (jQuery not defined etc.) for seemingly no reason at all.
 
